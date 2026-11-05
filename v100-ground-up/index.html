@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<title>First Keep v100 · Terrain</title>
+<title>First Keep v100 · Non-movables</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; --slot: 44px; --gap: 6px; }
@@ -19,7 +19,7 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span>v100 · floor 2 · Terrain</span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span>v100 · floor 3 · Non-movables</span><span id="seed"></span></div>
 <div id="bar"><button data-t="grid">Grid</button><button data-t="zones" class="on">Zones</button><button data-t="edge" class="on">Edge</button><button id="new">New map</button></div>
 <script>
 'use strict';
@@ -27,7 +27,12 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 const D = { site: 3060, board: 2160, zone: [300, 600, 900], edge: 60, tile: 10, land: 24, sandTop: 12, dirtTop: 20, beach: 80, cliff: 4, wander: 24, sea: 60, // D1, D2, D3–D6, D7, D12–D19
   bare: 12, wade: 4, lakes: [3, 6], lakeR: [50, 160], lakeDeep: 12, shore: 0.25, riverDeep: 8, riverW: 0.25, riverWander: 80, bank: 40, ford: 40, stream: 6, streamDeep: 2, // D23–D35
   hills: [2, 4], hillR: [80, 160], hillH: 14, rocks: [3, 6], rockR: [15, 35], rockH: 18, crevices: [1, 2], creviceW: 8, creviceFloor: 13, creviceL: [150, 300], lane: 50, middle: 150, // D36–D47
-  forestScale: 500, forestShare: 0.1, wall: [920, 1080], pond: [700, 450], pondR: 50 }; // D48–D52
+  forestScale: 500, forestShare: 0.1, wall: [920, 1080], pond: [700, 450], pondR: 50, // D48–D52
+  treeWood: 100, bushFood: 125, goldPile: 800, stonePile: 350, ironPile: 350, ruinStone: 200, fireFood: 100, chestGold: 300, // D53–D60 what a shell holds
+  ageUp: 500, villager: 50, mill: 100, lumber: 100, home: 25, barracks: 175, villagers: 6, homes: 2, margin: 0.25, // D61–D69 the prices Z1 is sized from (stand-ins until the Content pull)
+  z1: { bush: [250, 140], tree: [140, 250], gold: [200, 120], stone: [120, 200] }, z3: { bush: [820, 300], tree: [300, 820], iron: [560, 680], stone: [450, 750], gold: [680, 560] }, z3x: 3, // D70–D72 the home spots, in the corner's frame
+  goldZ4: [4, 6], stoneZ4: [3, 5], ironZ4: [3, 5], patches: [6, 10], patch: [4, 6], ruins: [2, 2], cemeteries: [1, 2], campfires: [2, 3], treasures: [1, 2], // D73–D81 Z4's finds
+  jitter: 3, lod: 5 }; // D82 a thing's stand wanders in its tile by this much, D83 under this many pixels a tile things are dots and the grid is off
 const A = { turn: 15, rise: 30, repose: 34 }; // A1 the grid's turn, A2 the camera's rise, A3 the angle of repose
 const C = { water: '#2a6488', sand: '#cdbb88', dirt: '#785c3a', grass: '#4a6634', red: '#ff6b5b', white: '#ece5d3', gold: '#e6b947' }; // C1–C4, C7, C8, C10
 
@@ -84,12 +89,14 @@ function makeGround(sd) {
     const round = [[ci - 1, cj - 1, 3], [ci, cj - 1, 2], [ci - 1, cj, 1], [ci, cj, 0]].filter(([i, j]) => i >= 0 && j >= 0 && i < N && j < N).map(([i, j, slot]) => [dh(i, j), (j * N + i) * 4 + slot]).sort((a, b) => a[0] - b[0]);
     for (let a = 0; a < round.length; ) { let b = a + 1; while (b < round.length && round[b][0] - round[b - 1][0] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += round[q][0]; for (let q = a; q < b; q++) CH[round[q][1]] = sum / (b - a); a = b; }
   }
+  makeThings(roll);
   renderGround();
   document.getElementById('seed').textContent = 'map ' + sd;
 }
 
 // ── Floor 2, terrain (layer 90): every piece is a Cut or a Raise on the one height field (L2, L3); the layer that shows follows (L1), a step past the angle of repose is a face (QBE).
-const CORNERS = [[B0, B0], [B1, B0], [B1, B1], [B0, B1]], MIDB = [MID, MID];
+const CORNERS = [[B0, B0], [B1, B0], [B1, B1], [B0, B1]];
+const corner = (c, u, v) => { const [cx, cy] = CORNERS[c], a = c * 90 * RAD; return [cx + u * Math.cos(a) - v * Math.sin(a), cy + u * Math.sin(a) + v * Math.cos(a)]; }; // a spot in a corner's own frame (u along one edge, v along the other), the same in all four (L12)
 const cornerDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => Math.hypot(bx - cx, by - cy)));
 const segDist = (px, py, ax, ay, bx, by) => { const vx = bx - ax, vy = by - ay, t = clamp(((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy), 0, 1); return Math.hypot(px - ax - t * vx, py - ay - t * vy); };
 const laneDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => segDist(bx, by, cx, cy, MID, MID))); // the four roads: corner to middle
@@ -123,8 +130,7 @@ const dome = (bx, by, r, hgt) => stamp(bx, by, r, (k, d) => { H[k] = Math.max(H[
 function makeTerrain(roll) {
   // The home pond: Who every corner · What one small lake · Where Z3, the same spot in each corner's own frame (D51, D52, L12) · When the map is made · Why a home has water to fish and to sail, and the same water for all · How one shore rolled once (QAZ), shared
   const pondRim = fractal(roll, 8, 1.3);
-  for (let c = 0; c < 4; c++) { const [cx, cy] = CORNERS[c], a = (c * 90 + 45) * RAD, ux = Math.cos(a - 45 * RAD), uy = Math.sin(a - 45 * RAD), vx = Math.cos(a + 45 * RAD), vy = Math.sin(a + 45 * RAD);
-    lake(cx + ux * D.pond[0] + vx * D.pond[1], cy + uy * D.pond[0] + vy * D.pond[1], D.pondR, pondRim, D.lakeDeep); }
+  for (let c = 0; c < 4; c++) lake(...corner(c, ...D.pond), D.pondR, pondRim, D.lakeDeep);
   // Lakes: Who the map · What their number, size and place · Where Z4, off the roads and the middle, inside the play edge · When the map is made · Why no two maps share their water · How a count between D25, sizes on the power law of lakes (QBA, Pareto draw), places uniform, each shore QAZ
   const lakes = [], c = 1.06, amin = Math.PI * D.lakeR[0] ** 2, amax = Math.PI * D.lakeR[1] ** 2;
   for (let n = count(roll, D.lakes), tries = 0; lakes.length < n && tries < 200; tries++) {
@@ -168,6 +174,42 @@ function makeTerrain(roll) {
     if (wall || patch) FOR[k] = 1; }
   for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) { const k = j * N + i; if (FOR[k] && [k - 1, k + 1, k - N, k + N].some((q) => H[q] !== D.land)) FOR[k] = 2; } // the wood's edge keeps one tile from any slope or water
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
+}
+// ── Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each stands on one flat tile of land; a big one takes the tiles under it. Nothing here moves; floor 5 takes from the amounts.
+const KIND = { // code → what it yields (SA Yield → R), how much (SA Amount → D53–D60), the ground it takes (units)
+  tree: { code: 'R1', yield: 'wood', amount: D.treeWood, r: 0 }, bush: { code: 'R5', yield: 'food', amount: D.bushFood, r: 0 },
+  gold: { code: 'R2', yield: 'gold', amount: D.goldPile, r: 9 }, stone: { code: 'R3', yield: 'stone', amount: D.stonePile, r: 9 }, iron: { code: 'R4', yield: 'iron', amount: D.ironPile, r: 9 },
+  ruins: { code: 'MG1', yield: 'stone', amount: D.ruinStone, r: 14 }, cemetery: { code: 'MG2', yield: null, amount: 0, r: 12 }, campfire: { code: 'MG3', yield: 'food', amount: D.fireFood, r: 6 }, treasure: { code: 'MG4', yield: 'gold', amount: D.chestGold, r: 4 },
+};
+// QBJ Z1's store, from what one age up costs (Albert's rule): food for the age and the villagers, wood for the mill, the lumber camp, the homes and the barracks, each with a margin (D61–D69)
+const Z1 = { food: (D.ageUp + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
+const z1 = { bush: Math.ceil(Z1.food / D.bushFood), tree: Math.ceil(Z1.wood / D.treeWood) };
+const OCC = new Uint8Array(N * N); let things = []; // what stands on each tile, and the shells themselves
+const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
+const free = (k) => flatAt(k) && !OCC[k] && !FOR[k];
+const clear = (bx, by, r) => { let ok = true; stamp(bx, by, r, (k) => { if (!free(k)) ok = false; }); return ok; };
+const nearest = (bx, by, r) => { let best = null; stamp(bx, by, r, (k, d) => { if (free(k) && (!best || d < best[0])) best = [d, k]; }); return best ? best[1] : -1; }; // the free tile nearest a spot
+function put(kind, k, roll, size = 1, v = 0) { // a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a grid
+  const i = k % N, j = (k - i) / N, [bx, by] = toBoard((i + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter, (j + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter), [vx, vy] = toView(bx, by, H[k]);
+  things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); OCC[k] = 1; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
+}
+function cluster(kind, bx, by, n, roll) { // the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry patch
+  const got = []; stamp(bx, by, Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile, (k, d) => { if (free(k)) got.push([d, k]); });
+  for (const [, k] of got.sort((a, b) => a[0] - b[0]).slice(0, n)) kind === 'tree' ? (FOR[k] = 1) : put(kind, k, roll);
+}
+function makeThings(roll) {
+  // The home finds: Who every corner · What Z1's berries, grove, gold and stone, sized by QBJ; Z3's the same at D72 times, with iron · Where fixed spots in the corner's frame (D70, D71), the same in all four (L12) · When the map is made · Why every player starts with the same ground and the same means to the next age · How one home dice (QBF), restarted at each corner, so the four are alike to the stand of each bush
+  for (let c = 0; c < 4; c++) { const hr = dice(seed ^ 0x9e3779b9), at = (z, key) => corner(c, ...D[z][key]), one = (kind, z) => { const k = nearest(...at(z, kind), 3 * D.tile); if (k >= 0) put(kind, k, hr); };
+    cluster('bush', ...at('z1', 'bush'), z1.bush, hr); cluster('tree', ...at('z1', 'tree'), z1.tree, hr); one('gold', 'z1'); one('stone', 'z1');
+    cluster('bush', ...at('z3', 'bush'), z1.bush * D.z3x, hr); cluster('tree', ...at('z3', 'tree'), z1.tree * D.z3x, hr); one('gold', 'z3'); one('stone', 'z3'); one('iron', 'z3'); }
+  // Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts: ruins, cemeteries, campfires, treasure · Where Z4, on flat free land, off the roads, the middle and the play edge · When the map is made · Why the game beyond the homestead is to be found, not known · How counts D73–D81, places uniform until one is clear, each a roll
+  const spot = (r) => { for (let t = 0; t < 200; t++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r)) return [bx, by, k]; } return null; };
+  for (const [kind, n] of [['gold', 'goldZ4'], ['stone', 'stoneZ4'], ['iron', 'ironZ4'], ['ruins', 'ruins'], ['cemetery', 'cemeteries'], ['campfire', 'campfires'], ['treasure', 'treasures']])
+    for (let m = count(roll, D[n]); m > 0; m--) { const s = spot(KIND[kind].r); if (s) put(kind, s[2], roll); }
+  for (let m = count(roll, D.patches); m > 0; m--) { const s = spot(2 * D.tile); if (s) cluster('bush', s[0], s[1], count(roll, D.patch), roll); }
+  // The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size and shade · Where its tile · When the map is made · Why the woods are what is cut for wood (R1) · How three rolls a tile
+  for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, roll() < 0.5 ? 0 : 1);
+  things.sort((a, b) => a.vy - b.vy); // drawn back to front
 }
 const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop || h >= D.land + D.bare ? 2 : 3); // 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23)
 const BANDS = 6, deepest = shade(C.water, 0.6);
@@ -232,7 +274,8 @@ function draw() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
   const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z);
-  if (show.grid && cam.z * D.tile >= 5) drawGrid();
+  if (show.grid && cam.z * D.tile >= D.lod) drawGrid();
+  drawThings();
   if (show.zones) drawZones();
   if (show.edge) drawEdge();
 }
@@ -257,6 +300,30 @@ function drawZones() { // Z1 to Z4 from each corner (D3 to D6), at the land's he
     [150, 450, 750, 1050].forEach((r, n) => { const [x, y] = toScreen(...toView(cx + r * ux, cy + r * uy, D.land)); ctx.fillText('Z' + (n + 1), x, y); });
   }
   ctx.restore();
+}
+// ── The things, drawn each frame back to front, only those on the screen; far out (D83) each is a dot. Every colour is a tint of C (L9).
+const LEAF = [shade(C.grass, 1.25), shade(C.grass, 1.05)], LEAFLIT = shade(C.grass, 1.55), TRUNK = shade(C.dirt, 0.6), BUSH = shade(C.grass, 1.15), ROCK = shade(C.white, 0.62), ROCKLIT = shade(C.white, 0.82), RUST = shade(C.red, 0.55), RUIN = shade(C.sand, 0.85), RUINFACE = shade(C.sand, 0.6), CHEST = shade(C.dirt, 0.9), LID = shade(C.dirt, 0.65);
+const disc = (x, y, r, fill) => { ctx.fillStyle = fill; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill(); };
+const rect = (x, y, w, h, fill) => { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); };
+const pile = (x, y, s, fleck) => { disc(x - 3 * s, y - 2 * s, 3.2 * s, ROCK); disc(x + 2.6 * s, y - 2.4 * s, 3.6 * s, ROCK); disc(x, y - 4.6 * s, 3 * s, ROCK); disc(x - 1.2 * s, y - 5.6 * s, 1.3 * s, ROCKLIT);
+  if (fleck) for (const [dx, dy] of [[-3.5, -2.5], [1, -5], [3.5, -1.5], [-0.5, -1.5]]) disc(x + dx * s, y + dy * s, 0.8 * s, fleck); };
+const ART = { // each drawn at its stand (x, y on the screen), s pixels a unit
+  tree: (x, y, s, v) => { rect(x - 0.5 * s, y - 6 * s, s, 6 * s, TRUNK); disc(x, y - 8.5 * s, 4.2 * s, LEAF[v]); disc(x - 1.3 * s, y - 9.8 * s, 2 * s, LEAFLIT); },
+  bush: (x, y, s) => { disc(x, y - 2.4 * s, 3.2 * s, BUSH); for (const [dx, dy] of [[-1.3, -2.6], [1.1, -1.8], [0.2, -4]]) disc(x + dx * s, y + dy * s, 0.6 * s, C.red); },
+  gold: (x, y, s) => pile(x, y, s, C.gold), stone: (x, y, s) => pile(x, y, s, null), iron: (x, y, s) => pile(x, y, s, RUST),
+  ruins: (x, y, s) => { for (const [dx, w, h] of [[-9, 5, 7], [-2, 4, 4], [4, 5, 9]]) { rect(x + dx * s, y - h * s, w * s, h * s, RUIN); rect(x + (dx + w) * s, y - h * s, 1.2 * s, h * s, RUINFACE); } disc(x + 1 * s, y + 1.5 * s, 1.6 * s, RUIN); },
+  cemetery: (x, y, s) => { for (let n = 0; n < 4; n++) { const gx = x - 6.5 * s + n * 4 * s, gy = y - (n % 2) * 1.5 * s; rect(gx, gy - 4 * s, 2.2 * s, 4 * s, ROCKLIT); disc(gx + 1.1 * s, gy - 4 * s, 1.1 * s, ROCKLIT); } },
+  campfire: (x, y, s) => { for (let n = 0; n < 6; n++) disc(x + 3.2 * s * Math.cos((n * Math.PI) / 3), y - 1.2 * s + 1.6 * s * Math.sin((n * Math.PI) / 3), 0.9 * s, ROCK);
+    ctx.fillStyle = C.gold; ctx.beginPath(); ctx.moveTo(x - 1.6 * s, y - 1 * s); ctx.lineTo(x + 1.6 * s, y - 1 * s); ctx.lineTo(x, y - 6 * s); ctx.fill(); ctx.fillStyle = C.red; ctx.beginPath(); ctx.moveTo(x - 0.8 * s, y - 1 * s); ctx.lineTo(x + 0.8 * s, y - 1 * s); ctx.lineTo(x, y - 3.5 * s); ctx.fill(); },
+  treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
+};
+const DOT = { tree: LEAF[0], bush: BUSH, gold: C.gold, stone: ROCK, iron: RUST, ruins: RUIN, cemetery: ROCKLIT, campfire: C.gold, treasure: C.gold };
+function drawThings() {
+  const s = cam.z, dots = s * D.tile < D.lod, m = 16 * s;
+  for (const t of things) {
+    const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
+    if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else ART[t.kind](x, y, s * t.size, t.v);
+  }
 }
 let edgeSegs = null;
 function drawEdge() { // L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges
@@ -289,10 +356,10 @@ for (const b of document.querySelectorAll('#bar [data-t]')) b.onclick = () => { 
 document.getElementById('new').onclick = () => { location.hash = String(Math.floor(Math.random() * 4294967296)); };
 // The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it.
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); makeGround(Number(location.hash.slice(1)) || today()); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); things = []; makeGround(Number(location.hash.slice(1)) || today()); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
 resize(); start();
-window.fk = { D, A, C, cam, show, dirty, fit, H, DEP, N, V, toView, B0, B1, seed: () => seed, coast: (s, p) => coast(s, p) }; // the test hook
+window.fk = { D, A, C, cam, show, dirty, fit, H, DEP, FOR, OCC, N, V, toView, B0, B1, KIND, Z1, z1, seed: () => seed, things: () => things, coast: (s, p) => coast(s, p) }; // the test hook
 </script>
 </body>
 </html>

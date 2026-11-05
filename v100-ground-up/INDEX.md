@@ -62,6 +62,7 @@ QBF The dice → N65
 QBG Headlands and bays → N67
 QBH A lake's size drawn from the power law (QBA) → N61
 QBI Roads cross rivers at fords → N68
+QBJ Z1's store → N69
 
 ## By citation
 N1 Spherical astronomy, the altitude formula (standard) → QA
@@ -132,5 +133,6 @@ N65 Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the 
 N66 Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empires II's tiles are 2:1) → QBD
 N67 Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomorphology, 2008; from memory) → QBG
 N68 Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
+N69 Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lumber camp 100 wood, the barracks 175 wood; a tree 100 wood, a forage bush 125 food, a gold tile 800, a stone tile 350 (from memory, to open; stand-ins) → QBJ
 
-59 calculations, 68 citations.
+60 calculations, 69 citations.
