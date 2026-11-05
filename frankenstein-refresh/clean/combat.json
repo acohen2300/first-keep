@@ -1,0 +1,287 @@
+{
+ "about": "Step 6, temp book staging/combat.js (Mid's 14-sim-troops, 16-sim-fight, 28-army-quick): every piece, and what becomes of it. in v100: already home. bring: Mid has it, v100 does not; it comes in as book entries and laws with its feature. cut: v100 does it another way. By the 10:31 rule, what comes over keeps Mid's values; hand shoves give way to QBT.",
+ "pieces": {
+  "followArmy": [
+   "bring",
+   "priests and medics walk with the battalion that is out; part of US1 Priest and US2 Medic (Later, kept)"
+  ],
+  "priestTick": [
+   "bring",
+   "the Priest: converts a foe beside it (the army cap holds), stands at a shrine; SC Convert; the shrine is the Throne's foot (see misfits)"
+  ],
+  "medicTick": [
+   "bring",
+   "the Medic: follows the army or its order; part of US2 Medic and SC Heal"
+  ],
+  "healTick": [
+   "bring",
+   "a Hospital or Medic closes your soldiers' wounds by the first-order lag (v100's law QP, Cukjati 2001); SC Heal"
+  ],
+  "shot": [
+   "bring",
+   "the missile seen in flight (arrows, bolts, fire arrows); its hand-made arc to be redrawn by QAJ (drag), see misfits"
+  ],
+  "routSecs": [
+   "bring",
+   "how long a broken soldier runs, halved by Engagement research; part of per-soldier nerve (SA Nerve, QAI). v100 has only the wave's break (combat.js recall, QBQ)"
+  ],
+  "nearHome": [
+   "bring",
+   "a soldier at home guards the ground round its yard and the Town Center; part of the soldier's home stance"
+  ],
+  "ambushTick": [
+   "bring",
+   "the ambush in place: hidden soldiers spring on a foe within reach or a blow; part of the War Director's choke and ambush"
+  ],
+  "solTick": [
+   "bring",
+   "the soldier's brain. v100 combat.js tick already has idle, march, fight, rout, QAG target, QBO blow; to bring: per-soldier nerve, stances and commander's intent, drills, garrison and its healing, the archers' stakes, teaching at the School, All hands, camps, prisoners, escorts, the march fanning to its places"
+  ],
+  "escortPick": [
+   "bring",
+   "a guard keeps to the caravan or trade stop it escorts; part of Caravan (UT1) and the trade stops"
+  ],
+  "wildLeash": [
+   "bring",
+   "how far a beast or a camp guard follows a foe from home; part of wildlife and the hazards (M)"
+  ],
+  "wildTick": [
+   "bring",
+   "wildlife and camp guards: game grazes and flees, guards keep to what they guard, robbers raid, a defender fights with probability V/C (QAH). v100 has the wander (QM) and the bite back (combat.js)"
+  ],
+  "wayfarers": [
+   "bring",
+   "wayfarers (MH5) arrive from the land's edges every so often; part of hazards as events"
+  ],
+  "wayfarerTick": [
+   "bring",
+   "a wayfarer meets your people and leaves a gift of food; part of MH5 Wayfarers"
+  ],
+  "guardsLeft": [
+   "bring",
+   "whether a find still has its guards alive; part of the finds (MG gifts)"
+  ],
+  "findsTick": [
+   "bring",
+   "the finds: guarded gifts taken when their guards fall, holy sites a priest holds, the trade stops' pay. v100 places MG1-MG4 with a yield (floor 3) but nothing captures them"
+  ],
+  "fromWhere": [
+   "bring",
+   "where a blow comes from, as a cosine (front, side, behind), the line's and its group's facing; v100's QBO has only a behind test (D141 flank)"
+  ],
+  "hurt": [
+   "bring",
+   "the whole blow: v100 combat.js damage and hit (QBO, D140, D141) has base, counter, flank, armour; to bring: research factors, roofed armour, gun on hide shields, nerve from the blow, villagers turning on a beast, plunder and war credit, regard. Its three hand shoves (stakes, the charge's JUICE.shove, a unit's knock) are cut: QBT (FK.impact) does it"
+  ],
+  "CHS": [
+   "bring",
+   "the crowd grid's square size (personal space); part of crowd spacing, see misfits"
+  ],
+  "CHNEXT": [
+   "bring",
+   "the crowd grid's linked list; part of crowd spacing, see misfits"
+  ],
+  "heft": [
+   "bring",
+   "who gives way in a crowd (9, 3, 1 by work, walk, stand); part of crowd spacing, see misfits"
+  ],
+  "forming": [
+   "bring",
+   "a soldier walking to its place in a shape, lower ranks giving way; part of drills (FORMING)"
+  ],
+  "pushApart": [
+   "bring",
+   "two units too close part (Reynolds separation, personal space); v100 has no crowd spacing, see misfits"
+  ],
+  "atRest": [
+   "bring",
+   "a nudged villager or grazer settles where it was nudged (no shuffle); part of crowd spacing"
+  ],
+  "collide": [
+   "bring",
+   "the crowd pass each step over the grid; part of crowd spacing, see misfits"
+  ],
+  "plunder": [
+   "bring",
+   "a destroyed building pays its destroyer a share of its cost; a fallen Town Center pays the stockpile"
+  ],
+  "warCredit": [
+   "bring",
+   "the War crown's count: the cost of enemy people and buildings destroyed; part of the crowns (39-games)"
+  ],
+  "plunderBld": [
+   "bring",
+   "a building's fall pays its plunder and war credit"
+  ],
+  "fall": [
+   "bring",
+   "a side falls: its stores go to the killer, its room is shared, the Throne goes back; v100 econ.js ends the game on the last Seat (conquest) but nothing passes on"
+  ],
+  "scoreAll": [
+   "in v100",
+   "econ.js score (QBR, D135): the same five parts and divisors"
+  ],
+  "watchHome": [
+   "bring",
+   "a warning when an enemy army comes near your Town Center"
+  ],
+  "finish": [
+   "bring",
+   "the end of a match: won or lost, the score times the level played, the chronicle; v100 econ.js sets the result and fires win or lose"
+  ],
+  "TICK": [
+   "cut",
+   "the table of each kind's tick; v100 runs each capability's tick through FK.on('tick') and asks by tick (SC)"
+  ],
+  "slotsOf": [
+   "bring",
+   "one worker to a field, a quarry, a workshop (the Open style's one worker); v100 econ.js does not hold a field to one"
+  ],
+  "startWork": [
+   "bring",
+   "builders who finish a place of work take it up: a field, a dock sets them fishing, a camp sends them to its job"
+  ],
+  "qsPool": [
+   "bring",
+   "who can go on an Attack with: the whole army or one battalion; part of the Attack with card (menu, Screen book)"
+  ],
+  "qsPick": [
+   "bring",
+   "Attack with picks idle soldiers first, then the nearest, by kind"
+  ],
+  "qsHTML": [
+   "bring",
+   "the Attack with card: how many of each kind; v100's War tab has one Attack of every idle soldier; comes as Screen book rows"
+  ],
+  "sendable": [
+   "bring",
+   "the soldiers that can be sent (not guards, spies, students)"
+  ],
+  "ARMY_STILL": [
+   "bring",
+   "2.5 s still: a soldier that has not moved is holding; part of the soldier's status word"
+  ],
+  "armyStatus": [
+   "bring",
+   "each soldier's status in one word: rally, march, fight, hold, rout"
+  ],
+  "idleSoldier": [
+   "bring",
+   "an idle soldier: holding or rallying, not placed by hand"
+  ],
+  "free": [
+   "bring",
+   "the idle soldiers that can be sent"
+  ],
+  "freeWhy": [
+   "bring",
+   "why nobody can be sent (none, or who is busy with what)"
+  ],
+  "guardsOf": [
+   "bring",
+   "the soldiers escorting one caravan or garrisoning one trade stop"
+  ],
+  "guardRow": [
+   "bring",
+   "the card row to send or call back guards"
+  ],
+  "showQuick": [
+   "bring",
+   "the quick action: a tap on open ground with nothing picked puts the sword and the x there (Albert, Nov 3); v100's War tab has Set target and Attack"
+  ],
+  "hideQuick": [
+   "bring",
+   "closes the quick action"
+  ],
+  "quickGo": [
+   "bring",
+   "the quick action's sword: every soldier to the spot"
+  ],
+  "ofKind": [
+   "bring",
+   "the soldiers of one kind that can be sent; part of the War Director"
+  ],
+  "aimH": [
+   "bring",
+   "where the War Director aims: the crosshair or the camera's middle"
+  ],
+  "drillOn": [
+   "bring",
+   "whether a soldier is still in a drill"
+  ],
+  "dress": [
+   "bring",
+   "a drill's shape on the ground: a line or an arc round a point (v100 Formations, names only)"
+  ],
+  "drillHold": [
+   "bring",
+   "Albert's x% by x% rule: a soldier short of its place by that share of the time stands where it is"
+  ],
+  "toolSet": [
+   "bring",
+   "the picked soldiers, else all that can be sent; for choke and ambush"
+  ],
+  "chokeAt": [
+   "bring",
+   "the choke: soldiers stand across a gap as many files as it holds (v100 Formations: Choke)"
+  ],
+  "coverNear": [
+   "bring",
+   "the nearest cover (open ground with forest near) for an ambush"
+  ],
+  "ambushAt": [
+   "bring",
+   "the ambush: soldiers go to cover and go to ground"
+  ],
+  "DIRECT_WHY": [
+   "bring",
+   "the War Director's reasons when nobody can move"
+  ],
+  "DIRECTS": [
+   "bring",
+   "the War Director's six moves: shield wall, advance, loose, fall back, charge, wheel"
+  ],
+  "DIRECT_OF": [
+   "bring",
+   "each kind's tap and hold moves, with the word and the sound"
+  ],
+  "direct": [
+   "bring",
+   "runs a War Director move and pays its order cost"
+  ],
+  "directWait": [
+   "bring",
+   "the wait before a kind's move is ready again (the reload, the charge)"
+  ],
+  "SUGGEST": [
+   "bring",
+   "the numbers of the build suggestion (reach, weights, a gap's width)"
+  ],
+  "suggestAt": [
+   "bring",
+   "what the game thinks fits a tapped spot: a drop-off, more of the same, a wall in a gap, a house (Albert, Build 41)"
+  ],
+  "dialBtns": [
+   "bring",
+   "an army's two dials, temper and shape (v100 commands Stance and Formation)"
+  ],
+  "musterGap": [
+   "bring",
+   "what a squad still lacks, by kind to train (v100 command Squad)"
+  ]
+ },
+ "misfits": [
+  [
+   "shot",
+   "A missile flies on a hand-made arc (Mid's own curve). You cut the hand-drawn arrow arc for v100; the law QAJ (flight with air drag) is meant to replace it. Should arrows be drawn on QAJ's path when they come over?"
+  ],
+  [
+   "pushApart, collide, heft, CHS, CHNEXT, atRest",
+   "Mid keeps units from standing on each other with a hand-tuned push (personal space, and who gives way by a set weight of 9, 3 or 1). You said v100's body physics replace hand-tuned shoves. Does this crowd push come over as it is, or should the Mass book (who is heavier gives way) decide who moves?"
+  ],
+  [
+   "priestTick",
+   "A priest sent to a shrine stands at the foot of the Throne, which sits on the island in the great lake in the middle. You said the middle stays clear until you describe the reimagined Throne. Does the shrine wait for that?"
+  ]
+ ]
+}

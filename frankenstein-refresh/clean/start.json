@@ -1,0 +1,46 @@
+{
+ "about": "Step 6, temp book staging/start.js (Mid's 41-boot): every piece. in v100: already home. bring: comes with its feature, as book entries and laws. cut: v100 does it another way.",
+ "pieces": {
+  "last": [
+   "in v100",
+   "index.html loop's last"
+  ],
+  "CATCHUP": [
+   "cut",
+   "Mid ran fixed steps and caught up to six behind; v100's loop runs one step a frame at D98 fps with the step capped at 0.1 s"
+  ],
+  "seenErr": [
+   "bring",
+   "the safety net: each kind of error logged once (with fault)"
+  ],
+  "fault": [
+   "bring",
+   "the safety net: an error costs a frame, never the game; a second kind pauses and offers a restart (needs Saving for the last good save)"
+  ],
+  "shed": [
+   "bring",
+   "the load governor: a slow phone sheds a level of drawing detail and climbs back when fast; v100 has the sprite and woods caches but no governor"
+  ],
+  "frame": [
+   "in v100",
+   "index.html loop (climate, step, tick, draw); Mid's pause, game speeds, autosave and the 15-a-second idle wait come with Menus and Saving"
+  ],
+  "spdPop": [
+   "bring",
+   "the game speeds dropping under the pause button; v100 has only Fast (D116) on the Layers page"
+  ],
+  "TEST_FIELD": [
+   "bring",
+   "the ?test address that opens the test field"
+  ],
+  "testField": [
+   "bring",
+   "Albert's test field (Nov 3): you and one rival at war, no fog, both armies out, never saved"
+  ],
+  "clip": [
+   "bring",
+   "copy to the clipboard, for the History page's copy (Menus); the test hook window.__fk at its end is v100's window.fk (index.html)"
+  ]
+ },
+ "misfits": []
+}

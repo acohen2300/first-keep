@@ -1,0 +1,186 @@
+{
+ "about": "Step 6, temp book staging/paths.js (Mid's 09-nav, the walking grid): every piece. in v100: already home. bring: comes with its feature, as book entries and laws. cut: v100 does it another way (most are speed aids or a second copy of what index.html's tiles and A* already do).",
+ "pieces": {
+  "NC": [
+   "in v100",
+   "the squares a side: index.html N (D2 board over D12 tile)"
+  ],
+  "POCKET": [
+   "cut",
+   "Mid's joined-region size for a closed-in pocket; v100's findPath gives up at its search budget instead of keeping regions"
+  ],
+  "NAV": [
+   "in v100",
+   "the grid's store: index.html OCC (what stands on a tile), H and DEP (water); Mid's per-side gates come with gates as doors, its path budget is cut"
+  ],
+  "gcell": [
+   "in v100",
+   "index.html tileAt"
+  ],
+  "toCell": [
+   "in v100",
+   "index.html tileAt"
+  ],
+  "COORD": [
+   "bring",
+   "the map's lettered squares (A1 to V22), for messages that say where (Words, Menus)"
+  ],
+  "coord": [
+   "bring",
+   "with COORD"
+  ],
+  "snapPos": [
+   "in v100",
+   "a building's tiles from a point: the ghost's i, j in menu.js and spot in ai.js"
+  ],
+  "navRebuild": [
+   "cut",
+   "v100 keeps OCC up to date at each build, unbuild and take: no grid to rebuild"
+  ],
+  "blockedCell": [
+   "bring",
+   "a gate is shut only to those at war with its owner; v100's walkable (index.html) does the rest, gates are a closed tile today"
+  ],
+  "COMPS": [
+   "cut",
+   "joined regions, a speed aid; v100's findPath gives up at its budget"
+  ],
+  "flood": [
+   "cut",
+   "joined regions, a speed aid; v100's findPath gives up at its budget"
+  ],
+  "compOf": [
+   "cut",
+   "joined regions, a speed aid; v100's findPath gives up at its budget"
+  ],
+  "lineClear": [
+   "cut",
+   "a straight walk when nothing is in the way; v100 walks tile to tile by A* (QBL)"
+  ],
+  "freeNear": [
+   "cut",
+   "the nearest free square in rings; v100 asks findPath with a goal (goBeside, goBy) and ai.js spot"
+  ],
+  "DANGER": [
+   "bring",
+   "the danger map: where workers will not go (foes, towers, fire, a fright), in three levels; villagers' safety"
+  ],
+  "DISC": [
+   "bring",
+   "part of the danger map (a disc's rows, worked out once)"
+  ],
+  "discRows": [
+   "bring",
+   "part of the danger map"
+  ],
+  "stampDanger": [
+   "bring",
+   "part of the danger map"
+  ],
+  "dangerMap": [
+   "bring",
+   "the danger map, redrawn every second for each side"
+  ],
+  "dangerWhy": [
+   "bring",
+   "why a villager left a find, in words (with the danger map)"
+  ],
+  "AS": [
+   "cut",
+   "A*'s working arrays; v100's findPath has its own"
+  ],
+  "DX8": [
+   "cut",
+   "A*'s eight ways; v100's findPath has its own"
+  ],
+  "wayLen": [
+   "bring",
+   "the real walking length round water and walls, for the forager's rate (QV) and arrival times; v100 uses the straight line"
+  ],
+  "astar": [
+   "in v100",
+   "index.html findPath (QBL); Mid also returned the way to the nearest point when the goal can't be reached"
+  ],
+  "halfOf": [
+   "in v100",
+   "combat.js edgeDist (a building's footprint)"
+  ],
+  "rectGap": [
+   "in v100",
+   "combat.js edgeDist"
+  ],
+  "edge": [
+   "in v100",
+   "combat.js edgeDist"
+  ],
+  "reachOf": [
+   "in v100",
+   "combat.js toward (within reach, D147)"
+  ],
+  "closeIn": [
+   "in v100",
+   "combat.js toward"
+  ],
+  "findBlocker": [
+   "bring",
+   "a soldier stopped by an enemy wall or building attacks it (War)"
+  ],
+  "standOff": [
+   "in v100",
+   "index.html goBy and goBeside: a tile along the edge on the walker's side"
+  ],
+  "route": [
+   "in v100",
+   "index.html walkTo and step; Mid's shared path for a big army and per-tick path budget are speed aids v100 doesn't need yet"
+  ],
+  "paceOf": [
+   "bring",
+   "what slows a walker: a load (0.9), sickness (0.8), the season and weather, its shape, an event, quicksand, a charge or tiredness; v100 has the speed D86 times the ground (QN mud and snow)"
+  ],
+  "stepTo": [
+   "in v100",
+   "index.html step: metres walked turn the stride (QBU)"
+  ],
+  "moveTo": [
+   "in v100",
+   "index.html step and walkTo; Mid's slip on ice (QR) and ruts (KI15, held) are not in v100"
+  ],
+  "canPlace": [
+   "bring",
+   "two clear squares round every building and from every find, a lane round buildings that train, trade posts only on a trade stop; v100's econ.js canPlace has the flat free tiles at one height"
+  ],
+  "GUIDE_R": [
+   "bring",
+   "how far a building's alignment lines reach (with snapGhost)"
+  ],
+  "snapGhost": [
+   "bring",
+   "the ghost snaps in line with your buildings, touching or one lane apart; v100's ghost follows the finger"
+  ],
+  "findSpot": [
+   "in v100",
+   "ai.js spot: rings out from a centre"
+  ],
+  "wallLine": [
+   "bring",
+   "a wall dragged as a straight line of pieces (BW1 laid as lines); v100 places one piece a tap"
+  ],
+  "SEAL": [
+   "bring",
+   "is your keep walled in: the walk outward and the gap shown (Walls)"
+  ],
+  "sealSeen": [
+   "bring",
+   "part of the walled-in check"
+  ],
+  "sealGen": [
+   "bring",
+   "part of the walled-in check"
+  ],
+  "sealPath": [
+   "bring",
+   "is your keep walled in, and the shortest way in shown while placing walls"
+  ]
+ },
+ "misfits": []
+}

@@ -1,0 +1,537 @@
+{
+ "about": "Step 6, temp book staging/events.js (Mid's 37-events, 38-camps, 38-natives, 39-games): every piece, and what becomes of it. in v100: already home. bring: Mid has it, v100 does not; it comes in as book entries and laws with its feature (an events module, its numbers in the books). cut: v100 does it another way (most of Mid's climate: v100's floor 6). By the 10:31 rule, what comes over keeps Mid's values. The big table EV carries a line per row.",
+ "pieces": {
+  "EVM": [
+   "bring",
+   "the multipliers the running event puts on damage, speed, sight and gathering; part of the event scheduler"
+  ],
+  "KNOBS": [
+   "bring",
+   "which multipliers an event sets: heat (damage, speed); its eclipse entry is for a cut feature, see misfits"
+  ],
+  "evmSet": [
+   "bring",
+   "sets the multipliers from the event now running"
+  ],
+  "hz": [
+   "bring",
+   "whether a hazard is switched on (Easy keeps none); part of the hazards setting (v100 Later: Easy and Hard)"
+  ],
+  "levelOf": [
+   "bring",
+   "the level played: the points of the hazards switched on"
+  ],
+  "levelMul": [
+   "bring",
+   "the score's multiplier for the level played (QBR's total times it)"
+  ],
+  "evOn": [
+   "bring",
+   "whether an event of a kind is running"
+  ],
+  "edgeSpot": [
+   "bring",
+   "a spot on one of the land's edges, where an event comes in; to roll by v100's dice (QBF)"
+  ],
+  "across": [
+   "bring",
+   "the far side of the land from a spot, through the middle"
+  ],
+  "wildSpot": [
+   "bring",
+   "a free spot of land in the wild for an event"
+  ],
+  "canEv": [
+   "bring",
+   "whether an event may come now (season, need, the fantasy switch)"
+  ],
+  "pickEvent": [
+   "bring",
+   "picks the next event, not the same twice running"
+  ],
+  "crossing": [
+   "bring",
+   "an event that crosses the map edge to edge in its time"
+  ],
+  "herdAt": [
+   "bring",
+   "lays a herd of a kind at a spot (the stampede's bison)"
+  ],
+  "EV": [
+   "bring",
+   "the table of events, one row a kind (rows below); the scheduler is new in v100 (an events module, its numbers in the books)",
+   {
+    "eclipse": [
+     "cut",
+     "the eclipse: a feature Albert cut (Nov 4); nothing comes over, see misfits"
+    ],
+    "storm": [
+     "cut",
+     "v100's climate floor rolls storms (QH, D103) and lightning (KW6, QL); Mid's band of cloud walking east and its fires on wooden buildings, see misfits"
+    ],
+    "stampede": [
+     "bring",
+     "a herd of bison runs across the map and tramples what it meets; their look is held as a skin in preview 49, the hooves sound waits in the Sound book"
+    ],
+    "flood": [
+     "cut",
+     "the flood: held for later (KI4); nothing comes over now, see misfits"
+    ],
+    "meteor": [
+     "cut",
+     "the falling star: held for later with the sky (KS3); nothing comes over now, see misfits"
+    ],
+    "wildfire": [
+     "bring",
+     "a fire starts in far woods in summer or autumn and spreads tree to tree, damped by wetness (QT, Rothermel)"
+    ],
+    "fog": [
+     "cut",
+     "v100's climate floor brings fog on a Poisson wait (KW7, QM, D110, D111); sight in fog (QK) is held"
+    ],
+    "sinkhole": [
+     "bring",
+     "the ground gives way under a spot and harms the building there; its cracks are drawn"
+    ],
+    "quicksand": [
+     "bring",
+     "a patch of ground that slows walkers to 0.3 for two minutes"
+    ],
+    "heatwave": [
+     "bring",
+     "heat in a summer drought: blows 0.85, speed 0.9; see misfits"
+    ],
+    "mirage": [
+     "cut",
+     "the mirage: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+    ],
+    "circus": [
+     "cut",
+     "the circus: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+    ],
+    "wagon": [
+     "bring",
+     "a wagon train crosses the map with a gift"
+    ],
+    "mercs": [
+     "bring",
+     "mercenaries for hire appear at an edge as a find for a time"
+    ],
+    "dragon": [
+     "cut",
+     "the dragon: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+    ],
+    "troll": [
+     "cut",
+     "the troll: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+    ],
+    "aurora": [
+     "cut",
+     "the aurora: held for later with the sky (KS2) and marked fantasy; nothing comes over now, see misfits"
+    ]
+   }
+  ],
+  "crackAt": [
+   "bring",
+   "the sinkhole's cracks on the ground, seeded from the place and the tick"
+  ],
+  "startEvent": [
+   "bring",
+   "starts an event and says so"
+  ],
+  "endEvent": [
+   "bring",
+   "ends the event running"
+  ],
+  "eventsTick": [
+   "bring",
+   "the scheduler, once a second: runs the event, waits, warns, starts the next"
+  ],
+  "hordeTick": [
+   "bring",
+   "the horde (MH2): announced two seasons ahead, comes for the weakest side, grows with the age"
+  ],
+  "blankClim": [
+   "cut",
+   "the climate's starting state; v100's K on the climate floor"
+  ],
+  "airTemp": [
+   "cut",
+   "the air's temperature from the year's and the day's swing; v100's climate() does it from the season's mean (D100) and the day's swing (D101) by the light"
+  ],
+  "wxWhy": [
+   "bring",
+   "why the sky turned, in the chain's own odds, shown under the news line"
+  ],
+  "precip": [
+   "cut",
+   "whether the sky is falling rain or snow; v100's climate() knows what falls"
+  ],
+  "skyTurn": [
+   "bring",
+   "the next sky from the chain (v100's climate() already rolls QH each game hour, D102); to bring: the sky rolled ahead for the Weather signs research, and the news line when it turns"
+  ],
+  "climateTick": [
+   "cut",
+   "the climate's tick; v100's climate(dt) on floor 6"
+  ],
+  "groundTick": [
+   "cut",
+   "wetness (QP), snow and its degree-day melt (QO), ice (QQ), mud; v100's climate() does each by the same laws (D104, D105, D107, D108, D109)"
+  ],
+  "ruts": [
+   "cut",
+   "the ruts' counts a square; held for later (KI15), nothing comes over now, see misfits"
+  ],
+  "rutsAt": [
+   "cut",
+   "the ruts at a place; held for later (KI15), nothing comes over now, see misfits"
+  ],
+  "rutsOn": [
+   "cut",
+   "a step deepens the ruts; held for later (KI15), nothing comes over now, see misfits"
+  ],
+  "rutHeal": [
+   "cut",
+   "the ruts dry back with time; held for later (KI15), nothing comes over now, see misfits"
+  ],
+  "rutOf": [
+   "cut",
+   "rut depth as passes^0.4 (QS); held for later (KI15), nothing comes over now, see misfits"
+  ],
+  "mudAt": [
+   "cut",
+   "the mud at a place: v100's footing (QN, D106) reads the wet and the marsh; Mid's extra by the shore (pooling, KI3) and the ruts (KI15) are held, see misfits"
+  ],
+  "groundNeed": [
+   "bring",
+   "the grip a step needs, by foot, horse or engine (Hanson 1999); part of slipping on ice (QR), see misfits"
+  ],
+  "studded": [
+   "bring",
+   "whether iron bites the ice (Horseshoes, Crampons research)"
+  ],
+  "iceMu": [
+   "bring",
+   "the ice's friction now, slickest just under freezing; studs give theirs; see misfits"
+  ],
+  "strideShare": [
+   "bring",
+   "the stride lost on ice by the grip a step lacks"
+  ],
+  "groundSpd": [
+   "bring",
+   "what the ground takes off a march; v100's footing (QN, D106) already slows by mud and snow; to bring: the ice's lost stride, the wagon's wheels in mud, research on mud and snow"
+  ],
+  "muOf": [
+   "bring",
+   "the friction the ground offers at a place, a blend of ice, snow, mud, dry; v100's Ground book holds friction (G) for QBT's slide"
+  ],
+  "slipChance": [
+   "bring",
+   "the chance of a slip on ice (QR, logistic); see misfits"
+  ],
+  "rothermel": [
+   "bring",
+   "Rothermel's damping of fire by wetness (QT, already a v100 law); comes with fire"
+  ],
+  "fireMul": [
+   "bring",
+   "fire's spread by the ground's wetness now; comes with fire (wildfire, fire arrows)"
+  ],
+  "wearMul": [
+   "bring",
+   "blades go brittle in frost and rust in rain unless researched (Tempering, Oiling)"
+  ],
+  "newsTick": [
+   "bring",
+   "the age's news lines every so often"
+  ],
+  "herdTick": [
+   "bring",
+   "a crossing herd: bison trample, performers pass, a dragon flies; the performers and the dragon are cut fantasy, see misfits"
+  ],
+  "starveTick": [
+   "bring",
+   "hunger and famine: with no food in reach the work weakens, under the Famine hazard people leave; v100's upkeep (QBP) only stops the store at nothing (hungry sides parked)"
+  ],
+  "foodInReach": [
+   "bring",
+   "whether a side still has food it can walk to"
+  ],
+  "CAMP_TENTS": [
+   "bring",
+   "the four camp tents (BTC5 Medical, BTC6 Training, BTC7 Mess, BI5 Depot); part of the war camps (BTC3, BTC4)"
+  ],
+  "campLayout": [
+   "bring",
+   "a camp's pieces: the Outpost a strip, the Camp a square with palisade, gate, towers, tents (Hyginus)"
+  ],
+  "campFacing": [
+   "bring",
+   "a camp faces home (its gate side)"
+  ],
+  "campCells": [
+   "bring",
+   "the ground a camp takes"
+  ],
+  "campWhy": [
+   "bring",
+   "why a camp cannot stand at a spot"
+  ],
+  "campUnpack": [
+   "bring",
+   "the Camp wagon (UT2) unpacks: trees under it burn, felled trees laid as abatis (BF5), the pieces become sites"
+  ],
+  "wagonTick": [
+   "bring",
+   "the Camp wagon drives to its spot and unpacks"
+  ],
+  "campCap": [
+   "bring",
+   "how many camps a side may have out (one, two from the next age; the Camp wagons research and a Store)"
+  ],
+  "campsOut": [
+   "bring",
+   "the camps a side has out, wagons on the road counted"
+  ],
+  "campWhyTrain": [
+   "bring",
+   "why a Camp wagon cannot be trained"
+  ],
+  "canRaise": [
+   "bring",
+   "a foot soldier idle near its camp's unraised piece lends a hand"
+  ],
+  "campRaise": [
+   "bring",
+   "soldiers raise and mend their camp at a villager's rate"
+  ],
+  "campSendHome": [
+   "bring",
+   "the badly hurt and sick by a medical tent walk home to the Hospital"
+  ],
+  "depotsOf": [
+   "bring",
+   "a side's depots (BI5)"
+  ],
+  "depotNear": [
+   "bring",
+   "the depot a unit eats from"
+  ],
+  "campEat": [
+   "bring",
+   "soldiers in a depot's reach eat from it; unsupplied they slow and do not mend"
+  ],
+  "supplyRun": [
+   "bring",
+   "a Market caravan runs food to a depot under half, for a carter's fee in gold"
+  ],
+  "campWearTick": [
+   "bring",
+   "rain, snow and frost wear a camp's pieces each minute"
+  ],
+  "throneB": [
+   "bring",
+   "the Throne (BS1); see misfits"
+  ],
+  "homeOf": [
+   "bring",
+   "where a side or group is found: the Natives at the Throne, a gang at its camp, a side at its Town Center"
+  ],
+  "natState": [
+   "bring",
+   "the Natives' own state: the handover, the raids, the garrison's regrowth"
+  ],
+  "gangState": [
+   "bring",
+   "each group's regard for each side, its stance, its gifts; part of diplomacy (Later, kept)"
+  ],
+  "regardOf": [
+   "bring",
+   "a group's regard for a side (0 to 100)"
+  ],
+  "addRegard": [
+   "bring",
+   "regard rises or falls, and the stance follows"
+  ],
+  "gangSet": [
+   "bring",
+   "a side's stance with a group is set; the Natives' gates open to a friend"
+  ],
+  "gangSync": [
+   "bring",
+   "peace and war follow regard; an alliance needs an emissary"
+  ],
+  "giftsRecent": [
+   "bring",
+   "gifts given lately (the Danegeld window)"
+  ],
+  "giftGain": [
+   "bring",
+   "each gift buys less regard than the last (Danegeld)"
+  ],
+  "giftWhy": [
+   "bring",
+   "why a gift cannot be given"
+  ],
+  "giveGift": [
+   "bring",
+   "a gift of gold for regard"
+  ],
+  "judgeGang": [
+   "bring",
+   "a group answers an emissary (the Natives' answer copied for every misfit group; their own rules are parked)"
+  ],
+  "gunAge": [
+   "bring",
+   "whether any side has reached the Gunpowder age (the Natives' garrison thins)"
+  ],
+  "garrisonMax": [
+   "bring",
+   "the Throne's garrison size by the ages; see misfits"
+  ],
+  "natSpawn": [
+   "bring",
+   "a Native warrior or bowman comes out at the Throne; see misfits"
+  ],
+  "throneHold": [
+   "bring",
+   "how long the Throne must be held, by the match's length; see misfits"
+  ],
+  "takeThrone": [
+   "bring",
+   "the Throne changes hands, walls and towers with it; see misfits"
+  ],
+  "trapAt": [
+   "bring",
+   "lays a hidden trap (BF1 Pit, BF2 Net, BF3 Stakes, BF4 Caltrops)"
+  ],
+  "layTraps": [
+   "bring",
+   "the Natives keep traps on each causeway to the Throne; see misfits"
+  ],
+  "trapsTick": [
+   "bring",
+   "traps spring on foes, scouts find them, allies walk free, caltrops wear flat"
+  ],
+  "natRaid": [
+   "bring",
+   "outlaw raids (MH3 Robbers): a band at the side they regard least, the mark drawn by load and guard (QAR, square law)"
+  ],
+  "nativesTick": [
+   "bring",
+   "the Natives' beat: traps, raids, regard's memory, the Throne's handover and score"
+  ],
+  "PEACE": [
+   "bring",
+   "the peace path's numbers: truce price, standing down, the Games, the hidden age after a year of peace, the crowns"
+  ],
+  "CARE": [
+   "bring",
+   "what counts as care for the Wellbeing crown (Hospital, Temple, Baths, Theatre, Tavern)"
+  ],
+  "bestOf": [
+   "bring",
+   "the best a side has of a measure over its soldier kinds (for the Games)"
+  ],
+  "livingSides": [
+   "cut",
+   "the living sides; v100 reads D.players and the Seat (econ.js)"
+  ],
+  "truceAll": [
+   "bring",
+   "a board truce: no two living sides at war"
+  ],
+  "truceFor": [
+   "bring",
+   "seconds the whole board has kept the peace"
+  ],
+  "ageOpen": [
+   "bring",
+   "the hidden age (Enlightenment) opens once, for every side"
+  ],
+  "nextAge": [
+   "bring",
+   "a side's next age, if open; v100 econ.js ageCost and ageUp walk the ages but know no hidden one"
+  ],
+  "chron": [
+   "bring",
+   "the chronicle: the match's lines, kept to a count"
+  ],
+  "peaceTick": [
+   "bring",
+   "once a second: the truce clock, the hidden age, standing down, the Games"
+  ],
+  "standDown": [
+   "bring",
+   "at peace, soldiers above the keep share go home as villagers"
+  ],
+  "holdGames": [
+   "bring",
+   "the Games under a board truce, won on the square of each side's best; held on the Throne island, see misfits"
+  ],
+  "crownsOf": [
+   "bring",
+   "the three crowns: Wealth, War, Wellbeing, and the overall"
+  ],
+  "CROWN_NAME": [
+   "bring",
+   "the crowns' names (to the Words book)"
+  ],
+  "crownsHTML": [
+   "bring",
+   "the crowns card and the chronicle, paged"
+  ],
+  "enlightenTick": [
+   "bring",
+   "the last research of the hidden age ends the match for everyone"
+  ],
+  "chaseCrown": [
+   "bring",
+   "a computer's personality chases its crown (beyond balanced: Later, kept)"
+  ]
+ },
+ "misfits": [
+  [
+   "EV.eclipse, KNOBS",
+   "The eclipse event is still in Mid's table. You cut the eclipse. It stays behind, right?"
+  ],
+  [
+   "EV.mirage, EV.circus, EV.dragon, EV.troll, herdTick",
+   "These are the fantasy events you cut from v100 (dragon, troll, mirage, circus). They stay behind, right?"
+  ],
+  [
+   "EV.aurora",
+   "Mid has a northern lights event at night (marked fantasy). In v100 the aurora is part of the sky, held until there is a horizon to show it. Leave it out?"
+  ],
+  [
+   "EV.storm",
+   "Mid's storm is a band of cloud walking across the map, and lightning in it sets wooden buildings on fire. v100 already has storms and lightning from the weather, and fire from a strike is held for later. Drop Mid's storm band and keep the fires waiting?"
+  ],
+  [
+   "EV.flood",
+   "Mid's flood raises the lake and damages buildings near it. Flooding is held for later in v100. Hold this with it?"
+  ],
+  [
+   "EV.meteor",
+   "Mid's falling star lands a find (stone) in the wild. Meteors are held for later with the sky. Hold this too, or bring it as a ground event only?"
+  ],
+  [
+   "EV.heatwave",
+   "The heat wave slows everyone to 0.9 of their speed. Walking is fixed at 3.4 mph. Should heat slow people at all?"
+  ],
+  [
+   "ruts, rutsAt, rutsOn, rutHeal, rutOf, mudAt",
+   "Mid has ruts that deepen where feet go and make the mud worse, and mud deeper by the shore. Ruts and pooling are held for later in v100. Hold them?"
+  ],
+  [
+   "iceMu, muOf, slipChance, groundNeed, strideShare, studded",
+   "In Mid, wet ground freezes and walkers slip and lose stride on it. In v100 only lakes freeze (they can be walked on), and frost is held for later. Should ice on the ground come over now?"
+  ],
+  [
+   "throneB, garrisonMax, natSpawn, throneHold, takeThrone, layTraps, holdGames",
+   "Mid's Throne stands on an island in the great lake in the middle, with Native guards, traps on the causeways, and the Games held there. You said the middle stays clear until you describe the reimagined Throne. Do these wait for that?"
+  ]
+ ]
+}

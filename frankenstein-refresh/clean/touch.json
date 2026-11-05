@@ -1,0 +1,139 @@
+{
+ "about": "Step 6, temp book staging/touch.js (Mid's 26-input.js): every piece, and what becomes of it. in v100: already home. bring: Mid has it, v100 does not; it comes in as book entries and laws with its feature (v100's touch floor in index.html has one-finger pan, pinch, wheel zoom and a tap; menu.js the ghost and the tap's answer). cut: v100 does it another way. By the 10:31 rule, what comes over keeps Mid's values.",
+ "pieces": {
+  "ptrs": [
+   "in v100",
+   "index.html touch floor: ptrs, the fingers down"
+  ],
+  "drag": [
+   "bring",
+   "one-finger pan and the two-finger pinch are in v100 (index.html touch floor, zoomAt); bring the drag's other modes: place, wall corner, wall slide, box, choke, crosshair"
+  ],
+  "HOLD_MS": [
+   "bring",
+   "the hold 320 ms, its ring after 250 ms, the double tap 320 ms: part of the finger's rule (hold to pick more or box, double tap for the card)"
+  ],
+  "holdT": [
+   "bring",
+   "the hold's timer: on one of yours, pick it and keep picking; on open ground, a box; on the crosshair, drag it"
+  ],
+  "holdStop": [
+   "bring",
+   "ends the hold; with the hold"
+  ],
+  "lp": [
+   "cut",
+   "the finger's point in the canvas; v100's canvas is the whole screen and reads clientX/Y"
+  ],
+  "EDGE": [
+   "bring",
+   "where the finger is while it drags the ghost; with edge scroll"
+  ],
+  "edgeScroll": [
+   "bring",
+   "the map scrolls when the ghost is dragged within 48 px of the screen's edge (320 px a second); part of placing a building"
+  ],
+  "LIFT": [
+   "bring",
+   "the ghost waits 64 px above the finger on a phone so it is not hidden; v100 puts the ghost's middle under the finger (menu.js ghostTo)"
+  ],
+  "wallSnap": [
+   "bring",
+   "a wall's next corner snaps flat or upright when nearly so; part of laying walls as lines (BW1, BW2, BW4)"
+  ],
+  "wallSet": [
+   "bring",
+   "a wall's squares from its corners; walls as lines"
+  ],
+  "wallXY": [
+   "bring",
+   "a wall corner's place on screen; walls as lines"
+  ],
+  "wallHit": [
+   "bring",
+   "a finger on a wall's corner or its line (24 px); walls as lines"
+  ],
+  "ghostAt": [
+   "bring",
+   "the ghost to the finger, snapped beside something of yours; v100 has menu.js ghostTo (tile under the finger), bring the lift and the snap"
+  ],
+  "wallDrag": [
+   "bring",
+   "drag a wall corner, or slide the whole wall; walls as lines"
+  ],
+  "foeFirst": [
+   "bring",
+   "the toast when you order an attack on a side you are not at war with; with diplomacy (Later)"
+  ],
+  "dropDrag": [
+   "bring",
+   "letting go of a drag in one place (box, crosshair glow, edge); with the hold and the crosshair"
+  ],
+  "miniAt": [
+   "cut",
+   "the small map's finger (tap to jump, drag to sweep); Albert's held list: see misfits"
+  ],
+  "hitAt": [
+   "bring",
+   "what is under the finger: a unit first, a building by its foot or its drawn roof, a find, a resource, else the ground, never under fog; v100 has menu.js under() and the 16 px unit pick, bring the roof and the find order"
+  ],
+  "cardFor": [
+   "cut",
+   "a hit to a card's type; v100's card is the subject itself, its rows picked by ticks (SN4)"
+  ],
+  "lastTap": [
+   "bring",
+   "the last tap, for the double tap"
+  ],
+  "tapAt": [
+   "bring",
+   "Albert's one rule for the finger (Build 40, Nov 2): a tap picks a unit, a second opens its card, a building or find opens on one tap, with units picked a tap is the order, empty ground raises the sword and x, a cut-out plot replants; v100 has menu.js FK.on('tap') (pick and send), this replaces it"
+  ],
+  "ordAt": [
+   "bring",
+   "tap a marching group's ring to pick the group (26 px)"
+  ],
+  "picked": [
+   "bring",
+   "the units the finger holds (many); v100 holds one (FK.sel)"
+  ],
+  "pickObj": [
+   "bring",
+   "a pick's thing; with many picked"
+  ],
+  "setPick": [
+   "bring",
+   "set what is picked; with many picked"
+  ],
+  "pickToggle": [
+   "bring",
+   "tap adds or drops a unit while picking more; with many picked"
+  ],
+  "pickSound": [
+   "in v100",
+   "each shell's voice in books/shells.js (pickHoof, pickTwang, pickMetal, pickWood: Sound book HU14 and its neighbours)"
+  ],
+  "order": [
+   "bring",
+   "the obvious order by tap for what is picked: attack, hunt, convert, gather, build, mend, work, walk, each villager to its own spot, the wagon's spot checked, the order's meal cost, the gold ripple; v100 has menu.js tap (gather, raise, fight, march), bring the rest"
+  ],
+  "startPlace": [
+   "bring",
+   "pick a building to place: a later age opens its info, a full count says why, the ghost starts mid-screen snapped beside yours; v100 has menu.js VERBS.pick"
+  ],
+  "cancelPlace": [
+   "in v100",
+   "menu.js VERBS.close (S.ghost = null), and a second tap on the picked building"
+  ],
+  "boxPick": [
+   "bring",
+   "hold and drag a box: your people in it are picked; a box of trees and nobody opens the road-cutting card"
+  ]
+ },
+ "misfits": [
+  [
+   "miniAt",
+   "Mid has a small map you tap to jump the camera and drag to sweep it (also the radar dot a tap on the map follows, in tapAt). v100 holds the small map for later (DICTIONARY: View and Screen, Held; the War page's middle shows Map as Later). Bring Mid's small map now, or keep it held?"
+  ]
+ ]
+}

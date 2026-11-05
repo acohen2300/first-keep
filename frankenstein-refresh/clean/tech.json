@@ -1,0 +1,1073 @@
+{
+ "about": "Step 6, temp book staging/tech.js (Mid's 04-rules-tech: ages, research, civilisations): every piece, and what becomes of it. in v100: already home. bring: Mid has it, v100 does not; it comes in as book entries (the new Tech book) and one law that applies them. cut: v100 does it another way. By the 10:31 rule, what comes over keeps Mid's values (costs, times, effects); the ages are Mid's (Stone, Bronze, Classical, Medieval, Gunpowder, hidden Enlightenment). The big table TECH carries a line per research step.",
+ "pieces": {
+  "MEASURED": [
+   "bring",
+   "the measured effects research uses (water and sewers on sickness, Alsan & Goldin 2019; quarantine, Bootsma & Ferguson 2007; a forecast's worth, Rosenzweig & Udry 2013): to the Measurements book with their citations (N), for QAQ"
+  ],
+  "TECH": [
+   "bring",
+   "the research tree from history, 255 steps by building, line and age, each with cost, time and its effects as data (fx: a stat, what it narrows to, multiply, add or the lowest); comes as the new Tech book, applied by one law. Its kinds and tags (tree, #mounted) become v100 shell codes and ticks. Rows below",
+   {
+    "hafting": [
+     "bring",
+     "Hafted axes (lumber, Stone): Wood comes in 10% faster."
+    ],
+    "axes": [
+     "bring",
+     "Bronze axes (lumber, Bronze): Wood comes in 15% faster."
+    ],
+    "ironaxe": [
+     "bring",
+     "Iron axes (lumber, Bronze): Wood comes in 15% faster."
+    ],
+    "sawpits": [
+     "bring",
+     "Saw pits (lumber, Classical): Wood comes in 10% faster."
+    ],
+    "twosaw": [
+     "bring",
+     "Crosscut saw (lumber, Medieval): Wood comes in 15% faster."
+    ],
+    "sawmill": [
+     "bring",
+     "Sawmill (lumber, Gunpowder): Tree farms give 30% more."
+    ],
+    "coppice": [
+     "bring",
+     "Coppicing (lumber, Stone): Tree farms give 25% more."
+    ],
+    "pollard": [
+     "bring",
+     "Pollarding (lumber, Bronze): Tree farms give 10% more."
+    ],
+    "forestry": [
+     "bring",
+     "Forest law (lumber, Medieval): Two more tree farms."
+    ],
+    "plantation": [
+     "bring",
+     "Plantations (lumber, Gunpowder): Tree farms give 20% more."
+    ],
+    "timber": [
+     "bring",
+     "Timber framing (lumber, Bronze): Houses hold one more."
+    ],
+    "charcoal": [
+     "bring",
+     "Charcoal burning (lumber, Bronze): Foundries make 15% more iron."
+    ],
+    "carts": [
+     "bring",
+     "Wagons (lumber, Medieval): Villagers carry 3 more."
+    ],
+    "logdrive": [
+     "bring",
+     "Log driving (lumber, Gunpowder): Tree farms give 15% more."
+    ],
+    "sickles": [
+     "bring",
+     "Sickles (mill, Stone): Fields yield 10% faster."
+    ],
+    "threshing": [
+     "bring",
+     "Threshing sledge (mill, Stone): Fields yield 10% faster."
+    ],
+    "plough": [
+     "bring",
+     "Plough (mill, Stone): Fields yield 20% faster."
+    ],
+    "noria": [
+     "bring",
+     "Water wheel (mill, Classical): Farms give 10% more."
+    ],
+    "horsecollar": [
+     "bring",
+     "Horse collar (mill, Medieval): Fields yield 15% faster."
+    ],
+    "heavyplough": [
+     "bring",
+     "Heavy plough (mill, Medieval): Farms give 15% more."
+    ],
+    "windmill": [
+     "bring",
+     "Windmill (mill, Medieval): Farms give 10% more."
+    ],
+    "seeddrill": [
+     "bring",
+     "Seed drill (mill, Gunpowder): Farms give 15% more."
+    ],
+    "seedstore": [
+     "bring",
+     "Seed selection (mill, Stone): Soil tires less."
+    ],
+    "irrigation": [
+     "bring",
+     "Irrigation (mill, Bronze): Soil tires less still."
+    ],
+    "manure": [
+     "bring",
+     "Manuring (mill, Bronze): Soil tires less."
+    ],
+    "rotation": [
+     "bring",
+     "Crop rotation (mill, Medieval): Farms give 20% more; three more farms."
+    ],
+    "enclosure": [
+     "bring",
+     "Enclosure (mill, Gunpowder): Three more farms."
+    ],
+    "potato": [
+     "bring",
+     "New World crops (mill, Gunpowder): Farms give 20% more."
+    ],
+    "ovens": [
+     "bring",
+     "Bread ovens (mill, Bronze): Farms give 10% more."
+    ],
+    "granary": [
+     "bring",
+     "Stone granary (mill, Bronze): Plague brings half as many cases."
+    ],
+    "wheelbarrow": [
+     "bring",
+     "Wheelbarrow (mill, Medieval): Villagers carry 5 more."
+    ],
+    "picks": [
+     "bring",
+     "Antler picks (mining, Stone): Stone and gold come in 20% faster."
+    ],
+    "firesetting": [
+     "bring",
+     "Fire-setting (mining, Bronze): Stone and gold come in 10% faster."
+    ],
+    "deep": [
+     "bring",
+     "Deep shafts (mining, Classical): Stone and gold come in 20% faster."
+    ],
+    "pumps": [
+     "bring",
+     "Mine pumps (mining, Medieval): Every ore comes in 15% faster."
+    ],
+    "rails": [
+     "bring",
+     "Mine wagons (mining, Gunpowder): Villagers carry 3 more."
+    ],
+    "blasting": [
+     "bring",
+     "Blasting (mining, Gunpowder): Stone and iron come in 25% faster."
+    ],
+    "brick": [
+     "bring",
+     "Fired brick (mining, Bronze): Houses hold 1 more, apartments 4."
+    ],
+    "masonry": [
+     "bring",
+     "Masonry (mining, Bronze): Buildings are 30% tougher. See misfits."
+    ],
+    "ventilation": [
+     "bring",
+     "Ventilation (mining, Gunpowder): Iron comes in 20% faster."
+    ],
+    "wedges": [
+     "bring",
+     "Iron wedges (quarry, Classical): Quarries give 20% more."
+    ],
+    "chisels": [
+     "bring",
+     "Steel chisels (quarry, Medieval): Quarries give 15% more."
+    ],
+    "stonesaw": [
+     "bring",
+     "Stone saws (quarry, Gunpowder): Quarries give 20% more."
+    ],
+    "rollers": [
+     "bring",
+     "Rollers and sledges (quarry, Classical): Villagers carry 2 more."
+    ],
+    "cranes": [
+     "bring",
+     "Treadwheel crane (quarry, Medieval): Quarries give 20% more."
+    ],
+    "fishtraps": [
+     "bring",
+     "Fish traps (dock, Stone): Fish come in 15% faster."
+    ],
+    "nets": [
+     "bring",
+     "Nets (dock, Stone): Fish come in 30% faster."
+    ],
+    "salting": [
+     "bring",
+     "Salting (dock, Classical): Fish come in 20% faster; food in store spoils half as fast."
+    ],
+    "deepboats": [
+     "bring",
+     "Decked boats (dock, Medieval): Fish come in 30% faster."
+    ],
+    "trawl": [
+     "bring",
+     "Trawl nets (dock, Gunpowder): Fish come in 20% faster."
+    ],
+    "dugouts": [
+     "bring",
+     "Dugout canoes (dock, Stone): Fish come in 10% faster."
+    ],
+    "sails": [
+     "bring",
+     "Sails (dock, Bronze): Fish come in 15% faster."
+    ],
+    "harbours": [
+     "bring",
+     "Harbour works (dock, Classical): Docks are 50% tougher. See misfits."
+    ],
+    "compass": [
+     "bring",
+     "Compass (dock, Medieval): Villagers, scouts and caravans see farther."
+    ],
+    "lighthouse": [
+     "bring",
+     "Lighthouse (dock, Gunpowder): Docks see farther."
+    ],
+    "tally": [
+     "bring",
+     "Tally sticks (keep, Stone): Research is 5% faster."
+    ],
+    "baskets": [
+     "bring",
+     "Baskets (keep, Stone): Villagers carry 3 more."
+    ],
+    "midwives": [
+     "bring",
+     "Midwives (keep, Bronze): The Town Center trains two villagers at once."
+    ],
+    "census": [
+     "bring",
+     "Census (keep, Classical): Villagers train 20% faster."
+    ],
+    "charter": [
+     "bring",
+     "Town charter (keep, Medieval): Houses hold one more."
+    ],
+    "hearth": [
+     "bring",
+     "Hearth and pot (house, Stone): Cooked food feeds better: your people eat 10% less."
+    ],
+    "icehouse": [
+     "bring",
+     "Ice house (house, Classical): Fish and game keep: 15% more of each reaches the table, and food in store spoils half as fast."
+    ],
+    "chimney": [
+     "bring",
+     "Chimney and fireplace (house, Medieval): Warm homes: winter sickness halves and winter work is 5% better."
+    ],
+    "calendar": [
+     "bring",
+     "Calendar (keep, Classical): Farms give 5% more; research 5% faster."
+    ],
+    "townwatch": [
+     "bring",
+     "Town watch (keep, Medieval): The Town Center shoots farther."
+    ],
+    "pride": [
+     "bring",
+     "Civic pride (keep, Medieval): Walls and towers steady nerve twice as much."
+    ],
+    "runners": [
+     "bring",
+     "Runners (keep, Bronze): News from your near lands, carried on foot."
+    ],
+    "royalroad": [
+     "bring",
+     "Royal Road (keep, Classical): News from all your lands, by relays of riders."
+    ],
+    "yam": [
+     "bring",
+     "Relay stations (keep, Medieval): News from your allies too."
+    ],
+    "postal": [
+     "bring",
+     "Post riders (keep, Gunpowder): News from the whole board; emissaries are heard more readily."
+    ],
+    "sheets": [
+     "bring",
+     "News sheets (keep, Gunpowder): A printed digest: every court that enters a new age is in it."
+    ],
+    "lanterns": [
+     "bring",
+     "Lanterns (keep, Medieval): Lanterns hung at every door: the town is lit, and its buildings keep 60% of their lost night sight."
+    ],
+    "shields": [
+     "bring",
+     "Shields (barracks, Bronze): Infantry take 8% less harm."
+    ],
+    "spearwall": [
+     "bring",
+     "Spear wall (barracks, Bronze): Spearmen are 10% tougher."
+    ],
+    "drill": [
+     "bring",
+     "Drill (barracks, Bronze): Soldiers are 15% tougher."
+    ],
+    "phalanx": [
+     "bring",
+     "Phalanx (barracks, Classical): Spearmen become Hoplites. Upgrades the spear in place (the Unit shell's Level)."
+    ],
+    "legion": [
+     "bring",
+     "Legion (barracks, Classical): Infantry 10% tougher, hit harder."
+    ],
+    "pikesquare": [
+     "bring",
+     "Pike square (barracks, Medieval): Spearmen become Pikemen: death to horse. Upgrades the spear in place (the Unit shell's Level)."
+    ],
+    "arms": [
+     "bring",
+     "Men-at-arms (barracks, Medieval): Swordsmen become Men-at-arms. Upgrades the sword in place (the Unit shell's Level)."
+    ],
+    "halberd": [
+     "bring",
+     "Halberd (barracks, Gunpowder): Spearmen become Halberdiers. Upgrades the spear in place (the Unit shell's Level)."
+    ],
+    "tercio": [
+     "bring",
+     "Tercio (barracks, Gunpowder): Infantry are 15% tougher."
+    ],
+    "bayonet": [
+     "bring",
+     "Bayonet (barracks, Gunpowder): Musketeers hit harder."
+    ],
+    "fieldcraft": [
+     "bring",
+     "Fieldcraft (barracks, Stone): Infantry see farther."
+    ],
+    "camps": [
+     "bring",
+     "Marching camps (barracks, Classical): Resting soldiers recover nerve 30% faster."
+    ],
+    "marching": [
+     "bring",
+     "Forced marches (barracks, Classical): Infantry march 8% faster. See misfits."
+    ],
+    "warmclothes": [
+     "bring",
+     "Wool cloaks (barracks, Medieval): Winter slows soldiers half as much."
+    ],
+    "waterproof": [
+     "bring",
+     "Oiled cloaks (barracks, Gunpowder): Blizzards slow soldiers half as much."
+    ],
+    "drillyard": [
+     "bring",
+     "Drill yard (barracks, Classical): Soldiers train 10% faster. Game: it gave room before Build 63; one population now."
+    ],
+    "veterans": [
+     "bring",
+     "Veterans (barracks, Classical): Soldiers can be taught up to a newer kind."
+    ],
+    "feudal": [
+     "bring",
+     "Feudal levy (barracks, Medieval): Infantry cost 10% less."
+    ],
+    "slings": [
+     "bring",
+     "Slings (range, Bronze): Javelineers hit harder."
+    ],
+    "composite": [
+     "bring",
+     "Composite bow (range, Bronze): Archers reach farther."
+    ],
+    "firearrows": [
+     "bring",
+     "Fire arrows (range, Medieval): Archers set wooden buildings alight."
+    ],
+    "bodkin": [
+     "bring",
+     "Bodkin points (range, Medieval): Archers hit harder."
+    ],
+    "xbowdrill": [
+     "bring",
+     "Crossbow drill (range, Medieval): Crossbowmen hit harder."
+    ],
+    "longbow": [
+     "bring",
+     "Longbow (range, Medieval): Archers become Longbowmen. Upgrades the archer in place (the Unit shell's Level)."
+    ],
+    "musket": [
+     "bring",
+     "Musket (range, Gunpowder): Arquebusiers become Musketeers. Upgrades the arquebus in place (the Unit shell's Level)."
+    ],
+    "volley": [
+     "bring",
+     "Volley fire (range, Gunpowder): Guns hit harder."
+    ],
+    "learning": [
+     "bring",
+     "Learning by doing (store, Classical): Every farm, tree farm, quarry, mint or foundry past the first adds 5% to all of its kind, up to four."
+    ],
+    "pinfactory": [
+     "bring",
+     "Division of labour (store, Gunpowder): Each hand one task: the mint strikes 20% more, the workshops make 10% more."
+    ],
+    "campwagons": [
+     "bring",
+     "Camp wagons (stable, Classical): The Stable packs a whole war camp on two wagons: palisade, gate, four towers, the four tents, a yard for 32."
+    ],
+    "fieldlog": [
+     "bring",
+     "Field logistics (stable, Classical): Soldiers raise a camp as fast as villagers, and a tent trains at a tenth over the price, not a quarter."
+    ],
+    "caltrops": [
+     "bring",
+     "Caltrops (smith, Classical): Iron caltrops may be sown from the Build menu: a strip of spikes against horse."
+    ],
+    "archerstakes": [
+     "bring",
+     "Archer stakes (range, Medieval): A shooter who has stood five seconds plants a stake: a horse that charges it is hurt and thrown back."
+    ],
+    "horses": [
+     "bring",
+     "Horse breeding (stable, Bronze): Mounted units are 12% faster; the scout rides. Upgrades the scout in place (the Unit shell's Level). See misfits."
+    ],
+    "bridles": [
+     "bring",
+     "Bits and bridles (stable, Bronze): Mounted units are 5% faster. See misfits."
+    ],
+    "saddles": [
+     "bring",
+     "Saddles (stable, Classical): Mounted units are 10% tougher."
+    ],
+    "stirrups": [
+     "bring",
+     "Stirrups (stable, Classical): Mounted units hit harder."
+    ],
+    "horseshoes": [
+     "bring",
+     "Horseshoes (stable, Medieval): Shod hooves bite the ice; horses bog down less."
+    ],
+    "remounts": [
+     "bring",
+     "Stud farms (stable, Gunpowder): Mounted units train 20% faster."
+    ],
+    "cavalry": [
+     "bring",
+     "Cavalry (stable, Classical): Chariots become Horsemen. Upgrades the chariot in place (the Unit shell's Level). See misfits."
+    ],
+    "knighthood": [
+     "bring",
+     "Knighthood (stable, Medieval): Cataphracts become Knights. Upgrades the cata in place (the Unit shell's Level). See misfits."
+    ],
+    "dragoons": [
+     "bring",
+     "Dragoons (stable, Gunpowder): Mounted units are 10% faster. See misfits."
+    ],
+    "bronze": [
+     "bring",
+     "Bronze (smith, Bronze): Soldiers and towers hit harder."
+    ],
+    "spearheads": [
+     "bring",
+     "Socketed heads (smith, Bronze): Spearmen hit harder."
+    ],
+    "iron": [
+     "bring",
+     "Iron working (smith, Bronze): Soldiers and towers hit harder still."
+    ],
+    "tempering": [
+     "bring",
+     "Tempering (smith, Medieval): Blades do not go brittle in frost."
+    ],
+    "casehard": [
+     "bring",
+     "Case hardening (smith, Gunpowder): Soldiers hit harder."
+    ],
+    "helmets": [
+     "bring",
+     "Helmets (smith, Bronze): Infantry take 10% less harm."
+    ],
+    "leather": [
+     "bring",
+     "Leather armour (smith, Bronze): Soldiers take 15% less harm."
+    ],
+    "scale": [
+     "bring",
+     "Scale armour (smith, Classical): Mounted units take 20% less harm."
+    ],
+    "chain": [
+     "bring",
+     "Chain mail (smith, Classical): Soldiers take 30% less harm."
+    ],
+    "plate": [
+     "bring",
+     "Plate armour (smith, Medieval): Soldiers take 40% less harm."
+    ],
+    "oiling": [
+     "bring",
+     "Oiled steel (smith, Gunpowder): Blades and armour do not rust in rain."
+    ],
+    "slits": [
+     "bring",
+     "Arrow slits (smith, Classical): Towers shoot farther."
+    ],
+    "fortify": [
+     "bring",
+     "Curtain walls (smith, Medieval): Walls 60% tougher, towers 40%. See misfits."
+    ],
+    "machic": [
+     "bring",
+     "Machicolations (smith, Medieval): Towers hit harder."
+    ],
+    "guncast": [
+     "bring",
+     "Gun founding (smith, Gunpowder): Guns hit harder."
+    ],
+    "starfort": [
+     "bring",
+     "Star fort (smith, Gunpowder): Walls 50% tougher, towers 30%. See misfits."
+    ],
+    "beacons": [
+     "bring",
+     "Beacons (tower, Classical): Every building that shoots sees 60 farther: towers, Town Centers, castles, trade posts."
+    ],
+    "greattower": [
+     "bring",
+     "Great towers (tower, Medieval): Every watchtower raised to a great tower: 40% tougher, +4 damage, +20 reach, +40 sight, 2 more inside. Upgrades every tower in place. See misfits."
+    ],
+    "guntower": [
+     "bring",
+     "Gun towers (tower, Gunpowder): Every great tower cut down and thickened for cannon: 40% tougher again, +10 damage, +30 reach, +20 sight, 3 more inside. Upgrades every tower in place. See misfits."
+    ],
+    "torsion": [
+     "bring",
+     "Torsion springs (siege, Classical): Catapults and ballistae reach farther."
+    ],
+    "engineers": [
+     "bring",
+     "Siege engineers (siege, Classical): Engines build 25% faster."
+    ],
+    "burningshot": [
+     "bring",
+     "Burning shot (siege, Medieval): Engines set buildings alight."
+    ],
+    "counterweight": [
+     "bring",
+     "Counterweight (siege, Medieval): Trebuchets hit harder."
+    ],
+    "corned": [
+     "bring",
+     "Corned powder (siege, Gunpowder): Bombards hit harder."
+    ],
+    "limbers": [
+     "bring",
+     "Gun carriages (siege, Gunpowder): Engines move 25% faster. See misfits."
+    ],
+    "petards": [
+     "bring",
+     "Petards (siege, Gunpowder): Bombards set what they hit alight."
+    ],
+    "drawbridge": [
+     "bring",
+     "Drawbridge (castle, Medieval): Castles are 20% tougher. See misfits."
+    ],
+    "standing": [
+     "bring",
+     "Standing army (castle, Medieval): Soldiers that drill between wars: nerve returns 30% faster, training 10% faster."
+    ],
+    "garrison": [
+     "bring",
+     "Garrison wards (castle, Gunpowder): Soldiers resting by a Castle, Barracks or Town Center heal twice as fast."
+    ],
+    "bastion": [
+     "bring",
+     "Bastions (castle, Gunpowder): Castles hit harder."
+    ],
+    "weathersigns": [
+     "bring",
+     "Weather signs (school, Classical): The next sky is told a minute ahead."
+    ],
+    "writing": [
+     "bring",
+     "Writing (school, Bronze): Research is 15% faster."
+    ],
+    "records": [
+     "bring",
+     "Record keeping (school, Bronze): One more order in every queue."
+    ],
+    "rhetoric": [
+     "bring",
+     "Rhetoric (school, Classical): Emissaries are heard more readily."
+    ],
+    "universities": [
+     "bring",
+     "Universities (school, Medieval): Research is 10% faster."
+    ],
+    "science": [
+     "bring",
+     "Natural philosophy (school, Gunpowder): Research is 15% faster."
+    ],
+    "maths": [
+     "bring",
+     "Geometry (school, Classical): Towers hit harder."
+    ],
+    "algebra": [
+     "bring",
+     "Algebra (school, Medieval): Engines reach farther."
+    ],
+    "ballistics": [
+     "bring",
+     "Ballistics (school, Gunpowder): Engines hit harder."
+    ],
+    "apprentices": [
+     "bring",
+     "Apprenticeship (school, Bronze): Everything trains 10% faster."
+    ],
+    "academy": [
+     "bring",
+     "Academy (school, Classical): Teaching soldiers takes 30% less time."
+    ],
+    "military_academy": [
+     "bring",
+     "War college (school, Gunpowder): Teaching soldiers takes 30% less time."
+    ],
+    "medicine": [
+     "bring",
+     "Medicine (library, Classical): Healing is 50% faster."
+    ],
+    "architecture": [
+     "bring",
+     "Architecture (library, Classical): Building is 20% faster."
+    ],
+    "medschool": [
+     "bring",
+     "Medical school (library, Medieval): Half as many die of plague; cures twice as fast."
+    ],
+    "guilds": [
+     "bring",
+     "Guilds (library, Medieval): Two more orders in every queue."
+    ],
+    "press": [
+     "bring",
+     "Printing press (library, Gunpowder): Research is 32% faster."
+    ],
+    "optics": [
+     "bring",
+     "Optics (library, Gunpowder): Everyone sees farther."
+    ],
+    "method": [
+     "bring",
+     "Scientific method (library, Enlightenment): Research is 25% faster."
+    ],
+    "fourcourse": [
+     "bring",
+     "Four-course rotation (library, Enlightenment): Fields give 25% more."
+    ],
+    "encyclopedia": [
+     "bring",
+     "Encyclopédie (library, Enlightenment): Research costs 15% less."
+    ],
+    "schooling": [
+     "bring",
+     "Public schooling (library, Enlightenment): Every gatherer works 10% faster."
+    ],
+    "freetrade": [
+     "bring",
+     "Free trade (library, Enlightenment): Trade pays 25% more."
+    ],
+    "vaccine": [
+     "bring",
+     "Vaccination (library, Enlightenment): Half as much sickness. The last step: the match ends and the crowns are given."
+    ],
+    "roads": [
+     "bring",
+     "Roads (library, Classical): Mud slows half as much; trade pays 15% more."
+    ],
+    "drainage": [
+     "bring",
+     "Field drains (library, Classical): Mud slows 30% less."
+    ],
+    "levees": [
+     "bring",
+     "Levees (library, Medieval): Floods stop short of your buildings. See misfits."
+    ],
+    "snowclear": [
+     "bring",
+     "Snow clearing (library, Medieval): Snow slows half as much."
+    ],
+    "crampons": [
+     "bring",
+     "Crampons (library, Medieval): Iron spikes on the boot bite the ice: men on foot slip less."
+    ],
+    "meteorology": [
+     "bring",
+     "Weather glass (library, Gunpowder): Fields give 10% more: farmers who plan by the forecast earn more."
+    ],
+    "bandages": [
+     "bring",
+     "Bandages (hospital, Classical): Healing is 30% faster."
+    ],
+    "herbs": [
+     "bring",
+     "Herbals (hospital, Classical): Cures are 30% faster."
+    ],
+    "hospitals": [
+     "bring",
+     "Hospitals (hospital, Medieval): 30% fewer die of plague."
+    ],
+    "pharmacy": [
+     "bring",
+     "Pharmacy (hospital, Medieval): Cures are 50% faster."
+    ],
+    "quarantine": [
+     "bring",
+     "Quarantine (hospital, Medieval): Sickness and plague spread 40% slower."
+    ],
+    "inoculation": [
+     "bring",
+     "Inoculation (hospital, Gunpowder): Plague strikes 70% less."
+    ],
+    "anatomy": [
+     "bring",
+     "Anatomy (hospital, Gunpowder): Healing is 20% faster."
+    ],
+    "surgeons": [
+     "bring",
+     "Surgeons (hospital, Gunpowder): Healing is 50% faster."
+    ],
+    "rites": [
+     "bring",
+     "Rites (temple, Bronze): Zeal lasts 15 s longer."
+    ],
+    "games": [
+     "bring",
+     "Sacred games (temple, Classical): Zeal costs half, returns sooner."
+    ],
+    "relics": [
+     "bring",
+     "Relics (temple, Medieval): Priests convert 25% faster."
+    ],
+    "sermons": [
+     "bring",
+     "Preaching orders (temple, Medieval): Resting soldiers recover nerve 20% faster."
+    ],
+    "reform": [
+     "bring",
+     "Reformation (temple, Gunpowder): Zeal costs 30% less."
+    ],
+    "codes": [
+     "bring",
+     "Law code (courthouse, Bronze): Vassal unrest climbs 15% slower."
+    ],
+    "magistrates": [
+     "bring",
+     "Magistrates (courthouse, Medieval): Vassal unrest climbs 20% slower."
+    ],
+    "watch": [
+     "bring",
+     "Night watch (courthouse, Medieval): Spies are seen from farther."
+    ],
+    "informers": [
+     "bring",
+     "Informers (courthouse, Gunpowder): Spies cost 30% less."
+    ],
+    "tolls": [
+     "bring",
+     "Tolls (courthouse, Classical): Trade pays 10% more."
+    ],
+    "assizes": [
+     "bring",
+     "Assizes (courthouse, Medieval): Spies are seen from farther still."
+    ],
+    "police": [
+     "bring",
+     "Police (courthouse, Gunpowder): Spies cheaper, seen farther."
+    ],
+    "engage": [
+     "bring",
+     "Engagement (council, Classical): Stances for the army."
+    ],
+    "command": [
+     "bring",
+     "Battalions (council, Classical): Three squads: Alpha, Bravo, Charlie."
+    ],
+    "formations": [
+     "bring",
+     "Formations (council, Classical): Set the shape of a battalion."
+    ],
+    "standards": [
+     "bring",
+     "Standards (council, Classical): Resting soldiers recover nerve 50% faster."
+    ],
+    "supply": [
+     "bring",
+     "Supply trains (council, Medieval): Resting soldiers recover nerve 20% faster."
+    ],
+    "muster": [
+     "bring",
+     "Muster (council, Gunpowder): Set formations for whole battalions."
+    ],
+    "staff": [
+     "bring",
+     "General staff (council, Gunpowder): Charges hit 20% harder."
+    ],
+    "weights": [
+     "bring",
+     "Weights and measures (market, Bronze): Goods sell 5% dearer."
+    ],
+    "coinage": [
+     "bring",
+     "Coinage (market, Classical): Goods sell 10% dearer."
+    ],
+    "credit": [
+     "bring",
+     "Letters of credit (market, Medieval): Trade pays 25% more."
+    ],
+    "bank": [
+     "bring",
+     "Bank (market, Medieval): Gold in your treasury earns 1% a minute, up to 40 gold a minute."
+    ],
+    "banking": [
+     "bring",
+     "Banking (market, Gunpowder): Ventures bring 20% more home."
+    ],
+    "exchange": [
+     "bring",
+     "Bourse (market, Gunpowder): Trade pays 15% more."
+    ],
+    "armedcart": [
+     "bring",
+     "Armed caravans (market, Classical): Caravans are twice as tough, and their guards strike any foe within undefined for undefined, once a second."
+    ],
+    "convoys": [
+     "bring",
+     "Convoys (market, Gunpowder): Caravans are 50% tougher."
+    ],
+    "caravanserai": [
+     "bring",
+     "Caravanserai (tpost, Classical): Caravans are 50% tougher."
+    ],
+    "milestones": [
+     "bring",
+     "Milestones (tpost, Classical): Trade pays 5% more."
+    ],
+    "fortpost": [
+     "bring",
+     "Fortified posts (tpost, Medieval): Posts are 50% tougher and shoot harder. See misfits."
+    ],
+    "customs": [
+     "bring",
+     "Customs (tpost, Gunpowder): Your posts take 10% more from passing trade."
+    ],
+    "postroads": [
+     "bring",
+     "Post roads (tpost, Gunpowder): Trade pays 10% more."
+    ],
+    "looms": [
+     "bring",
+     "Warp-weighted loom (workshop, Bronze): Workshops make 15% more cloth."
+    ],
+    "spinwheel": [
+     "bring",
+     "Spinning wheel (workshop, Medieval): Workshops make 30% more cloth."
+    ],
+    "fulling": [
+     "bring",
+     "Fulling mill (workshop, Medieval): Workshops make 30% more cloth."
+    ],
+    "frame": [
+     "bring",
+     "Stocking frame (workshop, Gunpowder): Workshops make 30% more cloth."
+    ],
+    "hops": [
+     "bring",
+     "Hops (workshop, Medieval): Workshops make 30% more beer."
+    ],
+    "brewhouse": [
+     "bring",
+     "Common brewhouse (workshop, Medieval): Workshops make 20% more beer."
+    ],
+    "lager": [
+     "bring",
+     "Cold brewing (workshop, Gunpowder): Workshops make 20% more beer."
+    ],
+    "dies": [
+     "bring",
+     "Engraved dies (mint, Medieval): The Mint makes 20% more."
+    ],
+    "assay": [
+     "bring",
+     "Assaying (mint, Medieval): The Mint makes 50% more."
+    ],
+    "milled": [
+     "bring",
+     "Milled coin (mint, Gunpowder): Goods sell 5% dearer."
+    ],
+    "castiron": [
+     "bring",
+     "Cast iron (foundry, Medieval): Foundries make 15% more iron."
+    ],
+    "bellows": [
+     "bring",
+     "Water bellows (foundry, Medieval): Foundries make 20% more iron."
+    ],
+    "blast": [
+     "bring",
+     "Blast furnace (foundry, Gunpowder): Foundries make 50% more iron."
+    ],
+    "finery": [
+     "bring",
+     "Finery forge (foundry, Gunpowder): Foundries make 15% more iron."
+    ],
+    "sewers": [
+     "bring",
+     "Sewers (aqueduct, Classical): Sickness and plague spread 12% slower."
+    ],
+    "cleanwater": [
+     "bring",
+     "Clean water (aqueduct, Classical): Sickness and plague spread 12% slower."
+    ],
+    "plumbing": [
+     "bring",
+     "Plumbing (aqueduct, Classical): Apartments hold 4 more."
+    ],
+    "waterworks": [
+     "bring",
+     "Waterworks (aqueduct, Gunpowder): Apartments hold 2 more; sickness strikes 20% less."
+    ],
+    "viamil": [
+     "bring",
+     "Via militaris (hall, Classical): The military road: foot soldiers march 20% faster (Vegetius: 20 miles in five hours at the common step, 24 at the full). See misfits."
+    ],
+    "horrea": [
+     "bring",
+     "Horrea (hall, Classical): State granaries on raised floors, 290 of them in Rome: food spoils half as fast again. See misfits."
+    ],
+    "castra": [
+     "bring",
+     "Castra (hall, Classical): Every legionary carried two stakes and dug the camp each night: soldiers raise a camp half again as fast, and its works stand half again as strong. See misfits."
+    ],
+    "trigger": [
+     "bring",
+     "Bronze trigger (hall, Classical): The cast bronze trigger, made in thousands to one pattern: crossbows reach 20 farther (the Luoyang arsenal held 11,181 of them in 13 BC). See misfits."
+    ],
+    "changping": [
+     "bring",
+     "Ever-normal granary (hall, Classical): Geng Shouchang: the state bought in good years and sold in bad; prices swing half as far again for you. See misfits."
+    ],
+    "taixue": [
+     "bring",
+     "Taixue (hall, Classical): The imperial academy, the first school of the state: every research 10% quicker. See misfits."
+    ],
+    "persianroad": [
+     "bring",
+     "Royal Road (hall, Classical): Herodotus: 111 stages from Sardis to Susa, ninety days on foot and nine by the royal couriers; caravans and wagons 20% faster. See misfits."
+    ],
+    "satrapy": [
+     "bring",
+     "Satrapies (hall, Classical): Darius set twenty satrapies and a fixed tribute from each, 14,560 talents a year: your vassals pay 20% more. See misfits."
+    ],
+    "immortals": [
+     "bring",
+     "The Immortals (hall, Classical): Kept at ten thousand, never more nor fewer, a fallen man replaced at once: Immortals train 25% faster. See misfits."
+    ],
+    "mongolyam": [
+     "bring",
+     "Yam (hall, Medieval): The relay of stations 20 to 40 miles apart, a rider 200 miles a day with spare horses: everything on horseback sees 20% farther. See misfits."
+    ],
+    "mongolremounts": [
+     "bring",
+     "Remounts (hall, Medieval): Three or four horses to a rider, a hundred miles a day in Hungary: a charge comes round 25% sooner. See misfits."
+    ],
+    "tumen": [
+     "bring",
+     "Tumen (hall, Medieval): Tens, hundreds, thousands, ten thousands, and the composite bow that volleyed to 400 metres: horse archers reach 15 farther. See misfits."
+    ],
+    "sixth": [
+     "bring",
+     "The sixth (hall, Classical): The Arthashastra sets the share of the king at a sixth of the crop, and no more: the resentment a tax breeds falls by a third. See misfits."
+    ],
+    "hastin": [
+     "bring",
+     "Hastin (hall, Classical): Nine thousand elephants in the army Megasthenes saw: war elephants hit buildings 20% harder. See misfits."
+    ],
+    "pataliputra": [
+     "bring",
+     "Pataliputra (hall, Classical): A capital of 570 towers and 64 gates behind a moat: your walls, gates and towers stand a quarter stronger. See misfits."
+    ],
+    "bambuk": [
+     "bring",
+     "Bambuk gold (hall, Medieval): The gold of Bambuk and Bure; the gifts of Mansa Musa dropped the price of gold in Cairo 12% for twelve years: gold comes in 12% faster. See misfits."
+    ],
+    "saltroad": [
+     "bring",
+     "Salt road (hall, Medieval): Ibn Battuta: salt from Taghaza sold at four times its price by the time it reached the capital: caravans earn 25% more. See misfits."
+    ],
+    "sankore": [
+     "bring",
+     "Sankore (hall, Medieval): Timbuktu, where Leo Africanus found more profit in books than in any other trade: every research 10% quicker. See misfits."
+    ],
+    "elite_roman": [
+     "bring",
+     "Elite: Praetorian (castle, Medieval): The soldiers of your people become Praetorians, their finest: tougher, harder hitting. Upgrades the legion in place (the Unit shell's Level). See misfits."
+    ],
+    "elite_han": [
+     "bring",
+     "Elite: Elite crossbowman (castle, Medieval): The soldiers of your people become Elite crossbowmen, their finest: tougher, harder hitting. Upgrades the hanxbow in place (the Unit shell's Level). See misfits."
+    ],
+    "elite_persian": [
+     "bring",
+     "Elite: Apple-bearer (castle, Medieval): The soldiers of your people become Apple-bearers, their finest: tougher, harder hitting. Upgrades the immortal in place (the Unit shell's Level). See misfits."
+    ],
+    "elite_mongol": [
+     "bring",
+     "Elite: Keshig (castle, Medieval): The soldiers of your people become Keshig guards, their finest: tougher, harder hitting. Upgrades the mongolha in place (the Unit shell's Level). See misfits."
+    ],
+    "elite_maurya": [
+     "bring",
+     "Elite: Royal elephant (castle, Medieval): The soldiers of your people become Royal elephants, their finest: tougher, harder hitting. Upgrades the mauryael in place (the Unit shell's Level). See misfits."
+    ],
+    "elite_mali": [
+     "bring",
+     "Elite: Elite horseman (castle, Medieval): The soldiers of your people become Elite horsemen, their finest: tougher, harder hitting. Upgrades the malihorse in place (the Unit shell's Level). See misfits."
+    ]
+   }
+  ],
+  "TECHBY": [
+   "cut",
+   "a lookup of research by id; the Tech book is keyed by its code"
+  ],
+  "CIVS": [
+   "bring",
+   "six civilisations (Roman, Han, Persian, Mongol, Maurya, Mali): each a unique unit, a small bonus as an effect, a wonder and a hall name; see misfits"
+  ],
+  "CIVK": [
+   "bring",
+   "the civilisations' keys and their six unique units (Legionary, Han crossbowman, Immortal, Mongol horse archer, Maurya war elephant, Mali horseman), each a common unit's settings with a few changed: Unit shells by attribute; see misfits"
+  ],
+  "ARMYK": [
+   "cut",
+   "the army kinds and soldier kinds by table; v100 asks by tick (Fight and not Gather, combat.js armed)"
+  ]
+ },
+ "misfits": [
+  [
+   "TECH: marching, horses, bridles, cavalry, knighthood, dragoons, limbers, viamil, persianroad, elite_mongol, elite_mali; CIVS (Mongol)",
+   "These research steps (and the Mongol bonus) make people, riders, engines or caravans move faster, from 5% to 35%. You fixed walking at 3.4 mph. Should research still be able to speed up walking, or only riders, engines and wagons, or none?"
+  ],
+  [
+   "TECH: masonry, harbours, fortify, starfort, greattower, guntower, drawbridge, fortpost, castra, pataliputra",
+   "These research steps make buildings tougher (towers, walls, camps). You said every building's health is v100's. Keep the research as a percentage on top of v100's health, or drop it?"
+  ],
+  [
+   "TECH: satrapy, sixth",
+   "Two Hall research steps (Persian and Maurya) are about taxing vassals. You said you are not adding taxes. Drop them, or change what they do?"
+  ],
+  [
+   "TECH: levees",
+   "Levees stop floods reaching your buildings. Floods are held for later. Hold Levees with them?"
+  ],
+  [
+   "CIVS, CIVK, TECH's civilisation steps",
+   "Mid has six civilisations, each with its own unit, bonus, wonder and research. v100 has none yet: the civ fronts of the Hall and Wonder were kept only as art skins, and the unique units' looks wait for their shells. Bring the civilisations as they are, or later?"
+  ]
+ ]
+}
