@@ -944,16 +944,16 @@
  },
  "decisions": [
   [
-   "Albert, Nov 5 10:06-10:11",
-   "build and train times: Mid's. Buildings' health: v100's (Age of Empires II's, one source for every building; the aim: walls that hold, Mid's broke too quickly)"
-  ],
-  [
-   "Albert, Nov 5 10:08-10:11",
-   "damage, and units' health: to review later (Albert tests them in play)"
-  ],
-  [
    "Albert, Nov 5 10:26",
    "soldiers: Shell: Unit. Its attributes (Age, Class, Level (evolution), Behavior, Attitude, Sprite, Motion, Speed, Health and the rest) = the output. Every kind of Mid's (spearman, swordsman, archer, javelineer...) is the Unit shell with its own settings; evolution is the Level and the next one it learns into"
+  ],
+  [
+   "Albert, Nov 5 10:06-10:28",
+   "build and train times: Mid's. Every building's health: v100's (Age of Empires II's; walls that hold)"
+  ],
+  [
+   "Albert, Nov 5 10:08-10:28",
+   "damage: still open (Albert tests it in play); units' health is open with it until he says otherwise"
   ]
  ]
 }

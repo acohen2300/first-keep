@@ -232,3 +232,12 @@ MODIFIED (4):
 LOCKED (634 of 637): byte for byte as sealed, 357,254 bytes
 Tests: 18/18 rules hold
 Inventory: 637 items sealed · 531 book entries · 74 laws · 89 citations, 17 still to open · 9 known
+
+## Frankenstein 7 · records · 2026-11-05 10:29
+Albert, Nov 5 10:28: the Yard stays Tall for now; every building's health v100's; damage still open
+Opened: book:screen:SN13
+MODIFIED (1):
+- book:screen:SN13 · 181 → 252 bytes
+LOCKED (636 of 637): byte for byte as sealed, 368,085 bytes
+Tests: not run (a citation only)
+Inventory: 637 items sealed · 531 book entries · 74 laws · 89 citations, 17 still to open · 9 known

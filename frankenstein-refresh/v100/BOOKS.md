@@ -420,7 +420,7 @@ Written by `index.py` from `books/*.js`, never by hand.
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | Design: Albert, Nov 4 (the setup screen its own height) |
 | SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | Design: Albert, Nov 5 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | Design: Albert, Nov 5 07:34 |
-| SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | Design: v100 floor 8, Nov 5 |
+| SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | Design: v100 floor 8, Nov 5; Design: Albert, Nov 5 10:28 (Tall for the volume ro |
 
 ## shells
 
