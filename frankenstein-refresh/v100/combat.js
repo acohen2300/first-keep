@@ -52,13 +52,13 @@ function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) :
   if (FK.has(t, 'Prey') && FK.has(a, 'Gather')) d *= D.hunt.blow;
   if (armed(t)) { const F = shapeOf(t); if (beast(a)) d *= MO.wild; if (routing(t)) d *= MO.routHit; if (t.fb > K.t) d *= FB.hit; d *= FK.stat(t.code, t.side, 'armor') * F.hit * (rider(a) ? F.vsRiders : 1); if (melee && fromWhere(t, a) < FL.behind) d *= D.flank; }
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
-function hit(a, t, base) { const d = damage(a, t, base), u = a.kind === 'unit'; t.hp -= d; t.hurtT = K.t; sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
+function hit(a, t, base) { const d = damage(a, t, base), u = a.kind === 'unit'; t.hp -= d; t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
   if (armed(t) && !beast(a)) { const dot = u ? fromWhere(t, a) : MO.front; t.mor -= ((MO.hit * d * temper(t).nerve) / t.hpMax) * (dot < FL.behind ? MO.rear : dot < FL.cos ? MO.side : MO.front); }
   if (u) { FK.impact(a, t); if (ranged(a)) shot(a, t, W[FK.SH[a.code].body].height); if (!SIDES[t.side] && t.job !== 'fight' && stat(t).atk) fight(t, a); }
   if (!alive(t)) { if (armed(a)) a.mor = Math.min(MO.full, a.mor + MO.kill); die(t, a); } }
-function die(t, by) { if (t.kind === 'bld') { if (by && SIDES[by.side] && by.side !== t.side) { for (const [y, n] of Object.entries(D.cost[t.code] || {})) ECON.earn(by.side, y, Math.floor(n * D.plunder), 'loot'); if (by.side === ME) FK.fire('event', 'plunder', t); } FK.fire('event', 'fell', t); FK.unbuild(t); return; } // E356
+function die(t, by) { if (t.kind === 'bld') { t.by = by && by.side; if (by && SIDES[by.side] && by.side !== t.side) { for (const [y, n] of Object.entries(D.cost[t.code] || {})) ECON.earn(by.side, y, Math.floor(n * D.plunder), 'loot'); if (by.side === ME) FK.fire('event', 'plunder', t); } FK.fire('event', 'fell', t); FK.unbuild(t); return; } // E356
   if (armed(t)) { const near = []; FK.unitsNear(t, MO.lossR * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && gap(t, v) < MO.lossR) near.push(v); }); for (const v of near) v.mor -= 1 / (D.breakAt * (near.length + 1)); } // E388
-  t.gone = true; const us = units(), c = FK.has(t, 'Prey') && FK.lay('meat', t.bx, t.by, D.meat[t.code]); if (us.includes(t)) us.splice(us.indexOf(t), 1); for (const u of us) if (u.target === t) { u.target = null; if (c && FK.has(u, 'Gather')) ECON.gatherAt(u, c); } }
+  t.gone = true; const us = units(), c = FK.has(t, 'Prey') && FK.lay('meat', t.bx, t.by, D.meat[t.code]); if (us.includes(t)) us.splice(us.indexOf(t), 1); FK.fire('gone', t); for (const u of us) if (u.target === t) { u.target = null; if (c && FK.has(u, 'Gather')) ECON.gatherAt(u, c); } }
 // E232
 const power1 = (u) => ((u.hp * Math.max(D.leastBlow, dmgOf(u))) / D.odds.per) * (stat(u).bonly ? D.odds.bonly : 1);
 const groupPower = (u) => { let p = power1(u); FK.unitsNear(u, AR.group * T, (v) => { if (v.side === u.side && armed(v) && alive(v)) p += power1(v); }); return p; };
@@ -228,8 +228,8 @@ FK.on('tick', (dt) => {
   if (ECON.result()) return; homeT -= dt; if (due(homeT)) { homeT = D.scan; formHome(); }
   for (const t of things()) if (t.kind === 'bld') { if (t.hpMax == null) fill(t);
     const tw = D.tower[t.code]; if (!tw || !up(t)) continue; t.cd -= dt; if (!due(t.cd)) continue; const reach = reachOf(t); let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (SIDES[u.side] && isFoe(t.side, u, t) && edgeDist(u, t) <= reach && (!best || edgeDist(u, t) < edgeDist(best, t))) best = u; });
-    if (best) { FK.fire('event', 'shot', t); shot(t, best, tw.h * mpt); hit(t, best, FK.stat(t.code, t.side, 'atk')); t.cd = FK.stat(t.code, t.side, 'rof'); } }
-  for (const u of units().slice()) { if (!alive(u)) continue; const s = stat(u); u.cd -= dt; u.rp -= dt; u.sc -= dt; const look = due(u.sc); if (look) u.sc = D.scan; if (u.mps) u.mvT = K.t;
+    if (best) { FK.fire('event', 'shot', t); shot(t, best, tw.h * mpt); hit(t, best, FK.stat(t.code, t.side, 'atk') + ECON.within(t)); t.cd = FK.stat(t.code, t.side, 'rof'); } }
+  for (const u of units().slice()) { if (!alive(u) || u.inside || u.den) continue; const s = stat(u); u.cd -= dt; u.rp -= dt; u.sc -= dt; const look = due(u.sc); if (look) u.sc = D.scan; if (u.mps) u.mvT = K.t;
     if (!SIDES[u.side]) { if (FK.has(u, 'Fight') && (u.job === 'idle' || u.job === 'fight') && !u.path) { if (u.job === 'idle' && look) { const t = choose(u, D.wildAggro); if (t && t.kind !== 'bld') fight(u, t); } } }
     else if (!armed(u)) { if (u.job !== 'fight') { const w = units().find((b) => !SIDES[b.side] && b.job === 'fight' && b.target === u); if (w) fight(u, w); else continue; } }
     else if (brain(u, dt, look)) continue;

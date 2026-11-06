@@ -550,8 +550,8 @@
    }
   ],
   "WONDER_HOLD": [
-   "bring",
-   "hold a Wonder 8 minutes to win"
+   "in v100",
+   "F23: Measure D257"
   ],
   "QUEUE": [
    "in v100",
@@ -754,8 +754,8 @@
    "F19+F20: D238 temper"
   ],
   "SHELTER": [
-   "bring",
-   "villagers run for shelter"
+   "in v100",
+   "F23: Measure D254 (÷ 10, tiles)"
   ],
   "LOOKOUT": [
    "bring",
@@ -770,8 +770,8 @@
    "F14: D196 space.apart (3 ft) and space.arrive (a quarter of it)"
   ],
   "DANGER_R": [
-   "bring",
-   "gatherers keep away from danger"
+   "in v100",
+   "F23: Measure D253 (÷ 10, tiles)"
   ],
   "DIRECT": [
    "in v100",

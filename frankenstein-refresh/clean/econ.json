@@ -438,16 +438,16 @@
    "combat.js recall"
   ],
   "incomingTick": [
-   "bring",
-   "a warning: a foe's group heading for you, how many and how soon"
+   "in v100",
+   "F23: econ.js watch(): FK.near, its count and time to arrive, for the marker"
   ],
   "ordersTick": [
    "in v100",
    "F22: combat.js ordersTick"
   ],
   "isThreat": [
-   "bring",
-   "who counts as a threat, for the danger map and warnings"
+   "in v100",
+   "F23: econ.js threat"
   ],
   "recount": [
    "in v100",
@@ -466,8 +466,8 @@
    "index.html loop: climate, step, the modules' tick; Mid's eclipse line goes (eclipse cut), its other parts are their own pieces"
   ],
   "reap": [
-   "bring",
-   "the fallen stay a while as bodies, burned or spent buildings go; v100's combat.js die removes them at once"
+   "in v100",
+   "F23: the fallen stay as bodies (index.html floor 7, D258); burned and spent buildings come with fire and plots"
   ],
   "sidesTick": [
    "in v100",
@@ -490,8 +490,8 @@
    "F19+F20: combat.js die (QAI)"
   ],
   "judge": [
-   "bring",
-   "the wins: every rival fallen and the bell are in v100 (econ.js); holding the Throne, ruling every rival as vassals, a Wonder standing, the bell's warnings to bring"
+   "in v100",
+   "F23: econ.js judge: your fall, every rival fallen, a Wonder held D257, the bell warned (D259) and the top score; the Throne and vassals come with them"
   ],
   "bldTick": [
    "in v100",
@@ -522,8 +522,8 @@
    "v100 asks yieldOf"
   ],
   "unsafe": [
-   "bring",
-   "with the danger map"
+   "in v100",
+   "F23: econ.js unsafe; bestFind skips unsafe finds, leave() drops them"
   ],
   "FORAGE": [
    "in v100",

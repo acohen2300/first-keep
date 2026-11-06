@@ -75,7 +75,7 @@
   ],
   "layMovers": [
    "bring",
-   "the start: v100's makeUnits places D67 villagers round the Town Center and herds in Z4; Mid also gives each side first jobs, a scout, deer and a boar near home, and a chest, ruins, wolf den, cemetery and drifters' camp each corner (where: by v100's zones)"
+   "the start: v100's makeUnits places D67 villagers round the Town Center and herds in Z4; Mid also gives each side first jobs, a scout, deer and a boar near home, and a chest, ruins, wolf den, cemetery and drifters' camp each corner (where: by v100's zones); F23: the first jobs are in (econ.js start, D260: the second on wood, the rest on food)"
   ],
   "layCamps": [
    "bring",

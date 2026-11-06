@@ -2035,3 +2035,65 @@ MODIFIED (59):
 LOCKED (1438 of 1497): byte for byte as sealed, 457,033 bytes
 Tests: 32/32 rules hold
 Inventory: 1497 items sealed · 1385 book entries · 80 laws · 191 citations, 33 still to open · 7 known
+
+## F23 · the alarm and the danger map, winning and losing; the start's first jobs, builders that tell, reachable sites · 2026-11-05 21:22
+Albert, Nov 5 11:40: yes yes F10–F39; 20:16: keep going (the three playability fixes are Mid's start and two bugs)
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:screen, book:words, book:comments, book:rules, book:citations, tool:test.py
+MODIFIED (54):
+- book:capabilities:SC29 · added
+- book:capabilities:SC30 · added
+- book:citations:N192 · added
+- book:citations:N193 · added
+- book:comments:E436 · added
+- book:comments:E437 · added
+- book:comments:E438 · added
+- book:comments:E439 · added
+- book:comments:E440 · added
+- book:comments:E441 · added
+- book:comments:E442 · added
+- book:comments:E443 · added
+- book:comments:E444 · added
+- book:comments:E445 · added
+- book:comments:E446 · added
+- book:comments:E447 · added
+- book:comments:E448 · added
+- book:comments:E449 · added
+- book:comments:E451 · added
+- book:comments:E452 · added
+- book:comments:E453 · added
+- book:comments:E454 · added
+- book:comments:E455 · added
+- book:comments:E456 · added
+- book:comments:E457 · added
+- book:measure:D239 · 496 → 554 bytes
+- book:measure:D253 · added
+- book:measure:D254 · added
+- book:measure:D255 · added
+- book:measure:D256 · added
+- book:measure:D257 · added
+- book:measure:D258 · added
+- book:measure:D259 · added
+- book:measure:D260 · added
+- book:measure:D261 · added
+- book:measure:D262 · added
+- book:rules:X59 · added
+- book:shells:BS2 · 136 → 144 bytes
+- book:shells:BTC1 · 268 → 276 bytes
+- book:shells:BTC2 · 145 → 153 bytes
+- book:shells:BW3 · 150 → 158 bytes
+- book:words:J12 · added
+- book:words:J13 · added
+- book:words:J7 · 25,048 → 25,165 bytes
+- book:words:J9 · 391 → 571 bytes
+- code:combat.js · 42,887 → 43,020 bytes
+- code:econ.js · 33,077 → 44,886 bytes
+- code:index.html#floor-5-movables · 12,946 → 13,797 bytes
+- code:index.html#floor-7-display · 2,956 → 5,892 bytes
+- code:index.html#the-door · 6,313 → 6,353 bytes
+- code:index.html#the-woods-cache · 4,861 → 4,873 bytes
+- code:index.html#touch · 6,186 → 6,232 bytes
+- code:menu.js · 62,352 → 62,463 bytes
+- tool:test.py · 123,364 → 135,679 bytes
+LOCKED (1481 of 1535): byte for byte as sealed, 451,072 bytes
+Tests: 33/33 rules hold
+Inventory: 1535 items sealed · 1423 book entries · 80 laws · 193 citations, 33 still to open · 7 known

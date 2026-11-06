@@ -49,6 +49,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC26 | its soil wears when worked and rests back (QAA, D214); its yield follows the season (D216) and the year's harvest (D215) | {by: econ.js, law: [QAA], needs: [], may: []} | N170 |
 | SC27 | a soldier of its side resting within D237's reach heals by the first-order lag (QP); its going inside waits for All hands | {by: combat.js, law: [QP], needs: [], may: []} | N188; N16 |
 | SC28 | the War Council: the three squads' plans, and Muster, a squad's lack in one order (D244); a squad's dials (temper, shape, intent) are answered by combat.js | {by: combat.js, econ.js, menu.js, law: [], needs: [], may: []} | N188 |
+| SC29 | a building with room inside (D256, after research): its side's villagers run in from danger (D254) and the Alarm fills it, sturdiest first; each one inside adds an arrow to its shot | {by: econ.js, combat.js, law: [], needs: [D256], may: []} | N192 |
+| SC30 | finished and standing D257 s, it wins for its side; every side is told when one stands and when it falls | {by: econ.js, law: [], needs: [], may: []} | N192 |
 
 ## citations
 
@@ -245,6 +247,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N189 |  | Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 to 3 on its shaft's cross-secti | to open |
 | N190 |  | Design: Mid's finger, orders, missions and the War Director (26-input.js hitAt, tapAt, picked, setPick, pickToggle, order, boxPick, ordAt, H | opened |
 | N191 |  | Design: Albert, Nov 5 (Frankenstein F21+F22, decisions.json): Mid's gameplay and controls come over (one tap picks, a second opens the card; | opened |
+| N192 |  | Design: Mid's alarm, danger map and the end (09-nav.js DANGER, discRows, stampDanger, dangerMap, dangerWhy; 12-sim-core.js isThreat, recount | opened |
+| N193 |  | Design: Albert, Nov 5 20:16 (Frankenstein F23): keep going; three playability fixes from his phone (everyone idle, three sites never built): | opened |
 
 ## colours
 
@@ -703,6 +707,27 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E433 |  | a tile on the board (the floor gives -1 off it) |  |
 | E434 |  | the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to half way, each ai.step tiles, the open width across |  |
 | E435 |  | the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foot, files deep across the narrowest gap on the road |  |
+| E436 |  | the Alarm and the end (F23, Mid's 09-nav, 12-sim-core, 13-sim-civil, 16-sim-fight, 40-emergency): the danger map's and the alarm's measures  |  |
+| E437 |  | a threat (Mid's isThreat): alive, not inside, one that fights and is neither a villager, game hunted for meat, nor a soldier that strikes on |  |
+| E438 |  | the danger map (Mid's dangerMap, stampDanger): each side's, drawn afresh each beat on the walking grid: foe level round every threat to it a |  |
+| E439 |  | why a spot is dangerous, nearest cause first (Mid's dangerWhy): a threat near (its side named), an enemy tower's reach, else a fright rememb |  |
+| E440 |  | a worker leaves a find that turns unsafe (Mid's vilTick): it drops the find and looks again, off the danger; your town is told why, once a l |  |
+| E441 |  | going inside (Mid's vilTick, stepOut): a unit sent to a building with room walks to it and goes in, hidden and out of reach, at its middle;  |  |
+| E442 |  | a villager's fright (Mid's vilTick, D254): soldiers near scare it, beasts or robbers when a pack comes or one hurt it; it runs into the near |  |
+| E443 |  | the Alarm's ranking (Mid's shelterRank, roomIn, fillRank, threatDir): buildings with room, sturdiest first, then roomiest, each filled to it |  |
+| E444 |  | the Alarm (Mid's emgStart, townSquare, soldiersIn, villagersIn): its first order notes each villager's work for Work; Gather sets everyone r |  |
+| E445 |  | the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see near your Town Center or marching on your buildin |  |
+| E446 |  | a site nobody builds (F23, Albert's play test): one no villager of its side can reach says why once; else the nearest free villager who can  |  |
+| E447 |  | a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost; its people and buildings go; its army room × D25 |  |
+| E448 |  | who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s wins for its side, the first finished first; a ti |  |
+| E449 |  | the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with the hazards setting), the best won score kept on  |  |
+| E451 |  | the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends it |  |
+| E452 |  | the danger map's home on the walking grid (econ draws it) and each side's reach, cached by what changes the walkable tiles |  |
+| E453 |  | the tiles a side's people can walk to: flooded by the way (QBL) from round its Town Center, gates as its own see them; a building's spot is  |  |
+| E454 |  | the fallen, the hit glow and the marker (Mid's fallen, drawHitGlow, drawRadar; D258, D262, D261) |  |
+| E455 |  | a figure that dies in sight topples back, away from the way it faced, and fades |  |
+| E456 |  | something of yours hit: the screen's edge glows, red for a rival, the flame's for the wild, fading |  |
+| E457 |  | foes near your Town Center out of view: a marker on the screen's edge points at them, their count in it and their time to arrive under it; a |  |
 
 ## ground
 
@@ -979,7 +1004,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D236 | a shooter reloading steps back back tiles from a blade within near, for hold seconds (Mid's KITE) | {near: 4.5, back: 2.8, hold: 0.5} | N188 |
 | D237 | a soldier at rest within r tiles of its own shelter heals (Mid's GARRISON; its pace is D239's garrison, QP) | {r: 7} | N188; N16 |
 | D238 | a soldier's choice of foe: its side within group tiles add their power (Lanchester); a foe that cannot hurt still counts least; it keeps a foe within leash × its sight × its temper's chase; the computers keep the temper guard; hold fights only within reach, press never kites; No pursuit (loose) looks step tiles past its reach, Buildings first (bld) takes the nearest building; a squad's plan steps by steps[1] under steps[0], else steps[2]; at home a soldier walks back when farther than near tiles from its post (Mid's GROUP_R, foeValue, TEMPER, INTENT, sqPlan) | {group: 6, least: 0.1, leash: 1.4, temper: {hold: 0, guard: 1, press: 2}, intent: {engage: 0, loose: 1, bld: 2}, step: 1, steps: [10, 1, 5], | N188; N36; N37 |
-| D239 | the bases of shares that research moves and no shell holds: nerve's settling (rest, shelter), healing at a shelter (garrison: most health ÷ this, seconds), the run (rout, seconds), wear's research, a blow on a building, a charge, a walker's share of its pace from its shape and its march (pace) (Mid's MORALE, GARRISON, fxv) | {rest: 1, shelter: 1, garrison: 0.6, rout: 8, wear: 0, bld: 1, charge: 1, pace: 1} | N188 |
+| D239 | the bases of shares that research moves and no shell holds: nerve's settling (rest, shelter), healing at a shelter (garrison: most health ÷ this, seconds), the run (rout, seconds), wear's research, a blow on a building, a charge, a walker's share of its pace from its shape and its march (pace), the room inside a building not in D256 (hold) (Mid's MORALE, GARRISON, fxv) | {rest: 1, shelter: 1, garrison: 0.6, rout: 8, wear: 0, bld: 1, charge: 1, pace: 1, hold: 0} | N188 |
 | D240 | a squad's shape, each a trade: riders in it strike × dmg; it takes × hit, from riders × vsRiders; it walks × spd; an army marches in column once Formations is known (Mid's FORM, COLUMN) | {line: {dmg: 1, hit: 1, spd: 1, vsRiders: 1}, wedge: {dmg: 1.15, hit: 1.1, spd: 1, vsRiders: 1}, square: {dmg: 1, hit: 0.9, spd: 0.8, vsRide | N188 |
 | D241 | an army stands in a grid gap tiles apart, about rows times as wide as deep, at most most files; at home in its building's yard tiles past it, a block a squad of √(n × block) files up to cols; a column three files, a choke three; support rings its blades round at least ring places (Mid's GRID, formUp, CHOKE) | {gap: 1.5, rows: 2, most: 14, yard: 2.4, block: 2.5, cols: 10, column: 3, choke: 3, ring: 6} | N188 |
 | D242 | a soldier in a drill not this share of the way to its place by this share of the drill's time stands where it is (Mid's FORMING, Albert's x% by x%) | {share: 0.7} | N188 |
@@ -993,6 +1018,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D250 | fall back in order (Mid's FALLBACK): for secs s soldiers step back tiles away from the nearest foe within look tiles (else toward home), take blows × hit and do not rout | {secs: 6, back: 20, look: 20, hit: 0.7} | N190 |
 | D251 | the choke (Mid's CHOKE): a gap held min to max files across, a file a rank's gap; the computer's (Mid's AB): with foot or more idle foot soldiers, not of the classes in not, once each every s, it holds the narrowest gap of min to max tiles on the road to the nearest foe, looked for each step tiles from from tiles out to half way, files deep a tile of width, for hold s | {min: 1, max: 12, ai: {foot: 6, hold: 180, every: 240, min: 2, max: 10, step: 4, from: 15, files: 3, not: [Riders, Engines]}} | N190 |
 | D252 | the ambush (Mid's AMBUSH): cover is an open tile with forest within cover tiles, looked for within find tiles of the crosshair; a soldier within there tiles of its place goes to ground; a foe within spring tiles, or a blow within blow s, springs it with a charge | {cover: 1, spring: 4.5, find: 9, there: 0.8, blow: 0.5} | N190 |
+| D253 | the danger map, one a side on the walking grid (Mid's DANGER_R and dangerMap, distances ÷ 10 in tiles), drawn each beat [s, frame]: foe level within near tiles of a live threat and inside an enemy tower's reach plus reach; scare level for secs s within mem tiles of where one of the side was frightened more than far tiles from home (the last keep kept); a find at unsafe or more is left, looked at each look, its cause said within the radius plus pad; a worker's walk pays cost a tile on any of it unless it goes into it. The fire's and the guards' levels come with them | {near: 11, reach: 3, mem: 8, secs: 45, far: 20, keep: 8, pad: 1, foe: 3, scare: 1, unsafe: 2, cost: 3, beat: [1, 1], look: [0.67, 2]} | N192 |
+| D254 | villagers run for shelter (Mid's SHELTER, tiles): when a foe's soldier comes within flee (wide × flee once running), raid or more beasts or robbers do, or one hurt it within hurt s; into the nearest building with room within tower tiles if nearer than the Town Center, else the Town Center; out when no threat is within clear of it; looked at each look [s, frame] | {flee: 7, clear: 15, raid: 3, hurt: 6, wide: 1.6, tower: 22, look: [0.17, 0]} | N192 |
+| D255 | the Alarm (Mid's EMG, incomingTick, watchHome, drawRadar; tiles): Garrison's spare soldiers hold a line line tiles toward the danger, rows row apart, perRow a row; villagers with no room wait behind tiles behind the Town Center, cols across, gap apart, shifted shift; Gather stands villagers square tiles out from its walls and soldiers away times as far; the danger lies toward the foe coming, else the nearest threat within dir, else the middle; a group within far tiles of your buildings, counted within group, is coming; a soldier within home of the Town Center warns, once each again s; the marker counts foes within radar of the nearest | {line: 11, row: 1.2, perRow: 12, behind: 6, square: 2, away: 3, gap: 1, cols: 6, shift: 2.5, dir: 70, far: 52, group: 14, home: 34, again: 2 | N192 |
+| D256 | the room inside a building, before research (Mid's BLD shelter): villagers and soldiers who go in, each adding an arrow to its shot | {BTC1: 8, BW3: 5, BTC2: 10} | N192 |
+| D257 | a finished Wonder that stands this many seconds wins for its side (Mid's WONDER_HOLD) | 480 | N192 |
+| D258 | the fallen (Mid's SHARE_FALLEN, FALL, drawFallen): a side's army room × share is split among those left; a figure that dies in sight topples over drop s, a turn × π, and fades over fade s, gone at secs; at most most at once; engines do not topple | {share: 0.5, secs: 1.4, drop: 0.35, fade: 0.7, turn: 0.5, most: 80, not: [Engines]} | N192 |
+| D259 | a timed game warns when this many seconds are left, if it is no more than late s past (Mid's judge) | {at: [300, 60], late: 5} | N192 |
+| D260 | each villager's first job at the start, in order, the rest on rest (Mid's layMovers: the second on wood) | {jobs: [food, wood], rest: food} | N192 |
+| D261 | the marker for foes near your Town Center out of view (Mid's drawRadar, screen px): shown when the nearest is past edge of the screen's sides; kept m in, side from the right, top from the top on the right, foot from the bottom; a disc r, pulsing pulse at beat, an arrow to tip from back, wing wide, its outline line; the time to arrive under px below | {edge: 40, m: 30, side: 84, top: 80, foot: 40, r: 15, pulse: 2, beat: 6, tip: 24, back: 16, wing: 6, line: 1.5, under: 26, half: 0.5, least: | N192 |
+| D262 | something of yours is hit: a glow round the screen's edge for secs s, from inner to outer of the screen's sides, at most alpha (Mid's drawHitGlow); red for a rival, the flame's for the wild | {secs: 1.6, inner: 0.3, outer: 0.72, alpha: 0.55, stops: [0, 1]} | N192 |
 
 ## rules
 
@@ -1056,6 +1091,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X56 | the physics of F17b: a villager walks exactly 1.52 m/s on flat firm ground, unloaded, in still air, and every load, grade, mud, snow and headwind gives the speed at which Pandolf's equation (with Pugh's drag as a grade) returns its power, each slower; the effects law adds boosts once and applies cuts one at a time, never reaching 0 nor the base, and every cut in the Tech book is a share between 0 and 1; the falling particles are the pool times the strength, the rates, wind and visibility the law's, and the blizzard flag turns exactly at the NWS's wind and visibility and after three game hours; a step slips exactly when the friction it needs exceeds what the ground offers; Crampons give studs to villagers, foot, archers and the engines' haulers and not riders, Horseshoes to riders; the scout's pace and reach are Mid's | {stage: page} | N185; N13; N180; N179 |
 | X57 | the blow, nerve and the rout, a soldier's day, squads and muster (F19+F20): every kind's counters on every kind are Mid's frozen vsMul over its UNIT; a tower reaches as far as Mid's rangeFrom within 1% (the arrow's drag, QAJ); a foe's worth in reach is Mid's foeValue; the nerve, flank, yard, kite, shelter, shapes, tempers, plunder and wear are Mid's numbers; on the page a blow from behind lands × D141, a skirmish breaks a soldier who runs and comes back, a fallen tower pays D233 of its price, and Muster brings a squad's lack at twice the price | {stage: page} | N132; N188 |
 | X58 | the finger, orders you can follow and the War Director (F21+F22): Mid's numbers (HOLD_MS, PRESS_SHOW, DBL_MS, HUD, ARMY_STILL, DIRECT, CHOKE, AMBUSH, CHARGE, FALLBACK, AB) in the books; Mid's frozen etaOf and reinforcePlan's waves for the same soldiers; on the page a box picks many, a tap is their order with its line and time, Go makes a mission, the charge quickens then tires, the choke stands as many files as the gap, an ambush hides | {stage: page} | N132; N190; N191 |
+| X59 | the Alarm and the end, with the start's first jobs, builders that tell and reachable sites (F23): Mid's DANGER_R, SHELTER, EMG, WONDER_HOLD, SHARE_FALLEN, PLUNDER, SCORE and room in the books; who is a threat is Mid's frozen isThreat; Shelter fills the buildings as Mid's frozen villagersIn does; a rival's fall pays what Mid's frozen fall pays, shares the room and scores as its scoreAll; your fall, a wonder held and the bell end the game as its judge; and on the page every villager has a job within 3 s of a new game, a villager leaves a find a foe stands by, Work sends them back, a site in reach is built, one out of reach says why and a free villager is sent to one in reach, and a spot nobody can walk to is refused | {stage: page} | N192; N193 |
 
 ## screen
 
@@ -1087,8 +1123,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | MG2 | Cemetery | [] | N144 |
 | MG3 | Campfire | [Yield] | N144 |
 | MG4 | Treasure | [Yield] | N144 |
-| BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health, Shelter] | N144 |
-| BTC2 | Castle | [Shelter] | N144 |
+| BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health, Shelter, Hold] | N144 |
+| BTC2 | Castle | [Shelter, Hold] | N144 |
 | BTC5 | Medical tent | [] | N144 |
 | BTC6 | Training tent | [] | N144 |
 | BTC7 | Mess tent | [Shelter] | N144 |
@@ -1128,11 +1164,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BM4 | Siege workshop | [Spawn, Health] | N144 |
 | BW1 | Wall | [Health, Line] | N144 |
 | BW2 | Gate | [Health, Gate] | N144 |
-| BW3 | Tower | [Shoot, Health] | N144 |
+| BW3 | Tower | [Shoot, Health, Hold] | N144 |
 | BW4 | Palisade | [Health, Line] | N144 |
 | BF5 | Abatis | [] | N144 |
 | BS1 | Throne | [] | N144 |
-| BS2 | Wonder | [] | N144 |
+| BS2 | Wonder | [Wonder] | N144 |
 | UV | Villager | [Walk, Gather, Carry, Build, Repair, Fight, Health] | N144; N170 |
 | UM1 | Spearman | [Walk, Fight, Health] | N144; N170; N176 |
 | UM6 | Swordsman | [Walk, Fight, Health] | N144; N170; N176 |
@@ -1461,9 +1497,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J4 | a number shortened: 1.2k | k | N132 |
 | J5 | one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s) | [[^(m)an(-at-arms)$, i, $1en$2], [man$, , men], [(wol)f$, i, $1ves], [([^aeiou])y$, , $1ies], [(s/x/ch/sh)$, , $1es], [$, , s]] | N132 |
 | J6 | the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190) | ABCDEFGHIJKLMNOPQRSTUVWXYZ | N132 |
-| J7 | the history line of each age (age0 to age4), each research step and each soldier kind, by its key (a step that shares a kind's key: tech:key): what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161; N170; N176 |
+| J7 | the history line of each age (age0 to age4), each research step and each soldier kind, by its key (a step that shares a kind's key: tech:key): what it was and when (Mid's WHY) | {wonder: The great work of each civilisation: built to be seen, and costly enough to show a state at its height., age0: Farming villages of  | N160; N161; N170; N176 |
 | J8 | what the town is told when food, the seasons and the flock turn, or its people slip on ice, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170; N173 |
-| J9 | what a refusal or an order says for plots, the dock and the hunt (Mid's words) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
+| J9 | what a refusal or an order says for plots, the dock, the hunt, a spot nobody can walk to and a site nobody can reach (Mid's words; the last two F23's) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
 | J10 | the army's words: the three squads (Mid's BN, the NATO names), the tempers, the shapes, the intents and the squad dials (Mid's TEMPER, FORM, INTENT) | {squads: [Alpha, Bravo, Charlie], all: Army, setup: Set up, tempers: [Hold, Guard, Press], forms: {line: Line, wedge: Wedge, square: Square, | N188 |
 | J11 | orders you can follow, the quick action, the choke, the ambush and the War Director: what each says (Mid's 11-orders, 28-army-quick, 39-huddle words); a move is [its id, its cell, the event it sounds, what it says] | {marching: {n} marching: {at}., arrived: {n} arrived: {at}., lost: {m} is lost., losing: {m} is losing., nobody: {m}: nobody idle in it., no | N190 |
+| J12 | the Alarm's four orders (each a name and its icon), what it says, the danger's causes and the warnings (Mid's EMERGENCY, emgStart, emgStop, dangerWhy, watchHome) | {cells: {square: {name: Gather, icon: gather}, hands: {name: Garrison, icon: garrison}, shelter: {name: Shelter, icon: shelter}, work: {name | N192 |
+| J13 | the end: the sides' names, a side's fall, the wonder, the bell and the score (Mid's judge, fall, finish, built) | {sides: [You, Raiders, Rivals, Fortress], fell: Your keep fell. You held out {t}., rivals: Every rival has fallen. {t}, wonder: [Your wonder | N192 |
 

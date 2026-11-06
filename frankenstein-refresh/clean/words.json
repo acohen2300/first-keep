@@ -1266,8 +1266,8 @@
      "F15: Words book J7 (why), by its key"
     ],
     "wonder": [
-     "bring",
-     "the history card for Wonder (BS2), with its building"
+     "in v100",
+     "F23: Words book J7 (why), by its key"
     ],
     "vil": [
      "bring",
@@ -1821,7 +1821,7 @@
     ],
     "An enemy group you can see heads for your buildings": [
      "bring",
-     "the red warning bar for a raid, with the army"
+     "F23: the feature is in (econ.js watch, the marker's count and time, index.html floor 7), its Guide row waits for the Guide (Parked)"
     ],
     "You start a game": [
      "bring",
@@ -1885,19 +1885,19 @@
     ],
     "A Town Center falls": [
      "bring",
-     "a fallen Town Center gives up its stockpile, with war"
+     "F23: the feature is in (econ.js fall), its Guide row waits for the Guide (Parked)"
     ],
     "Score": [
      "bring",
-     "the score and its five parts, with the score (v100's rank waits for a home, SN6)"
+     "F23: Mid's score is in (econ.js score, each part rounded, QBR), its Guide row waits for the Guide (Parked)"
     ],
     "A timed game": [
      "bring",
-     "timed games and scenarios; points to Help → Game, where v100 has its Start page"
+     "F23: the bell warns and the top score wins (econ.js judge), its Guide row waits for the Guide (Parked)"
     ],
     "A wonder is finished": [
      "bring",
-     "a wonder held wins, with wonders"
+     "F23: the feature is in (econ.js, tick Wonder, D257), its Guide row waits for the Guide (Parked)"
     ],
     "Finds in the wild": [
      "bring",
@@ -2001,7 +2001,7 @@
     ],
     "Soldiers come within ${SHELTER.flee} of a villager": [
      "bring",
-     "villagers flee into towers and the Town Center (Shelter), with Shelter"
+     "F23: the feature is in (econ.js fright, D254; each one inside adds an arrow, combat.js), its Guide row waits for the Guide (Parked)"
     ],
     "You pay for an age at the Town Center": [
      "bring",
@@ -2045,7 +2045,7 @@
     ],
     "The Alarm: four orders": [
      "bring",
-     "the Alarm's four orders; v100 draws Work, Gather, Garrison, Shelter (Later cells), this wording comes"
+     "F23: the feature is in (econ.js alarm, allClear; menu.js), its Guide row waits for the Guide (Parked)"
     ],
     "Teach": [
      "bring",
@@ -2113,7 +2113,7 @@
     ],
     "Winning and losing": [
      "bring",
-     "winning and losing; v100's end card covers the hall and the bell; the Throne hold (misfits)"
+     "F23: conquest and the wonder are in (econ.js judge); the Throne waits for F40; its Guide row waits for the Guide (Parked)"
     ]
    }
   ]

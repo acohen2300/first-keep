@@ -62,28 +62,28 @@
    "the nearest free square in rings; v100 asks findPath with a goal (goBeside, goBy) and ai.js spot"
   ],
   "DANGER": [
-   "bring",
-   "the danger map: where workers will not go (foes, towers, fire, a fright), in three levels; villagers' safety"
+   "in v100",
+   "F23: econ.js dangerMap into FK.DANGER (index.html floor 5), D253"
   ],
   "DISC": [
-   "bring",
-   "part of the danger map (a disc's rows, worked out once)"
+   "in v100",
+   "F23: index.html stamp() (E25) draws the disc; no rows table needed"
   ],
   "discRows": [
-   "bring",
-   "part of the danger map"
+   "in v100",
+   "F23: index.html stamp() (E25)"
   ],
   "stampDanger": [
-   "bring",
-   "part of the danger map"
+   "in v100",
+   "F23: econ.js dangerMap put() over stamp(), levels D253"
   ],
   "dangerMap": [
-   "bring",
-   "the danger map, redrawn every second for each side"
+   "in v100",
+   "F23: econ.js dangerMap, each D253 beat; the walk pays D253 cost on it (index.html findPath); fire and guards come with them"
   ],
   "dangerWhy": [
-   "bring",
-   "why a villager left a find, in words (with the danger map)"
+   "in v100",
+   "F23: econ.js dangerWhy, words J12"
   ],
   "AS": [
    "cut",

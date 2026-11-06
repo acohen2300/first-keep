@@ -114,20 +114,20 @@
    "F19+F20: combat.js, plunderBld"
   ],
   "fall": [
-   "bring",
-   "a side falls: its stores go to the killer, its room is shared, the Throne goes back; v100 econ.js ends the game on the last Seat (conquest) but nothing passes on"
+   "in v100",
+   "F23: econ.js fall: stores and D233 of the buildings to the killer (combat.js die keeps t.by), its people and buildings go, army room shared (D258, capA); the Throne comes with it"
   ],
   "scoreAll": [
    "in v100",
    "econ.js score (QBR, D135): the same five parts and divisors"
   ],
   "watchHome": [
-   "bring",
-   "a warning when an enemy army comes near your Town Center"
+   "in v100",
+   "F23: econ.js watch(), D255 home and again, words J12 home"
   ],
   "finish": [
-   "bring",
-   "the end of a match: won or lost, the score times the level played, the chronicle; v100 econ.js sets the result and fires win or lose"
+   "in v100",
+   "F23: econ.js finish: won or lost, the text and score, the best kept; the level played comes with the hazards setting, the chronicle with Mail"
   ],
   "TICK": [
    "cut",

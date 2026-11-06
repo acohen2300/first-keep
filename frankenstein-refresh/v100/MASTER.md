@@ -163,6 +163,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E90** most: the tiles it may open before giving up
 - **E91** no cutting a corner
+- **E452** the danger map's home on the walking grid (econ draws it) and each side's reach, cached by
+- **E453** the tiles a side's people can walk to: flooded by the way (QBL) from round its Town Center · QBL (N74)
 - **E92** a unit on a tile; its stand wanders in the tile (D82) · D82 (N112)
 - **E93** a path of one tile (already there) walks to its middle: no step past the end
 - **E94** to a tile
@@ -258,6 +260,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E151** left at sunrise, up at noon, right at sunset
 - **E152** under the buildings and units: a building's footprint thrown by its height, a unit's foot 
 - **E153** the box's shadow: its top thrown, joined to its foot along every edge, one fill so the ove
+- **E454** the fallen, the hit glow and the marker (Mid's fallen, drawHitGlow, drawRadar; D258, D262, · D258 (N192) · D262 (N192) · D261 (N192)
+- **E455** a figure that dies in sight topples back, away from the way it faced, and fades
+- **E456** something of yours hit: the screen's edge glows, red for a rival, the flame's for the wild
+- **E457** foes near your Town Center out of view: a marker on the screen's edge points at them, thei
 
 ## index.html#the-woods-cache
 
@@ -315,6 +321,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
 - **E188** sound on or off
+- **E451** the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends
 - **E189** a cell for what is drawn but not yet built: Albert's reminder
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E191** tap a yield: new villagers go there (the ring)
@@ -417,6 +424,20 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E347** the gather beat: the field is worked now (its soil wears); a flock's food goes straight to
 - **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119)
+- **E436** the Alarm and the end (F23, Mid's 09-nav, 12-sim-core, 13-sim-civil, 16-sim-fight, 40-emer · D253 (N192) · D255 (N192) · J12 (N192) · J13 (N192)
+- **E437** a threat (Mid's isThreat): alive, not inside, one that fights and is neither a villager, g
+- **E438** the danger map (Mid's dangerMap, stampDanger): each side's, drawn afresh each beat on the  · D253 (N192)
+- **E439** why a spot is dangerous, nearest cause first (Mid's dangerWhy): a threat near (its side na
+- **E440** a worker leaves a find that turns unsafe (Mid's vilTick): it drops the find and looks agai
+- **E441** going inside (Mid's vilTick, stepOut): a unit sent to a building with room walks to it and
+- **E442** a villager's fright (Mid's vilTick, D254): soldiers near scare it, beasts or robbers when  · D254 (N192)
+- **E443** the Alarm's ranking (Mid's shelterRank, roomIn, fillRank, threatDir): buildings with room, · D255 (N192)
+- **E444** the Alarm (Mid's emgStart, townSquare, soldiersIn, villagersIn): its first order notes eac
+- **E445** the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see · D255 (N192)
+- **E446** a site nobody builds (F23, Albert's play test): one no villager of its side can reach says · D203 (N168)
+- **E447** a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost · D233 (N188) · D258 (N192)
+- **E448** who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s · D257 (N192) · D259 (N192)
+- **E449** the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
 
 ## combat.js

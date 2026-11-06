@@ -48,7 +48,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAL** Sight from height → N41 · used by SC7
 - **QAM** Line of sight → N42
 - **QAN** Many eyes → N43, N44
-- **QAO** Flee → N45 · used by SC6, D231
+- **QAO** Flee → N45 · used by SC6, D231, D254
 - **QAP** Cold and wet → N46
 - **QAQ** Sickness → N47, N48
 - **QAR** Weighted pick → N49
@@ -278,6 +278,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N189** (to open) Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 t → W10
 - **N190** Design: Mid's finger, orders, missions and the War Director (26-input.js hitAt, tapAt, picked, setPick, pickTo → D246, D247, D248, D249, D250, D251, D252, X58, P38, P39, P40, P41, P42, J11
 - **N191** Design: Albert, Nov 5 (Frankenstein F21+F22, decisions.json): Mid's gameplay and controls come over (one tap p → D249, X58
+- **N192** Design: Mid's alarm, danger map and the end (09-nav.js DANGER, discRows, stampDanger, dangerMap, dangerWhy; 12 → SC29, SC30, D253, D254, D255, D256, D257, D258, D259, D260, D261, D262, X59, J12, J13
+- **N193** Design: Albert, Nov 5 20:16 (Frankenstein F23): keep going; three playability fixes from his phone (everyone i → X59
 
 ## Named exceptions
 

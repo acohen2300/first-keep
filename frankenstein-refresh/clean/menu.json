@@ -1658,64 +1658,64 @@
    "copy where the clipboard is refused"
   ],
   "EMERGENCY": [
-   "bring",
-   "Emergency: Gather (everyone to the Town Center), Garrison, Shelter; v100's War base draws Gather, Garrison, Shelter, Work as Later"
+   "in v100",
+   "F23: menu.js War base cells alarm and work (E451), words J12 cells"
   ],
   "EMG": [
-   "bring",
-   "Emergency's measures (lines, rows, the square's 20)"
+   "in v100",
+   "F23: Measure D255"
   ],
   "shelterRank": [
-   "bring",
-   "the buildings that shelter, ranked; Emergency"
+   "in v100",
+   "F23: econ.js ranked()"
   ],
   "roomIn": [
-   "bring",
-   "room left in a shelter; Emergency"
+   "in v100",
+   "F23: econ.js inN() and hold()"
   ],
   "troops": [
-   "bring",
-   "the soldiers an emergency moves; Emergency"
+   "in v100",
+   "F23: econ.js alarm, WAR.armyFree(ME, 'rout')"
   ],
   "stand": [
-   "bring",
-   "a soldier stands at a spot and fights; Emergency"
+   "in v100",
+   "F23: econ.js alarm, WAR.march"
   ],
   "threatDir": [
-   "bring",
-   "the way the danger lies; Emergency"
+   "in v100",
+   "F23: econ.js threatDir"
   ],
   "fillRank": [
-   "bring",
-   "fill shelters with the nearest; Emergency"
+   "in v100",
+   "F23: econ.js fillRank"
   ],
   "emgSnap": [
-   "bring",
-   "what Stop goes back to; Emergency"
+   "in v100",
+   "F23: econ.js alarm (the emg map)"
   ],
   "release": [
-   "bring",
-   "a villager let go; Emergency"
+   "in v100",
+   "F23: econ.js out()"
   ],
   "villagersIn": [
-   "bring",
-   "villagers inside (Shelter)"
+   "in v100",
+   "F23: econ.js alarm ('shelter', 'hands')"
   ],
   "soldiersIn": [
-   "bring",
-   "soldiers into the buildings (Garrison)"
+   "in v100",
+   "F23: econ.js alarm ('hands')"
   ],
   "townSquare": [
-   "bring",
-   "everyone to the Town Center's square (Gather)"
+   "in v100",
+   "F23: econ.js alarm ('square')"
   ],
   "emgStart": [
-   "bring",
-   "starts an emergency"
+   "in v100",
+   "F23: econ.js alarm"
   ],
   "emgStop": [
-   "bring",
-   "Stop: back to work (v100's Work cell)"
+   "in v100",
+   "F23: econ.js allClear"
   ]
  },
  "misfits": [

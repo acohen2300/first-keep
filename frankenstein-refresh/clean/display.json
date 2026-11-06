@@ -174,16 +174,16 @@
    "index.html draw(): one frame, back to front; Mid's extra passes come with their own pieces"
   ],
   "RADAR": [
-   "bring",
-   "the alert marker's place, for a tap (with drawRadar)"
+   "in v100",
+   "F23: index.html floor 7 RADAR, a tap looks (E457)"
   ],
   "drawRadar": [
-   "bring",
-   "a red marker on the screen's edge pointing at foes near your Town Center, with their count; tap to look"
+   "in v100",
+   "F23: index.html floor 7 (E457), D261"
   ],
   "hg": [
-   "bring",
-   "the hit glow's gradients, kept (with drawHitGlow)"
+   "in v100",
+   "F23: index.html floor 7 (E456), one gradient a frame while it glows"
   ],
   "fogAt": [
    "in v100",
@@ -458,16 +458,16 @@
    "F19+F20: combat.js draw, Sprites P35"
   ],
   "FALL": [
-   "bring",
-   "the fallen, for the picture only (with fallen)"
+   "in v100",
+   "F23: index.html floor 7 FALL"
   ],
   "fallen": [
-   "bring",
-   "one who dies in sight topples over and fades (War)"
+   "in v100",
+   "F23: index.html floor 7 on('gone') (E454)"
   ],
   "drawFallen": [
-   "bring",
-   "draws the toppling (with fallen)"
+   "in v100",
+   "F23: index.html floor 7 (E455), D258"
   ],
   "LEAN": [
    "bring",
@@ -618,8 +618,8 @@
    "where a fire is always lit after dark (with drawLight)"
   ],
   "drawHitGlow": [
-   "bring",
-   "something of yours is hit: a red glow round the screen's edge, orange for bandits and beasts"
+   "in v100",
+   "F23: index.html floor 7 (E456), combat.js hit fires 'struck', D262"
   ],
   "drawFlash": [
    "bring",
