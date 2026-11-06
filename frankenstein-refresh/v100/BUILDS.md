@@ -2648,3 +2648,70 @@ MODIFIED (10):
 LOCKED (1840 of 1850): byte for byte as sealed, 639,920 bytes
 Tests: 38/38 rules hold
 Inventory: 1850 items sealed · 1731 book entries · 87 laws · 207 citations, 39 still to open · 7 known
+
+## F33+F34 · sight and the fog, the small map and labels; lights after dark, the camera's glide and Follow, theatrics, building and figure dressing, the ground picture and the rim, the draw budget and Reduce motion · 2026-11-06 14:59
+Albert, Nov 5 11:40: yes yes F10–F39; Nov 6 12:37: continue
+Opened: code:index.html, code:menu.js, book:measure, book:screen, book:sprites, book:colours, book:comments, book:citations, book:rules, law:QAL, law:QAM, law:QAW, tool:test.py
+MODIFIED (59):
+- book:citations:N208 · added
+- book:citations:N209 · added
+- book:colours:C19 · added
+- book:colours:C20 · added
+- book:colours:C21 · added
+- book:colours:C22 · added
+- book:comments:E598 · added
+- book:comments:E599 · added
+- book:comments:E600 · added
+- book:comments:E601 · added
+- book:comments:E602 · added
+- book:comments:E603 · added
+- book:comments:E604 · added
+- book:comments:E605 · added
+- book:comments:E606 · added
+- book:comments:E607 · added
+- book:comments:E608 · added
+- book:comments:E609 · added
+- book:comments:E610 · added
+- book:comments:E611 · added
+- book:comments:E612 · added
+- book:comments:E613 · added
+- book:comments:E614 · added
+- book:comments:E615 · added
+- book:comments:E616 · added
+- book:comments:E617 · added
+- book:comments:E618 · added
+- book:comments:E619 · added
+- book:comments:E620 · added
+- book:comments:E621 · added
+- book:comments:E622 · added
+- book:comments:E623 · added
+- book:measure:D117 · 125 → 128 bytes
+- book:measure:D239 · 1,773 → 1,784 bytes
+- book:measure:D312 · added
+- book:measure:D313 · added
+- book:measure:D314 · added
+- book:measure:D315 · added
+- book:measure:D316 · added
+- book:measure:D317 · added
+- book:measure:D318 · added
+- book:measure:D319 · added
+- book:measure:D320 · added
+- book:measure:D321 · added
+- book:rules:X66 · added
+- book:rules:X67 · added
+- book:screen:SN14 · added
+- book:sprites:P45 · added
+- code:index.html#drawn-once-in-the-view-frame · 6,045 → 6,058 bytes
+- code:index.html#floor-7-display · 6,049 → 6,795 bytes
+- code:index.html#the-building-art · 50,708 → 50,846 bytes
+- code:index.html#the-door · 6,441 → 6,653 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 5,089 → 5,214 bytes
+- code:index.html#the-view · 920 → 946 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · added
+- code:index.html#the-woods-cache · 5,097 → 4,765 bytes
+- code:index.html#touch · 6,447 → 6,763 bytes
+- code:menu.js · 63,923 → 64,139 bytes
+- tool:test.py · 197,799 → 210,883 bytes
+LOCKED (1838 of 1897): byte for byte as sealed, 778,307 bytes
+Tests: 40/40 rules hold
+Inventory: 1897 items sealed · 1777 book entries · 87 laws · 209 citations, 40 still to open · 7 known

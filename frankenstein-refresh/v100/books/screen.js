@@ -1,7 +1,7 @@
 // Book · SN Screen: the menus as shells. One mold, a row of six slots; a cell takes half a slot, one or two. A page is a shell: it ticks Tall to keep its own height,
 // else every page shares the tallest of the rest. On a card the subject's ticks pick the rows, in the order here. Every cell points at the books (its name in Shells, its price in D, its icon in Sprites). Edit here only.
 BOOK("screen", {
- "SN1": {"key":"mold","value":{"slots":6,"slot":44,"gap":6},"name":"the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6","cite":["N133"],"law":[]},
+"SN1": {"key":"mold","value":{"slots":6,"slot":44,"gap":6},"name":"the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6","cite":["N133"],"law":[]},
  "SN2": {"key": "tabs", "value": {"Home": ["BTC1", "BR1", "BR2", "BCR2", "BP4", "BP6", "BP7"], "Land": ["BCL1", "BI1", "BCL2", "BI3", "BCT2", "BI2", "BCL3", "BCL4", "BI5"], "Trade": ["BCR1", "BCT1", "BI6", "BI4", "BI7", "BI8"], "War": ["BM1", "BM2", "BM3", "BM4", "BI9", "BP10", "BTC2"], "Walls": ["BW1", "BW2", "BW3", "BF5", "BF1", "BF3", "BF4"], "Culture": ["BP1", "BP2", "BP3", "BP5", "BP8", "BP9", "BS2"]}, "name": "the Build tabs: six, up to nine buildings each, three to a row (each cell two slots wide)", "cite": ["N134"], "law": []},
  "SN3": {"key": "offmenu", "value": ["BS1", "BTC5", "BTC6", "BTC7", "BTC8", "BW4", "BF2"], "name": "buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the Net is the Natives' (it waits with them)", "cite": ["N135", "N172", "N198"], "law": []},
  "SN4": {"key":"card","value":[["title",null],["health","Health"],["load","Gather"],["store","Yield"],["flock","Flock"],["queue","Spawn"],["train","Spawn"],["tech","Research"],["troops",null],["acts",null]],"name":"a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs","cite":["N136","N170","N194"],"law":[]},
@@ -10,5 +10,6 @@ BOOK("screen", {
  "SN10": {"key":"Start","value":{"ticks":["Tall"],"rows":"the new game's choices"},"name":"the Start page","cite":["N139"],"law":[]},
  "SN11": {"key":"Build","value":{"ticks":[],"rows":"title, the six tabs, the tab's grid"},"name":"the Build page","cite":["N140"],"law":[]},
  "SN12": {"key":"Hall","value":{"ticks":["Tall"],"rows":"title, three tabs, the queue, train, tech"},"name":"the Town Center page","cite":["N141"],"law":[]},
- "SN13": {"key":"Layers","value":{"ticks":["Tall"],"rows":"title, the layers, Fast and New, the three volumes"},"name":"the Yard","cite":["N142","N143"],"law":[]}
+ "SN13": {"key":"Layers","value":{"ticks":["Tall"],"rows":"title, the layers, Fast and New, the three volumes"},"name":"the Yard","cite":["N142","N143"],"law":[]},
+ "SN14": {"key": "label", "value": {"px": 12, "floor": 9, "zoom": 1.3, "pad": [10, 4, 13, 19, 5]}, "name": "words on the map (Mid's LABEL, labelK, mapFont, tag): px at the opening zoom, never under floor; a label's pill (padding, edge, rise, height, inset)", "cite": ["N208"], "law": []}
 });

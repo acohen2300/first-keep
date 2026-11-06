@@ -9,11 +9,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QC** Moon lit fraction → N2 · used by D292, X63
 - **QD** Day's edges → N2
 - **QE** Eclipses, by geometry · N2 → N2
-- **QF** Colour from temperature → N4, N5, N54
+- **QF** Colour from temperature → N4, N5, N54 · used by D316, D318, X67
 - **QH** Rain or dry → N7 · used by D102, D293, O205
 - **QI** Snow line → N8
 - **QJ** Raindrop speed → N9 · used by D229, X56
-- **QK** Visibility → N10 · used by D229, X56
+- **QK** Visibility → N10 · used by D229, X56, X66
 - **QL** Lightning → N11 · used by D112
 - **QM** Random events → N12 · used by SC9, D110, D181, D308, D309, D310, D311, X64, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
@@ -52,18 +52,18 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAH** Fight or not → N38 · used by D305, X64
 - **QAI** Nerve → N76, N188 · used by SC6, D142, D231, X57
 - **QAJ** Arrow flight → N39, N40 · used by A5, SC7, W10, D143, D245, X57
-- **QAL** Sight from height → N41 · used by SC7
-- **QAM** Line of sight → N42
+- **QAL** Sight from height → N41 · used by SC7, D312, X66
+- **QAM** Line of sight → N42 · used by D313, X66
 - **QAN** Many eyes → N43, N44
 - **QAO** Flee → N45 · used by SC6, D231, D254
 - **QAP** Cold and wet → N46
 - **QAQ** Sickness → N47, N48 · used by D311, X65, O209, O210, O212, O213, O214, O215, O216, O219, O220, O222
 - **QAR** Weighted pick → N49 · used by D307, X64
 - **QAS** Breaking → N50, N51, N52
-- **QAT** Shadow → N53 · used by D120
-- **QAU** Light reach ∝ √power (flame colour uses QF, colour from temperature) · N54 → N54
-- **QAV** Smoke → N55, N56
-- **QAW** Camera → N57
+- **QAT** Shadow → N53 · used by D120, D317, D320
+- **QAU** Light reach ∝ √power (flame colour uses QF, colour from temperature) · N54 → N54 · used by D316, D317, X67
+- **QAV** Smoke → N55, N56 · used by D320
+- **QAW** Camera → N57 · used by D315, X67
 - **QAX** Sound → N58 · used by HA3, HX1
 - **QAY** Material sound by decay rate · N59 → N59 · used by HM1, HM2, HM3, HU4, HU11, HU12, HU14, HW2, HW3, HW4
 - **QAZ** Coastline → N60
@@ -134,8 +134,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N38** Maynard Smith & Price (1973), hawk–dove → QAH
 - **N39** Projectile motion from a height (standard) → QAJ, A5, D143, D245
 - **N40** Drag on a sphere (standard fluid dynamics) → QAJ, D143, D245
-- **N41** Horizon from a height, √(2Rh) (standard) → QAL
-- **N42** Bresenham (1965), grid line → QAM
+- **N41** Horizon from a height, √(2Rh) (standard) → QAL, D312
+- **N42** Bresenham (1965), grid line → QAM, D313
 - **N43** Pulliam (1973) → QAN
 - **N44** Lima (1995) → QAN
 - **N45** Ydenberg & Dill (1986) → QAO
@@ -147,10 +147,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N51** Auerbach (1891), crack threshold → QAS
 - **N52** Weibull (1951), strength by size → QAS
 - **N53** Plane geometry, shadow length → QAT
-- **N54** Black-body colour; inverse-square light → QF, QAU
+- **N54** Black-body colour; inverse-square light → QF, QAU, D316, D317, D318
 - **N55** Briggs (1969), plume rise → QAV
 - **N56** Pasquill–Gifford dispersion → QAV
-- **N57** Damped harmonic oscillator (standard) → QAW
+- **N57** Damped harmonic oscillator (standard) → QAW, D315
 - **N58** ISO 9613-2, sound outdoors → QAX, HX1
 - **N59** Klatzky, Pai & Krotkov (2000), Presence 9 → QAY, HM1, HM2, HM3
 - **N60** Mandelbrot (1967), Science 156 → QAZ
@@ -301,6 +301,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N205** Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_L → SC18, SC42, SC43, SC44, C18, D305, D306, D307, D308, D309, X64, MG1, MG2, MG4, MH1, MH3, MH4, MH5, MG7, MG8, MG9, MG10, MG11, MH7, PN1, J19
 - **N206** Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sick → SC45, C18, D310, D311, X65, BTC5, BTC6, BTC7, BTC8, BR1, BCR1, BCR2, BCT2, BI1, BI2, BI5, BI8, BM1, BM2, BM3, BW2, BW4, BF5, O208, O209, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J20
 - **N207** (to open) Alsan & Goldin (2019), Watersheds in Child Mortality: The Role of Effective Water and Sewerage Infrastructure, → O219, O220
+- **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, C22, D312, D313, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN14, P45
+- **N209** (to open) Tanner Helland (2012), How to Convert Temperature (K) to RGB: a fit to the CIE black-body locus, 1000 to 40000 → D318
 
 ## Named exceptions
 

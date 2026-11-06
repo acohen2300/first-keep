@@ -2,16 +2,16 @@
  "about": "Step 6, temp book staging/sprites.js (Mid's 18-figures and 19-building-art): every piece. in v100: already home (v100 took preview 49's figures and building art, Nov 4). bring: Mid has it, v100 does not; it comes as Sprites book entries with its feature (most are the skins held in preview 49). cut: v100 does it another way, or Albert cut it (then also in misfits). LOOKS, ART and WONDERART carry a line per row.",
  "pieces": {
   "lessMotion": [
-   "bring",
-   "the player's Reduce motion setting, read from the phone; v100 has none: with the View (it stills the moving extras)"
+   "in v100",
+   "F33+F34: index.html lessMotion"
   ],
   "DRAW": [
-   "bring",
-   "the draw budget: a phone that falls behind sheds cosmetic passes in one order (tree shadows, rain rings, motion, half pixels); with the View"
+   "in v100",
+   "F33+F34: index.html DRAW (D321 draw)"
   ],
   "still": [
-   "bring",
-   "is motion off (Reduce motion or the draw budget): with lessMotion and DRAW"
+   "in v100",
+   "F33+F34: index.html still"
   ],
   "shade": [
    "in v100",
@@ -284,8 +284,8 @@
    "index.html, the things floor, SPR (one sprite cache)"
   ],
   "trim": [
-   "bring",
-   "v100's sprite() drops the oldest past 400; Mid also zeroes the dropped canvas to give the memory back at once (iPhone drops pages that hold too much): to bring with the cache"
+   "in v100",
+   "F33+F34: index.html dropOld, for the sprites and the woods"
   ],
   "SCALES": [
    "cut",
@@ -380,8 +380,8 @@
    "index.html, the building art floor, win"
   ],
   "FLAGS": [
-   "bring",
-   "the pennant slots: a building's flags drawn live over it and waving; held as a skin in preview 49 (Parked, Nov 4)"
+   "in v100",
+   "F33+F34: index.html FLAGS, banner and bldSprite's fly"
   ],
   "banner": [
    "in v100",
@@ -700,8 +700,8 @@
    "the buildings' own cache: v100 has one cache for every picture (SPR)"
   ],
   "bldSprite": [
-   "bring",
-   "v100 has bldSprite (index.html, the things floor); Mid's choice of variant (age, civ, season, spent, sheep, tower tier, research tier) and the flags come with those skins, as Sprite entries, not kind checks"
+   "in v100",
+   "F33+F34: v100's bldSprite with levelOf and the Sprite level entries chooses the variant; the flags fly live"
   ],
   "NSPR": [
    "cut",
@@ -724,8 +724,8 @@
    "index.html, the node art floor, NS_INK"
   ],
   "NODE_H": [
-   "bring",
-   "how tall each find stands, for its shadow (tree 22, bush 8, rock 7): with the shadows (QAT)"
+   "in v100",
+   "F33+F34: sprites P45 dress.nodeH"
   ],
   "nodeSprite": [
    "in v100",

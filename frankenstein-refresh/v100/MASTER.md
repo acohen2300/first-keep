@@ -131,6 +131,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E72** The building art (preview 49, 19-building-art.js; Nov 3, the last build before the camera  · PB3 (N151, N160) · PB4 (N151, N160) · PB6 (N151, N160) · PB12 (N151, N160)
 - **E294** research shows on its building (Mid's UP, PB12): the steps learned of those its row names, · PB12 (N151, N160) · PB3 (N151, N160) · PB4 (N151, N160) · PB6 (N151, N160)
 - **E295** the keep at its level: the bastion from its points in the Sprites book (PB13) · PB13 (N151, N160)
+- **E622** a banner on a building that flies live leaves its place to the view (Mid's FLAGS)
 - **E73** a building picture's height, from its look
 
 ## index.html#the-node-art
@@ -297,10 +298,38 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E151** left at sunrise, up at noon, right at sunset
 - **E152** under the buildings and units: a building's footprint thrown by its height, a unit's foot 
 - **E153** the box's shadow: its top thrown, joined to its foot along every edge, one fill so the ove
+- **E623** the shadows of the trees, bushes and rocks in sight, not the deep woods, cast like everyth · QAT (N53)
 - **E454** the fallen, the hit glow and the marker (Mid's fallen, drawHitGlow, drawRadar; D258, D262, · D258 (N192) · D262 (N192) · D261 (N192)
 - **E455** a figure that dies in sight topples back, away from the way it faced, and fades
 - **E456** something of yours hit: the screen's edge glows, red for a rival, the flame's for the wild
 - **E457** foes near your Town Center out of view: a marker on the screen's edge points at them, thei
+
+## index.html#the-view-s-eyes-lights-and-stage
+
+- **E598** the view's eyes, lights and stage: what your side sees (sight from height, the woods), the
+- **E599** how far a building sees from its height: base + k √h, rounded (QAL, Mid's lookout) · QAL (N41)
+- **E600** a thing's sight: its own (research adds), shortened at night (a lantern gives a building p
+- **E601** the woods as walls: a square of tiles with enough standing trees blocks sight (QAM, Mid's  · QAM (N42)
+- **E602** is one square in open sight of another: a grid line (Bresenham); the first wood on the way
+- **E603** another side's building shows only where you see it now or once saw it (Mid's knownB)
+- **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
+- **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
+- **E606** a cache dropping its oldest picture gives the memory back at once (Mid's trim: iPhone drop
+- **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
+- **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
+- **E609** fire's colour from its temperature (QF, a black body), its life in the rain (an open flame · QF (N4, N5, N54) · QAU (N54)
+- **E610** a flame's light on the ground: a disc fading to a quarter at half its reach, added to the 
+- **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
+- **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
+- **E613** words on the map scale with the zoom down to a floor; a label is a pill (Mid's labelK, map
+- **E614** the dressing: a site staked out and rising with the work, a finished building's pop and fr
+- **E615** a building site: the stakes round its footprint, the walls rising with the work between tw
+- **E616** a building's flags, drawn live over its picture where its art put them, waving more in a s
+- **E617** a side's stores as piles by the camp that takes them in: a pyramid by log₁₀ of the store, 
+- **E618** a chimney's plume: rising ∝ x^(2/3) (QAV, Briggs) and widening ∝ x^0.9, leaning downwind ( · QAV (N55, N56)
+- **E619** a figure in motion: the woodcutter's lean into its tree (the view's own memory), the step'
+- **E620** the small map: the ground, the fog, buildings you know (a seat is a star), units you see, 
+- **E621** the grass mottled, greens then earth, kept to the land (Mid's makeBg)
 
 ## index.html#the-woods-cache
 

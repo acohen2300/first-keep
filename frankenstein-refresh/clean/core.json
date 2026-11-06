@@ -566,24 +566,24 @@
    "F24: measure D267 seen, research spysight"
   ],
   "lookout": [
-   "bring",
-   "sight: a building's from its height (√height), night, fog and snow shrink it"
+   "in v100",
+   "F33+F34: index.html sightOf, lookout (BASE.sight, QAL)"
   ],
   "sightFx": [
-   "bring",
-   "sight: a building's from its height (√height), night, fog and snow shrink it"
+   "in v100",
+   "F33+F34: index.html sightOf, lookout (BASE.sight, QAL)"
   ],
   "sightClear": [
-   "bring",
-   "sight: a building's from its height (√height), night, fog and snow shrink it"
+   "in v100",
+   "F33+F34: index.html sightOf, lookout (BASE.sight, QAL)"
   ],
   "visCap": [
-   "bring",
-   "sight: a building's from its height (√height), night, fog and snow shrink it"
+   "in v100",
+   "F33+F34: index.html sightOf, lookout (BASE.sight, QAL)"
   ],
   "sightOf": [
-   "bring",
-   "sight: a building's from its height (√height), night, fog and snow shrink it"
+   "in v100",
+   "F33+F34: index.html sightOf, lookout (BASE.sight, QAL)"
   ],
   "groupSees": [
    "in v100",

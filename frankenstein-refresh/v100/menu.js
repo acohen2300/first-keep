@@ -157,6 +157,8 @@ const VERBS = {
   move: { label: (c) => { const [[, a], [, b]] = WO.direct[c], w = WAR.directWait(c); return `${a}<small>${b}${w ? ` ${w}s` : ''}</small>`; }, whyNot: () => '', run: (c, held) => WAR.direct(c, !!held, S.aim) },
   quick: { label: () => SVG.attack, whyNot: () => (!WAR.sendable().length ? WO.none : ''), run: () => { const q = S.qa, U = WAR.sendable(); S.qa = null; if (WAR.order(U, null, q.k)) ECON.orderCost(ME, U); } },
   qclose: { label: () => SVG.close, whyNot: () => '', run: () => { S.qa = null; } },
+  follow: { label: () => 'Follow', whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
+  map: { label: () => 'Map', whyNot: () => '', run: () => { FK.show.M = !FK.show.M; FK.dirty(); } },
   recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
   train: { label: (c) => `${FK.rankName(c, ME)}${price(D.cost[c])}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, D.cost[c]) ? `Needs ${costText(D.cost[c])}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },
   untrain: { label: () => '−', whyNot: (b) => (!b.q || !b.q.length ? 'Nothing queued' : ''), run: (b) => ECON.unqueue(b) },
@@ -221,15 +223,15 @@ const ROWS = { // E199
   tech: (t) => (own(t) && t.done >= 1 ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
   troops: (t) => { const k = key(t), I = !own(t) && FK.has(t, 'Seat') && SIDES[ME].intel[t.side], x = !own(t) ? '' : t.kind === 'unit' ? (ECON.teachTo(t) ? vcell('teach', k) : '') : (FK.has(t, 'Zeal') ? vcell('zeal', k) : '') + (FK.has(t, 'Seat') ? ECON.prisonersOf(ME).map((_, i) => vcell('ransom', i)).join('') : ''); // E477
     return (x ? `<div class="row">${x}</div>` : '') + (t.job === 'school' ? `<p>${TW.teach.left.replace('{n}', Math.ceil(t.schoolT - FK.K.t))}</p>` : '') + (I ? `<p>${TW.sab.intel.replace('{n}', Math.floor(FK.K.t - I.t)).replace('{store}', costText(I.store)).replace('{age}', D.ages[I.age]).replace('{techs}', I.techs).replace('{army}', Object.values(I.army).reduce((a, b) => a + b, null))}</p>` : ''); },
-  acts: (t, r) => { const k = key(t), sq = council(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
+  acts: (t, r) => { const k = key(t), sq = council(t), a = t.kind === 'unit' ? (own(t) ? vcell('follow', null, null, '', FK.cam.follow) + (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
       : t.kind === 'bld' ? (own(t) ? (t.max ? vcell('replant', k) : ECON.cutOut(ME, t).length ? vcell('replantAll', k) : '') + vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
     return sq + (a ? `<div class="row">${a}</div>` : ''); },
 };
 function cardText(r) { const t = S.subject; if (!t) return ''; return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
-const base = (r) => S.war ? row(tab('Layers', 'Yard', 'yard'), gap(4), vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`)) + warBase()
-  : row(tab('Layers', 'Yard', 'yard'), gap(4), vcell('war', null, null, 'ic war').replace('</button>', `<span class="t">${SVG.war}</span>War</button>`))
+const base = (r) => S.war ? row(tab('Layers', 'Yard', 'yard'), gap(3), vcell('map', null, null, '', FK.show.M), vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`)) + warBase()
+  : row(tab('Layers', 'Yard', 'yard'), gap(3), vcell('map', null, null, '', FK.show.M), vcell('war', null, null, 'ic war').replace('</button>', `<span class="t">${SVG.war}</span>War</button>`))
   + row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y)))
   + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
@@ -286,8 +288,8 @@ for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) c
   e.stopImmediatePropagation(); }, true);
 const tints = new WeakMap(), tinted = (c, col) => { const T = tints.get(c) || {}; if (!T[col]) { const t = Object.assign(document.createElement('canvas'), { width: c.width, height: c.height }), x = t.getContext('2d'); Object.assign(t, { ax: c.ax, ay: c.ay, q: c.q }); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = P.tint; x.fillStyle = col; x.fillRect(0, 0, t.width, t.height); T[col] = t; tints.set(c, T); } return T[col]; }; // E338
 function drawSeal(ctx, g) { if (!g.seal || FK.K.t - g.sealT > D.seal.every) { g.seal = ECON.sealPath(ME, line(g.code) ? g.cells.filter((k) => fits(g, k)) : g.ok ? [g.j * N + g.i] : []); g.sealT = FK.K.t; } // E339
-  const p = g.seal, h = FK.seatOf(ME); if (!p || !h) return; ctx.fillStyle = COL.rw; ctx.font = getComputedStyle(toastEl).font; ctx.textAlign = 'center'; if (!p.length) return ctx.fillText('Sealed', ...FK.toScreen(h.vx, h.vy));
-  ctx.strokeStyle = COL.rr; ctx.lineWidth = P.width.seal; ctx.setLineDash(P.dash.seal); ctx.beginPath(); p.forEach((k, n) => ctx[n ? 'lineTo' : 'moveTo'](...onMap(k))); ctx.stroke(); ctx.setLineDash([]); ctx.fillText('Open: a foe walks in', ...onMap(p.at(-1))); }
+  const p = g.seal, h = FK.seatOf(ME); if (!p || !h) return; if (!p.length) return FK.tag(ctx, 'Sealed', ...FK.toScreen(h.vx, h.vy));
+  ctx.strokeStyle = COL.rr; ctx.lineWidth = P.width.seal; ctx.setLineDash(P.dash.seal); ctx.beginPath(); p.forEach((k, n) => ctx[n ? 'lineTo' : 'moveTo'](...onMap(k))); ctx.stroke(); ctx.setLineDash([]); FK.tag(ctx, 'Open: a foe walks in', ...onMap(p.at(-1))); }
 FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g) return; const [, n] = B[g.code], T = D.tile, h = FK.H[Math.max(0, g.j) * N + Math.max(0, g.i)] ?? D.land, at = (sx, sy, z = h) => FK.toScreen(...FK.toView(...FK.toBoard(sx * T, sy * T), Math.max(D.land, z))); ctx.save(); // E340
   if (walled(g.code)) drawSeal(ctx, g);
   if (line(g.code)) { ctx.globalAlpha = P.tint; for (const k of g.cells) { const [i, j] = ij(k); ctx.fillStyle = fits(g, k) ? COL.rg : COL.rr; ctx.beginPath(); P.quad.forEach(([a, b], q) => ctx[q ? 'lineTo' : 'moveTo'](...at(i + a, j + b, FK.H[k]))); ctx.fill(); }
@@ -341,7 +343,7 @@ const msnSay = (slot) => { const m = WAR.MS[slot]; return !m || m.end ? '' : m.s
 const waveLine = (p) => { const [first, more] = WO.wave; return p.waves.map((w, i) => { const [c, other] = new Set(w.list.map((r) => FK.SH[r.u.code].class)); return (i ? more : first).replace('{n}', w.list.length).replace('{who}', other ? WO.soldiers : c.toLowerCase()).replace('{t}', clock(w.t)); }).join(WD.list.and); };
 const etaNow = () => { const F = WAR.free(), k = aimK(), key = [k, F.length, Math.floor(FK.K.t / HUD.settle)].join(); if (!F.length) return null; if (!S.eta || S.eta.key !== key) S.eta = { key, v: WAR.etaOf(F, k, WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(F))), k)) }; return S.eta.v; };
 FK.on('draw', (ctx, s) => { if (S.line) { const p = S.line, a = boardAt(p.x0, p.y0), b = boardAt(p.x, p.y), T0 = FK.SPRITE.touch; ctx.save(); ctx.strokeStyle = ctx.fillStyle = FK.C.gold; ctx.lineWidth = T0.choke; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(p.x0, p.y0); ctx.lineTo(p.x, p.y); ctx.stroke(); // E432
-    ctx.font = getComputedStyle(toastEl).font; ctx.textAlign = 'center'; ctx.fillText(WO.choke.find((w) => w.includes('across')).replace('{n}', Math.max(D.choke.min, Math.round(FK.dist(b, a) / D.tile / D.ranks.gap))), (p.x0 + p.x) * P.half, (p.y0 + p.y) * P.half - T0.up); ctx.restore(); }
+    ctx.font = FK.mapFont(); ctx.textAlign = 'center'; ctx.fillText(WO.choke.find((w) => w.includes('across')).replace('{n}', Math.max(D.choke.min, Math.round(FK.dist(b, a) / D.tile / D.ranks.gap))), (p.x0 + p.x) * P.half, (p.y0 + p.y) * P.half - T0.up); ctx.restore(); }
   if (!S.war || !S.aim) return; if (S.aim.t && S.aim.t.gone) S.aim.t = null;
   const [x, y] = aimAt(), now = performance.now(), [r0, rz, rp] = RT.r, L = now - S.firedT < RT.settle * TO.ms, R0 = Math.max(r0, rz * s + rp), R = L ? R0 * RT.fired : R0, t = (now - S.aimT) / TO.ms, eta = etaNow(), seg = (a, b, c, d) => { ctx.moveTo(a, b); ctx.lineTo(c, d); }, turn = FK.SPRITE.marks.arc;
   ctx.save(); ctx.strokeStyle = ctx.fillStyle = L ? FK.C.green : aimColor(); ctx.lineWidth = RT.line;
@@ -351,7 +353,7 @@ FK.on('draw', (ctx, s) => { if (S.line) { const p = S.line, a = boardAt(p.x0, p.
     for (const i of Array(n).keys()) { const a = t * csp + (i * whole) / n, c = Math.cos(a), e = Math.sin(a), rot = (u, v) => [x + u * c - v * e, y + u * e + v * c], tip = [x + (R * at + len) * c, y + (R * at + len) * e]; seg(...rot(R * at, -wid), ...tip); seg(...rot(R * at, wid), ...tip); }
     const sy = y + Math.sin(t * ssp) * (R - ins); seg(x - R + ins, sy, x + R - ins, sy); ctx.stroke(); }
   const [out, g] = RT.arm; ctx.beginPath(); seg(x - R - out, y, x - g, y); seg(x + g, y, x + R + out, y); seg(x, y - R - out, x, y - g); seg(x, y + g, x, y + R + out); ctx.stroke();
-  const [bx, by] = FK.tileMid(aimK()); ctx.font = getComputedStyle(toastEl).font; ctx.textAlign = 'center'; ctx.fillText(eta ? `${clock(eta)} · ${coord(bx, by)}` : coord(bx, by), x, y - R - RT.label); ctx.restore(); });
+  const [bx, by] = FK.tileMid(aimK()); ctx.font = FK.mapFont(); ctx.textAlign = 'center'; ctx.fillText(eta ? `${clock(eta)} · ${coord(bx, by)}` : coord(bx, by), x, y - R - RT.label); ctx.restore(); });
 FK.on('event', (e, t, n) => { if (e === 'short') toast('Not enough to pay for repairs'); const w = NEWS[e]; if (w) toast((Array.isArray(w) ? w[n] : w).replace('{n}', n).replace('{m}', n * D.flock.mutton).replace('{at}', t && coord(t.bx, t.by))); }); // E359
 FK.on('tick', (dt) => { const real = dt / (show.fast ? D.fast : 1); if (edge && drag && S.ghost) { const [w, h] = FK.size(), vx = (edge.x > w - P.edge) - (edge.x < P.edge), vy = (edge.y > h - P.edge) - (edge.y < P.edge), f = (P.scroll * real) / FK.cam.z; if (vx || vy) { FK.cam.x += vx * f; FK.cam.y += vy * f; FK.keepOn(); ghostTo(edge.x, edge.y - drag.lift); } } // E342
   acc += real; if (S.toastT > 0) { S.toastT -= real; if (S.toastT <= 0) toastEl.style.opacity = 0; } if (acc >= D.beatUi) { acc = 0; render(); } });

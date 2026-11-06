@@ -1126,7 +1126,75 @@ async def blaze(b):
     hs, mh = v['health']['sick'], (m.get('health') or {}).get('sick'); sick = bool(mh) and hs == mh and len(hs[0]) > 1 and any(set(c) - set(a) for c, a in zip(hs, hs[1:])) and any(set(a) - set(c) for c, a in zip(hs, hs[1:]))
     got = [books, laws, town, sick, not errs]
     ok('t-fire', all(got), [got, v['heat'], B.get('heat'), t, mt, hs, mh, errs[:2], err[-800:]])
-PAGED = {'t-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+SIGHTJS = r"""(() => { const D = FK.D, K = FK.K, N = FK.N, T = D.tile, C = D.woods.cell, F = C * T, ME = D.players[0], foe = D.players[1], h = FK.seatOf(ME); $calm(ME, foe); FK.show.fog = true;
+  const tw = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'tower'), hs = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'house'), W = FK.woodsGrid(), NW = Math.ceil(N / C), cell = (b) => Math.floor(b / F);
+  const dusk = () => Object.assign(K, { alt: -D.moon.twilight / 2, moonLit: 0.5, vis: 12 }), woods = (i, j, r) => { let n = 0; for (let y = j - r; y <= j + r; y++) for (let x = i - r; x <= i + r; x++) n += W[y * NW + x] || 0; return n; };
+  const hidden = (i, j) => { const ci = Math.floor(i / C), cj = Math.floor(j / C); let n = 0, room = false; for (let y = cj - 3; y <= cj + 3; y++) for (let x = ci - 3; x <= ci + 3; x++) if (Math.hypot(x - ci, y - cj) <= 2 && !W[y * NW + x] && !FK.openLine(W, ci, cj, x, y)) { n++; for (let q = 0; q < C * C; q++) if (ECON.canPlace(hs, x * C + (q % C), y * C + Math.floor(q / C))) room = true; } return n >= 3 && room; };
+  let t = null; for (let j = 8; j < N - 8 && !t; j++) for (let i = 8; i < N - 8 && !t; i++) if (ECON.canPlace(tw, i, j) && hidden(i, j)) t = FK.build(tw, i, j, FK.SIDES[ME].col); if (!t) return null;
+  Object.assign(t, { side: ME, done: 1 }); FK.units().length = 0; for (const b of FK.things()) if (b.kind === 'bld' && b !== t && b.side === ME) b.done = 0.5; dusk();
+  const cases = [[0, 0, 99], [0.5, 0.5, 99], [1, 0, 99], [0.5, 0.5, 12]].map(([n, m, v]) => { Object.assign(K, { alt: -D.moon.twilight * n, moonLit: m, vis: v }); return [n, m, v * D.upm, FK.sightOf(t)]; }); dusk();
+  const r = FK.sightOf(t), [ex, ey] = FK.fromBoard(t.bx, t.by), cx0 = cell(ex), cy0 = cell(ey), inner = []; for (let j = cy0 - 6; j <= cy0 + 6; j++) for (let i = cx0 - 6; i <= cx0 + 6; i++) if (Math.hypot((i + 0.5) * F - ex, (j + 0.5) * F - ey) <= r - F) inner.push([i, j]);
+  const state = () => inner.map(([i, j]) => { const v = new Set(); for (let y = 0; y < C; y++) for (let x = 0; x < C; x++) v.add(FK.SEEN[(j * C + y) * N + i * C + x]); return v.size === 1 ? [...v][0] : -1; });
+  FK.SEEN.fill(0); K.fogT = 0; const look = () => { FK.look(99); }; look(); const s1 = state(), spot = (want) => { for (const [n, [i, j]] of inner.entries()) for (let y = 0; y < C; y++) for (let x = 0; x < C; x++) if (s1[n] === want && ECON.canPlace(hs, i * C + x, j * C + y)) return [i * C + x, j * C + y]; };
+  const hid = spot(0), lit = spot(2), foes = [hid, lit].map((c) => c && FK.build(hs, c[0], c[1], FK.SIDES[foe].col)); for (const b of foes) if (b) Object.assign(b, { side: foe, done: 1 });
+  look(); const k1 = foes.map((b) => b && !FK.fire('hide', b)); t.done = 0; look(); const s3 = state(), k3 = foes.map((b) => b && !FK.fire('hide', b));
+  const trees = []; for (let k = 0; k < N * N; k++) if (FK.OCC[k] === 1 && FK.FOR[k]) trees.push([(k % N) * T + T / 2, Math.floor(k / N) * T + T / 2]);
+  return { r, eye: [ex, ey], cases, inner, s1, s3, k1, k3, foes: foes.map((b) => b && FK.fromBoard(b.bx, b.by)), trees, W: [...W], fogN: NW }; })()"""
+MINIJS = r"""(async () => { const D = FK.D, ME = D.players[0], foe = D.players[1]; $calm(ME, foe); FK.show.fog = false; FK.show.M = true; MENU.S.tab = null; MENU.render(true);
+  const h = FK.seatOf(ME), sol = FK.kinds('Foot')[0] || Object.keys(D.stats).find((c) => (D.stats[c].tags || []).includes('infantry')), k0 = $ring(h, 14, 40, (i, j) => FK.walkable(j * FK.N + i) && j * FK.N + i);
+  for (let n = 0; n < 3; n++) FK.spawn(sol, foe, k0, FK.rng); $run(2); for (let i = 0; i < 40 && !(FK.mini() && FK.mini().mark); i++) { FK.dirty(); await new Promise((r) => setTimeout(r, 50)); } const q = FK.near, M = FK.mini(); if (!q || !M || !M.mark) return { q: !!q, M: !!M };
+  const [mx, my] = [M.mx + (M.mark[0] - M.cx) * M.k, M.my + (M.mark[1] - M.cy) * M.k], back = FK.miniAt(mx, my), p = { x0: mx, y0: my, x: mx, y: my, t: performance.now(), mode: null }; FK.fire('press', p);
+  return { mark: M.mark, u: [q.u.vx, q.u.vy], back, mode: p.mode, eat: p.eat, to: [FK.cam.tx, FK.cam.ty], n: q.n, beat: D.mini.inc.beat }; })()"""
+MIDSIGHT = r"""const n = (re, t) => t.match(re)[0];
+return box([basics, units, blds, n(/const LOOKOUT = \{[^}]*\};/, tuning), `const G = { night: 0, wx: 'fog', ev: {}, fog: new Uint8Array(FOGN * FOGN), fogOn: true, seenB: {}, units: [], blds: [], nodes: RUN.trees.map(([x, y]) => ({ kind: 'tree', amt: 1, x, y })), treeV: 0 };
+  let MOON = 0; const FX1 = { a: 0, m: 1 }, fxv = () => FX1, bldKeys = () => [], unitKeys = () => [], stats = () => ({}), moonLight = () => MOON, EVM = { sight: 1 }, WEATHER = { fog: { vis: 99 } }, EVENTS = {}, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), hyp = Math.hypot, friendly = (a, b) => a === b, wearGround = () => {};`,
+  cut(core, 'const lookout', 'const groupSees'), cut(fog, 'const fogAt', 'let WOODS'), cut(fog, 'let WOODS', 'let fogOff'),
+  `var OUT = { cases: RUN.cases.map(([nt, m, v]) => { G.night = nt; MOON = m; WEATHER.fog.vis = v; return sightOf({ kind: 'tower', owner: 0 }); }) }; const [cn, cm, cv] = RUN.dusk; G.night = cn; MOON = cm; WEATHER.fog.vis = cv;
+  const tw = { id: 1, kind: 'tower', owner: 0, x: RUN.eye[0], y: RUN.eye[1], hp: 1, prog: 1 }, at = ([i, j]) => G.fog[j * FOGN + i]; G.blds.push(tw); OUT.r = sightOf(tw); OUT.W = [...woodsGrid()]; fogTick(); OUT.s1 = RUN.inner.map(at);
+  RUN.foes.forEach((p, i) => p && G.blds.push({ id: 2 + i, kind: 'house', owner: 1, x: p[0], y: p[1], hp: 1, prog: 1 })); fogTick(); const kn = () => RUN.foes.map((p, i) => p && knownB(G.blds.find((b) => b.id === 2 + i)));
+  OUT.k1 = kn(); tw.hp = 0; fogTick(); OUT.s3 = RUN.inner.map(at); OUT.k3 = kn(); OUT.fogN = FOGN; OUT.LOOKOUT = LOOKOUT; OUT.FOG = FOG;`]);"""
+async def sight(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(SIGHTJS); pg2, errs2 = await fresh(b); mn = await pg2.evaluate(MINIJS); await pg.close(); await pg2.close(); M = MEASURE
+    m, err = frozen('basics units blds tuning core fog=22-view-fog', MIDSIGHT, v and {**v, 'dusk': v['cases'][3][:3]}); m = m or {}
+    books = bool(m) and [M['lookout']['base'], M['lookout']['k']] == [m['LOOKOUT']['base'], m['LOOKOUT']['k']] and M['woods'] == {'cell': m['FOG'] // M['tile'], 'trees': 3}
+    num = bool(v and m) and all(abs(a[3] - c) < 1e-9 for a, c in zip(v['cases'], m['cases'])) and abs(v['r'] - m['r']) < 1e-9 and v['cases'][0][3] > v['cases'][2][3] > 0
+    grid = bool(v and m) and v['W'] == m['W'] and v['fogN'] == m['fogN'] and v['s1'] == m['s1'] and v['s3'] == m['s3'] and 0 in v['s1'] and 2 in v['s1'] and set(v['s3']) <= {0, 1} and 1 in v['s3']
+    known = bool(v and m) and v['k1'] == m['k1'] and v['k3'] == m['k3'] and v['k1'] == [False, True] and v['k3'] == [False, True]
+    mini = bool(mn.get('mark')) and mn['mark'] == mn['u'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['back'], mn['u'])) and mn['mode'] == 'mini' and mn['eat'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['to'], mn['u'])) and mn['beat'] == 350
+    got = [books, num, grid, known, mini, not errs and not errs2]
+    ok('t-sight', all(got), [got, v and {k: v[k] for k in ('r', 'cases', 's1', 's3', 'k1', 'k3')}, {k: m.get(k) for k in ('r', 'cases', 's1', 's3', 'k1', 'k3')}, mn, errs[:2], errs2[:2], err[-600:]])
+STAGEJS = r"""(() => { $calm(); const D = FK.D, K = FK.K, ME = D.players[0], h = FK.seatOf(ME), out = {}; MENU.S.tab = null; MENU.render(true);
+  FK.cam.z = FK.zmax(); FK.cam.x = h.vx + 80; FK.cam.y = h.vy + 60; FK.camStop(); FK.camGo(h.vx, h.vy); out.cam0 = [h.vx + 80, h.vy + 60, h.vx, h.vy]; out.cam = []; for (let i = 0; i < 30; i++) { FK.followCam(1 / 30); out.cam.push([FK.cam.x, FK.cam.y]); }
+  const hs = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'house'), lm = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'lumber'), lamp = Object.keys(BOOKS.tech).find((c) => BOOKS.tech[c].value.fx.some((f) => f.s === 'lamp'));
+  const site = $put(hs, ME), burn = $put(hs, ME), hurt = $put(lm, ME), lit = $put(lm, ME); site.done = 0.4; burn.fire = 0.5; hurt.hp = hurt.hpMax * 0.3; FK.learn(ME, lamp); FK.sim(0.1); site.done = 1; FK.sim(0.1); const t0 = K.t;
+  out.pop = []; for (let i = 0; i < 24; i++) { out.pop.push([K.t - t0, FK.popOf(site)]); K.t += 1 / 30; } out.popC = [-0.1, 0, 0.1, 0.25, 0.5, 0.75, 0.99, 1, 2].map(FK.popC);
+  Object.assign(K, { alt: -D.moon.twilight, rain: 0, snowing: 0 }); const mine = [h, site, burn, hurt, lit], L = new Map(FK.lightsOf().map(([t, k]) => [t, k]));
+  out.blds = mine.map((t) => [FK.SH[t.code].look, t.done >= 1 ? 1 : t.done, t.hp, t.hpMax, t.fire || 0, FK.stat(t.code, t.side, 'lamp') || 0, !!FK.has(t, 'Line'), !!FK.has(t, 'Field')]); out.lights = mine.map((t) => L.get(t) || null);
+  out.rgb = Object.fromEntries(Object.keys(D.flames).map((k) => [k, FK.kelvinRGB(D.flames[k].K)])); out.life = Object.keys(D.flames).map((k) => [FK.flameLife(k), (K.rain = 0.5, FK.flameLife(k)), (K.rain = 0)][1]);
+  Object.assign(FK.DRAW, { lvl: 0, ema: 0, slow: 0, fast: 0 }); const sh = [], d0 = FK.DRAW.lvl; for (const w of [...Array(130).fill(20), ...Array(700).fill(3)]) { FK.shed(w); sh.push(FK.DRAW.lvl); } out.shed = [d0, sh.indexOf(1), sh.lastIndexOf(1), sh.at(-1)]; return out; })()"""
+MIDSTAGE = r"""const n = (re, t) => t.match(re)[0];
+const cam = box([`const cam = { x: RUN.cam0[0], y: RUN.cam0[1], z: 2 }, G = { follow: false }, still = () => false, clampCam = () => {};`, cut(vb, 'const spring', '// The turned view'), `camGo(RUN.cam0[2], RUN.cam0[3]); var OUT = []; for (let i = 0; i < 30; i++) { followCam(1 / 30); OUT.push([cam.x, cam.y]); }`]);
+const lights = box([basics, units, blds, `let MX = 0, CUR = null; const L = [], G = { night: 1, wx: 'clear', finds: [], units: [], P: [{ techs: new Set() }] }, SET = { lights: true }, STANDARDS = [], cw = 1, ch = 1, performance = { now: () => 0 };
+  const precip = () => false, tintOf = () => null, knownB = () => true, known0 = () => true, visibleTo0 = () => true, maxHpB = () => MX, halfOf = () => 10, upTier = () => 0, SX = () => 0, SY = () => 0, DY = () => 0;
+  const ctx = new Proxy({}, { get: () => () => {}, set: () => true }), flame = () => {}, glow = (x, y, kind) => L.push(kind), fxv = () => ({ a: CUR.lamp, m: 1 }), bldKeys = () => [];`, n(/const HEARTH = [^;]*;/, vo), cut(vo, 'function drawLight', 'const HEARTH'),
+  `var OUT = RUN.blds.map(([kind, prog, hp, mx, fire, lamp, wall, crop], id) => { BLD[kind] = { ...BLD[kind], wallish: wall, crop }; CUR = { id, kind, owner: 0, x: 0, y: 0, prog, hp, fire, lamp }; MX = mx; G.blds = [CUR]; L.length = 0; drawLight(1, () => true); return L.at(-1) || null; });`]);
+const things = box([basics, `const G = { wx: 'clear', t: 0 }, precip = (w) => w === 'rain', clamp = (v, a, b) => Math.max(a, Math.min(b, v));`, n(/const FLAME = \{[\s\S]*?\n\};/, vt), n(/const LIGHT = \{[^}]*\};/, vt), cut(vt, 'const kelvinRGB', 'function flame('), n(/const popC = [^\n]*/, vt),
+  `var OUT = { FLAME, LIGHT, rgb: FLAME_RGB, life: Object.keys(FLAME).map((k) => { G.wx = 'rain'; const v = flameLife(k); G.wx = 'clear'; return v; }), popC: [-0.1, 0, 0.1, 0.25, 0.5, 0.75, 0.99, 1, 2].map(popC), pop: RUN.pop.map(([a]) => popC(a / 0.6)) };`]);
+const shed = box([`let lessMotion = false; const fit = () => {};`, n(/const DRAW = \{[^}]*\};/, fg), cut(fr, 'function shed', '// One frame'), `const sh = []; for (const w of [...Array(130).fill(20), ...Array(700).fill(3)]) { shed(w); sh.push(DRAW.lvl); } var OUT = [0, sh.indexOf(1), sh.lastIndexOf(1), sh.at(-1)];`]);
+return { cam, lights, things, shed };"""
+async def stage(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(STAGEJS); await pg.close(); M = MEASURE
+    m, err = frozen('basics units blds vb=20-view-base vt=23-view-things vo=24-view-overlays fg=18-figures fr=41-boot', MIDSTAGE, {'cam0': v['cam0'], 'blds': v['blds'], 'pop': v['pop']}); m = m or {}
+    T = m.get('things') or {}; FL = {k: {q: f[q] for q in ('p', 'K', 's')} | ({'covered': True} if f.get('covered') else {}) for k, f in (T.get('FLAME') or {}).items()}
+    books = bool(T) and M['flames'] == FL and [M['light'][k] for k in ('k', 'wet', 'a')] == [T['LIGHT'][k] for k in ('k', 'wet', 'a')] and M['cam']['w'] == 9 and M['stage']['pop'] == [0.16, 0.6] and M['draw']['slow'] == 12
+    cam = bool(m.get('cam')) and all(abs(a - c) < 1e-9 for p, q in zip(v['cam'], m['cam']) for a, c in zip(p, q)) and abs(v['cam'][-1][0] - v['cam0'][2]) < 1 and v['cam'][0] != v['cam'][1]
+    lights = v['lights'] == m.get('lights') and len(set(v['lights'])) >= 3
+    colour = bool(T) and v['rgb'] == T['rgb'] and v['life'] == T['life'] and all(abs(a - c) < 1e-12 for a, c in zip(v['popC'], T['popC']))
+    pop = bool(T) and all(abs(p[1] - c) < 1e-9 for p, c in zip(v['pop'], T['pop'])) and max(p[1] for p in v['pop']) > 1.05 and v['pop'][-1][1] == 1
+    shed = v['shed'] == m.get('shed') and v['shed'][1] > 0
+    got = [books, cam, lights, colour, pop, shed, not errs]
+    ok('t-stage', all(got), [got, v['cam'][:3], (m.get('cam') or [])[:3], v['lights'], m.get('lights'), v['blds'], v['shed'], m.get('shed'), v['pop'][:4], T.get('pop', [])[:4], errs[:2], err[-800:]])
+PAGED = {'t-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

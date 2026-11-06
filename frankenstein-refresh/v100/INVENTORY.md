@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 2,835 | 430,031 | 430,165 |
-| Books | 1731 | 0 | 455,303 | 455,862 |
+| Game code | 29 | 2,961 | 453,689 | 453,827 |
+| Books | 1777 | 0 | 472,091 | 472,685 |
 | Laws | 87 | 0 | 15,620 | 16,070 |
-| Tools | 4 | 1,424 | 226,396 | 226,626 |
+| Tools | 4 | 1,492 | 239,480 | 239,710 |
 
 ## The trades (code)
 
@@ -21,22 +21,23 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground | 28 | 1,816 | 1,820 | 38 |
 | index.html#floor-2-terrain | 81 | 7,995 | 7,999 | 131 |
 | index.html#floor-3-non-movables | 48 | 5,779 | 5,783 | 81 |
-| index.html#drawn-once-in-the-view-frame | 55 | 6,041 | 6,045 | 123 |
-| index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 59 | 6,437 | 6,441 | 69 |
+| index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
+| index.html#the-view | 9 | 942 | 946 | 14 |
+| index.html#the-door | 59 | 6,649 | 6,653 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
-| index.html#the-building-art | 324 | 50,704 | 50,708 | 4096 |
+| index.html#the-building-art | 324 | 50,842 | 50,846 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
 | index.html#floor-5-movables | 128 | 14,640 | 14,644 | 93 |
 | index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 33 | 5,085 | 5,089 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,210 | 5,214 | 92 |
 | index.html#floor-6-climate | 155 | 24,487 | 24,499 | 251 |
-| index.html#floor-7-display | 45 | 6,045 | 6,049 | 72 |
-| index.html#the-woods-cache | 51 | 5,093 | 5,097 | 79 |
-| index.html#touch | 49 | 6,443 | 6,447 | 55 |
-| menu.js | 364 | 63,881 | 63,923 | 588 |
+| index.html#floor-7-display | 48 | 6,791 | 6,795 | 70 |
+| index.html#the-view-s-eyes-lights-and-stage | 119 | 22,198 | 22,202 | 0 |
+| index.html#the-woods-cache | 51 | 4,761 | 4,765 | 71 |
+| index.html#touch | 49 | 6,759 | 6,763 | 55 |
+| menu.js | 366 | 64,097 | 64,139 | 588 |
 | econ.js | 538 | 97,493 | 97,493 | 72 |
 | combat.js | 351 | 58,447 | 58,447 | 84 |
 | ai.js | 159 | 25,177 | 25,177 | 26 |
@@ -48,18 +49,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 5 | 734 |
 | capabilities | 50 | 14,678 |
-| citations | 207 | 38,853 |
-| colours | 17 | 2,958 |
-| comments | 592 | 98,444 |
+| citations | 209 | 39,729 |
+| colours | 21 | 4,542 |
+| comments | 618 | 102,954 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 292 | 107,687 |
-| rules | 64 | 21,680 |
-| screen | 10 | 2,959 |
+| measure | 302 | 115,572 |
+| rules | 66 | 23,047 |
+| screen | 11 | 3,247 |
 | shells | 103 | 20,476 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
-| sprites | 61 | 23,607 |
+| sprites | 62 | 24,413 |
 | tech | 222 | 64,240 |
 | words | 20 | 59,224 |
 
@@ -139,5 +140,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X63 | t-mind | page | the computers' minds and the sky, the moon and the ground (F29+F30): Mid's PERS, PLAYERS, WAVE, SAVE, DIFF, EASY_SAFE, SYNODIC, NIGHT_SIGHT, CLIMATE.rut, CLIMATE.shore and EVENTS.flood in the books; a computer's plan by need each minute over four minutes is Mid's frozen needOf and runsOut on the same hands, rates, stores, goal and draw, and every computer grows its town; the moon's phase, light and the night's sight are Mid's; a walker wears the ground a unit-second a second, and the ruts heal, deepen the mud and pool by water as Mid's frozen rutHeal, rutOf and mudAt; a flood blocks the land within its rise and harms a building there unless Levees, and goes |
 | X64 | t-wild | page | finds, wild guards, drifters, events and the hazards (F31): Mid's FINDS (guards, spoils, the ruins' scroll, the drifters' price), WAYFARER_EVERY, WILD_LOOK, the leash, NATIVE's raids, GROUP_R, EV_MEAN, EV_MIN, EV_WARN, the kept EVENTS, HAZARDS, HORDE and the bandit's and robber's UNIT rows in the books; on the seed every find laid with its guards on its ring (drifters by their fire); with every hazard on, the events in order with their warnings and the horde's warnings, arrival and number, fed one string of dice, are Mid's frozen eventsTick and hordeTick's (each event's doing set aside); a robbers' raid's band and mark are Mid's frozen natRaid's for the same camp, people and strengths; a drifter's refusals, price and three foot soldiers are Mid's frozen hireWhy and hire's; a chest taken pays Mid's frozen findsTick's spoils, the ruins a free research |
 | X65 | t-fire | page | fire and sickness (F32): Mid's FIRE, FIRE_SMOKE, FIREARMS and HEALTH in the books, its wooden buildings the ones that Burn, its water, sewer and quarantine research the measured shares (MEASURED); fireHeat and Rothermel's η are Mid's; a summer storm's strike on a wooden town of two clusters: the home with villagers beside it saved, its neighbour untouched, and the other cluster's three burning down one from another, each when Mid's frozen lightning, ignite, fireTick and repairTick's buckets do on the same town and dice (to the 3 s look); then an outbreak, beat by beat, sickens and cures the same people as Mid's frozen outbreak and healthTick |
+| X66 | t-sight | page | sight and the small map (F33): Mid's LOOKOUT and the woods' 40 square of three trees in the books; a tower at dusk in fog beside a wood sees as far as Mid's frozen sightOf (four nights, moons and fogs), the woods grid is Mid's woodsGrid, the tiles seen and then remembered when the tower is gone are Mid's frozen fogTick's grid square by square, and another side's house behind the wood stays hidden while the one in sight shows and stays shown, as Mid's knownB; the small map marks the army the alarm has coming, at its place, and a tap there takes the finger and glides the camera to it |
+| X67 | t-stage | page | lights, the glide, theatrics and the draw budget (F34): Mid's FLAME, LIGHT, CAM_W, the pop and the shed thresholds in the books; a glide to the Town Center follows Mid's frozen spring and followCam frame by frame; after dark the Town Center, a finished house, a burning house, a badly hurt and a lanterned camp give the lights Mid's frozen drawLight gives; each flame's colour and its life in the rain are Mid's kelvinRGB and flameLife; the finished house's pop runs Mid's popC frame by frame; a slow phone sheds and climbs back on Mid's frozen shed |
 
-1850 items sealed · 1731 book entries · 87 laws · 207 citations, 39 still to open · 7 known
+1897 items sealed · 1777 book entries · 87 laws · 209 citations, 40 still to open · 7 known

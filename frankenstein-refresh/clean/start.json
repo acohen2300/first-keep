@@ -18,8 +18,8 @@
    "the safety net: an error costs a frame, never the game; a second kind pauses and offers a restart (needs Saving for the last good save)"
   ],
   "shed": [
-   "bring",
-   "the load governor: a slow phone sheds a level of drawing detail and climbs back when fast; v100 has the sprite and woods caches but no governor"
+   "in v100",
+   "F33+F34: index.html shed, in the frame loop (D321)"
   ],
   "frame": [
    "in v100",

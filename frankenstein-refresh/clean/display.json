@@ -82,24 +82,24 @@
    "v100's keepOn (the camera rule); Mid's clamps in the 45° land frame past its rim, both replaced"
   ],
   "spring": [
-   "bring",
-   "the camera's glide, a critically damped spring (law QAW, written but not built in v100)"
+   "in v100",
+   "F33+F34: index.html spring (QAW)"
   ],
   "CAM_W": [
-   "bring",
-   "the glide's speed, ω 9, about half a second (Measurements, with QAW)"
+   "in v100",
+   "F33+F34: D315 cam"
   ],
   "camGo": [
-   "bring",
-   "glide the camera to a point: Follow, Home, go there, an alert (with QAW)"
+   "in v100",
+   "F33+F34: index.html camGo (the small map; still jumps)"
   ],
   "camStop": [
-   "bring",
-   "stops a glide; a drag or pinch takes over (with QAW)"
+   "in v100",
+   "F33+F34: index.html camStop (a finger, a pinch, the wheel)"
   ],
   "followCam": [
-   "bring",
-   "Follow: the camera keeps the picked units in the middle (with QAW and the pick)"
+   "in v100",
+   "F33+F34: index.html followCam, in the frame loop; menu.js Follow on your unit's card"
   ],
   "SX": [
    "cut",
@@ -154,8 +154,8 @@
    "v100's sprite() steps the zoom by √2 (STEP); Mid's steps are SCALES 1 to 6"
   ],
   "makeBg": [
-   "bring",
-   "Mid's ground picture: v100's renderGround already paints the strata, water by depth, the forest floor and grass blades; what comes is the grass's mottling and the worn track of the roads (Colours, Sprites). Its land-frame clip, the Throne's island and Mid's lake and river painting do not"
+   "in v100",
+   "F33+F34: index.html mottle, in renderGround (C22); the worn road track waits for roads (v100 has none; Parked)"
   ],
   "SPARKS": [
    "in v100",
@@ -198,8 +198,8 @@
    "index.html SEEN 1, remembered, drawn dim (D118)"
   ],
   "knownB": [
-   "bring",
-   "another side's building shows only where seen now or once (remembered buildings); v100 draws every building under the fog"
+   "in v100",
+   "F33+F34: index.html, the hide hook and t.spotted"
   ],
   "visibleTo0": [
    "in v100",
@@ -210,16 +210,16 @@
    "index.html fogCv"
   ],
   "WOODS": [
-   "bring",
-   "held: the woods block sight (QAM, DICTIONARY V); see misfits"
+   "in v100",
+   "F33+F34: index.html woodsGrid (D313 woods, QAM)"
   ],
   "woodsGrid": [
-   "bring",
-   "held: the woods block sight (QAM); see misfits"
+   "in v100",
+   "F33+F34: index.html woodsGrid, each beat of the fog"
   ],
   "openLine": [
-   "bring",
-   "held: the woods block sight (QAM), a grid line of sight; see misfits"
+   "in v100",
+   "F33+F34: index.html openLine (QAM, Bresenham)"
   ],
   "fogTick": [
    "in v100",
@@ -286,20 +286,20 @@
    "v100's bldSprite (ART); Mid's box mold: see misfits"
   ],
   "drawBld": [
-   "bring",
-   "a building's dressing: traps, the site rising with stakes and progress bar, the finish pop and glow, worker dots on a field, the research tab, mill sails, chimney smoke, fire when hurt, + for an empty post, health bar, the wonder's clock; v100 has the stamp, a site's fade (t.done) and health bars (combat.js)"
+   "in v100",
+   "F33+F34: index.html drawBld: the site staked and rising with posts, bar and z, the pop and fresh glow, flags, piles, chimney smoke, the blaze; the research tab, field dots, the empty post's +, mill sails and the wonder's clock wait (Parked)"
   ],
   "CHIMNEY": [
-   "bring",
-   "where each building's chimney stands, for its smoke (Sprites)"
+   "in v100",
+   "F33+F34: sprites P45 dress.chimney"
   ],
   "FLAME": [
-   "bring",
-   "one table of every flame: power, colour temperature, size, covered or not (laws QF, QAU)"
+   "in v100",
+   "F33+F34: index.html, the view's eyes, lights and stage (D316 flames)"
   ],
   "LIGHT": [
-   "bring",
-   "how far a flame's light reaches, what rain leaves of it (QAU)"
+   "in v100",
+   "F33+F34: D317 light; glowAt"
   ],
   "CAST": [
    "in v100",
@@ -314,8 +314,8 @@
    "index.html shadowVec (QAT); Mid's moon shadow at night is held with the Moon (KH2): see misfits"
   ],
   "shadowPath": [
-   "bring",
-   "shadows of the trees, bushes and rocks in view (not the deep woods); v100 shadows buildings and units only"
+   "in v100",
+   "F33+F34: index.html drawShadows: the finds in sight (P45 nodeH, QAT)"
   ],
   "BOX": [
    "cut",
@@ -346,72 +346,72 @@
    "the long shadow a fire throws of a thing near it, after dark"
   ],
   "kelvinRGB": [
-   "bring",
-   "a flame's colour from its temperature, black body (law QF)"
+   "in v100",
+   "F33+F34: index.html kelvinRGB (D318, QF)"
   ],
   "FLAME_RGB": [
-   "bring",
-   "each flame's colour, worked out once (with FLAME)"
+   "in v100",
+   "F33+F34: index.html FLAME_RGB"
   ],
   "flameLife": [
-   "bring",
-   "rain dims an open flame; a lantern keeps its light (reads v100's K.rain)"
+   "in v100",
+   "F33+F34: index.html flameLife (K.rain, K.snowing)"
   ],
   "flame": [
-   "bring",
-   "the flame itself: a flickering teardrop, whiter at heart; it leans with the wind: see misfits"
+   "in v100",
+   "F33+F34: index.html flame, leaning with v100's wind (K.wind, Nov 5 18:08)"
   ],
   "glow": [
-   "bring",
-   "a flame's light on the ground, fading as 1/r² (QAU)"
+   "in v100",
+   "F33+F34: index.html glowAt (QAU)"
   ],
   "flagsOn": [
-   "bring",
-   "a building's flags fly, longer in a strong wind: see misfits"
+   "in v100",
+   "F33+F34: index.html flagsOn, waving with v100's wind"
   ],
   "PILE": [
-   "bring",
-   "a side's stores shown as piles by the camp that takes them in: logs, cut stone, gold, sacks"
+   "in v100",
+   "F33+F34: sprites P45 dress.pile"
   ],
   "PSPR": [
    "cut",
    "the piles' cache; v100's sprite cache (SPR)"
   ],
   "pileAt": [
-   "bring",
-   "draws a camp's pile by the size of the store (with PILE)"
+   "in v100",
+   "F33+F34: index.html pileAt, through sprite()"
   ],
   "pileArt": [
-   "bring",
-   "the piles' art (Sprites)"
+   "in v100",
+   "F33+F34: index.html pileAt's paint (P45 log, sack, block)"
   ],
   "smoke": [
-   "bring",
-   "a chimney's plume (law QAV), bent over by the wind: see misfits"
+   "in v100",
+   "F33+F34: index.html smoke (QAV), leaning with v100's wind"
   ],
   "blaze": [
    "in v100",
    "F32: index.html blaze"
   ],
   "RIPS": [
-   "bring",
-   "the rings that spread from a tap or an order (with ripple)"
+   "in v100",
+   "F33+F34: index.html RIPS"
   ],
   "ripple": [
-   "bring",
-   "a ring spreading on the ground where you tapped or ordered (Touch, Menus)"
+   "in v100",
+   "F33+F34: index.html ripple, where you tap"
   ],
   "popC": [
-   "bring",
-   "the swell-and-settle curve of a finished building (theatrics)"
+   "in v100",
+   "F33+F34: index.html popC (D319 stage)"
   ],
   "celebrate": [
-   "bring",
-   "three sizes of celebration: a building done, an upgrade through an army, a new age, wonder or victory: see misfits"
+   "in v100",
+   "F33+F34: index.html celebrate: a building done, an upgrade through the army (the learnt event), a new age, a wonder, a win"
   ],
   "ripDraw": [
-   "bring",
-   "draws the ripples (with ripple)"
+   "in v100",
+   "F33+F34: index.html, a draw hook"
   ],
   "sparkDraw": [
    "in v100",
@@ -470,8 +470,8 @@
    "F23: index.html floor 7 (E455), D258"
   ],
   "LEAN": [
-   "bring",
-   "the view's memory of a woodcutter's lean into its tree"
+   "in v100",
+   "F33+F34: index.html LEAN, the view's own memory"
   ],
   "PACED": [
    "cut",
@@ -482,8 +482,8 @@
    "F22: combat.js drawOrders, P41 leaves"
   ],
   "drawUnit": [
-   "bring",
-   "a figure's motion and marks: the woodcutter's lean, the step's rise and fall, the lunge, a shooter's kick, the recoil, the stagger, nerve bar, rout badge, march chevron, conversion, idle z and focus F, the archer's stakes; v100 has the ring, the sprite, the stride (QBU), the sway (QBS), dots far out"
+   "in v100",
+   "F33+F34: index.html drawUnit: the lean, the step's bob, the lunge and kick, the recoil, the stagger, the born pop, the upgrade glow, nerve bar, rout badge, march chevron, z and F; the archer's stakes and the conversion arc wait (Parked)"
   ],
   "drawFind": [
    "in v100",
@@ -526,24 +526,24 @@
    "the same; v100's Screen book"
   ],
   "labelK": [
-   "bring",
-   "words on the map scale with the zoom down to a floor (the map's one text size rule)"
+   "in v100",
+   "F33+F34: index.html labelK (SN14 label)"
   ],
   "mapFont": [
-   "bring",
-   "the map's font at that size (with labelK; the font from the Screen book)"
+   "in v100",
+   "F33+F34: index.html mapFont; menu.js reads it"
   ],
   "ring": [
    "in v100",
    "index.html drawThings' ellipse ring"
   ],
   "idleMark": [
-   "bring",
-   "z over an idle villager, + over an empty post, F over a focused one"
+   "in v100",
+   "F33+F34: index.html idleMark (P45 marks)"
   ],
   "tag": [
-   "bring",
-   "held: a label pill on the map (DICTIONARY V, labels); see misfits"
+   "in v100",
+   "F33+F34: index.html tag; menu.js drawSeal's Sealed and Open"
   ],
   "drawSeal": [
    "in v100",
@@ -566,16 +566,16 @@
    "F15: menu.js tinted()"
   ],
   "miniIncoming": [
-   "bring",
-   "held: the small map's mark for an army coming (DICTIONARY V); see misfits"
+   "in v100",
+   "F33+F34: index.html drawMini, the alarm's FK.near flashing"
   ],
   "MINI_K": [
-   "bring",
-   "held: the small map's scale (DICTIONARY V); see misfits"
+   "in v100",
+   "F33+F34: index.html drawMini, the land fitted to D314 mini.px"
   ],
   "drawMini": [
-   "bring",
-   "held: the small map (DICTIONARY V); its mirage and blizzard: see misfits"
+   "in v100",
+   "F33+F34: index.html drawMini, an over hook; menu.js Map cell (the mirage is cut)"
   ],
   "drawFlood": [
    "in v100",
@@ -610,20 +610,20 @@
    "F19+F20: combat.js draw"
   ],
   "drawLight": [
-   "bring",
-   "after dark: lit windows, hearths, lanterns, torches, fires throwing their glow; v100's drawSky already lays dusk and night"
+   "in v100",
+   "F33+F34: index.html lightsOf and drawLights, after drawSky; the torches on standards wait for standards that carry one"
   ],
   "HEARTH": [
-   "bring",
-   "where a fire is always lit after dark (with drawLight)"
+   "in v100",
+   "F33+F34: D317 light.hearth, by look"
   ],
   "drawHitGlow": [
    "in v100",
    "F23: index.html floor 7 (E456), combat.js hit fires 'struck', D262"
   ],
   "drawFlash": [
-   "bring",
-   "a pale flash for a new age, a wonder, a victory (theatrics)"
+   "in v100",
+   "F33+F34: index.html, an over hook"
   ],
   "drawTouch": [
    "in v100",

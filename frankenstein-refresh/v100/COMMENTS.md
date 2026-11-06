@@ -596,3 +596,29 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E595 | econ.js | in a summer storm lightning strikes a wooden building now and then, and a forge throws sparks (Mid's lightning) |
 | E596 | econ.js | sickness: a town's people near its seat or a depot; more cases from outside in summer and winter, fewer with research |
 | E597 | econ.js | each health beat: cases from outside, the spread β S I / N (QAQ), and each sick one cured by a healer near, dying, or well again (Mid's healthTick) |
+| E598 | index.html#the-view-s-eyes-lights-and-stage | the view's eyes, lights and stage: what your side sees (sight from height, the woods), the camera's glide, the lights after dark, the theatrics, the dressing, the small map and the draw budget (Mid's view, F33 and F34) |
+| E599 | index.html#the-view-s-eyes-lights-and-stage | how far a building sees from its height: base + k √h, rounded (QAL, Mid's lookout) |
+| E600 | index.html#the-view-s-eyes-lights-and-stage | a thing's sight: its own (research adds), shortened at night (a lantern gives a building part back), never past what the weather lets anyone see (Mid's sightClear and visCap) |
+| E601 | index.html#the-view-s-eyes-lights-and-stage | the woods as walls: a square of tiles with enough standing trees blocks sight (QAM, Mid's woodsGrid); worked out each beat of the fog |
+| E602 | index.html#the-view-s-eyes-lights-and-stage | is one square in open sight of another: a grid line (Bresenham); the first wood on the way is seen, the rest is not; the viewer's own square never blocks (Mid's openLine) |
+| E603 | index.html#the-view-s-eyes-lights-and-stage | another side's building shows only where you see it now or once saw it (Mid's knownB) |
+| E604 | index.html#the-view-s-eyes-lights-and-stage | the player's Reduce motion, read from the phone; the draw budget's level; still: is motion off, by the setting or by load (Mid's lessMotion, DRAW, still) |
+| E605 | index.html#the-view-s-eyes-lights-and-stage | a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, then half the pixels) and climbs back when fast again (Mid's shed) |
+| E606 | index.html#the-view-s-eyes-lights-and-stage | a cache dropping its oldest picture gives the memory back at once (Mid's trim: iPhone drops pages that hold too much) |
+| E607 | index.html#the-view-s-eyes-lights-and-stage | the camera glides on a critically damped spring (QAW): to a point, Home or the small map's tap; a finger takes over; still means a jump (Mid's spring, camGo, camStop) |
+| E608 | index.html#the-view-s-eyes-lights-and-stage | Follow keeps the picked units in the middle until they are gone or a finger moves the map (Mid's followCam) |
+| E609 | index.html#the-view-s-eyes-lights-and-stage | fire's colour from its temperature (QF, a black body), its life in the rain (an open flame dims, a covered one keeps), its glow fading as 1/r² (QAU) and the flame itself, leaning with the wind (Mid's kelvinRGB, flameLife, glow, flame) |
+| E610 | index.html#the-view-s-eyes-lights-and-stage | a flame's light on the ground: a disc fading to a quarter at half its reach, added to the dark, only when there is dark to light |
+| E611 | index.html#the-view-s-eyes-lights-and-stage | what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at a lit door, a camp's fire, a caravan's lantern (Mid's drawLight, HEARTH) |
+| E612 | index.html#the-view-s-eyes-lights-and-stage | theatrics: one pop curve (a finished building and a newborn swell and settle), ripples where you tap, three sizes of celebration (a building, an upgrade rolling through the army, a new age or a wonder) and the pale flash (Mid's popC, celebrate, ripple, ripDraw, drawFlash) |
+| E613 | index.html#the-view-s-eyes-lights-and-stage | words on the map scale with the zoom down to a floor; a label is a pill (Mid's labelK, mapFont, tag) |
+| E614 | index.html#the-view-s-eyes-lights-and-stage | the dressing: a site staked out and rising with the work, a finished building's pop and fresh glow, its flags, piles and chimney smoke (Mid's drawBld) |
+| E615 | index.html#the-view-s-eyes-lights-and-stage | a building site: the stakes round its footprint, the walls rising with the work between two posts, the bar, and z when nobody builds it |
+| E616 | index.html#the-view-s-eyes-lights-and-stage | a building's flags, drawn live over its picture where its art put them, waving more in a strong wind (Mid's flagsOn) |
+| E617 | index.html#the-view-s-eyes-lights-and-stage | a side's stores as piles by the camp that takes them in: a pyramid by log₁₀ of the store, drawn once per count and zoom (Mid's PILE, pileAt, pileArt) |
+| E618 | index.html#the-view-s-eyes-lights-and-stage | a chimney's plume: rising ∝ x^(2/3) (QAV, Briggs) and widening ∝ x^0.9, leaning downwind (Mid's smoke) |
+| E619 | index.html#the-view-s-eyes-lights-and-stage | a figure in motion: the woodcutter's lean into its tree (the view's own memory), the step's rise and fall, a lunge into a blow and a shooter's kick, the recoil, a hurt soldier's stagger; then its marks: nerve, rout, march, idle z and focus F (Mid's LEAN, drawUnit, idleMark) |
+| E620 | index.html#the-view-s-eyes-lights-and-stage | the small map: the ground, the fog, buildings you know (a seat is a star), units you see, an army coming flashing red, and the screen's box; tap to glide there, drag to sweep (Mid's drawMini, miniIncoming, miniAt) |
+| E621 | index.html#the-view-s-eyes-lights-and-stage | the grass mottled, greens then earth, kept to the land (Mid's makeBg) |
+| E622 | index.html#the-building-art | a banner on a building that flies live leaves its place to the view (Mid's FLAGS) |
+| E623 | index.html#floor-7-display | the shadows of the trees, bushes and rocks in sight, not the deep woods, cast like everything else (QAT, Mid's shadowPath); the draw budget sheds them first |
