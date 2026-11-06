@@ -2,8 +2,8 @@
  "about": "Step 6, temp book staging/tech.js (Mid's 04-rules-tech: ages, research, civilisations): every piece, and what becomes of it. in v100: already home. bring: Mid has it, v100 does not; it comes in as book entries (the new Tech book) and one law that applies them. cut: v100 does it another way. By the 10:31 rule, what comes over keeps Mid's values (costs, times, effects); the ages are Mid's (Stone, Bronze, Classical, Medieval, Gunpowder, hidden Enlightenment). The big table TECH carries a line per research step.",
  "pieces": {
   "MEASURED": [
-   "bring",
-   "the measured effects research uses (water and sewers on sickness, Alsan & Goldin 2019; quarantine, Bootsma & Ferguson 2007; a forecast's worth, Rosenzweig & Udry 2013): to the Measurements book with their citations (N), for QAQ"
+   "in v100",
+   "F32: the shares in O215, O219, O220 (N48, N207)"
   ],
   "TECH": [
    "bring",
@@ -630,16 +630,16 @@
      "War college (school, Gunpowder): Teaching soldiers takes 30% less time. · F24: tech book, by its key"
     ],
     "medicine": [
-     "bring",
-     "Medicine (library, Classical): Healing is 50% faster."
+     "in v100",
+     "F32: tech book, key medicine"
     ],
     "architecture": [
      "in v100",
      "F13a: books/tech.js O60 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "medschool": [
-     "bring",
-     "Medical school (library, Medieval): Half as many die of plague; cures twice as fast."
+     "in v100",
+     "F32: tech book, key medschool"
     ],
     "guilds": [
      "in v100",
@@ -674,8 +674,8 @@
      "F26+F27: books/tech.js O199 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "vaccine": [
-     "bring",
-     "Vaccination (library, Enlightenment): Half as much sickness. The last step: the match ends and the crowns are given."
+     "in v100",
+     "F32: tech book, key vaccine"
     ],
     "roads": [
      "in v100",
@@ -702,36 +702,36 @@
      "F30: books/tech.js O207"
     ],
     "bandages": [
-     "bring",
-     "Bandages (hospital, Classical): Healing is 30% faster."
+     "in v100",
+     "F32: tech book, key bandages"
     ],
     "herbs": [
-     "bring",
-     "Herbals (hospital, Classical): Cures are 30% faster."
+     "in v100",
+     "F32: tech book, key herbs"
     ],
     "hospitals": [
-     "bring",
-     "Hospitals (hospital, Medieval): 30% fewer die of plague."
+     "in v100",
+     "F32: tech book, key hospitals"
     ],
     "pharmacy": [
-     "bring",
-     "Pharmacy (hospital, Medieval): Cures are 50% faster."
+     "in v100",
+     "F32: tech book, key pharmacy"
     ],
     "quarantine": [
-     "bring",
-     "Quarantine (hospital, Medieval): Sickness and plague spread 40% slower."
+     "in v100",
+     "F32: tech book, key quarantine"
     ],
     "inoculation": [
-     "bring",
-     "Inoculation (hospital, Gunpowder): Plague strikes 70% less."
+     "in v100",
+     "F32: tech book, key inoculation"
     ],
     "anatomy": [
-     "bring",
-     "Anatomy (hospital, Gunpowder): Healing is 20% faster."
+     "in v100",
+     "F32: tech book, key anatomy"
     ],
     "surgeons": [
-     "bring",
-     "Surgeons (hospital, Gunpowder): Healing is 50% faster."
+     "in v100",
+     "F32: tech book, key surgeons"
     ],
     "rites": [
      "in v100",
@@ -918,20 +918,20 @@
      "F26+F27: books/tech.js O193 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "sewers": [
-     "bring",
-     "Sewers (aqueduct, Classical): Sickness and plague spread 12% slower."
+     "in v100",
+     "F32: tech book, key sewers"
     ],
     "cleanwater": [
-     "bring",
-     "Clean water (aqueduct, Classical): Sickness and plague spread 12% slower."
+     "in v100",
+     "F32: tech book, key cleanwater"
     ],
     "plumbing": [
-     "bring",
-     "Plumbing (aqueduct, Classical): Apartments hold 4 more."
+     "in v100",
+     "F32: tech book, key plumbing"
     ],
     "waterworks": [
-     "bring",
-     "Waterworks (aqueduct, Gunpowder): Apartments hold 2 more; sickness strikes 20% less."
+     "in v100",
+     "F32: tech book, key waterworks"
     ],
     "viamil": [
      "bring",

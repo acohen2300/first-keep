@@ -184,11 +184,11 @@ function makeTerrain(roll) {
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
 }
 // ── Floor 3, non-movables (E40)
-const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0, open: e.style === 'Open' }; } // E41
+const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, look: e.look, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0, open: e.style === 'Open' }; } // E41
 // E42
 const [, AGE1] = D.age.cost, Z1 = { food: (AGE1.food + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
 const z1 = { bush: Math.ceil(Z1.food / D.bushFood), tree: Math.ceil(Z1.wood / D.treeWood) };
-const OCC = new Uint8Array(N * N); let things = []; // E43
+const OCC = new Uint8Array(N * N), FN = D.finds, rowOf = (t) => FN.rows[(KIND[t.kind] || {}).code]; let things = []; // E43
 const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
 const free = (k) => flatAt(k) && !OCC[k] && !FOR[k];
 const clear = (bx, by, r) => { let ok = true; stamp(bx, by, r, (k) => { if (!free(k)) ok = false; }); return ok; };
@@ -207,13 +207,15 @@ function makeThings(roll) {
     cluster('bush', ...at('z1', 'bush'), z1.bush, hr); cluster('tree', ...at('z1', 'tree'), z1.tree, hr); one('gold', 'z1'); one('stone', 'z1');
     cluster('bush', ...at('z3', 'bush'), z1.bush * D.z3x, hr); cluster('tree', ...at('z3', 'tree'), z1.tree * D.z3x, hr); one('gold', 'z3'); one('stone', 'z3'); one('iron', 'z3'); }
   // E48
-  const spot = (r) => { for (let t = 0; t < 200; t++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r)) return [bx, by, k]; } return null; };
+  const spot = (r, roll2 = roll) => { for (let t = 0; t < 200; t++) { const bx = between(roll2, [B0, B1]), by = between(roll2, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r)) return [bx, by, k]; } return null; };
   for (const [kind, n] of [['gold', 'goldZ4'], ['stone', 'stoneZ4'], ['iron', 'ironZ4'], ['ruins', 'ruins'], ['cemetery', 'cemeteries'], ['campfire', 'campfires'], ['treasure', 'treasures']])
     for (let m = count(roll, D[n]); m > 0; m--) { const s = spot(KIND[kind].r); if (s) put(kind, s[2], roll); }
   for (let m = count(roll, D.patches); m > 0; m--) { const s = spot(2 * D.tile); if (s) cluster('bush', s[0], s[1], count(roll, D.patch), roll); }
   const TR = D.trade; TR.routes.forEach(([ax, ay], r) => TR.stops.forEach((d, i) => { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('stop', k, roll); Object.assign(things.at(-1), { route: r, want: TR.wares[(r + i) % TR.wares.length], owner: null }); } })); // E492
   // E49
   for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
+  const fr = dice(seed ^ FN.seed); for (const [kind, n] of Object.entries(FN.lay)) for (let m = count(fr, n); m--; ) { const s = spot(KIND[kind].r, fr); if (s) put(kind, s.at(-1), fr); } // E564
+  for (const [ax, ay] of TR.routes) for (const d of [FN.camp, -FN.camp]) { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) put('camp', k, fr); }
   things.sort((a, b) => a.vy - b.vy); // E50
   for (const t of things) if (t.kind === 'tree') deepen(t); // E51
   for (const L of lakes) for (let m = Math.round(L.r / D.fish.per), n = m; m--; ) { const a = (m / n) * A.round * RAD, [cx, cy] = [Math.cos(a), Math.sin(a)]; let d = D.fish.inset; // E344
@@ -990,8 +992,12 @@ function makeUnits(roll) {
   for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // E109
     for (let tries = 0; tries < D.tries.spot; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
       const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, D[w.size]))) spawn(w.code, -1, q, roll); break; } }
-  regrid();
+  for (const t of things.slice()) guard(t, roll); regrid();
 }
+function guard(t, roll) { const F = rowOf(t) || {}, R = FN.ring * D.tile, at = (code, x, y) => { const k = near1([x, y], FN.ring); if (~k) Object.assign(spawn(code, -1, k, roll), { home: t, find: t }); }; // E565
+  if (F.guard) { const [g, n] = F.guard; for (let i = n; i--; ) { const a = (i / n) * A.round * RAD + roll(); at(g, t.bx + Math.cos(a) * R, t.by + Math.sin(a) * R); } }
+  if (F.hire) { const [dx, dy] = FN.row; for (let i = F.hire.n; i--; ) at(FN.drifter, t.bx + ~-i * dx * D.tile, t.by + dy * D.tile); } }
+const vanish = (u) => { u.gone = true; units.splice(units.indexOf(u), ONE); }, drop = (t) => { t.amount = null; take(t, null); }; // E566
 const gait = (code) => W[SH[code].mount || SH[code].body]; // E110
 const bodyOf = (code) => W[SH[code].body];
 // ── The body's laws (E111)
@@ -1049,6 +1055,9 @@ const GIFT = { // E120
   stop: (x, y, s) => { const { ring, w, e: [, , rx, ry, rot, a0, a1] } = SPRITE.nodes.stop; ctx.strokeStyle = ring; ctx.lineWidth = w * s; ctx.beginPath(); ctx.ellipse(x, y, rx * s, ry * s, rot, a0, a1); ctx.stroke(); },
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
+for (const [k, B] of Object.entries(SPRITE.nodes.blobs)) GIFT[k] = (x, y, s) => B.forEach(([dx, dy, r, c]) => disc(x + dx * s, y + dy * s, r * s, C.wild[c] || C[c])); // E580
+function blaze(x, y, s, f, w) { const F = D.fire.flame; ctx.save(); ctx.globalAlpha = Math.min(F.base, f); ctx.fillStyle = C.wild.smoke; ctx.beginPath(); oval(ctx, x, y - F.smoke * s, F.w * w * s, F.w * s); ctx.fill(); ctx.globalAlpha = F.base + (ONE - F.base) * Math.min(ONE, f); ctx.fillStyle = C.flame; ctx.beginPath(); // E581
+  for (let i = F.n; i--; ) { const cx = x + (i / F.n - F.mid) * F.w * w * s; ctx.moveTo(cx - F.w * s, y); ctx.lineTo(cx + F.w * s, y); ctx.lineTo(cx + Math.sin(K.t * F.sway + i) * F.w * s, y - F.h * f * s); } ctx.fill(); ctx.restore(); }
 const TRAPS = SPRITE.traps; // E524
 function trapArt(x, y, s, t) { const A = TRAPS[t.done < D.camp.built ? 'site' : SH[t.code].trap], col = fire('own', t) ? A.own : A.foe; ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = ctx.fillStyle = col; ctx.lineWidth = Math.max(A.w || s, (A.w || s) * s); if (A.dash) ctx.setLineDash(A.dash);
   if (A.e) { const [rx, ry, rot, a0, a1] = A.e; ctx.beginPath(); ctx.ellipse(x, y, rx * s, ry * s, rot, a0, a1); if (A.fill) ctx.fill(); else ctx.stroke(); }
@@ -1087,12 +1096,13 @@ function climate(dt) {
   if (K.fogT > 0) K.fogT -= dt; else if (rng() < dt / D.fogWait) K.fogT = D.fogLast; // E133
   K.fog += ((K.fogT > 0 ? 0.6 : K.wet > 0.5 && K.rain < 0.1 && K.alt > -6 && K.alt < 10 ? 0.3 : 0) - K.fog) * Math.min(1, dt / 15); // E134
   if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - rng()); strike(); } } // E135
-  K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
+  K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.fog > 0.3 ? ' ≈' : '');
 }
 // E136
+const bolt = (vx, vy) => { K.bolts.push({ vx, vy, t: K.t, seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); fire('event', 'strike', { vx, vy }); }; // E576
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
-  if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
+  if (close > 0.4) { bolt(cam.x + (glance() - 0.5) * (cw / cam.z), cam.y + (glance() - 0.5) * (ch / cam.z)); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); }
   else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
 // E138
 const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active = (strength) => Math.round(WX.pool * strength);
@@ -1102,6 +1112,7 @@ function drawSkin() { // E139
   if (K.wet > 0.05) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.45 * K.wet; ctx.drawImage(maskDark, gx, gy, w, h); ctx.restore(); }
   if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
   if (K.flood > K.t) { ctx.globalAlpha = FLD.show; ctx.drawImage(maskFlood, gx, gy, w, h); ctx.globalAlpha = 1; } marks();
+  if (K.sand) { const [x, y] = toScreen(...toView(K.sand.bx, K.sand.by, Math.max(null, H[tileAt(K.sand.bx, K.sand.by)]))); ctx.fillStyle = C.wild.sand; ctx.beginPath(); oval(ctx, x, y, K.sand.r * cam.z, K.sand.r * cam.z * TILT); ctx.fill(); } // E578
 }
 function drawSky(dt) { // E140
   const now = K.t, px = D.upm * cam.z, lam = WX.rain.n0 * (K.rain * WX.rain.most) ** WX.rain.exp, drift = K.wind * px * dt, wrap = (m, len) => { m.x = (((m.x + drift) % cw) + cw) % cw; if (m.y > ch + len) { m.y = -len; m.x = glance() * cw; } };
@@ -1116,6 +1127,8 @@ function drawSky(dt) { // E140
     const foot = ctx.createRadialGradient(x1, y1, 0, x1, y1, 60 * cam.z); foot.addColorStop(0, `rgba(220,235,255,${(0.7 * a).toFixed(2)})`); foot.addColorStop(1, 'rgba(220,235,255,0)'); ctx.fillStyle = foot; ctx.beginPath(); oval(ctx, x1, y1, 60 * cam.z, 30 * cam.z); ctx.fill();
     for (const [lw, col] of [[12, `rgba(170,200,255,${(0.18 * a).toFixed(2)})`], [4.6, `rgba(210,228,255,${(0.45 * a).toFixed(2)})`], [1.9, `rgba(255,255,255,${a.toFixed(2)})`]]) { ctx.strokeStyle = col; paths.forEach((p, i) => { ctx.lineWidth = i ? lw * 0.55 : lw; ctx.beginPath(); p.forEach(([px, py], j) => (j ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.stroke(); }); }
     ctx.restore(); }
+  if (evOn('meteor')) { const e = K.ev.cur, [dx, dy, tail, lw, r] = ER.meteor.streak, f = Math.min(ONE, (K.t - e.t0) / (e.until - e.t0)), [x1, y1] = toScreen(...toView(...e.at, null)), x = x1 - dx * (ONE - f), y = y1 - dy * (ONE - f); // E579
+    ctx.strokeStyle = ctx.fillStyle = C.wild.streak; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x - dx * tail, y - dy * tail); ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r, null, A.round * RAD); ctx.fill(); }
   wash(SKYC.flash, Math.min(0.75, K.flash));
   const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7 * (DARK0 - DARK1 * K.moonLit), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   wash(SKYC.gloom, gloom);
@@ -1124,7 +1137,7 @@ function drawSky(dt) { // E140
 }
 // E552
 const FC = D.forecast, SKYW = fromBook('words').sky, FLD = D.flood, RU = D.ruts, RC = Math.ceil(N / RU.cell), RUTS = new Float32Array(RC * RC), BANK = new Uint8Array(N * N), HEAL = Math.exp(-RU.heal[0] / RU.tau);
-on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear' }); sunAlt(); });
+on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear', ev: {}, horde: null, sand: null, burn: new Set(), wayT: J.every, wayI: null }); sunAlt(); });
 on('gone', (t) => { if (t.kind === 'unit') fallen(t); }); on('event', (e, t) => { if (e === 'fell' && t) burnt(t); });
 function ahead(was) { const A = K.ahead, lead = Math.round((stat('', ME, 'forecast') * FC.step) / HOUR), wet = (w) => rng() < D.chain[+w]; K.wetHour = A.length ? A.shift() : wet(was); // E553
   do A.push(wet([K.wetHour, ...A].at(-1))); while (A.length < lead); const [last, prev] = [K.wetHour, ...A].reverse(), n = Math.round((lead * HOUR) / FC.step), S = SKYW.signs; if (!lead || last === prev) return;
@@ -1140,6 +1153,52 @@ function makeShore() { const far = RU.near + FLD.rise, q = []; BANK.fill(far + 1
 function flooding() { const W = SKYW.water, [secs] = FLD.beat; for (const b of [...things]) if (b.kind === 'bld' && b.done >= 1 && SIDES[b.side] && !stat('', b.side, 'flood') && BANK[tileAt(b.bx, b.by)] < FLD.rise - b.n / 2) { b.hp -= b.hpMax * FLD.hit * secs; // E557
     if (b.side === ME && every(FLD.say)) fire('say', W.replace('{b}', SH[b.code].name.toLowerCase()).replace('{at}', MENU.coord(b.bx, b.by))); if (b.hp <= 0) WAR.die(b); } }
 const flood = (secs = FLD.secs) => { K.flood = K.t + secs; };
+// E567
+const EV = D.events, ER = EV.rows, [, NEAR] = EV.wild, HZD = D.hazards, HZ = new Set(), WL = fromBook('words').wild, J = D.wayfarer, ONE = HZD.base;
+const hz = (id) => HZ.has(id) && !!MENU.S.opt.diff, level = () => [...HZ].reduce((n, k) => n + HZD.pts[k], null), levelMul = () => ONE + (MENU.S.opt.diff ? level() / HZD.per : null);
+const evOn = (k) => !!K.ev.cur && K.ev.cur.kind === k, raining = () => K.sky === 'rain', far = ([x, y]) => [MID + MID - x, MID + MID - y], near1 = ([x, y], r) => { let b = null; stamp(x, y, r * D.tile, (k, d) => { if (walkable(k) && (!b || d < b.d)) b = { d, k }; }); return b ? b.k : -1; }; // E568
+function edgeSpot() { const [e, off] = EV.edge, lo = B0 + e * D.tile, hi = B1 - e * D.tile, S = [(v) => [v, lo], (v) => [hi, v], (v) => [v, hi], (v) => [lo, v]], f = S[Math.floor(rng() * S.length)]; return f(between(rng, [B0 + off * D.tile, B1 - off * D.tile])); }
+function wildSpot() { const [w, lake, keep, fall] = EV.wild, R = [B0 + w * D.tile, B1 - w * D.tile];
+  for (let i = D.tries.spot; i--; ) { const [x, y] = [between(rng, R), between(rng, R)]; if (walkable(tileAt(x, y)) && !byLake(x, y, lake * D.tile) && !things.some((s) => has(s, 'Seat') && Math.hypot(s.bx - x, s.by - y) < keep * D.tile)) return [x, y]; } return [MID, MID - fall * D.tile]; }
+const canEv = (k) => !(ER[k].season && !ER[k].season.includes(season())) && !(ER[k].rain && !raining()); // E569
+function pickEv(roll) { const can = Object.keys(ER).filter(canEv); let k = can[Math.floor(roll() * can.length)]; if (k === K.ev.last && can.some((c) => c !== k)) k = can[-~can.indexOf(k) % can.length]; return k; }
+const wait = (roll, mean, least) => least - (mean - least) * Math.log1p(-roll()); // E570
+function walker(code, a, b, s) { const j = (p) => near1(s ? p.map((v) => v + between(rng, [-s, s]) * D.tile) : p, s || J.edge), k = j(a); if (!~k) return null; const u = spawn(code, -1, k, rng), g = j(b); if (!~g || !go(u, g)) { vanish(u); return null; } return Object.assign(u, { then: 'walk', herd: true, to: g }); }
+const EVS = { // E571
+  stampede: { start(e) { const R = ER.stampede, a = edgeSpot(); e.units = Array.from({ length: R.n }, () => walker(R.herd, a, far(a), R.spread)).filter(Boolean); },
+    end(e) { for (const u of e.units) { const [x, y] = tileMid(u.to); if (!u.gone && Math.hypot(x - u.bx, y - u.by) < ER.stampede.gone * D.tile) vanish(u); } } },
+  flood: { start() { flood(); } },
+  meteor: { start(e) { e.at = wildSpot(); }, end(e) { const k = near1(e.at, NEAR); if (!~k) return; put('meteor', k, rng); const t = things.at(-1); if (scarX) blot(t.vx + ox, t.vy + oy, ...SC.strike, SCAR.strike); fire('event', 'strike', t); fire('say', WL.events.meteor[ONE], WL.why.meteor); } },
+  wildfire: { start(e) { const R = ER.wildfire, T = things.filter((t) => t.kind === 'tree' && t.amount > null && !things.some((s) => has(s, 'Seat') && Math.hypot(s.bx - t.bx, s.by - t.by) < R.keep * D.tile)), t = T[Math.floor(rng() * T.length)]; K.burn = new Set(t ? [t] : []); e.at = t; },
+    tick(e) { const R = ER.wildfire; if (K.wetHour) { e.until = K.t; return; } const next = new Set(), fm = ECON.fireMul();
+      for (const n of K.burn) { if (n.gone) continue; const a = Math.min(n.amount, KIND.tree.amount * R.burn); if (n.amount > a) next.add(n); else if (scarX) blot(n.vx + ox, n.vy + oy, ...SC.strike, SCAR.burn); take(n, a);
+        for (const m of things) if (m.kind === 'tree' && m.amount > null && !K.burn.has(m) && !next.has(m) && Math.hypot(m.bx - n.bx, m.by - n.by) < R.r * D.tile && rng() < R.spread * fm) next.add(m);
+        bldsNear(n.bx, n.by, R.bld * D.tile, (b) => { if (has(b, 'Burn') && b.done >= ONE) ECON.ignite(b, 'wildfire'); }); }
+      K.burn = new Set([...next].slice(null, R.most)); if (!K.burn.size) e.until = K.t; }, end() { K.burn.clear(); } },
+  sinkhole: { start() { const B = things.filter((b) => b.kind === 'bld' && b.done >= ONE && SIDES[b.side] && !has(b, 'Line') && !has(b, 'Gate') && !has(b, 'Seat')), b = B[Math.floor(rng() * B.length)]; if (!b) return; b.hp -= b.hpMax * ER.sinkhole.hit; crack(b);
+    if (b.side === ME) fire('say', WL.sinkhole.replace('{b}', SH[b.code].name.toLowerCase()).replace('{at}', MENU.coord(b.bx, b.by))); if (b.hp <= null) WAR.die(b); } },
+  quicksand: { start(e) { const [bx, by] = wildSpot(); K.sand = { bx, by, r: ER.quicksand.r * D.tile }; }, tick() { for (const u of units) u.sand = !!K.sand && Math.hypot(u.bx - K.sand.bx, u.by - K.sand.by) < K.sand.r; }, end() { K.sand = null; for (const u of units) u.sand = false; } },
+  wagon: { start(e) { const a = edgeSpot(); e.units = [walker(ER.wagon.code, a, far(a))].filter(Boolean); } },
+  mercs: { start(e) { const k = near1(edgeSpot(), NEAR); if (!~k) return; put('mercs', k, rng); e.f = things.at(-1); guard(e.f, rng); }, end(e) { if (!e.f) return; for (const u of [...units]) if (u.find === e.f && !SIDES[u.side]) vanish(u); if (!e.f.gone) drop(e.f); } },
+};
+function crack(b) { if (!scarX) return; const [r, a0, a1, l0, l1, jit, bend, segs, mid, lw] = ER.sinkhole.crack, rn = NS_rng(b.k || tileAt(b.bx, b.by)), [x, y] = onGround(b.bx, b.by), n = a0 + Math.floor(rn() * a1); // E572
+  scarX.strokeStyle = SCAR.crack; scarX.lineWidth = lw; scarX.beginPath(); for (let i = n; i--; ) { let a = (i / n) * A.round * RAD + rn() * jit, px = x, py = y; const len = r * (l0 + rn() * l1); scarX.moveTo(px, py);
+    for (let j = segs; j--; ) { a += (rn() - mid) * bend; px += (Math.cos(a) * len) / segs; py += (Math.sin(a) * len * TILT) / segs; scarX.lineTo(px, py); } } scarX.stroke(); }
+function events(roll = rng) { const V = K.ev; if (V.next == null) V.next = K.t + wait(roll, EV.mean, EV.min); // E573
+  if (V.cur) { V.cur.s = -~V.cur.s; const f = EVS[V.cur.kind]; if (f.tick) f.tick(V.cur); if (K.t >= V.cur.until) { if (f.end) f.end(V.cur); V.cur = null; V.next = K.t + wait(roll, EV.mean, EV.min); } }
+  else if (!V.warned && K.t >= V.next - EV.warn) { V.warned = pickEv(roll); const [warn] = WL.events[V.warned]; fire('say', warn); }
+  else if (V.warned && K.t >= V.next) { const k = V.warned; V.warned = null; if (!canEv(k)) V.next = K.t + EV.retry; else { const e = (V.cur = { kind: k, t0: K.t, until: K.t + (ER[k].secs || FLD.secs) }); V.last = k; if (EVS[k].start) EVS[k].start(e); if (k !== 'meteor') fire('say', WL.events[k][ONE].replace('{n}', J.joins[ER.wagon.code]), WL.why[k]); } }
+  horde(roll); arrivals(); for (const u of units.filter((u) => u.herd && !u.path)) vanish(u); }
+function horde(roll) { const H = HZD.horde, W = WL.horde, seat = things.find((t) => t.side === ME && has(t, 'Seat')); if (!hz('horde') || K.horde === false) return; // E574
+  if (!K.horde) { K.horde = { at: wait(roll, H.mean, H.min), said: null }; return; } const left = K.horde.at - K.t;
+  H.warn.forEach((w, i) => { if (~~K.horde.said <= i && left <= w * D.season) { K.horde.said = -~i; fire('say', W[i]); } }); if (left > null) return;
+  if (!seat || !WAR.atWar(ME, 'out')) { K.horde = false; return; } const [fx, fy] = roll() < H.edge ? edgeSpot() : wildSpot(), n = H.n + H.perAge * SIDES[ME].age, j = () => between(rng, [-H.spread, H.spread]) * D.tile;
+  for (let i = n; i--; ) { const k = near1([fx + j(), fy + j()], H.spread); if (~k) Object.assign(spawn(H.kinds[i % H.kinds.length], -1, k, rng), { home: seat, horde: true }); }
+  fire('say', W.at(-1)); K.horde = false; }
+function arrivals() { if (K.t < K.wayT) return; K.wayT = K.t + J.every; const e = J.edge * D.tile, E = [[MID, B0 + e], [B1 - e, MID], [MID, B1 - e], [B0 + e, MID]], a = E[K.wayI++ % E.length]; // E575
+  if (walker(J.code, a, far(a))) fire('say', WL.wayfarer.come); }
+function trample() { const R = ER.stampede, r = R.r * D.tile; for (const b of K.ev.cur.units) if (!b.gone) { unitsNear(b, r, (v) => { if (v.herd || !(v.hp > null) || v.inside || Math.hypot(v.bx - b.bx, v.by - b.by) >= r) return; v.hp -= R.trample; v.hurtT = K.t; shove(v, (v.bx - b.bx) * R.shove, (v.by - b.by) * R.shove); if (v.hp <= null) WAR.die(v); }); // E577
+  bldsNear(b.bx, b.by, R.field * D.tile, (t) => has(t, 'Soil') && t.done >= ONE && Math.hypot(t.bx - b.bx, t.by - b.by) < R.field * D.tile && !!(t.fert = Math.max(stat(t.code, t.side, 'soil'), t.fert - R.fert))); } }
 // E558
 const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, wash = (col, a) => { if (a < BD.least) return; ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(0, 0, cw, ch); ctx.globalAlpha = 1; }, rgb = (h) => h.match(/\w\w/g).map((x) => parseInt(x, 16)), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
 function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWidth = RP.line; ctx.strokeStyle = C.marks.ripple; ctx.beginPath();
@@ -1236,10 +1295,10 @@ function drawThings() {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
     if (t.deep && !dots) continue;
     const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
-    if (t.kind === 'bld') { if (!show.B || fire('hide', t)) continue; if (has(t, 'Trap')) { if (!dots) trapArt(x, y, s, t); continue; } if (t.done < 1) ctx.globalAlpha = 0.3 + 0.7 * t.done; blit(bldSprite(t.code, t.col, s, ...levelOf(t)), x, y, s); ctx.globalAlpha = 1; }
+    if (t.kind === 'bld') { if (!show.B || fire('hide', t)) continue; if (has(t, 'Trap')) { if (!dots) trapArt(x, y, s, t); continue; } if (t.done < 1) ctx.globalAlpha = 0.3 + 0.7 * t.done; blit(bldSprite(t.code, t.col, s, ...levelOf(t)), x, y, s); ctx.globalAlpha = 1; if (t.fire > null && !dots) blaze(x, y, s, t.fire, t.n); }
     else if (!show.T) continue;
-    else if (GIFT[t.kind]) { if (!dots) GIFT[t.kind](x, y, s); }
-    else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else { const z = s * t.size * (LEFT + (GROW * t.amount) / KIND[t.kind].amount); blit(nodeSprite(t.kind, t.v, z), x, y, z); } // E305
+    else if (GIFT[KIND[t.kind].look]) { if (!dots) GIFT[KIND[t.kind].look](x, y, s); }
+    else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else { const z = s * t.size * (LEFT + (GROW * t.amount) / KIND[t.kind].amount); blit(nodeSprite(t.kind, t.v, z), x, y, z); if (K.burn.has(t)) blaze(x, y, s, ONE, t.size); } // E305
   }
   while (n < us.length) unit(us[n++]);
 }
@@ -1293,7 +1352,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); GATES.clear(); fogT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, nightSight, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, nightSight, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, HZ, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

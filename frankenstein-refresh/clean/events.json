@@ -2,154 +2,154 @@
  "about": "Step 6, temp book staging/events.js (Mid's 37-events, 38-camps, 38-natives, 39-games): every piece, and what becomes of it. in v100: already home. bring: Mid has it, v100 does not; it comes in as book entries and laws with its feature (an events module, its numbers in the books). cut: v100 does it another way (most of Mid's climate: v100's floor 6). By the 10:31 rule, what comes over keeps Mid's values. The big table EV carries a line per row.",
  "pieces": {
   "EVM": [
-   "bring",
-   "the multipliers the running event puts on damage, speed, sight and gathering; part of the event scheduler"
+   "cut",
+   "F31: the multipliers: only the eclipse (cut) and the heat (parked with the drought) set them"
   ],
   "KNOBS": [
-   "bring",
-   "which multipliers an event sets: heat (damage, speed); its eclipse entry is for a cut feature, see misfits"
+   "cut",
+   "F31: with EVM"
   ],
   "evmSet": [
-   "bring",
-   "sets the multipliers from the event now running"
+   "cut",
+   "F31: with EVM"
   ],
   "hz": [
-   "bring",
-   "whether a hazard is switched on (Easy keeps none); part of the hazards setting (v100 Later: Easy and Hard)"
+   "in v100",
+   "F31: index.html floor 6 hz (HZ)"
   ],
   "levelOf": [
-   "bring",
-   "the level played: the points of the hazards switched on"
+   "in v100",
+   "F31: index.html floor 6 level"
   ],
   "levelMul": [
-   "bring",
-   "the score's multiplier for the level played (QBR's total times it)"
+   "in v100",
+   "F31: index.html floor 6 levelMul; econ.js finish"
   ],
   "evOn": [
-   "bring",
-   "whether an event of a kind is running"
+   "in v100",
+   "F31: index.html floor 6 evOn"
   ],
   "edgeSpot": [
-   "bring",
-   "a spot on one of the land's edges, where an event comes in; to roll by v100's dice (QBF)"
+   "in v100",
+   "F31: index.html floor 6 edgeSpot (D308 edge)"
   ],
   "across": [
-   "bring",
-   "the far side of the land from a spot, through the middle"
+   "in v100",
+   "F31: index.html floor 6 far"
   ],
   "wildSpot": [
-   "bring",
-   "a free spot of land in the wild for an event"
+   "in v100",
+   "F31: index.html floor 6 wildSpot (D308 wild)"
   ],
   "canEv": [
-   "bring",
-   "whether an event may come now (season, need, the fantasy switch)"
+   "in v100",
+   "F31: index.html floor 6 canEv"
   ],
   "pickEvent": [
-   "bring",
-   "picks the next event, not the same twice running"
+   "in v100",
+   "F31: index.html floor 6 pickEv"
   ],
   "crossing": [
-   "bring",
-   "an event that crosses the map edge to edge in its time"
+   "in v100",
+   "F31: index.html floor 6 walker (a path edge to edge)"
   ],
   "herdAt": [
-   "bring",
-   "lays a herd of a kind at a spot (the stampede's bison)"
+   "in v100",
+   "F31: index.html floor 6 walker"
   ],
   "EV": [
-   "bring",
-   "the table of events, one row a kind (rows below); the scheduler is new in v100 (an events module, its numbers in the books)",
+   "in v100",
+   "F31: index.html floor 6 EVS (D308 rows); rows below",
    {
     "eclipse": [
-     "bring",
-     "(Albert 11:16: bring, clean) the eclipse: a feature Albert cut (Nov 4); nothing comes over, see misfits"
+     "cut",
+     "the eclipse: cut by Albert (Nov 4, Nov 5 10:27)"
     ],
     "storm": [
-     "bring",
-     "(Albert 11:16: bring, clean) v100's climate floor rolls storms (QH, D103) and lightning (KW6, QL); Mid's band of cloud walking east and its fires on wooden buildings, see misfits"
+     "cut",
+     "F31: v100's sky rolls the storms (QH, D103) and their lightning; Mid's band of cloud would be a second storm. Its fires come with F32's lightning"
     ],
     "stampede": [
-     "bring",
-     "a herd of bison runs across the map and tramples what it meets; their look is held as a skin in preview 49, the hooves sound waits in the Sound book"
+     "in v100",
+     "F31: index.html floor 6 EVS.stampede (D308 rows)"
     ],
     "flood": [
-     "bring",
-     "(Albert 11:16: bring, clean) the flood: held for later (KI4); nothing comes over now, see misfits"
+     "in v100",
+     "F31: index.html floor 6 EVS.flood (D308 rows)"
     ],
     "meteor": [
-     "bring",
-     "(Albert 11:16: bring, clean) the falling star: held for later with the sky (KS3); nothing comes over now, see misfits"
+     "in v100",
+     "F31: index.html floor 6 EVS.meteor (D308 rows)"
     ],
     "wildfire": [
-     "bring",
-     "a fire starts in far woods in summer or autumn and spreads tree to tree, damped by wetness (QT, Rothermel)"
+     "in v100",
+     "F31: index.html floor 6 EVS.wildfire (D308 rows)"
     ],
     "fog": [
-     "bring",
-     "(Albert 11:16: bring, clean) v100's climate floor brings fog on a Poisson wait (KW7, QM, D110, D111); sight in fog (QK) is held"
+     "cut",
+     "F31: v100's climate rolls the fog (KW7, D110); the event would be a second fog"
     ],
     "sinkhole": [
-     "bring",
-     "the ground gives way under a spot and harms the building there; its cracks are drawn"
+     "in v100",
+     "F31: index.html floor 6 EVS.sinkhole (D308 rows)"
     ],
     "quicksand": [
-     "bring",
-     "a patch of ground that slows walkers to 0.3 for two minutes"
+     "in v100",
+     "F31: index.html floor 6 EVS.quicksand (D308 rows)"
     ],
     "heatwave": [
-     "bring",
-     "heat in a summer drought: blows 0.85, speed 0.9; see misfits"
+     "parked",
+     "F31: it needs a drought sky, which v100's weather has not yet (the drought hazard); Parked.md"
     ],
     "mirage": [
-     "bring",
-     "(Albert 11:16: bring, clean) the mirage: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+     "cut",
+     "fantasy, cut (Nov 4)"
     ],
     "circus": [
-     "bring",
-     "(Albert 11:16: bring, clean) the circus: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+     "cut",
+     "fantasy, cut (Nov 4)"
     ],
     "wagon": [
-     "bring",
-     "a wagon train crosses the map with a gift"
+     "in v100",
+     "F31: index.html floor 6 EVS.wagon (D308 rows)"
     ],
     "mercs": [
-     "bring",
-     "mercenaries for hire appear at an edge as a find for a time"
+     "in v100",
+     "F31: index.html floor 6 EVS.mercs (D308 rows)"
     ],
     "dragon": [
-     "bring",
-     "(Albert 11:16: bring, clean) the dragon: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+     "cut",
+     "fantasy, cut (Nov 4)"
     ],
     "troll": [
-     "bring",
-     "(Albert 11:16: bring, clean) the troll: a fantasy event Albert cut from v100's pull (Nov 4); nothing comes over, see misfits"
+     "cut",
+     "fantasy, cut (Nov 4)"
     ],
     "aurora": [
-     "bring",
-     "(Albert 11:16: bring, clean) the aurora: held for later with the sky (KS2) and marked fantasy; nothing comes over now, see misfits"
+     "parked",
+     "F31: Mid marks it fantasy; the aurora (KS2) waits with the sky (Parked.md)"
     ]
    }
   ],
   "crackAt": [
-   "bring",
-   "the sinkhole's cracks on the ground, seeded from the place and the tick"
+   "in v100",
+   "F31: index.html floor 6 crack, laid on the ground's memory (D308 crack)"
   ],
   "startEvent": [
-   "bring",
-   "starts an event and says so"
+   "in v100",
+   "F31: index.html floor 6 events"
   ],
   "endEvent": [
-   "bring",
-   "ends the event running"
+   "in v100",
+   "F31: index.html floor 6 events"
   ],
   "eventsTick": [
-   "bring",
-   "the scheduler, once a second: runs the event, waits, warns, starts the next"
+   "in v100",
+   "F31: index.html floor 6 events"
   ],
   "hordeTick": [
-   "bring",
-   "the horde (MH2): announced two seasons ahead, comes for the weakest side, grows with the age"
+   "in v100",
+   "F31: index.html floor 6 horde (D309 horde)"
   ],
   "blankClim": [
    "cut",
@@ -232,12 +232,12 @@
    "F17b: index.html floor 5, stride(): each second on ground ice the step lands on ice by its cover and slips exactly when need > supply (QR); stands G10 secs, the town told (J8 slip)"
   ],
   "rothermel": [
-   "bring",
-   "Rothermel's damping of fire by wetness (QT, already a v100 law); comes with fire"
+   "in v100",
+   "F32: econ.js eta (QT, D310 eta)"
   ],
   "fireMul": [
-   "bring",
-   "fire's spread by the ground's wetness now; comes with fire (wildfire, fire arrows)"
+   "in v100",
+   "F32: econ.js fireMul"
   ],
   "wearMul": [
    "in v100",
@@ -248,8 +248,8 @@
    "the age's news lines every so often"
   ],
   "herdTick": [
-   "bring",
-   "a crossing herd: bison trample, performers pass, a dragon flies; the performers and the dragon are cut fantasy, see misfits"
+   "in v100",
+   "F31: index.html floor 6 trample (D308 stampede); the dragon's flight cut with fantasy"
   ],
   "starveTick": [
    "in v100",
@@ -416,8 +416,8 @@
    "F25+F28: combat.js traps, spring"
   ],
   "natRaid": [
-   "bring",
-   "outlaw raids (MH3 Robbers): a band at the side they regard least, the mark drawn by load and guard (QAR, square law)"
+   "in v100",
+   "F31: combat.js raids (D307, QAR)"
   ],
   "nativesTick": [
    "bring",

@@ -78,8 +78,8 @@
    "F29: ai.js cap (D303 armyCap, D291 armyAge, D226)"
   ],
   "lootRun": [
-   "bring",
-   "a detachment clears the nearest guarded find and hires vagabonds it passes: with the gifts (MG) and the hazards (MH)"
+   "in v100",
+   "F31: combat.js loot (D305 loot), with the computers' hire"
   ],
   "throneRun": [
    "bring",

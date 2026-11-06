@@ -54,8 +54,8 @@
      "a research step's history and date, with the tech tree (the Content pull)"
     ],
     "vaccine": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "fourcourse": [
      "bring",
@@ -778,8 +778,8 @@
      "a research step's history and date, with the tech tree (the Content pull) · F24: Words book J7 (why), by its key"
     ],
     "medicine": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "architecture": [
      "in v100",
@@ -790,8 +790,8 @@
      "F13a: Words book J7 (why), by its key"
     ],
     "medschool": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "press": [
      "in v100",
@@ -826,36 +826,36 @@
      "F30: Words book J7 (why), by its key"
     ],
     "bandages": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "herbs": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "hospitals": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "pharmacy": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "quarantine": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "surgeons": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "anatomy": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "inoculation": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "rites": [
      "in v100",
@@ -1038,20 +1038,20 @@
      "F26+F27: Words book J7 (why), by its key"
     ],
     "cleanwater": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "sewers": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "plumbing": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "waterworks": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F32: J7"
     ],
     "keep": [
      "bring",
@@ -1186,8 +1186,8 @@
      "F25+F28: Words book J7 (why), by its key"
     ],
     "hospital": [
-     "bring",
-     "the history card for Hospital (BP6), with its building"
+     "in v100",
+     "F32: J7"
     ],
     "baths": [
      "bring",
@@ -1406,44 +1406,44 @@
      "F19+F20: Words book J7 (why), by its key"
     ],
     "chest": [
-     "bring",
-     "the treasure chest (MG4 Treasure), with finds"
+     "in v100",
+     "F31: J7"
     ],
     "ruins": [
-     "bring",
-     "MG1 Ruins, with finds"
+     "in v100",
+     "F31: J7"
     ],
     "cemetery": [
-     "bring",
-     "MG2 Cemetery, with finds"
+     "in v100",
+     "F31: J7"
     ],
     "camp": [
-     "bring",
-     "the robbers' camp, with the hazards (MH3 Robbers)"
+     "in v100",
+     "F31: J7"
     ],
     "den": [
-     "bring",
-     "the bear den, with finds (MW6 Bear)"
+     "in v100",
+     "F31: J7"
     ],
     "shrine": [
      "bring",
      "the shrine at the Throne, with finds (see misfits: the Throne)"
     ],
     "vagabonds": [
-     "bring",
-     "the vagabonds to hire (MH4), with finds"
+     "in v100",
+     "F31: J7"
     ],
     "mercs": [
-     "bring",
-     "the free company, with events"
+     "in v100",
+     "F31: J7"
     ],
     "meteor": [
-     "bring",
-     "the fallen star (iron), with events"
+     "in v100",
+     "F31: J7"
     ],
     "wayfarer": [
-     "bring",
-     "MH5 Wayfarers, with finds"
+     "in v100",
+     "F31: J7"
     ],
     "wonder:roman": [
      "bring",
@@ -1566,8 +1566,8 @@
    }
   ],
   "EV_WHY": [
-   "bring",
-   "why each event happened, with events. Rows below",
+   "in v100",
+   "F31: J19 why",
    {
     "eclipse": [
      "cut",
@@ -1640,8 +1640,8 @@
    }
   ],
   "EV_TEXT": [
-   "bring",
-   "each event's warning and its line, with events. Rows below",
+   "in v100",
+   "F31: J19 events, horde",
    {
     "eclipse": [
      "cut",

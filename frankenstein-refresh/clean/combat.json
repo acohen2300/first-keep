@@ -42,28 +42,28 @@
    "F26+F27: combat.js guard: the caravan or stop is the guard's post (u.esc, u.home)"
   ],
   "wildLeash": [
-   "bring",
-   "how far a beast or a camp guard follows a foe from home; part of wildlife and the hazards (M)"
+   "in v100",
+   "F31: combat.js wild (D305 leash, raid)"
   ],
   "wildTick": [
-   "bring",
-   "wildlife and camp guards: game grazes and flees, guards keep to what they guard, robbers raid, a defender fights with probability V/C (QAH). v100 has the wander (QM) and the bite back (combat.js)"
+   "in v100",
+   "F31: combat.js wild: guards keep home, look, leash, a defender weighs a stranger (QAH, D305); wildlife without a home as before"
   ],
   "wayfarers": [
-   "bring",
-   "wayfarers (MH5) arrive from the land's edges every so often; part of hazards as events"
+   "in v100",
+   "F31: index.html floor 6 arrivals (D306)"
   ],
   "wayfarerTick": [
-   "bring",
-   "a wayfarer meets your people and leaves a gift of food; part of MH5 Wayfarers"
+   "in v100",
+   "F31: combat.js join (Join, D306)"
   ],
   "guardsLeft": [
-   "bring",
-   "whether a find still has its guards alive; part of the finds (MG gifts)"
+   "in v100",
+   "F31: combat.js guardsLeft"
   ],
   "findsTick": [
-   "bring",
-   "the finds: guarded gifts taken when their guards fall, holy sites a priest holds, the trade stops' pay. v100 places MG1-MG4 with a yield (floor 3) but nothing captures them"
+   "in v100",
+   "F31: econ.js finds (Take, D305); the shrine waits for the Throne (Albert)"
   ],
   "fromWhere": [
    "in v100",

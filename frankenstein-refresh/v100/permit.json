@@ -1,5 +1,1 @@
-{
- "build": "",
- "agreed": "",
- "opens": []
-}
+{"build": "F31+F32 · hazards, finds and their guards, events with warnings, robbers' raids, hired drifters; fire in storms, villagers who save buildings, outbreaks and cures", "agreed": "Albert, Nov 5 11:40: yes yes F10–F39; Nov 6 07:04: proceed", "opens": ["code:index.html", "code:combat.js", "code:econ.js", "book:shells", "book:measure", "book:sprites", "book:words", "book:capabilities", "book:citations", "book:tech", "book:comments", "book:rules", "book:colours", "law:QM", "law:QT", "law:QU", "law:QAQ", "tool:test.py"], "grow": {"code:combat.js": 7043, "code:econ.js": 8620, "code:index.html#floor-3-non-movables": 478, "code:index.html#floor-5-movables": 705, "code:index.html#floor-6-climate": 9088, "code:index.html#the-things-drawn-each-frame-back-to-fr": 744, "code:index.html#the-woods-cache": 127, "code:index.html#touch": 103}, "why": "F31+F32 bring four whole modules (Mid's finds, guards and drifters; the events and hazards; fire; sickness and healing: about 70 kB of Mid) as new behaviour: the wild's guards, raids, detachments and the scout (combat.js), the finds, hiring, fire and sickness (econ.js), the finds and guards laid (floors 3 and 5), the scheduler, its events and the horde (floor 6), and their drawing (flames, blobs, sand, the star); every number in the books, nothing typed past the ratchet"}

@@ -390,8 +390,8 @@
    "a chimney's plume (law QAV), bent over by the wind: see misfits"
   ],
   "blaze": [
-   "bring",
-   "fire on a badly hurt building, dark smoke when sabotage stalls it"
+   "in v100",
+   "F32: index.html blaze"
   ],
   "RIPS": [
    "bring",
@@ -486,8 +486,8 @@
    "a figure's motion and marks: the woodcutter's lean, the step's rise and fall, the lunge, a shooter's kick, the recoil, the stagger, nerve bar, rout badge, march chevron, conversion, idle z and focus F, the archer's stakes; v100 has the ring, the sprite, the stride (QBU), the sway (QBS), dots far out"
   ],
   "drawFind": [
-   "bring",
-   "the finds' art: v100 draws ruins, cemetery, campfire, treasure (GIFT); Mid's robbers' camp, wolf den, trade stop and drifters' camp come with their features; the Throne's shrine: see misfits"
+   "in v100",
+   "F31: index.html GIFT by look; the den and the star as blobs (PN1), the camps wear the campfire; Mid's drawn finds parked (Parked.md)"
   ],
   "drawPicks": [
    "in v100",
@@ -502,12 +502,12 @@
    "index.html drawSkin: wet darkens, snow whitens, ice whitens the water; Mid's ruts are held (KI15): see misfits"
   ],
   "drawCracks": [
-   "bring",
-   "a sinkhole's cracks and dust (with the events)"
+   "in v100",
+   "F31: index.html crack on the scar layer (the 45 s bright crack and dust puff parked)"
   ],
   "drawEvents": [
-   "bring",
-   "each event draws itself (events module); its blizzard snow: see misfits"
+   "in v100",
+   "F31: index.html drawSky, the falling star's streak; the others' overlays went with their events"
   ],
   "bar": [
    "in v100",
@@ -582,8 +582,8 @@
    "F30: maskFlood, floor 6 drawSkin"
   ],
   "drawSand": [
-   "bring",
-   "quicksand: a pale patch with ripples (with the events)"
+   "in v100",
+   "F31: index.html drawSkin, quicksand"
   ],
   "drawLakeRipples": [
    "in v100",
@@ -594,8 +594,8 @@
    "F30: floor 6 marks (D298)"
   ],
   "drawFire": [
-   "bring",
-   "the wildfire; fire spreading (QT, QU) is held: see misfits"
+   "in v100",
+   "F32: index.html blaze on burning buildings and trees"
   ],
   "drawFogLayer": [
    "in v100",

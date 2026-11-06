@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 2,693 | 403,801 | 403,935 |
-| Books | 1657 | 0 | 423,374 | 423,895 |
+| Game code | 28 | 2,835 | 430,709 | 430,843 (+26,908) |
+| Books | 1731 | 0 | 455,124 | 455,683 (+5,096) |
 | Laws | 87 | 0 | 15,620 | 16,070 |
-| Tools | 4 | 1,354 | 219,365 | 219,537 |
+| Tools | 4 | 1,483 | 245,733 | 245,972 (+26,435) |
 
 ## The trades (code)
 
@@ -20,7 +20,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,816 | 1,820 | 38 |
 | index.html#floor-2-terrain | 81 | 7,995 | 7,999 | 131 |
-| index.html#floor-3-non-movables | 46 | 5,301 | 5,305 | 81 |
+| index.html#floor-3-non-movables | 48 | 5,779 | 5,783 (+478) | 81 |
 | index.html#drawn-once-in-the-view-frame | 55 | 6,041 | 6,045 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
 | index.html#the-door | 59 | 6,437 | 6,441 | 69 |
@@ -29,16 +29,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 124 | 13,899 | 13,903 | 95 |
+| index.html#floor-5-movables | 128 | 14,604 | 14,608 (+705) | 95 |
 | index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 30 | 4,341 | 4,345 | 92 |
-| index.html#floor-6-climate | 105 | 15,534 | 15,546 | 251 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 33 | 5,085 | 5,089 (+744) | 92 |
+| index.html#floor-6-climate | 155 | 24,622 | 24,634 (+9,088) | 251 |
 | index.html#floor-7-display | 45 | 6,045 | 6,049 | 72 |
-| index.html#the-woods-cache | 51 | 4,966 | 4,970 | 79 |
-| index.html#touch | 49 | 6,326 | 6,330 | 55 |
+| index.html#the-woods-cache | 51 | 5,093 | 5,097 (+127) | 79 |
+| index.html#touch | 49 | 6,429 | 6,433 (+103) | 55 |
 | menu.js | 364 | 64,046 | 64,088 | 588 |
-| econ.js | 494 | 89,100 | 89,100 | 75 |
-| combat.js | 312 | 51,482 | 51,482 | 84 |
+| econ.js | 538 | 97,720 | 97,720 (+8,620) | 75 |
+| combat.js | 351 | 58,525 | 58,525 (+7,043) | 84 |
 | ai.js | 159 | 25,300 | 25,300 | 27 |
 | sound.js | 57 | 5,774 | 5,774 | 66 |
 
@@ -47,29 +47,29 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 5 | 734 |
-| capabilities | 46 | 13,236 |
-| citations | 204 | 37,131 |
-| colours | 16 | 2,599 |
-| comments | 558 | 93,831 |
+| capabilities | 50 | 14,678 |
+| citations | 207 | 38,853 |
+| colours | 17 | 2,958 |
+| comments | 592 | 98,265 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 285 | 96,546 |
-| rules | 62 | 19,942 |
+| measure | 292 | 107,687 |
+| rules | 64 | 21,680 |
 | screen | 10 | 2,959 |
-| shells | 97 | 19,255 |
+| shells | 103 | 20,476 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
-| sprites | 61 | 23,313 |
-| tech | 207 | 60,054 |
-| words | 18 | 53,226 |
+| sprites | 61 | 23,607 |
+| tech | 222 | 64,240 |
+| words | 20 | 59,224 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
-| 100 | 12 | 1 |
-| 110 | 50 | 11 |
-| 120 | 35 | 0 |
+| 100 | 17 | 0 |
+| 110 | 50 | 10 |
+| 120 | 36 | 0 |
 
 ## The rules
 
@@ -137,5 +137,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X61 | t-trade | page | the Market, coin, bank and ventures, goods and workshops, trade and caravans (F26+F27): Mid's TRADE, SELL, BUY, MKT_SELL, MKT_BUY, GOODS, PRICE, MINT, VENTURE, BANK_CAP, SCALE, LOAD, CARAVAN, POST, TRADE_CAP, TRADE_DIV, PLACES.stop and WARES in the books, and every building priced, timed and with its health; eight stops on the two routes wanting Mid's wares in turn; three lots sold, two bought, the coin debased and a slow beat's drift give Mid's frozen marketTrade, debase and priceDrift's gold and stock; a caravan's run to a held stop loads and is paid as Mid's frozen priceAt and loadable, less the keeper's cut; an ally's run, five minutes of a workshop with the loom, Learning by doing, a venture with Banking and the Bank's interest are Mid's frozen numbers; guards keep to a caravan, a guarded caravan is Mid's frozen guardedCart's, a robbed one Mid's frozen robbed |
 | X62 | t-realm | page | the war camp, field traps, relations and vassals (F25+F28): Mid's CAMP, CALTROPS, STAKES, NATIVE's traps, NOTICE, PEACE.truce, REGARD, GANG, REL_WORD, VASSAL, DEMAND and its fair TAX as the tribute in the books, and the camp pieces', traps', wagons', envoy's and rebels' rows; both camps' layouts at three facings are Mid's frozen campLayout snapped; the small camp unpacks as sites and a soldier's hands raise a piece at D279's build of a villager's; a medical tent binds a wound as Mid's healTick's lag; a caravan's supply run costs Mid's fee and food and stocks the depot; soldiers eat from it, and unsupplied they slow; caltrops on a rider and a spearman, and a pit a scout found, are Mid's frozen trapsTick; war comes after Mid's notice; an envoy's five answers and a truce's price are Mid's frozen judgeEnvoy on the same odds; ten minutes of a vassal's tribute, loyalty and unrest are Mid's frozen vassalTick; gifts buy Mid's giftGain (QCD) |
 | X63 | t-mind | page | the computers' minds and the sky, the moon and the ground (F29+F30): Mid's PERS, PLAYERS, WAVE, SAVE, DIFF, EASY_SAFE, SYNODIC, NIGHT_SIGHT, CLIMATE.rut, CLIMATE.shore and EVENTS.flood in the books; a computer's plan by need each minute over four minutes is Mid's frozen needOf and runsOut on the same hands, rates, stores, goal and draw, and every computer grows its town; the moon's phase, light and the night's sight are Mid's; a walker wears the ground a unit-second a second, and the ruts heal, deepen the mud and pool by water as Mid's frozen rutHeal, rutOf and mudAt; a flood blocks the land within its rise and harms a building there unless Levees, and goes |
+| X64 | t-wild | page | finds, wild guards, drifters, events and the hazards (F31): Mid's FINDS (guards, spoils, the ruins' scroll, the drifters' price), WAYFARER_EVERY, WILD_LOOK, the leash, NATIVE's raids, GROUP_R, EV_MEAN, EV_MIN, EV_WARN, the kept EVENTS, HAZARDS, HORDE and the bandit's and robber's UNIT rows in the books; on the seed every find laid with its guards on its ring (drifters by their fire); with every hazard on, the events in order with their warnings and the horde's warnings, arrival and number, fed one string of dice, are Mid's frozen eventsTick and hordeTick's (each event's doing set aside); a robbers' raid's band and mark are Mid's frozen natRaid's for the same camp, people and strengths; a drifter's refusals, price and three foot soldiers are Mid's frozen hireWhy and hire's; a chest taken pays Mid's frozen findsTick's spoils, the ruins a free research |
+| X65 | t-fire | page | fire and sickness (F32): Mid's FIRE, FIRE_SMOKE, FIREARMS and HEALTH in the books, its wooden buildings the ones that Burn, its water, sewer and quarantine research the measured shares (MEASURED); fireHeat and Rothermel's η are Mid's; a summer storm's strike on a wooden town of two clusters: the home with villagers beside it saved, its neighbour untouched, and the other cluster's three burning down one from another, each when Mid's frozen lightning, ignite, fireTick and repairTick's buckets do on the same town and dice (to the 3 s look); then an outbreak, beat by beat, sickens and cures the same people as Mid's frozen outbreak and healthTick |
 
-1776 items sealed · 1657 book entries · 87 laws · 204 citations, 38 still to open · 7 known
+1850 items sealed · 1731 book entries · 87 laws · 207 citations, 39 still to open · 7 known
