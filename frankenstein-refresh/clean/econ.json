@@ -358,12 +358,12 @@
    "F24: econ.js intel; menu.js troops row on their hall"
   ],
   "hireWhy": [
-   "bring",
-   "hiring soldiers at a find on the map"
+   "in v100",
+   "F31: econ.js hireWhy"
   ],
   "hire": [
-   "bring",
-   "hiring"
+   "in v100",
+   "F31: econ.js hire (Hire)"
   ],
   "setJob": [
    "in v100",
@@ -634,8 +634,8 @@
    "F19+F20: combat.js formHome"
   ],
   "scoutTick": [
-   "bring",
-   "the Scout (US4, SC18): treasure first, then a loop of the map"
+   "in v100",
+   "F31: combat.js scout (SC18, D305 scout)"
   ],
   "envoyTick": [
    "in v100",
@@ -778,16 +778,16 @@
    "F16: econ.js seasonTurn: spoilage (QAD), fish and lambs (QY), the cull (QZ), wolves, the harvest; the wool and the plague wait (Parked)"
   ],
   "fireHeat": [
-   "bring",
-   "fire: t² growth and heat to a neighbour (QU)"
+   "in v100",
+   "F32: econ.js heat (QU, D310)"
   ],
   "FIRE_SMOKE": [
-   "bring",
-   "fire: smoke kills a firefighter now and then"
+   "in v100",
+   "F32: D310 smoke, econ.js douse"
   ],
   "ignite": [
-   "bring",
-   "fire: wood and thatch catch"
+   "in v100",
+   "F32: econ.js ignite (Burn)"
   ],
   "storm": [
    "in v100",
@@ -798,24 +798,24 @@
    "index.html climate: the bolt pinned to the ground it hits, its foot lit (KW6, QL); the fire it starts is held"
   ],
   "lightning": [
-   "bring",
-   "summer storms strike wooden buildings and set them on fire"
+   "in v100",
+   "F32: econ.js lightning, the bolt at index.html bolt"
   ],
   "fireTick": [
-   "bring",
-   "fire: spread, burn and put out"
+   "in v100",
+   "F32: econ.js burn"
   ],
   "sickRisk": [
-   "bring",
-   "sickness (QAQ): more in summer and winter, less with clean water"
+   "in v100",
+   "F32: econ.js sickRisk"
   ],
   "outbreak": [
-   "bring",
-   "sickness"
+   "in v100",
+   "F32: econ.js outbreak"
   ],
   "healthTick": [
-   "bring",
-   "sickness and healing (Hospital BP6, Medic US2)"
+   "in v100",
+   "F32: econ.js health (QAQ, D311)"
   ],
   "upkeepTick": [
    "in v100",

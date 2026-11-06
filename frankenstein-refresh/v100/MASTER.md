@@ -76,6 +76,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
+- **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
 - **E50** drawn back to front
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
 - **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170)
@@ -110,7 +111,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E65** The door (floor 8): the modules (menu, econ, combat, ai) hang on these hooks and read the 
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
-- **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
+- **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144, N206)
 - **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198) · D123 (N168, N176, N194, N195, N198) · D124 (N169, N176, N194, N195, N198) · D125 (N169, N168, N195, N198) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
 - **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198) · D130 (N160)
@@ -157,7 +158,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E82** Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands a · QBL (N74)
 - **E83** one a corner (C5–C8); the player is 0 · C5 (N103) · C8 (N103)
 - **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79, N170, N176, N198)
-- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170, N195)
+- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170, N195, N205)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
@@ -202,6 +203,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E346** a boar near every Town Center, at the book's spot in each corner (Mid's boar)
 - **E108** The wildlife: Who the map · What herds of deer and packs of wolves · Where Z4, on walkable · D90 (N112) · D93 (N112)
 - **E109** which walkers, how many groups and how big: the book's (D181) · D181 (N121)
+- **E565** a find's guards on a ring round it, each bound to it as its home; drifters in a row beside
+- **E566** a walker that leaves the land (no fall, no carcass), and a find taken away
 - **E110** what carries a walker: its mount, else its own body (W)
 
 ## index.html#the-body-s-laws
@@ -219,6 +222,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E118** W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's st
 - **E119** the node art's own small dice, seeded by the variant, so a tree's leaves fall the same eac
 - **E120** each drawn at its stand (x, y on the screen), s pixels a unit
+- **E580** a find drawn as blobs from the Sprites book
+- **E581** flames on what burns, with its smoke, as strong as the fire
 - **E524** A hidden trap is drawn flat on the ground from the Sprites book, in its side's shade or th
 - **E121** a find far out, from its look
 
@@ -245,14 +250,17 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E134** fog, or mist after rain at dawn and dusk (KW8)
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
+- **E576** a bolt where it falls: drawn, the ground scorched, the thunder told
 - **E137** a far flash: its thunder from beyond the screen
 - **E138** the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling · QJ (N9)
 - **E139** on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply)
+- **E578** quicksand on the ground while it lasts
 - **E140** over everything: what falls, the strikes, the flash, the night, the white of low visibilit
 - **E379** rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's sp
 - **E380** snow: flakes falling slow to fast by size, carried by the wind and swaying
 - **E141** SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three st
 - **E142** the channel wanders but leans home to its foot
+- **E579** a falling star streaks down onto its spot
 - **E143** the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of
 - **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10)
 - **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10)
@@ -262,6 +270,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E555** water over the shore while the flood stands (KI4); the mud a step meets: the wetness, deep · QS (N20) · D294 (N20, N203)
 - **E556** each land tile's distance to the inland water, once a map: the shore that pools and the la
 - **E557** the flood harms a finished building whose middle stands within its rise, unless its side h
+- **E567** the Challenge's hazards and the events: a hazard counts only off Easy; the level played mu
+- **E568** where an event comes in: a spot on one of the land's edges, its far side through the middl
+- **E569** an event comes only in its season, or in the rain; never the same twice running
+- **E570** a Poisson wait with a floor: least plus −(mean − least) ln U (QM) · QM (N12)
+- **E571** what each event does when it starts, each second it runs and when it ends (Mid's EV)
+- **E572** a sinkhole's star of cracks, each arm bending as it goes, laid on the ground's memory from
+- **E573** once a second: the event running, else the warning ahead of the next, else its start; the 
+- **E574** the horde under the Outlaws hazard: told two seasons and one ahead, then it comes for the 
+- **E575** a wayfarer from the middle of each edge in turn, to the far one (Mid's wayfarers)
+- **E577** a running herd tramples who stands in its way and the soil of the fields it crosses (Mid's
 - **E558** marks on the water and the ground, and the sky band (D296–D298, Mid's drawLakeRipples, dra · D296 (N203) · D298 (N203)
 - **E559** ripples drift on the lakes, inside the shore; none on ice
 - **E560** rain rings sit on the ground, fixed to the world, fewer as the rain eases; only close up
@@ -293,7 +311,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E158** the chunk's deep trees on one canvas
 - **E159** a hit moves to the back: the oldest goes first
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
-- **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170, N195)
+- **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170, N195, N205)
 - **E161** L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tile · D7 (N112)
 
 ## index.html#touch
@@ -496,6 +514,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E506** Why a side cannot take a stance toward another, or a group, now (Mid's relWhy, envoyWhy):  · D282 (N198, N199, N201)
 - **E507** An envoy rides from the Town Center to the court (its Town Center) or the group (its neare
 - **E508** The answer (Mid's judgeEnvoy): at war and not asked for peace, the envoy is killed; the pl
+- **E590** the finds: the first side to touch one whose guards have fallen takes what it holds; the r
+- **E591** drifters fight for whoever pays, with a unit of the payer beside them and room in the army
+- **E592** fire: the ground's dryness by Rothermel (QT), the t² fire's heat across a gap (QU), and a  · QT (N21) · QU (N22) · QM (N12)
+- **E593** a wooden building catches fire, and the nearest villagers of its side run with buckets (Mi
+- **E594** a fire burns its building and, every few seconds, may light a wooden neighbour; a building
+- **E595** in a summer storm lightning strikes a wooden building now and then, and a forge throws spa
+- **E596** sickness: a town's people near its seat or a depot; more cases from outside in summer and 
+- **E597** each health beat: cases from outside, the spread β S I / N (QAQ), and each sick one cured  · QAQ (N47, N48)
 - **E509** A wild group's regard for each side (Mid's gangState, regardOf, addRegard, gangSync): peac · D282 (N198, N199, N201)
 - **E510** Gifts (Mid's giftGain, QCD): each gift in the window buys less regard than the last, as th · QCD (N201, N198)
 - **E511** Vassals and tribute (F28, Mid's 36-economy; Albert, Nov 5 11:16 (2): tribute, the tax rate · QCG (N198)
@@ -587,6 +613,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E472** a spy is unseen unless a foe's soldier or watching building is near; by a foe's building i
 - **E473** the computers' spy: it takes the first unguarded building it sees that can be sabotaged
 - **E474** sabotage (Mid's sabotage): a building burns a share of its health or stalls and loses the 
+- **E582** the wild's guards and travellers, the robbers' raids, the computers' detachments and the s
+- **E583** a guard keeps to its home: it looks for a stranger near home (a raider, near its reach), l
+- **E584** a defender weighs a stranger now and then: it fights with probability V / C, C the strange · QAH (N38)
+- **E585** a traveller joins the first side to meet him, as villagers (on its rally job), or as food 
+- **E586** one weighted draw: p = w_i / Σw (QAR) · QAR (N49)
+- **E587** now and then the robbers' camp nearest the player sends its band at a villager or caravan 
+- **E588** a computer hires drifters it can pay for, and sends half its idle army at the nearest find
+- **E589** a scout left to itself goes for a find whose guards have fallen, else loops the land
 - **E519** Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies  · D280 (N198, N199)
 - **E520** A trap sprung: caltrops spike each walker once a while and wear flat; the others go off on
 - **E521** The archers' stake (Mid's STAKES, Agincourt): a horse that strikes a staked shooter is hur

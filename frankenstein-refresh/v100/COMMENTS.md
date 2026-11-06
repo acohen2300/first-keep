@@ -562,3 +562,37 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E561 | index.html#floor-6-climate | the horizon: a band of sky along the top of the glass, coloured by the hour and the weather |
 | E562 | index.html#floor-6-climate | clouds cross the band with the wind |
 | E563 | sound.js | the wind is heard as hard as it blows (HA4, HX4) |
+| E564 | index.html#floor-3-non-movables | the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay as they were; a robbers' camp at each end of the two trade routes (Mid's layCamps) |
+| E565 | index.html#floor-5-movables | a find's guards on a ring round it, each bound to it as its home; drifters in a row beside their fire (Mid's addFind) |
+| E566 | index.html#floor-5-movables | a walker that leaves the land (no fall, no carcass), and a find taken away |
+| E567 | index.html#floor-6-climate | the Challenge's hazards and the events: a hazard counts only off Easy; the level played multiplies the score |
+| E568 | index.html#floor-6-climate | where an event comes in: a spot on one of the land's edges, its far side through the middle, or a free spot of the wild away from every town |
+| E569 | index.html#floor-6-climate | an event comes only in its season, or in the rain; never the same twice running |
+| E570 | index.html#floor-6-climate | a Poisson wait with a floor: least plus −(mean − least) ln U (QM) |
+| E571 | index.html#floor-6-climate | what each event does when it starts, each second it runs and when it ends (Mid's EV) |
+| E572 | index.html#floor-6-climate | a sinkhole's star of cracks, each arm bending as it goes, laid on the ground's memory from its place |
+| E573 | index.html#floor-6-climate | once a second: the event running, else the warning ahead of the next, else its start; the horde and the travellers; a walker past its way out leaves (Mid's eventsTick) |
+| E574 | index.html#floor-6-climate | the horde under the Outlaws hazard: told two seasons and one ahead, then it comes for the weakest side at war with the outlaws, growing with the age (Mid's hordeTick) |
+| E575 | index.html#floor-6-climate | a wayfarer from the middle of each edge in turn, to the far one (Mid's wayfarers) |
+| E576 | index.html#floor-6-climate | a bolt where it falls: drawn, the ground scorched, the thunder told |
+| E577 | index.html#floor-6-climate | a running herd tramples who stands in its way and the soil of the fields it crosses (Mid's herdTick) |
+| E578 | index.html#floor-6-climate | quicksand on the ground while it lasts |
+| E579 | index.html#floor-6-climate | a falling star streaks down onto its spot |
+| E580 | index.html#the-things-drawn-each-frame-back-to-fr | a find drawn as blobs from the Sprites book |
+| E581 | index.html#the-things-drawn-each-frame-back-to-fr | flames on what burns, with its smoke, as strong as the fire |
+| E582 | combat.js | the wild's guards and travellers, the robbers' raids, the computers' detachments and the scout (Mid's wildTick, wayfarerTick, natRaid, lootRun, scoutTick) |
+| E583 | combat.js | a guard keeps to its home: it looks for a stranger near home (a raider, near its reach), lets go past its leash and walks home when far; a raid's band goes home when its time is out |
+| E584 | combat.js | a defender weighs a stranger now and then: it fights with probability V / C, C the stranger's strength over its own (QAH) |
+| E585 | combat.js | a traveller joins the first side to meet him, as villagers (on its rally job), or as food when the town is full |
+| E586 | combat.js | one weighted draw: p = w_i / Σw (QAR) |
+| E587 | combat.js | now and then the robbers' camp nearest the player sends its band at a villager or caravan they can beat, drawn toward a load and away from a guard, and calls them back after a spell |
+| E588 | combat.js | a computer hires drifters it can pay for, and sends half its idle army at the nearest find while nothing else is on; home when it is taken |
+| E589 | combat.js | a scout left to itself goes for a find whose guards have fallen, else loops the land |
+| E590 | econ.js | the finds: the first side to touch one whose guards have fallen takes what it holds; the ruins a free research of its age |
+| E591 | econ.js | drifters fight for whoever pays, with a unit of the payer beside them and room in the army |
+| E592 | econ.js | fire: the ground's dryness by Rothermel (QT), the t² fire's heat across a gap (QU), and a chance in a step from a rate (QM) |
+| E593 | econ.js | a wooden building catches fire, and the nearest villagers of its side run with buckets (Mid's ignite) |
+| E594 | econ.js | a fire burns its building and, every few seconds, may light a wooden neighbour; a building that burns out falls (Mid's fireTick) |
+| E595 | econ.js | in a summer storm lightning strikes a wooden building now and then, and a forge throws sparks (Mid's lightning) |
+| E596 | econ.js | sickness: a town's people near its seat or a depot; more cases from outside in summer and winter, fewer with research |
+| E597 | econ.js | each health beat: cases from outside, the spread β S I / N (QAQ), and each sick one cured by a healer near, dying, or well again (Mid's healthTick) |

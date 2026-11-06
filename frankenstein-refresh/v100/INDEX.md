@@ -38,7 +38,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC15 | where the ages are reached; the queue holds research as well as units: a step of the Research book is learned at the building its row names, after the one before it in its line and its needs | {by: menu.js, econ.js, law: [QCA], needs: [], may: []} | N95; N160 |
 | SC16 | a building that yields, at the rate its row points to, to one worker at a time (D195); its builder takes it up; one with an amount runs out and is replanted at D222's share of its price (Mid's replant) | {by: econ.js, ai.js, law: [QBN, QX], needs: [yield, rate], may: [amount]} | N95; N164; N170 |
 | SC17 | a find: holds an amount of a yield | {by: econ.js, law: [QBN], needs: [yield, amount], may: []} | N99 |
-| SC18 | scouts: finds the hidden traps it comes near, for its side | {by: combat.js traps, law: [], needs: [], may: []} | N100; N198 |
+| SC18 | scouts: finds the hidden traps it comes near, for its side; left to itself, it goes for a find whose guards have fallen, then loops the land (Mid's scoutTick) | {by: combat.js traps, econ.js scout, law: [], needs: [], may: []} | N100; N198; N205 |
 | SC19 | trades: a Market sells and buys by the lot at the going price (D270, QAE), sends ventures (D274) and loads its side's caravans; a caravan (D278) with a route carries goods from its Market to a trade stop or an ally's Market, sells them by distance (QCE) and buys spice at a stop, or with none runs to an ally's Market for distance² pay; a trade stop is where caravans sell, on one of the two routes | {by: econ.js, law: [QAE, QCE], needs: [], may: []} | N195 |
 | SC20 | a page that keeps its own height (the Town Center, the Start page); every other page shares the tallest of the rest | {by: menu.js, law: [], needs: [], may: []} | N101 |
 | SC21 | laid as a line, corner to corner, one piece a tile, four-connected; touches any building, keeps no lane (Mid's lineKind) | {by: econ.js, menu.js, law: [], needs: [], may: []} | N168 |
@@ -62,6 +62,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC39 | a depot: the soldiers within D279's reach eat from its stock; unsupplied they slow and do not mend; a Market caravan fills it | {by: econ.js upkeep, a caravan's run, law: [], needs: [], may: []} | N198 |
 | SC40 | a hidden trap (D280's kinds): seen only by its side, its allies and a side whose scout found it; a foe who steps on it springs it | {by: combat.js traps, index.html (drawn, hidden), law: [], needs: [trap], may: []} | N198 |
 | SC41 | carries an offer of peace or alliance to a court or a group, answered there by its odds (QAF) or its regard; no one strikes it on the road | {by: econ.js, combat.js enemies, law: [QAF], needs: [], may: []} | N198 |
+| SC42 | a find held by its guards (D305): the first side to touch it once they fall takes what it holds (its yield, if it has one, stays to be worked) | {by: econ.js finds, index.html (laid with their guards), law: [], needs: [], may: []} | N205 |
+| SC43 | drifters by a fire (D305): they fight for whoever pays, a unit of the payer beside them; the mercenaries move on when their time is out | {by: econ.js hire, index.html (laid with their drifters), law: [], needs: [], may: []} | N205 |
+| SC44 | a traveller (D306): crosses the land edge to edge and joins the first side to meet him, as villagers, or as food when the town is full | {by: combat.js wild, index.html (they arrive), law: [], needs: [], may: [mount]} | N205 |
+| SC45 | wooden or thatched: it catches fire from lightning in a summer storm, a spark, a shot, sabotage or a wildfire, burns down unless its villagers put it out, and lights its wooden neighbours (D310) | {by: econ.js fire, index.html (drawn, struck), law: [QT, QU], needs: [], may: []} | N206; N21; N22 |
 
 ## citations
 
@@ -271,6 +275,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N202 |  | Design: Mid's computers (17-ai.js bestCounter, timeLeft, rateFrom, goalOf, needOf, runsOut, famineNear, PLOTS, plotPays, think, armyCap, arm | opened |
 | N203 |  | Design: Mid's sky, moon and ground (08-core.js moonVec, moonPhase, moonLight, NIGHT_SIGHT, SYNODIC; 37-events.js skyTurn, wxWhy, ruts, rutsA | opened |
 | N204 |  | Rosenzweig & Udry (2013), Forecasting Profitability, NBER Working Paper 19334, p. 21: farmers who plan by the monsoon forecast earn R46,625  | to open |
+| N205 |  | Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_LOOK, NATIVE raids; 14-sim-troo | opened |
+| N206 |  | Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sickRisk, outbreak, healthTick; 06 | opened |
+| N207 |  | Alsan & Goldin (2019), Watersheds in Child Mortality: The Role of Effective Water and Sewerage Infrastructure, 1880–1920, Journal of Politic | to open |
 
 ## colours
 
@@ -292,6 +299,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C15 | The sky: the band by the hour and the weather, its clouds, the frost's cast (Mid's SKY, drawSky, WX_TINT); and the glass's washes, laid at their strength: wet ground's dark, a flash, rain's gloom, the white veil, dusk's glow, night's blue, fog, a shadow (v100's own, moved here from the code) | {day: #78aae1, dusk: #eb9650, night: #101630, rain: #78828f, storm: #323846, blizzard: #cdd2dc, frost: #b9cde6, cloud: #f5f8fc, cloudDark: # | N203 |
 | C16 | The ground's memory, each with its strength: worn earth, where one fell and a blade's cut, a strike's scorch, a crack, burnt ground and rubble (Mid's scar paints) | {wear: #7660404d, fall: #28120c38, cut: #3c2d1e80, strike: #14100c59, crack: #160f0a80, burn: #19141261, rubble: #5f5a548c} | N203 |
 | C17 | Ripples on the lakes and rain rings on the ground, with their strength (Mid's) | {ripple: #dcf0ff47, ring: #d7e6f54d} | N203 |
+| C18 | The wild's: a den's mound, a fallen star's stone and glow, quicksand on the ground, a fire's smoke and a falling star's streak (Mid's drawFind, drawSand, blaze, the meteor) | {den: #4a3a2a, stone: #5c5a60, star: #fff0c8, sand: #c8a8648c, smoke: #3c38348c, streak: #fff0c8e6} | N205; N206 |
 
 ## comments
 
@@ -855,6 +863,40 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E561 |  | the horizon: a band of sky along the top of the glass, coloured by the hour and the weather |  |
 | E562 |  | clouds cross the band with the wind |  |
 | E563 |  | the wind is heard as hard as it blows (HA4, HX4) |  |
+| E564 |  | the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay as they were; a robbers' camp at each end of the tw |  |
+| E565 |  | a find's guards on a ring round it, each bound to it as its home; drifters in a row beside their fire (Mid's addFind) |  |
+| E566 |  | a walker that leaves the land (no fall, no carcass), and a find taken away |  |
+| E567 |  | the Challenge's hazards and the events: a hazard counts only off Easy; the level played multiplies the score |  |
+| E568 |  | where an event comes in: a spot on one of the land's edges, its far side through the middle, or a free spot of the wild away from every town |  |
+| E569 |  | an event comes only in its season, or in the rain; never the same twice running |  |
+| E570 |  | a Poisson wait with a floor: least plus −(mean − least) ln U (QM) |  |
+| E571 |  | what each event does when it starts, each second it runs and when it ends (Mid's EV) |  |
+| E572 |  | a sinkhole's star of cracks, each arm bending as it goes, laid on the ground's memory from its place |  |
+| E573 |  | once a second: the event running, else the warning ahead of the next, else its start; the horde and the travellers; a walker past its way ou |  |
+| E574 |  | the horde under the Outlaws hazard: told two seasons and one ahead, then it comes for the weakest side at war with the outlaws, growing with |  |
+| E575 |  | a wayfarer from the middle of each edge in turn, to the far one (Mid's wayfarers) |  |
+| E576 |  | a bolt where it falls: drawn, the ground scorched, the thunder told |  |
+| E577 |  | a running herd tramples who stands in its way and the soil of the fields it crosses (Mid's herdTick) |  |
+| E578 |  | quicksand on the ground while it lasts |  |
+| E579 |  | a falling star streaks down onto its spot |  |
+| E580 |  | a find drawn as blobs from the Sprites book |  |
+| E581 |  | flames on what burns, with its smoke, as strong as the fire |  |
+| E582 |  | the wild's guards and travellers, the robbers' raids, the computers' detachments and the scout (Mid's wildTick, wayfarerTick, natRaid, lootR |  |
+| E583 |  | a guard keeps to its home: it looks for a stranger near home (a raider, near its reach), lets go past its leash and walks home when far; a r |  |
+| E584 |  | a defender weighs a stranger now and then: it fights with probability V / C, C the stranger's strength over its own (QAH) |  |
+| E585 |  | a traveller joins the first side to meet him, as villagers (on its rally job), or as food when the town is full |  |
+| E586 |  | one weighted draw: p = w_i / Σw (QAR) |  |
+| E587 |  | now and then the robbers' camp nearest the player sends its band at a villager or caravan they can beat, drawn toward a load and away from a |  |
+| E588 |  | a computer hires drifters it can pay for, and sends half its idle army at the nearest find while nothing else is on; home when it is taken |  |
+| E589 |  | a scout left to itself goes for a find whose guards have fallen, else loops the land |  |
+| E590 |  | the finds: the first side to touch one whose guards have fallen takes what it holds; the ruins a free research of its age |  |
+| E591 |  | drifters fight for whoever pays, with a unit of the payer beside them and room in the army |  |
+| E592 |  | fire: the ground's dryness by Rothermel (QT), the t² fire's heat across a gap (QU), and a chance in a step from a rate (QM) |  |
+| E593 |  | a wooden building catches fire, and the nearest villagers of its side run with buckets (Mid's ignite) |  |
+| E594 |  | a fire burns its building and, every few seconds, may light a wooden neighbour; a building that burns out falls (Mid's fireTick) |  |
+| E595 |  | in a summer storm lightning strikes a wooden building now and then, and a forge throws sparks (Mid's lightning) |  |
+| E596 |  | sickness: a town's people near its seat or a depot; more cases from outside in summer and winter, fewer with research |  |
+| E597 |  | each health beat: cases from outside, the spread β S I / N (QAQ), and each sick one cured by a healer near, dying, or well again (Mid's heal |  |
 
 ## ground
 
@@ -981,7 +1023,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D83 | under this many pixels a tile things are dots and the grid is off | 5 | N112 |
 | D84 | the Town Center's spot in the corner's frame, Z2 on the road | [380, 380] | N112 |
 | D85 | units a metre, from the figure | 11.7 | N112 |
-| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the small camp wagon 14 (cart), the boar 30, the bison 70 and the scout 27 (F17b) | {walk: 1.52, ride: 2.28, horse: 1.7, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933, sc | N71; N72; N73; N79; N170; N176; N198 |
+| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the small camp wagon 14 (cart), the boar 30, the bison 70, the scout 27 (F17b); the bandit 26, the robber 32, the vagabond 20, the wayfarer 22 and the wagon train 16 (F31) | {walk: 1.52, ride: 2.28, horse: 1.7, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933, sc | N71; N72; N73; N79; N170; N176; N198 |
 | D87 | a load | 10 | N112 |
 | D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
 | D89 | the next find within | 100 | N112 |
@@ -1104,7 +1146,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D221 | a villager's javelin strikes game at blow times its blow (Mid's huntTick) | {blow: 5} | N170 |
 | D222 | a tree farm: amount wood at rate a second, then cut out; replanted at replant × its price (Mid's treefarm, Albert's 36 and 12) | {amount: 1200, rate: 0.55, replant: 0.5} | N170 |
 | D223 | the boar of each corner and its spot in the corner's frame, about 300 from the Town Center and clear of the home pond (Mid's boar, 280 to 380 from the keep) | {code: MW7, at: [470, 660]} | N170 |
-| D224 | the pace (QCB): each state that slows a walker, by the field that holds it (sickness 0.8, Mid's); a boot with no iron has no studs; how deep each sinks in mud, a foot 1 and the camp wagons' wheels 2 (Mid's wheelMud); Pandolf's coefficients, standing, load, walking and grade (W, kg; V, m/s; G, %); a grade as a percent; a body's drag area grows as its mass to the two-thirds (geometric similarity) | {state: {sick: 0.8}, bare: 0, sink: {foot: 1, UT2: 2, UT4: 2}, pandolf: {stand: 1.5, load: 2, walk: 1.5, grade: 0.35}, pct: 100, area: 0.666 | N13; N173; N181; N185; N198 |
+| D224 | the pace (QCB): each state that slows a walker, by the field that holds it (sickness 0.8; quicksand 0.3, D308; Mid's); a boot with no iron has no studs; how deep each sinks in mud, a foot 1 and the camp wagons' wheels 2 (Mid's wheelMud); Pandolf's coefficients, standing, load, walking and grade (W, kg; V, m/s; G, %); a grade as a percent; a body's drag area grows as its mass to the two-thirds (geometric similarity) | {state: {sick: 0.8, sand: 0.3}, bare: 0, sink: {foot: 1, UT2: 2, UT4: 2}, pandolf: {stand: 1.5, load: 2, walk: 1.5, grade: 0.35}, pct: 100,  | N13; N173; N181; N185; N198 |
 | D225 | ice on the ground: it grows while the ground is wetter than wet and the air below freezing, full at fdd freezing °C·s (thickness ∝ √), and thaws melt a °C·s above freezing (Mid's CLIMATE.ice) | {wet: 0.225, fdd: 500, melt: 0.0064} | N17; N173 |
 | D226 | the most soldiers a side may have, queued ones counted (Mid's ARMYMAX: the phone's ceiling); a fallen side's share adds to it | 120 | N176 |
 | D227 | the most soldiers a squad holds (Mid's BNSIZE), with the squads | 40 | N176 |
@@ -1119,7 +1161,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D236 | a shooter reloading steps back back tiles from a blade within near, for hold seconds (Mid's KITE) | {near: 4.5, back: 2.8, hold: 0.5} | N188 |
 | D237 | a soldier at rest within r tiles of its own shelter heals (Mid's GARRISON; its pace is D239's garrison, QP) | {r: 7} | N188; N16 |
 | D238 | a soldier's choice of foe: its side within group tiles add their power (Lanchester); a foe that cannot hurt still counts least; it keeps a foe within leash × its sight × its temper's chase; the computers keep the temper guard; hold fights only within reach, press never kites; No pursuit (loose) looks step tiles past its reach, Buildings first (bld) takes the nearest building; a squad's plan steps by steps[1] under steps[0], else steps[2]; at home a soldier walks back when farther than near tiles from its post (Mid's GROUP_R, foeValue, TEMPER, INTENT, sqPlan) | {group: 6, least: 0.1, leash: 1.4, temper: {hold: 0, guard: 1, press: 2}, intent: {engage: 0, loose: 1, bld: 2}, step: 1, steps: [10, 1, 5], | N188; N36; N37 |
-| D239 | the bases of shares that research moves and no shell holds: nerve's settling (rest, shelter), healing at a shelter (garrison: most health ÷ this, seconds), the run (rout, seconds), wear's research, a blow on a building, a charge, a walker's share of its pace from its shape and its march (pace), the room inside a building not in D256 (hold) (Mid's MORALE, GARRISON, fxv); Teach's opening (teach) and its time (lesson), Zeal's seconds, price and rest, a conversion's time, a watcher's sight of a spy (spysight), a healer's pace (heal); the Market's sale share's research (sell adds), trade's share (trade), the Bank's interest a minute, a venture's extra return, a stop keeper's extra cut, a good's making (make), Learning by doing (scale) and an armed caravan (armed); a soldier's hands at a camp (campbuild), the training tent's surcharge (tentcost), the Diplomacy research's lift on an envoy's odds (diplo); the sky told ahead in forecast steps (forecast) and Levees (flood: one wades a flood and keeps it from the buildings) | {rest: 1, shelter: 1, garrison: 0.6, rout: 8, wear: 0, bld: 1, charge: 1, pace: 1, hold: 0, teach: 0, lesson: 1, zealsecs: 0, zealcost: 1, z | N188; N194; N195; N198 |
+| D239 | the bases of shares that research moves and no shell holds: nerve's settling (rest, shelter), healing at a shelter (garrison: most health ÷ this, seconds), the run (rout, seconds), wear's research, a blow on a building, a charge, a walker's share of its pace from its shape and its march (pace), the room inside a building not in D256 (hold) (Mid's MORALE, GARRISON, fxv); Teach's opening (teach) and its time (lesson), Zeal's seconds, price and rest, a conversion's time, a watcher's sight of a spy (spysight), a healer's pace (heal); the Market's sale share's research (sell adds), trade's share (trade), the Bank's interest a minute, a venture's extra return, a stop keeper's extra cut, a good's making (make), Learning by doing (scale) and an armed caravan (armed); a soldier's hands at a camp (campbuild), the training tent's surcharge (tentcost), the Diplomacy research's lift on an envoy's odds (diplo); the sky told ahead in forecast steps (forecast) and Levees (flood: one wades a flood and keeps it from the buildings); fire arrows and burning shot (fire), petards (blast), and sickness's research: cure, death, sick (cases from outside), spread, plague and chill (winter's cases) (F32) | {rest: 1, shelter: 1, garrison: 0.6, rout: 8, wear: 0, bld: 1, charge: 1, pace: 1, hold: 0, teach: 0, lesson: 1, zealsecs: 0, zealcost: 1, z | N188; N194; N195; N198 |
 | D240 | a squad's shape, each a trade: riders in it strike × dmg; it takes × hit, from riders × vsRiders; it walks × spd; an army marches in column once Formations is known (Mid's FORM, COLUMN) | {line: {dmg: 1, hit: 1, spd: 1, vsRiders: 1}, wedge: {dmg: 1.15, hit: 1.1, spd: 1, vsRiders: 1}, square: {dmg: 1, hit: 0.9, spd: 0.8, vsRide | N188 |
 | D241 | an army stands in a grid gap tiles apart, about rows times as wide as deep, at most most files; at home in its building's yard tiles past it, a block a squad of √(n × block) files up to cols; a column three files, a choke three; support rings its blades round at least ring places (Mid's GRID, formUp, CHOKE) | {gap: 1.5, rows: 2, most: 14, yard: 2.4, block: 2.5, cols: 10, column: 3, choke: 3, ring: 6} | N188 |
 | D242 | a soldier in a drill not this share of the way to its place by this share of the drill's time stands where it is (Mid's FORMING, Albert's x% by x%) | {share: 0.7} | N188 |
@@ -1185,6 +1227,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D302 | the places to train a computer adds a second of when every one's line is full (Mid's barracks, range, stable) | [BM1, BM2, BM3] | N202 |
 | D303 | the computers' three personalities, one brain (Mid's PERS): of, the personality of each side; goals, what its hands work toward first; mix, its share of villagers on food, wood, gold, stone, iron when nothing is short; extraBarracks, armyCap (the army it keeps, + D291's armyAge an age), waveMin (a wave's least), bold (the odds it needs to attack), guard (the share kept home), raid (riders sent at a foe's drop-off), towers, walls, opportunist (how much a foe busy with another war tempts it), early (villagers before soldiers), ageArmy (soldiers before it saves for an age), diplo, trade, spy, loot, wonder, siege (engines kept), shrine (priests kept); build: [building, from age, how many, with an army of at least, with stock in store]; techs: the research it wants, in order (Mid's crown, the games' goal, waits for the games) | {of: [null, aggr, bal, fort], aggr: {goals: [army, age, build], extraBarracks: 1, armyCap: 34, waveMin: 5, bold: 0.5, guard: 0.15, raid: 3,  | N202; N203 |
 | D304 | Easy, Normal, Hard (the Start card's Difficulty): difficulty turns the computers' minds, never their stores (Mid's DIFF): react, seconds between a computer's turns; bold, added to the odds it needs; opp, how much more a foe at another war tempts it; allyAt, seconds before it courts allies; gang, whether it allies against the score leader at peace; envoy, seconds between its envoys; wave, soldiers added to a wave's least (Mid's Easy +3); safe, seconds before anyone marches on you (Mid's EASY_SAFE) | [{react: 2, bold: 0.1, opp: 0.8, allyAt: 900, gang: 0, envoy: 240, wave: 3, safe: 360}, {react: 1, bold: 0, opp: 1, allyAt: 600, gang: 0, en | N202 |
+| D305 | the finds of the wild (Mid's FINDS): each find's guards (kind, how many, laid on a ring ring tiles round it), what the first side to touch it within take tiles takes once they fall (got; ruins a free research of its age, tech), and drifters who fight for whoever pays (hire: price, kind, how many, laid in a row row tiles off it; a unit of the payer within near tiles); dens and drifters' camps laid in Z4 as lay, the robbers' camps camp tiles out from the middle along each trade route; looked at each beat. A guard or a beast looks look tiles for a stranger within home tiles of its home (a raider within its raid tiles, look plus reach), lets go past its leash (raid or the first, plus the second), goes home past back tiles; the horde breaks buildings within breaks; a defender weighs a stranger each weigh seconds, fighting with probability V / C at stake V (QAH); a computer's detachment (loot): with army soldiers at home and no wave it sends half of them (go at most, least at least) at the nearest find within far tiles (a guarded stop within stop, from the second age), calls them home when it is taken or give s after its guards fall, and hires drifters with gold in store (Mid's WILD_LOOK, wildLeash, lootRun, hire); the finds laid by their own dice (seed). The scout (Mid's PLACES.scout): a fallen find within far tiles with no other side within clear first, else a loop of the land, edge tiles in on its middle lines, keep tiles in front of each Town Center and mid tiles off the middle, each moved up to jit tiles, the next point within at | {rows: {MG4: {guard: [MW4, 2], got: {food: 100, gold: 150}}, MG1: {guard: [MH1, 3], got: {gold: 50}, tech: true}, MG2: {guard: [MH3, 2], got | N205 |
+| D306 | a wayfarer every every seconds from the middle of one of the land's edges (edge tiles in, the next edge each time) to the far one; the first unit of a side within meet tiles gains his joins as villagers, gap tiles apart, or food if the town is full; at the far edge he is gone (Mid's WAYFARER_EVERY, wayfarers, wayfarerTick; the wagon train joins three) | {every: 240, edge: 6, meet: 2.2, food: 50, code: MH5, joins: {MH5: 1, MH7: 3}, gap: 0.6} | N205 |
+| D307 | the robbers' raids (Mid's NATIVE raids, natRaid): none before from s (Easy adds its safe time), then a wait drawn between gap (halved by horde under the Outlaws hazard); the camp nearest the side the robbers regard least (drawn by 1 + (regard[0] − its regard) / regard[1], never the side raided last when another is open) sends its first n guards plus one for each age at a villager or caravan they beat by the square law (QAF above beat), drawn by (1 + load × its load ÷ a full load) / (1 + guard × the armed strength within group tiles of it ÷ the band's) (QAR); they come back after secs s; the first raid at half a wait; the raiders' camp (camp) | {from: 600, gap: [180, 480], horde: 2, n: 2, secs: 45, load: 2, guard: 1, group: 6, beat: 0.5, regard: [100, 25], camp: MG7, first: 0.5} | N205 |
+| D308 | the events (Mid's EV_MEAN, EV_MIN, EV_WARN, EVENTS, EV): one at a time; the next after min s plus a Poisson wait of mean − min (QM), told warn s ahead, then run for its secs; a kind that cannot come at its time waits retry s; never the same twice running; each in its seasons (spring 0) or in the rain. They come in at a spot edge[0] tiles in from one of the land's edges, edge[1] from its corners, and cross to the far side; or at a free spot of the wild, wild[0] tiles in, wild[1] from a lake and wild[2] from every Town Center (else wild[3] tiles north of the middle). The stampede's herd tramples each beat what stands within r tiles, a blow of trample, a shove of shove tiles and fert of a field's soil, and those still within gone tiles of their way out leave at its end; the falling star streaks in from up and left; the wildfire burns burn of a tree a second, spreads at spread × the ground's dryness (QT) to trees within r tiles, at most most alight, sets wooden buildings within bld alight, and starts keep tiles from every Town Center; the sinkhole takes hit of a building's health and cracks the ground (arms, length and bend); quicksand slows a walker inside r tiles to slow (D224); the wagon train joins three villagers (D306); the mercenaries are a find for their secs (D305). The eclipse, the storm band (v100's sky rolls the storms), fog (v100's climate rolls it), the heat (it needs a drought) and the fantasy events are not brought; looked at each beat; a field within field tiles of a running bison loses its soil | {mean: 120, min: 30, warn: 12, retry: 30, edge: [4, 30], wild: [20, 6, 42, 30], rows: {stampede: {secs: 30, n: 10, herd: MW8, spread: 4, tra | N205 |
+| D309 | the Challenge's hazards (Mid's HAZARDS, HORDE): each switched on adds its points to the level played, and the level multiplies the score by base + level / per (Easy keeps none and its base); the horde (Outlaws) comes after min s plus a Poisson wait of mean − min (QM), told warn and half warn seasons ahead, for the weakest side at war with the outlaws: n plus perAge for each age, of kinds in turn, spread tiles round a spot on the land's edge (at odds edge) or in the wild | {pts: {hard: 3, starve: 2, winter: 2, drought: 2, horde: 3, plague: 2}, base: 1, per: 10, horde: {min: 1200, mean: 1800, warn: [2, 1], n: 16 | N205 |
+| D310 | fire (Mid's FIRE, FIRE_SMOKE, FIREARMS, ignite, fireTick): a burning wooden building loses burn of its health a second for its fire's strength; every check s it lights a wooden neighbour within reach tiles at a rate a second of rate × the ground's dryness (QT: η's coefficients eta, as a share of a dry day's, at most most) × its heat there, the t² fire grown in grow s and the radiant view factor (near / (gap + near))² (QU, gap in tiles); the crew nearest villagers of its side within run tiles run with buckets, each putting out douse of it a second; a big fire (spread, or the building below half) can take one of them, smoke a second. In a summer storm each side's wooden building is struck at a chance a minute of storm (drought's second), a Smith or Foundry sparks a wooden neighbour within spark tiles at sparks a minute; fire arrows and burning shot light a wooden building on a hit at chance × the dryness (a petard blast at blast, shaking the neighbours within splash tiles by hit of the blow); the flames drawn (tongues, width, height, sway, smoke); a full fire (full) in the summer (season, spring 0); the forges that spark | {rate: 0.12, grow: 20, near: 1, reach: 4, burn: 0.02, check: 3, douse: 0.2, crew: 2, run: 6, smoke: 0.008, eta: [1, -2.59, 5.11, -3.52], mos | N206; N21; N22 |
+| D311 | sickness and healing (Mid's HEALTH, sickRisk, outbreak, healthTick; SIR, QAQ): each side's town (its people within near tiles of its seat, or by a depot) is looked at each health beat (D183): a case comes from outside each every s at a chance a minute of risk × its season's × research (sick; winter's chill); new cases β S I / N a beat, β = R0 (× plagueR0 in plague) / sickFor × the beat × research (spread); the sick are well again after sickFor s, cured at cure × research (cure) a beat within a healer's reach (D268), and die at death (× plagueDeath in plague) × research (death), a plague's deaths at most plagueCap of the town. A plague year comes at the spring turn while caravans are on the roads, at plague's odds (the Plague hazard's second), for lasts seasons; a caravan home from abroad then brings cases (cart of the town) at carts' odds. The sick work at work and strike at dmg; winter (spring 0) | {every: 60, risk: 0.06, seasons: [1, 1.2, 1, 1.2], sickFor: 60, R0: 2, plagueR0: [1, 1.5], death: 0.004, plagueDeath: [1, 4], cure: 0.3, pla | N206; N47; N48 |
 
 ## rules
 
@@ -1252,6 +1301,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X61 | the Market, coin, bank and ventures, goods and workshops, trade and caravans (F26+F27): Mid's TRADE, SELL, BUY, MKT_SELL, MKT_BUY, GOODS, PRICE, MINT, VENTURE, BANK_CAP, SCALE, LOAD, CARAVAN, POST, TRADE_CAP, TRADE_DIV, PLACES.stop and WARES in the books, and every building priced, timed and with its health; eight stops on the two routes wanting Mid's wares in turn; three lots sold, two bought, the coin debased and a slow beat's drift give Mid's frozen marketTrade, debase and priceDrift's gold and stock; a caravan's run to a held stop loads and is paid as Mid's frozen priceAt and loadable, less the keeper's cut; an ally's run, five minutes of a workshop with the loom, Learning by doing, a venture with Banking and the Bank's interest are Mid's frozen numbers; guards keep to a caravan, a guarded caravan is Mid's frozen guardedCart's, a robbed one Mid's frozen robbed | {stage: page} | N132; N195 |
 | X62 | the war camp, field traps, relations and vassals (F25+F28): Mid's CAMP, CALTROPS, STAKES, NATIVE's traps, NOTICE, PEACE.truce, REGARD, GANG, REL_WORD, VASSAL, DEMAND and its fair TAX as the tribute in the books, and the camp pieces', traps', wagons', envoy's and rebels' rows; both camps' layouts at three facings are Mid's frozen campLayout snapped; the small camp unpacks as sites and a soldier's hands raise a piece at D279's build of a villager's; a medical tent binds a wound as Mid's healTick's lag; a caravan's supply run costs Mid's fee and food and stocks the depot; soldiers eat from it, and unsupplied they slow; caltrops on a rider and a spearman, and a pit a scout found, are Mid's frozen trapsTick; war comes after Mid's notice; an envoy's five answers and a truce's price are Mid's frozen judgeEnvoy on the same odds; ten minutes of a vassal's tribute, loyalty and unrest are Mid's frozen vassalTick; gifts buy Mid's giftGain (QCD) | {stage: page} | N132; N198 |
 | X63 | the computers' minds and the sky, the moon and the ground (F29+F30): Mid's PERS, PLAYERS, WAVE, SAVE, DIFF, EASY_SAFE, SYNODIC, NIGHT_SIGHT, CLIMATE.rut, CLIMATE.shore and EVENTS.flood in the books; a computer's plan by need each minute over four minutes is Mid's frozen needOf and runsOut on the same hands, rates, stores, goal and draw, and every computer grows its town; the moon's phase, light and the night's sight are Mid's; a walker wears the ground a unit-second a second, and the ruts heal, deepen the mud and pool by water as Mid's frozen rutHeal, rutOf and mudAt; a flood blocks the land within its rise and harms a building there unless Levees, and goes | {stage: page} | N132; N202; N203 |
+| X64 | finds, wild guards, drifters, events and the hazards (F31): Mid's FINDS (guards, spoils, the ruins' scroll, the drifters' price), WAYFARER_EVERY, WILD_LOOK, the leash, NATIVE's raids, GROUP_R, EV_MEAN, EV_MIN, EV_WARN, the kept EVENTS, HAZARDS, HORDE and the bandit's and robber's UNIT rows in the books; on the seed every find laid with its guards on its ring (drifters by their fire); with every hazard on, the events in order with their warnings and the horde's warnings, arrival and number, fed one string of dice, are Mid's frozen eventsTick and hordeTick's (each event's doing set aside); a robbers' raid's band and mark are Mid's frozen natRaid's for the same camp, people and strengths; a drifter's refusals, price and three foot soldiers are Mid's frozen hireWhy and hire's; a chest taken pays Mid's frozen findsTick's spoils, the ruins a free research | {stage: page} | N205 |
+| X65 | fire and sickness (F32): Mid's FIRE, FIRE_SMOKE, FIREARMS and HEALTH in the books, its wooden buildings the ones that Burn, its water, sewer and quarantine research the measured shares (MEASURED); fireHeat and Rothermel's η are Mid's; a summer storm's strike on a wooden town of two clusters: the home with villagers beside it saved, its neighbour untouched, and the other cluster's three burning down one from another, each when Mid's frozen lightning, ignite, fireTick and repairTick's buckets do on the same town and dice (to the 3 s look); then an outbreak, beat by beat, sickens and cures the same people as Mid's frozen outbreak and healthTick | {stage: page} | N206 |
 
 ## screen
 
@@ -1279,27 +1330,27 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | R2 | Gold | [Yield] | N144 |
 | R3 | Stone | [Yield] | N144 |
 | R4 | Iron | [Yield] | N144 |
-| MG1 | Ruins | [Yield] | N144 |
-| MG2 | Cemetery | [] | N144 |
+| MG1 | Ruins | [Yield, Take] | N144; N205 |
+| MG2 | Cemetery | [Take] | N144; N205 |
 | MG3 | Campfire | [Yield] | N144 |
-| MG4 | Treasure | [Yield] | N144 |
+| MG4 | Treasure | [Yield, Take] | N144; N205 |
 | MT1 | Trade stop | [Trade] | N195 |
 | BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health, Shelter, Hold] | N144 |
 | BTC2 | Castle | [Shelter, Hold] | N144 |
-| BTC5 | Medical tent | [Heal, Health] | N144; N198 |
-| BTC6 | Training tent | [Spawn, Health] | N144; N198 |
-| BTC7 | Mess tent | [Shelter, Health] | N144; N198 |
-| BTC8 | Camp tower | [Shoot, Health] | N144; N198 |
-| BR1 | Home | [House, Health] | N144 |
+| BTC5 | Medical tent | [Heal, Health, Burn] | N144; N198; N206 |
+| BTC6 | Training tent | [Spawn, Health, Burn] | N144; N198; N206 |
+| BTC7 | Mess tent | [Shelter, Health, Burn] | N144; N198; N206 |
+| BTC8 | Camp tower | [Shoot, Health, Burn] | N144; N198; N206 |
+| BR1 | Home | [House, Health, Burn] | N144; N206 |
 | BR2 | Apartment | [] | N144 |
-| BCR1 | Market | [Trade, Spawn] | N144; N195 |
-| BCR2 | Tavern | [] | N144 |
+| BCR1 | Market | [Trade, Spawn, Burn] | N144; N195; N206 |
+| BCR2 | Tavern | [Burn] | N144; N206 |
 | BCL1 | Farm | [Field, Health, Soil] | N144; N170 |
 | BCL2 | Tree farm | [Field, Health] | N144; N170 |
 | BCL3 | Pasture | [Field, Health, Flock] | N144; N170 |
 | BCL4 | Quarry | [] | N144 |
 | BCT1 | Trade post | [Post, Shoot] | N144; N195 |
-| BCT2 | Dock | [Drop-off, Health, Shore] | N144; N170 |
+| BCT2 | Dock | [Drop-off, Health, Shore, Burn] | N144; N170; N206 |
 | BP1 | School | [Teach] | N144; N194 |
 | BP2 | Library | [] | N144 |
 | BP3 | Temple | [Spawn, Zeal] | N144; N194 |
@@ -1310,24 +1361,24 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BP8 | Courthouse | [Spawn, Shoot] | N144; N194 |
 | BP9 | Hall | [] | N144 |
 | BP10 | War Council | [Squad] | N144 |
-| BI1 | Mill | [Drop-off, Health] | N144 |
-| BI2 | Lumber camp | [Drop-off, Health] | N144 |
+| BI1 | Mill | [Drop-off, Health, Burn] | N144; N206 |
+| BI2 | Lumber camp | [Drop-off, Health, Burn] | N144; N206 |
 | BI3 | Mining camp | [Drop-off, Health] | N144 |
 | BI4 | Store | [] | N144 |
-| BI5 | Depot | [Drop-off, Supply, Health] | N144; N198 |
+| BI5 | Depot | [Drop-off, Supply, Health, Burn] | N144; N198; N206 |
 | BI6 | Mint | [Make] | N144; N195 |
 | BI7 | Foundry | [Make] | N144; N195 |
-| BI8 | Workshop | [Make] | N144; N195 |
+| BI8 | Workshop | [Make, Burn] | N144; N195; N206 |
 | BI9 | Smith | [] | N144 |
-| BM1 | Barracks | [Spawn, Health, Shelter] | N144 |
-| BM2 | Range | [Spawn, Health] | N144 |
-| BM3 | Stable | [Spawn, Health] | N144 |
+| BM1 | Barracks | [Spawn, Health, Shelter, Burn] | N144; N206 |
+| BM2 | Range | [Spawn, Health, Burn] | N144; N206 |
+| BM3 | Stable | [Spawn, Health, Burn] | N144; N206 |
 | BM4 | Siege workshop | [Spawn, Health] | N144 |
 | BW1 | Wall | [Health, Line] | N144 |
-| BW2 | Gate | [Health, Gate] | N144 |
+| BW2 | Gate | [Health, Gate, Burn] | N144; N206 |
 | BW3 | Tower | [Shoot, Health, Hold] | N144 |
-| BW4 | Palisade | [Health, Line] | N144 |
-| BF5 | Abatis | [Health] | N144; N198 |
+| BW4 | Palisade | [Health, Line, Burn] | N144; N206 |
+| BF5 | Abatis | [Health, Burn] | N144; N198; N206 |
 | BF1 | Pit | [Trap, Health] | N144; N198 |
 | BF2 | Net | [Trap, Health] | N144; N198 |
 | BF3 | Stakes | [Trap, Health] | N144; N198 |
@@ -1359,16 +1410,22 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | UT1 | Caravan | [Walk, Carry, Trade, Health] | N144; N170; N195 |
 | UT2 | Small camp wagon | [Walk, Carry, Unpack, Health] | N144; N199; N198 |
 | UT4 | Large camp wagon | [Walk, Carry, Unpack, Health] | N144; N199; N198 |
-| MH1 | Outlaws | [Walk] | N144 |
-| MH3 | Robbers | [Walk] | N144 |
-| MH4 | Vagabonds | [Walk] | N144 |
-| MH5 | Wayfarers | [Walk] | N144 |
+| MH1 | Outlaws | [Walk, Fight, Health] | N144; N205 |
+| MH3 | Robbers | [Walk, Fight, Health] | N144; N205 |
+| MH4 | Vagabonds | [Walk, Health] | N144; N205 |
+| MH5 | Wayfarers | [Walk, Join, Health] | N144; N205 |
 | MH6 | Rebels | [Walk, Fight, Health] | N144; N198 |
 | MW3 | Deer | [Walk, Wander, Prey, Health] | N144; N170 |
 | MW4 | Wolf | [Walk, Wander, Fight, Health] | N144 |
 | MW6 | Bear | [Walk, Wander, Fight, Health] | N144 |
 | MW7 | Boar | [Walk, Wander, Prey, Health] | N170 |
 | MW8 | Bison | [Walk, Wander, Prey, Health] | N170 |
+| MG7 | Robbers' camp | [Take] | N205 |
+| MG8 | Bear den | [Take] | N205 |
+| MG9 | Drifters' camp | [Hire] | N205 |
+| MG10 | Mercenaries | [Hire] | N205 |
+| MG11 | Fallen star | [Take] | N205 |
+| MH7 | Wagon train | [Walk, Join, Health] | N205 |
 
 ## sides
 
@@ -1474,7 +1531,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PB12 | research on its building (Mid's UP): 1 when a step of its own is learned sets it on a stone footing (foot tall, its side in shade); 2, half its steps or more, adds corner stones (w, h, every gap, clear of the eaves by edge) and a gilded ridge | {half: 0.5, top: 2, foot: 3, shade: -0.45, line: 0.4, stone: [3.4, 3, 6, 2], lift: 0.15, rim: 0.3, ridge: #e6c75a, ridgeW: 1.6} | N151; N160 |
 | PB13 | the keep at its level (Gunpowder): an angled stone bastion with a gun on it, from the keep's front corner | {at: [-27, -1], face: [[-9, -1], [0, 6], [9, -1], [9, -10], [0, -4], [-9, -10]], top: [[-9, -10], [0, -16], [9, -10], [0, -4]], shade: [0.08 | N151; N160 |
-| PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out; the trees' leaves by the season (autumn's two, winter's snow), the carcass, the fish's ripple and a trade stop's ring (its stall waits for the finds' art) (Mid's nodeSprite, drawNode) | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2, fish: 1, meat: 1}, dot: {tree: # | N152; N164; N170; N195 |
+| PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out; the trees' leaves by the season (autumn's two, winter's snow), the carcass, the fish's ripple and a trade stop's ring (its stall waits for the finds' art) (Mid's nodeSprite, drawNode); the bear den and the fallen star as blobs (offset, radius, the colour's name in C18); the robbers', drifters' and mercenaries' camps wear the campfire (F31) | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2, fish: 1, meat: 1}, dot: {tree: # | N152; N164; N170; N195; N205 |
 | P20 | the boar figure | {brush: quad, o: {col: #4a3a2e, len: 13, h: 7, legH: 3.4, legW: 1, head: 2.8, headY: 0.55, tusk: true, bristle: true, tail: 0.6}, box: [24,  | N150; N170 |
 | P21 | the bison figure: the hump, a shaggy mane and a short horn | {brush: quad, o: {col: #3e2a1c, len: 20, h: 10, legH: 6, legW: 1.4, head: 3.4, headY: 0.4, hump: true, bristle: true, tail: 0.8, horn: {col: | N150; N170 |
 | PB14 | the farm building picture; its level is the season: the crop's colours spring to winter | {level: {season: true}} | N151; N170 |
@@ -1567,7 +1624,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O57 | Geometry | {at: BP1, line: Numbers, age: 2, cost: {wood: 110, gold: 70}, time: 30, fx: [{s: atk, k: [BTC1, BW3, BTC8], a: 2}], when: 300 BC, w: 6} | N160; N161 |
 | O58 | Algebra | {at: BP1, line: Numbers, age: 3, cost: {wood: 290, gold: 190}, time: 56, fx: [{s: rng, k: Engines, a: 1.0}], when: 820, w: 6} | N160; N161 |
 | O59 | Ballistics | {at: BP1, line: Numbers, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: atk, k: Engines, a: 5}], need: [algebra], when: 1537, w: 6 | N160; N161 |
+| O208 | Medicine | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: heal, p: 0.5}], when: 400 BC, w: 6} | N160; N161; N206 |
 | O60 | Architecture | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: build, c: 0.2}], need: [masonry], when: 25 BC, w: 6} | N160; N161 |
+| O209 | Medical school | {at: BP2, line: Learning, age: 3, cost: {gold: 290, stone: 190}, time: 56, fx: [{s: death, c: 0.5}, {s: cure, p: 1}], when: 1000s, w: 6} | N160; N161; N206 |
 | O61 | Guilds | {at: BP2, line: Learning, age: 3, cost: {gold: 260, stone: 180}, time: 52, fx: [{s: queue, a: 2}], when: 1100s, w: 5} | N160; N161 |
 | O62 | Printing press | {at: BP2, line: Learning, age: 4, cost: {gold: 550, stone: 360}, time: 87, fx: [{s: time, k: O, c: 0.32}], when: 1450s, w: 9} | N160; N161 |
 | O63 | Optics | {at: BP2, line: Learning, age: 4, cost: {gold: 430, stone: 290}, time: 71, fx: [{s: sight, k: *, a: 2.0}], need: [press], when: 1608, w: 6} | N160; N161 |
@@ -1715,6 +1774,19 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O205 | Weather signs | {at: BP1, line: Sky, age: 2, cost: {gold: 120, wood: 60}, time: 30, fx: [{s: forecast, a: 1}], when: 300 BC, w: 3} | N160; N161; N203 |
 | O206 | Levees | {at: BP2, line: Weather, age: 3, cost: {gold: 290, stone: 190}, time: 56, fx: [{s: flood, a: 1}], need: [irrigation], when: 1000s, w: 6} | N160; N161; N203 |
 | O207 | Weather glass | {at: BP2, line: Weather, age: 4, cost: {gold: 430, stone: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.1022}], need: [science, weathersigns] | N160; N161; N204 |
+| O210 | Vaccination | {at: BP2, line: Enlightenment, age: 5, cost: {gold: 600, food: 400}, time: 90, fx: [{s: sick, c: 0.5}], when: 1796, w: 2} | N160; N161; N206 |
+| O211 | Bandages | {at: BP6, line: Wards, age: 2, cost: {food: 150, gold: 100}, time: 35, fx: [{s: heal, p: 0.3}], when: 400 BC, w: 4} | N160; N161; N206 |
+| O212 | Herbals | {at: BP6, line: Wards, age: 2, cost: {food: 130, gold: 90}, time: 32, fx: [{s: cure, p: 0.3}], when: 50 AD, w: 3} | N160; N161; N206 |
+| O213 | Hospitals | {at: BP6, line: Wards, age: 3, cost: {food: 290, gold: 190}, time: 56, fx: [{s: death, c: 0.30000000000000004}], when: 800s, w: 6} | N160; N161; N206 |
+| O214 | Pharmacy | {at: BP6, line: Wards, age: 3, cost: {food: 290, gold: 190}, time: 56, fx: [{s: cure, p: 0.5}], need: [herbs], when: 1025, w: 6} | N160; N161; N206 |
+| O215 | Quarantine | {at: BP6, line: Wards, age: 3, cost: {food: 320, gold: 210}, time: 60, fx: [{s: spread, c: 0.4}], when: 1377, w: 7} | N160; N161; N206; N48 |
+| O216 | Inoculation | {at: BP6, line: Wards, age: 4, cost: {food: 510, gold: 340}, time: 82, fx: [{s: plague, c: 0.7}], need: [quarantine], when: 1500s, w: 8} | N160; N161; N206 |
+| O217 | Anatomy | {at: BP6, line: Wards, age: 4, cost: {food: 430, gold: 290}, time: 71, fx: [{s: heal, p: 0.2}], when: 1543, w: 6} | N160; N161; N206 |
+| O218 | Surgeons | {at: BP6, line: Wards, age: 4, cost: {food: 430, gold: 290}, time: 71, fx: [{s: heal, p: 0.5}], when: 1545, w: 6} | N160; N161; N206 |
+| O219 | Sewers | {at: BP7, line: Water, age: 2, cost: {stone: 320, gold: 210}, time: 60, fx: [{s: spread, c: 0.1157363374391791}], when: 600 BC, w: 7} | N160; N161; N206; N207 |
+| O220 | Clean water | {at: BP7, line: Water, age: 2, cost: {stone: 200, gold: 130}, time: 44, fx: [{s: spread, c: 0.11838515321658394}], when: 312 BC, w: 7} | N160; N161; N206; N207 |
+| O221 | Plumbing | {at: BP7, line: Water, age: 2, cost: {stone: 260, gold: 180}, time: 52, fx: [{s: room, k: BR2, a: 4}], when: 100s, w: 5} | N160; N161; N206 |
+| O222 | Waterworks | {at: BP7, line: Water, age: 4, cost: {stone: 390, gold: 260}, time: 66, fx: [{s: room, k: BR2, a: 2}, {s: sick, c: 0.19999999999999996}], ne | N160; N161; N206 |
 
 ## words
 
@@ -1738,4 +1810,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J16 | what the war camp and the traps say (Mid's 38-camps and 38-natives words) | {why: {edge: Too near the edge of the map., water: A camp cannot stand in water., bld: A building stands there., find: A resource lies there | N198 |
 | J17 | what relations, envoys, regard, vassals and the league say (Mid's 11-orders, 36-economy, 38-natives and 17-ai words) | {why: {now: Not now., already: Already., vassal: Your vassal: see their card., lord: Your overlord., notice: Notice given: {n} s., regard: N | N198; N202 |
 | J18 | the sky's news (Mid's WEATHER texts, wxWhy and skyTurn's signs, in v100's hourly chain; what v100's weather does not do is left out of the line) and the flood's warning | {turn: {rain: Rain: the ground softens., snow: Snow: the ground deepens and sight shortens., blizzard: Blizzard: a whiteout. Marches crawl a | N202; N203 |
+| J19 | what the wild says (Mid's news for finds, wayfarers, hiring, raids and the horde; EV_TEXT, each event's warning and start; EV_WHY, its why, kept for the chronicle) | {took: {name}: {got}{extra}., scroll:  and a scroll: {name}, wayfarer: {come: A wayfarer: reach him first to gain him., one: A wayfarer join | N205 |
+| J20 | what fire and sickness say (Mid's news for ignite, fireTick, repairTick's smoke, outbreak and the plague year) | {fire: {at: Fire at the {b} ({why}). {who}, who: [Nobody is near it., A neighbour runs with a bucket., Two neighbours run with buckets.], ou | N206 |
 

@@ -15,15 +15,15 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QJ** Raindrop speed → N9 · used by D229, X56
 - **QK** Visibility → N10 · used by D229, X56
 - **QL** Lightning → N11 · used by D112
-- **QM** Random events → N12 · used by SC9, D110, D181, HX4
+- **QM** Random events → N12 · used by SC9, D110, D181, D308, D309, D310, D311, X64, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
 - **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268, D271, D279, D283, D294, X63
 - **QQ** Ice growth → N17 · used by D109, D225, X54
 - **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
 - **QS** Ruts → N20 · used by D294, X63
-- **QT** Fire vs wetness → N21
-- **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22 → N22
+- **QT** Fire vs wetness → N21 · used by SC45, D308, D310, X65
+- **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22 → N22 · used by SC45, D310, X65
 - **QV** Forager's rate → N23, N24 · used by SC2, D88, D195, D300, X51
 - **QW** Move on → N24 · used by SC2, D132
 - **QX** Crowding → N25, N26 · used by SC2, SC16, D195, X51
@@ -34,7 +34,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAC** Crew → N31 · used by SC4, D126, X52
 - **QAD** Spoilage → N32, N33 · used by D217, X53
 - **QAE** Price → N34 · used by SC19, D270, D271
-- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207
+- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O208, O60, O209, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222
 - **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, D247, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
@@ -47,9 +47,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QCM** By need → N24, N202 · used by D291, D300, X63
 - **QCN** Counter → N202 · used by D291
 - **QCO** Night sight → N2, N203 · used by D292, X63
-- **QAF** Battle odds → N35 · used by SC6, SC41, D177, D192, D193, D194, D238, D247, D281, D285, D289, X48
+- **QAF** Battle odds → N35 · used by SC6, SC41, D177, D192, D193, D194, D238, D247, D281, D285, D289, D307, X48
 - **QAG** Who to fight → N36, N37, N188 · used by SC6, D238, X57
-- **QAH** Fight or not → N38
+- **QAH** Fight or not → N38 · used by D305, X64
 - **QAI** Nerve → N76, N188 · used by SC6, D142, D231, X57
 - **QAJ** Arrow flight → N39, N40 · used by A5, SC7, W10, D143, D245, X57
 - **QAL** Sight from height → N41 · used by SC7
@@ -57,8 +57,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAN** Many eyes → N43, N44
 - **QAO** Flee → N45 · used by SC6, D231, D254
 - **QAP** Cold and wet → N46
-- **QAQ** Sickness → N47, N48
-- **QAR** Weighted pick → N49
+- **QAQ** Sickness → N47, N48 · used by D311, X65, O209, O210, O212, O213, O214, O215, O216, O219, O220, O222
+- **QAR** Weighted pick → N49 · used by D307, X64
 - **QAS** Breaking → N50, N51, N52
 - **QAT** Shadow → N53 · used by D120
 - **QAU** Light reach ∝ √power (flame colour uses QF, colour from temperature) · N54 → N54
@@ -114,8 +114,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, QCD, QCG, G9
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD, QCM, QCN, QCO, D294
-- **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
-- **N22** Heskestad (1984); NFPA 72, the t² fire → QU
+- **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT, SC45, D310
+- **N22** Heskestad (1984); NFPA 72, the t² fire → QU, SC45, D310
 - **N23** Holling (1959), Can. Entomol. 91 → QV
 - **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW, QCM
 - **N25** Fretwell & Lucas (1970) → QX
@@ -140,8 +140,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N44** Lima (1995) → QAN
 - **N45** Ydenberg & Dill (1986) → QAO
 - **N46** Thermal resistance in series (standard) → QAP
-- **N47** Kermack & McKendrick (1927), Proc. R. Soc. A 115 → QAQ
-- **N48** Bootsma & Ferguson (2007), PNAS 104(18) → QAQ
+- **N47** Kermack & McKendrick (1927), Proc. R. Soc. A 115 → QAQ, D311
+- **N48** Bootsma & Ferguson (2007), PNAS 104(18) → QAQ, D311, O215
 - **N49** Goldberg (1989), roulette-wheel selection → QAR
 - **N50** Hertz (1882), contact → QAS
 - **N51** Auerbach (1891), crack threshold → QAS
@@ -253,8 +253,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 - **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
 - **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
-- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207, J7
-- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207, J7
+- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O208, O60, O209, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J7
+- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O208, O60, O209, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J7
 - **N162** Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of t → X17
 - **N163** (to open) Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SI → QCJ
 - **N164** Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js → SC2, SC16, D88, D132, D195, D196, D197, X51, PN1
@@ -298,6 +298,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N202** Design: Mid's computers (17-ai.js bestCounter, timeLeft, rateFrom, goalOf, needOf, runsOut, famineNear, PLOTS, → QCM, QCN, D122, D152, D176, D178, D180, D285, D289, D290, D291, D300, D301, D302, D303, D304, X63, J17, J18
 - **N203** Design: Mid's sky, moon and ground (08-core.js moonVec, moonPhase, moonLight, NIGHT_SIGHT, SYNODIC; 37-events. → QCO, C15, C16, C17, D122, D292, D293, D294, D295, D296, D297, D298, D299, D303, X63, HA4, HX4, O205, O206, J18
 - **N204** (to open) Rosenzweig & Udry (2013), Forecasting Profitability, NBER Working Paper 19334, p. 21: farmers who plan by the  → O207
+- **N205** Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_L → SC18, SC42, SC43, SC44, C18, D305, D306, D307, D308, D309, X64, MG1, MG2, MG4, MH1, MH3, MH4, MH5, MG7, MG8, MG9, MG10, MG11, MH7, PN1, J19
+- **N206** Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sick → SC45, C18, D310, D311, X65, BTC5, BTC6, BTC7, BTC8, BR1, BCR1, BCR2, BCT2, BI1, BI2, BI5, BI8, BM1, BM2, BM3, BW2, BW4, BF5, O208, O209, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J20
+- **N207** (to open) Alsan & Goldin (2019), Watersheds in Child Mortality: The Role of Effective Water and Sewerage Infrastructure, → O219, O220
 
 ## Named exceptions
 

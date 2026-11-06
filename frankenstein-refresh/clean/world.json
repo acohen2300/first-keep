@@ -78,16 +78,16 @@
    "the start: v100's makeUnits places D67 villagers round the Town Center and herds in Z4; Mid also gives each side first jobs, a scout, deer and a boar near home, and a chest, ruins, wolf den, cemetery and drifters' camp each corner (where: by v100's zones); F23: the first jobs are in (econ.js start, D260: the second on wood, the rest on food)"
   ],
   "layCamps": [
-   "bring",
-   "a robbers' camp each side of the map (with the outlaws, MH); where: by v100's zones"
+   "in v100",
+   "F31: index.html floor 3, a camp at each end of the trade routes (D305 camp)"
   ],
   "wildAt": [
    "in v100",
    "index.html spawn() with side −1; Mid's home point and a find's guard come with addFind"
   ],
   "addFind": [
-   "bring",
-   "a find with its guards (wolves round a den) or hired drifters; v100's put() lays the gifts. Its fantasy guards: see misfits"
+   "in v100",
+   "F31: index.html floor 5 guard (D305 ring, row); real guards only"
   ],
   "SHAPE": [
    "cut",

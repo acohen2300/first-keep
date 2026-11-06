@@ -254,16 +254,16 @@
      "Wayfarer → Wayfarers"
     ],
     "wagon": [
-     "bring",
-     "Wagon train"
+     "in v100",
+     "F31: shell MH7 Wagon train, D138, D86 wagon"
     ],
     "bison": [
      "in v100",
      "F16: Bison: shell MW8, D138, D86, D220, the Mass and Sprites books (its herd comes with the stampede)"
     ],
     "performer": [
-     "bring",
-     "Performer"
+     "cut",
+     "F31: the circus's performers: fantasy cut (Nov 4)"
     ],
     "vagabond": [
      "in v100",
@@ -578,16 +578,16 @@
    "Mid's Build menu lists: v100's Screen book (SN2, Albert's six tabs)"
   ],
   "FINDS": [
-   "bring",
-   "10 finds: treasure, ruins and cemetery are v100's MG4, MG1, MG2; robber camp, bear den, trade stop, shrine, vagabonds, mercenaries, fallen star to bring"
+   "in v100",
+   "F31: D305 rows (shells MG7–MG11; the shrine waits for the Throne)"
   ],
   "WAYFARER_EVERY": [
-   "bring",
-   "a wayfarer every 4 minutes"
+   "in v100",
+   "F31: D306 every"
   ],
   "WILD_LOOK": [
-   "bring",
-   "how far a beast or a guard looks from its home (140): v100 has aggro ranges (D144, D146) without a home"
+   "in v100",
+   "F31: D305 look"
   ],
   "REGARD": [
    "in v100",
@@ -670,12 +670,12 @@
    "F30: compared; v100's D99–D108 kept, one set; Mid's rut and shore in D294"
   ],
   "FIRE": [
-   "bring",
-   "fire spreading"
+   "in v100",
+   "F32: D310"
   ],
   "FIREARMS": [
-   "bring",
-   "burning shot"
+   "in v100",
+   "F32: D310 arrows, econ.js shot"
   ],
   "SOUND": [
    "in v100",
@@ -802,12 +802,12 @@
    "F30: D293 forecast step"
   ],
   "HAZARDS": [
-   "bring",
-   "the Challenge's hazards"
+   "in v100",
+   "F31: D309 pts"
   ],
   "HZK": [
-   "bring",
-   "with HAZARDS"
+   "in v100",
+   "F31: index.html HZ"
   ],
   "STARVE": [
    "in v100",
@@ -826,16 +826,16 @@
    "F29: D290 ai.save"
   ],
   "EV_MEAN": [
-   "bring",
-   "the wait between events"
+   "in v100",
+   "F31: D308"
   ],
   "EVENTS": [
-   "bring",
-   "the events"
+   "in v100",
+   "F31: D308 rows (the kept kinds)"
   ],
   "EVK": [
-   "bring",
-   "with EVENTS"
+   "in v100",
+   "F31: index.html Object.keys(D308 rows)"
   ],
   "PLACES": [
    "in v100",
@@ -854,8 +854,8 @@
    "F26+F27: measure D278 all, cut, cutMax, safe, guard, far, want"
   ],
   "HEALTH": [
-   "bring",
-   "sickness"
+   "in v100",
+   "F32: D311"
   ],
   "MKT_SELL": [
    "in v100",
