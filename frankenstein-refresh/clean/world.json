@@ -126,8 +126,8 @@
    "the lakes the walking grid was drawn for; v100 reads water from the height (L5)"
   ],
   "inFlood": [
-   "bring",
-   "held: the flood (KI4); see misfits"
+   "in v100",
+   "F30: floor 6 flooded, K.flood, FK.flood (its start waits for the events, F31)"
   ],
   "lakeR": [
    "cut",
@@ -158,8 +158,8 @@
    "distance to the nearest lake; v100's terrain keeps its own rules (between())"
   ],
   "lakeGrid": [
-   "bring",
-   "(Albert 11:16: bring, clean) water on the walking grid, flood water wadeable with levees; v100's walkable() reads the height (L5). The flood: see misfits"
+   "in v100",
+   "F30: floor 6 makeShore (BANK), floor 5 walkable reads the flood"
   ],
   "lakeSize": [
    "cut",

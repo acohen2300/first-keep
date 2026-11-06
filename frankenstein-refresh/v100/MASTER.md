@@ -89,11 +89,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E56** Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward 
 - **E57** the masks at a quarter scale: the land in white and in shadow, the inland water
+- **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
 - **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102)
 - **E60** the light stands high to the left and in front: ground leaning that way is lit, ground lea
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
+- **E547** the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so 
+- **E548** bare earth worn by feet round a finished building (not a field, a wall or a trap)
+- **E549** the dark where someone fell, wider for a big body, a blade's cut for a soldier
+- **E550** burnt ground and rubble where a building fell (not a wall)
 
 ## index.html#the-view
 
@@ -221,6 +226,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E122** Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), ac · D20 (N112) · D21 (N112) · D22 (N112)
 - **E123** QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year · QA (N1, N2) · D99 (N112)
+- **E551** the moon (QB to first order, QC): it runs ahead of the sun by its phase on a declination t · QB (N2, N3) · QC (N2)
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
 - **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
@@ -250,6 +256,17 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E143** the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of
 - **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10)
 - **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10)
+- **E552** the sky told ahead, the sky's news, the flood and the ruts (D293–D295); the ground's marks · D293 (N7, N203) · D295 (N203)
+- **E553** the chain (QH) rolled ahead a forecast step for each step of Weather signs, never less tha · QH (N7)
+- **E554** when the sky turns its news is told, with why in the chain's own odds (Mid's skyTurn and w
+- **E555** water over the shore while the flood stands (KI4); the mud a step meets: the wetness, deep · QS (N20) · D294 (N20, N203)
+- **E556** each land tile's distance to the inland water, once a map: the shore that pools and the la
+- **E557** the flood harms a finished building whose middle stands within its rise, unless its side h
+- **E558** marks on the water and the ground, and the sky band (D296–D298, Mid's drawLakeRipples, dra · D296 (N203) · D298 (N203)
+- **E559** ripples drift on the lakes, inside the shore; none on ice
+- **E560** rain rings sit on the ground, fixed to the world, fewer as the rain eases; only close up
+- **E561** the horizon: a band of sky along the top of the glass, coloured by the hour and the weathe
+- **E562** clouds cross the band with the wind
 - **E145** Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the l · D115 (N112) · D114 (N112)
 
 ## index.html#floor-7-display
@@ -577,7 +594,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## ai.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
-- **E241** First Keep v100 · ai.js (floor 11): one brain for the computer's side, one personality (ba
+- **E241** First Keep v100 · ai.js (floor 11): one brain for every computer's side, three personaliti · D303 (N202, N203)
 - **E242** the seat, and the hands it trains
 - **E243** the shells a side can pay for that tick a capability
 - **E244** each yield's camp: the drop-off that takes it in
@@ -585,12 +602,29 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E331** an arc of wall round the Town Center facing the middle, four-connected; its two squares ne
 - **E434** the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to h · D251 (N190)
 - **E435** the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foo · D251 (N190)
-- **E246** jobs by need: the yield whose share is most under its wanted share takes an idle villager,
-- **E247** people, homes, drop-offs, plots, the age
+- **E525** what a side stands, raises, trains and has queued, asked of the things themselves
+- **E526** the by-need plan's eyes (QCM, QV): the seconds to the bell, what one more hand earns at th · QCM (N24, N202) · QV (N23, N24)
+- **E527** the army a side keeps: its personality's ceiling plus D291's armyAge an age, at most D226; · D291 (N202) · D226 (N176) · D285 (N198, N199, N202)
+- **E528** the counter (QCN, Mid's bestCounter): among the soldiers it can train now, the best answer · QCN (N202)
+- **E529** a computer's turn, every D304 react s (Mid's think), in Mid's order: a site nobody raises, · D304 (N202)
+- **E530** shelter before it is needed: a Home (an Apartment once it can) when the people come within · D152 (N202)
+- **E531** a drop-off where D291's crew work a yield whose nearest find stands far from one · D291 (N202)
+- **E532** the shift to plots: one at a time, never more than the hands on its yield, when it beats t
+- **E533** the age: once the town is big enough (D176) it saves for the next; a save once begun holds · D176 (N202) · D290 (N202)
+- **E534** the town grows while one more villager pays its price in the time left (QCM), and not whil · QCM (N24, N202)
+- **E535** its personality's buildings in order (D303 build); while saving, only the first; a second  · D303 (N202, N203)
 - **E330** the computer's wall ring: from its age, with stone, a few pieces a round, gates first, whi
-- **E248** the army: the troop whose counters strike hardest, summed over the enemy's soldiers (Mid's
-- **E249** the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other sid · QAF (N35) · D155 (N114)
-- **E522** The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll, by its balanced personali · D285 (N198, N199)
+- **E536** faith and care: priests with an army, Zeal on the soldiers fighting, medics (Mid's think)
+- **E537** engines to break what soldiers cannot, by D291's cycle and the age's late engine · D291 (N202)
+- **E538** research while not saving: its personality's list in order, each through the first step it · D291 (N202)
+- **E539** the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yiel · QCM (N24, N202)
+- **E540** a hand moves to the bottleneck from a yield the goal does not need whose store does not th
+- **E541** with nothing short, the personality's mix: no stone and less gold in the Stone age, no iro
+- **E542** a waiting villager goes to the first yield in need it can find work for, else the one payi
+- **E543** the computers' economy (Mid's aiEconomy, without surplus selling, Albert 11:16 (5)): staff
+- **E544** the war (Mid's decideWar, QAF): a wave out is judged by its progress (D289): a blow or a s · QAF (N35) · D289 (N202)
+- **E545** the wave sets out, its guard kept home; a few riders go for the foe's nearest drop-off to 
+- **E522** The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll): its personality's bold a · D304 (N202) · D285 (N198, N199, N202)
 - **E523** Dynamic Diplomacy (Mid's LEAGUE, leagueTick): when one side runs far ahead, the others (no
 
 ## sound.js
@@ -610,5 +644,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E262** thunder comes after its flash by the distance ÷ the speed of sound
 - **E263** QBX: rain drowns the far and quiet first · QBX (N88)
 - **E264** the player's volume for this channel
-- **E265** ambience as events: a bird from a tree in view by day, a cricket in the dark, never in win · HX4 (N12, N145)
+- **E265** ambience as events: a bird from a tree in view by day, a cricket in the dark, never in win · HX4 (N12, N145, N203)
 - **E266** QBX: the air's top falls with snow cover, on a log scale · QBX (N88)
+- **E563** the wind is heard as hard as it blows (HA4, HX4) · HA4 (N146, N203) · HX4 (N12, N145, N203)

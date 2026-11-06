@@ -97,7 +97,7 @@ function makeGround(sd) {
     const round = [[ci - 1, cj - 1, 3], [ci, cj - 1, 2], [ci - 1, cj, 1], [ci, cj, 0]].filter(([i, j]) => i >= 0 && j >= 0 && i < N && j < N).map(([i, j, slot]) => [dh(i, j), (j * N + i) * 4 + slot]).sort((a, b) => a[0] - b[0]);
     for (let a = 0; a < round.length; ) { let b = a + 1; while (b < round.length && round[b][0] - round[b - 1][0] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += round[q][0]; for (let q = a; q < b; q++) CH[round[q][1]] = sum / (b - a); a = b; }
   }
-  makeThings(roll); makeBuildings(); makeMarsh(roll);
+  makeThings(roll); makeBuildings(); makeMarsh(roll); makeShore();
   renderGround();
   document.getElementById('seed').textContent = 'map ' + sd;
 }
@@ -230,7 +230,7 @@ const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), 
 const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // E55
 
 // ── Drawn once in the view frame (E56)
-let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskLake = document.createElement('canvas');
+let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskLake = document.createElement('canvas'), maskFlood = document.createElement('canvas');
 function renderGround() {
   const pts = []; for (const [x, y] of [[0, 0], [D.site, 0], [0, D.site], [D.site, D.site]]) for (const h of [0, D.land]) pts.push(V(x, y, h));
   const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
@@ -238,7 +238,8 @@ function renderGround() {
   ground = document.createElement('canvas'); ground.width = gw; ground.height = gh;
   const g = ground.getContext('2d');
   g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
-  for (const m of [maskLand, maskDark, maskLake]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? '#404a52' : '#fff'; } // E57
+  for (const m of [maskLand, maskDark, maskLake, maskFlood]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? C.sky.wet : m === maskFlood ? C.water : '#fff'; } // E57
+  scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); for (const t of things) if (t.kind === 'bld') wear(t); // E546
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // E58
   const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 1, b[1]); g.lineTo(c[0] + 1, c[1] + 1); g.lineTo(d[0], d[1] + 1); g.closePath(); g.fill(); };
@@ -257,7 +258,7 @@ function renderGround() {
       const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
       const a = P(i * T, j * T, CH[k]), b = P((i1 + 1) * T, j * T, CH[k1 + 1]), c = P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), d = P(i * T, (j + 1) * T, CH[k + 2]); quad(a, b, c, d, col);
       if (col === C.grass || col === FLOOR) { g.globalAlpha = D.blades; quad(a, b, c, d, blades); g.globalAlpha = 1; }
-      const h = H[j * N + i]; for (const m of h > 0 ? [maskLand, maskDark] : DEP[j * N + i] >= D.edge ? [maskLake] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.fill(); }
+      const h = H[j * N + i]; for (const m of h > 0 ? (BANK[j * N + i] <= FLD.rise ? [maskLand, maskDark, maskFlood] : [maskLand, maskDark]) : DEP[j * N + i] >= D.edge ? [maskLake] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.fill(); }
       i = i1 + 1;
     }
     for (let i = 0; i < N; i++) { // E62
@@ -276,6 +277,13 @@ function renderGround() {
   }
 }
 
+const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null; // E547
+const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
+function wear(b) { if (!scarX || has(b, 'Field') || has(b, 'Line') || has(b, 'Gate') || has(b, 'Trap')) return; const [dx, dy, rx, ry] = SC.wear, w = b.n * D.tile, [x, y] = onGround(b.bx, b.by); blot(x + w * dx, y + w * dy * TILT, w * rx, w * ry, SCAR.wear); } // E548
+function fallen(u) { const F = SC.fall, [x, y] = onGround(u.bx, u.by), [w] = LOOKBOX[SH[u.code].look] || []; blot(x, y, w > F.big ? F.rx + F.more : F.rx, F.ry, SCAR.fall); if (!ECON.soldier(u.code)) return; // E549
+  const [a, b, c, d, lw] = SC.cut; scarX.strokeStyle = SCAR.cut; scarX.lineWidth = lw; scarX.beginPath(); scarX.moveTo(x - a, y + b * TILT); scarX.lineTo(x + c, y - d * TILT); scarX.stroke(); }
+function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; const [rx, ry, out, n, turn, step, least, w, h] = SC.burn, r0 = b.n * D.tile * D.place.half, [x, y] = onGround(b.bx, b.by); blot(x, y, r0 * rx, r0 * ry, SCAR.burn); scarX.fillStyle = SCAR.rubble; // E550
+  for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); scarX.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }
 // ── The view (E63)
 const canvas = document.getElementById('map'), ctx = canvas.getContext('2d');
 const cam = { x: 0, y: 0, z: 1 }, show = { G: false, Z: true, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // E64
@@ -314,7 +322,7 @@ function draw() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
-  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
+  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
   if (show.G && cam.z * D.tile >= D.lod) drawGrid();
   drawThings(); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
@@ -872,11 +880,11 @@ const YIELD = (t) => KIND[t.kind].yield;
 const iced = (k) => K.ice && H[k] <= 0 && DEP[k] >= D.edge; // E87
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); let who = null; // E328
-const walkable = (k) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3 || (GATES.has(k) && !fire('shut', GATES.get(k), who)));
+const walkable = (k) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3 || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
 const stepOk = (a, b) => walkable(b) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
 const [ME] = D.players, PACE = D.pace, PAN = D.pace.pandolf, NEED = G.step, SLIP = G.slip; // E88
 function footing(u, to = u.k) { // E360
-  const c = u.code, bare = clamp(G.ice.grip - ((G.ice.cold - G.ice.grip) * K.temp) / G.ice.at, G.ice.grip, G.ice.cold), mud = Math.max(MARSH[u.k], K.wet), snow = Math.min(1, K.snow / 5), d = G.grass.grip + (G.mud.grip - G.grass.grip) * mud;
+  const c = u.code, bare = clamp(G.ice.grip - ((G.ice.cold - G.ice.grip) * K.temp) / G.ice.at, G.ice.grip, G.ice.cold), mud = Math.max(MARSH[u.k], mudAt(u.k)), snow = Math.min(1, K.snow / 5), d = G.grass.grip + (G.mud.grip - G.grass.grip) * mud;
   return { mud, snow, ice: sheet(), need: NEED[SH[c].mount || SH[c].body], ground: d + (G.snow.grip - d) * snow, on: stat(c, u.side, 'studs') ? Math.max(bare, SLIP.studs) : bare, rise: (hAt(to) - hAt(u.k)) / stepLen(u.k, to) || 0, along: u.ux || 0 };
 }
 function pace(u, g = footing(u)) { // E361
@@ -943,7 +951,7 @@ function spotFor(u, c) { // E301
 function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.y))) return false; u.path.pop(); u.path.push([s.x, s.y]); u.spot = s; return true; } // E302
 function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
 function stride(u, [tx, ty], dt, near = 0) { // E100
-  if (u.stuck > K.t) return false; const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy); u.ux = d && dx / d; const g = footing(u, tileAt(tx, ty)), beat = Math.floor(u.t / SLIP.every); // E363
+  if (u.stuck > K.t) return false; if (SIDES[u.side]) RUTS[rutAt(u.k)] += dt; const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy); u.ux = d && dx / d; const g = footing(u, tileAt(tx, ty)), beat = Math.floor(u.t / SLIP.every); // E363
   if (!g.ice) u.wary = false; else if (beat !== u.tread) { u.tread = beat; const on = rng() < g.ice; if (!u.wary && g.need > (on ? g.on : g.ground)) { u.stuck = K.t + SLIP.secs; u.wary = on; if (u.side === ME && !(K.told > K.t - SLIP.tell)) { K.told = K.t; fire('event', 'slip', u); } return false; } } // E362
   const v = pace(u, g) * D.upm * dt;
   u.walked = (u.walked || 0) + Math.min(d, v) / D.upm; u.mps = v / D.upm / dt; // E101
@@ -1052,7 +1060,9 @@ const K = { t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow:
 const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
 const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
 // E123
-function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - 0.5) * 2 * Math.PI; return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(Hh)) / RAD; }
+function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - 0.5) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
+  K.moonAlt = alt(dec * Math.cos(f), Hh + f); K.moonLit = (1 - Math.cos(f)) / 2; return alt(dec, Hh); } // E551
+const MO = D.moon, [MOON0, MOON1] = MO.full, [DARK0, DARK1] = MO.dark, moonPhase = () => (K.t / D.day / MO.month) % 1, nightOf = () => clamp(-K.alt / MO.twilight, 0, 1), nightSight = () => 1 - (1 - MO.sight * (MOON0 + MOON1 * K.moonLit)) * nightOf();
 const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // E124
 function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i < RAMP.length; i++) if (a <= RAMP[i][0]) { const [a0, l0] = RAMP[i - 1], [a1, l1] = RAMP[i]; return l0 + ((l1 - l0) * (a - a0)) / (a1 - a0); } return 1; }
 // E125
@@ -1066,23 +1076,23 @@ on('start', () => { GUST = fractal(dice(seed ^ WX.wind.seed), WX.wind.k, WX.wind
 function climate(dt) {
   K.t0 = K.t; K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // E127
   K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
-  const hour = Math.floor(K.t / HOUR), was = K.wetHour; if (hour !== K.hour) { K.hour = hour; K.wetHour = rng() < D.chain[was ? 1 : 0]; if (K.wetHour !== was) { const r = K.wetHour ? rnd(-1, 1) : 0; K.I = Math.abs(r); K.dir = Math.sign(r); } K.storm = K.I >= D.stormAt; }
-  const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; // E128
-  K.rain += ((falling === 'rain') * K.I - K.rain) * Math.min(1, dt / 12); K.snowing += ((falling === 'snow') * K.I - K.snowing) * Math.min(1, dt / 12); // E129
+  const hour = Math.floor(K.t / HOUR), was = K.wetHour, fresh = hour !== K.hour; if (fresh) { K.hour = hour; ahead(was); if (K.wetHour !== was) { const r = K.wetHour ? rnd(-1, 1) : 0; K.I = Math.abs(r); K.dir = Math.sign(r); } K.storm = K.I >= D.stormAt; }
+  const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; if (fresh) turned(was, falling); // E128
+  const ease = Math.min(1, dt / 12); K.rain += ((falling === 'rain') * K.I - K.rain) * ease; K.snowing += ((falling === 'snow') * K.I - K.snowing) * ease; // E129
   const s = sky(K.rain, K.snowing); K.vis = s.vis; K.wind = K.dir * s.wind * (1 + WX.wind.gust * GUST(K.t / WX.wind.period)); K.blizT = blizzard(s) ? K.blizT + dt : 0; K.bliz = K.blizT >= WX.blizzard.hours * HOUR; // E376
-  K.wet = relax(K.wet, K.rain > 0.1 ? 1 : 0, K.rain > 0.1 ? D.wetUp : D.dryOut, dt); // E130
-  if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (K.rain > 0.1 ? 2 : 1) * dt); // E131
+  const raining = K.rain > 0.1; K.wet = relax(K.wet, +raining, raining ? D.wetUp : D.dryOut, dt); // E130
+  if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (raining ? 2 : 1) * dt); // E131
   if (K.temp < 0) { K.fds += -K.temp * dt; if (K.wet > D.groundIce.wet) K.gfd = Math.min(D.groundIce.fdd, K.gfd - K.temp * dt); } // E132
   else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = K.fds >= D.bears; // E364
   if (K.fogT > 0) K.fogT -= dt; else if (rng() < dt / D.fogWait) K.fogT = D.fogLast; // E133
   K.fog += ((K.fogT > 0 ? 0.6 : K.wet > 0.5 && K.rain < 0.1 && K.alt > -6 && K.alt < 10 ? 0.3 : 0) - K.fog) * Math.min(1, dt / 15); // E134
   if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - rng()); strike(); } } // E135
-  K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09);
+  K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.fog > 0.3 ? ' ≈' : '');
 }
 // E136
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
-  if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: glance() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
+  if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
   else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
 // E138
 const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active = (strength) => Math.round(WX.pool * strength);
@@ -1091,6 +1101,7 @@ function drawSkin() { // E139
   if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
   if (K.wet > 0.05) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.45 * K.wet; ctx.drawImage(maskDark, gx, gy, w, h); ctx.restore(); }
   if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
+  if (K.flood > K.t) { ctx.globalAlpha = FLD.show; ctx.drawImage(maskFlood, gx, gy, w, h); ctx.globalAlpha = 1; } marks();
 }
 function drawSky(dt) { // E140
   const now = K.t, px = D.upm * cam.z, lam = WX.rain.n0 * (K.rain * WX.rain.most) ** WX.rain.exp, drift = K.wind * px * dt, wrap = (m, len) => { m.x = (((m.x + drift) % cw) + cw) % cw; if (m.y > ch + len) { m.y = -len; m.x = glance() * cw; } };
@@ -1102,17 +1113,49 @@ function drawSky(dt) { // E140
     while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34 + (x1 - x) * 0.12; main.push([x, y]); } main[main.length - 1] = [x1, y1]; const paths = [main]; // E142
     for (let f = 0, nf = 1 + ((rr() * 3) | 0); f < nf; f++) { const fk = main[1 + Math.floor(rr() * (main.length - 3))], dir = rr() < 0.5 ? -1 : 1, br = [fk]; for (let k = 1, kn = 3 + ((rr() * 3) | 0); k <= kn; k++) br.push([fk[0] + dir * k * (7 + rr() * 9), fk[1] + k * (8 + rr() * 9)]); paths.push(br); }
     ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
-    const foot = ctx.createRadialGradient(x1, y1, 0, x1, y1, 60 * cam.z); foot.addColorStop(0, `rgba(220,235,255,${(0.7 * a).toFixed(2)})`); foot.addColorStop(1, 'rgba(220,235,255,0)'); ctx.fillStyle = foot; ctx.beginPath(); ctx.ellipse(x1, y1, 60 * cam.z, 30 * cam.z, 0, 0, 7); ctx.fill();
+    const foot = ctx.createRadialGradient(x1, y1, 0, x1, y1, 60 * cam.z); foot.addColorStop(0, `rgba(220,235,255,${(0.7 * a).toFixed(2)})`); foot.addColorStop(1, 'rgba(220,235,255,0)'); ctx.fillStyle = foot; ctx.beginPath(); oval(ctx, x1, y1, 60 * cam.z, 30 * cam.z); ctx.fill();
     for (const [lw, col] of [[12, `rgba(170,200,255,${(0.18 * a).toFixed(2)})`], [4.6, `rgba(210,228,255,${(0.45 * a).toFixed(2)})`], [1.9, `rgba(255,255,255,${a.toFixed(2)})`]]) { ctx.strokeStyle = col; paths.forEach((p, i) => { ctx.lineWidth = i ? lw * 0.55 : lw; ctx.beginPath(); p.forEach(([px, py], j) => (j ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.stroke(); }); }
     ctx.restore(); }
-  if (K.flash > 0.005) { ctx.fillStyle = `rgba(190,210,255,${Math.min(0.75, K.flash).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
-  const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7, dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
-  if (gloom > 0.01) { ctx.fillStyle = `rgba(60,70,80,${gloom.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
-  const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); if (veil > 0.01) { ctx.fillStyle = `rgba(225,230,236,${veil.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); } // E381
-  if (dusk > 0.01) { ctx.fillStyle = `rgba(255,140,60,${dusk.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
-  if (night > 0.01) { ctx.fillStyle = `rgba(10,18,48,${night.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
-  if (K.fog > 0.02) { ctx.fillStyle = `rgba(200,205,210,${(K.fog * 0.8).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); } // E144
+  wash(SKYC.flash, Math.min(0.75, K.flash));
+  const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7 * (DARK0 - DARK1 * K.moonLit), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
+  wash(SKYC.gloom, gloom);
+  const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); wash(SKYC.veil, veil); // E381
+  wash(SKYC.glow, dusk); wash(SKYC.blue, night); wash(SKYC.fog, K.fog * 0.8); if (K.sky === 'frost') wash(SKYC.rime, BD.frost); skyBand(); // E144
 }
+// E552
+const FC = D.forecast, SKYW = fromBook('words').sky, FLD = D.flood, RU = D.ruts, RC = Math.ceil(N / RU.cell), RUTS = new Float32Array(RC * RC), BANK = new Uint8Array(N * N), HEAL = Math.exp(-RU.heal[0] / RU.tau);
+on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear' }); sunAlt(); });
+on('gone', (t) => { if (t.kind === 'unit') fallen(t); }); on('event', (e, t) => { if (e === 'fell' && t) burnt(t); });
+function ahead(was) { const A = K.ahead, lead = Math.round((stat('', ME, 'forecast') * FC.step) / HOUR), wet = (w) => rng() < D.chain[+w]; K.wetHour = A.length ? A.shift() : wet(was); // E553
+  do A.push(wet([K.wetHour, ...A].at(-1))); while (A.length < lead); const [last, prev] = [K.wetHour, ...A].reverse(), n = Math.round((lead * HOUR) / FC.step), S = SKYW.signs; if (!lead || last === prev) return;
+  fire('say', (last ? S.rain : S.clear).replace('{n}', n > 1 ? S.more.replace('{n}', n) : S.one)); }
+function turned(was, falling) { const name = K.bliz ? 'blizzard' : falling || (K.temp < 0 ? 'frost' : 'clear'), from = K.sky; if (name === from) return; K.sky = name; const say = SKYW.turn[name]; if (!say || K.t < HOUR) return; // E554
+  const W = SKYW.why, p = (x) => W.odds.replace('{n}', Math.round(x * FC.tenths)), [P0, P1] = D.chain, wet = (s) => ['rain', 'snow', 'blizzard'].includes(s);
+  fire('say', say, wet(name) && wet(from) ? W.holds.replace('{p}', p(P1)) : wet(name) ? W.begins.replace('{p}', p(P0)) + (W[name] || '') : name === 'frost' ? W.frost.replace('{T}', Math.round(K.temp)) : wet(from) ? W.stopped.replace('{p}', p(1 - P1)) : W.dry); }
+// E555
+const flooded = (k) => K.flood > K.t && H[k] > 0 && BANK[k] <= FLD.rise, rutAt = (k) => Math.floor((k - (k % N)) / N / RU.cell) * RC + Math.floor((k % N) / RU.cell);
+const rutOf = (k) => RU.deep * Math.min(1, RUTS[rutAt(k)] / RU.n0) ** RU.pow, mudAt = (k) => Math.min(1, K.wet * (BANK[k] <= RU.near + (K.flood > K.t) * FLD.rise ? RU.shore : 1) * (1 + rutOf(k)));
+function makeShore() { const far = RU.near + FLD.rise, q = []; BANK.fill(far + 1); H.forEach((h, k) => { if (h <= 0 && DEP[k] >= D.edge) { BANK[k] = 0; q.push(k); } }); // E556
+  for (const k of q) for (const [dx, dy] of D.ways) { const i = (k % N) + dx, j = (k - (k % N)) / N + dy, n = j * N + i, d = BANK[k] + 1; if (i >= 0 && j >= 0 && i < N && j < N && BANK[n] > d) { BANK[n] = d; if (d < far) q.push(n); } } }
+function flooding() { const W = SKYW.water, [secs] = FLD.beat; for (const b of [...things]) if (b.kind === 'bld' && b.done >= 1 && SIDES[b.side] && !stat('', b.side, 'flood') && BANK[tileAt(b.bx, b.by)] < FLD.rise - b.n / 2) { b.hp -= b.hpMax * FLD.hit * secs; // E557
+    if (b.side === ME && every(FLD.say)) fire('say', W.replace('{b}', SH[b.code].name.toLowerCase()).replace('{at}', MENU.coord(b.bx, b.by))); if (b.hp <= 0) WAR.die(b); } }
+const flood = (secs = FLD.secs) => { K.flood = K.t + secs; };
+// E558
+const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, wash = (col, a) => { if (a < BD.least) return; ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(0, 0, cw, ch); ctx.globalAlpha = 1; }, rgb = (h) => h.match(/\w\w/g).map((x) => parseInt(x, 16)), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
+function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWidth = RP.line; ctx.strokeStyle = C.marks.ripple; ctx.beginPath();
+  if (!K.ice) for (const L of lakes) { const lx = L.x, ly = L.y * TILT; if (Math.abs(lx - cam.x) > w + L.r || Math.abs(ly - cam.y) > hh + L.r) continue; // E559
+    for (let i = 0; i < RP.n; i++) { const a = i * RP.turn + K.t * RP.spin, r = L.r * (RP.from + RP.span * ((i * RP.step + K.t * RP.drift) % 1)), [x, y] = toScreen(L.x + Math.cos(a) * r, (L.y + Math.sin(a) * r) * TILT); ctx.moveTo(x - RP.w * z, y); ctx.quadraticCurveTo(x, y - RP.lift * z, x + RP.w * z, y); } }
+  ctx.stroke(); if (K.sky !== 'rain' || z < RR.zoom) return; const C0 = RR.cell, [r0, r1, rmax] = RR.r, gy0 = Math.floor((cam.y - hh) / TILT / C0), gy1 = Math.ceil((cam.y + hh + D.land * UP) / TILT / C0); // E560
+  ctx.lineWidth = RR.line; ctx.strokeStyle = C.marks.ring; ctx.beginPath();
+  for (let gy = gy0; gy <= gy1; gy++) for (let gx = Math.floor((cam.x - w) / C0); gx <= Math.ceil((cam.x + w) / C0); gx++) { const r = NS_rng(Math.abs(gy * RC * RU.cell + gx)), ph = (K.t * RR.rate + r()) % 1, bx = (gx + r()) * C0, by = (gy + r()) * C0; if (r() > K.rain / RR.show) continue;
+    const s = Math.min(rmax, (r0 + ph * r1) * z), [x, y] = toScreen(...toView(bx, by, Math.max(0, H[tileAt(bx, by)]))); ctx.moveTo(x + s, y); oval(ctx, x, y, s, s * TILT); }
+  ctx.stroke(); }
+function skyBand() { const nt = nightOf(), top = document.querySelector('.topbar').getBoundingClientRect().bottom, [hf, hmax] = BD.h, h = Math.round(Math.min(ch * hf, hmax)), [cast, rainy] = BD.cast; // E561
+  const base = mixC(mixC(rgb(SKYC.day), rgb(SKYC.dusk), BD.dusk * nt * (1 - nt)), rgb(SKYC.night), nt), kind = K.storm && K.wetHour ? 'storm' : K.sky, col = SKYC[kind] ? mixC(base, rgb(SKYC[kind]), kind === 'rain' ? rainy : cast) : base;
+  const gr = ctx.createLinearGradient(0, top, 0, top + h); gr.addColorStop(0, css(col, BD.base)); gr.addColorStop(1, css(col, 0)); ctx.fillStyle = css(col, BD.base); ctx.fillRect(0, 0, cw, top); ctx.fillStyle = gr; ctx.fillRect(0, top, cw, h);
+  const cover = CL.cover[kind] ?? CL.cover.other, dark = CL.dark[kind] ?? CL.dark.other, [sp, ds] = CL.speed, [xs, xw, xo] = CL.x, [y0, dy] = CL.y, [w0, dw] = CL.w, [t0, dt] = CL.tall, [pf, pu, pw, ph] = CL.puff, [m3, m4, m2] = CL.mod, drift = CL.calm + K.wind / WX.wind.most; // E562
+  ctx.fillStyle = css(mixC(mixC(rgb(SKYC.cloud), rgb(SKYC.cloudDark), dark), rgb(SKYC.night), nt * CL.night), CL.a * cover);
+  for (let i = 0; i < CL.n; i++) { const L = cw + xw, x = ((((i * xs + K.t * (sp + (i % m3) * ds) * drift) % L) + L) % L) - xo, y = top + y0 + (i % m3) * dy, rw = w0 + (i % m4) * dw; ctx.beginPath(); oval(ctx, x, y, rw, t0 + (i % m2) * dt); oval(ctx, x + rw * pf, y - pu, rw * pw, ph); ctx.fill(); } }
 function makeMarsh(roll) { // E145
   const picks = lakes.slice().sort(() => roll() - 0.5).slice(0, count(roll, D.marshes));
   for (const L of picks) stamp(L.x, L.y, L.r * (1 + D.shore) + D.marshW, (k) => { if (H[k] > 0 && H[k] <= D.land && OCC[k] === 0 && !FOR[k]) MARSH[k] = 1; });
@@ -1120,7 +1163,7 @@ function makeMarsh(roll) { // E145
 // ── Floor 7, display (E146)
 const SEEN = new Uint8Array(N * N), fogCv = document.createElement('canvas'); fogCv.width = fogCv.height = N; const fogG = fogCv.getContext('2d'), fogPx = fogG.createImageData(N, N); let fogT = 0;
 function look(dt) { // E147
-  fogT -= dt; if (fogT > 0) return; fogT = D.fogTick; const reach = 1 - 0.6 * K.fog;
+  fogT -= dt; if (fogT > 0) return; fogT = D.fogTick; const reach = (1 - 0.6 * K.fog) * nightSight();
   for (let k = 0; k < N * N; k++) if (SEEN[k] === 2) SEEN[k] = 1;
   const see = (bx, by, r) => stamp(bx, by, Math.min(r * reach, K.vis * D.upm), (k) => { SEEN[k] = 2; });
   for (const u of units) if (u.side === 0) see(u.bx, u.by, D.sight.unit);
@@ -1133,9 +1176,9 @@ function drawFog() { // E149
 }
 const inSight = (k) => !show.fog || SEEN[k] === 2;
 // E150
-function shadowVec(h) { const alt = Math.max(K.alt, 2) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * dayPhase() + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, clamp(K.alt / 10, 0, 1) * 0.35 * K.light]; } // E151
+function shadowVec(h) { const sun = clamp(K.alt / 10, 0, 1) * 0.35 * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, 2) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
 function drawShadows(s) { // E152
-  const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.fillStyle = `rgba(10,20,30,${a.toFixed(2)})`;
+  const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = C.sky.shadow;
   for (const t of things) if (t.kind === 'bld') { const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue;
     const n = t.n * D.tile, pts = [[t.i * D.tile, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile + n], [t.i * D.tile, t.j * D.tile + n]].map(([sx, sy]) => S(sx, sy, H[t.j * N + t.i]));
     const sh = pts.map(([px, py]) => [px + dx * h * s, py + dy * h * s]); ctx.beginPath(); // E153
@@ -1250,7 +1293,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); GATES.clear(); fogT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, nightSight, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

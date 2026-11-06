@@ -5,12 +5,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 ## By law
 
 - **QA** Sun height → N1, N2 · used by D99
-- **QB** True sun, moon and planets → N2, N3
-- **QC** Moon lit fraction → N2
+- **QB** True sun, moon and planets → N2, N3 · used by D292, X63
+- **QC** Moon lit fraction → N2 · used by D292, X63
 - **QD** Day's edges → N2
 - **QE** Eclipses, by geometry · N2 → N2
 - **QF** Colour from temperature → N4, N5, N54
-- **QH** Rain or dry → N7 · used by D102
+- **QH** Rain or dry → N7 · used by D102, D293, O205
 - **QI** Snow line → N8
 - **QJ** Raindrop speed → N9 · used by D229, X56
 - **QK** Visibility → N10 · used by D229, X56
@@ -18,13 +18,13 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QM** Random events → N12 · used by SC9, D110, D181, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
-- **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268, D271, D279, D283
+- **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268, D271, D279, D283, D294, X63
 - **QQ** Ice growth → N17 · used by D109, D225, X54
 - **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
-- **QS** Ruts → N20
+- **QS** Ruts → N20 · used by D294, X63
 - **QT** Fire vs wetness → N21
 - **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22 → N22
-- **QV** Forager's rate → N23, N24 · used by SC2, D88, D195, X51
+- **QV** Forager's rate → N23, N24 · used by SC2, D88, D195, D300, X51
 - **QW** Move on → N24 · used by SC2, D132
 - **QX** Crowding → N25, N26 · used by SC2, SC16, D195, X51
 - **QY** Growth → N27 · used by SC24, SC25, D218, D219, X53
@@ -34,7 +34,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAC** Crew → N31 · used by SC4, D126, X52
 - **QAD** Spoilage → N32, N33 · used by D217, X53
 - **QAE** Price → N34 · used by SC19, D270, D271
-- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204
+- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207
 - **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, D247, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
@@ -44,7 +44,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QCF** Returns → N195 · used by D274, D275
 - **QCD** Danegeld → N201, N198 · used by D282
 - **QCG** Tribute and unrest → N198 · used by D283, D288
-- **QAF** Battle odds → N35 · used by SC6, SC41, D155, D177, D192, D193, D194, D238, D247, D281, D285, X48
+- **QCM** By need → N24, N202 · used by D291, D300, X63
+- **QCN** Counter → N202 · used by D291
+- **QCO** Night sight → N2, N203 · used by D292, X63
+- **QAF** Battle odds → N35 · used by SC6, SC41, D177, D192, D193, D194, D238, D247, D281, D285, D289, X48
 - **QAG** Who to fight → N36, N37, N188 · used by SC6, D238, X57
 - **QAH** Fight or not → N38
 - **QAI** Nerve → N76, N188 · used by SC6, D142, D231, X57
@@ -92,12 +95,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 ## By citation
 
 - **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBO, QBP, QBT
-- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCD
+- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCD, QCM, QCN, QCO, D292
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
 - **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
-- **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QAI, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
+- **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QAI, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102, D293
 - **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX, QBY
 - **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ, QCL, D229
 - **N10** Koschmieder (1924) → QK, QCL, D229
@@ -110,11 +113,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, QCD, QCG, G9
-- **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD
+- **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD, QCM, QCN, QCO, D294
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU
 - **N23** Holling (1959), Can. Entomol. 91 → QV
-- **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW
+- **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW, QCM
 - **N25** Fretwell & Lucas (1970) → QX
 - **N26** Sutherland (1983) → QX
 - **N27** Verhulst (1838) → QY, D218, D219
@@ -204,25 +207,25 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
 - **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D110, D111, D112, D113, D114, D115, D116, D117, D118, D119, D120, D121, D169, D170, D230
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
-- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D149, D150, D151, D152, D153, D154, D155, D156, D157, D160, D161, D162, D163, D164, P37
+- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D163, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
 - **N116** Design: the juice pass of Nov 3 (Base: 2 px, 0.08 s) → D166
 - **N117** Standard gravity (standard) → D168
 - **N118** Design: the build log (README) → D171
 - **N119** Design: Albert, Nov 1 14:18 (the old game's START_RES: 200 of food, wood, stone and gold, no iron) → D172
-- **N120** Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, Build A) → D173, D174, D175, D176, D178, D179, D180
+- **N120** Design: the computer of floor 11, Nov 5 (were typed in ai.js; moved to the book, Build A) → D173
 - **N121** Design: v100 floor 5, Nov 4 (deer herds D90–D91, wolf packs D92–D93) → D181
 - **N122** Design: Mid's BEAT (numbers.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D182, D183, D184
 - **N123** Design: Mid's UG (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D185
 - **N124** Design: Mid's SGC (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D186
 - **N125** Design: Albert's randomizer rule, Nov 5 (Frankenstein F10): no Math.random in the world, looks included → D187
 - **N126** Design: Albert, Nov 5 (the gate) → X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31, X32, X33
-- **N127** Design: the audit of Nov 5, Build A: a test for each fix → X34, X35, X36, X37, X38, X39
+- **N127** Design: the audit of Nov 5, Build A: a test for each fix → X34, X35, X36, X37, X38
 - **N128** Design: Albert, Nov 5 (Frankenstein Refresh: map Mid with our tests) → X40
 - **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
 - **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
 - **N131** Design: Albert, Nov 5 09:47 (sort every piece) → X43
-- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, X54, X55, X57, X58, X60, X61, X62, J1, J2, J3, J4, J5, J6
+- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, X54, X55, X57, X58, X60, X61, X62, X63, J1, J2, J3, J4, J5, J6
 - **N133** Design: Albert, the Rank Ribbon (Oct 30) and the Formation → SN1
 - **N134** Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) → SN2
 - **N135** Design: Albert, Nov 5 07:30 → SN3
@@ -250,8 +253,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 - **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
 - **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
-- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, J7
-- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, J7
+- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207, J7
+- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, O201, O202, O203, O204, O205, O206, O207, J7
 - **N162** Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of t → X17
 - **N163** (to open) Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SI → QCJ
 - **N164** Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js → SC2, SC16, D88, D132, D195, D196, D197, X51, PN1
@@ -292,6 +295,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N199** Design: Albert, Nov 5 11:16 (2): vassals pay tribute, the tax rate parked; 11:16 (7): the war camp's wagon in  → D279, D287, D280, D281, D282, D283, D288, D284, D285, D286, UT2, UT4
 - **N200** (to open) Hyginus (Pseudo-Hyginus), De munitionibus castrorum, about AD 100: §1 a century's tents in one line, eight men → D287
 - **N201** (to open) The Anglo-Saxon Chronicle, 991 and after: the Danegeld, tribute to buy off the Danes, 10,000 pounds in 991 and → QCD, D282
+- **N202** Design: Mid's computers (17-ai.js bestCounter, timeLeft, rateFrom, goalOf, needOf, runsOut, famineNear, PLOTS, → QCM, QCN, D122, D152, D176, D178, D180, D285, D289, D290, D291, D300, D301, D302, D303, D304, X63, J17, J18
+- **N203** Design: Mid's sky, moon and ground (08-core.js moonVec, moonPhase, moonLight, NIGHT_SIGHT, SYNODIC; 37-events. → QCO, C15, C16, C17, D122, D292, D293, D294, D295, D296, D297, D298, D299, D303, X63, HA4, HX4, O205, O206, J18
+- **N204** (to open) Rosenzweig & Udry (2013), Forecasting Profitability, NBER Working Paper 19334, p. 21: farmers who plan by the  → O207
 
 ## Named exceptions
 
@@ -306,6 +312,5 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **roar** (HU18) waits for a beast in the land (an event)
 - **shot** (HC7) waits for hand guns
 - **boom** (HC8) waits for siege guns and blasts
-- **wind** (HA4) waits for the wind (cut Nov 4; the sound kept, Albert Nov 5 10:27)
 - **hooves** (HA6) waits for the stampede (an event)
 - **rumble** (HA7) waits for the earthquake (an event)

@@ -2388,3 +2388,122 @@ MODIFIED (103):
 LOCKED (1621 of 1724): byte for byte as sealed, 506,882 bytes
 Tests: 36/36 rules hold
 Inventory: 1724 items sealed · 1608 book entries · 84 laws · 201 citations, 37 still to open · 7 known
+
+## F29+F30 · the computers' minds; weather, the moon and the sky; the ground remembers; floods, ripples and rain rings · 2026-11-06 07:20
+Albert, Nov 5 11:40: yes yes F10–F39; 11:16 (1): the held features Mid built come over (ruts, floods, moon and sky, ripples); 18:07–18:08: weather one system by intensity, visuals by code and math
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, code:sound.js, book:measure, book:shells, book:capabilities, book:screen, book:sprites, book:ground, book:colours, book:sound, book:tech, book:sides, book:words, book:comments, book:rules, book:citations, tool:test.py, law:QCM, law:QCN, law:QCO
+MODIFIED (111):
+- book:citations:N202 · added
+- book:citations:N203 · added
+- book:citations:N204 · added
+- book:colours:C15 · added
+- book:colours:C16 · added
+- book:colours:C17 · added
+- book:comments:E241 · 307 → 291 bytes
+- book:comments:E246 · removed
+- book:comments:E247 · removed
+- book:comments:E248 · removed
+- book:comments:E249 · removed
+- book:comments:E522 · 335 → 381 bytes
+- book:comments:E525 · added
+- book:comments:E526 · added
+- book:comments:E527 · added
+- book:comments:E528 · added
+- book:comments:E529 · added
+- book:comments:E530 · added
+- book:comments:E531 · added
+- book:comments:E532 · added
+- book:comments:E533 · added
+- book:comments:E534 · added
+- book:comments:E535 · added
+- book:comments:E536 · added
+- book:comments:E537 · added
+- book:comments:E538 · added
+- book:comments:E539 · added
+- book:comments:E540 · added
+- book:comments:E541 · added
+- book:comments:E542 · added
+- book:comments:E543 · added
+- book:comments:E544 · added
+- book:comments:E545 · added
+- book:comments:E546 · added
+- book:comments:E547 · added
+- book:comments:E548 · added
+- book:comments:E549 · added
+- book:comments:E550 · added
+- book:comments:E551 · added
+- book:comments:E552 · added
+- book:comments:E553 · added
+- book:comments:E554 · added
+- book:comments:E555 · added
+- book:comments:E556 · added
+- book:comments:E557 · added
+- book:comments:E558 · added
+- book:comments:E559 · added
+- book:comments:E560 · added
+- book:comments:E561 · added
+- book:comments:E562 · added
+- book:comments:E563 · added
+- book:measure:D122 · 93 → 348 bytes
+- book:measure:D149 · removed
+- book:measure:D150 · removed
+- book:measure:D151 · removed
+- book:measure:D152 · 132 → 195 bytes
+- book:measure:D153 · removed
+- book:measure:D154 · removed
+- book:measure:D155 · removed
+- book:measure:D156 · removed
+- book:measure:D160 · removed
+- book:measure:D161 · removed
+- book:measure:D174 · removed
+- book:measure:D175 · removed
+- book:measure:D176 · 121 → 226 bytes
+- book:measure:D178 · 158 → 497 bytes
+- book:measure:D179 · removed
+- book:measure:D180 · 161 → 225 bytes
+- book:measure:D239 · 1,364 → 1,510 bytes
+- book:measure:D285 · 827 → 713 bytes
+- book:measure:D289 · added
+- book:measure:D290 · added
+- book:measure:D291 · added
+- book:measure:D292 · added
+- book:measure:D293 · added
+- book:measure:D294 · added
+- book:measure:D295 · added
+- book:measure:D296 · added
+- book:measure:D297 · added
+- book:measure:D298 · added
+- book:measure:D299 · added
+- book:measure:D300 · added
+- book:measure:D301 · added
+- book:measure:D302 · added
+- book:measure:D303 · added
+- book:measure:D304 · added
+- book:rules:X39 · removed
+- book:rules:X63 · added
+- book:sound:HA4 · 204 → 302 bytes
+- book:sound:HX4 · 202 → 336 bytes
+- book:tech:O205 · added
+- book:tech:O206 · added
+- book:tech:O207 · added
+- book:words:J17 · 3,279 → 3,338 bytes
+- book:words:J18 · added
+- book:words:J7 · 36,638 → 37,164 bytes
+- code:ai.js · 10,585 → 25,300 bytes
+- code:combat.js · 51,446 → 51,482 bytes
+- code:econ.js · 89,049 → 89,100 bytes
+- code:index.html#drawn-once-in-the-view-frame · 4,134 → 6,045 bytes
+- code:index.html#floor-5-movables · 13,797 → 13,903 bytes
+- code:index.html#floor-6-climate · 9,129 → 15,546 bytes
+- code:index.html#floor-7-display · 5,892 → 6,049 bytes
+- code:index.html#the-door · 6,386 → 6,441 bytes
+- code:index.html#the-ground · 1,807 → 1,820 bytes
+- code:index.html#touch · 6,243 → 6,330 bytes
+- code:sound.js · 5,632 → 5,774 bytes
+- law:QCM · added
+- law:QCN · added
+- law:QCO · added
+- tool:test.py · 181,436 → 190,710 bytes
+LOCKED (1682 of 1776): byte for byte as sealed, 572,517 bytes
+Tests: 36/36 rules hold
+Inventory: 1776 items sealed · 1657 book entries · 87 laws · 204 citations, 38 still to open · 7 known

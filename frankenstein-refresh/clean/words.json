@@ -378,8 +378,8 @@
      "a research step's history and date, with the tech tree (the Content pull)"
     ],
     "weathersigns": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F30: Words book J7 (why), by its key"
     ],
     "shields": [
      "in v100",
@@ -818,12 +818,12 @@
      "F17: books/words.js J7 why.crampons"
     ],
     "levees": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull); its flood is held (KI4)"
+     "in v100",
+     "F30: Words book J7 (why), by its key"
     ],
     "meteorology": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F30: Words book J7 (why), by its key"
     ],
     "bandages": [
      "bring",
@@ -1985,7 +1985,7 @@
     ],
     "The ground remembers": [
      "bring",
-     "scorch marks and ruts: ruts and tracks are held (KI13–KI15) (misfits)"
+     "F30: the feature is in (the view frame, ruts); its Guide row waits for the Guide (Parked)"
     ],
     "Temple: Zeal": [
      "bring",
@@ -2021,7 +2021,7 @@
     ],
     "A computer decides to attack": [
      "bring",
-     "when a computer attacks (Lanchester), with the computers"
+     "F29: the feature is in (ai.js decideWar); its Guide row waits for the Guide (Parked)"
     ],
     "Trees stand in the way": [
      "bring",
@@ -2029,7 +2029,7 @@
     ],
     "The ground remembers the weather": [
      "bring",
-     "mud, snow and ice by the weather; v100 has wet, mud, snow cover and frozen (KI1, KI2, KI5, KI6) but not this wording"
+     "F30: the feature is in (mudAt); its Guide row waits for the Guide (Parked)"
     ],
     "Research comes in lines": [
      "bring",
@@ -2057,7 +2057,7 @@
     ],
     "The weather runs in spells": [
      "bring",
-     "weather in spells and its effects; ruts held (misfits)"
+     "F30: the feature is in (floor 6); its Guide row waits for the Guide (Parked)"
     ],
     "A wooden building catches fire": [
      "bring",
@@ -2109,7 +2109,7 @@
     ],
     "Difficulty": [
      "bring",
-     "difficulty turns the computers' minds; v100's Start has Easy / Normal / Hard"
+     "F29: the feature is in (D304); its Guide row waits for the Guide (Parked)"
     ],
     "Winning and losing": [
      "bring",

@@ -26,32 +26,32 @@
    "the grass texture's matrix over Mid's land picture; v100 bakes the blades into the ground (renderGround, D121)"
   ],
   "scarCv": [
-   "bring",
-   "the ground's memory: a layer under everything where people fell, buildings burned, lightning struck, the ground split; cleared each game (View)"
+   "in v100",
+   "F30: the view frame scarCv (D299)"
   ],
   "resetScars": [
-   "bring",
-   "clears the ground's memory each new game (with scarCv)"
+   "in v100",
+   "F30: renderGround, each map"
   ],
   "wearGround": [
-   "bring",
-   "bare worn earth round a finished building, painted once into the ground's memory (look: Colours)"
+   "in v100",
+   "F30: the view frame wear, from econ.js when a building is up"
   ],
   "scarFall": [
-   "bring",
-   "the dark mark where someone fell (with combat)"
+   "in v100",
+   "F30: the view frame fallen"
   ],
   "scarStrike": [
-   "bring",
-   "the scorch where lightning struck (v100 has the strikes, KW6, not the mark)"
+   "in v100",
+   "F30: floor 6 strike's blot"
   ],
   "scarCrack": [
    "bring",
-   "the cracks a sinkhole leaves (with the events)"
+   "F30: waits for the sinkhole (F31): its painter comes with its event (Parked)"
   ],
   "scarBurn": [
-   "bring",
-   "burnt ground and rubble where a building burned (with fire and combat)"
+   "in v100",
+   "F30: the view frame burnt"
   ],
   "drawOnce": [
    "cut",
@@ -418,8 +418,8 @@
    "F19+F20: combat.js (draw), sparkDraw"
   ],
   "WX_TINT": [
-   "bring",
-   "(Albert 11:16: bring, clean) a colour cast for each of Mid's weather kinds; v100's climate lays its own gloom (drawSky). Drought and blizzard: see misfits"
+   "in v100",
+   "F30: v100's gloom by intensity; the frost's cast C15 rime, D296 frost (drought waits for the hazard, Parked)"
   ],
   "tintC": [
    "in v100",
@@ -578,20 +578,20 @@
    "held: the small map (DICTIONARY V); its mirage and blizzard: see misfits"
   ],
   "drawFlood": [
-   "bring",
-   "held: the flood over the shore (KI4); see misfits"
+   "in v100",
+   "F30: maskFlood, floor 6 drawSkin"
   ],
   "drawSand": [
    "bring",
    "quicksand: a pale patch with ripples (with the events)"
   ],
   "drawLakeRipples": [
-   "bring",
-   "held: ripples on the lakes (DICTIONARY V); see misfits"
+   "in v100",
+   "F30: floor 6 marks (D297)"
   ],
   "drawRainRings": [
-   "bring",
-   "held: rain rings on the ground (DICTIONARY V); see misfits"
+   "in v100",
+   "F30: floor 6 marks (D298)"
   ],
   "drawFire": [
    "bring",
@@ -638,8 +638,8 @@
    "index.html RAIN"
   ],
   "wxT": [
-   "bring",
-   "(Albert 11:16: bring, clean) Mid's weather clock, the wind and the flash's state; v100's K holds the weather. The wind: see misfits"
+   "in v100",
+   "F30: v100's K holds the weather; the wind is K.wind (measured)"
   ],
   "FLASH_GAP": [
    "in v100",
@@ -654,12 +654,12 @@
    "index.html drawSky: rain, snow, bolts with forks, sheet flashes (QJ, QL); Mid's wind slant and blizzard and frost flakes: see misfits"
   ],
   "SKY": [
-   "bring",
-   "held: the sky band's colours by hour and weather; see misfits"
+   "in v100",
+   "F30: C15 sky"
   ],
   "drawSky": [
-   "bring",
-   "held: a band of sky along the top with clouds and the storm's front; see misfits"
+   "in v100",
+   "F30: floor 6 skyBand (D296)"
   ],
   "forestCv": [
    "cut",

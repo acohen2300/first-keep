@@ -248,21 +248,21 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | Temp book | Group | Parts | Lines | Characters | Bytes | Sorted (step 6) |
 |---|---|---|---|---|---|---|
 | capabilities.js | Element cards | 2 | 27 | 2,176 | 2,196 | 2 in v100, 0 bring, 0 cut, 0 parked |
-| numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 | 87 in v100, 38 bring, 13 cut, 1 parked |
+| numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 | 99 in v100, 26 bring, 13 cut, 1 parked |
 | tech.js | Ages and tech | 1 | 3,375 | 73,123 | 73,159 | 0 in v100, 4 bring, 2 cut, 0 parked |
 | words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 5 in v100, 11 bring, 1 cut, 0 parked |
-| core.js | Core | 2 | 957 | 47,164 | 47,714 | 137 in v100, 28 bring, 12 cut, 0 parked |
+| core.js | Core | 2 | 957 | 47,164 | 47,714 | 140 in v100, 25 bring, 12 cut, 0 parked |
 | paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | 36 in v100, 0 bring, 9 cut, 0 parked |
-| world.js | World | 7 | 1,095 | 52,496 | 53,361 | 7 in v100, 12 bring, 37 cut, 0 parked |
-| econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | 202 in v100, 16 bring, 10 cut, 0 parked |
+| world.js | World | 7 | 1,095 | 52,496 | 53,361 | 9 in v100, 10 bring, 37 cut, 0 parked |
+| econ.js | Orders and economy | 4 | 3,878 | 151,377 | 152,607 | 205 in v100, 13 bring, 10 cut, 0 parked |
 | combat.js | War | 3 | 1,523 | 61,958 | 62,375 | 56 in v100, 10 bring, 1 cut, 0 parked |
-| ai.js | Computers | 1 | 782 | 36,855 | 37,048 | 13 in v100, 17 bring, 1 cut, 0 parked |
+| ai.js | Computers | 1 | 782 | 36,855 | 37,048 | 26 in v100, 4 bring, 1 cut, 0 parked |
 | sprites.js | Art | 2 | 5,134 | 122,368 | 122,642 | 70 in v100, 10 bring, 3 cut, 0 parked |
-| display.js | View | 6 | 3,369 | 127,181 | 127,457 | 63 in v100, 70 bring, 34 cut, 0 parked |
+| display.js | View | 6 | 3,369 | 127,181 | 127,457 | 76 in v100, 57 bring, 34 cut, 0 parked |
 | touch.js | Touch | 1 | 669 | 21,388 | 21,512 | 29 in v100, 1 bring, 2 cut, 0 parked |
 | menu.js | Menus | 8 | 4,871 | 212,969 | 214,200 | 80 in v100, 123 bring, 21 cut, 0 parked |
 | save.js | Saving | 1 | 771 | 27,462 | 27,595 | 0 in v100, 17 bring, 1 cut, 0 parked |
-| sound.js | Sound | 1 | 478 | 14,907 | 15,043 | 19 in v100, 2 bring, 2 cut, 5 parked |
-| events.js | Events, camps, natives, peace | 4 | 1,636 | 67,062 | 67,392 | 40 in v100, 59 bring, 6 cut, 0 parked |
+| sound.js | Sound | 1 | 478 | 14,907 | 15,043 | 21 in v100, 0 bring, 2 cut, 5 parked |
+| events.js | Events, camps, natives, peace | 4 | 1,636 | 67,062 | 67,392 | 48 in v100, 51 bring, 6 cut, 0 parked |
 | start.js | Start | 1 | 750 | 12,347 | 12,467 | 2 in v100, 7 bring, 1 cut, 0 parked |
 | **all** | 18 temp books | 51 | 33,957 | 1,272,150 | 1,279,351 | 1435 of 1,435 pieces |

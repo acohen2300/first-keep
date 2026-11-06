@@ -34,20 +34,20 @@
    "the great lake round the Throne's island, radius 170, at the middle: v100 has the Throne (BS1) but no great lake"
   ],
   "SEASON_LEN": [
-   "bring",
-   "season 180, year, day 120 are D21, D22, D20 (the same); night sight 0.6 and the moon's 29.53-day month (Meeus) to bring"
+   "in v100",
+   "F30: D20–D22 the same; night sight and the month in D292"
   ],
   "EASY_SAFE": [
-   "bring",
-   "Easy's first six minutes without a raid; the save every 10 s goes with Saving"
+   "in v100",
+   "F29: D304 safe (Easy)"
   ],
   "DIFF": [
-   "bring",
-   "difficulty turns the computers' minds, never their stores: react, bold, opp, allyAt, gang, envoy"
+   "in v100",
+   "F29: D304 ai.diff"
   ],
   "DIFK": [
-   "bring",
-   "with DIFF"
+   "in v100",
+   "F29: D304 (by the Start card)"
   ],
   "ZOOM_MAX": [
    "in v100",
@@ -98,12 +98,12 @@
    "a correction for Mid's snapping at 45°: not needed"
   ],
   "PLAYERS": [
-   "bring",
-   "four computers with personalities (Raiders, Rivals, Fortress) and the Natives: v100 has two sides (D122)"
+   "in v100",
+   "F29: D122 (four sides; the Natives' place waits for the Throne) and D303 of"
   ],
   "FORT": [
-   "bring",
-   "with PLAYERS"
+   "in v100",
+   "F29: D303 of (side 3, the Fortress)"
   ],
   "AGES": [
    "in v100",
@@ -606,12 +606,12 @@
    "holding the Throne: 15 minutes, tithe, score, the island and causeways"
   ],
   "WAVE": [
-   "bring",
-   "attack waves"
+   "in v100",
+   "F29: D289 ai.wave"
   ],
   "PERS": [
-   "bring",
-   "the computers' three personalities"
+   "in v100",
+   "F29: D303 ai.pers"
   ],
   "TRADE": [
    "in v100",
@@ -666,8 +666,8 @@
    "shove, jolt, recoil, stagger by hand: v100 does these with real physics (impact, slide, sway: laws QBT, QBS; D166 jolt)"
   ],
   "CLIMATE": [
-   "bring",
-   "temperature, wetness, the sky's run: v100 has a climate (D99-D108); Mid's 51 lines to compare at step 7"
+   "in v100",
+   "F30: compared; v100's D99–D108 kept, one set; Mid's rut and shore in D294"
   ],
   "FIRE": [
    "bring",
@@ -794,12 +794,12 @@
    "F16: books/measure.js D215 (its chances summed), its words in J8"
   ],
   "WEATHER": [
-   "bring",
-   "weather each minute: v100 has its own chain (D102, D103); compare at step 7"
+   "in v100",
+   "F30: J18 the sky's news (v100's effects kept; Parked)"
   ],
   "WX_EVERY": [
-   "bring",
-   "with WEATHER"
+   "in v100",
+   "F30: D293 forecast step"
   ],
   "HAZARDS": [
    "bring",
@@ -822,8 +822,8 @@
    "no more than 33 buttons always on screen: a rule for the gate"
   ],
   "SAVE": [
-   "bring",
-   "a computer saving for an age"
+   "in v100",
+   "F29: D290 ai.save"
   ],
   "EV_MEAN": [
    "bring",

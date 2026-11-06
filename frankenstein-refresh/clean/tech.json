@@ -582,8 +582,8 @@
      "F19+F20: Tech book, by its key"
     ],
     "weathersigns": [
-     "bring",
-     "Weather signs (school, Classical): The next sky is told a minute ahead."
+     "in v100",
+     "F30: books/tech.js O205"
     ],
     "writing": [
      "in v100",
@@ -686,8 +686,8 @@
      "F17: books/tech.js O85 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "levees": [
-     "bring",
-     "Levees (library, Medieval): Floods stop short of your buildings. See misfits."
+     "in v100",
+     "F30: books/tech.js O206"
     ],
     "snowclear": [
      "in v100",
@@ -698,8 +698,8 @@
      "F17: books/tech.js O87 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "meteorology": [
-     "bring",
-     "Weather glass (library, Gunpowder): Fields give 10% more: farmers who plan by the forecast earn more."
+     "in v100",
+     "F30: books/tech.js O207"
     ],
     "bandages": [
      "bring",

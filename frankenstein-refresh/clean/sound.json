@@ -81,16 +81,16 @@
    "sound.js: hearing(), law QAX; v100 also undoes the 41° squash"
   ],
   "AMB": [
-   "bring",
-   "bird and cricket are in HX4; the wind (heard when it blows harder than 0.35) is not: it comes with the wind"
+   "in v100",
+   "F30: HX4 wind, gust"
   ],
   "ambT": [
    "in v100",
    "sound.js: ambT"
   ],
   "ambience": [
-   "bring",
-   "the wind line, with the wind; Mid's bird also waits for a tree with wood left (v100 sings from any tree)"
+   "in v100",
+   "F30: sound.js the wind line (HA4); the bird already sings only from a standing tree (v100's spent trees go)"
   ],
   "thunder": [
    "in v100",

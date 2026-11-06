@@ -244,15 +244,11 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E238 | combat.js | QAF a group's power: each one's health × its blow (Mid's dmgOf), the blow at least D194, over D193 per, a building-only kind at D193's bonly (Mid's unitPower and powerOf, one home) |
 | E239 | combat.js | a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; outnumbered it drains; at nothing it breaks and runs (QAO), the player told once in a while |
 | E240 | combat.js | the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of the player's wave |
-| E241 | ai.js | First Keep v100 · ai.js (floor 11): one brain for the computer's side, one personality (balanced). Lives alone; acts only through ECON and WAR, the same doors the menu uses. Every D.ai.beat it looks and does one round: jobs by need, people, homes, drop-offs, plots, the age, the army, the wave. |
+| E241 | ai.js | First Keep v100 · ai.js (floor 11): one brain for every computer's side, three personalities (D303: Raiders, Rivals, Fortress), Mid's think. Lives alone; acts only through ECON and WAR, the same doors as the player; it sees the whole map, as Mid's computers did (Albert, Nov 5). |
 | E242 | ai.js | the seat, and the hands it trains |
 | E243 | ai.js | the shells a side can pay for that tick a capability |
 | E244 | ai.js | each yield's camp: the drop-off that takes it in |
 | E245 | ai.js | a spot: the nearest free footprint to a point, searched in rings, kept off the home's own ring so the roads stay open |
-| E246 | ai.js | jobs by need: the yield whose share is most under its wanted share takes an idle villager, or one from the yield most over |
-| E247 | ai.js | people, homes, drop-offs, plots, the age |
-| E248 | ai.js | the army: the troop whose counters strike hardest, summed over the enemy's soldiers (Mid's bestCounter by vs), until the age's count stands |
-| E249 | ai.js | the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other side; a stalled wave goes home |
 | E250 | sound.js | First Keep v100 · sound.js (beside the stack): one player for every recipe in books/sound.js (H). Lives alone; hears the world only through FK's 'event' hook. |
 | E251 | sound.js | The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow lowers the air's top and rain masks the quiet (QBX). No sound is typed here. |
 | E252 | sound.js | each channel's volume steps, the one in use first (HX10) |
@@ -524,6 +520,45 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E519 | combat.js | Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies and a side whose scout found them; a foe who steps on one springs it (D280). |
 | E520 | combat.js | A trap sprung: caltrops spike each walker once a while and wear flat; the others go off once; a net takes a prisoner (not an engine); horses take the worst. |
 | E521 | combat.js | The archers' stake (Mid's STAKES, Agincourt): a horse that strikes a staked shooter is hurt, its charge ends, and it is thrown back. |
-| E522 | ai.js | The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll, by its balanced personality and normal difficulty, D285): losing, it asks peace; strong and idle, it gives notice; at war, it courts an ally; an ally helps a friend's town under attack when its own is safe; at peace with all, its army stands down to a share. |
+| E522 | ai.js | The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll): its personality's bold and the difficulty's envoy, allyAt and gang (D304), the rest D285: losing, it asks peace; strong and at peace with no war on, it gives notice; with a war on (or on Hard against the leader) it courts an ally; an ally helps a friend's town under attack, never at the cost of its own |
 | E523 | ai.js | Dynamic Diplomacy (Mid's LEAGUE, leagueTick): when one side runs far ahead, the others (not the player, not the leader's vassals) ally and make war on it; it breaks up when the lead falls back. |
 | E524 | index.html#the-things-drawn-each-frame-back-to-fr | A hidden trap is drawn flat on the ground from the Sprites book, in its side's shade or the foe's red; a site as a dashed ring; caltrops show a spike for each tread left (Mid's drawBld for traps). |
+| E525 | ai.js | what a side stands, raises, trains and has queued, asked of the things themselves |
+| E526 | ai.js | the by-need plan's eyes (QCM, QV): the seconds to the bell, what one more hand earns at the best find from home (a probe walks from the hall; wild: no plot), whether a plot pays its price back, each yield's hands, rate, income, shortfall and time, and the reorder point (the store runs out before its income can be rebuilt) |
+| E527 | ai.js | the army a side keeps: its personality's ceiling plus D291's armyAge an age, at most D226; at peace with every side, D285's stand of it (Mid's armyCap, armyAim, peaceAll) |
+| E528 | ai.js | the counter (QCN, Mid's bestCounter): among the soldiers it can train now, the best answer to what its foes field for its price, mixed with the next best so an army is never one kind; with no foe in the field, each in turn |
+| E529 | ai.js | a computer's turn, every D304 react s (Mid's think), in Mid's order: a site nobody raises, homes, drop-offs, plots, the age and its saving, the town's growth by payback, a scout, its buildings, towers, walls, a Wonder, priests and Zeal, medics, engines, caravans, its economy, spies, research, Muster and soldiers, then the hands by need and the war |
+| E530 | ai.js | shelter before it is needed: a Home (an Apartment once it can) when the people come within D152 of the room; one it cannot yet pay for is due, and the hands work toward it |
+| E531 | ai.js | a drop-off where D291's crew work a yield whose nearest find stands far from one |
+| E532 | ai.js | the shift to plots: one at a time, never more than the hands on its yield, when it beats the wild find and pays its price back in the time left; one it cannot yet afford is due |
+| E533 | ai.js | the age: once the town is big enough (D176) it saves for the next; a save once begun holds until the age is bought, and spends freely only when it has stalled (D290) |
+| E534 | ai.js | the town grows while one more villager pays its price in the time left (QCM), and not while it saves for the age unless food runs over; growing is a steady draw on the stores: a villager and its share of a home over its training |
+| E535 | ai.js | its personality's buildings in order (D303 build); while saving, only the first; a second barracks or place to train when every line is full |
+| E536 | ai.js | faith and care: priests with an army, Zeal on the soldiers fighting, medics (Mid's think) |
+| E537 | ai.js | engines to break what soldiers cannot, by D291's cycle and the age's late engine |
+| E538 | ai.js | research while not saving: its personality's list in order, each through the first step it waits on; with the list done, any step every D291 research-th turn |
+| E539 | ai.js | the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yield with the longest time to afford it (food first when the famine runway is short) |
+| E540 | ai.js | a hand moves to the bottleneck from a yield the goal does not need whose store does not then run out, or from one whose time stays under the bottleneck's after the move |
+| E541 | ai.js | with nothing short, the personality's mix: no stone and less gold in the Stone age, no iron before the Classical, a Wonder-builder a little of everything |
+| E542 | ai.js | a waiting villager goes to the first yield in need it can find work for, else the one paying most; then the war and the relations |
+| E543 | ai.js | the computers' economy (Mid's aiEconomy, without surplus selling, Albert 11:16 (5)): staff an idle shop, ventures with gold to spare over the age, trade posts on free stops, a Market, a Pasture, a workshop (the Raiders brew), caravans and their routes |
+| E544 | ai.js | the war (Mid's decideWar, QAF): a wave out is judged by its progress (D289): a blow or a step nearer; it charges once on contact, and goes home beaten or stalled; at home, the foe whose odds, bent by the opportunist's eye, best clear the personality's nerve |
+| E545 | ai.js | the wave sets out, its guard kept home; a few riders go for the foe's nearest drop-off to draw the defence apart; you are told when it is you |
+| E546 | index.html#drawn-once-in-the-view-frame | the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; the worn earth round every building standing is laid at once |
+| E547 | index.html#drawn-once-in-the-view-frame | the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so they cost nothing a frame; at a board point on the ground's picture |
+| E548 | index.html#drawn-once-in-the-view-frame | bare earth worn by feet round a finished building (not a field, a wall or a trap) |
+| E549 | index.html#drawn-once-in-the-view-frame | the dark where someone fell, wider for a big body, a blade's cut for a soldier |
+| E550 | index.html#drawn-once-in-the-view-frame | burnt ground and rubble where a building fell (not a wall) |
+| E551 | index.html#floor-6-climate | the moon (QB to first order, QC): it runs ahead of the sun by its phase on a declination that swings from the sun's at new to its opposite at full, so a full moon rises at sunset; its lit fraction (1 − cos i) ÷ 2 |
+| E552 | index.html#floor-6-climate | the sky told ahead, the sky's news, the flood and the ruts (D293–D295); the ground's marks laid when someone falls or a building falls |
+| E553 | index.html#floor-6-climate | the chain (QH) rolled ahead a forecast step for each step of Weather signs, never less than an hour; when the last rolled hour turns, its sign is told |
+| E554 | index.html#floor-6-climate | when the sky turns its news is told, with why in the chain's own odds (Mid's skyTurn and wxWhy) |
+| E555 | index.html#floor-6-climate | water over the shore while the flood stands (KI4); the mud a step meets: the wetness, deeper by water (pooling) and by traffic, the ruts' depth (passes ÷ n0)^0.4 (QS, D294) |
+| E556 | index.html#floor-6-climate | each land tile's distance to the inland water, once a map: the shore that pools and the land a flood covers |
+| E557 | index.html#floor-6-climate | the flood harms a finished building whose middle stands within its rise, unless its side has Levees; you are told |
+| E558 | index.html#floor-6-climate | marks on the water and the ground, and the sky band (D296–D298, Mid's drawLakeRipples, drawRainRings, drawSky) |
+| E559 | index.html#floor-6-climate | ripples drift on the lakes, inside the shore; none on ice |
+| E560 | index.html#floor-6-climate | rain rings sit on the ground, fixed to the world, fewer as the rain eases; only close up |
+| E561 | index.html#floor-6-climate | the horizon: a band of sky along the top of the glass, coloured by the hour and the weather |
+| E562 | index.html#floor-6-climate | clouds cross the band with the wind |
+| E563 | sound.js | the wind is heard as hard as it blows (HA4, HX4) |

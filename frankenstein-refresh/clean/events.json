@@ -160,16 +160,16 @@
    "the air's temperature from the year's and the day's swing; v100's climate() does it from the season's mean (D100) and the day's swing (D101) by the light"
   ],
   "wxWhy": [
-   "bring",
-   "why the sky turned, in the chain's own odds, shown under the news line"
+   "in v100",
+   "F30: floor 6 turned's why (J18)"
   ],
   "precip": [
    "cut",
    "whether the sky is falling rain or snow; v100's climate() knows what falls"
   ],
   "skyTurn": [
-   "bring",
-   "the next sky from the chain (v100's climate() already rolls QH each game hour, D102); to bring: the sky rolled ahead for the Weather signs research, and the news line when it turns"
+   "in v100",
+   "F30: index.html floor 6 ahead and turned"
   ],
   "climateTick": [
    "cut",
@@ -180,28 +180,28 @@
    "wetness (QP), snow and its degree-day melt (QO), ice (QQ), mud; v100's climate() does each by the same laws (D104, D105, D107, D108, D109)"
   ],
   "ruts": [
-   "bring",
-   "(Albert 11:16: bring, clean) the ruts' counts a square; held for later (KI15), nothing comes over now, see misfits"
+   "in v100",
+   "F30: floor 6 RUTS (D294)"
   ],
   "rutsAt": [
-   "bring",
-   "(Albert 11:16: bring, clean) the ruts at a place; held for later (KI15), nothing comes over now, see misfits"
+   "in v100",
+   "F30: floor 6 rutAt"
   ],
   "rutsOn": [
-   "bring",
-   "(Albert 11:16: bring, clean) a step deepens the ruts; held for later (KI15), nothing comes over now, see misfits"
+   "in v100",
+   "F30: floor 5 stride"
   ],
   "rutHeal": [
-   "bring",
-   "(Albert 11:16: bring, clean) the ruts dry back with time; held for later (KI15), nothing comes over now, see misfits"
+   "in v100",
+   "F30: floor 6 climate's heal beat"
   ],
   "rutOf": [
-   "bring",
-   "(Albert 11:16: bring, clean) rut depth as passes^0.4 (QS); held for later (KI15), nothing comes over now, see misfits"
+   "in v100",
+   "F30: floor 6 rutOf (QS)"
   ],
   "mudAt": [
-   "bring",
-   "(Albert 11:16: bring, clean) the mud at a place: v100's footing (QN, D106) reads the wet and the marsh; Mid's extra by the shore (pooling, KI3) and the ruts (KI15) are held, see misfits"
+   "in v100",
+   "F30: floor 6 mudAt, read by floor 5 footing"
   ],
   "groundNeed": [
    "in v100",

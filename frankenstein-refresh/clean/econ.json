@@ -478,12 +478,12 @@
    "F19+F20: combat.js dress, formHome"
   ],
   "DF": [
-   "bring",
-   "difficulty (Easy, Hard: later)"
+   "in v100",
+   "F29: D304 ai.diff by the Start card, ai.js DF"
   ],
   "react": [
-   "bring",
-   "difficulty: seconds between a computer's decisions; v100 has D.ai.beat"
+   "in v100",
+   "F29: D304 react, ai.js"
   ],
   "died": [
    "in v100",
@@ -834,8 +834,8 @@
    "econ.js FK.on('tick')"
   ],
   "aiEconomy": [
-   "bring",
-   "the computers' Market, workshops, caravans and trade posts (Computers)"
+   "in v100",
+   "F29: ai.js economy (no surplus selling)"
   ],
   "shareOf": [
    "in v100",

@@ -442,16 +442,16 @@
    "the sun's height and direction (laws QA, QAT) and the night from it"
   ],
   "moonVec": [
-   "bring",
-   "the moon: its place, phase and light (Meeus)"
+   "in v100",
+   "F30: floor 6 sunAlt (K.moonAlt), the shadow in floor 7"
   ],
   "moonPhase": [
-   "bring",
-   "the moon: its place, phase and light (Meeus)"
+   "in v100",
+   "F30: floor 6 moonPhase (D292)"
   ],
   "moonLight": [
-   "bring",
-   "the moon: its place, phase and light (Meeus)"
+   "in v100",
+   "F30: floor 6 K.moonLit (QC), read by the night, its sight (QCO) and the shadow"
   ],
   "civOf": [
    "bring",

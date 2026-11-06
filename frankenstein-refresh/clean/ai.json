@@ -14,56 +14,56 @@
    "index.html, the movables floor, findNear (the nearest find of a kind)"
   ],
   "bestCounter": [
-   "bring",
-   "v100/ai.js round picks the counter to what the enemy fields most from D180 by D138 \"vs\"; Mid scores every kind it can train by who beats whom over its cost, by age and civ, and mixes the best two so an army is never one kind"
+   "in v100",
+   "F29: ai.js bestCounter (QCN, D291 counter)"
   ],
   "timeLeft": [
-   "bring",
-   "seconds to the bell (D134): the horizon of the by-need plan"
+   "in v100",
+   "F29: ai.js left (the bell, ECON.bell)"
   ],
   "rateFrom": [
-   "bring",
-   "what one more worker earns on a yield from home (the best free find, walk and crowd counted, Charnov): with the by-need plan"
+   "in v100",
+   "F29: ai.js rateFrom (a probe from the hall; econ.js bestFind takes a wild probe)"
   ],
   "goalOf": [
-   "bring",
-   "the personality's next goal (the age, a building, an army wave) and its cost: with the by-need plan and the personalities"
+   "in v100",
+   "F29: ai.js goalOf"
   ],
   "needOf": [
-   "bring",
-   "for each yield: hands, rate, income, shortfall against the goal, time to afford it; v100/ai.js round uses a fixed share by age (D151) instead"
+   "in v100",
+   "F29: ai.js needOf (QCM)"
   ],
   "runsOut": [
-   "bring",
-   "the reorder point (the famine runway): a store that runs out before its income can be rebuilt: with the by-need plan"
+   "in v100",
+   "F29: ai.js runsOut (QCM)"
   ],
   "famineNear": [
-   "bring",
-   "food runs out first: with runsOut"
+   "in v100",
+   "F29: ai.js famineNear"
   ],
   "PLOTS": [
-   "bring",
-   "which plot makes which yield, and how far from the Town Center a plot goes (60 to 170): with the shift to plots; v100 builds farms only (D160, D161)"
+   "in v100",
+   "F29: D300 ai.plots (the quarry waits for the Quarry's work, Parked)"
   ],
   "plotPays": [
-   "bring",
-   "the shift to plots: a plot is built when it beats the wild find and pays its cost back in the time left (marginal value, payback)"
+   "in v100",
+   "F29: ai.js plotPays (QCM)"
   ],
   "peaceAll": [
    "in v100",
    "F25+F28: ai.js peaceAll (the army stands down to D285 stand)"
   ],
   "armyAim": [
-   "bring",
-   "the army a side keeps: its cap, or the stand-down share at peace: with armyCap and diplomacy"
+   "in v100",
+   "F29: ai.js aim (D285 stand)"
   ],
   "firstNeed": [
    "bring",
    "the first research a wanted one waits on: with the tech tree"
   ],
   "think": [
-   "bring",
-   "Mid's computer turn: by-need jobs, homes, camps, plots, saving for the age, the Market, the Wonder, priests, medics, siege, caravans, spies, the army mix, finds, war, by personality (PERS). v100/ai.js round already does jobs, homes, camps, farms, the age, the army and the wave for one balanced side; the rest comes, asking by tick · Albert 11:16: without its surplus selling (cut for everyone)"
+   "in v100",
+   "F29: ai.js think, by personality (D303, D291), without surplus selling (cut, 11:16 (5)); its loot, Throne, hire and crown parts wait with their features (Parked)"
   ],
   "aiDiplomacy": [
    "in v100",
@@ -74,8 +74,8 @@
    "F25+F28: ai.js allyDuty"
   ],
   "armyCap": [
-   "bring",
-   "the army a side keeps: the personality's cap plus 10 an age, to ARMYMAX; v100 has soldiers by age (D154)"
+   "in v100",
+   "F29: ai.js cap (D303 armyCap, D291 armyAge, D226)"
   ],
   "lootRun": [
    "bring",
@@ -98,8 +98,8 @@
    "combat.js WAR.waves and WAR.attack; the stalled wave goes home by D156 (v100 ai.js)"
   ],
   "decideWar": [
-   "bring",
-   "when and whom to attack, by odds against the personality's nerve: the opportunist, Easy's safe start, Hard waiting for winter, a rival's Wonder or the Throne at once, riders on the foe's camps; v100/ai.js round sends one wave at Lanchester odds D155"
+   "in v100",
+   "F29: ai.js decideWar (D289; Hard's hazard winter wait and raid wait for the hazards, F31)"
   ],
   "LEAGUE": [
    "in v100",
@@ -115,7 +115,7 @@
   ],
   "storesOf": [
    "bring",
-   "a side's whole store: with the B side's greed (AB)"
+   "F29: not brought: only Mid's A/B test's B side read it (greed), and v100's computers are one kind (Parked)"
   ],
   "gapOnRoad": [
    "in v100",

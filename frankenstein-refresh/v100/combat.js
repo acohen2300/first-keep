@@ -81,7 +81,7 @@ function recall(side) { waves[side] = null; homeAll(orders(side)); }
 const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { const room = t && D.trade.guard - guardsOf(t).length; S.filter((u) => armed(u) && u.esc !== t).filter((u, i) => !t || i < room).forEach((u) => Object.assign(u, { esc: t, home: t })); }; // E493
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
 function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
-function attack(side, k) { const army = orders(side); if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; dress(army, k); if (side === ME) FK.fire('event', 'march', army[0]); return army.length; }
+function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; dress(army, k); if (side === ME) FK.fire('event', 'march', army[0]); return army.length; }
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
 // E392
 function dress(S, k, form, drill) { const [s0] = S, shape = form || formOf(s0), [tx, ty] = FK.tileMid(k), h = home(s0.side) || { bx: tx, by: ty }, [fx, fy] = (drill && drill.f) || dir(tx - h.bx, ty - h.by), n = S.length, slow = Math.min(...S.filter((u) => !engine(u)).map((u) => FK.stat(u.code, u.side, 'spd')));
@@ -186,8 +186,8 @@ function reinforcePlan(m) { const S = mUnits(m); if (!S.length) return null; con
 function join(S, m) { const O = order(S, null, kOf(centreOf(mUnits(m)))); if (!O) return; ORD.delete(O); for (const u of S) u.ord = m.ord; }
 // E418
 const ofKind = (cls) => sendable().filter((u) => clsOf(u.code) === cls), aimK = (aim) => (aim.t ? kOf(aim.t) : aim.k), wait = (k) => Math.ceil(Math.max(K.t, AT[k] ?? K.t) - K.t);
-const chargeWhy = (S) => (!S.some((u) => !stat(u).bonly) ? WO.why.charge : AT.charge > K.t ? WO.why.winded.replace('{n}', wait('charge')) : '');
-function charge(S) { AT.charge = K.t + CH.cd; for (const u of S) if (!stat(u).bonly) { u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } }
+const chargeWhy = (S) => (!S.some((u) => !stat(u).bonly) ? WO.why.charge : AT['charge' + ME] > K.t ? WO.why.winded.replace('{n}', wait('charge' + ME)) : '');
+function charge(S) { const [s0] = S; AT['charge' + s0.side] = K.t + CH.cd; for (const u of S) if (!stat(u).bonly) { u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } }
 function fallBack(S) { const h = home(ME); if (!h || !S.length) return false; for (const u of S) { const f = nearest(u, FB.look), [dx, dy] = f ? dir(u.bx - f.bx, u.by - f.by) : dir(h.bx - u.bx, h.by - u.by), k = FK.tileAt(u.bx + dx * FB.back * T, u.by + dy * FB.back * T);
   Object.assign(u, { fb: K.t + FB.secs, target: null, focus: null, ord: null, sent: false }); march(u, FK.walkable(k) ? k : u.k); } return true; }
 const DIRECTS = { // E419

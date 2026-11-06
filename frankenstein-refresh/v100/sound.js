@@ -47,6 +47,7 @@ FK.on('event', (name, t, u) => {
 // E265
 FK.on('tick', (dt) => { if (!AC || (ambT -= dt) > 0) return; ambT = 1;
   const share = Math.min(1, FK.K.snow / 5); air.frequency.setTargetAtTime(HB.muffle.open * (HB.muffle.snow / HB.muffle.open) ** share, AC.currentTime, 2); // E266
+  const wind = Math.abs(FK.K.wind) / D.weather.wind.most; if (wind > HB.amb.wind && Math.random() < wind * HB.amb.gust) play('wind'); // E563
   if (FK.season() === 3) return; const [cw, ch] = FK.size(), z = cam.z, day = FK.K.alt > 0;
   if (day) { const T = []; for (const t of FK.things()) if (t.kind === 'tree' && Math.abs(t.vx - cam.x) < cw / 2 / z && Math.abs(t.vy - cam.y) < ch / 2 / z && T.push(t) >= HB.amb.singers) break;
     if (T.length && Math.random() < 1 - Math.exp(-HB.amb.bird * T.length)) play('bird', T[Math.floor(Math.random() * T.length)]); }

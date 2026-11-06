@@ -388,7 +388,7 @@ WALLS = """(() => { const D = FK.D, E = ECON, N = FK.N, out = {}, [ME, FOE] = D.
     const t = E.plan(ME, HOME, ...spot(HOME, h, 8)), near = vs.filter((v) => E.jobOf(v) && E.jobOf(v) !== 'build').sort((a, b) => Math.hypot(a.bx - t.bx, a.by - t.by) - Math.hypot(b.bx - t.bx, b.by - t.by))[0], old = near.target;
     E.autoBuilder(ME, t); const sent = near.target === t && near.was.back && near.was.t === old; let q = 0; while (t.done < 1 && q++ < 9000) FK.sim(0.1); FK.sim(0.1);
     out.pulled = { sent, built: t.done >= 1, back: near.target === old || E.jobOf(near) === 'wood', clear: near.was === null, none }; }
-  { FK.reset(); const s = FK.SIDES[FOE], h = FK.seatOf(FOE); s.age = 1; s.store.stone = 5000; s.store.wood = 5000; const plan = AI.wallPlan(h); AI.round(FOE);
+  { FK.reset(); const s = FK.SIDES[FOE], h = FK.seatOf(FOE); s.age = 1; s.store.stone = 5000; s.store.wood = 5000; const plan = AI.wallPlan(h); AI.think(FOE);
     out.ring = { h: [h.i, h.j, h.n], mid: FK.MID / D.tile, plan: plan.map(([k, c]) => [...at(k), c === GATE ? 'gate' : 'wall']), laid: FK.things().filter((t) => t.side === FOE && E.wallish(t)).map((t) => [t.i, t.j, FK.has(t, 'Gate') ? 'gate' : 'wall']), pieces: D.ai.walls.pieces }; }
   out.N = N; return out; })()"""
 MIDWALLS = r"""return box([basics, units, blds, tech, tuning.match(/const BUILDER_POW = [\d.]+;/)[0], tuning.match(/const LANE = \d+;/)[0], tuning.match(/const HOME = \{[^}]*\};/)[0], cut(tuning, 'const WALL_R', '\n'),
@@ -518,10 +518,6 @@ def proof():   # each planted break in a copy of the build must stop the gate, n
         assert a in s, f'plant {key}: {a} not found'; open(f'{t}/v/{f}', 'w').write(s.replace(a, b, 1))
         r = subprocess.run([sys.executable, t + '/v/index.py'], capture_output=True, text=True); shutil.rmtree(t)
         ok('t-proof', r.returncode == 1 and (f'[{key}]' in r.stdout or (key == 'seals' and '[permit] law:QA' in r.stdout)), f'{key}: {r.stdout[-200:]}')
-async def ai(b):   # the computer's army building, on a page of its own on the seed: the bell test before restarts the shared page, so this game starts clean (F16); 900 s since F23's first jobs (its walls come first on this seed)
-    pg, errs = await fresh(b)
-    got = await pg.evaluate("(() => { FK.reset(); for (let i = 0; i < 9000; i++) FK.sim(0.1); const first = FK.D.ai.raise[0].code; return [FK.seed(), FK.things().some((t) => t.side === FK.D.players[1] && t.code === first)]; })()")
-    ok('t-ai', got[1] and not errs, [got, errs[:2]]); await pg.close()
 # The pace (F17, F17b, QCB): five kinds of v100 walker and a wolf on dry, flat, firm ground in still air, plain, with a full load and sick, with no research, Roads, Field drains,
 # Snow clearing + Oiled cloaks + Forced marches, Crampons, and Roads with Field drains: each one's pace over its walk is Mid's frozen paceOf under a clear sky (its season at rest:
 # the season's own speeds are out; a full load is Mid's 0.9 to a ten-thousandth, by W24), and each one's mud and snow costs are Mid's fxv under the effects law (two cuts, one on what
@@ -764,7 +760,7 @@ ALJS = r"""(() => { const D = FK.D, [me, foe] = D.players, out = {}, sim = (t) =
   fresh(); const H = tick('House', 'Seat'); FK.SIDES[me].store.wood = 1e4; for (const u of ECON.villagersOf(me)) ECON.idle(u); const [i, j] = spot(H, me), site = ECON.plan(me, H, i, j); sim(1.5); out.sent = ECON.villagersOf(me).some((u) => u.target === site); sim(90); out.built = site.done;
   let far = null; for (let k = 0; k < FK.N * FK.N && !far; k += 7) { const x = k % FK.N, y = (k - x) / FK.N; if (ECON.placeWhy(me, H, x, y) === W.say.reach) far = [x, y]; } out.refused = !!far;
   if (far) { const s3 = FK.build(H, far[0], far[1], FK.SIDES[me].col); s3.done = 0; s3.hp = 1; s3.hpMax = WAR.hpMax(s3); sim(1.5); out.told = said.some((m) => m.startsWith(W.say.site.split('{')[0])) && !ECON.villagersOf(me).some((u) => u.target === s3); }
-  fresh(); sim(5); const fh = FK.seatOf(foe), fb = FK.things().filter((t) => t.kind === 'bld' && t.side === foe && t !== fh), was = { ...FK.SIDES[me].store }, fs = { ...FK.SIDES[foe].store }, a = FK.spawn(kind('Foot'), me, near(fh, 9)[0], FK.rng);
+  fresh(); sim(5); for (const q of D.players) if (q !== me && q !== foe) ECON.fall(q); FK.SIDES[me].capA = null; const fh = FK.seatOf(foe), fb = FK.things().filter((t) => t.kind === 'bld' && t.side === foe && t !== fh), was = { ...FK.SIDES[me].store }, fs = { ...FK.SIDES[foe].store }, a = FK.spawn(kind('Foot'), me, near(fh, 9)[0], FK.rng);
   fh.hp = 1e-9; WAR.hit(a, fh); const s0 = FK.SIDES[me], got = ECON.YIELDS.map((y) => s0.store[y] - was[y]); FK.sim(0.1);
   out.fall = { got, fs, blds: fb.map((t) => ({ kind: t.code, hp: t.hp })), keep: fh.code, capA: s0.capA, left: ECON.YIELDS.map((y) => FK.SIDES[foe].store[y]), end: end(), gone: !FK.units().some((u) => u.side === foe) && !FK.things().some((t) => t.side === foe),
     spent: s0.ledger.out.research || 0, gathered: s0.gathered, units: FK.units().filter((u) => u.side === me).map((u) => ({ kind: u.code, army: FK.has(u, 'Fight') && !FK.has(u, 'Gather') })), mine: FK.things().filter((t) => t.kind === 'bld' && t.side === me && t.done >= 1).map((t) => t.code), score: ECON.score(me) };
@@ -790,8 +786,8 @@ async def alarm(b):   # the Alarm and the end, with the three playability fixes
     codes = [c for c, e in SHELLS.items() if e['layer'] == 120]; looks = [SHELLS[c]['look'] for c in codes]; tower = next(c for c in MEASURE['hold'] if 'Seat' not in SHELLS[c]['ticks'] and c in MEASURE['tower'])
     sb = keyed('sides'); wild = sb['beasts'] + [c for g in sb['groups'].values() for c in g]
     pg, errs = await fresh(b, 1500); v = await pg.evaluate(ALJS.replace('CODES', json.dumps(codes)).replace('WILD', json.dumps(wild)).replace('TOWER', json.dumps(tower))); await pg.close()
-    me, foe = MEASURE['players']; mid, err = frozen({'basics': '01-rules-basics', 'units': '02-rules-units', 'blds': '03-rules-buildings', 'tuning': '06-rules-tuning', 'core8': '08-core', 'core': '12-sim-core', 'fight': '16-sim-fight', 'emg': '40-emergency'}, MIDAL,
-        {'v': v, 'looks': looks, 'cost': MEASURE['cost'], 'players': MEASURE['players'], 'me': me, 'foe': foe}); mid = mid or {}
+    me, foe = MEASURE['players'][:2]; mid, err = frozen({'basics': '01-rules-basics', 'units': '02-rules-units', 'blds': '03-rules-buildings', 'tuning': '06-rules-tuning', 'core8': '08-core', 'core': '12-sim-core', 'fight': '16-sim-fight', 'emg': '40-emergency'}, MIDAL,
+        {'v': v, 'looks': looks, 'cost': MEASURE['cost'], 'players': [me, foe], 'me': me, 'foe': foe}); mid = mid or {}
     m, n, F, f = mid.get('nums') or {}, MEASURE, v['fall'], mid.get('fell') or {}; DG, FL, AL = n['danger'], n['flee'], n['alarm']; ten = lambda d, ks, M: all(d[k] * 10 == M[k] for k in ks)
     nums = bool(m) and ten(DG, ('near', 'reach', 'mem', 'far'), m['DANGER_R']) and [DG['secs'], DG['keep']] == [m['DANGER_R']['secs'], m['DANGER_R']['keep']] and ten(FL, ('flee', 'clear'), m['SHELTER']) and [FL['raid'], FL['hurt']] == [m['SHELTER']['raid'], m['SHELTER']['hurt']] \
         and [AL['line'] * 10, AL['row'] * 10, AL['perRow'], AL['behind'] * 10, AL['square'] * 10] == [m['EMG'][k] for k in ('line', 'row', 'perRow', 'behind', 'square')] and n['wonderHold'] == m['WONDER_HOLD'] and n['fallen']['share'] == m['SHARE_FALLEN'] and n['plunder'] == m['PLUNDER'] and n['score'] == m['SCORE'] \
@@ -851,7 +847,7 @@ async def troops(b):   # Teach, prisoners, priests, medics, Zeal and spies (F24)
     got = [nums, tech, pairs, lesson, held, zeal, conv, heal, spies, not errs]
     ok('t-troops', all(got), [got, v, {k: m.get(k) for k in ('teach', 'ransom', 'seen', 'heal')}, errs[:2], err[-400:]])
 TRADEJS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}, said = [], sim = (t, pin) => { for (let i = 0; i < t * 10; i++) { if (pin) pin(); FK.sim(0.1); } }, by = (f) => Object.keys(FK.SH).find(f), tick = (t) => by((c) => FK.SH[c].ticks.includes(t) && FK.SH[c].layer === 110), TK = (k) => Object.keys(BOOKS.tech).find((c) => BOOKS.tech[c].key === k);
-  const fresh = () => { FK.reset(); Object.assign(FK.K, { rain: 0, snowing: 0, temp: 10 }); said.length = 0; for (const s of D.players) { Object.assign(FK.SIDES[s].store, { food: 1e4, wood: 1e4, gold: 1e4, stone: 1e4, iron: 1e4 }); FK.SIDES[s].age = 4; E.villagersOf(s).forEach(E.idle); } }; FK.on('say', (m) => { said.push(m); });
+  const fresh = () => { FK.reset(); Object.assign(FK.K, { rain: 0, snowing: 0, temp: 10 }); said.length = 0; for (const s of [me, foe]) { Object.assign(FK.SIDES[s].store, { food: 1e4, wood: 1e4, gold: 1e4, stone: 1e4, iron: 1e4 }); FK.SIDES[s].age = 4; E.villagersOf(s).forEach(E.idle); } }; FK.on('say', (m) => { said.push(m); });
   const put = (code, side) => { const h = FK.seatOf(side); for (let d = 8; d < 60; d++) for (const [i, j] of [[h.i + d, h.j], [h.i - d, h.j], [h.i, h.j + d], [h.i, h.j - d]]) if (E.canPlace(code, i, j, side)) { const t = FK.build(code, i, j, FK.SIDES[side].col); if (t) { Object.assign(t, { side, done: 1 }); t.hp = t.hpMax = WAR.hpMax(t); return t; } } };
   const MKT = by((c) => FK.SH[c].ticks.includes('Trade') && FK.SH[c].layer === 110), st = () => FK.SIDES[me].store, gold = () => st().gold;
   // the stops, and the four buildings' numbers
@@ -863,7 +859,7 @@ TRADEJS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}
   out.market = { gold: g, stock: { ...E.stock() } }; const t0 = FK.K.t; let n = 0; while (!FK.every(D.beats.slow) && n++ < 200) FK.sim(0.1); out.drift = { stock: { ...E.stock() }, held: n < 200 };
   // a caravan's run to a stop that wants beer, the stop held by the foe's post (the keeper's cut)
   fresh(); const m2 = put(MKT, me); Object.assign(st(), { cloth: 12, beer: 5, food: 610, wood: 700, stone: 0, iron: 0, gold: 0 }); const stop = E.stops().find((f) => f.want === 'beer');
-  const post = FK.build(by((c) => FK.SH[c].ticks.includes('Post')), ...[stop.k % FK.N, Math.floor(stop.k / FK.N)], FK.SIDES[foe].col); Object.assign(post, { side: foe, done: 1 }); WAR.treaty(me, foe, 'peace');
+  const post = FK.build(by((c) => FK.SH[c].ticks.includes('Post')), ...[stop.k % FK.N, Math.floor(stop.k / FK.N)], FK.SIDES[foe].col); Object.assign(post, { side: foe, done: 1 }); for (const q of D.players) if (q !== me) WAR.treaty(me, q, 'peace');
   const cv = FK.spawn(D.trains[m2.code][0], me, FK.tileAt(m2.bx, m2.by + (m2.n / 2 + 2) * D.tile), FK.rng); const est = E.estPay(me, stop, m2), load = E.cargo(me, stop, m2), fg = ~~FK.SIDES[foe].ledger.in.trade;
   E.setRoute(cv, stop, false, false); let left = 0, sold = null; for (let i = 0; i < 6000 && cv.route; i++) { FK.sim(0.1); if (cv.leg === 'back' && !left) [left, sold] = [gold(), { ...E.stock() }]; }
   out.run = { d: Math.hypot(stop.bx - m2.bx, stop.by - m2.by), want: stop.want, load, est, got: left, cut: FK.SIDES[foe].ledger.in.trade - fg, owner: stop.owner, stock: sold, home: !cv.route, store: { cloth: st().cloth, beer: st().beer, food: st().food, wood: st().wood } };
@@ -947,7 +943,7 @@ REALMJS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}
   fresh(); const pit = put(look('pit'), foe), hid0 = FK.fire('hide', pit), sc = mk(look('scout'), me, pit.bx + 4 * D.tile, pit.by); WAR.traps(); const hid1 = FK.fire('hide', pit), walker = mk(SP, me, pit.bx, pit.by); WAR.traps(); out.pit = [hid0, hid1, !!pit.gone, walker.hp === walker.hpMax];
   // war after its notice; an envoy's answers
   fresh(); WAR.treaty(me, foe, 'peace'); out.notice = [E.setRel(me, foe, 'war'), E.noticeLeft(me, foe)]; sim(29); out.notice.push(WAR.stance(me, foe)); sim(2); out.notice.push(WAR.stance(me, foe));
-  const answer = (who, ask, setup) => { fresh(); setup(); const u = { ask, to: foe, side: me, job: 'envoy' }, o = [WAR.odds(WAR.armyOf(me), foe), WAR.odds(WAR.armyOf(foe), me)], g = FK.SIDES[me].store.gold; said.length = 0; E.judgeEnvoy(foe, me, u); return { who, ask, odds: o, said: said.slice(), stance: WAR.stance(me, foe), ally: FK.SIDES[foe].ally, paid: g - FK.SIDES[me].store.gold, back: u.job }; };
+  const answer = (who, ask, setup) => { fresh(); for (const q of D.players) if (q !== me && q !== foe) WAR.treaty(foe, q, 'peace'); setup(); const u = { ask, to: foe, side: me, job: 'envoy' }, o = [WAR.odds(WAR.armyOf(me), foe), WAR.odds(WAR.armyOf(foe), me)], g = FK.SIDES[me].store.gold; said.length = 0; E.judgeEnvoy(foe, me, u); return { who, ask, odds: o, said: said.slice(), stance: WAR.stance(me, foe), ally: FK.SIDES[foe].ally, paid: g - FK.SIDES[me].store.gold, back: u.job }; };
   const army = (side, n) => { const k = FK.seatOf(side); for (let i = 0; i < n; i++) mk(SP, side, k.bx + (4 + i % 4) * D.tile, k.by + (4 + Math.floor(i / 4)) * D.tile); };
   out.answers = [answer('weak', 'ally', () => { WAR.treaty(me, foe, 'peace'); army(foe, 8); }), answer('even', 'ally', () => { WAR.treaty(me, foe, 'peace'); army(me, 8); army(foe, 8); }), answer('yours', 'ally', () => { WAR.treaty(me, foe, 'ally'); FK.SIDES[foe].ally = me; FK.SIDES[me].ally = foe; army(me, 8); }),
     answer('truce', 'peace', () => { WAR.treaty(me, foe, 'war'); army(foe, 30); }), answer('free', 'peace', () => { WAR.treaty(me, foe, 'war'); army(me, 30); })];
@@ -1004,7 +1000,63 @@ async def realm(b):   # the war camp, field traps, relations and vassals (F25+F2
     gift = bool(m) and v['gifts'][0] == m['gifts']
     got = [nums, rows, lay, camp, heal, supply, traps, notice, ans, vas, gift, not errs]
     ok('t-realm', all(got), [got, {k: v[k] for k in ('camp', 'heal', 'supply', 'eat', 'unfed', 'caltrops', 'pit', 'notice', 'gifts')}, v['answers'], v['vassal']['beats'][::15], {k: m.get(k) for k in ('heal', 'supply', 'caltrops', 'pit', 'notice', 'answers', 'gifts')}, (m.get('vassal') or {}).get('beats', [])[::15], errs[:2], err[-800:]])
-PAGED = {'t-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+# The computers' minds and the sky, the moon and the ground (F29+F30): Mid's PERS, PLAYERS, WAVE, SAVE, DIFF, EASY_SAFE, SYNODIC, NIGHT_SIGHT, CLIMATE.rut, CLIMATE.shore and
+# EVENTS.flood in the books; a computer's plan by need, sampled each minute over four minutes of its own play, is Mid's frozen needOf and runsOut fed the same hands, rates, stores,
+# goal and draw; the moon's phase and light at five times and the night's sight are Mid's moonPhase, moonLight and sightClear's night; a walker wears the ground a unit-second a
+# second and three of Mid's frozen rutHeal beats heal a square as Mid's; rutOf and mudAt are Mid's; a flood blocks the land within its rise unless Levees, and harms a building there
+MINDJS = r"""(() => { const D = FK.D, K = FK.K, out = {}, side = D.players[1], sim = (t) => { for (let i = 0; i < t * 10; i++) FK.sim(0.1); }, vil = D.trains[FK.seatOf(0).code][0];
+  FK.reset(); out.plans = []; for (let m = 0; m < 4; m++) { sim(60); const vs = ECON.villagersOf(side), s = FK.SIDES[side], cost = ECON.ageCost(side) || {}, draw = { food: vs.length * 0.012, wood: 0.05 }, plan = AI.needOf(side, vs, cost, draw);
+    out.plans.push({ jobs: vs.map((v) => [ECON.jobOf(v), ECON.forageNow(v) || 0]), rate: Object.fromEntries(ECON.YIELDS.map((y) => [y, AI.rateFrom(side, y)])), store: { ...s.store }, cost, draw, plan,
+      famine: AI.runsOut(side, 'food', plan.food, plan.food.n, draw.food), react: D.ai.diff[MENU.S.opt.diff].react, carry: FK.stat(vil, side, 'carry') }); }
+  out.minds = D.players.slice(1).map((p) => [AI.mind[p].goal || null, ECON.villagersOf(p).length, FK.things().filter((t) => t.kind === 'bld' && t.side === p).length]);
+  out.moon = [0, 1000, 5000, 12345, 40000].map((t) => { K.t = t; FK.sim(0); return [FK.moonPhase(), K.moonLit]; });
+  out.sight = [[-20, 0], [-20, 1], [-6, 0.5], [10, 1]].map(([a, k]) => { K.alt = a; K.moonLit = k; return FK.nightSight(); });
+  FK.reset(); const us = FK.units(), u = ECON.villagersOf(0)[0]; us.splice(0, us.length, u); FK.RUTS.fill(0); const far = [8, -8, 8 * FK.N, -8 * FK.N].map((d) => u.k + d).find(FK.walkable); FK.go(u, far); let moved = 0;
+  for (let i = 0; i < 200 && u.path; i++) { FK.step(0.1); moved += u.mps > 0; } out.wear = [FK.RUTS.reduce((a, b) => a + b, 0), moved * 0.1];
+  FK.RUTS.fill(0); FK.RUTS[0] = 300; sim(25); out.heal = FK.RUTS[0];
+  const land = (ok) => { for (let k = 0; k < FK.N * FK.N; k++) if (FK.H[k] > 0 && FK.walkable(k) && ok(FK.BANK[k], k)) return k; return -1; }, kw = land((b) => b === 2), kd = land((b) => b > D.ruts.near + D.flood.rise);
+  out.ruts = [0, 30, 150, 300, 900].map((n) => { FK.RUTS.fill(0); FK.RUTS[FK.rutAt(kw)] = n; FK.RUTS[FK.rutAt(kd)] = n; K.wet = 0.4; return [n, FK.rutOf(kw), FK.mudAt(kw), FK.mudAt(kd)]; });
+  FK.reset(); FK.RUTS.fill(0); const i0 = kw % FK.N, j0 = (kw - i0) / FK.N, dry = land((b, k) => b > D.flood.rise + 1 && Math.abs((k % FK.N) - i0) < 12 && Math.abs(Math.floor(k / FK.N) - j0) < 12), w = FK.spawn(vil, 0, dry, FK.rng);
+  const path = () => { const ok = FK.go(w, kw); w.path = null; return ok; }, home = Object.keys(D.cost).find((c) => FK.has({ code: c }, 'Line')), lev = Object.keys(BOOKS.tech).find((c) => BOOKS.tech[c].key === 'levees');
+  let b = null; for (let k = 0; k < FK.N * FK.N && !b; k++) if (FK.BANK[k] && FK.BANK[k] < D.flood.rise && FK.H[k] > 0) { b = FK.build(home, k % FK.N, (k - (k % FK.N)) / FK.N, FK.SIDES[0].col); if (b && !(FK.BANK[FK.tileAt(b.bx, b.by)] < D.flood.rise - b.n / 2)) { FK.unbuild(b); b = null; } } if (b) { b.hpMax = b.hp = FK.stat(home, 0, 'hp'); }
+  out.flood = { before: path(), kw, dry, b: !!b }; FK.flood(); out.flood.wet = FK.flooded(kw); out.flood.during = path(); const hp0 = b && b.hp; sim(10.5); out.flood.lost = b ? (hp0 - b.hp) / (b.hpMax * D.flood.hit) : null;
+  FK.learn(0, lev); out.flood.levees = path(); const hp1 = b && b.hp; sim(5); out.flood.kept = b ? hp1 - b.hp : null; sim(D.flood.secs); out.flood.after = !FK.flooded(kw);
+  return out; })()"""
+MIDMIND = r"""const n = (re, t) => t.match(re)[0];
+const rut = n(/rut: \{[^}]*\}/, tuning), shore = n(/shore: [\d.]+/, tuning), night = n(/\(1 - NIGHT_SIGHT[^\n]*\)\)/, core);
+return box([basics, n(/const PERS = \{[\s\S]*?\n\};/, wild), n(/const WAVE = \{[^}]*\};/, wild), n(/const SAVE = \{[^}]*\};/, tuning), n(/const EVENTS = \{[\s\S]*?\n\};/, tuning),
+  `const CLIMATE = { ${rut}, ${shore} }, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), G = { t: 0, clim: { mud: 0 }, tread: null, night: 0 }, NAV = { shore: [0] }, gcell = () => 0; let RATE_ = {}, REACT_ = 1, CARRY_ = 1;
+   const forageNow = (v) => v.rho, rateFrom = (o, r) => RATE_[r], react = () => REACT_, carryOf = () => CARRY_`,
+  cut(ai, 'function needOf', '// The reorder point'), cut(ai, 'function runsOut', '// The shift to plots'), cut(core, 'const moonPhase', 'const civOf'), cut(core, 'const nightOf', 'const nightness'), cut(events, 'const ruts = ', '// what a step needs'),
+  `var OUT = { pers: PERS, wave: WAVE, save: SAVE, diff: DIFF, safe: EASY_SAFE, players: PLAYERS.map((p) => p.pers), synodic: SYNODIC, day: DAY_LEN, nightSight: NIGHT_SIGHT, flood: EVENTS.flood, rut: CLIMATE.rut, shore: CLIMATE.shore, plans: [] };
+  for (const P of RUN.plans) { RATE_ = P.rate; REACT_ = P.react; CARRY_ = P.carry; const p = { id: 1, eats: P.draw.food * 60, res: Object.fromEntries(RES.map((r) => [KEY[r], P.store[r]])) }, vils = P.jobs.map(([job, rho]) => ({ job, rho }));
+    const plan = needOf(p, vils, Object.fromEntries(Object.entries(P.cost).map(([r, c]) => [KEY[r], c])), null, P.draw); OUT.plans.push({ plan: JSON.parse(JSON.stringify(plan)), famine: famineNear(p, plan) }); }
+  OUT.moon = RUN.moon.map((t) => { G.t = t; return [moonPhase(t), moonLight()]; }); OUT.sight = RUN.sight.map(([a, k]) => { G.night = nightOf(a); const moonLight = () => k; return 1 - eval(${JSON.stringify(night)}) * G.night; });
+  const T = ruts(); T[0] = 300; for (let i = 0; i < 3; i++) rutHeal(); OUT.heal = T[0];
+  OUT.ruts = RUN.ruts.map(([c]) => { T[0] = c; G.clim.mud = 0.4; NAV.shore[0] = 1; const wet = mudAt({ x: 0, y: 0 }); NAV.shore[0] = 0; return [rutOf(0, 0), wet, mudAt({ x: 0, y: 0 })]; });`]);"""
+async def mind(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(MINDJS); await pg.close()
+    m, err = frozen({'basics': '01-rules-basics', 'wild': '05-rules-wild', 'tuning': '06-rules-tuning', 'core': '08-core', 'ai': '17-ai', 'events': '37-events'}, MIDMIND, {'plans': [{k: P[k] for k in ('jobs', 'rate', 'store', 'cost', 'draw', 'react', 'carry')} for P in v['plans']], 'moon': [0, 1000, 5000, 12345, 40000], 'sight': [[-20, 0], [-20, 1], [-6, 0.5], [10, 1]], 'ruts': v['ruts']})
+    M, Y = MEASURE, ['food', 'wood', 'gold', 'stone', 'iron']; m = m or {}
+    names = {k: re.search(r'→ ([^;)]+)', r[1]).group(1).strip() for k, r in json.load(open(os.path.join(HERE, '../clean/numbers.json')))['pieces']['BLD'][2].items() if re.search(r'→ ([^;)]+)', r[1])}
+    KEYS = {'f': 'food', 'w': 'wood', 'g': 'gold', 's': 'stone', 'i': 'iron'}
+    def pers(k, mid):
+        mine = M['ai.pers'][k]; same = all(mine[f] == mid[f] for f in mid if f not in ('build', 'techs', 'mix', 'crown') and f in mine) and mine['mix'] == [mid['mix'][y] for y in Y] and mine['techs'] == mid['techs']
+        return same and [[SHELLS[c]['name'], *r] for c, *r in mine['build']] == [[names[b[0]], *b[1:4], *([{KEYS[a]: n for a, n in b[4].items()}] if len(b) > 4 else [])] for b in mid['build']]
+    D = keyed('measure')
+    books = bool(m) and all(pers(k, m['pers'][k]) for k in ('aggr', 'bal', 'fort')) and D['ai.pers']['of'][1:] == m['players'][1:4] and {k: D['ai.wave'][k] for k in m['wave']} == {**m['wave'], 'step': m['wave']['step'] / M['tile']} \
+        and D['ai.save'] == m['save'] and [{k: r[k] for k in ('react', 'bold', 'opp', 'allyAt', 'gang', 'envoy')} for r in D['ai.diff']] == [m['diff'][d] for d in ('easy', 'normal', 'hard')] and D['ai.diff'][0]['safe'] == m['safe'] \
+        and D['moon']['month'] == m['synodic'] and D['moon']['sight'] == m['nightSight'] and M['day'] == m['day'] and {k: D['ruts'][k] for k in m['rut']} == m['rut'] and D['ruts']['shore'] == m['shore'] \
+        and [D['flood'][k] for k in ('secs', 'hit')] == [m['flood'][k] for k in ('secs', 'hit')] and D['flood']['rise'] * M['tile'] == m['flood']['rise']
+    def same(a, b): a, b = [float('inf') if x is None else x for x in (a, b)]; return a == b or abs(a - b) <= 1e-9 * max(1, abs(b))
+    plans = bool(m) and len(m['plans']) == 4 and all(all(same(v['plan'][y][f], mm['plan'][y][f]) for y in Y for f in ('n', 'rho', 'inc', 'short', 't')) and v['famine'] == mm['famine'] for v, mm in zip(v['plans'], m['plans']))
+    minds = all(g and n > MEASURE['villagers'] and nb > 1 for g, n, nb in v['minds'])
+    moon = bool(m) and all(same(a, c) and same(b, d) for (a, b), (c, d) in zip(v['moon'], m['moon'])) and all(same(a, c) for a, c in zip(v['sight'], m['sight']))
+    ground = bool(m) and abs(v["wear"][0] - v["wear"][1]) < 1e-4 and v['wear'][1] > 1 and v['heal'] == m['heal'] and all(same(a[1], c[0]) and same(a[2], min(1, c[1])) and same(a[3], min(1, c[2])) for a, c in zip(v['ruts'], m['ruts']))
+    f = v['flood']; flood = f['before'] and f['wet'] and not f['during'] and f['b'] and abs(f['lost'] - round(f['lost'])) < 1e-6 and 10 <= round(f['lost']) <= 11 and f['levees'] and f['kept'] == 0 and f['after']
+    got = [books, plans, minds, moon, ground, flood, not errs]
+    ok('t-mind', all(got), [got, v['minds'], v['plans'][0]['plan'], (m.get('plans') or [{}])[0], v['moon'], m.get('moon'), v['sight'], m.get('sight'), v['wear'], v['heal'], m.get('heal'), v['ruts'], m.get('ruts'), f, errs[:2], err[-800:]])
+PAGED = {'t-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:
