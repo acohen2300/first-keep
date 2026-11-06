@@ -304,16 +304,16 @@
    "asks by tag: v100 asks by tick (has)"
   ],
   "GOODS": [
-   "bring",
-   "the goods (wool, cloth, spice and the rest): the economy's depth"
+   "in v100",
+   "F26+F27: measure D272 (the cart load's colour waits for the art)"
   ],
   "GOODK": [
-   "bring",
-   "with GOODS"
+   "in v100",
+   "F26+F27: measure D272, D271 keys"
   ],
   "LOAD": [
-   "bring",
-   "a caravan's load and the wares: with trade"
+   "in v100",
+   "F26+F27: measure D278 load, keep, carried, wares"
   ],
   "UPKEEP": [
    "in v100",
@@ -328,16 +328,16 @@
    "vassals: loyalty, unrest, rebellion, tribute (Albert 11:16); the tax rate is parked"
   ],
   "VENTURE": [
-   "bring",
-   "trade ventures"
+   "in v100",
+   "F26+F27: measure D274 (QCF)"
   ],
   "SPOIL": [
    "in v100",
    "F16: books/measure.js D217, law QAD"
   ],
   "PRICE": [
-   "bring",
-   "the Market's prices"
+   "in v100",
+   "F26+F27: measure D271 (QAE)"
   ],
   "BLD": [
    "bring",
@@ -558,8 +558,8 @@
    "a building's line: v100's mold is six (SN1, Albert's), Mid's five; Written records and Guilds lengthen it (with tech)"
   ],
   "MINT": [
-   "bring",
-   "debasing the coin"
+   "in v100",
+   "F26+F27: measure D273"
   ],
   "NOTICE": [
    "bring",
@@ -567,7 +567,7 @@
   ],
   "DEMAND": [
    "bring",
-   "the Market's demand"
+   "the Market's demand; F26+F27: not the Market's: the lord's demands of a vassal (a demand, forced tribute, a levy) come with the vassals (M37, F28)"
   ],
   "TRAINERS": [
    "cut",
@@ -614,8 +614,8 @@
    "the computers' three personalities"
   ],
   "TRADE": [
-   "bring",
-   "trade runs: pay by distance², sell and buy prices"
+   "in v100",
+   "F26+F27: measure D270 worth, D278 cap, div"
   ],
   "ZEAL": [
    "in v100",
@@ -646,8 +646,8 @@
    "F19+F20: D238 (the dials keep per squad)"
   ],
   "SCALE": [
-   "bring",
-   "fields and workshops grow with use, 5% a step"
+   "in v100",
+   "F26+F27: measure D277 (QAB)"
   ],
   "CALTROPS": [
    "bring",
@@ -838,32 +838,32 @@
    "with EVENTS"
   ],
   "PLACES": [
-   "bring",
-   "trade stops, the scouts' marks, where the first people stand"
+   "in v100",
+   "F26+F27: the stop: measure D278 stops, index.html floor 3; the lode, the robbers' camp, the scouts' marks and the start come with their features"
   ],
   "cross": [
-   "bring",
-   "the trade routes"
+   "in v100",
+   "F26+F27: measure D278 routes (the middle lines)"
   ],
   "ROUTES_L": [
-   "bring",
-   "the trade routes"
+   "in v100",
+   "F26+F27: measure D278 routes, stops; index.html floor 3 (E492)"
   ],
   "POST": [
-   "bring",
-   "trade posts on the routes"
+   "in v100",
+   "F26+F27: measure D278 all, cut, cutMax, safe, guard, far, want"
   ],
   "HEALTH": [
    "bring",
    "sickness"
   ],
   "MKT_SELL": [
-   "bring",
-   "the Market's goods"
+   "in v100",
+   "F26+F27: measure D270 sells, buys"
   ],
   "MKTK": [
-   "bring",
-   "with MKT_SELL"
+   "in v100",
+   "F26+F27: measure D271 eps keys"
   ],
   "RATE_OF": [
    "in v100",

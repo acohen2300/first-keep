@@ -480,3 +480,19 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E475 | combat.js | a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else it walks there |
 | E476 | menu.js | Teach on a soldier, Zeal at the Temple, a ransom at your hall |
 | E477 | menu.js | the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what your spy read on theirs |
+| E478 | econ.js | the Market (Mid's marketTrade and its prices): a yield by the raw lot, a good by the good lot, sold at sell of its worth and bought at buy, both moved by the going price, P = P0 (Q/Q0)^(-1/eps) (QAE), and by debased coin; what is sold adds to the stock, what is bought takes from it; the goods' names for what a caravan says |
+| E479 | econ.js | sell or buy one lot at a finished Market: raw sold for gold is a swap, not gathered; a good sold counts |
+| E480 | econ.js | the Mint debases the coin once: its gold now, every Market price dearer for good (Rome's denarius) |
+| E481 | econ.js | a venture from the Market (the commenda): back in a year with the return or lost; only the profit counts as gathered (QCF) |
+| E482 | econ.js | a venture lost to robbers on the way |
+| E483 | econ.js | the stock settles back toward normal each slow beat (QP), spice toward dearer while one side holds a whole route |
+| E484 | econ.js | a shop (Make): what it makes now and from what; the choice changes its worker's work; Learning by doing adds a share for each other finished plot of its kind (QAB); its worker takes the inputs from the stores and puts the good straight in, as a shepherd's milk |
+| E485 | econ.js | trade: the stops on the two routes, held by the post standing on them; a good's price at a place is its base, more where wanted, × the going price, × the distance from its Market (QCE); a load is the best-paying goods first, of a yield only the surplus |
+| E486 | econ.js | a caravan walks to a building's side or onto a stop; a way it cannot walk ends its run, and it waits a beat |
+| E487 | econ.js | a caravan on a route: load at its Market, sell at the far end (a keeper's cut), buy spice at a stop if told, bring it home, again if it repeats |
+| E488 | econ.js | a caravan with no route runs to the farthest ally's Market or Town Center for distance² pay (QCE), then home |
+| E489 | econ.js | robbers leave a caravan alone near its side's trade post or tower, or with a soldier of its side beside it |
+| E490 | econ.js | each frame the caravans; each beat a stop's holder, an armed caravan's blow and a whole route's pay; each slow beat the prices settle and ventures come home; each minute the Bank's interest |
+| E491 | econ.js | a caravan taken by a side pays its cargo and goods to the taker; one killed by the wild is robbed (the robbers' hoard waits for their camps) |
+| E492 | index.html#floor-3-non-movables | the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines, each on the nearest free tile, of its route, wanting one of the wares in turn; open ground, so a trade post stands over one |
+| E493 | combat.js | guards (Mid's escortPick, guardsOf): soldiers told to escort a caravan or garrison a stop keep to it as their post, as many as the trade's guard; when it is gone they come home |

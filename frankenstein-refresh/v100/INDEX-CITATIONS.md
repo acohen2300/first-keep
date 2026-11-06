@@ -18,7 +18,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QM** Random events → N12 · used by SC9, D110, D181, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
-- **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268
+- **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268, D271
 - **QQ** Ice growth → N17 · used by D109, D225, X54
 - **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
 - **QS** Ruts → N20
@@ -30,16 +30,18 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QY** Growth → N27 · used by SC24, SC25, D218, D219, X53
 - **QZ** Sustainable take → N28 · used by SC25, D219, X53
 - **QAA** Soil → N29 · used by SC26, D214, D215, D216, X53
-- **QAB** Learning curve → N30
+- **QAB** Learning curve → N30 · used by SC36, D277
 - **QAC** Crew → N31 · used by SC4, D126, X52
 - **QAD** Spoilage → N32, N33 · used by D217, X53
-- **QAE** Price → N34
-- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169
+- **QAE** Price → N34 · used by SC19, D270, D271
+- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199
 - **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, D247, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
 - **QCK** Mending → N168 · used by SC5, D201, X52
 - **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187 · used by D103, D229, X56
+- **QCE** Trade pay → N195, N197 · used by SC19, D278
+- **QCF** Returns → N195 · used by D274, D275
 - **QAF** Battle odds → N35 · used by SC6, D155, D177, D192, D193, D194, D238, D247, X48
 - **QAG** Who to fight → N36, N37, N188 · used by SC6, D238, X57
 - **QAH** Fight or not → N38
@@ -87,7 +89,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QAG, QAI, QBO, QBP, QBT
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QAG, QAI, QBO, QBP, QBT
 - **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
@@ -105,7 +107,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, SC27, D231, D237, D249
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
-- **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, G9
+- **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, G9
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU
@@ -116,11 +118,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N27** Verhulst (1838) → QY, D218, D219
 - **N28** Schaefer (1954) → QZ, D218, D219
 - **N29** (to open) White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/ → QAA, D214
-- **N30** Wright (1936), learning curve → QAB
+- **N30** Wright (1936), learning curve → QAB, D277
 - **N31** Thomas & Smith (1990), overmanning → QAC
 - **N32** Labuza, first-order food loss → QAD, D217
 - **N33** FAO, Grain storage techniques, ch. 6 → QAD, D217
-- **N34** Andreyeva, Long & Brownell (2010), food price elasticities → QAE
+- **N34** Andreyeva, Long & Brownell (2010), food price elasticities → QAE, D271
 - **N35** Lanchester (1916), Aircraft in Warfare → QAF
 - **N36** Churchill, Saffidine & Buro (2012), AIIDE → QAG, D238
 - **N37** Cox & Smith (1961), Queues → QAG, D238
@@ -186,7 +188,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N97** Design, Nov 5 → SC8, W14, HE1, HX5
 - **N98** Design: v100 floor 4, Nov 4 → SC12
 - **N99** Design: v100 floor 3, Nov 4 → SC17
-- **N100** Design: dictionary SC → SC18, SC19
+- **N100** Design: dictionary SC → SC18
 - **N101** Design: Albert, Nov 5 07:35 → SC20
 - **N102** Design: v100 floor 1, Nov 4 → C1, C2, C3, C4
 - **N103** Design: v100, Nov 4 → C5, C6, C7, C8, C10
@@ -218,7 +220,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
 - **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
 - **N131** Design: Albert, Nov 5 09:47 (sort every piece) → X43
-- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, X54, X55, X57, X58, X60, J1, J2, J3, J4, J5, J6
+- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, X54, X55, X57, X58, X60, X61, J1, J2, J3, J4, J5, J6
 - **N133** Design: Albert, the Rank Ribbon (Oct 30) and the Formation → SN1
 - **N134** Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) → SN2
 - **N135** Design: Albert, Nov 5 07:30 → SN3
@@ -246,8 +248,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 - **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
 - **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
-- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, J7
-- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, J7
+- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, J7
+- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, J7
 - **N162** Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of t → X17
 - **N163** (to open) Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SI → QCJ
 - **N164** Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js → SC2, SC16, D88, D132, D195, D196, D197, X51, PN1
@@ -255,7 +257,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N166** (to open) OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in  → D195, D196
 - **N167** (to open) Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechani → QCJ, D196
 - **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC5, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
-- **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D124, D125
+- **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D124, D125, D139
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** (to open) Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip → QBP, D212
 - **N172** Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the  → SN3
@@ -281,6 +283,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N192** Design: Mid's alarm, danger map and the end (09-nav.js DANGER, discRows, stampDanger, dangerMap, dangerWhy; 12 → SC29, SC30, D253, D254, D255, D256, D257, D258, D259, D260, D261, D262, X59, J12, J13
 - **N193** Design: Albert, Nov 5 20:16 (Frankenstein F23): keep going; three playability fixes from his phone (everyone i → X59
 - **N194** Design: Mid's lessons, prisoners, priests, medics, Zeal and spies (11-orders.js teachTo, teachGap, teachCost,  → SC31, SC32, SC33, SC34, SC35, D123, D124, D133, D138, D143, D239, D263, D264, D265, D266, D267, D268, D269, X60, SN4, BP1, BP3, BP6, BP8, US1, US2, US3, J14
+- **N195** Design: Mid's Market, coin, bank and ventures; goods and workshops; trade and caravans (11-orders.js LOT, wort → QCE, QCF, SC19, SC36, SC37, D123, D124, D125, D133, D138, D143, D172, D219, D239, D270, D271, D272, D273, D274, D275, D276, D277, D278, X61, MT1, BCR1, BCT1, BI6, BI7, BI8, UT1, PN1, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, J7, J15
+- **N196** (to open) Age of Empires II (1999), the buildings' health: a Castle and a Wonder 4800, a Market, Monastery, University a → D139
+- **N197** (to open) Age of Empires II (1999), the trade cart and the trade cog: the gold a trip earns grows with the square of the → QCE, D278
 
 ## Named exceptions
 

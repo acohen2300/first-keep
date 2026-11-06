@@ -302,32 +302,32 @@
    "F24: econ.js, each tick (D264 secs)"
   ],
   "LOT": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE): sold by the 100 or the 10"
+   "in v100",
+   "F26+F27: econ.js lot (D270 lot)"
   ],
   "worth": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE)"
+   "in v100",
+   "F26+F27: econ.js worth"
   ],
   "coinOf": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE): debased coin (the Mint)"
+   "in v100",
+   "F26+F27: econ.js coinOf (D273 price, sound)"
   ],
   "sellPrice": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE)"
+   "in v100",
+   "F26+F27: econ.js sellPrice"
   ],
   "buyPrice": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE)"
+   "in v100",
+   "F26+F27: econ.js buyPrice"
   ],
   "haveOf": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE)"
+   "in v100",
+   "F26+F27: econ.js: the store holds the goods beside the yields (D172), so one read"
   ],
   "marketTrade": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE)"
+   "in v100",
+   "F26+F27: econ.js marketTrade(side, good, 'sells' or 'buys')"
   ],
   "zealCost": [
    "in v100",
@@ -370,8 +370,8 @@
    "econ.js gatherAt and jobOf: a villager's job is the yield it works"
   ],
   "atShop": [
-   "bring",
-   "a worker inside a workshop, Mint or Foundry (Make)"
+   "in v100",
+   "F26+F27: econ.js post/posted: a shop worker is posted, as at a field"
   ],
   "NO_HANDS": [
    "cut",
@@ -562,8 +562,8 @@
    "v100 reads the drop list from the shell (SC12)"
   ],
   "shopTick": [
-   "bring",
-   "a worker inside a workshop makes goods into the stores (Make)"
+   "in v100",
+   "F26+F27: econ.js make: the worker works beside the shop, the good straight to the store (inside: Parked)"
   ],
   "workMul": [
    "in v100",
@@ -642,8 +642,8 @@
    "diplomacy (ally, peace, war, envoys; kept for after the core): the envoy's walk"
   ],
   "caravanTick": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js run (the ally lane, QCE) and the armed caravan's blow; the camp's supply run waits for the war camp (F25)"
   ],
   "spyTick": [
    "in v100",
@@ -654,16 +654,16 @@
    "F16: books/measure.js D218 (fish stock) and D219 (the flock, mutton); the wool waits for the goods (Parked)"
   ],
   "stopsAll": [
-   "bring",
-   "trade stops and the Trade post (BCT1)"
+   "in v100",
+   "F26+F27: econ.js stops"
   ],
   "postAt": [
-   "bring",
-   "trade stops"
+   "in v100",
+   "F26+F27: econ.js postOn (the post standing over the stop)"
   ],
   "stopsHeld": [
-   "bring",
-   "trade stops"
+   "in v100",
+   "F26+F27: econ.js held"
   ],
   "stash": [
    "in v100",
@@ -698,12 +698,12 @@
    "a new game's weather, harvest, prices and routes; v100's start resets the stores and the weather"
   ],
   "distF": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js farF (QCE)"
   ],
   "baseOf": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js baseOf"
   ],
   "nameOf": [
    "cut",
@@ -714,60 +714,60 @@
    "a load's colour comes from the Colours book"
   ],
   "loadable": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js cargo (D278 keep)"
   ],
   "takeFrom": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js spend (goods and yields in one store)"
   ],
   "giveTo": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js earn"
   ],
   "priceAt": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js priceAt (QCE)"
   ],
   "tradeTargets": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js targets; a stop's wild guards wait for the hazards (F31)"
   ],
   "allyMarket": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js allyMarket"
   ],
   "targetOf": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js: the route holds its place itself"
   ],
   "homeBiz": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js homeOf"
   ],
   "estPay": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js estPay"
   ],
   "setRoute": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js setRoute"
   ],
   "bestTarget": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js bestTarget"
   ],
   "routeTick": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets"
+   "in v100",
+   "F26+F27: econ.js route; the plague home with the carts waits for sickness (F32), a stop's chosen wares for its card (F46)"
   ],
   "guardedCart": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets: robbers leave a guarded cart"
+   "in v100",
+   "F26+F27: econ.js guarded (the robbers read it, F31)"
   ],
   "robbed": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets: a robbed load goes to the robbers' camp"
+   "in v100",
+   "F26+F27: econ.js on a caravan's end: a side's take, the wild's robbery told; the robbers' hoard waits for their camps (F31)"
   ],
   "natureTick": [
    "in v100",
@@ -822,12 +822,12 @@
    "econ.js tick: everyone eats (QBP, D131); Mid's shares, eating at the find, camp depots and famine come with shareOf and hungerOf"
   ],
   "BANK_CAP": [
-   "bring",
-   "the Bank: interest on gold, to a cap (a research)"
+   "in v100",
+   "F26+F27: measure D275 interest.cap"
   ],
   "bankTick": [
-   "bring",
-   "the Bank"
+   "in v100",
+   "F26+F27: econ.js interest, each minute (QCF)"
   ],
   "econTick": [
    "in v100",
@@ -850,36 +850,36 @@
    "F16: econ.js hungerOf (work in the gather beat, blows in combat.js damage)"
   ],
   "setMake": [
-   "bring",
-   "a workshop's choice of what it makes (Make)"
+   "in v100",
+   "F26+F27: econ.js setMake"
   ],
   "mkt": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE): prices float with what is sold and bought"
+   "in v100",
+   "F26+F27: econ.js goingPrice (QAE, D271); the Store's steadier price (fx band) waits for building effects (Parked)"
   ],
   "debase": [
-   "bring",
-   "the Mint debases the coin: gold now, dearer prices for good"
+   "in v100",
+   "F26+F27: econ.js debase (a shop that makes gold)"
   ],
   "mktHit": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE)"
+   "in v100",
+   "F26+F27: econ.js stockHit"
   ],
   "spiceCost": [
-   "bring",
-   "trade: caravans (UT1) on routes to trade stops and allies' markets: spice"
+   "in v100",
+   "F26+F27: econ.js route (spice at the going price)"
   ],
   "priceDrift": [
-   "bring",
-   "the Market (BCR1) and its prices (QAE): prices drift back"
+   "in v100",
+   "F26+F27: econ.js drift each slow beat (QP); plague's dearer spice waits for sickness (F32)"
   ],
   "venture": [
-   "bring",
-   "ventures: gold sent on a voyage, back in a year with 40% more or lost"
+   "in v100",
+   "F26+F27: econ.js venture"
   ],
   "ventureTick": [
-   "bring",
-   "ventures"
+   "in v100",
+   "F26+F27: econ.js ventures, returnOf (QCF); the vassal's share of it waits with the vassals"
   ],
   "vassalsOf": [
    "bring",

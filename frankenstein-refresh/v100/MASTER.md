@@ -74,6 +74,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
 - **E47** The home finds: Who every corner · What Z1's berries, grove, gold and stone, sized by QBJ; · QBJ (N69) · D72 (N112) · D70 (N112) · D71 (N112) · QBF (N65)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
+- **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
 - **E50** drawn back to front
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
@@ -105,9 +106,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176) · D139 (N69, N170) · D138 (N69, N170, N176, N188, N194) · D123 (N168, N176, N194) · D124 (N169, N176, N194) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176) · D139 (N69, N169, N170, N196) · D138 (N69, N170, N176, N188, N194, N195) · D123 (N168, N176, N194, N195) · D124 (N169, N176, N194, N195) · D125 (N169, N168, N195) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
-- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194) · D130 (N160)
+- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195) · D130 (N160)
 - **E370** a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give 
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
@@ -151,7 +152,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E82** Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands a · QBL (N74)
 - **E83** one a corner (C5–C8); the player is 0 · C5 (N103) · C8 (N103)
 - **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79, N170, N176)
-- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170)
+- **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170, N195)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
@@ -274,7 +275,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E158** the chunk's deep trees on one canvas
 - **E159** a hit moves to the back: the oldest goes first
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
-- **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170)
+- **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170, N195)
 - **E161** L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tile · D7 (N112)
 
 ## index.html#touch
@@ -296,7 +297,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E171** the codes and their floors; Lock is a mark for us (no floor is locked yet)
 - **E172** the Screen book: the Build tabs are its; a building shows priced once econ prices it, else
 - **E173** the seat, and who it trains first: asked of the books, never named
-- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194)
+- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194, N195)
 - **E175** a page that keeps its own height (SC20) · SC20 (N101)
 - **E176** the new game's choices: the first is the label's row in Albert's template; built ones set 
 - **E177** which choices are floors yet
@@ -393,7 +394,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
-- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194) · D129 (N160)
+- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195) · D129 (N160)
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
@@ -425,7 +426,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E224** the tick: training and research, ages, upkeep, the villagers, the bell
 - **E347** the gather beat: the field is worked now (its soil wears); a flock's food goes straight to
 - **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
-- **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119)
+- **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119, N195)
 - **E436** the Alarm and the end (F23, Mid's 09-nav, 12-sim-core, 13-sim-civil, 16-sim-fight, 40-emer · D253 (N192) · D255 (N192) · J12 (N192) · J13 (N192)
 - **E437** a threat (Mid's isThreat): alive, not inside, one that fights and is neither a villager, g
 - **E438** the danger map (Mid's dangerMap, stampDanger): each side's, drawn afresh each beat on the  · D253 (N192)
@@ -448,6 +449,20 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E462** Zeal (Mid's zealCost, zealWhy, zeal): the Temple blesses the squad for gold if a priest st
 - **E463** each tick: a lesson that is over graduates; a prisoner unransomed in time goes over to its
 - **E464** a spy by a foe's building reads that side: its stores, age, research and army, kept with t
+- **E478** the Market (Mid's marketTrade and its prices): a yield by the raw lot, a good by the good  · QAE (N34)
+- **E479** sell or buy one lot at a finished Market: raw sold for gold is a swap, not gathered; a goo
+- **E480** the Mint debases the coin once: its gold now, every Market price dearer for good (Rome's d
+- **E481** a venture from the Market (the commenda): back in a year with the return or lost; only the · QCF (N195)
+- **E482** a venture lost to robbers on the way
+- **E483** the stock settles back toward normal each slow beat (QP), spice toward dearer while one si · QP (N16)
+- **E484** a shop (Make): what it makes now and from what; the choice changes its worker's work; Lear · QAB (N30)
+- **E485** trade: the stops on the two routes, held by the post standing on them; a good's price at a · QCE (N195, N197)
+- **E486** a caravan walks to a building's side or onto a stop; a way it cannot walk ends its run, an
+- **E487** a caravan on a route: load at its Market, sell at the far end (a keeper's cut), buy spice 
+- **E488** a caravan with no route runs to the farthest ally's Market or Town Center for distance² pa · QCE (N195, N197)
+- **E489** robbers leave a caravan alone near its side's trade post or tower, or with a soldier of it
+- **E490** each frame the caravans; each beat a stop's holder, an armed caravan's blow and a whole ro
+- **E491** a caravan taken by a side pays its cargo and goods to the taker; one killed by the wild is
 
 ## combat.js
 
@@ -467,7 +482,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E385** a squad's plan by class (Mid's sqPlan): a step of one under ten, five above, the whole squ · D227 (N176)
 - **E386** what a squad lacks, by kind to train (Mid's musterGap): its plan less its soldiers and tho
 - **E230** the blow's strength (Mid's dmgOf): its blow after research, blades worn by frost, rain or  · D234 (N188)
-- **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
+- **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194, N195) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
 - **E387** where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own a · D232 (N188)
 - **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188)
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
@@ -482,6 +497,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E236** a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ) · QBQ (N76)
 - **E237** to a tile, or near one that cannot be stood on (a building's); no way there, it strikes a 
 - **E391** a foe building in the way is struck (Mid's findBlocker)
+- **E493** guards (Mid's escortPick, guardsOf): soldiers told to escort a caravan or garrison a stop 
 - **E372** the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps t
 - **E392** a group dressed into its shape at a tile (Mid's formUp): facing from home to there, the sq
 - **E407** the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, 

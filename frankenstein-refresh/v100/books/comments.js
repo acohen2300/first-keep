@@ -475,5 +475,21 @@ BOOK("comments", {
  "E474": {"text": "sabotage (Mid's sabotage): a building burns a share of its health or stalls and loses the head of its line; the spy is spent; a fall by fire pays nobody"},
  "E475": {"text": "a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else it walks there"},
  "E476": {"text": "Teach on a soldier, Zeal at the Temple, a ransom at your hall"},
- "E477": {"text": "the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what your spy read on theirs"}
+ "E477": {"text": "the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what your spy read on theirs"},
+ "E478": {"text": "the Market (Mid's marketTrade and its prices): a yield by the raw lot, a good by the good lot, sold at sell of its worth and bought at buy, both moved by the going price, P = P0 (Q/Q0)^(-1/eps) (QAE), and by debased coin; what is sold adds to the stock, what is bought takes from it; the goods' names for what a caravan says"},
+ "E479": {"text": "sell or buy one lot at a finished Market: raw sold for gold is a swap, not gathered; a good sold counts"},
+ "E480": {"text": "the Mint debases the coin once: its gold now, every Market price dearer for good (Rome's denarius)"},
+ "E481": {"text": "a venture from the Market (the commenda): back in a year with the return or lost; only the profit counts as gathered (QCF)"},
+ "E482": {"text": "a venture lost to robbers on the way"},
+ "E483": {"text": "the stock settles back toward normal each slow beat (QP), spice toward dearer while one side holds a whole route"},
+ "E484": {"text": "a shop (Make): what it makes now and from what; the choice changes its worker's work; Learning by doing adds a share for each other finished plot of its kind (QAB); its worker takes the inputs from the stores and puts the good straight in, as a shepherd's milk"},
+ "E485": {"text": "trade: the stops on the two routes, held by the post standing on them; a good's price at a place is its base, more where wanted, × the going price, × the distance from its Market (QCE); a load is the best-paying goods first, of a yield only the surplus"},
+ "E486": {"text": "a caravan walks to a building's side or onto a stop; a way it cannot walk ends its run, and it waits a beat"},
+ "E487": {"text": "a caravan on a route: load at its Market, sell at the far end (a keeper's cut), buy spice at a stop if told, bring it home, again if it repeats"},
+ "E488": {"text": "a caravan with no route runs to the farthest ally's Market or Town Center for distance² pay (QCE), then home"},
+ "E489": {"text": "robbers leave a caravan alone near its side's trade post or tower, or with a soldier of its side beside it"},
+ "E490": {"text": "each frame the caravans; each beat a stop's holder, an armed caravan's blow and a whole route's pay; each slow beat the prices settle and ventures come home; each minute the Bank's interest"},
+ "E491": {"text": "a caravan taken by a side pays its cargo and goods to the taker; one killed by the wild is robbed (the robbers' hoard waits for their camps)"},
+ "E492": {"text": "the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines, each on the nearest free tile, of its route, wanting one of the wares in turn; open ground, so a trade post stands over one"},
+ "E493": {"text": "guards (Mid's escortPick, guardsOf): soldiers told to escort a caravan or garrison a stop keep to it as their post, as many as the trade's guard; when it is gone they come home"}
 });

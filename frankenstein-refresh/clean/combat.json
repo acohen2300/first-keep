@@ -38,8 +38,8 @@
    "F19+F20: combat.js, solTick"
   ],
   "escortPick": [
-   "bring",
-   "a guard keeps to the caravan or trade stop it escorts; part of Caravan (UT1) and the trade stops"
+   "in v100",
+   "F26+F27: combat.js guard: the caravan or stop is the guard's post (u.esc, u.home)"
   ],
   "wildLeash": [
    "bring",
@@ -178,8 +178,8 @@
    "F22: combat.js freeWhy"
   ],
   "guardsOf": [
-   "bring",
-   "the soldiers escorting one caravan or garrisoning one trade stop"
+   "in v100",
+   "F26+F27: combat.js guardsOf"
   ],
   "guardRow": [
    "bring",

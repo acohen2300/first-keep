@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 2,330 | 332,918 | 333,052 |
-| Books | 1476 | 0 | 333,078 | 333,505 |
-| Laws | 80 | 0 | 13,129 | 13,494 |
-| Tools | 4 | 1,141 | 174,341 | 174,497 |
+| Game code | 28 | 2,387 | 345,369 | 345,503 |
+| Books | 1539 | 0 | 362,574 | 363,021 |
+| Laws | 82 | 0 | 13,809 | 14,190 |
+| Tools | 4 | 1,214 | 190,769 | 190,933 |
 
 ## The trades (code)
 
@@ -20,7 +20,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,803 | 1,807 | 38 |
 | index.html#floor-2-terrain | 81 | 7,995 | 7,999 | 131 |
-| index.html#floor-3-non-movables | 45 | 4,943 | 4,947 | 82 |
+| index.html#floor-3-non-movables | 46 | 5,301 | 5,305 | 81 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
 | index.html#the-door | 59 | 6,349 | 6,353 | 69 |
@@ -31,14 +31,14 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
 | index.html#floor-5-movables | 124 | 13,793 | 13,797 | 95 |
 | index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,282 | 3,286 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 25 | 3,503 | 3,507 | 92 |
 | index.html#floor-6-climate | 70 | 9,117 | 9,129 | 256 |
 | index.html#floor-7-display | 45 | 5,888 | 5,892 | 75 |
 | index.html#the-woods-cache | 51 | 4,881 | 4,885 | 79 |
 | index.html#touch | 49 | 6,239 | 6,243 | 55 |
 | menu.js | 364 | 64,024 | 64,066 | 588 |
-| econ.js | 300 | 49,408 | 49,408 | 75 |
-| combat.js | 294 | 48,394 | 48,394 | 84 |
+| econ.js | 353 | 60,834 | 60,834 | 75 |
+| combat.js | 296 | 48,840 | 48,840 | 84 |
 | ai.js | 59 | 7,642 | 7,642 | 34 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
@@ -47,28 +47,28 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 5 | 734 |
-| capabilities | 40 | 10,908 |
-| citations | 194 | 31,545 |
+| capabilities | 42 | 12,045 |
+| citations | 197 | 33,403 |
 | colours | 13 | 1,363 |
-| comments | 476 | 77,711 |
+| comments | 492 | 80,572 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 262 | 63,066 |
-| rules | 60 | 17,256 |
+| measure | 271 | 70,950 |
+| rules | 61 | 18,237 |
 | screen | 10 | 2,808 |
-| shells | 89 | 17,312 |
+| shells | 90 | 17,604 |
 | sides | 4 | 1,202 |
 | sound | 51 | 11,159 |
-| sprites | 59 | 21,687 |
-| tech | 169 | 49,450 |
-| words | 14 | 37,607 |
+| sprites | 59 | 21,838 |
+| tech | 199 | 57,879 |
+| words | 15 | 44,164 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
-| 100 | 11 | 1 |
-| 110 | 46 | 20 |
+| 100 | 12 | 1 |
+| 110 | 46 | 15 |
 | 120 | 32 | 0 |
 
 ## The rules
@@ -135,5 +135,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X58 | t-orders | page | the finger, orders you can follow and the War Director (F21+F22): Mid's numbers (HOLD_MS, PRESS_SHOW, DBL_MS, HUD, ARMY_STILL, DIRECT, CHOKE, AMBUSH, CHARGE, FALLBACK, AB) in the books; Mid's frozen etaOf and reinforcePlan's waves for the same soldiers; on the page a box picks many, a tap is their order with its line and time, Go makes a mission, the charge quickens then tires, the choke stands as many files as the gap, an ambush hides |
 | X59 | t-alarm | page | the Alarm and the end, with the start's first jobs, builders that tell and reachable sites (F23): Mid's DANGER_R, SHELTER, EMG, WONDER_HOLD, SHARE_FALLEN, PLUNDER, SCORE and room in the books; who is a threat is Mid's frozen isThreat; Shelter fills the buildings as Mid's frozen villagersIn does; a rival's fall pays what Mid's frozen fall pays, shares the room and scores as its scoreAll; your fall, a wonder held and the bell end the game as its judge; and on the page every villager has a job within 3 s of a new game, a villager leaves a find a foe stands by, Work sends them back, a site in reach is built, one out of reach says why and a free villager is sent to one in reach, and a spot nobody can walk to is refused |
 | X60 | t-troops | page | Teach, prisoners, priests, medics, Zeal and spies (F24): Mid's TEACH, TEACH_TO, PRISON, CONVERT, ZEAL, SAB, the spy's stealth, heal and hrng, the priest's, medic's and spy's rows and the 18 research steps in the books; Mid's frozen teachCost and teachSecs for every kind that learns, its ransom, spySeen and healTick's lag for the same wound; on the page a spear learns to be a sword at the School keeping its share of health, a runner is taken, serves its captor after the wait and another is ransomed with the gold moved, Zeal costs Mid's gold and lifts the blow by its share for its seconds, a priest turns a villager in Mid's time, a medic binds a wound, a spy is unseen at 6 tiles and seen at 3, and sabotage stalls a barracks and burns a mill |
+| X61 | t-trade | page | the Market, coin, bank and ventures, goods and workshops, trade and caravans (F26+F27): Mid's TRADE, SELL, BUY, MKT_SELL, MKT_BUY, GOODS, PRICE, MINT, VENTURE, BANK_CAP, SCALE, LOAD, CARAVAN, POST, TRADE_CAP, TRADE_DIV, PLACES.stop and WARES in the books, and every building priced, timed and with its health; eight stops on the two routes wanting Mid's wares in turn; three lots sold, two bought, the coin debased and a slow beat's drift give Mid's frozen marketTrade, debase and priceDrift's gold and stock; a caravan's run to a held stop loads and is paid as Mid's frozen priceAt and loadable, less the keeper's cut; an ally's run, five minutes of a workshop with the loom, Learning by doing, a venture with Banking and the Bank's interest are Mid's frozen numbers; guards keep to a caravan, a guarded caravan is Mid's frozen guardedCart's, a robbed one Mid's frozen robbed |
 
-1588 items sealed · 1476 book entries · 80 laws · 194 citations, 33 still to open · 7 known
+1653 items sealed · 1539 book entries · 82 laws · 197 citations, 35 still to open · 7 known

@@ -184,7 +184,7 @@ function makeTerrain(roll) {
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
 }
 // ── Floor 3, non-movables (E40)
-const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0 }; } // E41
+const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0, open: e.style === 'Open' }; } // E41
 // E42
 const [, AGE1] = D.age.cost, Z1 = { food: (AGE1.food + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
 const z1 = { bush: Math.ceil(Z1.food / D.bushFood), tree: Math.ceil(Z1.wood / D.treeWood) };
@@ -195,7 +195,7 @@ const clear = (bx, by, r) => { let ok = true; stamp(bx, by, r, (k) => { if (!fre
 const nearest = (bx, by, r) => { let best = null; stamp(bx, by, r, (k, d) => { if (free(k) && (!best || d < best[0])) best = [d, k]; }); return best ? best[1] : -1; }; // E44
 function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3)) { // E45
   const i = k % N, j = (k - i) / N, [bx, by] = toBoard((i + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter, (j + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter), [vx, vy] = toView(bx, by, H[k]);
-  things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); OCC[k] = 1; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
+  things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
 }
 function cluster(kind, bx, by, n, roll) { // E46
   const got = []; stamp(bx, by, Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile, (k, d) => { if (free(k)) got.push([d, k]); });
@@ -211,6 +211,7 @@ function makeThings(roll) {
   for (const [kind, n] of [['gold', 'goldZ4'], ['stone', 'stoneZ4'], ['iron', 'ironZ4'], ['ruins', 'ruins'], ['cemetery', 'cemeteries'], ['campfire', 'campfires'], ['treasure', 'treasures']])
     for (let m = count(roll, D[n]); m > 0; m--) { const s = spot(KIND[kind].r); if (s) put(kind, s[2], roll); }
   for (let m = count(roll, D.patches); m > 0; m--) { const s = spot(2 * D.tile); if (s) cluster('bush', s[0], s[1], count(roll, D.patch), roll); }
+  const TR = D.trade; TR.routes.forEach(([ax, ay], r) => TR.stops.forEach((d, i) => { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('stop', k, roll); Object.assign(things.at(-1), { route: r, want: TR.wares[(r + i) % TR.wares.length], owner: null }); } })); // E492
   // E49
   for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
   things.sort((a, b) => a.vy - b.vy); // E50
@@ -1037,6 +1038,7 @@ const GIFT = { // E120
   cemetery: (x, y, s) => { for (let n = 0; n < 4; n++) { const gx = x - 6.5 * s + n * 4 * s, gy = y - (n % 2) * 1.5 * s; rect(gx, gy - 4 * s, 2.2 * s, 4 * s, ROCKLIT); disc(gx + 1.1 * s, gy - 4 * s, 1.1 * s, ROCKLIT); } },
   campfire: (x, y, s) => { for (let n = 0; n < 6; n++) disc(x + 3.2 * s * Math.cos((n * Math.PI) / 3), y - 1.2 * s + 1.6 * s * Math.sin((n * Math.PI) / 3), 0.9 * s, ROCK);
     ctx.fillStyle = C.gold; ctx.beginPath(); ctx.moveTo(x - 1.6 * s, y - 1 * s); ctx.lineTo(x + 1.6 * s, y - 1 * s); ctx.lineTo(x, y - 6 * s); ctx.fill(); ctx.fillStyle = C.red; ctx.beginPath(); ctx.moveTo(x - 0.8 * s, y - 1 * s); ctx.lineTo(x + 0.8 * s, y - 1 * s); ctx.lineTo(x, y - 3.5 * s); ctx.fill(); },
+  stop: (x, y, s) => { const { ring, w, e: [, , rx, ry, rot, a0, a1] } = SPRITE.nodes.stop; ctx.strokeStyle = ring; ctx.lineWidth = w * s; ctx.beginPath(); ctx.ellipse(x, y, rx * s, ry * s, rot, a0, a1); ctx.stroke(); },
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
 const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // E121

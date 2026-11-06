@@ -402,12 +402,12 @@
      "F18: Research book O105"
     ],
     "learning": [
-     "bring",
-     "Learning by doing (store, Classical): Every farm, tree farm, quarry, mint or foundry past the first adds 5% to all of its kind, up to four."
+     "in v100",
+     "F26+F27: books/tech.js O181 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "pinfactory": [
-     "bring",
-     "Division of labour (store, Gunpowder): Each hand one task: the mint strikes 20% more, the workshops make 10% more."
+     "in v100",
+     "F26+F27: books/tech.js O182 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "campwagons": [
      "bring",
@@ -670,8 +670,8 @@
      "Public schooling (library, Enlightenment): Every gatherer works 10% faster."
     ],
     "freetrade": [
-     "bring",
-     "Free trade (library, Enlightenment): Trade pays 25% more."
+     "in v100",
+     "F26+F27: books/tech.js O199 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "vaccine": [
      "bring",
@@ -810,112 +810,112 @@
      "F19+F20: Tech book, by its key"
     ],
     "weights": [
-     "bring",
-     "Weights and measures (market, Bronze): Goods sell 5% dearer."
+     "in v100",
+     "F26+F27: books/tech.js O170 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "coinage": [
-     "bring",
-     "Coinage (market, Classical): Goods sell 10% dearer."
+     "in v100",
+     "F26+F27: books/tech.js O171 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "credit": [
-     "bring",
-     "Letters of credit (market, Medieval): Trade pays 25% more."
+     "in v100",
+     "F26+F27: books/tech.js O172 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "bank": [
-     "bring",
-     "Bank (market, Medieval): Gold in your treasury earns 1% a minute, up to 40 gold a minute."
+     "in v100",
+     "F26+F27: books/tech.js O173 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "banking": [
-     "bring",
-     "Banking (market, Gunpowder): Ventures bring 20% more home."
+     "in v100",
+     "F26+F27: books/tech.js O174 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "exchange": [
-     "bring",
-     "Bourse (market, Gunpowder): Trade pays 15% more."
+     "in v100",
+     "F26+F27: books/tech.js O175 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "armedcart": [
-     "bring",
-     "Armed caravans (market, Classical): Caravans are twice as tough, and their guards strike any foe within undefined for undefined, once a second."
+     "in v100",
+     "F26+F27: books/tech.js O176 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "convoys": [
-     "bring",
-     "Convoys (market, Gunpowder): Caravans are 50% tougher."
+     "in v100",
+     "F26+F27: books/tech.js O177 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "caravanserai": [
-     "bring",
-     "Caravanserai (tpost, Classical): Caravans are 50% tougher."
+     "in v100",
+     "F26+F27: books/tech.js O194 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "milestones": [
-     "bring",
-     "Milestones (tpost, Classical): Trade pays 5% more."
+     "in v100",
+     "F26+F27: books/tech.js O195 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "fortpost": [
-     "bring",
-     "Fortified posts (tpost, Medieval): Posts are 50% tougher and shoot harder. See misfits."
+     "in v100",
+     "F26+F27: books/tech.js O196 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "customs": [
-     "bring",
-     "Customs (tpost, Gunpowder): Your posts take 10% more from passing trade."
+     "in v100",
+     "F26+F27: books/tech.js O197 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "postroads": [
-     "bring",
-     "Post roads (tpost, Gunpowder): Trade pays 10% more."
+     "in v100",
+     "F26+F27: books/tech.js O198 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "looms": [
-     "bring",
-     "Warp-weighted loom (workshop, Bronze): Workshops make 15% more cloth."
+     "in v100",
+     "F26+F27: books/tech.js O183 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "spinwheel": [
-     "bring",
-     "Spinning wheel (workshop, Medieval): Workshops make 30% more cloth."
+     "in v100",
+     "F26+F27: books/tech.js O184 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "fulling": [
-     "bring",
-     "Fulling mill (workshop, Medieval): Workshops make 30% more cloth."
+     "in v100",
+     "F26+F27: books/tech.js O185 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "frame": [
-     "bring",
-     "Stocking frame (workshop, Gunpowder): Workshops make 30% more cloth."
+     "in v100",
+     "F26+F27: books/tech.js O186 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "hops": [
-     "bring",
-     "Hops (workshop, Medieval): Workshops make 30% more beer."
+     "in v100",
+     "F26+F27: books/tech.js O187 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "brewhouse": [
-     "bring",
-     "Common brewhouse (workshop, Medieval): Workshops make 20% more beer."
+     "in v100",
+     "F26+F27: books/tech.js O188 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "lager": [
-     "bring",
-     "Cold brewing (workshop, Gunpowder): Workshops make 20% more beer."
+     "in v100",
+     "F26+F27: books/tech.js O189 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "dies": [
-     "bring",
-     "Engraved dies (mint, Medieval): The Mint makes 20% more."
+     "in v100",
+     "F26+F27: books/tech.js O178 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "assay": [
-     "bring",
-     "Assaying (mint, Medieval): The Mint makes 50% more."
+     "in v100",
+     "F26+F27: books/tech.js O179 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "milled": [
-     "bring",
-     "Milled coin (mint, Gunpowder): Goods sell 5% dearer."
+     "in v100",
+     "F26+F27: books/tech.js O180 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "castiron": [
-     "bring",
-     "Cast iron (foundry, Medieval): Foundries make 15% more iron."
+     "in v100",
+     "F26+F27: books/tech.js O190 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "bellows": [
-     "bring",
-     "Water bellows (foundry, Medieval): Foundries make 20% more iron."
+     "in v100",
+     "F26+F27: books/tech.js O191 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "blast": [
-     "bring",
-     "Blast furnace (foundry, Gunpowder): Foundries make 50% more iron."
+     "in v100",
+     "F26+F27: books/tech.js O192 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "finery": [
-     "bring",
-     "Finery forge (foundry, Gunpowder): Foundries make 15% more iron."
+     "in v100",
+     "F26+F27: books/tech.js O193 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "sewers": [
      "bring",

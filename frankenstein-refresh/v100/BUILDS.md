@@ -2179,3 +2179,101 @@ MODIFIED (74):
 LOCKED (1514 of 1588): byte for byte as sealed, 484,432 bytes
 Tests: 34/34 rules hold
 Inventory: 1588 items sealed · 1476 book entries · 80 laws · 194 citations, 33 still to open · 7 known
+
+## F26+F27 · the Market, coin, bank and ventures, goods and workshops; trade and caravans; the four buildings' missing numbers · 2026-11-05 22:57
+Albert, Nov 5 11:40: yes yes F10–F39; 11:16 (5): no surplus selling for anyone; 10:06: Mid's prices and build times, v100's (Age of Empires II's) health for every building
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:screen, book:sprites, book:tech, book:sides, book:words, book:comments, book:rules, book:citations, tool:test.py, law:QCE, law:QCF
+MODIFIED (90):
+- book:capabilities:SC01 · 188 → 197 bytes
+- book:capabilities:SC19 · 142 → 543 bytes
+- book:capabilities:SC36 · added
+- book:capabilities:SC37 · added
+- book:citations:N195 · added
+- book:citations:N196 · added
+- book:citations:N197 · added
+- book:comments:E478 · added
+- book:comments:E479 · added
+- book:comments:E480 · added
+- book:comments:E481 · added
+- book:comments:E482 · added
+- book:comments:E483 · added
+- book:comments:E484 · added
+- book:comments:E485 · added
+- book:comments:E486 · added
+- book:comments:E487 · added
+- book:comments:E488 · added
+- book:comments:E489 · added
+- book:comments:E490 · added
+- book:comments:E491 · added
+- book:comments:E492 · added
+- book:comments:E493 · added
+- book:measure:D123 · 1,397 → 2,320 bytes
+- book:measure:D124 · 386 → 405 bytes
+- book:measure:D125 · 378 → 681 bytes
+- book:measure:D133 · 349 → 374 bytes
+- book:measure:D138 · 3,138 → 3,227 bytes
+- book:measure:D139 · 382 → 1,125 bytes
+- book:measure:D143 · 677 → 760 bytes
+- book:measure:D172 · 165 → 259 bytes
+- book:measure:D219 · 542 → 652 bytes
+- book:measure:D239 · 833 → 1,172 bytes
+- book:measure:D270 · added
+- book:measure:D271 · added
+- book:measure:D272 · added
+- book:measure:D273 · added
+- book:measure:D274 · added
+- book:measure:D275 · added
+- book:measure:D276 · added
+- book:measure:D277 · added
+- book:measure:D278 · added
+- book:rules:X61 · added
+- book:shells:BCR1 · 134 → 158 bytes
+- book:shells:BCT1 · 137 → 160 bytes
+- book:shells:BI6 · 132 → 163 bytes
+- book:shells:BI7 · 138 → 169 bytes
+- book:shells:BI8 · 140 → 172 bytes
+- book:shells:MT1 · added
+- book:shells:UT1 · 233 → 251 bytes
+- book:sprites:PN1 · 1,029 → 1,196 bytes
+- book:tech:O170 · added
+- book:tech:O171 · added
+- book:tech:O172 · added
+- book:tech:O173 · added
+- book:tech:O174 · added
+- book:tech:O175 · added
+- book:tech:O176 · added
+- book:tech:O177 · added
+- book:tech:O178 · added
+- book:tech:O179 · added
+- book:tech:O180 · added
+- book:tech:O181 · added
+- book:tech:O182 · added
+- book:tech:O183 · added
+- book:tech:O184 · added
+- book:tech:O185 · added
+- book:tech:O186 · added
+- book:tech:O187 · added
+- book:tech:O188 · added
+- book:tech:O189 · added
+- book:tech:O190 · added
+- book:tech:O191 · added
+- book:tech:O192 · added
+- book:tech:O193 · added
+- book:tech:O194 · added
+- book:tech:O195 · added
+- book:tech:O196 · added
+- book:tech:O197 · added
+- book:tech:O198 · added
+- book:tech:O199 · added
+- book:words:J15 · added
+- book:words:J7 · 28,206 → 33,918 bytes
+- code:combat.js · 48,394 → 48,840 bytes
+- code:econ.js · 49,408 → 60,834 bytes
+- code:index.html#floor-3-non-movables · 4,947 → 5,305 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 3,286 → 3,507 bytes
+- law:QCE · added
+- law:QCF · added
+- tool:test.py · 145,670 → 162,106 bytes
+LOCKED (1563 of 1653): byte for byte as sealed, 564,117 bytes
+Tests: 35/35 rules hold
+Inventory: 1653 items sealed · 1539 book entries · 82 laws · 197 citations, 35 still to open · 7 known
