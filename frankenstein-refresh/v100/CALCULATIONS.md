@@ -45,9 +45,9 @@ QCK Mending: each villager mends M ÷ (k × T) health a second, M the building's
 QCL Weather: one intensity I, uniform 0 to 1 from the rules' dice, drawn when a wet spell begins and held through it (calm when dry): rain R = I × most, snow S = I × most (D229); wind I × most m/s, signed by the same draw, gusting mean ± swing of it on a fractal of the day's dice; visibility V = 3912 ÷ (0.312 R^0.67 + S ÷ c) m (QK); a storm from D103; a blizzard when snow falls with wind or gusts ≥ 35 mph (15.65 m/s) and visibility < 1/4 mile (402 m) for 3 hours or more, by the NWS. The picture: a fixed pool whose active count is the strength, drops sized by Marshall–Palmer at R (λ = 4.1 R^−0.21) falling at QJ's speed, flakes slower, both carried by the wind, drawn from the looks' dice · N9, N10, N180, N182, N183, N184, N186, N187
 Combat and behaviour
 QAF Battle odds: r² / (1 + r²) · N35
-QAG Who to fight: damage a second ÷ (time to kill + time to reach) · N36, N37
+QAG Who to fight: first one its group can beat (QAF, its side within reach summed against the foe alone), then the most: the foe's damage a second ÷ (time to kill it + time to reach it) · N36, N37, N188
 QAH Fight or not: probability V / C · N38
-QAI Nerve: each loss nearby drains 1 / (break × n) · design
+QAI Nerve: steady at 1; each loss nearby drains 1 / (break × n); a blow that lands drains hit × harm ÷ most health, × side or rear by where it comes from, × the temper's nerve; a kill gives kill; outnumbered drains odds a second; at rest it settles back by QP; at 0 it runs (QAO) · N76, N188
 QAJ Arrow flight: projectile motion under gravity with quadratic drag, F = ½ ρ Cd A v²; the range is where it lands (replaces the no-drag range formula) · N39, N40
 QAL Sight from height: a + b √h · N41
 QAM Line of sight: grid line; woods block · N42
@@ -80,7 +80,7 @@ QBL The way: A* over the tiles, eight neighbours, a straight step 1 and a diagon
 QBM Walking: a shell moves its speed in metres a second (D86) times the units a metre (D85) along its way, tile middle to tile middle; a person walks at quick time, 120 steps of 30 in a minute, 1.52 m/s · N71, N72, N73, N79
 QBN Gathering: a load fills at the find's rate a second (D88) until it holds D87 or the find is gone; then the walk to the nearest drop-off of the side, and back to the find or the one of best rate (QV) within D197, the look widening while it waits at the drop-off · N70
 QBJ Z1's store: food = (age up + villagers × a villager) × (1 + margin); wood = (mill + lumber camp + homes × a home + barracks) × (1 + margin); bushes = ⌈food / a bush⌉, trees = ⌈wood / a tree⌉ (Albert's rule; the prices are the genre's until the Content pull) · N69
-QBO The blow: damage = max(1, base × counter × flank − armour); counter D140 when the striker's kind counters the struck's, flank D141 from behind; an engine strikes a building with its own blow · N69
+QBO The blow: damage = blow × wear × shape × temper × hunger × counter, and on a soldier × the armour share (D228) × its shape's hit (× against riders) × flank (D141) when a blade strikes from behind its line (the cosine to its facing under D232's behind; the front when it can turn or a comrade covers that side), × roofed against missiles; the counter is the most of the striker's vs (D138, its ranks' added) over the struck one's kind, class and tags; a building takes blow × the striker's bld · N69, N188
 QBP Upkeep: every unit of a side eats D131 × its share (its Upkeep, D211, × (1 + Σ research shares), QCA) a day from its store, never below nothing; a villager working food eats from its find instead (a field and game for nothing); with the store empty and no food in reach (a famine), after D212's days its work and blows are × D212's work; an order of yours costs its soldiers' shares for D213's seconds · N170, N171
 QBQ The break: a wave goes home when fewer than D142 of the soldiers it set out with still stand · N76
 QBR The score: people and army held at cost ÷ 5, buildings standing at cost ÷ 5, ages paid ÷ 5, everything gathered ÷ 10 · N75

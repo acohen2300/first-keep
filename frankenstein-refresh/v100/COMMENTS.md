@@ -204,7 +204,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E198 | menu.js | Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) |
 | E199 | menu.js | one row a name in SN4; each answers for the subject t, or says nothing |
 | E200 | menu.js | the base: Albert's template. Corners Yard and War; who works where; Build and − + under each yield |
-| E201 | menu.js | war mode: Albert's War rows. Left the people's orders, the middle box (map, squads, orders, kinds), right the army's |
+| E201 | menu.js | war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and their dials, orders, kinds), right the army's |
 | E202 | menu.js | the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, people, idle, records, rank, army |
 | E203 | menu.js | Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), the three stances, ✓. Drawn now, built with diplomacy (Later) |
 | E204 | menu.js | the five stores, sound, play, mail (SN5) |
@@ -230,19 +230,19 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E224 | econ.js | the tick: training and research, ages, upkeep, the villagers, the bell |
 | E225 | econ.js | a new game: the book's stores (D172); the bell stays as Start set it |
 | E226 | econ.js | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's research, Mid's spent) ÷ D135 |
-| E227 | combat.js | First Keep v100 · combat.js (floor 10): health, one blow (QBO), target choice (QAG), nerve (QBQ), towers (QAL). Lives alone; touches the world only through FK. A soldier's jobs: idle, walk, fight, march (to a point, fighting what it meets), rout (home, fighting nothing). |
+| E227 | combat.js | First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), nerve and the rout (QAI, QAO, QBQ), a soldier's day (its yard, kiting, healing at a shelter), squads, shapes and tempers, towers' reach (QAJ), the missile, sparks and standards. Lives alone; touches the world only through FK. A soldier's jobs: idle (at home, guarding its yard), march (to a point, fighting what it meets), hold (standing at that point), fight, rout (broken and running, or called home) |
 | E228 | combat.js | tiles from a unit to a thing: to a building's footprint, in the grid's frame |
 | E229 | combat.js | gone: pulled down (econ marks it) or dead (die marks it) |
-| E230 | combat.js | QBO the blow: base × counter × flank − armour, one at least; engines strike buildings with their own blow |
-| E231 | combat.js | the blow (QBO), and the body it moves (QBT) |
-| E232 | combat.js | QAG the target: the most harm a second for its health left, discounted by distance; wildlife only when it is biting |
-| E233 | combat.js | by the grids: a building by its middle, so the widest one's reach (D11) is added |
+| E230 | combat.js | the blow's strength (Mid's dmgOf): its blow after research, blades worn by frost, rain or snow (D234, its research a share), a mounted shape's edge, its temper, its side's hunger |
+| E231 | combat.js | a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends it off by the impact (QBT), throws sparks and, from a shooter, a missile; a kill steadies the striker |
+| E232 | combat.js | QAF and QAG the foe (Mid's unitPower, groupPower, canBeat, foeValue): one its group can beat first (Lanchester: its side near summed against the foe alone, with the counters both ways), then the most harm the foe does a second for the time to kill it and reach it; wildlife picks the most worth among what bites it |
+| E233 | combat.js | the best foe in reach (Mid's bestFoe), the nearest one (nearestFoe, round any point), the nearest foe building (nearestFoeBld; the widest one's reach, D11, added to the grid's search) |
 | E234 | combat.js | to within reach of a thing, with a short search (D147) |
 | E235 | combat.js | a wave falls back to its seat, else to any building of its side |
 | E236 | combat.js | a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ) |
-| E237 | combat.js | to a tile, or near one that cannot be stood on (a building's) |
-| E238 | combat.js | QAF a group's power: each one's health × its blow after research, the blow at least D194, over D193 per (Mid's unitPower and powerOf, one home) |
-| E239 | combat.js | a villager fights back only when bitten |
+| E237 | combat.js | to a tile, or near one that cannot be stood on (a building's); no way there, it strikes a foe building that blocks it |
+| E238 | combat.js | QAF a group's power: each one's health × its blow (Mid's dmgOf), the blow at least D194, over D193 per, a building-only kind at D193's bonly (Mid's unitPower and powerOf, one home) |
+| E239 | combat.js | a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; outnumbered it drains; at nothing it breaks and runs (QAO), the player told once in a while |
 | E240 | combat.js | the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of the player's wave |
 | E241 | ai.js | First Keep v100 · ai.js (floor 11): one brain for the computer's side, one personality (balanced). Lives alone; acts only through ECON and WAR, the same doors the menu uses. Every D.ai.beat it looks and does one round: jobs by need, people, homes, drop-offs, plots, the age, the army, the wave. |
 | E242 | ai.js | the seat, and the hands it trains |
@@ -251,7 +251,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E245 | ai.js | a spot: the nearest free footprint to a point, searched in rings, kept off the home's own ring so the roads stay open |
 | E246 | ai.js | jobs by need: the yield whose share is most under its wanted share takes an idle villager, or one from the yield most over |
 | E247 | ai.js | people, homes, drop-offs, plots, the age |
-| E248 | ai.js | the army: the best counter to what the enemy (the first side in play it is at war with) fields most, until the age's count stands |
+| E248 | ai.js | the army: the troop whose counters strike hardest, summed over the enemy's soldiers (Mid's bestCounter by vs), until the age's count stands |
 | E249 | ai.js | the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other side; a stalled wave goes home |
 | E250 | sound.js | First Keep v100 · sound.js (beside the stack): one player for every recipe in books/sound.js (H). Lives alone; hears the world only through FK's 'event' hook. |
 | E251 | sound.js | The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow lowers the air's top and rain masks the quiet (QBX). No sound is typed here. |
@@ -285,7 +285,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E279 | index.html#the-door | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123, or the step's own), a step's time (its own), a unit's training (D124), a site's raising (D125), a queue's length (the mold's six, SN1), a load (D87), a home's room (D127), mud's and snow's cost (D106, how deep it sinks), studs (none), a soldier's share of a blow before armour (D228); any other key is the unit's D138 entry |
 | E280 | index.html#the-door | the one window for a kind's number after research (QCA): flat adds first, then the boosts summed and applied once to that, then each cut on what is left (Albert, Nov 5 18:07), then the lowest kept; a price rounds each yield to the whole unit |
 | E281 | index.html#the-door | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can have moves |
-| E282 | combat.js | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the odds (QAF) both read |
+| E282 | combat.js | who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' added) over the struck one's kind, class and tags; the one home the blow (QBO), the foe (QAG) and the odds (QAF) read |
 | E283 | combat.js | QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army, their ratio held in D193 (Mid's matchup) bending my power |
 | E284 | combat.js | against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 (Mid's powerFrom); the square law as odds, p² ÷ (p² + q²), which is r² ÷ (1 + r²) with r = p ÷ q |
 | E285 | combat.js | the Sides book (I) and the stances made in play, each pair's own; a new game forgets them |
@@ -358,8 +358,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E352 | econ.js | each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY) and a tended flock is culled to half for mutton (QZ); wolves near a pasture take sheep every season; the harvest of the year is rolled in spring (Mid's seasonTurn) |
 | E353 | econ.js | a cut-out plot is replanted at D222's share of its price and is full again; from a drop-off, every cut-out plot of what it takes, nearest first, as many as can be paid for (Mid's replantWhy, replant, cutOut, replantAll) |
 | E354 | econ.js | send a hunter: the given villager, or the nearest idle one, else the nearest from other work (not a builder or a posted worker); it fights the game (Mid's sendHunt) |
-| E355 | combat.js | a villager's javelin strikes game at D221's blow; a famine weakens every blow of its side (Mid's huntTick, hungerOf) |
-| E356 | combat.js | game falls as a carcass of its meat where it stood, and its hunters butcher it (Mid's kill) |
+| E355 | combat.js | QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier, an animal's at D231 wild, a runner's × routHit, × its armour share (D228), its shape's hit and against riders, from behind a blade × D141; roofed against missiles; on a building × the striker's bld (Mid's hurt) |
+| E356 | combat.js | a building that falls pays its destroyer D233 of its price (Mid's plunderBld); game falls as a carcass of its meat where it stood, and its hunters butcher it (Mid's kill) |
 | E357 | menu.js | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |
 | E358 | menu.js | a pasture's card counts its sheep |
 | E359 | menu.js | the town is told what food, the seasons and the flock do, in the Words book's news |
@@ -385,3 +385,27 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E379 | index.html#floor-6-climate | rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's speed in metres a second on the screen, carried and slanted by the wind |
 | E380 | index.html#floor-6-climate | snow: flakes falling slow to fast by size, carried by the wind and swaying |
 | E381 | index.html#floor-6-climate | the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷ V) (QK) |
+| E382 | combat.js | a side knows a step of research by its key |
+| E383 | combat.js | the player's three squads (Mid's battalions): each one's plan by class, its shape, temper and intent (the dials), and the one picked for orders (none: the whole army); the computers keep Guard and the line |
+| E384 | combat.js | who is in which squad (Mid's rebattalion): each keeps its squad while its class has room in the plan, the rest fill the first squad with room; none before Battalions |
+| E385 | combat.js | a squad's plan by class (Mid's sqPlan): a step of one under ten, five above, the whole squad at most D227 |
+| E386 | combat.js | what a squad lacks, by kind to train (Mid's musterGap): its plan less its soldiers and those mustering for it, each class as its first kind of the age |
+| E387 | combat.js | where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own and its comrades' near, D232) and the striker; the front whenever it can turn to meet it or a comrade covers that side |
+| E388 | combat.js | QAI a loss drains each soldier of its side within D231's lossR by 1 ÷ (D142 × n) (Mid's died, Dupuy's break) |
+| E389 | combat.js | Lanchester's odds above a half is exactly the ratio above one |
+| E390 | combat.js | a soldier at home keeps to its yard: within D235 of its post or of its Town Center (Mid's nearHome) |
+| E391 | combat.js | a foe building in the way is struck (Mid's findBlocker) |
+| E392 | combat.js | a group dressed into its shape at a tile (Mid's formUp): facing from home to there, the squads in order, blades before shooters; a column three files, a square √n, a front one rank, a choke three, a line about twice as wide as deep, a wedge point first, support a ring of blades round the shooters; each walks to its own place, at the pace of the slowest that is not an engine; a drill (the War Director's) keeps the shape for its time |
+| E393 | combat.js | Albert's x% by x%: a soldier in a drill not D242's share of the way to its place by that share of the time stands where it is (Mid's drillOn, drillHold) |
+| E394 | combat.js | at home an army stands in the yard of the building that trained it (or its Town Center), toward the map's middle, a block a squad side by side, blades in front, shooters behind (Mid's formUp, homeSpot) |
+| E395 | combat.js | a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own pace, for the run's seconds (research shortens it), then comes back at D231's after (Mid's routSecs) |
+| E396 | combat.js | a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its foe while in reach of its sight × D238 leash × its temper's chase; it looks for the best foe and keeps the one it has unless the new is D132 better or the old is at its blade; at home only near its yard; No pursuit and Buildings first; Hold fights only what comes within reach; a march arrived holds; at home it walks back to its post |
+| E397 | combat.js | QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245's angle, stepped until it lands; its speed for a distance found by halving; a tower reaches as far as the arrow that lands at its bow's ground reach would land from its height, plus its research |
+| E398 | combat.js | in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE), then strikes when ready |
+| E399 | combat.js | the missiles in flight: a streak along the drag path, its tail D245's share of the flight |
+| E400 | combat.js | a blow's sparks (Mid's sparkDraw) |
+| E401 | combat.js | the standards (Mid's drawStandards): a group of D sprites' least on the move carries its side's flag, a ring at its foot as full as its health |
+| E402 | econ.js | Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the War Council: D244's times the price, the slowest kind's time shared by the buildings that train it × D244's time; refused without the step, with nothing lacking, without a council, a kind's building, room in the army or the town, or the price (a reason as a word for the menu); it comes out together into its squad |
+| E403 | menu.js | the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up opens them for the one picked or the whole army |
+| E404 | menu.js | the squads' words and the step each dial waits for (Engagement, Formations, Battalions) |
+| E405 | menu.js | the War Council's card: the three squads, the picked one's plan by class (− and +) and Muster for what it lacks |

@@ -10,6 +10,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | A2 | the camera's rise over the ground | 41 | N91 |
 | A3 | the angle of repose, dry sand: steeper is a face, not a slope | 34 | N64 |
 | A4 | a full turn: the fish spots go round a lake's shore | 360 | N170 |
+| A5 | a missile is loosed at this rise: the farthest reach (Mid's rangeFrom) | 45 | N39; N188 |
 
 ## capabilities
 
@@ -25,8 +26,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC3 | takes a load to the nearest drop-off of its side | {by: econ.js, law: [QBN], needs: [body], may: []} | N95 |
 | SC4 | raises a site; a builder remembers its work and goes back to it after (Mid's) | {by: econ.js, law: [QAC], needs: [body], may: []} | N95; N168 |
 | SC5 | mends a hurt building at D201's time and price, paid as it goes, then goes back to its work (Mid's) | {by: econ.js, law: [QCK], needs: [body], may: []} | N95; N168 |
-| SC6 | strikes; without Gather it is a soldier; a wild one with it bites | {by: combat.js, law: [QBO, QAG, QBT], needs: [D138], may: []} | N96 |
-| SC7 | looses at range (a building that shoots reads D143) | {by: combat.js, law: [QAL], needs: [D143/D138], may: []} | N96 |
+| SC6 | strikes (QBO: its counters, where the blow comes from, the shape and the armour share); its foe the one its group can beat, then the best (QAG, QAF); a soldier's nerve drains and breaks it (QAI, QAO); a soldier at home guards its yard | {by: combat.js, law: [QBO, QAG, QAF, QBT, QAI, QAO], needs: [D138], may: []} | N96; N188 |
+| SC7 | looses at range; a building that shoots reads D143 and reaches as far as an arrow loosed from its height lands (QAJ); a shooter steps back while it reloads | {by: combat.js, law: [QAL, QAJ], needs: [D143/D138], may: []} | N96; N188 |
 | SC8 | has health, and sways when badly hurt | {by: combat.js, index.html, law: [QBS], needs: [D138/D139], may: []} | N97 |
 | SC9 | wanders when idle (a Poisson wait) | {by: index.html step, law: [QM], needs: [pace], may: []} | N94 |
 | SC10 | can be hunted: a villager sent to it (or tapped on it) strikes at D221's blow; it falls as a carcass of D220's food where it stood, which its hunters butcher; one with a blow strikes back (Mid's sendHunt, huntTick, the boar's temper) | {by: econ.js, combat.js, menu.js: hunting, law: [QBO], needs: [D220], may: []} | N94; N170 |
@@ -46,6 +47,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC24 | a find worked only within D218's near of a finished Shore building of the side; it regrows each spring toward its own stock (QY) | {by: econ.js, law: [QY], needs: [], may: []} | N170 |
 | SC25 | keeps a flock (D219): its shepherd's food goes straight to the stores, a sheep's rate times the sheep; lambs each spring (QY), a tended flock culled to half (QZ); wolves take sheep | {by: econ.js, law: [QY, QZ], needs: [], may: []} | N170 |
 | SC26 | its soil wears when worked and rests back (QAA, D214); its yield follows the season (D216) and the year's harvest (D215) | {by: econ.js, law: [QAA], needs: [], may: []} | N170 |
+| SC27 | a soldier of its side resting within D237's reach heals by the first-order lag (QP); its going inside waits for All hands | {by: combat.js, law: [QP], needs: [], may: []} | N188; N16 |
+| SC28 | the War Council: the three squads' plans, and Muster, a squad's lack in one order (D244); a squad's dials (temper, shape, intent) are answered by combat.js | {by: combat.js, econ.js, menu.js, law: [], needs: [], may: []} | N188 |
 
 ## citations
 
@@ -238,6 +241,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N185 |  | Design: Albert, Nov 5 18:07–18:08: pace by the floor, the weather, mass and gravity, never by the calendar (Pandolf); the effects law, boost | opened |
 | N186 |  | Intensity's top: rain 50 mm/h (violent rain on the Met Office's scale), snow 5 mm/h of water, wind 20 m/s (a gale, Beaufort 8); from memory, | to open |
 | N187 |  | Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open | to open |
+| N188 |  | Design: Mid's blow, nerve, a soldier's day, squads, formations and muster (16-sim-fight.js fromWhere, hurt, plunder, plunderBld; 14-sim-troo | opened |
+| N189 |  | Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 to 3 on its shaft's cross-secti | to open |
 
 ## colours
 
@@ -252,6 +257,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C7 | Ring red | #ff6b5b | N103 |
 | C8 | Ring white | #ece5d3 | N103 |
 | C10 | Gold (on) | #e6b947 | N103 |
+| C11 | An arrow or shot in flight | #ffeec8 | N188 |
+| C12 | A burning arrow; a blow's spark | #ffb050 | N188 |
+| C13 | A standard's pole | #3a2a1a | N188 |
+| C14 | A ring's or a flag's shadow | #100c08 | N188 |
 
 ## comments
 
@@ -457,7 +466,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E198 |  | Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) |  |
 | E199 |  | one row a name in SN4; each answers for the subject t, or says nothing |  |
 | E200 |  | the base: Albert's template. Corners Yard and War; who works where; Build and − + under each yield |  |
-| E201 |  | war mode: Albert's War rows. Left the people's orders, the middle box (map, squads, orders, kinds), right the army's |  |
+| E201 |  | war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and their dials, orders, kinds), right the army's |  |
 | E202 |  | the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, people, idle, records, rank, army |  |
 | E203 |  | Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), the three stances, ✓. Drawn now, built with diplom |  |
 | E204 |  | the five stores, sound, play, mail (SN5) |  |
@@ -483,19 +492,19 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E224 |  | the tick: training and research, ages, upkeep, the villagers, the bell |  |
 | E225 |  | a new game: the book's stores (D172); the bell stays as Start set it |  |
 | E226 |  | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's researc |  |
-| E227 |  | First Keep v100 · combat.js (floor 10): health, one blow (QBO), target choice (QAG), nerve (QBQ), towers (QAL). Lives alone; touches the wor |  |
+| E227 |  | First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), nerve and the rout (QAI, QAO, QBQ), a soldier's day |  |
 | E228 |  | tiles from a unit to a thing: to a building's footprint, in the grid's frame |  |
 | E229 |  | gone: pulled down (econ marks it) or dead (die marks it) |  |
-| E230 |  | QBO the blow: base × counter × flank − armour, one at least; engines strike buildings with their own blow |  |
-| E231 |  | the blow (QBO), and the body it moves (QBT) |  |
-| E232 |  | QAG the target: the most harm a second for its health left, discounted by distance; wildlife only when it is biting |  |
-| E233 |  | by the grids: a building by its middle, so the widest one's reach (D11) is added |  |
+| E230 |  | the blow's strength (Mid's dmgOf): its blow after research, blades worn by frost, rain or snow (D234, its research a share), a mounted shape |  |
+| E231 |  | a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends it off by the impact (QBT), throws sparks and, from |  |
+| E232 |  | QAF and QAG the foe (Mid's unitPower, groupPower, canBeat, foeValue): one its group can beat first (Lanchester: its side near summed against |  |
+| E233 |  | the best foe in reach (Mid's bestFoe), the nearest one (nearestFoe, round any point), the nearest foe building (nearestFoeBld; the widest on |  |
 | E234 |  | to within reach of a thing, with a short search (D147) |  |
 | E235 |  | a wave falls back to its seat, else to any building of its side |  |
 | E236 |  | a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ) |  |
-| E237 |  | to a tile, or near one that cannot be stood on (a building's) |  |
-| E238 |  | QAF a group's power: each one's health × its blow after research, the blow at least D194, over D193 per (Mid's unitPower and powerOf, one ho |  |
-| E239 |  | a villager fights back only when bitten |  |
+| E237 |  | to a tile, or near one that cannot be stood on (a building's); no way there, it strikes a foe building that blocks it |  |
+| E238 |  | QAF a group's power: each one's health × its blow (Mid's dmgOf), the blow at least D194, over D193 per, a building-only kind at D193's bonly |  |
+| E239 |  | a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; outnumbered it drains; at nothing it breaks and runs |  |
 | E240 |  | the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of the player's wave |  |
 | E241 |  | First Keep v100 · ai.js (floor 11): one brain for the computer's side, one personality (balanced). Lives alone; acts only through ECON and W |  |
 | E242 |  | the seat, and the hands it trains |  |
@@ -504,7 +513,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E245 |  | a spot: the nearest free footprint to a point, searched in rings, kept off the home's own ring so the roads stay open |  |
 | E246 |  | jobs by need: the yield whose share is most under its wanted share takes an idle villager, or one from the yield most over |  |
 | E247 |  | people, homes, drop-offs, plots, the age |  |
-| E248 |  | the army: the best counter to what the enemy (the first side in play it is at war with) fields most, until the age's count stands |  |
+| E248 |  | the army: the troop whose counters strike hardest, summed over the enemy's soldiers (Mid's bestCounter by vs), until the age's count stands |  |
 | E249 |  | the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other side; a stalled wave goes home |  |
 | E250 |  | First Keep v100 · sound.js (beside the stack): one player for every recipe in books/sound.js (H). Lives alone; hears the world only through  |  |
 | E251 |  | The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow lowers the air's top and rain masks the quiet (QB |  |
@@ -538,7 +547,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E279 |  | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123 |  |
 | E280 |  | the one window for a kind's number after research (QCA): flat adds first, then the boosts summed and applied once to that, then each cut on  |  |
 | E281 |  | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can ha |  |
-| E282 |  | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the |  |
+| E282 |  | who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' added) over the struck one's kind, class and tags;  |  |
 | E283 |  | QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army |  |
 | E284 |  | against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 (Mid's powerFrom); the square law as odds, p² ÷ (p² |  |
 | E285 |  | the Sides book (I) and the stances made in play, each pair's own; a new game forgets them |  |
@@ -611,8 +620,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E352 |  | each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY) and a tended flock is culled to half for mutton  |  |
 | E353 |  | a cut-out plot is replanted at D222's share of its price and is full again; from a drop-off, every cut-out plot of what it takes, nearest fi |  |
 | E354 |  | send a hunter: the given villager, or the nearest idle one, else the nearest from other work (not a builder or a posted worker); it fights t |  |
-| E355 |  | a villager's javelin strikes game at D221's blow; a famine weakens every blow of its side (Mid's huntTick, hungerOf) |  |
-| E356 |  | game falls as a carcass of its meat where it stood, and its hunters butcher it (Mid's kill) |  |
+| E355 |  | QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier, an animal's at D231 wild, a runner's × routHit, ×  |  |
+| E356 |  | a building that falls pays its destroyer D233 of its price (Mid's plunderBld); game falls as a carcass of its meat where it stood, and its h |  |
 | E357 |  | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |  |
 | E358 |  | a pasture's card counts its sheep |  |
 | E359 |  | the town is told what food, the seasons and the flock do, in the Words book's news |  |
@@ -638,6 +647,30 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E379 |  | rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's speed in metres a second on the screen, carried and  |  |
 | E380 |  | snow: flakes falling slow to fast by size, carried by the wind and swaying |  |
 | E381 |  | the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷ V) (QK) |  |
+| E382 |  | a side knows a step of research by its key |  |
+| E383 |  | the player's three squads (Mid's battalions): each one's plan by class, its shape, temper and intent (the dials), and the one picked for ord |  |
+| E384 |  | who is in which squad (Mid's rebattalion): each keeps its squad while its class has room in the plan, the rest fill the first squad with roo |  |
+| E385 |  | a squad's plan by class (Mid's sqPlan): a step of one under ten, five above, the whole squad at most D227 |  |
+| E386 |  | what a squad lacks, by kind to train (Mid's musterGap): its plan less its soldiers and those mustering for it, each class as its first kind  |  |
+| E387 |  | where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own and its comrades' near, D232) and the striker; the  |  |
+| E388 |  | QAI a loss drains each soldier of its side within D231's lossR by 1 ÷ (D142 × n) (Mid's died, Dupuy's break) |  |
+| E389 |  | Lanchester's odds above a half is exactly the ratio above one |  |
+| E390 |  | a soldier at home keeps to its yard: within D235 of its post or of its Town Center (Mid's nearHome) |  |
+| E391 |  | a foe building in the way is struck (Mid's findBlocker) |  |
+| E392 |  | a group dressed into its shape at a tile (Mid's formUp): facing from home to there, the squads in order, blades before shooters; a column th |  |
+| E393 |  | Albert's x% by x%: a soldier in a drill not D242's share of the way to its place by that share of the time stands where it is (Mid's drillOn |  |
+| E394 |  | at home an army stands in the yard of the building that trained it (or its Town Center), toward the map's middle, a block a squad side by si |  |
+| E395 |  | a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own pace, for the run's seconds (research shortens it), |  |
+| E396 |  | a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its foe while in reach of its sight × D238 leash × it |  |
+| E397 |  | QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245's angle, stepped until it lands; its speed for a d |  |
+| E398 |  | in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE), then strikes when ready |  |
+| E399 |  | the missiles in flight: a streak along the drag path, its tail D245's share of the flight |  |
+| E400 |  | a blow's sparks (Mid's sparkDraw) |  |
+| E401 |  | the standards (Mid's drawStandards): a group of D sprites' least on the move carries its side's flag, a ring at its foot as full as its heal |  |
+| E402 |  | Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the War Council: D244's times the price, the slowest k |  |
+| E403 |  | the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up opens them for the one picked or the whole army |  |
+| E404 |  | the squads' words and the step each dial waits for (Engagement, Formations, Battalions) |  |
+| E405 |  | the War Council's card: the three squads, the picked one's plan by class (− and +) and Muster for what it lacks |  |
 
 ## ground
 
@@ -663,7 +696,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | W7 | a tool (axe, pick, hammer) | {kg: 2, blow: {kg: 2, mps: 8}} | N85 |
 | W8 | a spear | {kg: 2.5, blow: {kg: 2.5, mps: 6}} | N85 |
 | W9 | a shield | {kg: 5} | N85 |
-| W10 | a bow, its blow an arrow | {kg: 2, blow: {kg: 0.03, mps: 50}} | N85 |
+| W10 | a bow, its blow an arrow; the arrow's drag ½ρCdA in N·s²/m² (ρ 1.2, Cd about 2 on an 8 mm shaft) | {kg: 2, blow: {kg: 0.03, mps: 50, drag: 6e-05}} | N85; N189 |
 | W11 | scale armour | {kg: 12} | N85 |
 | W13 | a lance: a thrust when standing; moving, the whole rider and horse strike (QBT) | {kg: 4, blow: {kg: 4, mps: 6}} | N85 |
 | W14 | a wagon's or caravan's load | {kg: 100} | N97 |
@@ -816,12 +849,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D135 | the score's divisors | {unit: 5, bld: 5, tech: 5, wealth: 10} | N75 |
 | D136 | a farm's food a second | 0.4 | N69 |
 | D137 | a find no path reached is left alone for | 60 | N114 |
-| D138 | a unit's health, blow, reach and sight in tiles (Mid's ÷ D12), pace, armour, class and counter; each soldier kind Mid's (its health and blow open for Albert's play test), its armour and counter its class's (v100's, until the blow, M19); the boar and the bison Mid's | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, arm: 0, cls: foot}, UM1: {hp: 60, atk: 6, rng: 1.2, rof: 1.2, arm: 1, sight: 13, cls: foot, vs: hors | N69; N170; N176 |
+| D138 | a unit's health, blow, reach and sight in tiles (Mid's ÷ D12), pace; a soldier's tags, its counters (vs: × its blow on a kind, class or tag), its blow on a building (bld, × its blow), roofed (rarmor, × arrows and bolts it takes), building-only (bonly) and kiting (kite), every one Mid's UNIT (no flat armour: its armour is the research share D228); its health and blow open for Albert's play test; the boar and the bison Mid's | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, tags: [civ]}, UM1: {hp: 60, atk: 6, rng: 1.2, rof: 1.2, sight: 13, tags: [infantry, spear], vs: {Rid | N69; N170; N176; N188 |
 | D139 | a building's health; the tree farm and the pasture a farm's, the dock Age of Empires II's | {BTC1: 2400, BR1: 550, BI1: 600, BI2: 600, BI3: 600, BCL1: 480, BM1: 1200, BM2: 1200, BM3: 1200, BM4: 1500, BW1: 1800, BW2: 2750, BW3: 1020, | N69; N170 |
-| D140 | a counter's edge | 1.5 | N114 |
-| D141 | a blow from behind | 1.3 | N114 |
-| D142 | a wave breaks under this share of its start | 0.3 | N76 |
-| D143 | what shoots: blow, reach, pace | {BW3: [5, 8, 2], BTC1: [5, 6, 2], BTC8: [4, 6, 2]} | N69 |
+| D141 | a blow from behind the line lands this much harder (Mid's FLANK) | 1.3 | N188 |
+| D142 | a wave breaks under this share of its start (QBQ); a soldier's loss drains each one near 1 ÷ (this × n) (QAI) | 0.3 | N76 |
+| D143 | what shoots: its blow, seconds a shot, the reach of its bow from the ground and its height (tiles), its reach's research (rng adds): Mid's watchtower, Town Center and camp tower; it shoots as far as an arrow loosed from that height lands (QAJ) | {BW3: {atk: 10, rof: 1.2, bow: 10.6, h: 4.4, rng: 0}, BTC1: {atk: 7, rof: 1, bow: 10.6, h: 3.4, rng: 0}, BTC8: {atk: 6, rof: 1.4, bow: 9, h: | N188; N39; N40 |
 | D144 | a soldier takes up a fight within | 8 | N114 |
 | D145 | seconds between its path checks | 1 | N114 |
 | D146 | wildlife bites within | 3 | N114 |
@@ -869,8 +901,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D190 | the map's lettered square, in units (J6): A1 to V22 across the board | 100 | N132 |
 | D191 | numbers said: from a thousand shortened to tenths of a k (1.2k), from ten thousand to whole k (12k); a share said in percent | {tenth: 100, thousand: 1000, whole: 10000, percent: 100} | N132 |
 | D192 | a side's people count as this much strength in the odds | 250 | N157 |
-| D193 | the odds: a unit's power is its health × its blow ÷ per; who counters whom is weighed over the first look of each army, held between lo and hi | {per: 6, look: 10, lo: 0.6, hi: 1.6} | N157 |
-| D194 | a blow does at least this, and a unit's power counts at least this blow | 1 | N69; N157 |
+| D193 | the odds: a unit's power is its health × its blow ÷ per; who counters whom is weighed over the first look of each army, held between lo and hi; a building-only kind counts bonly of its power (Mid's unitPower) | {per: 6, look: 10, lo: 0.6, hi: 1.6, bonly: 0.3} | N157; N188 |
+| D194 | a unit's power counts at least this blow (Mid's unitPower) | 1 | N157 |
 | D195 | the forager: a field (or a tree begun) counts as life loads; how many a find holds before they crowd (QX); the finds one works at a time: a tree one feller, a field one worker (the Open style) | {life: 20, hold: {tree: 1, bush: 2, fish: 2, stone: 3, gold: 3, iron: 3, carcass: 2, other: 2}, cap: {tree: 1, bld: 1}} | N164; N166 |
 | D196 | standing, in metres: a pace apart (3 ft), near enough a spot to stand on it (a quarter pace), the ring a find is worked from (Mid's WORK_R); the lattice's rings, pack × √(D128) and spare more, its second axis at 60° (hex, QCI); two who meet part with pass as much again to the side, each to its right, so they slip by (QCJ) | {apart: 0.9144, arrive: 0.2286, work: {fish: 1.495, other: 1.035}, pack: 0.525, spare: 2, hex: [0.5, 0.866025], pass: 0.5} | N164; N165; N166; N167 |
 | D197 | a worker whose find is gone looks from metres, widening by grow over tau seconds (Mid's REACH ÷ 2 and × 1.5), waits at its drop-off and looks again every again seconds | {from: 14.95, grow: 44.86, tau: 20, again: 2} | N164 |
@@ -907,6 +939,21 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D229 | weather by one intensity I, 0 to 1, drawn at a wet spell's start (QCL): rain most mm/h (Marshall–Palmer drops, N0 and the rate's power; sizes dMin to dMax mm; extinction beta R^pow a km), snow most mm/h of water (extinction S ÷ c a km; flakes fall slow to fast m/s); a drop's fall speed a − b e^(−c D) (QJ); wind most m/s, gusting ± gust of it by a fractal of the day's dice (seed, k waves, dimension, period s), so a gust is 1 + gust of the wind; visibility k ÷ extinction a km, km metres to one (QK); a blizzard by the NWS: wind or gusts at least wind m/s (35 mph), visibility under vis m (a quarter mile), for hours; the white veil's most (Koschmieder's contrast lost over the screen's width); a pool of particles whose active count is the strength | {pool: 240, rain: {most: 50, n0: 4.1, exp: -0.21, dMin: 0.5, dMax: 4, beta: 0.312, pow: 0.67}, snow: {most: 5, c: 0.2, slow: 0.5, fast: 1.5} | N9; N10; N180; N182; N183; N184; N186; N187; N185 |
 | D230 | the most tiles the way (QBL) opens before it gives up; the most places tried for a wild group | {way: 20000, spot: 100} | N112 |
 | D228 | the share of a blow a soldier takes before its armour research, which keeps the lowest share it reaches (Mid's stats armor) | 1 | N176 |
+| D231 | a soldier's nerve, 1 when steady: a blow that lands takes hit × the harm ÷ its most health, from the front × front, the side × side, behind × rear; a kill gives kill; a loss within lossR tiles drains (QAI); outnumbered more than this to one within crowd tiles drains odds a second; at rest it settles back over tau s (QP), shelter times faster within shelterR tiles of its own wall or tower; broken, it runs from the nearest foe within flee tiles, run tiles a step, for the run's seconds (D239 rout), takes routHit, and comes back at after; an animal's blow lands at wild and shakes no nerve (Mid's MORALE) | {full: 1, hit: 0.8, side: 1.5, rear: 2, kill: 0.04, lossR: 4, odds: 0.02, crowd: 10, outnumbered: 1.5, tau: 15, shelter: 1.5, shelterR: 6, r | N188; N76; N16 |
+| D232 | where a blow comes from: a comrade within cover tiles on that side covers it; the line's facing sums those within line tiles; a blow is from behind past the behind cosine, from the side under cos; only a blade (reach up to melee tiles) flanks (Mid's FLANKING) | {cover: 3, line: 4, cos: 0.5, behind: -0.5, melee: 2} | N188 |
+| D233 | a building that falls pays its destroyer this share of its price (Mid's PLUNDER) | 0.25 | N188 |
+| D234 | blades brittle in frost and rusted in rain or snow strike this much less, less each research's share (Mid's CLIMATE.wear; Tempering, Oiled steel) | 0.15 | N188 |
+| D235 | a soldier at home fights within this many tiles of its post or its Town Center (Mid's YARD) | 32 | N188 |
+| D236 | a shooter reloading steps back back tiles from a blade within near, for hold seconds (Mid's KITE) | {near: 4.5, back: 2.8, hold: 0.5} | N188 |
+| D237 | a soldier at rest within r tiles of its own shelter heals (Mid's GARRISON; its pace is D239's garrison, QP) | {r: 7} | N188; N16 |
+| D238 | a soldier's choice of foe: its side within group tiles add their power (Lanchester); a foe that cannot hurt still counts least; it keeps a foe within leash × its sight × its temper's chase; the computers keep the temper guard; hold fights only within reach, press never kites; No pursuit (loose) looks step tiles past its reach, Buildings first (bld) takes the nearest building; a squad's plan steps by steps[1] under steps[0], else steps[2]; at home a soldier walks back when farther than near tiles from its post (Mid's GROUP_R, foeValue, TEMPER, INTENT, sqPlan) | {group: 6, least: 0.1, leash: 1.4, temper: {hold: 0, guard: 1, press: 2}, intent: {engage: 0, loose: 1, bld: 2}, step: 1, steps: [10, 1, 5], | N188; N36; N37 |
+| D239 | the bases of shares that research moves and no shell holds: nerve's settling (rest, shelter), healing at a shelter (garrison: most health ÷ this, seconds), the run (rout, seconds), wear's research, a blow on a building, a charge, a walker's share of its pace from its shape and its march (pace) (Mid's MORALE, GARRISON, fxv) | {rest: 1, shelter: 1, garrison: 0.6, rout: 8, wear: 0, bld: 1, charge: 1, pace: 1} | N188 |
+| D240 | a squad's shape, each a trade: riders in it strike × dmg; it takes × hit, from riders × vsRiders; it walks × spd; an army marches in column once Formations is known (Mid's FORM, COLUMN) | {line: {dmg: 1, hit: 1, spd: 1, vsRiders: 1}, wedge: {dmg: 1.15, hit: 1.1, spd: 1, vsRiders: 1}, square: {dmg: 1, hit: 0.9, spd: 0.8, vsRide | N188 |
+| D241 | an army stands in a grid gap tiles apart, about rows times as wide as deep, at most most files; at home in its building's yard tiles past it, a block a squad of √(n × block) files up to cols; a column three files, a choke three; support rings its blades round at least ring places (Mid's GRID, formUp, CHOKE) | {gap: 1.5, rows: 2, most: 14, yard: 2.4, block: 2.5, cols: 10, column: 3, choke: 3, ring: 6} | N188 |
+| D242 | a soldier in a drill not this share of the way to its place by this share of the drill's time stands where it is (Mid's FORMING, Albert's x% by x%) | {share: 0.7} | N188 |
+| D243 | a squad's temper, Hold, Guard, Press: blows on it shake its nerve × nerve, it strikes × dmg, chases × chase (Mid's TEMPER) | [{nerve: 0.8, dmg: 1, chase: 1}, {nerve: 1, dmg: 1, chase: 1}, {nerve: 1.3, dmg: 1.1, chase: 1.3}] | N188 |
+| D244 | Muster: a squad's lack in one order at the War Council, cost times the price, the slowest kind's time shared by its buildings, times time (Mid's musterCost) | {cost: 2, time: 1.25} | N188 |
+| D245 | a missile's flight (QAJ): loosed at A5, stepped dt seconds, its speed found in tries halvings; drawn as a streak tail of its flight long; a blow's sparks last spark seconds, at most sparks at once | {dt: 0.01, tries: 24, tail: 0.12, spark: 0.3, sparks: 40} | N188; N39; N40 |
 
 ## rules
 
@@ -999,11 +1046,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | MG2 | Cemetery | [] | N144 |
 | MG3 | Campfire | [Yield] | N144 |
 | MG4 | Treasure | [Yield] | N144 |
-| BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health] | N144 |
-| BTC2 | Castle | [] | N144 |
+| BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health, Shelter] | N144 |
+| BTC2 | Castle | [Shelter] | N144 |
 | BTC5 | Medical tent | [] | N144 |
 | BTC6 | Training tent | [] | N144 |
-| BTC7 | Mess tent | [] | N144 |
+| BTC7 | Mess tent | [Shelter] | N144 |
 | BTC8 | Camp tower | [Shoot] | N144 |
 | BR1 | Home | [House, Health] | N144 |
 | BR2 | Apartment | [] | N144 |
@@ -1024,7 +1071,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BP7 | Aqueduct | [] | N144 |
 | BP8 | Courthouse | [] | N144 |
 | BP9 | Hall | [] | N144 |
-| BP10 | War Council | [] | N144 |
+| BP10 | War Council | [Squad] | N144 |
 | BI1 | Mill | [Drop-off, Health] | N144 |
 | BI2 | Lumber camp | [Drop-off, Health] | N144 |
 | BI3 | Mining camp | [Drop-off, Health] | N144 |
@@ -1034,7 +1081,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BI7 | Foundry | [] | N144 |
 | BI8 | Workshop | [] | N144 |
 | BI9 | Smith | [] | N144 |
-| BM1 | Barracks | [Spawn, Health] | N144 |
+| BM1 | Barracks | [Spawn, Health, Shelter] | N144 |
 | BM2 | Range | [Spawn, Health] | N144 |
 | BM3 | Stable | [Spawn, Health] | N144 |
 | BM4 | Siege workshop | [Spawn, Health] | N144 |
@@ -1198,6 +1245,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | P32 | the treb figure | {brush: draw, parts: [[planks, -14, -5, 14, -2, #8a5d34], [P, [[-6, -5], [0, -30], [6, -5]], null, #8a5d34, 1.6], [L, -3, -18, 3, -18, #8a5d | N150; N176 |
 | P33 | the armour a side's research puts on its soldiers (Mid's KIT): leather a shoulder guard, chain mail and a steel helm, plate with a great helm, its crest and a cape in the figure's own colours ($side the trim) | [{}, {body: {: mail, scale: mail}, head: {bare: kettle, hood: kettle, cap: kettle, straw: kettle}}, {body: {: plate, mail: plate, scale: pla | N150; N176 |
 | P34 | the elite rank's gold pennant on a staff, for a look marked elite at a rank (Mid's elitePennant, ELITE_LOOK) | {parts: [[L, 8, -4, 8, -30, #5a3a1c, 0.9], [P, [[8, -30], [16, -27.5], [8, -25]], #e6b947, #8a6a1a, 0.4], [P, [[8.6, -29], [13.5, -27.5], [8 | N150; N176 |
+| P35 | the standard an army on the move carries: drawn over a group of least or more once the zoom passes zoom; a pole pole tall, a ring at its foot as full as the group's health (radius, plus), filled from top (radians), the flag's width and its edges, its wave (speed, swing, the tail's share), the ring's tilt and its shadow's alpha (Mid's drawStandards) | {least: 5, zoom: 0.4, pole: 30, ring: [6, 2], line: 2.4, flag: [10, 1, 6, 7], wave: [4, 1.4, 1.5], tilt: 0.5, alpha: 0.6, top: -1.5708} | N188 |
+| P36 | a blow's sparks: rays rays turned turn apart and spinning spin, from from out to to plus grow over its life, lifted lift (Mid's sparkDraw) | {rays: 5, turn: 1.26, spin: 7, from: 2, to: 3, grow: 6, line: 1.4, lift: 6} | N188 |
+| P37 | the marks over the map: a health bar h tall, its shadow's alpha; a unit's width, lift and margin; a building's width and lift a tile of its size, plus, and margin; the wave's crosshair, its line, ring and arms; a whole turn | {bar: {h: 3, alpha: 0.5, unit: [16, 34, 20], bld: [10, 12, 20, 40]}, cross: {line: 1.5, r: [14, 7], arm: [20, 10]}, arc: [0, 6.2832]} | N114 |
 
 ## tech
 
@@ -1335,6 +1385,25 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O130 | Corned powder | {at: BM4, line: Engines, age: 4, cost: {wood: 510, gold: 340}, time: 82, fx: [{s: atk, k: UM14, a: 20}], when: 1420s, w: 8} | N160; N161; N176 |
 | O131 | Gun carriages | {at: BM4, line: Engines, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: spd, k: Engines, p: 0.25}], need: [corned], when: 1470s, w | N160; N161; N176 |
 | O132 | Petards | {at: BM4, line: Engines, age: 4, cost: {wood: 390, gold: 260}, time: 66, fx: [{s: blast, k: [UM9, UM14], a: 1}], need: [corned], when: 1570s | N160; N161; N176 |
+| O133 | Arrow slits | {at: BI9, line: Walls, age: 2, cost: {gold: 150, iron: 100}, time: 35, fx: [{s: rng, k: Shoot, a: 2.0}], when: 200 BC, w: 4} | N160; N161; N188 |
+| O134 | Curtain walls | {at: BI9, line: Walls, age: 3, cost: {gold: 290, iron: 190}, time: 56, fx: [{s: hp, k: [Line, Gate], p: 0.6}, {s: hp, k: BW3, p: 0.4}], need | N160; N161; N188 |
+| O135 | Machicolations | {at: BI9, line: Walls, age: 3, cost: {gold: 240, iron: 160}, time: 48, fx: [{s: atk, k: BW3, a: 5}], need: [fortify], when: 1200s, w: 4} | N160; N161; N188 |
+| O136 | Gun founding | {at: BI9, line: Walls, age: 4, cost: {gold: 470, iron: 310}, time: 77, fx: [{s: atk, k: [UM9, UM14], a: 10}], need: [blasting], when: 1400s, | N160; N161; N188 |
+| O137 | Star fort | {at: BI9, line: Walls, age: 4, cost: {gold: 510, iron: 340}, time: 82, fx: [{s: hp, k: [Line, Gate], p: 0.5}, {s: hp, k: Shoot, p: 0.3}], ne | N160; N161; N188 |
+| O138 | Beacons | {at: BW3, line: Towers, age: 2, cost: {wood: 150, gold: 80}, time: 35, fx: [{s: sight, k: Shoot, a: 6.0}], when: about 200 BC, w: 4} | N160; N161; N188 |
+| O139 | Great towers | {at: BW3, line: Towers, age: 3, cost: {stone: 300, gold: 150}, time: 50, fx: [{s: hp, k: BW3, p: 0.4}, {s: atk, k: BW3, a: 4}, {s: rng, k: B | N160; N161; N188 |
+| O140 | Gun towers | {at: BW3, line: Towers, age: 4, cost: {stone: 400, gold: 200, iron: 200}, time: 70, fx: [{s: hp, k: BW3, p: 0.4}, {s: atk, k: BW3, a: 10}, { | N160; N161; N188 |
+| O141 | Drawbridge | {at: BTC2, line: Garrison, age: 3, cost: {gold: 240, iron: 160}, time: 48, fx: [{s: hp, k: BTC2, p: 0.2}], when: 1200s, w: 4} | N160; N161; N188 |
+| O142 | Standing army | {at: BTC2, line: Garrison, age: 3, cost: {gold: 290, iron: 190}, time: 56, fx: [{s: rest, p: 0.3}, {s: train, c: 0.1}], when: 1445, w: 6} | N160; N161; N188 |
+| O143 | Garrison wards | {at: BTC2, line: Garrison, age: 4, cost: {gold: 390, iron: 260}, time: 66, fx: [{s: garrison, p: 1}], need: [hospitals], when: 1500s, w: 5} | N160; N161; N188 |
+| O144 | Bastions | {at: BTC2, line: Garrison, age: 4, cost: {gold: 430, iron: 290}, time: 71, fx: [{s: atk, k: BTC2, a: 8}], need: [starfort], when: 1530s, w:  | N160; N161; N188 |
+| O145 | Engagement | {at: BP10, line: Command, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: rout, c: 0.5}], when: 500 BC, w: 6} | N160; N161; N188 |
+| O146 | Battalions | {at: BP10, line: Command, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [], need: [engage], when: 300 BC, w: 6} | N160; N161; N188 |
+| O147 | Formations | {at: BP10, line: Command, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [], need: [command], when: 300 BC, w: 5} | N160; N161; N188 |
+| O148 | Standards | {at: BP10, line: Command, age: 2, cost: {food: 260, gold: 180}, time: 52, fx: [{s: rest, p: 0.5}], when: 100 BC, w: 5} | N160; N161; N188 |
+| O149 | Supply trains | {at: BP10, line: Command, age: 3, cost: {food: 260, gold: 180}, time: 52, fx: [{s: rest, p: 0.2}], when: 1200s, w: 5} | N160; N161; N188 |
+| O150 | Muster | {at: BP10, line: Command, age: 4, cost: {food: 430, gold: 290}, time: 71, fx: [], when: 1600s, w: 6} | N160; N161; N188 |
+| O151 | General staff | {at: BP10, line: Command, age: 4, cost: {food: 430, gold: 290}, time: 71, fx: [{s: charge, p: 0.2}], need: [muster], when: 1630s, w: 6} | N160; N161; N188 |
 
 ## words
 
@@ -1349,4 +1418,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J7 | the history line of each age (age0 to age4), each research step and each soldier kind, by its key (a step that shares a kind's key: tech:key): what it was and when (Mid's WHY) | {age0: Farming villages of the Neolithic (from about 10,000 years ago): fields, houses, a wall. Jericho had a stone wall and tower about 800 | N160; N161; N170; N176 |
 | J8 | what the town is told when food, the seasons and the flock turn, or its people slip on ice, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170; N173 |
 | J9 | what a refusal or an order says for plots, the dock and the hunt (Mid's words) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
+| J10 | the army's words: the three squads (Mid's BN, the NATO names), the tempers, the shapes, the intents and the squad dials (Mid's TEMPER, FORM, INTENT) | {squads: [Alpha, Bravo, Charlie], all: Army, setup: Set up, tempers: [Hold, Guard, Press], forms: {line: Line, wedge: Wedge, square: Square, | N188 |
 

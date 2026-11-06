@@ -4,9 +4,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 1,913 | 256,425 | 256,557 |
-| Books | 1268 | 0 | 259,123 | 259,494 |
-| Laws | 80 | 0 | 12,464 | 12,818 |
+| Game code | 28 | 2,039 | 278,613 | 278,747 (+22,190) |
+| Books | 1338 | 0 | 285,184 | 285,595 (+6,209) |
+| Laws | 80 | 0 | 13,129 | 13,494 (+676) |
 | Tools | 4 | 968 | 135,692 | 135,845 |
 
 ## The trades (code)
@@ -23,52 +23,52 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 45 | 4,943 | 4,947 | 82 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 59 | 6,229 | 6,233 | 69 |
+| index.html#the-door | 59 | 6,259 | 6,263 (+30) | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,704 | 50,708 | 4096 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 120 | 12,915 | 12,919 | 95 |
+| index.html#floor-5-movables | 120 | 12,943 | 12,947 (+28) | 95 |
 | index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,282 | 3,286 | 92 |
 | index.html#floor-6-climate | 70 | 9,117 | 9,129 | 256 |
 | index.html#floor-7-display | 28 | 2,952 | 2,956 | 75 |
 | index.html#the-woods-cache | 51 | 4,849 | 4,853 | 79 |
-| index.html#touch | 40 | 4,656 | 4,660 | 59 |
-| menu.js | 304 | 51,216 | 51,256 | 595 |
-| econ.js | 214 | 31,372 | 31,372 | 79 |
-| combat.js | 63 | 9,483 | 9,483 | 101 |
-| ai.js | 49 | 6,453 | 6,453 | 37 |
+| index.html#touch | 40 | 4,663 | 4,667 (+7) | 59 |
+| menu.js | 312 | 53,396 | 53,438 (+2,182) | 595 |
+| econ.js | 221 | 32,996 | 32,996 (+1,624) | 79 |
+| combat.js | 174 | 27,883 | 27,883 (+18,400) | 84 |
+| ai.js | 49 | 6,372 | 6,372 (-81) | 34 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
 
 | Book | Entries | Bytes |
 |---|---|---|
-| angles | 4 | 583 |
-| capabilities | 31 | 8,171 |
-| citations | 187 | 27,387 |
-| colours | 9 | 951 |
-| comments | 381 | 59,037 |
+| angles | 5 | 734 |
+| capabilities | 33 | 9,093 |
+| citations | 189 | 28,600 |
+| colours | 13 | 1,363 |
+| comments | 405 | 64,907 |
 | ground | 6 | 1,524 |
-| mass | 24 | 3,636 |
-| measure | 224 | 43,283 |
+| mass | 24 | 3,740 |
+| measure | 238 | 50,261 |
 | rules | 56 | 14,342 |
 | screen | 10 | 2,689 |
-| shells | 89 | 17,014 |
+| shells | 89 | 17,061 |
 | sides | 4 | 1,202 |
 | sound | 51 | 11,159 |
-| sprites | 51 | 18,368 |
-| tech | 132 | 38,976 |
-| words | 9 | 24,731 |
+| sprites | 54 | 19,623 |
+| tech | 151 | 44,679 |
+| words | 10 | 28,787 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
 | 100 | 11 | 1 |
-| 110 | 46 | 28 |
+| 110 | 46 | 25 |
 | 120 | 32 | 0 |
 
 ## The rules
@@ -132,4 +132,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X55 | t-kinds | page | every soldier is the Unit shell with Mid's settings: each kind's class, age, look, teach, price, train time, health, blow, reach, sight and speed (by the foot's 3.4 mph) are Mid's UNIT and TEACH_TO; with research its name, rank, kit, health, blow, reach, speed, sight, armour and train time are Mid's frozen stats() with the shares added; each army building trains exactly its class's kinds, each from its age, and the army stops at the ceiling; every kind's figure at each rank and kit is Mid's own, pixel for pixel |
 | X56 | t-physics | page | the physics of F17b: a villager walks exactly 1.52 m/s on flat firm ground, unloaded, in still air, and every load, grade, mud, snow and headwind gives the speed at which Pandolf's equation (with Pugh's drag as a grade) returns its power, each slower; the effects law adds boosts once and applies cuts one at a time, never reaching 0 nor the base, and every cut in the Tech book is a share between 0 and 1; the falling particles are the pool times the strength, the rates, wind and visibility the law's, and the blizzard flag turns exactly at the NWS's wind and visibility and after three game hours; a step slips exactly when the friction it needs exceeds what the ground offers; Crampons give studs to villagers, foot, archers and the engines' haulers and not riders, Horseshoes to riders; the scout's pace and reach are Mid's |
 
-1380 items sealed · 1268 book entries · 80 laws · 187 citations, 32 still to open · 7 known
+1450 items sealed · 1338 book entries · 80 laws · 189 citations, 33 still to open · 7 known

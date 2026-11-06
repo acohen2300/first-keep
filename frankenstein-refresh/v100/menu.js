@@ -96,7 +96,9 @@ const price = (c) => { const st = SIDES[ME].store, miss = Object.entries(c || {}
   const f = Math.min(...miss.map(([, m, n]) => 1 - m / n)); return `<small style="color:${f < 0.5 ? mixc(COL.rr, COL.rw, f * 2) : mixc(COL.rw, COL.rg, f * 2 - 1)};opacity:1">Short ${miss.map(([y, m]) => m + y[0]).join(' ')}</small>`; };
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
 const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || 'free'; // E183
-const own = (t) => t && t.side === ME, NEWS = WD.news, TELL = WD.say;
+const own = (t) => t && t.side === ME, NEWS = WD.news, TELL = WD.say, WA = WD.army, DIALTECH = { temper: 'engage', form: 'formations', intent: 'command' }, TECHOF = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])); // E404
+const MUSTER = { tech: 'Needs Muster', none: 'Nothing missing', at: 'Needs a War Council', kind: 'Needs the building that trains it', army: 'The army is full', room: 'Needs room: build homes' };
+const council = (t) => (own(t) && FK.has(t, 'Squad') ? row(...WA.squads.map((n, i) => vcell('squad', i, null, '', WAR.SQ.sel === i)), vcell('muster')) + row(...classes().map((c) => `<div class="pairs">${vcell('plan', c, '')}${vcell('plan', c, 'up')}</div>`)) : ''); // E405
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
 const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null; };
@@ -117,6 +119,12 @@ const VERBS = {
   new: { label: () => 'New', whyNot: () => '', run: () => { S.prev = S.tab; S.tab = 'Start'; } },
   close: { label: () => SVG.close, whyNot: () => '', run: () => { S.tab = null; S.subject = null; S.ghost = null; S.arming = false; FK.dirty(); } },
   back: { label: () => SVG.back, whyNot: () => '', run: () => { S.tab = S.prev; S.prev = null; } },
+  squad: { label: (i) => `${WA.squads[i]}<small>${WAR.squad(i).length}</small>`, whyNot: () => (WAR.knows(ME, 'command') ? '' : 'Needs Battalions'), run: (i) => { if (WAR.SQ.sel === i) S.mid = 'setup'; else WAR.SQ.sel = i; } }, // E403
+  setup: { label: () => WA.setup, whyNot: () => '', run: () => { S.mid = 'setup'; } },
+  squads: { label: () => WA.back, whyNot: () => '', run: () => { S.mid = 'squad'; } },
+  dial: { label: (k) => { const v = WAR.dialOf(k, WAR.SQ.sel); return `${WA[k]}<small>${!WAR.DIAL[k][v] ? WA.all : k === 'form' ? WA.forms[WAR.SHAPES[v]] : WAR.DIAL[k][v]}</small>`; }, whyNot: (k) => (WAR.knows(ME, DIALTECH[k]) ? '' : `Needs ${BOOKS.tech[TECHOF[DIALTECH[k]]].name}`), run: (k) => WAR.cycle(k, WAR.SQ.sel) },
+  plan: { label: (c, up) => (up ? `${(WAR.SQ.plan[WAR.SQ.sel] || {})[c] || ''}<small>${c}</small>` : '−'), whyNot: () => (WAR.SQ.sel == null ? 'Pick a squad' : ''), run: (c, up) => WAR.plan(WAR.SQ.sel, c, !!up) },
+  muster: { label: () => `${WA.muster}${WAR.SQ.sel == null ? '' : price(ECON.musterCost(ME, WAR.lack(WAR.SQ.sel)).cost)}`, whyNot: () => { if (WAR.SQ.sel == null) return 'Pick a squad'; const g = WAR.lack(WAR.SQ.sel), w = ECON.musterWhy(ME, g); return w === 'cost' ? `Needs ${costText(ECON.musterCost(ME, g).cost)}` : MUSTER[w] || ''; }, run: () => ECON.muster(ME, WAR.lack(WAR.SQ.sel), WAR.SQ.sel) },
   opt: { label: (k, i) => OPTS[k][i][0], whyNot: (k) => (BUILT[k] ? '' : 'Not built yet'), run: (k, i) => { S.opt[k] = i; } },
   war: { label: () => '', whyNot: () => '', run: () => { S.war = !S.war; S.mid = 'map'; S.tab = null; S.arming = false; } },
   mid: { label: (m) => `<span class="t">${SVG[m]}</span>${{ train: 'Train', squad: 'Squad', direct: 'Direct' }[m]}`, whyNot: () => '', run: (m) => { S.mid = S.mid === m ? 'map' : m; } },
@@ -145,7 +153,7 @@ const VERBS = {
   send: { label: () => 'Send one', whyNot: (t) => (!ECON.villagersOf(ME).some((v) => v.job === 'idle' || v.job === 'wait') ? 'No idle villager' : ''), run: (t) => { const u = ECON.villagersOf(ME).filter((v) => v.job === 'idle' || v.job === 'wait').sort((a, b) => Math.hypot(a.bx - t.bx, a.by - t.by) - Math.hypot(b.bx - t.bx, b.by - t.by))[0]; ECON.gatherAt(u, t); } },
   raise: { label: (t) => (t.done < 1 ? 'Raise' : `Repair${price(ECON.repairCost(t))}`), whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : t.done >= 1 && t.hp >= t.hpMax - D.repair.within ? 'Not hurt' : ''), run: (t) => ECON.buildAt(FK.sel(), t) },
   scrap: { label: (t) => (t.done < 1 ? 'Cancel site' : 'Demolish'), whyNot: (t) => (FK.has(t, 'Seat') && t.done >= 1 ? 'The hall stays' : ''), run: (t) => { toast(`${B[t.code][0]} ${t.done < D.refund.first ? 'cancelled' : 'taken down'}: ${costText(ECON.refund(t))} back`); ECON.cancel(t); S.subject = null; } },
-  fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => { ECON.orderCost(ME, [FK.sel()]); WAR.fight(FK.sel(), t); } },
+  fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => { ECON.orderCost(ME, [FK.sel()]); WAR.fight(FK.sel(), t, true); } },
   here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: (t) => { ECON.orderCost(ME, WAR.armyOf(ME)); WAR.attack(ME, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k); } },
   hunt: { label: () => 'Hunt', whyNot: () => (!ECON.villagersOf(ME).length ? 'No villagers' : ''), run: (t) => toast(ECON.hunt(ME, t) ? TELL.hunt : TELL.hands) }, // E357
   replant: { label: (t) => `Replant${price(ECON.replantCost(t))}`, whyNot: (t) => { const w = ECON.replantWhy(ME, t); return w === 'cost' ? `Needs ${costText(ECON.replantCost(t))}` : w; }, run: (t) => ECON.replant(ME, t) },
@@ -196,9 +204,9 @@ const ROWS = { // E199
   queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [ECON.nameOf(c), i ? ECON.timeOf(t.side, c) : t.qt]), 1 - t.qt / ECON.timeOf(t.side, t.q[0]), Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
   train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${FK.trains(t.code).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
   tech: (t) => (own(t) && t.done >= 1 ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
-  acts: (t, r) => { const k = key(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
+  acts: (t, r) => { const k = key(t), sq = council(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
       : t.kind === 'bld' ? (own(t) ? (t.max ? vcell('replant', k) : ECON.cutOut(ME, t).length ? vcell('replantAll', k) : '') + vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
-    return a ? `<div class="row">${a}</div>` : ''; },
+    return sq + (a ? `<div class="row">${a}</div>` : ''); },
 };
 function cardText(r) { const t = S.subject; if (!t) return ''; return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
@@ -209,7 +217,7 @@ const base = (r) => S.war ? row(tab('Layers', 'Yard', 'yard'), gap(4), vcell('wa
   + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
 const MID = { map: () => vcell('later', 'Map', null, 'two whole'), train: () => classes().map((k) => vcell('kind', kindOf(k), null, 'ic')).join(''),
-  squad: () => ['Alpha', 'Bravo', 'Charlie', 'Set up'].map((n) => vcell('later', n, null, 'two')).join(''), direct: () => ['Wall', 'Loose!', 'Charge', 'Bombard'].map((n) => vcell('later', n, null, 'two')).join('') };
+  squad: () => WA.squads.map((n, i) => vcell('squad', i, null, 'two', WAR.SQ.sel === i)).join('') + vcell('setup', null, null, 'two'), setup: () => Object.keys(WAR.DIAL).map((k) => vcell('dial', k, null, 'two')).join('') + vcell('squads', null, null, 'two'), direct: () => ['Wall', 'Loose!', 'Charge', 'Bombard'].map((n) => vcell('later', n, null, 'two')).join('') };
 const ic = (name, icon) => vcell('later', name, null, 'ic').replace(/>[^<]*<small>Later<\/small>/, `><span class="t">${SVG[icon]}</span>${name}`);
 const warBase = () => `<div class="warbase">${ic('Work', 'work')}${ic('Gather', 'gather')}<div class="mid">${MID[S.mid]()}</div>${vcell('mid', 'train', null, 'ic red', S.mid === 'train')}${vcell('mid', 'squad', null, 'ic red', S.mid === 'squad')}`
   + `${ic('Garrison', 'garrison')}${ic('Shelter', 'shelter')}${vcell('mid', 'direct', null, 'ic red', S.mid === 'direct')}${vcell('attack', null, null, 'ic red', S.arming)}</div>`;

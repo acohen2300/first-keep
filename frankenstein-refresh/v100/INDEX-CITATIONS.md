@@ -18,7 +18,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QM** Random events → N12 · used by SC9, D110, D181, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
-- **QP** Settle → N16 · used by D104
+- **QP** Settle → N16 · used by SC27, D104, D231, D237
 - **QQ** Ice growth → N17 · used by D109, D225, X54
 - **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
 - **QS** Ruts → N20
@@ -34,21 +34,21 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAC** Crew → N31 · used by SC4, D126, X52
 - **QAD** Spoilage → N32, N33 · used by D217, X53
 - **QAE** Price → N34
-- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132
+- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151
 - **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
 - **QCK** Mending → N168 · used by SC5, D201, X52
 - **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187 · used by D103, D229, X56
-- **QAF** Battle odds → N35 · used by D155, D177, D192, D193, D194, X48
-- **QAG** Who to fight → N36, N37 · used by SC6
+- **QAF** Battle odds → N35 · used by SC6, D155, D177, D192, D193, D194, D238, X48
+- **QAG** Who to fight → N36, N37, N188 · used by SC6, D238
 - **QAH** Fight or not → N38
-- **QAI** Nerve → design
-- **QAJ** Arrow flight → N39, N40
-- **QAL** Sight from height → N41 · used by SC7, D143
+- **QAI** Nerve → N76, N188 · used by SC6, D142, D231
+- **QAJ** Arrow flight → N39, N40 · used by A5, SC7, W10, D143, D245
+- **QAL** Sight from height → N41 · used by SC7
 - **QAM** Line of sight → N42
 - **QAN** Many eyes → N43, N44
-- **QAO** Flee → N45
+- **QAO** Flee → N45 · used by SC6, D231
 - **QAP** Cold and wet → N46
 - **QAQ** Sickness → N47, N48
 - **QAR** Weighted pick → N49
@@ -74,7 +74,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17, D88, D197, X51
 - **QBJ** Z1's store → N69 · used by D129, X50
-- **QBO** The blow → N69 · used by SC6, SC10, D140, D141, D194, D221
+- **QBO** The blow → N69, N188 · used by SC6, SC10, D138, D141, D143, D221, D232
 - **QBP** Upkeep → N170, N171 · used by D131, D211, D212, D213, X53
 - **QBQ** The break → N76 · used by D142
 - **QBR** The score → N75 · used by D135
@@ -87,13 +87,13 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QBP, QBT
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QAG, QAI, QBO, QBP, QBT
 - **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
 - **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
-- **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
+- **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QAI, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
 - **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX, QBY
 - **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ, QCL, D229
 - **N10** Koschmieder (1924) → QK, QCL, D229
@@ -102,9 +102,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N13** Pandolf, Givoni & Goldman (1977) → QN, QCB, D224, X56
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
-- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK
+- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, SC27, D231, D237
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
-- **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QBT, G5, G6, G7, G8
+- **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, G9
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
@@ -122,11 +122,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N33** FAO, Grain storage techniques, ch. 6 → QAD, D217
 - **N34** Andreyeva, Long & Brownell (2010), food price elasticities → QAE
 - **N35** Lanchester (1916), Aircraft in Warfare → QAF
-- **N36** Churchill, Saffidine & Buro (2012), AIIDE → QAG
-- **N37** Cox & Smith (1961), Queues → QAG
+- **N36** Churchill, Saffidine & Buro (2012), AIIDE → QAG, D238
+- **N37** Cox & Smith (1961), Queues → QAG, D238
 - **N38** Maynard Smith & Price (1973), hawk–dove → QAH
-- **N39** Projectile motion from a height (standard) → QAJ
-- **N40** Drag on a sphere (standard fluid dynamics) → QAJ
+- **N39** Projectile motion from a height (standard) → QAJ, A5, D143, D245
+- **N40** Drag on a sphere (standard fluid dynamics) → QAJ, D143, D245
 - **N41** Horizon from a height, √(2Rh) (standard) → QAL
 - **N42** Bresenham (1965), grid line → QAM
 - **N43** Pulliam (1973) → QAN
@@ -155,14 +155,14 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
 - **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
 - **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
-- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D127, D136, D138, D139, D143, D194
+- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D127, D136, D138, D139
 - **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
 - **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
 - **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
 - **N73** (to open) Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) → QBM, D86
 - **N74** Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* → QBL, D198
 - **N75** First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept) → QBR, D135
-- **N76** (to open) Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint nea → QBQ, D142
+- **N76** (to open) Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint nea → QAI, QBQ, D142, D231
 - **N77** Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxio → QBS, D167
 - **N78** FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper  → QBS, D167
 - **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3. → QBM, QBU, D86
@@ -200,7 +200,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
 - **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D110, D111, D112, D113, D114, D115, D116, D117, D118, D119, D120, D121, D169, D170, D230
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
-- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D140, D141, D144, D145, D146, D147, D148, D149, D150, D151, D152, D153, D154, D155, D156, D157, D160, D161, D162, D163, D164
+- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D149, D150, D151, D152, D153, D154, D155, D156, D157, D160, D161, D162, D163, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
 - **N116** Design: the juice pass of Nov 3 (Base: 2 px, 0.08 s) → D166
 - **N117** Standard gravity (standard) → D168
@@ -246,8 +246,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 - **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
 - **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
-- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, J7
-- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, J7
+- **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, J7
+- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, J7
 - **N162** Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of t → X17
 - **N163** (to open) Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SI → QCJ
 - **N164** Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js → SC2, SC16, D88, D132, D195, D196, D197, X51, PN1
@@ -274,6 +274,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N185** Design: Albert, Nov 5 18:07–18:08: pace by the floor, the weather, mass and gravity, never by the calendar (Pa → QCA, QCB, W24, D103, D224, D229, X54, X56
 - **N186** (to open) Intensity's top: rain 50 mm/h (violent rain on the Met Office's scale), snow 5 mm/h of water, wind 20 m/s (a g → QCL, D229
 - **N187** (to open) Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open → QCL, D229
+- **N188** Design: Mid's blow, nerve, a soldier's day, squads, formations and muster (16-sim-fight.js fromWhere, hurt, pl → QAG, QAI, QBO, A5, SC6, SC7, SC27, SC28, C11, C12, C13, C14, D138, D141, D143, D193, D231, D232, D233, D234, D235, D236, D237, D238, D239, D240, D241, D242, D243, D244, D245, P35, P36, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, J10
+- **N189** (to open) Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 t → W10
 
 ## Named exceptions
 

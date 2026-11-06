@@ -8,5 +8,9 @@ BOOK("colours", {
  "C6": {"key":"green","value":"#5fd08a","name":"Ring green","cite":["N103"],"law":[]},
  "C7": {"key":"red","value":"#ff6b5b","name":"Ring red","cite":["N103"],"law":[]},
  "C8": {"key":"white","value":"#ece5d3","name":"Ring white","cite":["N103"],"law":[]},
- "C10": {"key":"gold","value":"#e6b947","name":"Gold (on)","cite":["N103"],"law":[]}
+ "C10": {"key":"gold","value":"#e6b947","name":"Gold (on)","cite":["N103"],"law":[]},
+ "C11": {"key":"shaft","value":"#ffeec8","name":"An arrow or shot in flight","cite":["N188"],"law":[]},
+ "C12": {"key":"flame","value":"#ffb050","name":"A burning arrow; a blow's spark","cite":["N188"],"law":[]},
+ "C13": {"key":"pole","value":"#3a2a1a","name":"A standard's pole","cite":["N188"],"law":[]},
+ "C14": {"key":"shade","value":"#100c08","name":"A ring's or a flag's shadow","cite":["N188"],"law":[]}
 });
