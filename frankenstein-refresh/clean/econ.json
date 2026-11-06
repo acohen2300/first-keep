@@ -254,52 +254,52 @@
    "F22: combat.js fallBack, damage × D250 hit, no rout while it lasts"
   ],
   "takePrisoner": [
-   "bring",
-   "prisoners: taken by a foe, ransomed back or they serve the captor"
+   "in v100",
+   "F24: econ.js takePrisoner, from combat.js hit() (caught: D264 after, r)"
   ],
   "prisonersOf": [
-   "bring",
-   "prisoners"
+   "in v100",
+   "F24: econ.js prisonersOf"
   ],
   "payRansom": [
-   "bring",
-   "prisoners: ransom"
+   "in v100",
+   "F24: econ.js payRansom; menu.js VERBS.ransom on your hall's troops row"
   ],
   "teachTo": [
-   "bring",
-   "Teach: an older soldier learns a newer kind at the School (BP1), the unit's Level"
+   "in v100",
+   "F24: econ.js teachTo (the shell's teach slot, a later age)"
   ],
   "teachGap": [
-   "bring",
-   "Teach"
+   "in v100",
+   "F24: econ.js teachGap"
   ],
   "teachCost": [
-   "bring",
-   "Teach"
+   "in v100",
+   "F24: econ.js teachCost"
   ],
   "teachSecs": [
-   "bring",
-   "Teach"
+   "in v100",
+   "F24: econ.js teachSecs (D263, research: lesson)"
   ],
   "schooling": [
-   "bring",
-   "Teach"
+   "in v100",
+   "F24: econ.js schooling"
   ],
   "teachWhy": [
-   "bring",
-   "Teach"
+   "in v100",
+   "F24: econ.js teachWhy (J14 troops.teach)"
   ],
   "teach": [
-   "bring",
-   "Teach"
+   "in v100",
+   "F24: econ.js teach; menu.js VERBS.teach on the troops row"
   ],
   "graduate": [
-   "bring",
-   "Teach"
+   "in v100",
+   "F24: econ.js graduate, each tick"
   ],
   "prisonersTick": [
-   "bring",
-   "prisoners"
+   "in v100",
+   "F24: econ.js, each tick (D264 secs)"
   ],
   "LOT": [
    "bring",
@@ -330,32 +330,32 @@
    "the Market (BCR1) and its prices (QAE)"
   ],
   "zealCost": [
-   "bring",
-   "Zeal at the Temple (BP3)"
+   "in v100",
+   "F24: econ.js zealCost"
   ],
   "zealWhy": [
-   "bring",
-   "Zeal"
+   "in v100",
+   "F24: econ.js zealWhy (J14 troops.zeal)"
   ],
   "zeal": [
-   "bring",
-   "Zeal"
+   "in v100",
+   "F24: econ.js zeal; combat.js dmgOf × D266 mul; menu.js VERBS.zeal on the Temple's troops row"
   ],
   "watchtower": [
-   "bring",
-   "spies (US3): what sees a spy"
+   "in v100",
+   "F24: combat.js watches: a building that ticks Shoot"
   ],
   "guarded": [
-   "bring",
-   "spies: a building under a tower's eye"
+   "in v100",
+   "F24: combat.js guarded"
   ],
   "sabotage": [
-   "bring",
-   "spies: sabotage"
+   "in v100",
+   "F24: combat.js sabotage (D267 how, burn, stall; the fire comes with M40)"
   ],
   "intel": [
-   "bring",
-   "spies: what a spy reports"
+   "in v100",
+   "F24: econ.js intel; menu.js troops row on their hall"
   ],
   "hireWhy": [
    "bring",
@@ -646,8 +646,8 @@
    "trade: caravans (UT1) on routes to trade stops and allies' markets"
   ],
   "spyTick": [
-   "bring",
-   "the Spy (US3)"
+   "in v100",
+   "F24: combat.js spy (sight, intel, sabotage, the computers' spy)"
   ],
   "FLEECE": [
    "in v100",

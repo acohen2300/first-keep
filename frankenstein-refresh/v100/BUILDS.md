@@ -2097,3 +2097,85 @@ MODIFIED (54):
 LOCKED (1481 of 1535): byte for byte as sealed, 451,072 bytes
 Tests: 33/33 rules hold
 Inventory: 1535 items sealed · 1423 book entries · 80 laws · 193 citations, 33 still to open · 7 known
+
+## F24 · teaching soldiers, prisoners and ransom, priests, medics and zeal, spies and sabotage · 2026-11-05 21:59
+Albert, Nov 5 11:40: yes yes F10–F39
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:screen, book:sprites, book:mass, book:tech, book:sides, book:words, book:comments, book:rules, book:citations, tool:test.py
+MODIFIED (74):
+- book:capabilities:SC31 · added
+- book:capabilities:SC32 · added
+- book:capabilities:SC33 · added
+- book:capabilities:SC34 · added
+- book:capabilities:SC35 · added
+- book:citations:N194 · added
+- book:comments:E458 · added
+- book:comments:E459 · added
+- book:comments:E460 · added
+- book:comments:E461 · added
+- book:comments:E462 · added
+- book:comments:E463 · added
+- book:comments:E464 · added
+- book:comments:E465 · added
+- book:comments:E466 · added
+- book:comments:E467 · added
+- book:comments:E468 · added
+- book:comments:E469 · added
+- book:comments:E470 · added
+- book:comments:E471 · added
+- book:comments:E472 · added
+- book:comments:E473 · added
+- book:comments:E474 · added
+- book:comments:E475 · added
+- book:comments:E476 · added
+- book:comments:E477 · added
+- book:measure:D123 · 1,290 → 1,397 bytes
+- book:measure:D124 · 345 → 386 bytes
+- book:measure:D133 · 293 → 349 bytes
+- book:measure:D138 · 2,923 → 3,138 bytes
+- book:measure:D143 · 525 → 677 bytes
+- book:measure:D239 · 554 → 833 bytes
+- book:measure:D263 · added
+- book:measure:D264 · added
+- book:measure:D265 · added
+- book:measure:D266 · added
+- book:measure:D267 · added
+- book:measure:D268 · added
+- book:measure:D269 · added
+- book:rules:X60 · added
+- book:screen:SN4 · 340 → 462 bytes
+- book:shells:BP1 · 136 → 151 bytes
+- book:shells:BP3 · 136 → 159 bytes
+- book:shells:BP6 · 140 → 163 bytes
+- book:shells:BP8 · 144 → 168 bytes
+- book:shells:US1 · 158 → 204 bytes
+- book:shells:US2 · 156 → 202 bytes
+- book:shells:US3 · 152 → 194 bytes
+- book:tech:O152 · added
+- book:tech:O153 · added
+- book:tech:O154 · added
+- book:tech:O155 · added
+- book:tech:O156 · added
+- book:tech:O157 · added
+- book:tech:O158 · added
+- book:tech:O159 · added
+- book:tech:O160 · added
+- book:tech:O161 · added
+- book:tech:O162 · added
+- book:tech:O163 · added
+- book:tech:O164 · added
+- book:tech:O165 · added
+- book:tech:O166 · added
+- book:tech:O167 · added
+- book:tech:O168 · added
+- book:tech:O169 · added
+- book:words:J14 · added
+- book:words:J7 · 25,165 → 28,206 bytes
+- code:combat.js · 43,020 → 48,394 bytes
+- code:econ.js · 44,886 → 49,408 bytes
+- code:index.html#the-woods-cache · 4,873 → 4,885 bytes
+- code:index.html#touch · 6,232 → 6,243 bytes
+- code:menu.js · 62,463 → 64,066 bytes
+- tool:test.py · 135,679 → 145,670 bytes
+LOCKED (1514 of 1588): byte for byte as sealed, 484,432 bytes
+Tests: 34/34 rules hold
+Inventory: 1588 items sealed · 1476 book entries · 80 laws · 194 citations, 33 still to open · 7 known

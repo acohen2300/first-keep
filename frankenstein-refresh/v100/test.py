@@ -661,7 +661,7 @@ async def kinds(b):   # same kinds, same settings and same numbers after researc
         a, m = v['sets'][i][j], mid['sets'][i][j]
         if not cls[c]: return a[:2] == m[:2] and near(a[6] / v['sets'][0][j][6], m[6] / mid['sets'][0][j][6])
         return (a[:3] == m[:3] and near(a[3], m[3]) and near(a[4], m[4]) and near(a[5], m[5] / 10) and near(a[6], walk * m[6] / 24, 1e-4) and near(a[7], m[7] / 10) and near(a[8], m[8]) and near(a[9], m[9]))
-    trained = [[[b, sorted(look[c] for c in ks)] for b, ks in age] for age in v['trains']]
+    trained = [[[b, sorted(look[c] for c in ks if c in look)] for b, ks in age] for age in v['trains']]
     want = [[[b, sorted(k for k in mid.get('sol', []) if at.get(U[k]['at']) == b and U[k]['age'] <= a)] for b, _ in age] for a, age in enumerate(v['trains'])]
     bad = [x for x in art if x[4] != 0 or x[5] < 20]
     got = [bool(mid) and sorted(look[c] for c in KSHELL) == sorted(mid['sol']) and all(same(c) for c in KSHELL),
@@ -692,7 +692,7 @@ MIDWAR = r"""return box([basics, units, blds, tuning, cut(core, 'const rangeFrom
    reach: RUN.towers.map((k) => rangeFrom(BLD[k].bow, BLD[k].h) / 10), worth: [foeValue({ owner: 0, kind: RUN.looks[0], hp: RUN.hp[0] }, { owner: 1, kind: RUN.looks[6], hp: RUN.hp[1] }, 0), foeValue({ owner: 1, kind: RUN.looks[6], hp: RUN.hp[1] }, { owner: 0, kind: RUN.looks[0], hp: RUN.hp[0] }, 0)],
    nums: { MORALE, FLANKING, FLANK, YARD, KITE, GARRISON, FORM, COLUMN, TEMPER, PLUNDER, wear: CLIMATE.wear, unit: Object.fromEntries(RUN.looks.map((k) => [k, UNIT[k]])) } };`]);"""
 async def war(b):   # the blow, nerve and muster: the same counters, reach and worth as Mid's frozen code; Mid's numbers in the books; flank, rout, plunder and Muster on the page
-    codes = [c for c, e in SHELLS.items() if e.get('class')]; looks = [SHELLS[c]['look'] for c in codes]; TW = {'BW3': 'tower', 'BTC1': 'keep', 'BTC8': 'camptower'}
+    codes = [c for c, e in SHELLS.items() if e.get('class')]; looks = [SHELLS[c]['look'] for c in codes]; TW = {'BW3': 'tower', 'BTC1': 'keep', 'BTC8': 'camptower', 'BP8': 'courthouse'}
     pg, errs = await fresh(b); v = await pg.evaluate(WARJS.replace('CODES', json.dumps(codes))); await pg.close()
     mid, err = frozen({'basics': '01-rules-basics', 'units': '02-rules-units', 'blds': '03-rules-buildings', 'tuning': '06-rules-tuning', 'core': '08-core', 'spatial': '15-sim-spatial'}, MIDWAR, {'looks': looks, 'towers': [TW[c] for c in MEASURE['tower']], 'hp': v['worth'][2:]}); mid = mid or {}
     m, n = mid.get('nums', {}), MEASURE; MO, FL, S = n['nerve'], n['flanking'], n['stats']; near = lambda a, c, r=1e-9: abs(a - c) <= r * max(1, abs(a), abs(c))
@@ -795,7 +795,55 @@ async def alarm(b):   # the Alarm and the end, with the three playability fixes
     E = mid.get('ends') or [None] * 3; ends = all(E) and v['fell'] and v['fell'][0] is False is E[0][0] and v['fell'][1].startswith(E[0][1].split('.')[0]) and v['wonder'] and v['wonder'][0] == E[1][0] is False and v['wonder'][1].startswith(E[1][1]) and v['bell'] and v['bell'][0] == E[2][0] is True and v['bell'][1].startswith(E[2][1])
     got = [nums, threat, mid.get('fill') == v['shelter'] and -1 in v['shelter'] and len(set(v['shelter'])) == 3, fall, ends, all(v['jobs']), all(v['leave']), v['inside'] > 0 and v['work'] == [False, True], v['sent'], v['built'] == 1, v['refused'], v.get('told'), not errs]
     ok('t-alarm', all(got), [got, [(c, t, x) for c, t, x in zip(codes, m.get('threat', []), v['threat']) if t != x and 'Fight' in SHELLS[c]['ticks']], v['shelter'], mid.get('fill'), F['got'], want, F['capA'], f.get('capA'), F['score'], f.get('score'), v['fell'], v['wonder'], v['bell'], E, v['jobs'], v['leave'], v['work'], errs[:2], err[-500:]])
-PAGED = {'t-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+TRJS = r"""(() => { const D = FK.D, [me, foe] = D.players, out = {}, said = [], step = (t, pin) => { for (let i = 0; i < t * 10; i++) { if (pin) pin(); FK.sim(0.1); } }, by = (f) => Object.keys(FK.SH).find(f), look = (l) => by((c) => FK.SH[c].look === l), tick = (t) => by((c) => FK.SH[c].ticks.includes(t));
+  const fresh = () => { FK.reset(); Object.assign(FK.K, { rain: 0, snowing: 0, temp: 10 }); WAR.treaty(me, foe, 'war'); said.length = 0; for (const s of D.players) Object.assign(FK.SIDES[s].store, { food: 1e4, wood: 1e4, gold: 1e4, stone: 1e4, iron: 1e4 }); }; FK.on('say', (m) => { said.push(m); });
+  const put = (code, side) => { const h = FK.seatOf(side); for (let d = 8; d < 60; d++) for (const [i, j] of [[h.i + d, h.j], [h.i - d, h.j], [h.i, h.j + d], [h.i, h.j - d]]) { const t = FK.build(code, i, j, FK.SIDES[side].col); if (t) { t.done = 1; t.hp = t.hpMax = WAR.hpMax(t); return t; } } };
+  const open = []; FK.stamp(FK.MID, FK.MID, 12 * D.tile, (k) => { if (FK.walkable(k)) open.push(k); }); const k0 = open[0], at = (u, dx) => { const [x, y] = FK.tileMid(k0); Object.assign(u, { bx: x + dx * D.tile, by: y, path: null }); }, mk = (c, s, dx = 0) => { const u = FK.spawn(c, s, k0, FK.rng); at(u, dx); return u; };
+  const SP = look('spear'), UV = tick('Gather');
+  fresh(); out.pairs = Object.keys(FK.SH).filter((c) => ECON.teachTo({ code: c, side: me })).map((c) => { const u = { code: c, side: me }; return [FK.SH[c].look, FK.SH[ECON.teachTo(u)].look, ECON.teachCost(me, u), ECON.teachSecs(me, u)]; });
+  const s = mk(SP, me), why0 = ECON.teachWhy(me, s); FK.learn(me, Object.keys(BOOKS.tech).find((c) => BOOKS.tech[c].key === 'veterans')); FK.SIDES[me].age = 2; const why1 = ECON.teachWhy(me, s); put(tick('Teach'), me); s.hp = s.hpMax / 2; const secs = ECON.teachSecs(me, s), g0 = FK.SIDES[me].store.gold;
+  const ok = ECON.teach(me, s); step(secs - 1, () => at(s, 0)); const mid1 = [s.job, FK.SH[s.code].look]; step(2, () => at(s, 0)); out.teach = { why: [why0, why1], ok, paid: g0 - FK.SIDES[me].store.gold, mid: mid1, end: [FK.SH[s.code].look, s.hp / s.hpMax, s.job] };
+  fresh(); const a = mk(SP, me), v = mk(SP, foe), count = (side, c) => FK.units().filter((u) => u.side === side && u.code === c).length; Object.assign(v, { job: 'rout', routAt: FK.K.t - D.prison.after - 1 }); WAR.hit(a, v);
+  out.taken = ECON.prisonersOf(foe).map((x) => [FK.SH[x.code].look, x.ransom, x.by]).concat([[v.gone, said.some((m) => m.startsWith(W.prison.taken.split('{')[0]))]]); const n0 = count(me, SP); FK.K.t += D.prison.secs + 1; FK.sim(0.1); out.served = [ECON.prisonersOf(foe).length, count(me, SP) - n0];
+  const v2 = mk(SP, foe); Object.assign(v2, { job: 'rout', routAt: FK.K.t - D.prison.after - 1 }); WAR.hit(a, v2); const gm = FK.SIDES[me].store.gold, gf = FK.SIDES[foe].store.gold, nf = count(foe, SP), r = ECON.prisonersOf(foe)[0].ransom; ECON.payRansom(foe, 0);
+  out.paid = [FK.SIDES[me].store.gold - gm, gf - FK.SIDES[foe].store.gold, count(foe, SP) - nf, r];
+  fresh(); const tp = put(tick('Zeal'), me), S = [0, 1, 2].map((i) => mk(SP, me, i)), d0 = WAR.dmgOf(S[0]), noPriest = ECON.zealWhy(me, tp, S); mk(tick('Convert'), me, 2); const gz = FK.SIDES[me].store.gold, zok = ECON.zeal(me, tp, S);
+  out.zeal = [noPriest === W.zeal.priest, zok, gz - FK.SIDES[me].store.gold, WAR.dmgOf(S[0]) / d0, S[0].zeal - FK.K.t, FK.SIDES[me].zealT - FK.K.t, ECON.zealWhy(me, tp, S).startsWith(W.zeal.rest.split('{')[0])];
+  fresh(); const pr = mk(tick('Convert'), me), vil = mk(UV, foe, 2); Object.assign(pr, { job: 'convert', cv: vil }); let t1 = null; for (let i = 0; i < 160 && t1 == null; i++) { at(vil, 2); at(pr, 0); vil.job = 'idle'; FK.sim(0.1); if (vil.side === me) t1 = (i + 1) / 10; } out.convert = [t1, vil.side === me, pr.cvCd - FK.K.t];
+  fresh(); const hs = mk(SP, me), md = mk(look('medic'), me, 1); hs.hp = hs.hpMax / 2; const hp0 = hs.hp; step(10, () => { at(hs, 0); at(md, 1); hs.job = 'idle'; }); out.heal = [hp0, hs.hp, hs.hpMax];
+  fresh(); const so = mk(SP, me), spy = mk(tick('Spy'), foe, 6); step(1, () => { at(so, 0); at(spy, 6); so.target = null; }); const v6 = spy.veil; step(1, () => { at(so, 0); at(spy, 3); }); out.veil = [v6, spy.veil];
+  fresh(); const bar = put(look('barracks'), foe); bar.q = [SP, SP]; bar.qt = 5; const k1 = bar.j * FK.N + bar.i - 1, s1 = FK.spawn(tick('Spy'), me, k1, FK.rng); WAR.order([s1], bar, k1); step(0.5); out.stall = [bar.stall - FK.K.t, bar.q.length, !!s1.gone, !!FK.SIDES[me].intel[foe]];
+  const mill = put(look('mill'), foe), k2 = mill.j * FK.N + mill.i - 1, s2 = FK.spawn(tick('Spy'), me, k2, FK.rng); WAR.order([s2], mill, k2); step(0.5); out.burn = [mill.hp / mill.hpMax, !!s2.gone];
+  return out; })()""".replace("W.", "fromBook('words').troops.")
+MIDTR = r"""const stub = 'const fxv = () => ({ m: 1, a: 0 }), unitKeys = () => [];';
+  return box([basics, units, blds, tech, tuning, cut(core8, 'const sumCost', '\n'), cut(core8, 'const relax', '\n'), cut(core8, 'const baseKind', '\n'), stub, cut(orders, 'const scaled', 'function trainWhy'), cut(orders, 'const teachTo', 'const schooling'), cut(core8, 'const spySeen', '\n'),
+    `var OUT = { TEACH, TEACH_TO, PRISON, CONVERT, ZEAL, SAB, cap: [MORALE.capAfter, MORALE.capR], teach: Object.keys(TEACH_TO).map((k) => { const u = { kind: k, owner: 0 }; return [k, teachTo(u), teachCost(0, u), teachSecs(0, u)]; }),
+      ransom: Math.round(Math.max(40, sumCost(UNIT.spear.cost || { f: 40 }) * PRISON.ransom)), seen: [spySeen(0, {}), spySeen(0, { q: [] })], heal: relax(RUN.hp0, RUN.max, RUN.max / UNIT.medic.heal, 10),
+      units: ['priest', 'medic', 'spy'].map((k) => [UNIT[k].cost, UNIT[k].t, UNIT[k].hp, UNIT[k].age, UNIT[k].at]), hosp: [BLD.hospital.heal, BLD.hospital.hrng], medic: [UNIT.medic.heal, UNIT.medic.hrng],
+      sab: Object.fromEntries(Object.entries(BLD).filter(([, b]) => b.sab).map(([k, b]) => [k, b.sab])), tech: TECH.filter((t) => RUN.techs.includes(t.id)).map((t) => [t.id, t.at, t.line, t.age, t.cost, t.t, t.need || []]) };`]);"""
+async def troops(b):   # Teach, prisoners, priests, medics, Zeal and spies (F24): Mid's numbers in the books, its frozen teachCost, teachSecs, ransom, spySeen and healTick's lag for the same soldiers; on the page a lesson, a prisoner served and ransomed, Zeal, a conversion, a wound bound, a spy unseen then seen, a stall and a fire
+    pg, errs = await fresh(b, 1500); v = await pg.evaluate(TRJS); await pg.close()
+    M, SH, T = keyed('measure'), book('shells'), keyed('tech'); LK = {s['look']: c for c, s in SH.items()}; RS = {'f': 'food', 'w': 'wood', 'g': 'gold', 's': 'stone', 'i': 'iron'}; cost = lambda c: {RS.get(k, k): x for k, x in (c or {}).items() if x}
+    mid, err = frozen({'basics': '01-rules-basics', 'units': '02-rules-units', 'blds': '03-rules-buildings', 'tech': '04-rules-tech', 'tuning': '06-rules-tuning', 'core8': '08-core', 'orders': '11-orders'}, MIDTR,
+        {'hp0': v['heal'][0], 'max': v['heal'][2], 'techs': [k for k, e in T.items() if e['at'] in ('BP3', 'BP8') or e['line'] in ('Levy', 'Teaching')]}); m = mid or {}
+    te, pr, cv, ze, sb, hl = M['teach'], M['prison'], M['convert'], M['zeal'], M['sab'], M['heal']
+    nums = bool(m) and te == m['TEACH'] and [pr['secs'], pr['ransom'], pr['after'], pr['r'] * 10] == [m['PRISON']['secs'], m['PRISON']['ransom'], *m['cap']] and [cv['r'] * 10, cv['secs'], cv['cd']] == [m['CONVERT'][k] for k in ('r', 'secs', 'cd')] \
+        and [ze['cost']['gold'], ze['secs'], ze['cd'], ze['mul']] == [m['ZEAL']['cost']['g'], m['ZEAL']['secs'], m['ZEAL']['cd'], m['ZEAL']['mul']] and [sb['burn'], sb['stall']] == [m['SAB']['burn'], m['SAB']['stall']] and [round(x * 10, 6) for x in sb['seen']] == m['seen'] \
+        and {SH[c]['look']: h for c, h in sb['how'].items()} == {k: h for k, h in m['sab'].items() if k in LK} and [hl['US2']['heal'], hl['US2']['r'] * 10] == m['medic'] and [hl['BP6']['heal'], hl['BP6']['r'] * 10] == m['hosp'] \
+        and all([cost(M['cost'][c]), M['train'][c], M['stats'][c]['hp'], M['ages'].index(SH[c]['age']), SH[[k for k, n in M['trains'].items() if c in n][0]]['look']] == [cost(u[0]), u[1], u[2], u[3], u[4]] for c, u in zip(('US1', 'US2', 'US3'), m['units']))
+    tech = bool(m) and len(m['tech']) == 18 and all(T[k]['at'] in [c for c, s in SH.items() if s['look'] == at] and T[k]['line'] == ln and T[k]['age'] == ag and T[k]['cost'] == cost(co) and T[k]['time'] == t and T[k].get('need', []) == nd for k, at, ln, ag, co, t, nd in m['tech'])
+    MT = {k: (to, c, s) for k, to, c, s in m.get('teach', [])}
+    pairs = bool(v['pairs']) and all(f in MT and MT[f][0] == to and c == cost(MT[f][1]) and close(s, MT[f][2]) for f, to, c, s in v['pairs']) and len(v['pairs']) == len([k for k in MT if k in LK])
+    W = keyed('words')['troops']; tc = v['teach']
+    lesson = tc['why'] == [W['teach']['vets'], W['teach']['school']] and tc['ok'] and tc['paid'] > 0 and tc['mid'] == ['school', 'spear'] and tc['end'][0] == 'sword' and abs(tc['end'][1] - 0.5) < 1e-6 and tc['end'][2] != 'school'
+    held = v['taken'][0] == ['spear', m.get('ransom'), keyed('measure')['players'][0]] and v['taken'][1] == [True, True] and v['served'] == [0, 1] and v['paid'] == [v['paid'][3], v['paid'][3], 1, m.get('ransom')]
+    zl = v['zeal']; zeal = zl[:3] == [True, True, ze['cost']['gold']] and close(zl[3], ze['mul']) and close(zl[4], ze['secs']) and close(zl[5], ze['cd']) and zl[6]
+    conv = v['convert'][1] and cv['secs'] <= v['convert'][0] <= cv['secs'] + 0.5 and abs(v['convert'][2] - cv['cd']) < 1
+    heal = bool(m) and abs(v['heal'][1] - m['heal']) < 0.01 * v['heal'][2]
+    spies = v['veil'] == [True, False] and abs(v['stall'][0] - (sb['stall'] - 0.5)) < 0.2 and v['stall'][1:] == [1, True, True] and abs(v['burn'][0] - (1 - sb['burn'])) < 1e-6 and v['burn'][1]
+    got = [nums, tech, pairs, lesson, held, zeal, conv, heal, spies, not errs]
+    ok('t-troops', all(got), [got, v, {k: m.get(k) for k in ('teach', 'ransom', 'seen', 'heal')}, errs[:2], err[-400:]])
+PAGED = {'t-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

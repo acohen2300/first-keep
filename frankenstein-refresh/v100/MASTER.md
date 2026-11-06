@@ -105,9 +105,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176) · D139 (N69, N170) · D138 (N69, N170, N176, N188) · D123 (N168, N176) · D124 (N169, N176) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176) · D139 (N69, N170) · D138 (N69, N170, N176, N188, N194) · D123 (N168, N176, N194) · D124 (N169, N176, N194) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
-- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176) · D130 (N160)
+- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194) · D130 (N160)
 - **E370** a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give 
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
@@ -296,7 +296,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E171** the codes and their floors; Lock is a mark for us (no floor is locked yet)
 - **E172** the Screen book: the Build tabs are its; a building shows priced once econ prices it, else
 - **E173** the seat, and who it trains first: asked of the books, never named
-- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176)
+- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194)
 - **E175** a page that keeps its own height (SC20) · SC20 (N101)
 - **E176** the new game's choices: the first is the label's row in Albert's template; built ones set 
 - **E177** which choices are floors yet
@@ -328,14 +328,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
+- **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
 - **E194** a cell's object arguments live here by key, since the DOM holds strings
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
-- **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170)
+- **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
 - **E358** a pasture's card counts its sheep
+- **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
@@ -391,7 +393,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
-- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176) · D129 (N160)
+- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194) · D129 (N160)
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
@@ -439,6 +441,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E448** who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s · D257 (N192) · D259 (N192)
 - **E449** the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
+- **E458** Teach (Mid's teachTo, teachWhy, teach): an older soldier learns the newer kind its shell's · D263 (N194)
+- **E459** the lesson's price: what the newer kind costs more than the old, in each yield, plus tuiti
+- **E460** the lesson done: the soldier is the newer kind, its health the same share of its new most 
+- **E461** prisoners (Mid's takePrisoner, payRansom, prisonersTick): a runner caught is held for a ra · D264 (N194)
+- **E462** Zeal (Mid's zealCost, zealWhy, zeal): the Temple blesses the squad for gold if a priest st
+- **E463** each tick: a lesson that is over graduates; a prisoner unransomed in time goes over to its
+- **E464** a spy by a foe's building reads that side: its stores, age, research and army, kept with t
 
 ## combat.js
 
@@ -458,7 +467,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E385** a squad's plan by class (Mid's sqPlan): a step of one under ten, five above, the whole squ · D227 (N176)
 - **E386** what a squad lacks, by kind to train (Mid's musterGap): its plan less its soldiers and tho
 - **E230** the blow's strength (Mid's dmgOf): its blow after research, blades worn by frost, rain or  · D234 (N188)
-- **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
+- **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
 - **E387** where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own a · D232 (N188)
 - **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188)
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
@@ -488,6 +497,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E411** a group's order you can follow (Mid's march): its tile, label, start and walk ratio; each 
 - **E412** each soldier's one word (Mid's armyStatus): rout, fight, rally (sent home, walking to the  · D247 (N190)
 - **E413** the obvious order for what is picked (Mid's order, Albert Nov 2): a foe is fought, a beast
+- **E475** a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else 
 - **E414** missions: a mission's soldiers, the hostile soldiers a group sees near it, and the chance  · QAF (N35)
 - **E415** each beat: every order's centre, count, fight and time left, arrived once all have stopped
 - **E416** Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshai
@@ -508,6 +518,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E238** QAF a group's power: each one's health × its blow (Mid's dmgOf), the blow at least D194, o · QAF (N35) · D194 (N157) · D193 (N157, N188)
 - **E283** QAF the odds an army gives itself against a side, the one home the computers read: the cou · QAF (N35) · D193 (N157, N188)
 - **E284** against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 ( · D177 (N157) · D192 (N157)
+- **E465** priests, medics and spies (Mid's 14-sim-troops, spyTick): the support troops' own work, th
+- **E466** a hand on a runner that did not get away: a prisoner, not a blow (Mid's soldier tick; ride
+- **E467** a student stands still; a spy keeps to its own work; a priest converts when sent, else pri
+- **E468** walk with the army: to the nearest soldier of the side out, a few paces behind it (Mid's f
+- **E469** a priest beside a foe for D265's time turns it; walking off lets the spell fade; with no r · D265 (N194)
+- **E470** the wounded heal by the best healer of their side in reach, a hospital or a medic, not the · QP (N16)
+- **E471** a shooting building watches for spies within its sight of one, more with research (Mid's w
+- **E472** a spy is unseen unless a foe's soldier or watching building is near; by a foe's building i
+- **E473** the computers' spy: it takes the first unguarded building it sees that can be sabotaged
+- **E474** sabotage (Mid's sabotage): a building burns a share of its health or stalls and loses the 
 
 ## ai.js
 

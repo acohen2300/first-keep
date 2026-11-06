@@ -618,12 +618,12 @@
    "trade runs: pay by distance², sell and buy prices"
   ],
   "ZEAL": [
-   "bring",
-   "zeal (religion)"
+   "in v100",
+   "F24: measure D266"
   ],
   "SAB": [
-   "bring",
-   "sabotage"
+   "in v100",
+   "F24: measure D267"
   ],
   "FLANK": [
    "in v100",
@@ -694,24 +694,24 @@
    "F19+F20: D237, D239 garrison"
   ],
   "TEACH": [
-   "bring",
-   "a soldier learns a newer kind at the School"
+   "in v100",
+   "F24: measure D263"
   ],
   "TEACH_TO": [
-   "bring",
-   "with TEACH; F18: each kind's teach slot holds it (shells), the School's lesson comes with M26"
+   "in v100",
+   "F24: shells teach slot (F18), read by econ.js teachTo"
   ],
   "FALLBACK": [
    "in v100",
    "F22: D250 fallback"
   ],
   "PRISON": [
-   "bring",
-   "prisoners and ransom"
+   "in v100",
+   "F24: measure D264 (with MORALE capAfter, capR)"
   ],
   "CONVERT": [
-   "bring",
-   "a priest turns an enemy"
+   "in v100",
+   "F24: measure D265"
   ],
   "BUILDER_POW": [
    "in v100",

@@ -460,3 +460,23 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E455 | index.html#floor-7-display | a figure that dies in sight topples back, away from the way it faced, and fades |
 | E456 | index.html#floor-7-display | something of yours hit: the screen's edge glows, red for a rival, the flame's for the wild, fading |
 | E457 | index.html#floor-7-display | foes near your Town Center out of view: a marker on the screen's edge points at them, their count in it and their time to arrive under it; a tap looks at them |
+| E458 | econ.js | Teach (Mid's teachTo, teachWhy, teach): an older soldier learns the newer kind its shell's teach slot names, if that kind is of a later age; it stands where it is for the lesson (D263), paid up front |
+| E459 | econ.js | the lesson's price: what the newer kind costs more than the old, in each yield, plus tuition gold for each age climbed (Mid's teachCost) |
+| E460 | econ.js | the lesson done: the soldier is the newer kind, its health the same share of its new most (Mid's graduate) |
+| E461 | econ.js | prisoners (Mid's takePrisoner, payRansom, prisonersTick): a runner caught is held for a ransom of its price; paid, it walks home from its hall; unpaid in D264's time, it serves the captor |
+| E462 | econ.js | Zeal (Mid's zealCost, zealWhy, zeal): the Temple blesses the squad for gold if a priest stands with them; their blows are stronger for a while, then the Temple rests |
+| E463 | econ.js | each tick: a lesson that is over graduates; a prisoner unransomed in time goes over to its captor |
+| E464 | econ.js | a spy by a foe's building reads that side: its stores, age, research and army, kept with the time (Mid's intel) |
+| E465 | combat.js | priests, medics and spies (Mid's 14-sim-troops, spyTick): the support troops' own work, the heal of the wounded, and a runner taken prisoner |
+| E466 | combat.js | a hand on a runner that did not get away: a prisoner, not a blow (Mid's soldier tick; riders catch the foot) |
+| E467 | combat.js | a student stands still; a spy keeps to its own work; a priest converts when sent, else priests and medics walk with the army |
+| E468 | combat.js | walk with the army: to the nearest soldier of the side out, a few paces behind it (Mid's followArmy) |
+| E469 | combat.js | a priest beside a foe for D265's time turns it; walking off lets the spell fade; with no room the spell stops; then it rests (Mid's priestTick) |
+| E470 | combat.js | the wounded heal by the best healer of their side in reach, a hospital or a medic, not the sum: the first-order lag (QP, Mid's healTick) |
+| E471 | combat.js | a shooting building watches for spies within its sight of one, more with research (Mid's watchtower, guarded, spySeen) |
+| E472 | combat.js | a spy is unseen unless a foe's soldier or watching building is near; by a foe's building it reads them |
+| E473 | combat.js | the computers' spy: it takes the first unguarded building it sees that can be sabotaged |
+| E474 | combat.js | sabotage (Mid's sabotage): a building burns a share of its health or stalls and loses the head of its line; the spy is spent; a fall by fire pays nobody |
+| E475 | combat.js | a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else it walks there |
+| E476 | menu.js | Teach on a soldier, Zeal at the Temple, a ransom at your hall |
+| E477 | menu.js | the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what your spy read on theirs |

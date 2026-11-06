@@ -51,6 +51,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC28 | the War Council: the three squads' plans, and Muster, a squad's lack in one order (D244); a squad's dials (temper, shape, intent) are answered by combat.js | {by: combat.js, econ.js, menu.js, law: [], needs: [], may: []} | N188 |
 | SC29 | a building with room inside (D256, after research): its side's villagers run in from danger (D254) and the Alarm fills it, sturdiest first; each one inside adds an arrow to its shot | {by: econ.js, combat.js, law: [], needs: [D256], may: []} | N192 |
 | SC30 | finished and standing D257 s, it wins for its side; every side is told when one stands and when it falls | {by: econ.js, law: [], needs: [], may: []} | N192 |
+| SC31 | a School: an older soldier learns its newer kind here (D263), standing where it was told, seats a School at once | {by: econ.js, menu.js, law: [], needs: [], may: []} | N194 |
+| SC32 | heals its side's troops within D268's reach by the first-order lag (QP); a medic walks with the army (D269) | {by: combat.js, law: [QP], needs: [D268], may: []} | N194 |
+| SC33 | a priest: sent at a foe, it stands beside it D265's time and turns it, then rests; it walks with the army (D269) | {by: combat.js, law: [], needs: [], may: []} | N194 |
+| SC34 | a Temple: Zeal on a squad with a priest beside it (D266) | {by: econ.js, menu.js, law: [], needs: [], may: []} | N194 |
+| SC35 | unseen by a foe beyond D267's sight (a soldier's, a shooting building's), it reads a side it stands by and is spent on sabotage at a foe building (D267) | {by: combat.js, econ.js, index.html, law: [], needs: [], may: []} | N194 |
 
 ## citations
 
@@ -249,6 +254,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N191 |  | Design: Albert, Nov 5 (Frankenstein F21+F22, decisions.json): Mid's gameplay and controls come over (one tap picks, a second opens the card; | opened |
 | N192 |  | Design: Mid's alarm, danger map and the end (09-nav.js DANGER, discRows, stampDanger, dangerMap, dangerWhy; 12-sim-core.js isThreat, recount | opened |
 | N193 |  | Design: Albert, Nov 5 20:16 (Frankenstein F23): keep going; three playability fixes from his phone (everyone idle, three sites never built): | opened |
+| N194 |  | Design: Mid's lessons, prisoners, priests, medics, Zeal and spies (11-orders.js teachTo, teachGap, teachCost, teachSecs, schooling, teachWhy | opened |
 
 ## colours
 
@@ -728,6 +734,26 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E455 |  | a figure that dies in sight topples back, away from the way it faced, and fades |  |
 | E456 |  | something of yours hit: the screen's edge glows, red for a rival, the flame's for the wild, fading |  |
 | E457 |  | foes near your Town Center out of view: a marker on the screen's edge points at them, their count in it and their time to arrive under it; a |  |
+| E458 |  | Teach (Mid's teachTo, teachWhy, teach): an older soldier learns the newer kind its shell's teach slot names, if that kind is of a later age; |  |
+| E459 |  | the lesson's price: what the newer kind costs more than the old, in each yield, plus tuition gold for each age climbed (Mid's teachCost) |  |
+| E460 |  | the lesson done: the soldier is the newer kind, its health the same share of its new most (Mid's graduate) |  |
+| E461 |  | prisoners (Mid's takePrisoner, payRansom, prisonersTick): a runner caught is held for a ransom of its price; paid, it walks home from its ha |  |
+| E462 |  | Zeal (Mid's zealCost, zealWhy, zeal): the Temple blesses the squad for gold if a priest stands with them; their blows are stronger for a whi |  |
+| E463 |  | each tick: a lesson that is over graduates; a prisoner unransomed in time goes over to its captor |  |
+| E464 |  | a spy by a foe's building reads that side: its stores, age, research and army, kept with the time (Mid's intel) |  |
+| E465 |  | priests, medics and spies (Mid's 14-sim-troops, spyTick): the support troops' own work, the heal of the wounded, and a runner taken prisoner |  |
+| E466 |  | a hand on a runner that did not get away: a prisoner, not a blow (Mid's soldier tick; riders catch the foot) |  |
+| E467 |  | a student stands still; a spy keeps to its own work; a priest converts when sent, else priests and medics walk with the army |  |
+| E468 |  | walk with the army: to the nearest soldier of the side out, a few paces behind it (Mid's followArmy) |  |
+| E469 |  | a priest beside a foe for D265's time turns it; walking off lets the spell fade; with no room the spell stops; then it rests (Mid's priestTi |  |
+| E470 |  | the wounded heal by the best healer of their side in reach, a hospital or a medic, not the sum: the first-order lag (QP, Mid's healTick) |  |
+| E471 |  | a shooting building watches for spies within its sight of one, more with research (Mid's watchtower, guarded, spySeen) |  |
+| E472 |  | a spy is unseen unless a foe's soldier or watching building is near; by a foe's building it reads them |  |
+| E473 |  | the computers' spy: it takes the first unguarded building it sees that can be sabotaged |  |
+| E474 |  | sabotage (Mid's sabotage): a building burns a share of its health or stalls and loses the head of its line; the spy is spent; a fall by fire |  |
+| E475 |  | a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else it walks there |  |
+| E476 |  | Teach on a soldier, Zeal at the Temple, a ransom at your hall |  |
+| E477 |  | the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what your spy read on theirs |  |
 
 ## ground
 
@@ -891,8 +917,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D120 | a shadow at most this many heights | 3 | N112 |
 | D121 | the blades' strength | 0.45 | N112 |
 | D122 | the sides in play | [0, 2] | N114 |
-| D123 | what a thing costs (Mid's BLD and UNIT cost, by the 10:31 rule; a second Town Center Mid's town, each unit the Mid kind it wears) | {BTC1: {wood: 400, stone: 300, food: 200}, BR1: {wood: 30}, BI1: {wood: 80}, BI2: {wood: 80}, BI3: {wood: 80}, BCL1: {wood: 60}, BM1: {wood: | N168; N176 |
-| D124 | seconds to train (Mid's UNIT t for every unit, Albert, Nov 5 10:06) | {UV: 8, UM1: 10, UM6: 12, UM2: 10, UM7: 9, UM8: 12, UM9: 14, UM10: 12, UM3: 16, UM11: 14, UM12: 28, UM4: 20, UM13: 24, UM5: 25, UM14: 40, UM | N169; N176 |
+| D123 | what a thing costs (Mid's BLD and UNIT cost, by the 10:31 rule; a second Town Center Mid's town, each unit the Mid kind it wears) | {BTC1: {wood: 400, stone: 300, food: 200}, BR1: {wood: 30}, BI1: {wood: 80}, BI2: {wood: 80}, BI3: {wood: 80}, BCL1: {wood: 60}, BM1: {wood: | N168; N176; N194 |
+| D124 | seconds to train (Mid's UNIT t for every unit, Albert, Nov 5 10:06) | {UV: 8, UM1: 10, UM6: 12, UM2: 10, UM7: 9, UM8: 12, UM9: 14, UM10: 12, UM3: 16, UM11: 14, UM12: 28, UM4: 20, UM13: 24, UM5: 25, UM14: 40, UM | N169; N176; N194 |
 | D125 | one villager's seconds to raise a site (Mid's build times, BLD t; the Town Center a second one, Mid's town) | {BTC1: 60, BR1: 12, BI1: 15, BI2: 15, BI3: 15, BCL1: 10, BM1: 25, BM2: 25, BM3: 25, BM4: 30, BW1: 10, BW2: 12, BW3: 25, BW4: 6, BCL2: 12, BC | N169; N168 |
 | D126 | n villagers raise it at n^this | 0.7 | N114 |
 | D127 | the people a building houses | {BTC1: 10, BR1: 5} | N69 |
@@ -901,16 +927,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D130 | the six ages (Mid's names; Albert, Nov 5 10:30) | [Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment] | N160 |
 | D131 | a share: what one person eats a day (Mid's UPKEEP.share, 30 food a minute feeding eight) | 7.5 | N170 |
 | D132 | move on when another find pays this much more (Mid's 1.18) | 0.18 | N114; N164 |
-| D133 | who trains whom: a shell, or a class (every kind of it, each from its age); the scout at the Town Center (Mid's keep) | {BTC1: [UV, US4], BM1: [Foot], BM2: [Archers], BM3: [Riders], BM4: [Engines]} | N114; N176 |
+| D133 | who trains whom: a shell, or a class (every kind of it, each from its age); the scout at the Town Center (Mid's keep) | {BTC1: [UV, US4], BM1: [Foot], BM2: [Archers], BM3: [Riders], BM4: [Engines], BP3: [US1], BP6: [US2], BP8: [US3]} | N114; N176; N194 |
 | D134 | the bell | 900 | N114 |
 | D135 | the score's divisors | {unit: 5, bld: 5, tech: 5, wealth: 10} | N75 |
 | D136 | a farm's food a second | 0.4 | N69 |
 | D137 | a find no path reached is left alone for | 60 | N114 |
-| D138 | a unit's health, blow, reach and sight in tiles (Mid's ÷ D12), pace; a soldier's tags, its counters (vs: × its blow on a kind, class or tag), its blow on a building (bld, × its blow), roofed (rarmor, × arrows and bolts it takes), building-only (bonly) and kiting (kite), every one Mid's UNIT (no flat armour: its armour is the research share D228); its health and blow open for Albert's play test; the boar and the bison Mid's | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, tags: [civ]}, UM1: {hp: 60, atk: 6, rng: 1.2, rof: 1.2, sight: 13, tags: [infantry, spear], vs: {Rid | N69; N170; N176; N188 |
+| D138 | a unit's health, blow, reach and sight in tiles (Mid's ÷ D12), pace; a soldier's tags, its counters (vs: × its blow on a kind, class or tag), its blow on a building (bld, × its blow), roofed (rarmor, × arrows and bolts it takes), building-only (bonly) and kiting (kite), every one Mid's UNIT (no flat armour: its armour is the research share D228); its health and blow open for Albert's play test; the boar and the bison Mid's | {UV: {hp: 25, atk: 3, rng: 1, rof: 1.5, tags: [civ]}, UM1: {hp: 60, atk: 6, rng: 1.2, rof: 1.2, sight: 13, tags: [infantry, spear], vs: {Rid | N69; N170; N176; N188; N194 |
 | D139 | a building's health; the tree farm and the pasture a farm's, the dock Age of Empires II's | {BTC1: 2400, BR1: 550, BI1: 600, BI2: 600, BI3: 600, BCL1: 480, BM1: 1200, BM2: 1200, BM3: 1200, BM4: 1500, BW1: 1800, BW2: 2750, BW3: 1020, | N69; N170 |
 | D141 | a blow from behind the line lands this much harder (Mid's FLANK) | 1.3 | N188 |
 | D142 | a wave breaks under this share of its start (QBQ); a soldier's loss drains each one near 1 ÷ (this × n) (QAI) | 0.3 | N76 |
-| D143 | what shoots: its blow, seconds a shot, the reach of its bow from the ground and its height (tiles), its reach's research (rng adds): Mid's watchtower, Town Center and camp tower; it shoots as far as an arrow loosed from that height lands (QAJ) | {BW3: {atk: 10, rof: 1.2, bow: 10.6, h: 4.4, rng: 0}, BTC1: {atk: 7, rof: 1, bow: 10.6, h: 3.4, rng: 0}, BTC8: {atk: 6, rof: 1.4, bow: 9, h: | N188; N39; N40 |
+| D143 | what shoots: its blow, seconds a shot, the reach of its bow from the ground and its height (tiles), its reach's research (rng adds): Mid's watchtower, Town Center and camp tower; it shoots as far as an arrow loosed from that height lands (QAJ); the Courthouse shoots only what ticks its only (Mid's spyonly) | {BW3: {atk: 10, rof: 1.2, bow: 10.6, h: 4.4, rng: 0}, BTC1: {atk: 7, rof: 1, bow: 10.6, h: 3.4, rng: 0}, BTC8: {atk: 6, rof: 1.4, bow: 9, h: | N188; N39; N40; N194 |
 | D144 | a soldier takes up a fight within | 8 | N114 |
 | D145 | seconds between its path checks | 1 | N114 |
 | D146 | wildlife bites within | 3 | N114 |
@@ -1004,7 +1030,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D236 | a shooter reloading steps back back tiles from a blade within near, for hold seconds (Mid's KITE) | {near: 4.5, back: 2.8, hold: 0.5} | N188 |
 | D237 | a soldier at rest within r tiles of its own shelter heals (Mid's GARRISON; its pace is D239's garrison, QP) | {r: 7} | N188; N16 |
 | D238 | a soldier's choice of foe: its side within group tiles add their power (Lanchester); a foe that cannot hurt still counts least; it keeps a foe within leash × its sight × its temper's chase; the computers keep the temper guard; hold fights only within reach, press never kites; No pursuit (loose) looks step tiles past its reach, Buildings first (bld) takes the nearest building; a squad's plan steps by steps[1] under steps[0], else steps[2]; at home a soldier walks back when farther than near tiles from its post (Mid's GROUP_R, foeValue, TEMPER, INTENT, sqPlan) | {group: 6, least: 0.1, leash: 1.4, temper: {hold: 0, guard: 1, press: 2}, intent: {engage: 0, loose: 1, bld: 2}, step: 1, steps: [10, 1, 5], | N188; N36; N37 |
-| D239 | the bases of shares that research moves and no shell holds: nerve's settling (rest, shelter), healing at a shelter (garrison: most health ÷ this, seconds), the run (rout, seconds), wear's research, a blow on a building, a charge, a walker's share of its pace from its shape and its march (pace), the room inside a building not in D256 (hold) (Mid's MORALE, GARRISON, fxv) | {rest: 1, shelter: 1, garrison: 0.6, rout: 8, wear: 0, bld: 1, charge: 1, pace: 1, hold: 0} | N188 |
+| D239 | the bases of shares that research moves and no shell holds: nerve's settling (rest, shelter), healing at a shelter (garrison: most health ÷ this, seconds), the run (rout, seconds), wear's research, a blow on a building, a charge, a walker's share of its pace from its shape and its march (pace), the room inside a building not in D256 (hold) (Mid's MORALE, GARRISON, fxv); Teach's opening (teach) and its time (lesson), Zeal's seconds, price and rest, a conversion's time, a watcher's sight of a spy (spysight), a healer's pace (heal) | {rest: 1, shelter: 1, garrison: 0.6, rout: 8, wear: 0, bld: 1, charge: 1, pace: 1, hold: 0, teach: 0, lesson: 1, zealsecs: 0, zealcost: 1, z | N188; N194 |
 | D240 | a squad's shape, each a trade: riders in it strike × dmg; it takes × hit, from riders × vsRiders; it walks × spd; an army marches in column once Formations is known (Mid's FORM, COLUMN) | {line: {dmg: 1, hit: 1, spd: 1, vsRiders: 1}, wedge: {dmg: 1.15, hit: 1.1, spd: 1, vsRiders: 1}, square: {dmg: 1, hit: 0.9, spd: 0.8, vsRide | N188 |
 | D241 | an army stands in a grid gap tiles apart, about rows times as wide as deep, at most most files; at home in its building's yard tiles past it, a block a squad of √(n × block) files up to cols; a column three files, a choke three; support rings its blades round at least ring places (Mid's GRID, formUp, CHOKE) | {gap: 1.5, rows: 2, most: 14, yard: 2.4, block: 2.5, cols: 10, column: 3, choke: 3, ring: 6} | N188 |
 | D242 | a soldier in a drill not this share of the way to its place by this share of the drill's time stands where it is (Mid's FORMING, Albert's x% by x%) | {share: 0.7} | N188 |
@@ -1028,6 +1054,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D260 | each villager's first job at the start, in order, the rest on rest (Mid's layMovers: the second on wood) | {jobs: [food, wood], rest: food} | N192 |
 | D261 | the marker for foes near your Town Center out of view (Mid's drawRadar, screen px): shown when the nearest is past edge of the screen's sides; kept m in, side from the right, top from the top on the right, foot from the bottom; a disc r, pulsing pulse at beat, an arrow to tip from back, wing wide, its outline line; the time to arrive under px below | {edge: 40, m: 30, side: 84, top: 80, foot: 40, r: 15, pulse: 2, beat: 6, tip: 24, back: 16, wing: 6, line: 1.5, under: 26, half: 0.5, least: | N192 |
 | D262 | something of yours is hit: a glow round the screen's edge for secs s, from inner to outer of the screen's sides, at most alpha (Mid's drawHitGlow); red for a rival, the flame's for the wild | {secs: 1.6, inner: 0.3, outer: 0.72, alpha: 0.55, stops: [0, 1]} | N192 |
+| D263 | Teach (Mid's TEACH): a soldier learns the newer kind its shell's teach slot names (Mid's TEACH_TO) at the School, seats a School at once; it stands for the newer kind's base training × mul × the ages climbed (research: lesson), and pays the newer kind's dearer prices plus tuition gold an age climbed; opened by Veterans (research: teach) | {seats: 4, mul: 1.5, tuition: 40} | N194 |
+| D264 | prisoners (Mid's PRISON, MORALE capAfter and capR, takePrisoner): a runner caught within r tiles after after s of its run is taken; its ransom is its price × ransom in gold, at least least; unransomed for secs s it serves its captor | {secs: 180, ransom: 1, least: 40, after: 2, r: 1} | N194 |
+| D265 | a priest turns a foe (Mid's CONVERT, tiles): beside it within r for secs s (research: convert), then rests cd s; the room holds as for a recruit | {r: 4, secs: 12, cd: 60} | N194 |
+| D266 | Zeal at the Temple (Mid's ZEAL): for cost gold (research: zealcost) the squad's soldiers strike × mul for secs s (research adds zealsecs); then the Temple rests cd s (research: zealcd); a priest must stand within near tiles of one of them | {cost: {gold: 60}, secs: 45, cd: 120, mul: 1.2, near: 12} | N194 |
+| D267 | spies and sabotage (Mid's SAB, the spy's stealth, BLD sab; tiles): a spy is seen by a foe's soldier within seen's first, by a foe's shooting building within its second (research adds spysight), looked for within far; at a foe building's edge within at it burns burn of its health or stalls it stall s and drops the head of its line, by how, and is spent; within look of one it reads that side | {burn: 0.6, stall: 40, seen: [4.5, 14], far: 30, at: 1.4, look: 6, how: {BR1: burn, BCL1: burn, BCL2: burn, BI1: burn, BI4: burn, BI2: burn, | N194 |
+| D268 | who heals its side's troops within r tiles (Mid's UNIT and BLD heal, hrng): the best in reach counts, its heal the health a second at the start, the wound closing as the first-order lag, tau = most health ÷ heal (QP) | {US2: {heal: 3, r: 5.5}, BP6: {heal: 3, r: 9}} | N194 |
+| D269 | priests and medics walk with the army (Mid's followArmy, tiles): to the nearest soldier of their side out within r, back tiles behind it, once more than near from there | {r: 26, back: 2.4, near: 1} | N194 |
 
 ## rules
 
@@ -1092,6 +1125,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X57 | the blow, nerve and the rout, a soldier's day, squads and muster (F19+F20): every kind's counters on every kind are Mid's frozen vsMul over its UNIT; a tower reaches as far as Mid's rangeFrom within 1% (the arrow's drag, QAJ); a foe's worth in reach is Mid's foeValue; the nerve, flank, yard, kite, shelter, shapes, tempers, plunder and wear are Mid's numbers; on the page a blow from behind lands × D141, a skirmish breaks a soldier who runs and comes back, a fallen tower pays D233 of its price, and Muster brings a squad's lack at twice the price | {stage: page} | N132; N188 |
 | X58 | the finger, orders you can follow and the War Director (F21+F22): Mid's numbers (HOLD_MS, PRESS_SHOW, DBL_MS, HUD, ARMY_STILL, DIRECT, CHOKE, AMBUSH, CHARGE, FALLBACK, AB) in the books; Mid's frozen etaOf and reinforcePlan's waves for the same soldiers; on the page a box picks many, a tap is their order with its line and time, Go makes a mission, the charge quickens then tires, the choke stands as many files as the gap, an ambush hides | {stage: page} | N132; N190; N191 |
 | X59 | the Alarm and the end, with the start's first jobs, builders that tell and reachable sites (F23): Mid's DANGER_R, SHELTER, EMG, WONDER_HOLD, SHARE_FALLEN, PLUNDER, SCORE and room in the books; who is a threat is Mid's frozen isThreat; Shelter fills the buildings as Mid's frozen villagersIn does; a rival's fall pays what Mid's frozen fall pays, shares the room and scores as its scoreAll; your fall, a wonder held and the bell end the game as its judge; and on the page every villager has a job within 3 s of a new game, a villager leaves a find a foe stands by, Work sends them back, a site in reach is built, one out of reach says why and a free villager is sent to one in reach, and a spot nobody can walk to is refused | {stage: page} | N192; N193 |
+| X60 | Teach, prisoners, priests, medics, Zeal and spies (F24): Mid's TEACH, TEACH_TO, PRISON, CONVERT, ZEAL, SAB, the spy's stealth, heal and hrng, the priest's, medic's and spy's rows and the 18 research steps in the books; Mid's frozen teachCost and teachSecs for every kind that learns, its ransom, spySeen and healTick's lag for the same wound; on the page a spear learns to be a sword at the School keeping its share of health, a runner is taken, serves its captor after the wait and another is ransomed with the gold moved, Zeal costs Mid's gold and lifts the blow by its share for its seconds, a priest turns a villager in Mid's time, a medic binds a wound, a spy is unseen at 6 tiles and seen at 3, and sabotage stalls a barracks and burns a mill | {stage: page} | N132; N194 |
 
 ## screen
 
@@ -1100,7 +1134,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN1 | the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6 | {slots: 6, slot: 44, gap: 6} | N133 |
 | SN2 | the Build tabs: six, up to nine buildings each, three to a row (each cell two slots wide) | {Home: [BTC1, BR1, BR2, BCR2, BP4, BP6, BP7], Land: [BCL1, BI1, BCL2, BI3, BCT2, BI2, BCL3, BCL4, BI5], Trade: [BCR1, BCT1, BI6, BI4, BI7, B | N134 |
 | SN3 | buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07) | [BS1, BTC5, BTC6, BTC7, BTC8, BW4] | N135; N172 |
-| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always) | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [queue, Spawn], [train, Spawn], [tech, Research], [acts, n | N136; N170 |
+| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [queue, Spawn], [train, Spawn], [tech, Research], [troops, | N136; N170; N194 |
 | SN5 | the top ribbon: the five stores, sound, play, mail | [food, wood, stone, gold, iron, mute, play, mail] | N137 |
 | SN6 | readings with no row: the second top row was cut, each waits for its new home | [season and time of day, the clock to the bell, people and room, idle villagers, records, rank, army] | N138 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |
@@ -1139,14 +1173,14 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BCL4 | Quarry | [] | N144 |
 | BCT1 | Trade post | [] | N144 |
 | BCT2 | Dock | [Drop-off, Health, Shore] | N144; N170 |
-| BP1 | School | [] | N144 |
+| BP1 | School | [Teach] | N144; N194 |
 | BP2 | Library | [] | N144 |
-| BP3 | Temple | [] | N144 |
+| BP3 | Temple | [Spawn, Zeal] | N144; N194 |
 | BP4 | Baths | [] | N144 |
 | BP5 | Theatre | [] | N144 |
-| BP6 | Hospital | [] | N144 |
+| BP6 | Hospital | [Spawn, Heal] | N144; N194 |
 | BP7 | Aqueduct | [] | N144 |
-| BP8 | Courthouse | [] | N144 |
+| BP8 | Courthouse | [Spawn, Shoot] | N144; N194 |
 | BP9 | Hall | [] | N144 |
 | BP10 | War Council | [Squad] | N144 |
 | BI1 | Mill | [Drop-off, Health] | N144 |
@@ -1186,9 +1220,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | UM14 | Bombard | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
 | UM15 | Ballista | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
 | UM16 | Trebuchet | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
-| US1 | Priest | [Walk] | N144; N170 |
-| US2 | Medic | [Walk] | N144; N170 |
-| US3 | Spy | [Walk] | N144; N170 |
+| US1 | Priest | [Walk, Health, Convert] | N144; N170; N194 |
+| US2 | Medic | [Walk, Health, Heal] | N144; N170; N194 |
+| US3 | Spy | [Walk, Health, Spy] | N144; N170; N194 |
 | US4 | Scout | [Walk, Fight, Scout, Health] | N144; N170 |
 | UT1 | Caravan | [Walk, Carry, Trade] | N144; N170 |
 | UT2 | Camp wagon | [Walk, Carry] | N144 |
@@ -1486,6 +1520,24 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O149 | Supply trains | {at: BP10, line: Command, age: 3, cost: {food: 260, gold: 180}, time: 52, fx: [{s: rest, p: 0.2}], when: 1200s, w: 5} | N160; N161; N188 |
 | O150 | Muster | {at: BP10, line: Command, age: 4, cost: {food: 430, gold: 290}, time: 71, fx: [], when: 1600s, w: 6} | N160; N161; N188 |
 | O151 | General staff | {at: BP10, line: Command, age: 4, cost: {food: 430, gold: 290}, time: 71, fx: [{s: charge, p: 0.2}], need: [muster], when: 1630s, w: 6} | N160; N161; N188 |
+| O152 | Drill yard | {at: BM1, line: Levy, age: 2, cost: {food: 150, gold: 100}, time: 35, fx: [{s: train, c: 0.1}], when: 300 BC, w: 4} | N160; N161 |
+| O153 | Veterans | {at: BM1, line: Levy, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: teach, a: 1}], need: [writing], when: 100 BC, w: 6} | N160; N161 |
+| O154 | Feudal levy | {at: BM1, line: Levy, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: cost, k: [Foot, Archers], c: 0.1}], when: 900s, w: 4} | N160; N161 |
+| O155 | Apprenticeship | {at: BP1, line: Teaching, age: 1, cost: {wood: 90, gold: 60}, time: 26, fx: [{s: train, c: 0.1}], when: 1700 BC, w: 4} | N160; N161 |
+| O156 | Academy | {at: BP1, line: Teaching, age: 2, cost: {wood: 170, gold: 110}, time: 38, fx: [{s: lesson, c: 0.3}], need: [veterans], when: 387 BC, w: 5} | N160; N161 |
+| O157 | War college | {at: BP1, line: Teaching, age: 4, cost: {wood: 390, gold: 260}, time: 66, fx: [{s: lesson, c: 0.3}], need: [academy], when: 1617, w: 5} | N160; N161 |
+| O158 | Rites | {at: BP3, line: Faith, age: 1, cost: {gold: 90, stone: 60}, time: 26, fx: [{s: zealsecs, a: 15}], when: Bronze age, w: 4} | N160; N161 |
+| O159 | Sacred games | {at: BP3, line: Faith, age: 2, cost: {gold: 150, stone: 100}, time: 35, fx: [{s: zealcost, c: 0.5}, {s: zealcd, c: 0.3}], when: 776 BC, w: 4 | N160; N161 |
+| O160 | Relics | {at: BP3, line: Faith, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: convert, c: 0.25}], when: 800s, w: 4} | N160; N161 |
+| O161 | Preaching orders | {at: BP3, line: Faith, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: rest, p: 0.2}], when: 1210s, w: 4} | N160; N161 |
+| O162 | Reformation | {at: BP3, line: Faith, age: 4, cost: {gold: 470, stone: 310}, time: 77, fx: [{s: zealcost, c: 0.3}], need: [press], when: 1517, w: 7} | N160; N161 |
+| O163 | Law code | {at: BP8, line: Order, age: 1, cost: {gold: 200, wood: 130}, time: 44, fx: [{s: push, c: 0.15}], need: [writing], when: 1750 BC, w: 7} | N160; N161 |
+| O164 | Magistrates | {at: BP8, line: Order, age: 3, cost: {gold: 260, wood: 180}, time: 52, fx: [{s: push, c: 0.2}], when: 1100s, w: 5} | N160; N161 |
+| O165 | Night watch | {at: BP8, line: Order, age: 3, cost: {gold: 80, wood: 50}, time: 24, fx: [{s: spysight, a: 6}], when: 1200s, w: 3} | N160; N161 |
+| O166 | Informers | {at: BP8, line: Order, age: 4, cost: {gold: 350, wood: 230}, time: 61, fx: [{s: cost, k: US3, c: 0.3}], when: 1500s, w: 4} | N160; N161 |
+| O167 | Tolls | {at: BP8, line: Revenue, age: 2, cost: {gold: 150, wood: 100}, time: 35, fx: [{s: trade, p: 0.1}], when: 100s, w: 4} | N160; N161 |
+| O168 | Assizes | {at: BP8, line: Revenue, age: 3, cost: {gold: 240, wood: 160}, time: 48, fx: [{s: spysight, a: 4}], when: 1166, w: 4} | N160; N161 |
+| O169 | Police | {at: BP8, line: Revenue, age: 4, cost: {gold: 390, wood: 260}, time: 66, fx: [{s: cost, k: US3, c: 0.15}, {s: spysight, a: 4}], need: [infor | N160; N161 |
 
 ## words
 
@@ -1504,4 +1556,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J11 | orders you can follow, the quick action, the choke, the ambush and the War Director: what each says (Mid's 11-orders, 28-army-quick, 39-huddle words); a move is [its id, its cell, the event it sounds, what it says] | {marching: {n} marching: {at}., arrived: {n} arrived: {at}., lost: {m} is lost., losing: {m} is losing., nobody: {m}: nobody idle in it., no | N190 |
 | J12 | the Alarm's four orders (each a name and its icon), what it says, the danger's causes and the warnings (Mid's EMERGENCY, emgStart, emgStop, dangerWhy, watchHome) | {cells: {square: {name: Gather, icon: gather}, hands: {name: Garrison, icon: garrison}, shelter: {name: Shelter, icon: shelter}, work: {name | N192 |
 | J13 | the end: the sides' names, a side's fall, the wonder, the bell and the score (Mid's judge, fall, finish, built) | {sides: [You, Raiders, Rivals, Fortress], fell: Your keep fell. You held out {t}., rivals: Every rival has fallen. {t}, wonder: [Your wonder | N192 |
+| J14 | what Teach, prisoners, priests, Zeal and spies say (Mid's teachWhy, graduate, takePrisoner, payRansom, prisonersTick, priestTick, zealWhy, zeal, sabotage, intel) | {teach: {label: Teach, none: Nothing newer to learn., busy: Already learning., vets: Research Veterans at the Barracks., age: Needs the {age | N194 |
 

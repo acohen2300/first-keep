@@ -2,20 +2,20 @@
  "about": "Step 6, temp book staging/combat.js (Mid's 14-sim-troops, 16-sim-fight, 28-army-quick): every piece, and what becomes of it. in v100: already home. bring: Mid has it, v100 does not; it comes in as book entries and laws with its feature. cut: v100 does it another way. By the 10:31 rule, what comes over keeps Mid's values; hand shoves give way to QBT.",
  "pieces": {
   "followArmy": [
-   "bring",
-   "priests and medics walk with the battalion that is out; part of US1 Priest and US2 Medic (Later, kept)"
+   "in v100",
+   "F24: combat.js follow (D269)"
   ],
   "priestTick": [
-   "bring",
-   "the Priest: converts a foe beside it (the army cap holds), stands at a shrine; SC Convert; the shrine is the Throne's foot (see misfits)"
+   "in v100",
+   "F24: combat.js support, convert (D265); sent by order(); the shrine waits for the Throne"
   ],
   "medicTick": [
-   "bring",
-   "the Medic: follows the army or its order; part of US2 Medic and SC Heal"
+   "in v100",
+   "F24: combat.js support, follow"
   ],
   "healTick": [
-   "bring",
-   "a Hospital or Medic closes your soldiers' wounds by the first-order lag (v100's law QP, Cukjati 2001); SC Heal"
+   "in v100",
+   "F24: combat.js heal (D268, QP; research: heal)"
   ],
   "shot": [
    "in v100",

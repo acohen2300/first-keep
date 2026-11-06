@@ -358,16 +358,16 @@
      "F17: books/tech.js O83 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "drillyard": [
-     "bring",
-     "Drill yard (barracks, Classical): Soldiers train 10% faster. Game: it gave room before Build 63; one population now."
+     "in v100",
+     "Drill yard (barracks, Classical): Soldiers train 10% faster. Game: it gave room before Build 63; one population now. · F24: tech book, by its key"
     ],
     "veterans": [
-     "bring",
-     "Veterans (barracks, Classical): Soldiers can be taught up to a newer kind."
+     "in v100",
+     "Veterans (barracks, Classical): Soldiers can be taught up to a newer kind. · F24: tech book, by its key"
     ],
     "feudal": [
-     "bring",
-     "Feudal levy (barracks, Medieval): Infantry cost 10% less."
+     "in v100",
+     "Feudal levy (barracks, Medieval): Infantry cost 10% less. · F24: tech book, by its key"
     ],
     "slings": [
      "in v100",
@@ -618,16 +618,16 @@
      "F13a: books/tech.js O59 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "apprentices": [
-     "bring",
-     "Apprenticeship (school, Bronze): Everything trains 10% faster."
+     "in v100",
+     "Apprenticeship (school, Bronze): Everything trains 10% faster. · F24: tech book, by its key"
     ],
     "academy": [
-     "bring",
-     "Academy (school, Classical): Teaching soldiers takes 30% less time."
+     "in v100",
+     "Academy (school, Classical): Teaching soldiers takes 30% less time. · F24: tech book, by its key"
     ],
     "military_academy": [
-     "bring",
-     "War college (school, Gunpowder): Teaching soldiers takes 30% less time."
+     "in v100",
+     "War college (school, Gunpowder): Teaching soldiers takes 30% less time. · F24: tech book, by its key"
     ],
     "medicine": [
      "bring",
@@ -734,52 +734,52 @@
      "Surgeons (hospital, Gunpowder): Healing is 50% faster."
     ],
     "rites": [
-     "bring",
-     "Rites (temple, Bronze): Zeal lasts 15 s longer."
+     "in v100",
+     "Rites (temple, Bronze): Zeal lasts 15 s longer. · F24: tech book, by its key"
     ],
     "games": [
-     "bring",
-     "Sacred games (temple, Classical): Zeal costs half, returns sooner."
+     "in v100",
+     "Sacred games (temple, Classical): Zeal costs half, returns sooner. · F24: tech book, by its key"
     ],
     "relics": [
-     "bring",
-     "Relics (temple, Medieval): Priests convert 25% faster."
+     "in v100",
+     "Relics (temple, Medieval): Priests convert 25% faster. · F24: tech book, by its key"
     ],
     "sermons": [
-     "bring",
-     "Preaching orders (temple, Medieval): Resting soldiers recover nerve 20% faster."
+     "in v100",
+     "Preaching orders (temple, Medieval): Resting soldiers recover nerve 20% faster. · F24: tech book, by its key"
     ],
     "reform": [
-     "bring",
-     "Reformation (temple, Gunpowder): Zeal costs 30% less."
+     "in v100",
+     "Reformation (temple, Gunpowder): Zeal costs 30% less. · F24: tech book, by its key"
     ],
     "codes": [
-     "bring",
-     "Law code (courthouse, Bronze): Vassal unrest climbs 15% slower."
+     "in v100",
+     "Law code (courthouse, Bronze): Vassal unrest climbs 15% slower. · F24: tech book, by its key"
     ],
     "magistrates": [
-     "bring",
-     "Magistrates (courthouse, Medieval): Vassal unrest climbs 20% slower."
+     "in v100",
+     "Magistrates (courthouse, Medieval): Vassal unrest climbs 20% slower. · F24: tech book, by its key"
     ],
     "watch": [
-     "bring",
-     "Night watch (courthouse, Medieval): Spies are seen from farther."
+     "in v100",
+     "Night watch (courthouse, Medieval): Spies are seen from farther. · F24: tech book, by its key"
     ],
     "informers": [
-     "bring",
-     "Informers (courthouse, Gunpowder): Spies cost 30% less."
+     "in v100",
+     "Informers (courthouse, Gunpowder): Spies cost 30% less. · F24: tech book, by its key"
     ],
     "tolls": [
-     "bring",
-     "Tolls (courthouse, Classical): Trade pays 10% more."
+     "in v100",
+     "Tolls (courthouse, Classical): Trade pays 10% more. · F24: tech book, by its key"
     ],
     "assizes": [
-     "bring",
-     "Assizes (courthouse, Medieval): Spies are seen from farther still."
+     "in v100",
+     "Assizes (courthouse, Medieval): Spies are seen from farther still. · F24: tech book, by its key"
     ],
     "police": [
-     "bring",
-     "Police (courthouse, Gunpowder): Spies cheaper, seen farther."
+     "in v100",
+     "Police (courthouse, Gunpowder): Spies cheaper, seen farther. · F24: tech book, by its key"
     ],
     "engage": [
      "in v100",

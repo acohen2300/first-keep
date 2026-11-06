@@ -202,8 +202,8 @@
    "another side's building shows only where seen now or once (remembered buildings); v100 draws every building under the fog"
   ],
   "visibleTo0": [
-   "bring",
-   "a foe's spy shows only once exposed (with the Spy, US3)"
+   "in v100",
+   "F24: index.html: a veiled unit is not drawn nor picked; combat.js enemies and the towers skip it"
   ],
   "fogCv": [
    "in v100",

@@ -1178,7 +1178,7 @@ function drawWoods(s) { const q = STEP ** Math.round(Math.log(s) / Math.log(STEP
 }
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
-  const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && !inSight(u.k))) return; const [x, y] = toScreen(u.vx, u.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
+  const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u.k) || u.veil))) return; const [x, y] = toScreen(u.vx, u.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
     if (!dots) { const on = pick.includes(u); ctx.strokeStyle = on ? C.gold : u.side >= 0 ? SIDES[u.side].col : C.white; ctx.globalAlpha = on ? 1 : 0.5; ctx.lineWidth = on ? 1.5 : 1; ctx.beginPath(); ctx.ellipse(x, y, 7 * s, 3.5 * s, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
     if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else { const th = swayOf(u); ctx.save(); ctx.translate(x, y); if (th) ctx.rotate(th); if (u.face < 0) ctx.scale(-1, 1); blit(unitSprite(u, s), 0, 0, s); ctx.restore(); } }; // E160
   if (!dots) { drawWoods(s); drawShadows(s); }
@@ -1231,7 +1231,7 @@ for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e)
   if (P.mode) fire('drop', P, ev !== 'pointerup'); else if (had && ev === 'pointerup' && !P.moved && !P.eat) tap(e.clientX, e.clientY); dirty(); });
 function hitAt(px, py) { // E164
   const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i, r = Math.max(TO.hit, TO.hitZ * cam.z);
-  let near = null; for (const u of units) if (!u.inside && (u.side === ME || (inSight(u.k) && !u.hid))) { const [x, y] = toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + TO.lift * cam.z); if (d < r && (!near || d < near[1])) near = [u, d]; }
+  let near = null; for (const u of units) if (!u.inside && (u.side === ME || (inSight(u.k) && !u.hid && !u.veil))) { const [x, y] = toScreen(u.vx, u.vy), d = Math.hypot(x - px, y - py + TO.lift * cam.z); if (d < r && (!near || d < near[1])) near = [u, d]; }
   return [k, near && near[0]]; }
 const tap = (px, py) => fire('tap', ...hitAt(px, py), px, py);
 on('draw', (c) => { if (!press || press.moved) return; const f = (performance.now() - press.t - TO.show) / (TO.hold - TO.show), [fa, fl] = TM.box; c.save(); c.strokeStyle = c.fillStyle = C.gold; // E426

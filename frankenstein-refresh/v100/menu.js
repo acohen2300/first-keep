@@ -84,7 +84,7 @@ const $ = (id) => document.getElementById(id);
 const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, fog: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Home', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
 const toast = (msg) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = D.toast; };
-const WD = fromBook('words'), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
+const WD = fromBook('words'), TW = WD.troops, blessed = () => WAR.armyOf(ME).filter((u) => WAR.SQ.sel == null || u.bn === WAR.SQ.sel), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
 const fmt = (n) => (n >= SAY.whole ? Math.round(n / SAY.thousand) + WD.thousand : n >= SAY.thousand ? Math.floor(n / SAY.tenth) / (SAY.thousand / SAY.tenth) + WD.thousand : String(Math.floor(n)));
 const plural = (n) => { for (const [p, f, e] of WD.plural) { const re = new RegExp(p, f); if (re.test(n)) return n.replace(re, e); } }; // E273
 const some = (k, n) => (k === 1 ? n : plural(n));
@@ -170,6 +170,9 @@ const VERBS = {
   hunt: { label: () => 'Hunt', whyNot: () => (!ECON.villagersOf(ME).length ? 'No villagers' : ''), run: (t) => toast(ECON.hunt(ME, t) ? TELL.hunt : TELL.hands) }, // E357
   replant: { label: (t) => `Replant${price(ECON.replantCost(t))}`, whyNot: (t) => { const w = ECON.replantWhy(ME, t); return w === 'cost' ? `Needs ${costText(ECON.replantCost(t))}` : w; }, run: (t) => ECON.replant(ME, t) },
   replantAll: { label: () => 'Replant all', whyNot: () => '', run: (t) => { const n = ECON.replantAll(ME, t); toast(n ? TELL.replanted.replace('{n}', n) : TELL.broke); } },
+  teach: { label: (u) => `${TW.teach.label}${price(ECON.teachCost(ME, u))}`, whyNot: (u) => ECON.teachWhy(ME, u).replace('{cost}', costText(ECON.teachCost(ME, u))), run: (u) => ECON.teach(ME, u) }, // E476
+  zeal: { label: (t) => `${TW.zeal.label}${price(ECON.zealCost(ME, t))}`, whyNot: (t) => ECON.zealWhy(ME, t, blessed()).replace('{cost}', costText(ECON.zealCost(ME, t))), run: (t) => ECON.zeal(ME, t, blessed()) },
+  ransom: { label: (i) => { const x = ECON.prisonersOf(ME)[i]; return x ? `${TW.prison.label} ${FK.SH[x.code].name}${price({ gold: x.ransom })}` : ''; }, whyNot: (i) => { const x = ECON.prisonersOf(ME)[i]; return x && !ECON.canPay(ME, { gold: x.ransom }) ? `Needs ${costText({ gold: x.ransom })}` : ''; }, run: (i) => ECON.payRansom(ME, +i) },
 };
 function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2); if (why) { FK.fire('event', 'err', null); toast(why); return false; } FK.fire('event', verb === 'build' ? 'place' : 'tap', null); v.run(arg, arg2); render(true); return true; }
 // E193
@@ -216,6 +219,8 @@ const ROWS = { // E199
   queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [ECON.nameOf(c), i ? ECON.timeOf(t.side, c) : t.qt]), 1 - t.qt / ECON.timeOf(t.side, t.q[0]), Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
   train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${FK.trains(t.code).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
   tech: (t) => (own(t) && t.done >= 1 ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
+  troops: (t) => { const k = key(t), I = !own(t) && FK.has(t, 'Seat') && SIDES[ME].intel[t.side], x = !own(t) ? '' : t.kind === 'unit' ? (ECON.teachTo(t) ? vcell('teach', k) : '') : (FK.has(t, 'Zeal') ? vcell('zeal', k) : '') + (FK.has(t, 'Seat') ? ECON.prisonersOf(ME).map((_, i) => vcell('ransom', i)).join('') : ''); // E477
+    return (x ? `<div class="row">${x}</div>` : '') + (t.job === 'school' ? `<p>${TW.teach.left.replace('{n}', Math.ceil(t.schoolT - FK.K.t))}</p>` : '') + (I ? `<p>${TW.sab.intel.replace('{n}', Math.floor(FK.K.t - I.t)).replace('{store}', costText(I.store)).replace('{age}', D.ages[I.age]).replace('{techs}', I.techs).replace('{army}', Object.values(I.army).reduce((a, b) => a + b, null))}</p>` : ''); },
   acts: (t, r) => { const k = key(t), sq = council(t), a = t.kind === 'unit' ? (own(t) ? (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
       : t.kind === 'bld' ? (own(t) ? (t.max ? vcell('replant', k) : ECON.cutOut(ME, t).length ? vcell('replantAll', k) : '') + vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
     return sq + (a ? `<div class="row">${a}</div>` : ''); },
