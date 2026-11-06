@@ -14,8 +14,8 @@
    "D2 board 2160, D1 site 3060 (the same); DT is D98 fps 30"
   ],
   "BN": [
-   "bring",
-   "the three squads' names (Alpha, Bravo, Charlie): with squads (War)"
+   "in v100",
+   "F19+F20: Words J10 squads"
   ],
   "CLS": [
    "in v100",
@@ -26,8 +26,8 @@
    "F18: D128 popMax 180, D226 armyMax 120, D227 squad 40 (BNSIZE, read with the squads); SHARE_FALLEN with the fallen side (M30)"
   ],
   "RICH": [
-   "bring",
-   "CARRY 10 is D87 (same); NAVC 10 is D12 tile (same); FOOT 2.65 units a foot is cut: v100's scale is D85, 11.7 units a metre (3.57 a foot, Albert's real-walking call); RICH 2.5 and PLUNDER 0.25 to bring"
+   "in v100",
+   "F19+F20: D220 holds meat × RICH (F16); plunder D233"
   ],
   "LAKE0": [
    "bring",
@@ -630,20 +630,20 @@
    "a blow from behind 30% harder: D141 (the same)"
   ],
   "FLANKING": [
-   "bring",
-   "flank cover and lines"
+   "in v100",
+   "F19+F20: D232"
   ],
   "MORALE": [
-   "bring",
-   "nerve and breaking: v100 has the break at 30% (D142) and shock (D167, law QBS)"
+   "in v100",
+   "F19+F20: D231, D239 rout"
   ],
   "CHARGE": [
    "bring",
    "the charge"
   ],
   "ORDER": [
-   "bring",
-   "orders keep their temper"
+   "in v100",
+   "F19+F20: D238 (the dials keep per squad)"
   ],
   "SCALE": [
    "bring",
@@ -658,8 +658,8 @@
    "with the traps"
   ],
   "FORMING": [
-   "bring",
-   "forming up"
+   "in v100",
+   "F19+F20: D242"
   ],
   "JUICE": [
    "cut",
@@ -686,12 +686,12 @@
    "F10: books/measure.js D182–D184 (beats.slow, beats.health, beats.natives), Mid's values; every() reads them"
   ],
   "YARD": [
-   "bring",
-   "a soldier at home fights within 320 of its post"
+   "in v100",
+   "F19+F20: D235"
   ],
   "GARRISON": [
-   "bring",
-   "resting soldiers heal"
+   "in v100",
+   "F19+F20: D237, D239 garrison"
   ],
   "TEACH": [
    "bring",
@@ -718,8 +718,8 @@
    "a crew of n builds n^0.7 as fast: D126 crew 0.7 (the same, Thomas & Smith)"
   ],
   "FORM": [
-   "bring",
-   "formations"
+   "in v100",
+   "F19+F20: D240 forms"
   ],
   "CHOKE": [
    "bring",
@@ -730,28 +730,28 @@
    "the ambush"
   ],
   "COLUMN": [
-   "bring",
-   "the column"
+   "in v100",
+   "F19+F20: D240 column"
   ],
   "GRID": [
-   "bring",
-   "an army stands in a grid"
+   "in v100",
+   "F19+F20: D241 ranks"
   ],
   "DOCKR": [
    "in v100",
    "F16: books/measure.js D218 near (and shore for the dock)"
   ],
   "KITE": [
-   "bring",
-   "a shooter steps back while it reloads"
+   "in v100",
+   "F19+F20: D236"
   ],
   "TEMPER": [
-   "bring",
-   "a squad's temper: hold, guard, press"
+   "in v100",
+   "F19+F20: D243, Words J10"
   ],
   "T_HOLD": [
-   "bring",
-   "with TEMPER"
+   "in v100",
+   "F19+F20: D238 temper"
   ],
   "SHELTER": [
    "bring",

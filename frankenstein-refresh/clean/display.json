@@ -158,8 +158,8 @@
    "Mid's ground picture: v100's renderGround already paints the strata, water by depth, the forest floor and grass blades; what comes is the grass's mottling and the worn track of the roads (Colours, Sprites). Its land-frame clip, the Throne's island and Mid's lake and river painting do not"
   ],
   "SPARKS": [
-   "bring",
-   "sparks where a blow lands (with combat)"
+   "in v100",
+   "F19+F20: combat.js sparks, Sprites P36"
   ],
   "RIMC": [
    "bring",
@@ -414,8 +414,8 @@
    "draws the ripples (with ripple)"
   ],
   "sparkDraw": [
-   "bring",
-   "draws the sparks (with SPARKS)"
+   "in v100",
+   "F19+F20: combat.js (draw), sparkDraw"
   ],
   "WX_TINT": [
    "bring",
@@ -450,12 +450,12 @@
    "ground a step covers; v100's law QBU turns the frame with metres walked over the body's stride (W)"
   ],
   "STANDARDS": [
-   "bring",
-   "the standards drawn this frame, for their torches (with drawStandards)"
+   "in v100",
+   "F19+F20: combat.js draw (no torch list: the lights wait)"
   ],
   "drawStandards": [
-   "bring",
-   "an army on the move carries its side's standard, a ring at its foot as full as the group's health (War)"
+   "in v100",
+   "F19+F20: combat.js draw, Sprites P35"
   ],
   "FALL": [
    "bring",
@@ -606,8 +606,8 @@
    "your groups on the march: a dashed line to where they go, a ring there, the time left; v100 has the War page's crosshair (combat.js)"
   ],
   "drawTracers": [
-   "bring",
-   "arrows and shots as short streaks along their flight, a burning arrow lit (War)"
+   "in v100",
+   "F19+F20: combat.js draw"
   ],
   "drawLight": [
    "bring",

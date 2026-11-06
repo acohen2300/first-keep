@@ -18,24 +18,24 @@
    "a Hospital or Medic closes your soldiers' wounds by the first-order lag (v100's law QP, Cukjati 2001); SC Heal"
   ],
   "shot": [
-   "bring",
-   "the missile seen in flight (arrows, bolts, fire arrows); its hand-made arc to be redrawn by QAJ (drag), see misfits"
+   "in v100",
+   "F19+F20: combat.js shot, fly (QAJ)"
   ],
   "routSecs": [
-   "bring",
-   "how long a broken soldier runs, halved by Engagement research; part of per-soldier nerve (SA Nerve, QAI). v100 has only the wave's break (combat.js recall, QBQ)"
+   "in v100",
+   "F19+F20: combat.js, routSecs"
   ],
   "nearHome": [
-   "bring",
-   "a soldier at home guards the ground round its yard and the Town Center; part of the soldier's home stance"
+   "in v100",
+   "F19+F20: combat.js, nearHome"
   ],
   "ambushTick": [
    "bring",
    "the ambush in place: hidden soldiers spring on a foe within reach or a blow; part of the War Director's choke and ambush"
   ],
   "solTick": [
-   "bring",
-   "the soldier's brain. v100 combat.js tick already has idle, march, fight, rout, QAG target, QBO blow; to bring: per-soldier nerve, stances and commander's intent, drills, garrison and its healing, the archers' stakes, teaching at the School, All hands, camps, prisoners, escorts, the march fanning to its places"
+   "in v100",
+   "F19+F20: combat.js, solTick"
   ],
   "escortPick": [
    "bring",
@@ -66,12 +66,12 @@
    "the finds: guarded gifts taken when their guards fall, holy sites a priest holds, the trade stops' pay. v100 places MG1-MG4 with a yield (floor 3) but nothing captures them"
   ],
   "fromWhere": [
-   "bring",
-   "where a blow comes from, as a cosine (front, side, behind), the line's and its group's facing; v100's QBO has only a behind test (D141 flank)"
+   "in v100",
+   "F19+F20: combat.js, fromWhere"
   ],
   "hurt": [
-   "bring",
-   "the whole blow: v100 combat.js damage and hit (QBO, D140, D141) has base, counter, flank, armour; to bring: research factors, roofed armour, gun on hide shields, nerve from the blow, villagers turning on a beast, plunder and war credit, regard. Its three hand shoves (stakes, the charge's JUICE.shove, a unit's knock) are cut: QBT (FK.impact) does it"
+   "in v100",
+   "F19+F20: combat.js damage, hit (QBO); its knock by QBT"
   ],
   "CHS": [
    "in v100",
@@ -86,8 +86,8 @@
    "F14: index.html collide(): who gives way by body mass (the Mass book, massOf), not the hand weights 9, 3, 1 (Albert's call)"
   ],
   "forming": [
-   "bring",
-   "a soldier walking to its place in a shape, lower ranks giving way; part of drills (FORMING)"
+   "in v100",
+   "F19+F20: combat.js, forming"
   ],
   "pushApart": [
    "in v100",
@@ -102,16 +102,16 @@
    "F14: index.html step: collide() after every step"
   ],
   "plunder": [
-   "bring",
-   "a destroyed building pays its destroyer a share of its cost; a fallen Town Center pays the stockpile"
+   "in v100",
+   "F19+F20: combat.js, plunder"
   ],
   "warCredit": [
    "bring",
    "the War crown's count: the cost of enemy people and buildings destroyed; part of the crowns (39-games)"
   ],
   "plunderBld": [
-   "bring",
-   "a building's fall pays its plunder and war credit"
+   "in v100",
+   "F19+F20: combat.js, plunderBld"
   ],
   "fall": [
    "bring",
@@ -206,16 +206,16 @@
    "where the War Director aims: the crosshair or the camera's middle"
   ],
   "drillOn": [
-   "bring",
-   "whether a soldier is still in a drill"
+   "in v100",
+   "F19+F20: combat.js, drillOn"
   ],
   "dress": [
-   "bring",
-   "a drill's shape on the ground: a line or an arc round a point (v100 Formations, names only)"
+   "in v100",
+   "F19+F20: combat.js, dress"
   ],
   "drillHold": [
-   "bring",
-   "Albert's x% by x% rule: a soldier short of its place by that share of the time stands where it is"
+   "in v100",
+   "F19+F20: combat.js, drillHold"
   ],
   "toolSet": [
    "bring",
@@ -266,8 +266,8 @@
    "an army's two dials, temper and shape (v100 commands Stance and Formation)"
   ],
   "musterGap": [
-   "bring",
-   "what a squad still lacks, by kind to train (v100 command Squad)"
+   "in v100",
+   "F19+F20: combat.js, musterGap"
   ]
  },
  "misfits": [

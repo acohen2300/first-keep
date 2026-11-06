@@ -36,7 +36,7 @@ function round(side) { const s = SIDES[side], h = home(side); if (!h) return; co
   if (vs.length >= want * D.ai.ageAt && ECON.ageCost(side) && ECON.canPay(side, ECON.ageCost(side))) ECON.ageUp(side);
   // E248
   const enemy = D.players.find((p) => WAR.atWar(side, p)), theirs = WAR.armyOf(enemy), mine = WAR.armyOf(side);
-  if (mine.length < D.ai.army[age]) { const cls = {}; for (const u of theirs) cls[WAR.stat(u).cls] = (cls[WAR.stat(u).cls] || 0) + 1; const most = Object.keys(cls).sort((a, b) => cls[b] - cls[a])[0]; const T = D.ai.troops, best = T.find((c) => D.stats[c].vs === most) || T[0];
+  if (mine.length < D.ai.army[age]) { const T = D.ai.troops, score = (c) => theirs.reduce((n, u) => n + WAR.vs({ code: c, side }, u), 0), best = T.reduce((b, c) => (score(c) > score(b) ? c : b));
     for (const code of [best, ...T]) { const b = trainer(side, code); if (b && ECON.queue(b, code)) break; } }
   // E249
   const eh = home(enemy), w = WAR.waves[side];

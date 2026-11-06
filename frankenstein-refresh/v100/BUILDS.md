@@ -1847,3 +1847,124 @@ MODIFIED (79):
 LOCKED (1301 of 1380): byte for byte as sealed, 465,892 bytes
 Tests: 30/30 rules hold
 Inventory: 1380 items sealed · 1268 book entries · 80 laws · 187 citations, 32 still to open · 7 known
+
+## F19+F20 · the blow, nerve and the rout; a soldier's day, squads, formations and muster · 2026-11-05 20:09
+Albert, Nov 5 11:40: yes yes F10–F39; 13:30: one module a build; 19:25: merge small builds to save credits
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:mass, book:tech, book:sides, book:words, book:comments, book:rules, book:citations, tool:test.py, book:angles, book:colours, book:sprites, law:QBO, law:QAG, law:QAI
+MODIFIED (113):
+- book:angles:A5 · added
+- book:capabilities:SC27 · added
+- book:capabilities:SC28 · added
+- book:capabilities:SC6 · 230 → 449 bytes
+- book:capabilities:SC7 · 193 → 319 bytes
+- book:citations:N188 · added
+- book:citations:N189 · added
+- book:colours:C11 · added
+- book:colours:C12 · added
+- book:colours:C13 · added
+- book:colours:C14 · added
+- book:comments:E201 · 128 → 144 bytes
+- book:comments:E227 · 284 → 504 bytes
+- book:comments:E230 · 121 → 190 bytes
+- book:comments:E231 · 55 → 202 bytes
+- book:comments:E232 · 127 → 326 bytes
+- book:comments:E233 · 92 → 195 bytes
+- book:comments:E237 · 73 → 129 bytes
+- book:comments:E238 · 156 → 193 bytes
+- book:comments:E239 · 51 → 191 bytes
+- book:comments:E248 · 141 → 151 bytes
+- book:comments:E282 · 173 → 218 bytes
+- book:comments:E355 · 128 → 318 bytes
+- book:comments:E356 · 103 → 182 bytes
+- book:comments:E382 · added
+- book:comments:E383 · added
+- book:comments:E384 · added
+- book:comments:E385 · added
+- book:comments:E386 · added
+- book:comments:E387 · added
+- book:comments:E388 · added
+- book:comments:E389 · added
+- book:comments:E390 · added
+- book:comments:E391 · added
+- book:comments:E392 · added
+- book:comments:E393 · added
+- book:comments:E394 · added
+- book:comments:E395 · added
+- book:comments:E396 · added
+- book:comments:E397 · added
+- book:comments:E398 · added
+- book:comments:E399 · added
+- book:comments:E400 · added
+- book:comments:E401 · added
+- book:comments:E402 · added
+- book:comments:E403 · added
+- book:comments:E404 · added
+- book:comments:E405 · added
+- book:mass:W10 · 136 → 244 bytes
+- book:measure:D138 · 2,496 → 2,923 bytes
+- book:measure:D140 · removed
+- book:measure:D141 · 94 → 140 bytes
+- book:measure:D142 · 120 → 195 bytes
+- book:measure:D143 · 158 → 525 bytes
+- book:measure:D193 · 260 → 348 bytes
+- book:measure:D194 · 163 → 136 bytes
+- book:measure:D231 · added
+- book:measure:D232 · added
+- book:measure:D233 · added
+- book:measure:D234 · added
+- book:measure:D235 · added
+- book:measure:D236 · added
+- book:measure:D237 · added
+- book:measure:D238 · added
+- book:measure:D239 · added
+- book:measure:D240 · added
+- book:measure:D241 · added
+- book:measure:D242 · added
+- book:measure:D243 · added
+- book:measure:D244 · added
+- book:measure:D245 · added
+- book:rules:X57 · added
+- book:shells:BM1 · 158 → 169 bytes
+- book:shells:BP10 · 142 → 149 bytes
+- book:shells:BTC1 · 257 → 268 bytes
+- book:shells:BTC2 · 136 → 145 bytes
+- book:shells:BTC7 · 141 → 150 bytes
+- book:sprites:P35 · added
+- book:sprites:P36 · added
+- book:sprites:P37 · added
+- book:tech:O133 · added
+- book:tech:O134 · added
+- book:tech:O135 · added
+- book:tech:O136 · added
+- book:tech:O137 · added
+- book:tech:O138 · added
+- book:tech:O139 · added
+- book:tech:O140 · added
+- book:tech:O141 · added
+- book:tech:O142 · added
+- book:tech:O143 · added
+- book:tech:O144 · added
+- book:tech:O145 · added
+- book:tech:O146 · added
+- book:tech:O147 · added
+- book:tech:O148 · added
+- book:tech:O149 · added
+- book:tech:O150 · added
+- book:tech:O151 · added
+- book:words:J10 · added
+- book:words:J7 · 21,712 → 25,048 bytes
+- book:words:J8 · 720 → 806 bytes
+- code:ai.js · 6,453 → 6,372 bytes
+- code:combat.js · 9,483 → 27,884 bytes
+- code:econ.js · 31,372 → 32,996 bytes
+- code:index.html#floor-5-movables · 12,919 → 12,947 bytes
+- code:index.html#the-door · 6,233 → 6,263 bytes
+- code:index.html#touch · 4,660 → 4,667 bytes
+- code:menu.js · 51,256 → 53,438 bytes
+- law:QAG · 79 → 204 bytes
+- law:QAI · 61 → 297 bytes
+- law:QBO · 205 → 520 bytes
+- tool:test.py · 107,018 → 114,019 bytes
+LOCKED (1339 of 1451): byte for byte as sealed, 406,133 bytes
+Tests: 31/31 rules hold
+Inventory: 1451 items sealed · 1339 book entries · 80 laws · 189 citations, 33 still to open · 7 known

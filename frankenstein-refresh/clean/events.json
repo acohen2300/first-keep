@@ -240,8 +240,8 @@
    "fire's spread by the ground's wetness now; comes with fire (wildfire, fire arrows)"
   ],
   "wearMul": [
-   "bring",
-   "blades go brittle in frost and rust in rain unless researched (Tempering, Oiling)"
+   "in v100",
+   "F19+F20: combat.js wear, wearMul"
   ],
   "newsTick": [
    "bring",

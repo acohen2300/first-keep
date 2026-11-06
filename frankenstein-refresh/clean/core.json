@@ -314,52 +314,52 @@
    "in v100 already: econ.js popOf counts people and soldiers with those queued (one population)"
   ],
   "orderSet": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, orderSet"
   ],
   "selName": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, selName"
   ],
   "hasCmd": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, hasCmd"
   ],
   "formOf": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, formOf"
   ],
   "marching": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, marching"
   ],
   "shapeOf": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, shapeOf"
   ],
   "dialOf": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, dialOf"
   ],
   "cycle": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, cycle"
   ],
   "temperOf": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, temperOf"
   ],
   "kiteOf": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, kiteOf"
   ],
   "clsOf": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, clsOf"
   ],
   "rebattalion": [
-   "bring",
-   "squads, formations, the two dials (shape, temper), kiting: with War"
+   "in v100",
+   "F19+F20: combat.js, rebattalion"
   ],
   "every": [
    "in v100",
@@ -554,12 +554,12 @@
    "F12a: index.html stat(code, side, 'rng'); the weather on long range comes with M42"
   ],
   "rangeFrom": [
-   "bring",
-   "how far a building shoots from its height (the projectile range from a height)"
+   "in v100",
+   "F19+F20: combat.js reachOf by the drag path (QAJ), D143"
   ],
   "rangeOf": [
-   "bring",
-   "how far a building shoots from its height (the projectile range from a height)"
+   "in v100",
+   "F19+F20: combat.js reachOf"
   ],
   "spySeen": [
    "bring",
@@ -678,36 +678,36 @@
    "who strikes whom: animals, drifters and spies left alone, self-defence always"
   ],
   "nearestFoe": [
-   "bring",
-   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+   "in v100",
+   "F19+F20: combat.js, nearestFoe"
   ],
   "foeValue": [
-   "bring",
-   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+   "in v100",
+   "F19+F20: combat.js, foeValue"
   ],
   "GROUP_R": [
-   "bring",
-   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+   "in v100",
+   "F19+F20: combat.js, GROUP_R"
   ],
   "groupPower": [
-   "bring",
-   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+   "in v100",
+   "F19+F20: combat.js, groupPower"
   ],
   "canBeat": [
-   "bring",
-   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+   "in v100",
+   "F19+F20: combat.js, canBeat"
   ],
   "bestFoe": [
-   "bring",
-   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+   "in v100",
+   "F19+F20: combat.js, bestFoe"
   ],
   "nearestFoeBld": [
-   "bring",
-   "who a soldier fights: the attack-value rule (Churchill, Saffidine & Buro 2012), only a foe its group can beat (v100 strikes the nearest)"
+   "in v100",
+   "F19+F20: combat.js, nearestFoeBld"
   ],
   "vsMul": [
-   "bring",
-   "what beats what, by kind: v100 has one counter (D140)"
+   "in v100",
+   "F19+F20: combat.js, vsMul"
   ]
  }
 }

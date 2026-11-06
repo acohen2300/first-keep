@@ -1474,8 +1474,8 @@
    "a mission's soldiers; missions"
   ],
   "sqUnits": [
-   "bring",
-   "a squad's soldiers; squads"
+   "in v100",
+   "F19+F20: menu.js, sqUnits"
   ],
   "sqOut": [
    "bring",
@@ -1518,8 +1518,8 @@
    "F18: menu.js kindOf: War's Train box, one cell a class, the first kind open at this age (the people's own with the civs)"
   ],
   "sqPlan": [
-   "bring",
-   "what a squad holds, up to BNSIZE; squads (v100 shows Alpha, Bravo, Charlie Later)"
+   "in v100",
+   "F19+F20: menu.js, sqPlan"
   ],
   "aimSpot": [
    "bring",
@@ -1622,8 +1622,8 @@
    "the crosshair's art: brackets, chevrons, scan line, sonar ring"
   ],
   "INTENT": [
-   "bring",
-   "a squad's intents: Engage, No pursuit, Buildings first"
+   "in v100",
+   "F19+F20: Words J10, combat.js intent"
   ],
   "intentsHTML": [
    "bring",

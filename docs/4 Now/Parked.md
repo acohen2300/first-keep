@@ -348,3 +348,15 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
 - Waiting: wind in what else it moves (trees, smoke, banners, the sea), a wind sound, blowing snow (visibility by the wind over lying snow), the weather's news (a blizzard told), Mid's weather icons; each with its module.
 - Pandolf's own published table (1977) was not opened: the test holds the speed to the equation itself, both ways.
 - Fixed on the way (found by t-same once the weather's draws changed the game): a builder sent to a site it already stood beside kept its old walk, and its arrival turned it back to carrying and then to gathering at the unbuilt Mill (a NaN load). buildAt now stops the walk (econ.js, E320).
+
+## Frankenstein F19+F20 · the blow, nerve and the rout, a soldier's day, squads, formations and muster (Nov 5)
+- Built: Mid's blow chain (counters per kind and tag, wear, shape, temper, armour share, flank by where a blow comes from, roofed armour), the foe its group can beat then the most worth, nerve per soldier (blows, losses, odds, rest, shelter) with the rout and return, the yard at home, kiting, healing by a shelter, plunder, the three squads with shape, temper and intent, dressing into a shape, Muster at the War Council, towers' reach by the arrow's drag path, tracers, sparks, standards; the 19 Walls, Towers, Garrison and Command steps.
+- Cut: v100's one counter (D140) and flat armour (Mid has neither); Mid's hand shoves (knock, charge shove: QBT does it) and the runner's ×1.3 speed (it runs at its own pace, QCB).
+- For Albert's yes (not Mid's, or not real):
+  - Damage and units' health stay open: Mid's values taken.
+  - A tower's reach is the drag path's (QAJ): 0.1–2% short of Mid's no-drag rangeFrom. The arrow's drag ½ρCdA 6e-5 (N189, from memory, to open); every missile is drawn as the arrow's flight.
+  - A dressed army walks each soldier to its own place (Mid marched one way, then fanned out in the last 90).
+  - Research shares add (QCA): Standing army + Standards + Supply give rest × 2.0, not Mid's 2.34.
+  - The squads' menu redesigned: Alpha, Bravo, Charlie and Set up in War, the dials there; plan and Muster on the War Council's card.
+  - Ticks: Shelter (Town Center, Castle, Barracks, Mess tent) and Squad (War Council); stance and formation fold into Squad.
+- Waiting: the Guide rows (TRIGGERS); a squad out on a mission (sqOut); All hands' going inside; the mess tent's fed rule; priests' nerve; prisoners; the computers' muster; the tower steps' names and hold; Garrison wards needs Hospitals; Gun founding needs Blasting.

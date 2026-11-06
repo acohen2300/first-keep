@@ -297,7 +297,7 @@ function stat(code, side, key) { // E280
   const memo = FXC.get(side) || FXC.set(side, new Map()).get(side), id = code + ' ' + key; if (memo.has(id)) return memo.get(id);
   const ks = keysOf(code), fx = [...(known.get(side) || [])].flatMap((t) => BOOKS.tech[t].value.fx).filter((f) => f.s === key && (!f.k || [].concat(f.k).some((k) => k === '*' || ks.includes(k))));
   const law = (n) => { const b = fx.filter((f) => f.a).reduce((v, f) => v + f.a, n), up = fx.filter((f) => f.p).reduce((v, f) => v + b * f.p, b); return fx.filter((f) => f.min != null).reduce((v, f) => Math.min(v, f.min), fx.filter((f) => f.c).reduce((v, f) => v - v * f.c, up)); };
-  const base = (BASE[key] || ((c) => (D.stats[c] || {})[key]))(code), v = base == null ? base : typeof base === 'object' ? Object.fromEntries(Object.entries(base).map(([y, n]) => [y, Math.round(law(n))])) : law(base);
+  const base = (BASE[key] || ((c) => (D.stats[c] || D.tower[c] || {})[key] ?? D.bases[key]))(code), v = base == null ? base : typeof base === 'object' ? Object.fromEntries(Object.entries(base).map(([y, n]) => [y, Math.round(law(n))])) : law(base);
   memo.set(id, v); return v;
 }
 const kinds = (cls) => SHELLS.filter((c) => SH[c].class === cls), trains = (c) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
@@ -883,7 +883,7 @@ function pace(u, g = footing(u)) { // E361
   const eta = 1 + stat(c, s, 'mud') * g.mud + stat(c, s, 'snow') * g.snow, F = W.person.drag * (m / W.person.kg) ** PACE.area * (vr * Math.abs(vr) - v0 * v0); // E374
   const a = PAN.walk * eta * M, b = PAN.grade * PACE.pct * Math.max(0, eta * M * g.rise + F / D.g), q = PAN.stand * m + PAN.load * M * (L / m) ** 2 - (PAN.stand + PAN.walk * v0 * v0) * m;
   const v = (Math.sqrt(b * b - 4 * a * q) - b) / (2 * a); // E375
-  return Object.entries(PACE.state).reduce((v, [k, f]) => (u[k] ? v * f : v), v) * (1 - (!!u.wary && (g.ice * (g.need - Math.min(g.need, g.on))) / g.need));
+  return Object.entries(PACE.state).reduce((v, [k, f]) => (u[k] ? v * f : v), v * (u.pacex ?? D.bases.pace)) * (1 - (!!u.wary && (g.ice * (g.need - Math.min(g.need, g.on))) / g.need));
 }
 // E89
 function findPath(from, goal, near, most = D.tries.way) { // E90
@@ -1213,7 +1213,7 @@ canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, 
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); GATES.clear(); fogT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.told = NaN; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

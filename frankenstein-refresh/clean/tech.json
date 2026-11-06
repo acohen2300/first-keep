@@ -506,36 +506,36 @@
      "F18: Research book O125"
     ],
     "slits": [
-     "bring",
-     "Arrow slits (smith, Classical): Towers shoot farther."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "fortify": [
-     "bring",
-     "Curtain walls (smith, Medieval): Walls 60% tougher, towers 40%. See misfits."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "machic": [
-     "bring",
-     "Machicolations (smith, Medieval): Towers hit harder."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "guncast": [
-     "bring",
-     "Gun founding (smith, Gunpowder): Guns hit harder."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "starfort": [
-     "bring",
-     "Star fort (smith, Gunpowder): Walls 50% tougher, towers 30%. See misfits."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "beacons": [
-     "bring",
-     "Beacons (tower, Classical): Every building that shoots sees 60 farther: towers, Town Centers, castles, trade posts."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "greattower": [
-     "bring",
-     "Great towers (tower, Medieval): Every watchtower raised to a great tower: 40% tougher, +4 damage, +20 reach, +40 sight, 2 more inside. Upgrades every tower in place. See misfits."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "guntower": [
-     "bring",
-     "Gun towers (tower, Gunpowder): Every great tower cut down and thickened for cannon: 40% tougher again, +10 damage, +30 reach, +20 sight, 3 more inside. Upgrades every tower in place. See misfits."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "torsion": [
      "in v100",
@@ -566,20 +566,20 @@
      "F18: Research book O132"
     ],
     "drawbridge": [
-     "bring",
-     "Drawbridge (castle, Medieval): Castles are 20% tougher. See misfits."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "standing": [
-     "bring",
-     "Standing army (castle, Medieval): Soldiers that drill between wars: nerve returns 30% faster, training 10% faster."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "garrison": [
-     "bring",
-     "Garrison wards (castle, Gunpowder): Soldiers resting by a Castle, Barracks or Town Center heal twice as fast."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "bastion": [
-     "bring",
-     "Bastions (castle, Gunpowder): Castles hit harder."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "weathersigns": [
      "bring",
@@ -782,32 +782,32 @@
      "Police (courthouse, Gunpowder): Spies cheaper, seen farther."
     ],
     "engage": [
-     "bring",
-     "Engagement (council, Classical): Stances for the army."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "command": [
-     "bring",
-     "Battalions (council, Classical): Three squads: Alpha, Bravo, Charlie."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "formations": [
-     "bring",
-     "Formations (council, Classical): Set the shape of a battalion."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "standards": [
-     "bring",
-     "Standards (council, Classical): Resting soldiers recover nerve 50% faster."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "supply": [
-     "bring",
-     "Supply trains (council, Medieval): Resting soldiers recover nerve 20% faster."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "muster": [
-     "bring",
-     "Muster (council, Gunpowder): Set formations for whole battalions."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "staff": [
-     "bring",
-     "General staff (council, Gunpowder): Charges hit 20% harder."
+     "in v100",
+     "F19+F20: Tech book, by its key"
     ],
     "weights": [
      "bring",

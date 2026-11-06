@@ -46,20 +46,20 @@
    "econ.js unqueue"
   ],
   "musterN": [
-   "bring",
-   "Muster: a whole battalion in one order at the War Council (BP10)"
+   "in v100",
+   "F19+F20: econ.js, musterN"
   ],
   "musterCost": [
-   "bring",
-   "Muster: twice the cost, a quarter longer"
+   "in v100",
+   "F19+F20: econ.js, musterCost"
   ],
   "musterWhy": [
-   "bring",
-   "Muster"
+   "in v100",
+   "F19+F20: econ.js, musterWhy"
   ],
   "muster": [
-   "bring",
-   "Muster"
+   "in v100",
+   "F19+F20: econ.js, muster"
   ],
   "researchWhy": [
    "in v100",
@@ -474,8 +474,8 @@
    "ai.js tick (D.ai.beat) and econ.js conquest on the last Seat; the Natives come with events"
   ],
   "formUp": [
-   "bring",
-   "an army stands in ranks at home and where it is sent, battalion beside battalion"
+   "in v100",
+   "F19+F20: combat.js dress, formHome"
   ],
   "DF": [
    "bring",
@@ -486,8 +486,8 @@
    "difficulty: seconds between a computer's decisions; v100 has D.ai.beat"
   ],
   "died": [
-   "bring",
-   "nerve: a loss nearby drains the others (QAI); v100 has the wave's break (QBQ)"
+   "in v100",
+   "F19+F20: combat.js die (QAI)"
   ],
   "judge": [
    "bring",
@@ -630,8 +630,8 @@
    "F15: econ.js mend (QCK, D201: three times the build time, a quarter of the price paid as it goes, short stops it, whole within half a point); the next site for a builder done (nextSite, D203); fighting fires waits for fire (Parked)"
   ],
   "homeSpot": [
-   "bring",
-   "where a soldier stands at home (with formUp)"
+   "in v100",
+   "F19+F20: combat.js formHome"
   ],
   "scoutTick": [
    "bring",

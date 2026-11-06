@@ -9,7 +9,7 @@ BOOK("mass", {
  "W7": {"key":"tool","value":{"kg":2,"blow":{"kg":2,"mps":8}},"name":"a tool (axe, pick, hammer)","cite":["N85"],"law":["QBT"]},
  "W8": {"key":"spear","value":{"kg":2.5,"blow":{"kg":2.5,"mps":6}},"name":"a spear","cite":["N85"],"law":["QBT"]},
  "W9": {"key":"shield","value":{"kg":5},"name":"a shield","cite":["N85"],"law":["QBT"]},
- "W10": {"key":"bow","value":{"kg":2,"blow":{"kg":0.03,"mps":50}},"name":"a bow, its blow an arrow","cite":["N85"],"law":["QBT"]},
+ "W10": {"key":"bow","value":{"kg":2,"blow":{"kg":0.03,"mps":50,"drag":6e-05}},"name":"a bow, its blow an arrow; the arrow's drag ½ρCdA in N·s²/m² (ρ 1.2, Cd about 2 on an 8 mm shaft)","cite":["N85","N189"],"law":["QBT","QAJ"]},
  "W11": {"key":"scale","value":{"kg":12},"name":"scale armour","cite":["N85"],"law":["QBT"]},
  "W13": {"key":"lance","value":{"kg":4,"blow":{"kg":4,"mps":6}},"name":"a lance: a thrust when standing; moving, the whole rider and horse strike (QBT)","cite":["N85"],"law":["QBT"]},
  "W14": {"key":"load","value":{"kg":100},"name":"a wagon's or caravan's load","cite":["N97"],"law":["QBT"]},

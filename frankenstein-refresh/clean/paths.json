@@ -122,8 +122,8 @@
    "combat.js toward"
   ],
   "findBlocker": [
-   "bring",
-   "a soldier stopped by an enemy wall or building attacks it (War)"
+   "in v100",
+   "F19+F20: combat.js block, findBlocker"
   ],
   "standOff": [
    "in v100",
