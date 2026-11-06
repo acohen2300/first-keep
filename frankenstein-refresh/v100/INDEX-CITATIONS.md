@@ -12,15 +12,15 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QF** Colour from temperature → N4, N5, N54
 - **QH** Rain or dry → N7 · used by D102
 - **QI** Snow line → N8
-- **QJ** Raindrop speed → N9
-- **QK** Visibility → N10
+- **QJ** Raindrop speed → N9 · used by D229, X56
+- **QK** Visibility → N10 · used by D229, X56
 - **QL** Lightning → N11 · used by D112
 - **QM** Random events → N12 · used by SC9, D110, D181, HX4
-- **QN** Walking cost → N13 · used by D106, X54
+- **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
 - **QP** Settle → N16 · used by D104
 - **QQ** Ice growth → N17 · used by D109, D225, X54
-- **QR** Slip → N18, N19, N174, N175 · used by G5, G6, G7, G8, G9, G10, X54
+- **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
 - **QS** Ruts → N20
 - **QT** Fire vs wetness → N21
 - **QU** Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22 → N22
@@ -34,11 +34,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAC** Crew → N31 · used by SC4, D126, X52
 - **QAD** Spoilage → N32, N33 · used by D217, X53
 - **QAE** Price → N34
-- **QCA** Effects → N154, N155, N156, N176 · used by SC15, D199, D228, X47, X50, X54, X55, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132
-- **QCB** Pace → N13, N19, N46, N173 · used by G9, G10, D224, X54, O81, O82, O83, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
+- **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132
+- **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
 - **QCK** Mending → N168 · used by SC5, D201, X52
+- **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187 · used by D103, D229, X56
 - **QAF** Battle odds → N35 · used by D155, D177, D192, D193, D194, X48
 - **QAG** Who to fight → N36, N37 · used by SC6
 - **QAH** Fight or not → N38
@@ -48,7 +49,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAM** Line of sight → N42
 - **QAN** Many eyes → N43, N44
 - **QAO** Flee → N45
-- **QAP** Cold and wet → N46 · used by X54
+- **QAP** Cold and wet → N46
 - **QAQ** Sickness → N47, N48
 - **QAR** Weighted pick → N49
 - **QAS** Breaking → N50, N51, N52
@@ -69,7 +70,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBH** A lake's size drawn from the power law (QBA) → N61
 - **QBI** Roads cross rivers at fords → N68
 - **QBK** The art frame → N66
-- **QBL** The way → N74 · used by SC1, D198, D207, X52
+- **QBL** The way → N74 · used by SC1, D198, D207, D230, X52
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17, D88, D197, X51
 - **QBJ** Z1's store → N69 · used by D129, X50
@@ -86,25 +87,25 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QBP, QBT
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QBP, QBT
 - **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
-- **N4** Mallama & Hilton (2018), colour indices → QF, QCB, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
+- **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
 - **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
 - **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102
 - **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX, QBY
-- **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ
-- **N10** Koschmieder (1924) → QK
+- **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ, QCL, D229
+- **N10** Koschmieder (1924) → QK, QCL, D229
 - **N11** WCAG 2.3.1, three flashes → QL
 - **N12** Poisson (1837); Feller, An Introduction to Probability Theory, vol. 1 → QM, HX4
-- **N13** Pandolf, Givoni & Goldman (1977) → QN, QCB
+- **N13** Pandolf, Givoni & Goldman (1977) → QN, QCB, D224, X56
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
 - **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
-- **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QBT, G5, G6, G7, G8
-- **N19** Hanson et al. (1999), slip and the grip a step needs → QR, QCB, G9, G10
+- **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QBT, G5, G6, G7, G8
+- **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, G9
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU
@@ -131,7 +132,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N43** Pulliam (1973) → QAN
 - **N44** Lima (1995) → QAN
 - **N45** Ydenberg & Dill (1986) → QAO
-- **N46** Thermal resistance in series (standard) → QCB, QAP
+- **N46** Thermal resistance in series (standard) → QAP
 - **N47** Kermack & McKendrick (1927), Proc. R. Soc. A 115 → QAQ
 - **N48** Bootsma & Ferguson (2007), PNAS 104(18) → QAQ
 - **N49** Goldberg (1989), roulette-wheel selection → QAR
@@ -197,7 +198,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D110, D111, D112, D113, D114, D115, D116, D117, D118, D119, D120, D121, D169, D170
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D110, D111, D112, D113, D114, D115, D116, D117, D118, D119, D120, D121, D169, D170, D230
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D140, D141, D144, D145, D146, D147, D148, D149, D150, D151, D152, D153, D154, D155, D156, D157, D160, D161, D162, D163, D164
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -258,11 +259,21 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** (to open) Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip → QBP, D212
 - **N172** Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the  → SN3
-- **N173** Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceM → QCB, G5, G6, G7, G9, G10, D224, D225, X54, O80, O81, O82, O83, O84, O85, O86, O87, J8
+- **N173** Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceM → G5, G6, G7, G9, G10, W24, D224, D225, X54, O80, O81, O82, O83, O84, O85, O86, O87, J8
 - **N174** (to open) Ichihara & Mizoguchi, studded tyres on ice and snow, Highway Research Board Special Report 115, Table 2 (Mid's → QR, G10
-- **N175** (to open) Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid' → QR, G8
+- **N175** (to open) Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid' → unused
 - **N176** Design: Mid's soldiers (02-rules-units.js UNIT, spear to treb; 04-rules-tech.js the barracks, range, stable, s → QCA, SC03, SC13, D86, D123, D124, D128, D133, D138, D226, D227, D228, X55, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, P2, P3, P4, P5, P6, P10, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, J7
 - **N177** (to open) Masses of arms and of the war elephant: a sword about 1.2 kg, a javelin 1 kg thrown at about 20 m/s, a crossbo → W19, W20, W21, W22, W23
+- **N178** Gao, Abeysekera, Hirvonen & Aschan (2003), The effect of footwear sole abrasion on the coefficient of friction → QR, G8
+- **N179** Burnfield & Powers (2004), Prediction of slip events during walking: an analysis of utilized coefficient of fr → QR, QCB, G9, G10, X56
+- **N180** US National Weather Service glossary, blizzard (forecast.weather.gov/glossary.php?word=bliz; weather.gov/dtx/w → QCL, D229, X56
+- **N181** (to open) Pugh (1971), The influence of wind resistance in running and walking and the mechanical efficiency of work aga → QCB, W1, D224
+- **N182** Seliga, Hazen & Burnley, nowcasting snowfall rate from visibility (AMS paper 104640): S = c σ, c from about 0. → QCL, D229
+- **N183** (to open) Rain's extinction of light β ≈ 0.312 R^0.67 a km, R in mm/h (an empirical fit used for visibility in rain); fr → QCL, D229
+- **N184** (to open) Harper, Kepert & Ginger (2010), WMO guidelines for converting between various wind averaging periods: a gust a → QCL, D229
+- **N185** Design: Albert, Nov 5 18:07–18:08: pace by the floor, the weather, mass and gravity, never by the calendar (Pa → QCA, QCB, W24, D103, D224, D229, X54, X56
+- **N186** (to open) Intensity's top: rain 50 mm/h (violent rain on the Met Office's scale), snow 5 mm/h of water, wind 20 m/s (a g → QCL, D229
+- **N187** (to open) Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open → QCL, D229
 
 ## Named exceptions
 

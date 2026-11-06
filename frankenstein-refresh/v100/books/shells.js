@@ -77,7 +77,7 @@ BOOK("shells", {
  "US1": {"name": "Priest", "layer": 120, "look": "priest", "pace": "D86.walk", "body": "person", "ticks": ["Walk"], "upkeep": "D211.person", "cite": ["N144", "N170"]},
  "US2": {"name": "Medic", "layer": 120, "look": "medic", "pace": "D86.walk", "body": "person", "ticks": ["Walk"], "upkeep": "D211.person", "cite": ["N144", "N170"]},
  "US3": {"name": "Spy", "layer": 120, "look": "spy", "pace": "D86.walk", "body": "person", "ticks": ["Walk"], "upkeep": "D211.person", "cite": ["N144", "N170"]},
- "US4": {"name": "Scout", "layer": 120, "look": "scout", "pace": "D86.walk", "body": "person", "ticks": ["Walk", "Fight", "Scout", "Health"], "mount": "horse", "kit": ["tool"], "voice": "pickHoof", "upkeep": "D211.person", "cite": ["N144", "N170"]},
+ "US4": {"name": "Scout", "layer": 120, "look": "scout", "pace": "D86.scout", "body": "person", "ticks": ["Walk", "Fight", "Scout", "Health"], "mount": "horse", "kit": ["tool"], "voice": "pickHoof", "upkeep": "D211.person", "cite": ["N144", "N170"]},
  "UT1": {"name": "Caravan", "layer": 120, "look": "caravan", "pace": "D86.horse", "body": "person", "ticks": ["Walk", "Carry", "Trade"], "mount": "horse", "kit": ["load"], "voice": "pickHoof", "upkeep": "D211.cart", "cite": ["N144", "N170"]},
  "UT2": {"name": "Camp wagon", "layer": 120, "look": "wagon", "pace": "D86.horse", "body": "person", "ticks": ["Walk", "Carry"], "mount": "horse", "kit": ["load"], "voice": "pickHoof", "cite": ["N144"]},
  "MH1": {"name": "Outlaws", "layer": 120, "look": "bandit", "pace": "D86.walk", "body": "person", "ticks": ["Walk"], "cite": ["N144"]},

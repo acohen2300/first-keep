@@ -1760,3 +1760,90 @@ MODIFIED (132):
 LOCKED (1226 of 1357): byte for byte as sealed, 334,304 bytes
 Tests: 29/29 rules hold
 Inventory: 1357 items sealed · 1246 book entries · 79 laws · 177 citations, 27 still to open · 7 known
+
+## F17b · the physics of pace, cuts one at a time, weather by intensity, grip by friction · 2026-11-05 19:34
+Albert, Nov 5 18:07-18:08: pace by floor, weather, mass and gravity; cuts one at a time, never 0 or 100; weather one system by intensity, the blizzard by the NWS definition, visuals by code and math (SoRen's); grip by measured friction
+Opened: code:index.html, code:econ.js, code:combat.js, code:sound.js, book:measure, book:ground, book:mass, book:shells, book:sprites, book:sound, book:tech, book:words, book:comments, book:rules, book:citations, law:QCA, law:QCB, law:QR, law:QN, tool:test.py, law:QCL
+MODIFIED (79):
+- book:citations:N178 · added
+- book:citations:N179 · added
+- book:citations:N180 · added
+- book:citations:N181 · added
+- book:citations:N182 · added
+- book:citations:N183 · added
+- book:citations:N184 · added
+- book:citations:N185 · added
+- book:citations:N186 · added
+- book:citations:N187 · added
+- book:comments:E100 · 139 → 124 bytes
+- book:comments:E126 · 213 → 285 bytes
+- book:comments:E129 · 60 → 96 bytes
+- book:comments:E138 · 159 → 116 bytes
+- book:comments:E140 · 86 → 115 bytes
+- book:comments:E147 · 133 → 165 bytes
+- book:comments:E279 · 414 → 477 bytes
+- book:comments:E280 · 222 → 253 bytes
+- book:comments:E320 · 141 → 251 bytes
+- book:comments:E360 · 298 → 376 bytes
+- book:comments:E361 · 344 → 321 bytes
+- book:comments:E362 · 172 → 246 bytes
+- book:comments:E363 · 106 → 83 bytes
+- book:comments:E374 · added
+- book:comments:E375 · added
+- book:comments:E376 · added
+- book:comments:E377 · added
+- book:comments:E378 · added
+- book:comments:E379 · added
+- book:comments:E380 · added
+- book:comments:E381 · added
+- book:comments:E88 · 171 → 174 bytes
+- book:ground:G10 · 444 → 303 bytes
+- book:ground:G8 · 300 → 269 bytes
+- book:ground:G9 · 230 → 287 bytes
+- book:mass:W1 · 181 → 272 bytes
+- book:mass:W24 · added
+- book:measure:D103 · 99 → 195 bytes
+- book:measure:D138 · 2,494 → 2,496 bytes
+- book:measure:D224 · 481 → 658 bytes
+- book:measure:D229 · added
+- book:measure:D230 · added
+- book:measure:D86 · 484 → 520 bytes
+- book:rules:X54 · 734 → 633 bytes
+- book:rules:X56 · added
+- book:shells:US4 · 240 → 241 bytes
+- book:tech:O110 · 310 → 309 bytes
+- book:tech:O111 · 265 → 264 bytes
+- book:tech:O127 · 276 → 275 bytes
+- book:tech:O24 · 268 → 267 bytes
+- book:tech:O40 · 258 → 257 bytes
+- book:tech:O43 · 274 → 273 bytes
+- book:tech:O45 · 247 → 246 bytes
+- book:tech:O46 · 330 → 329 bytes
+- book:tech:O47 · 278 → 277 bytes
+- book:tech:O48 · 311 → 310 bytes
+- book:tech:O52 · 253 → 252 bytes
+- book:tech:O55 · 258 → 257 bytes
+- book:tech:O56 · 280 → 279 bytes
+- book:tech:O60 · 273 → 272 bytes
+- book:tech:O62 · 257 → 256 bytes
+- book:tech:O72 · 287 → 286 bytes
+- book:tech:O82 · 283 → 275 bytes
+- book:tech:O83 · 284 → 276 bytes
+- book:tech:O84 · 278 → 277 bytes
+- book:tech:O85 · 261 → 260 bytes
+- book:tech:O86 · 263 → 262 bytes
+- code:econ.js · 31,357 → 31,372 bytes
+- code:index.html#floor-5-movables · 12,462 → 12,919 bytes
+- code:index.html#floor-6-climate · 8,151 → 9,129 bytes
+- code:index.html#floor-7-display · 2,931 → 2,956 bytes
+- code:index.html#the-door · 6,196 → 6,233 bytes
+- code:index.html#touch · 4,607 → 4,660 bytes
+- law:QCA · 728 → 884 bytes
+- law:QCB · 774 → 773 bytes
+- law:QCL · added
+- law:QN · 65 → 180 bytes
+- law:QR · 347 → 538 bytes
+- tool:test.py · 98,832 → 107,018 bytes
+LOCKED (1301 of 1380): byte for byte as sealed, 465,892 bytes
+Tests: 30/30 rules hold
+Inventory: 1380 items sealed · 1268 book entries · 80 laws · 187 citations, 32 still to open · 7 known

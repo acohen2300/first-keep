@@ -205,7 +205,7 @@
   ],
   "groundNeed": [
    "in v100",
-   "F17: books/ground.js G9 step, read by footing(u) by mount or body"
+   "F17b: books/ground.js G9 step (a person 0.21, Burnfield & Powers), read by footing(u) by mount or body"
   ],
   "studded": [
    "in v100",
@@ -213,23 +213,23 @@
   ],
   "iceMu": [
    "in v100",
-   "F17: index.html floor 5, footing(u): bare (G8: grip at freezing to cold, its melt film above) and on (studs G10)"
+   "F17b: index.html floor 5, footing(u): bare (G8: melting ice 0.055 to hard ice 0.18 by the air, Gao et al.) and on (studs G10)"
   ],
   "strideShare": [
    "in v100",
-   "F17: index.html floor 5, pace(u): (max(need, on) - on) / (need - bare), the stride G10"
+   "F17b: index.html floor 5, pace(u): after a slip the step shortens to on ÷ need on its share of ice (QR); Mid's G10 stride cut"
   ],
   "groundSpd": [
    "in v100",
-   "F17: index.html floor 5, pace(u): the ground's term (QN, D106 by research and the wagon's sink D224) and the ice's lost stride (QR, G10)"
+   "F17b: index.html floor 5, pace(u): Pandolf's η inside the walking cost (QN, QCB), D106 by research cuts and the wagon's sink D224; the ice's term by QR"
   ],
   "muOf": [
    "in v100",
-   "F17: index.html floor 5, slips(g): dry to mud to snow to ice by their shares (G5 to G8 grip)"
+   "F17b: index.html floor 5, footing(u).ground: dry to mud to snow by their shares (G5 to G7 grip); on ice, G8 or the studs"
   ],
   "slipChance": [
    "in v100",
-   "F17: index.html floor 5, slips(g) and stride(): checked each second on ground ice, a slip stands G10 secs, the town told (J8 slip)"
+   "F17b: index.html floor 5, stride(): each second on ground ice the step lands on ice by its cover and slips exactly when need > supply (QR); stands G10 secs, the town told (J8 slip)"
   ],
   "rothermel": [
    "bring",

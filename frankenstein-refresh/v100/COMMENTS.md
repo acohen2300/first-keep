@@ -91,7 +91,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E85 | index.html#floor-5-movables | the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book (PN1 tool), the one home econ.js reads |
 | E86 | index.html#floor-5-movables | walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not |
 | E87 | index.html#floor-5-movables | inland water bearing ice (QQ): walked as if flat |
-| E88 | index.html#floor-5-movables | the pace's books (QCB): what slows a walker besides the ground (D224), the grip a step needs (G9), slipping (G10); the player's side, told when its people slip |
+| E88 | index.html#floor-5-movables | the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step needs (G9), slipping (G10); the player's side, told when its people slip |
 | E89 | index.html#floor-5-movables | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null |
 | E90 | index.html#floor-5-movables | most: the tiles it may open before giving up |
 | E91 | index.html#floor-5-movables | no cutting a corner |
@@ -103,7 +103,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E97 | index.html#floor-5-movables | to a tile along a building's edge (the ring of tiles round it, byB) |
 | E98 | index.html#floor-5-movables | a find used up is gone; its tile is free again |
 | E99 | index.html#floor-5-movables | one tick for every unit |
-| E100 | index.html#floor-5-movables | walking: toward the next point at the walker's pace (QCB): a tile's middle, or the spot a path ends on; true when it gets there |
+| E100 | index.html#floor-5-movables | walking: toward the next point at the walker's pace (QCB) over the ground it steps onto; true when it gets there |
 | E101 | index.html#floor-5-movables | metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) |
 | E102 | index.html#floor-5-movables | wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 |
 | E103 | index.html#floor-5-movables | M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it comes. A search looks only nearby |
@@ -129,10 +129,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E123 | index.html#floor-6-climate | QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year from the spring equinox, H turns with the day (noon at the day's middle) |
 | E124 | index.html#floor-6-climate | light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) |
 | E125 | index.html#floor-6-climate | QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mid's relax: wetness here, and the market, nerve, healing, loyalty to come) |
-| E126 | index.html#floor-6-climate | QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet / dry) and P(wet / wet) are D102; a wet hour is a storm with D103. Snow falls instead when the air is at or under 1 °C (QI) |
+| E126 | index.html#floor-6-climate | QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet / dry) and P(wet / wet) are D102; a wet spell draws its intensity and the wind's sign once, from the rules' dice (QCL), a storm from D103. Snow falls instead when the air is at or under 1 °C (QI) |
 | E127 | index.html#floor-6-climate | the season's mean, eased into the next |
 | E128 | index.html#floor-6-climate | what falls |
-| E129 | index.html#floor-6-climate | rain comes and goes over tens of seconds (SoRen) |
+| E129 | index.html#floor-6-climate | rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity |
 | E130 | index.html#floor-6-climate | QP settle: wet in D104, dry in D105 |
 | E131 | index.html#floor-6-climate | QO degree-day melt, rain on snow twice as fast |
 | E132 | index.html#floor-6-climate | QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground grows the same way while the ground is wet, full at D225 |
@@ -141,16 +141,16 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E135 | index.html#floor-6-climate | QL, QM: strikes on Poisson waits in a storm |
 | E136 | index.html#floor-6-climate | a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits |
 | E137 | index.html#floor-6-climate | a far flash: its thunder from beyond the screen |
-| E138 | index.html#floor-6-climate | the rain: a pool of drops whose size sets its speed (Marshall–Palmer sizes, QJ Atlas's fall speed), leaning a little; the snow: flakes that drift |
+| E138 | index.html#floor-6-climate | the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling: the strength |
 | E139 | index.html#floor-6-climate | on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply), ice whitens the inland water |
-| E140 | index.html#floor-6-climate | over everything: what falls, the strikes, the flash, the night and the fog |
+| E140 | index.html#floor-6-climate | over everything: what falls, the strikes, the flash, the night, the white of low visibility and the fog |
 | E141 | index.html#floor-6-climate | SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three strokes from a soft glow to a bright core; its foot lights the ground round it |
 | E142 | index.html#floor-6-climate | the channel wanders but leans home to its foot |
 | E143 | index.html#floor-6-climate | the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of it |
 | E144 | index.html#floor-6-climate | KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze |
 | E145 | index.html#floor-6-climate | Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made · Why ground that is always mud (KI2), slow to cross, never built on · How count D114, lakes picked by the dice |
 | E146 | index.html#floor-7-display | Floor 7, display (layer 140): what the player sees. The fog of war: every tile is unseen, seen once, or in sight now (the player's units see D117, its buildings further; fog in the air shortens sight, QK); the unseen is dark, the remembered dim (D118). Shadows fall from the sun (QAT). |
-| E147 | index.html#floor-7-display | the player's sight, every D119: what was in sight is remembered; what the units and buildings of side 0 reach now is seen |
+| E147 | index.html#floor-7-display | the player's sight, every D119: what was in sight is remembered; what the units and buildings of side 0 reach now is seen, never past the visibility (QK) |
 | E148 | index.html#floor-7-display | the sea is never fogged |
 | E149 | index.html#floor-7-display | the fog image is one tile a pixel in the grid's frame; one affine lays it on the ground (QBD): the turn, the tilt and the camera together |
 | E150 | index.html#floor-7-display | QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown away from the sun; the sun rises on the right, stands over the bottom of the screen at noon (the camera looks north), sets on the left |
@@ -282,8 +282,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E276 | menu.js | a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; under half a unit is left out |
 | E277 | index.html#the-door | QCA, the effects: what each side has learned, and each side's numbers worked out once until its learning changes; a new game forgets both |
 | E278 | index.html#the-door | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, its ticks and a soldier's class |
-| E279 | index.html#the-door | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123, or the step's own), a step's time (its own), a unit's training (D124), a site's raising (D125), a queue's length (the mold's six, SN1), a load (D87), a home's room (D127), a soldier's share of a blow before armour (D228); any other key is the unit's D138 entry |
-| E280 | index.html#the-door | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11:40), then the lowest kept; a price rounds each yield to the whole unit |
+| E279 | index.html#the-door | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123, or the step's own), a step's time (its own), a unit's training (D124), a site's raising (D125), a queue's length (the mold's six, SN1), a load (D87), a home's room (D127), mud's and snow's cost (D106, how deep it sinks), studs (none), a soldier's share of a blow before armour (D228); any other key is the unit's D138 entry |
+| E280 | index.html#the-door | the one window for a kind's number after research (QCA): flat adds first, then the boosts summed and applied once to that, then each cut on what is left (Albert, Nov 5 18:07), then the lowest kept; a price rounds each yield to the whole unit |
 | E281 | index.html#the-door | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can have moves |
 | E282 | combat.js | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the odds (QAF) both read |
 | E283 | combat.js | QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army, their ratio held in D193 (Mid's matchup) bending my power |
@@ -323,7 +323,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E317 | econ.js | taking a building down pays back half its price, all of it early in the build; its line is paid back in full first (Mid's shellBack, refundOf, demolish) |
 | E318 | econ.js | a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing slips through a diagonal (Mid's wallLine); laid piece by piece while the stores last, each sent a builder; the seal is a foe's walk out from the Town Center over the tiles not yet built too (Mid's sealPath, by v100's A*) |
 | E319 | econ.js | the walk starts on the Town Center's own floor; walls being laid count as built; everything is put back after |
-| E320 | econ.js | a builder remembers the work it left (its find and yield, and whether it was pulled off it) so it can go back (Mid's sendBuilder) |
+| E320 | econ.js | a builder remembers the work it left (its find and yield, and whether it was pulled off it) so it can go back (Mid's sendBuilder); one already beside the site stops the walk it was on, so its arrival cannot turn it back to that walk's work |
 | E321 | econ.js | a new site gets the nearest free villager; with none free, your nearest worker is pulled off and goes back after, a computer's lowest earner keeps building (Mid's autoBuilder and pickVil); a line of wall gets two at most, who work down it |
 | E322 | econ.js | back to the very find it left if it still stands, else the best of its yield, else idle (Mid's backToWork) |
 | E323 | econ.js | the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's repairTick) |
@@ -363,10 +363,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E357 | menu.js | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |
 | E358 | menu.js | a pasture's card counts its sheep |
 | E359 | menu.js | the town is told what food, the seasons and the flock do, in the Words book's news |
-| E360 | index.html#floor-5-movables | the ground under a side's walker (QN, QR): its mud (the marsh always), its snow cover, its ice (D225), the grip its step needs by what steps (G9), the bare ice's grip by the air (G8: slickest just above freezing, better in deep cold), and what is offered, the studs' if iron bites (G10) |
-| E361 | index.html#floor-5-movables | QCB the pace: the walk with its research (QCA), × each state the walker is in (D224), less the snow storm's share less the cloaks' (QAP); a side's own walker then ÷ the ground's cost (QN, D106, its research and wheels) and less the stride lost on ice by the share of the grip it lacks (QR); wild things only the weather, as in Mid |
-| E362 | index.html#floor-5-movables | QR the chance of a slip: the grip offered, dry to mud to snow to ice by their shares, against the need, a logistic step over G10's soft, only where there is ice |
-| E363 | index.html#floor-5-movables | a slipped walker stands G10's seconds; each walker on ice is checked once a second as it walks |
+| E360 | index.html#floor-5-movables | the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh always), its snow cover, its ice (D225), the friction its step needs by what steps (G9), what the ground offers off the ice (dry to mud to snow) and on it (G8 by the air, melting to hard; the studs' G10 if iron bites), the grade up to it, and which way it walks against the wind |
+| E361 | index.html#floor-5-movables | QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker's base (D86 with research, QCA) unloaded on flat firm ground in still air; the load, the ground's η, the grade and the wind change it; × each state (D224) and, after a slip, the shortened step on its share of ice (QR) |
+| E362 | index.html#floor-5-movables | QR each second on ice: the step lands on the ice with the chance of its cover, else on the ground; it slips exactly when the friction it needs is more than that ground offers, and walks on wary (a shorter step) until it is off the ice |
+| E363 | index.html#floor-5-movables | a slipped walker stands G10's seconds; which way it walks, for the wind |
 | E364 | index.html#floor-6-climate | above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the degree (D225) and its degree-seconds are set to match what is left |
 | E365 | index.html#floor-6-climate | the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ, Stefan) |
 | E366 | index.html#the-figures | the armour kit a side has learned (Mid's KIT): 0 to 3 steps of the Sprites book's kit, each turning a person's slots (mail and a steel helm, then plate, the great helm, its crest and a cape in the figure's own colours), with a shoulder guard of leather, mail or steel |
@@ -377,3 +377,11 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E371 | econ.js | the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid's ARMYMAX; a fallen side's share, capA, joins it with M30) |
 | E372 | combat.js | the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps to its own work and armyFree leaves them out (the routed now; the spy, the shrine, the escort and the school with their modules) |
 | E373 | menu.js | why a kind waits: the age it opens in (Mid's trainWhy) |
+| E374 | index.html#floor-5-movables | the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v/v/ (W1, by the mass to the ⅔, D224), v the walk against the wind (Pugh) |
+| E375 | index.html#floor-5-movables | aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c the standing and load terms less the walker's power; the positive root |
+| E376 | index.html#floor-6-climate | QCL the weather of the moment: rates, wind and visibility from the strengths; the wind signed and gusting; a blizzard's hours counted while its three conditions hold, and the flag at the NWS's three hours |
+| E377 | index.html#floor-6-climate | the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the start) and the particle pool (the looks' dice) |
+| E378 | index.html#floor-6-climate | QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain's and snow's extinction); a blizzard by the NWS: snow, wind or gusts at 35 mph or more, visibility under a quarter mile |
+| E379 | index.html#floor-6-climate | rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's speed in metres a second on the screen, carried and slanted by the wind |
+| E380 | index.html#floor-6-climate | snow: flakes falling slow to fast by size, carried by the wind and swaying |
+| E381 | index.html#floor-6-climate | the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷ V) (QK) |

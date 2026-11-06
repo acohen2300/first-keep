@@ -455,11 +455,11 @@
   ],
   "insulate": [
    "in v100",
-   "F17: Oiled cloaks' share on the storm's toll, -0.5 (insulate(1)), added by QCA (O83)"
+   "F17b: cut; Oiled cloaks no longer touch the pace (the wind's drag, Pugh, is the weather's term; Parked)"
   ],
   "sideSpd": [
    "in v100",
-   "F17: index.html floor 5, pace(u): the weather's term (a snow storm, Mid's blizzard, D224 storm less Oiled cloaks); the season's own speeds left out (F16)"
+   "F17b: index.html floor 5, pace(u): the weather reaches the pace only as the wind's drag counted as a grade (QCB, Pugh); Mid's blizzard ×0.6 and the season's speeds out"
   ],
   "step": [
    "in v100",

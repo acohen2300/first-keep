@@ -292,11 +292,11 @@ const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC
 const keysOf = (code) => { let p = ''; const [L] = code.match(/^[A-Z]*/); return [...L].map((c) => (p += c)).concat(code, SH[code] ? SH[code].ticks.concat(SH[code].class || []) : []); }; // E278
 const BASE = { spd: (c) => ref(SH[c].pace), hp: (c) => D.bldHp[c] ?? (D.stats[c] || {}).hp, rate: (c) => (SH[c].rate ? ref(SH[c].rate) : D.rate[SH[c].find]), cost: (c) => D.cost[c] || (BOOKS.tech[c] || {}).value?.cost,
   time: (c) => (BOOKS.tech[c] || {}).value?.time, train: (c) => D.train[c], build: (c) => D.buildTime[c], queue: () => fromBook('screen').mold.slots, carry: () => D.carry, room: (c) => D.pop[c], limit: (c) => D.caps[c], eat: (c) => ref(SH[c].upkeep), spoil: () => D.spoil.year, soil: () => D.soil.floor,
-  mud: (c) => D.walkCost.mud * (D.pace.sink[c] ?? D.pace.sink.foot), snow: () => D.walkCost.snow, wet: () => D.pace.storm, studs: () => D.pace.bare, armor: () => D.harm }; // E279
+  mud: (c) => D.walkCost.mud * (D.pace.sink[c] ?? D.pace.sink.foot), snow: () => D.walkCost.snow, studs: () => D.pace.bare, armor: () => D.harm }; // E279
 function stat(code, side, key) { // E280
   const memo = FXC.get(side) || FXC.set(side, new Map()).get(side), id = code + ' ' + key; if (memo.has(id)) return memo.get(id);
   const ks = keysOf(code), fx = [...(known.get(side) || [])].flatMap((t) => BOOKS.tech[t].value.fx).filter((f) => f.s === key && (!f.k || [].concat(f.k).some((k) => k === '*' || ks.includes(k))));
-  const law = (n) => { const b = fx.filter((f) => f.a).reduce((v, f) => v + f.a, n); return fx.filter((f) => f.min != null).reduce((v, f) => Math.min(v, f.min), fx.filter((f) => f.p).reduce((v, f) => v + b * f.p, b)); };
+  const law = (n) => { const b = fx.filter((f) => f.a).reduce((v, f) => v + f.a, n), up = fx.filter((f) => f.p).reduce((v, f) => v + b * f.p, b); return fx.filter((f) => f.min != null).reduce((v, f) => Math.min(v, f.min), fx.filter((f) => f.c).reduce((v, f) => v - v * f.c, up)); };
   const base = (BASE[key] || ((c) => (D.stats[c] || {})[key]))(code), v = base == null ? base : typeof base === 'object' ? Object.fromEntries(Object.entries(base).map(([y, n]) => [y, Math.round(law(n))])) : law(base);
   memo.set(id, v); return v;
 }
@@ -873,20 +873,20 @@ const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); let who = null; // E328
 const walkable = (k) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3 || (GATES.has(k) && !fire('shut', GATES.get(k), who)));
 const stepOk = (a, b) => walkable(b) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
-const [ME] = D.players, PACE = D.pace, NEED = G.step, SLIP = G.slip; // E88
-function footing(u) { // E360
-  const c = u.code, studs = stat(c, u.side, 'studs'), bare = K.temp > D.frost.at ? G.ice.melt : Math.min(G.ice.cold, G.ice.grip + ((G.ice.cold - G.ice.grip) * -K.temp) / G.ice.at);
-  return { mud: Math.max(MARSH[u.k], K.wet), snow: Math.min(1, K.snow / 5), ice: sheet(), need: NEED[SH[c].mount || SH[c].body], bare, on: studs ? Math.max(bare, SLIP.studs) : bare };
+const [ME] = D.players, PACE = D.pace, PAN = D.pace.pandolf, NEED = G.step, SLIP = G.slip; // E88
+function footing(u, to = u.k) { // E360
+  const c = u.code, bare = clamp(G.ice.grip - ((G.ice.cold - G.ice.grip) * K.temp) / G.ice.at, G.ice.grip, G.ice.cold), mud = Math.max(MARSH[u.k], K.wet), snow = Math.min(1, K.snow / 5), d = G.grass.grip + (G.mud.grip - G.grass.grip) * mud;
+  return { mud, snow, ice: sheet(), need: NEED[SH[c].mount || SH[c].body], ground: d + (G.snow.grip - d) * snow, on: stat(c, u.side, 'studs') ? Math.max(bare, SLIP.studs) : bare, rise: (hAt(to) - hAt(u.k)) / stepLen(u.k, to) || 0, along: u.ux || 0 };
 }
-function pace(u, g = SIDES[u.side] && footing(u)) { // E361
-  const c = u.code, s = u.side; let v = Object.entries(PACE.state).reduce((v, [k, m]) => (u[k] ? v * m : v), stat(c, s, 'spd'));
-  v -= v * stat(c, s, 'wet') * K.snowing * K.storm; if (!g) return v;
-  v /= 1 + stat(c, s, 'mud') * g.mud + stat(c, s, 'snow') * g.snow;
-  return v - v * SLIP.stride * g.ice * (g.need > g.on && (g.need - g.on) / (g.need - g.bare));
+function pace(u, g = footing(u)) { // E361
+  const c = u.code, s = u.side, m = W[SH[c].mount || SH[c].body].kg, L = u.load * W.carried.kg, M = m + L, v0 = stat(c, s, 'spd'), vr = v0 - K.wind * g.along;
+  const eta = 1 + stat(c, s, 'mud') * g.mud + stat(c, s, 'snow') * g.snow, F = W.person.drag * (m / W.person.kg) ** PACE.area * (vr * Math.abs(vr) - v0 * v0); // E374
+  const a = PAN.walk * eta * M, b = PAN.grade * PACE.pct * Math.max(0, eta * M * g.rise + F / D.g), q = PAN.stand * m + PAN.load * M * (L / m) ** 2 - (PAN.stand + PAN.walk * v0 * v0) * m;
+  const v = (Math.sqrt(b * b - 4 * a * q) - b) / (2 * a); // E375
+  return Object.entries(PACE.state).reduce((v, [k, f]) => (u[k] ? v * f : v), v) * (1 - (!!u.wary && (g.ice * (g.need - Math.min(g.need, g.on))) / g.need));
 }
-const slips = (g) => { const d = G.grass.grip + (G.mud.grip - G.grass.grip) * g.mud, s = d + (G.snow.grip - d) * g.snow; return g.ice / (1 + Math.exp((s + (g.on - s) * g.ice - g.need) / SLIP.soft)); }; // E362
 // E89
-function findPath(from, goal, near, most = 20000) { // E90
+function findPath(from, goal, near, most = D.tries.way) { // E90
   const open = [from], gs = new Map([[from, 0]]), came = new Map(), done = new Set(), fs = new Map([[from, 0]]), hx = (k) => { const dx = Math.abs((k % N) - (near % N)), dy = Math.abs(Math.floor(k / N) - Math.floor(near / N)); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
   const push = (k) => { open.push(k); let i = open.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (fs.get(open[p]) <= fs.get(open[i])) break; [open[p], open[i]] = [open[i], open[p]]; i = p; } };
   const pop = () => { const top = open[0], last = open.pop(); if (open.length) { open[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i; if (l < open.length && fs.get(open[l]) < fs.get(open[m])) m = l; if (r < open.length && fs.get(open[r]) < fs.get(open[m])) m = r; if (m === i) break; [open[m], open[i]] = [open[i], open[m]]; i = m; } } return top; };
@@ -905,7 +905,7 @@ function findPath(from, goal, near, most = 20000) { // E90
 const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k - i) / N + 0.5) * D.tile); };
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
 function spawn(code, side, k, roll) { // E92
-  const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + (roll() * 2 - 1) * D.jitter, by: by + (roll() * 2 - 1) * D.jitter, k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0 };
+  const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + between(roll, [-D.jitter, D.jitter]), by: by + between(roll, [-D.jitter, D.jitter]), k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0 };
   place(u); units.push(u); file(UG, D.grid.unit, u); fire('spawn', u); return u;
 }
 const place = (u) => { u.k = tileAt(u.bx, u.by); [u.vx, u.vy] = toView(u.bx, u.by, Math.max(0, H[u.k])); };
@@ -938,9 +938,9 @@ function spotFor(u, c) { // E301
 function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.y))) return false; u.path.pop(); u.path.push([s.x, s.y]); u.spot = s; return true; } // E302
 function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
 function stride(u, [tx, ty], dt, near = 0) { // E100
-  if (u.stuck > K.t) return false; const g = SIDES[u.side] && footing(u), beat = Math.floor(u.t / SLIP.every); // E363
-  if (g && g.ice && beat !== u.tread) { u.tread = beat; if (rng() < slips(g)) { u.stuck = K.t + SLIP.secs; if (u.side === ME && !(K.told > K.t - SLIP.tell)) { K.told = K.t; fire('event', 'slip', u); } return false; } }
-  const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy), v = pace(u, g) * D.upm * dt;
+  if (u.stuck > K.t) return false; const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy); u.ux = d && dx / d; const g = footing(u, tileAt(tx, ty)), beat = Math.floor(u.t / SLIP.every); // E363
+  if (!g.ice) u.wary = false; else if (beat !== u.tread) { u.tread = beat; const on = rng() < g.ice; if (!u.wary && g.need > (on ? g.on : g.ground)) { u.stuck = K.t + SLIP.secs; u.wary = on; if (u.side === ME && !(K.told > K.t - SLIP.tell)) { K.told = K.t; fire('event', 'slip', u); } return false; } } // E362
+  const v = pace(u, g) * D.upm * dt;
   u.walked = (u.walked || 0) + Math.min(d, v) / D.upm; u.mps = v / D.upm / dt; // E101
   if (d <= v) { u.bx = tx; u.by = ty; } else { u.bx += (dx / d) * v; u.by += (dy / d) * v; u.face = dx < 0 ? -1 : 1; }
   place(u); return d <= Math.max(v, near);
@@ -975,7 +975,7 @@ function makeUnits(roll) {
   for (const t of things) if (has(t, 'Seat') && D.players.includes(t.side)) { const got = []; stamp(t.bx, t.by, (t.n / 2 + 3) * D.tile, (k, d) => { if (walkable(k)) got.push([d, k]); }); got.sort((a, b) => a[0] - b[0]); for (const [, k] of got.slice(0, D.villagers)) spawn(trains(t.code)[0], t.side, k, roll); const b = tileAt(...corner(t.side, ...D.boar.at)); if (walkable(b)) spawn(D.boar.code, -1, b, roll); } // E346
   // E108
   for (const w of D.wildlife) for (let m = count(roll, D[w.groups]); m > 0; m--) { // E109
-    for (let tries = 0; tries < 100; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
+    for (let tries = 0; tries < D.tries.spot; tries++) { const bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), k = tileAt(bx, by); if (!inZ4(bx, by, 2 * D.tile) || !walkable(k)) continue;
       const got = []; stamp(bx, by, 3 * D.tile, (q, d) => { if (walkable(q)) got.push([d, q]); }); got.sort((a, b) => a[0] - b[0]); for (const [, q] of got.slice(0, count(roll, D[w.size]))) spawn(w.code, -1, q, roll); break; } }
   regrid();
 }
@@ -1047,13 +1047,18 @@ function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i 
 // E125
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 const sheet = () => Math.sqrt(K.gfd / D.groundIce.fdd); // E365
+const WX = D.weather, HOUR = D.day / 24; let GUST = () => 0, DROPS = []; // E377
+const sky = (rain, snow) => { const R = rain * WX.rain.most, S = snow * WX.snow.most, wind = Math.max(rain, snow) * WX.wind.most; return { R, S, wind, gust: wind * (1 + WX.wind.gust), vis: (WX.km * WX.k) / (WX.rain.beta * R ** WX.rain.pow + S / WX.snow.c) }; };
+const blizzard = (s) => s.S > 0 && s.gust >= WX.blizzard.wind && s.vis < WX.blizzard.vis; // E378
+on('start', () => { GUST = fractal(dice(seed ^ WX.wind.seed), WX.wind.k, WX.wind.dim); DROPS = Array.from({ length: WX.pool }, () => ({ x: glance() * cw, y: glance() * ch, q: glance(), d: glance() })); });
 // E126
 function climate(dt) {
   K.t0 = K.t; K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // E127
   K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
-  const hour = Math.floor(K.t / (D.day / 24)); if (hour !== K.hour) { K.hour = hour; K.wetHour = rng() < D.chain[K.wetHour ? 1 : 0]; K.storm = K.wetHour && rng() < D.stormShare ? 1 : 0; }
+  const hour = Math.floor(K.t / HOUR), was = K.wetHour; if (hour !== K.hour) { K.hour = hour; K.wetHour = rng() < D.chain[was ? 1 : 0]; if (K.wetHour !== was) { const r = K.wetHour ? rnd(-1, 1) : 0; K.I = Math.abs(r); K.dir = Math.sign(r); } K.storm = K.I >= D.stormAt; }
   const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; // E128
-  K.rain += ((falling === 'rain' ? (K.storm ? 1 : 0.6) : 0) - K.rain) * Math.min(1, dt / 12); K.snowing += ((falling === 'snow' ? 1 : 0) - K.snowing) * Math.min(1, dt / 12); // E129
+  K.rain += ((falling === 'rain') * K.I - K.rain) * Math.min(1, dt / 12); K.snowing += ((falling === 'snow') * K.I - K.snowing) * Math.min(1, dt / 12); // E129
+  const s = sky(K.rain, K.snowing); K.vis = s.vis; K.wind = K.dir * s.wind * (1 + WX.wind.gust * GUST(K.t / WX.wind.period)); K.blizT = blizzard(s) ? K.blizT + dt : 0; K.bliz = K.blizT >= WX.blizzard.hours * HOUR; // E376
   K.wet = relax(K.wet, K.rain > 0.1 ? 1 : 0, K.rain > 0.1 ? D.wetUp : D.dryOut, dt); // E130
   if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (K.rain > 0.1 ? 2 : 1) * dt); // E131
   if (K.temp < 0) { K.fds += -K.temp * dt; if (K.wet > D.groundIce.wet) K.gfd = Math.min(D.groundIce.fdd, K.gfd - K.temp * dt); } // E132
@@ -1069,8 +1074,7 @@ function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glanc
   if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); K.bolts.push({ vx, vy, t: K.t, seed: glance() }); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); fire('event', 'strike', { vx, vy }); }
   else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
 // E138
-const RAINP = { n: 240, lambda: 4.1 * 5 ** -0.21, dMin: 0.5, dMax: 4 }, fallV = (Dd) => 9.65 - 10.3 * Math.exp(-0.6 * Dd);
-const RAIN = Array.from({ length: RAINP.n }, (_, i) => { const Dd = Math.min(RAINP.dMax, RAINP.dMin - Math.log(1 - ((i * 0.618) % 1 || 0.5)) / RAINP.lambda), d = clamp(0.4 + (0.6 * (Dd - RAINP.dMin)) / 2.5, 0.4, 1); return { x: (i * 97.3) % 1000, y: (i * 53.7) % 1000, d, v: (9.6 * fallV(Dd)) / fallV(2) }; });
+const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active = (strength) => Math.round(WX.pool * strength);
 function drawSkin() { // E139
   const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / 5);
   if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
@@ -1078,10 +1082,10 @@ function drawSkin() { // E139
   if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
 }
 function drawSky(dt) { // E140
-  const now = K.t;
-  if (K.rain > 0.05) { const n = Math.round(RAINP.n * K.rain), slant = 0.2, fall = 420 * dt; ctx.lineCap = 'round';
-    for (let i = 0; i < n; i++) { const m = RAIN[i]; m.y += m.v * fall; if (m.y > ch + 12) { m.y = -12; m.x = glance() * cw; } const len = 8 + 12 * m.d; ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x - slant * len, m.y + len); ctx.stroke(); } }
-  if (K.snowing > 0.05) { const n = Math.round(140 * K.snowing); ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0; i < n; i++) { const y = ((i * 71.9 + now * 34) % (ch + 20)) - 10, x = (i * 113.7 + Math.sin(now * 0.8 + i) * 14) % cw; ctx.fillRect(x < 0 ? x + cw : x, y, 2 + (i % 3 === 0), 2 + (i % 3 === 0)); } }
+  const now = K.t, px = D.upm * cam.z, lam = WX.rain.n0 * (K.rain * WX.rain.most) ** WX.rain.exp, drift = K.wind * px * dt, wrap = (m, len) => { m.x = (((m.x + drift) % cw) + cw) % cw; if (m.y > ch + len) { m.y = -len; m.x = glance() * cw; } };
+  ctx.lineCap = 'round'; for (let i = 0, n = active(K.rain); i < n; i++) { const m = DROPS[i], v = fallV(Math.min(WX.rain.dMax, WX.rain.dMin - Math.log(1 - m.q) / lam)), len = 8 + 12 * m.d; m.y += v * px * dt; wrap(m, len); // E379
+    ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x + (K.wind / v) * len, m.y + len); ctx.stroke(); }
+  ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0, n = active(K.snowing); i < n; i++) { const m = DROPS[i], z = 2 + m.d; m.y += (WX.snow.slow + (WX.snow.fast - WX.snow.slow) * m.d) * px * dt; m.x += Math.sin(now + i) * m.d * px * dt; wrap(m, z); ctx.fillRect(m.x, m.y, z, z); } // E380
   for (const b of K.bolts) { // E141
     const age = now - b.t, a = clamp(1 - age / 0.45, 0, 1), rr = NS_rng((b.seed * 1e6) | 1), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300); main.push([x, y]);
     while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34 + (x1 - x) * 0.12; main.push([x, y]); } main[main.length - 1] = [x1, y1]; const paths = [main]; // E142
@@ -1093,6 +1097,7 @@ function drawSky(dt) { // E140
   if (K.flash > 0.005) { ctx.fillStyle = `rgba(190,210,255,${Math.min(0.75, K.flash).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
   const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7, dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   if (gloom > 0.01) { ctx.fillStyle = `rgba(60,70,80,${gloom.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
+  const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); if (veil > 0.01) { ctx.fillStyle = `rgba(225,230,236,${veil.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); } // E381
   if (dusk > 0.01) { ctx.fillStyle = `rgba(255,140,60,${dusk.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
   if (night > 0.01) { ctx.fillStyle = `rgba(10,18,48,${night.toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); }
   if (K.fog > 0.02) { ctx.fillStyle = `rgba(200,205,210,${(K.fog * 0.8).toFixed(3)})`; ctx.fillRect(0, 0, cw, ch); } // E144
@@ -1106,7 +1111,7 @@ const SEEN = new Uint8Array(N * N), fogCv = document.createElement('canvas'); fo
 function look(dt) { // E147
   fogT -= dt; if (fogT > 0) return; fogT = D.fogTick; const reach = 1 - 0.6 * K.fog;
   for (let k = 0; k < N * N; k++) if (SEEN[k] === 2) SEEN[k] = 1;
-  const see = (bx, by, r) => stamp(bx, by, r * reach, (k) => { SEEN[k] = 2; });
+  const see = (bx, by, r) => stamp(bx, by, Math.min(r * reach, K.vis * D.upm), (k) => { SEEN[k] = 2; });
   for (const u of units) if (u.side === 0) see(u.bx, u.by, D.sight.unit);
   for (const t of things) if (t.kind === 'bld' && t.side === 0) see(t.bx, t.by, D.sight.bld + (t.n * D.tile) / 2);
   const px = fogPx.data; for (let k = 0; k < N * N; k++) { px[k * 4 + 3] = DEP[k] < 0 || SEEN[k] === 2 ? 0 : SEEN[k] === 1 ? 255 * D.fogDim[1] : 255 * D.fogDim[0]; } fogG.putImageData(fogPx, 0, 0); // E148
@@ -1206,9 +1211,9 @@ function tap(px, py) { // E164
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); keepOn(); dirty(); }, { passive: false });
 // E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); GATES.clear(); fogT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = jolt.t = 0; K.wetHour = false; K.told = NaN; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
+function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.fill(0); GATES.clear(); fogT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.fogT = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.told = NaN; K.bolts = []; things = []; units = []; sel = null; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
 addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, slips, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { D, A, C, W, G, HB, SPRITE, SH, ref, lay, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, findNear, stat, learn, keysOf, kinds, trains, aged, rankOf, rankName, kitOf, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, sel: () => sel, select: (u) => (sel = u), seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

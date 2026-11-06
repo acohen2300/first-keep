@@ -14,9 +14,9 @@ def ok(key, cond, got=''):
 async def fresh(b, wait=800):   # a new page on the seed, its errors gathered
     pg = await b.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e))); await pg.goto(URL); await pg.wait_for_timeout(wait); return pg, errs
 # The one loader of Mid's frozen code (mid/src) into node's vm. parts {name: file} are read as text; body is JS that returns what is held to the page, with cut(text, from, to)
-# (to the end when to is empty) and box(code, more): code (a string or a list joined) run in a fresh context holding RUN and more, its OUT returned. RUN comes in on stdin
+# (to the end when to is empty), qca(text) Mid's fxv under the effects law (QCA, Albert Nov 5 18:07: its boosts added, its cuts one at a time) and box(code, more): code (a string or a list joined) run in a fresh context holding RUN and more, its OUT returned. RUN comes in on stdin
 MIDJS = r"""const vm = require('vm'), fs = require('fs'), RUN = JSON.parse(fs.readFileSync(0, 'utf8')), src = (f) => fs.readFileSync(DIR + '/' + f + '.js', 'utf8');
-const cut = (t, a, b) => t.slice(t.indexOf(a), b ? t.indexOf(b, t.indexOf(a)) : undefined), box = (code, more) => { const ctx = { RUN, ...more }; vm.createContext(ctx); vm.runInContext([].concat(code).join(';\n'), ctx); return vm.runInContext('OUT', ctx); };
+const cut = (t, a, b) => t.slice(t.indexOf(a), b ? t.indexOf(b, t.indexOf(a)) : undefined), qca = (t) => t.replace('let m = 1,', 'let m = 1, up = 1, cuts = 1,').replace('if (f.m) m *= f.m;', 'if (f.m > 1) up += f.m - 1; else if (f.m) cuts *= f.m;').replace('return (M[key] = { m, a', 'return (M[key] = { m: up * cuts, a'), box = (code, more) => { const ctx = { RUN, ...more }; vm.createContext(ctx); vm.runInContext([].concat(code).join(';\n'), ctx); return vm.runInContext('OUT', ctx); };
 """
 def frozen(parts, body, run=None):   # Mid's answer (None if it broke) and node's errors
     js = MIDJS.replace('DIR', json.dumps(os.path.join(HERE, '../mid/src'))) + ''.join(f'const {n} = src({json.dumps(f)});\n' for n, f in parts.items())
@@ -120,8 +120,8 @@ async def ledger(b):   # same action, same stores, flow, ledger and words as Mid
     acted = all(x[1] for x in v['steps'])
     ok('t-ledger', mid and not off and acted and all(all(x) for x in bal), [off, acted, bal, err[-300:]])
 # The effects law (F12a, QCA): with a set of effects in force, a kind's numbers are Mid's stats(), maxHpB, unitCost and techCost, and its rehealth, run in Mid's frozen 08-core and
-# 11-orders with one change: Mid multiplied its shares (fxv: m *= f.m); Albert's call (Nov 5 11:40) adds them, so Mid's line is read as m += f.m - 1 (its effects turned into additive
-# shares). Mid's keys come from tags that name what v100's keys name (the heads of a code's letters and its ticks, worked out here, not by the page). A building's health is also
+# 11-orders with one change: Mid multiplied its shares (fxv: m *= f.m); Albert's calls (Nov 5 11:40, 18:07) add the boosts and apply the cuts one at a time, so Mid's line is read
+# through qca (its boosts turned into added shares, its cuts kept as Mid compounded them; two cuts on the spearman's price). Mid's keys come from tags that name what v100's keys name (the heads of a code's letters and its ticks, worked out here, not by the page). A building's health is also
 # held to v100's D139 × (1 + Σ); the lowest, a find's rate and the walk are checked on the page (Mid's gathering waits for its own laws)
 SHELLS = book('shells'); MEASURE = keyed('measure')
 heads = lambda c: [re.match(r'[A-Z]*', c).group(0)[:i + 1] for i in range(len(re.match(r'[A-Z]*', c).group(0)))]
@@ -131,7 +131,7 @@ FX = [({'s': 'spd', 'k': 'UV', 'p': 0.10}, {'s': 'spd', 'k': 'UV', 'm': 1.10}), 
       ({'s': 'hp', 'k': 'UM', 'p': 0.15}, {'s': 'uhp', 'k': '#UM', 'm': 1.15}), ({'s': 'hp', 'k': SOLDIER, 'p': 0.05}, {'s': 'uhp', 'k': SOLDIER, 'm': 1.05}),
       ({'s': 'hp', 'k': HOME, 'p': 0.10}, {'s': 'bhp', 'k': HOME, 'm': 1.10}), ({'s': 'hp', 'k': 'B', 'p': 0.08}, {'s': 'bhp', 'k': '*', 'm': 1.08}),
       ({'s': 'atk', 'k': 'UM1', 'a': 2}, {'s': 'dmg', 'k': 'UM1', 'a': 2}), ({'s': 'atk', 'k': 'Fight', 'a': 1}, {'s': 'dmg', 'k': '#Fight', 'a': 1}), ({'s': 'rng', 'k': 'Shoot', 'a': 1}, {'s': 'rng', 'k': '#Shoot', 'a': 1}),
-      ({'s': 'cost', 'k': 'UM', 'p': -0.13}, {'s': 'cost', 'k': '#UM', 'm': 0.87}), ({'s': 'cost', 'k': 'O', 'p': -0.2}, {'s': 'cost', 'k': '#research', 'm': 0.8}),
+      ({'s': 'cost', 'k': 'UM', 'c': 0.13}, {'s': 'cost', 'k': '#UM', 'm': 0.87}), ({'s': 'cost', 'k': 'O', 'c': 0.2}, {'s': 'cost', 'k': '#research', 'm': 0.8}), ({'s': 'cost', 'k': 'UM1', 'c': 0.5}, {'s': 'cost', 'k': 'UM1', 'm': 0.5}),
       ({'s': 'rof', 'k': 'UM3', 'min': 1.2}, None), ({'s': 'rate', 'k': TREE, 'p': 0.2}, None)]
 STEP = {'wood': 233, 'gold': 117}
 EFF = """(() => { FK.reset(); const D = FK.D, kinds = Object.keys(D.stats), seat = FK.seatOf(0), keys = ['hp', 'atk', 'rng', 'spd'], read = (side) => kinds.map((k) => keys.map((y) => FK.stat(k, side, y)));
@@ -140,7 +140,7 @@ EFF = """(() => { FK.reset(); const D = FK.D, kinds = Object.keys(D.stats), seat
   const out = { base, mine: read(0), wild: read(1), cost: kinds.filter((k) => D.cost[k]).map((k) => FK.stat(k, 0, 'cost')), tech: FK.stat('O0', 0, 'cost'), home: FK.stat(HOME, 0, 'hp'), seat: [seat.hp, seat.hpMax], sol: [sol.hp, sol.hpMax],
     rof: [FK.stat('UM3', 0, 'rof'), FK.stat('UM1', 0, 'rof')], rate: FK.stat(TREE, 0, 'rate'), seatBase: D.bldHp[seat.code], kinds };
   FK.K.wet = FK.K.snow = 0; FK.go(u, [3, -3, 3 * FK.N, -3 * FK.N].map((d) => u.k + d).find(FK.walkable)); FK.step(0.1); out.walk = u.mps; delete BOOKS.tech.O0; FK.reset(); out.after = FK.stat(HOME, 0, 'hp'); return out; })()"""
-MIDFX = r"""const law = cut(core, 'function fxList', '// Two words'), add = law.replace('if (f.m) m *= f.m;', 'if (f.m) m += f.m - 1;');
+MIDFX = r"""const law = cut(core, 'function fxList', '// Two words'), add = qca(law);
 const go = (fx) => box([fx, cut(core, 'const unitKeys', 'const dmgOf'), cut(core, 'function rehealth', '// Hawk-Dove'), cut(orders, 'const scaled', 'function trainWhy'),
   `const WILD = -1, TECH = [], CIVS = {}, standing = () => true, baseKind = (k) => k, TECHBY = { O0: { fx: RUN.fx } }, G = { fxv: 0, P: [{ techs: new Set() }, { techs: new Set() }] };
   const UNIT = Object.fromEntries(RUN.kinds.map((k) => [k, { name: k, hp: RUN.stats[k].hp, dmg: RUN.stats[k].atk, rng: RUN.stats[k].rng, spd: RUN.spd[k], sight: 0, tags: RUN.tags[k], cost: RUN.cost[k] }]));
@@ -250,7 +250,7 @@ RES = """(() => { FK.reset(); const D = FK.D, s = FK.SIDES[0], st = s.store, T =
   s.age = 4; s.aging = 0; x.gun = [MENU.VERBS.ageUp.label(), ECON.nextAge(0), FK.levelOf(h)[0], spr(h.code, 0, 0) !== spr(h.code, FK.levelOf(h)[0], 0), spr(lab.code, 0, 0) !== spr(lab.code, 0, FK.levelOf(lab)[1])];
   x.z1 = FK.Z1.food;
   return { out, x, line: ECON.lineOf(H).map((c) => T[c].key), next: T[ECON.nextStep(0, H)].key, needs: ECON.needsOf(key('ironaxe')).map((c) => (T[c] ? T[c].key : c)), queued: lab.q.length }; })()"""
-MIDRES = r"""const fx = cut(core, 'function fxList', '// Two words').replace('if (f.m) m *= f.m;', 'if (f.m) m += f.m - 1;');
+MIDRES = r"""const fx = qca(cut(core, 'function fxList', '// Two words'));
 return box([basics, units, blds, tech, fx, cut(core, 'const costText', 'const afford'), cut(core, 'const afford', '// Every'), cut(core, 'const sumCost', 'const fmt'), cut(core, 'const bldsOf', 'const readyAt'),
   cut(core, 'const roomOf', '\n'), cut(core, 'const qMax', 'const lineFree'), cut(core, 'const lineOf', 'const todaySeed'), cut(core, 'const carryOf', '\n'), cut(core, 'const nodeKey', 'const makeOf'),
   cut(orders, 'const scaled', 'const unitCost'), cut(orders, 'const techCost', 'function trainWhy'), cut(orders, 'function researchWhy', 'let navHold'), cut(games, 'const ageOpen', '\n'), cut(games, 'const nextAge', '\n'),
@@ -471,7 +471,7 @@ MIDFOOD = r"""const ev = cut(events, 'function starveTick');
 return box([cut(basics, 'const SEASON_LEN', 'const EASY_SAFE'), basics.match(/const SEASONS = \[[\s\S]*?\];/)[0], blds.match(/const UPKEEP = [^;]*;/)[0], blds.match(/const SPOIL = [^;]*;/)[0],
   tuning.match(/const FERT = [^;]*;/)[0], tuning.match(/const HARVEST = \[[\s\S]*?\];/)[0], tuning.match(/const STARVE = [\s\S]*?;/)[0], tuning.match(/const ORDER = [^;]*;/)[0], core.match(/const clamp = [^\n]*/)[0], core.match(/const logistic = [^\n]*/)[0],
   core.match(/const season = [^\n]*/)[0], cut(core, 'const nodeKey', 'const makeOf'), cut(eco, 'const FLEECE', 'const stopsAll'), cut(eco, 'function natureTick', '// ── fire'), cut(eco, 'function upkeepTick', '// the Bank'), cut(eco, 'function shareOf', '// ── prices'), ev,
-  `const WILD = -1, R = RUN; let n = 0, ledger = { upkeep: 0, spoiled: 0, orders: 0 }; const rng = () => R.draws[n++], fxv = (o, s, keys) => { let m = 1, a = 0; for (const f of R.fx) if (f.s === s && (!f.k || [].concat(f.k).some((k) => (keys || []).includes(k)))) { if (f.m) m += f.m - 1; if (f.a) a += f.a; } return { m, a }; };
+  `const WILD = -1, R = RUN; let n = 0, ledger = { upkeep: 0, spoiled: 0, orders: 0 }; const rng = () => R.draws[n++], fxv = (o, s, keys) => { let m = 1, a = 0, c = 1; for (const f of R.fx) if (f.s === s && (!f.k || [].concat(f.k).some((k) => (keys || []).includes(k)))) { if (f.m > 1) m += f.m - 1; else if (f.m) c *= f.m; if (f.a) a += f.a; } return { m: m * c, a }; };
   const unitKeys = (k) => [k], hasTag = (k, t) => (R.tags[k] || []).includes(t), UNIT = { vil: { cls: 'civ', tick: 'vil' }, spear: { cls: 'army', tick: 'sol' }, cata: { cls: 'army', tick: 'sol' }, wolf: { cls: null, meat: 0 } };
   const BLD = { farm: { crop: 'food' }, pasture: { crop: 'wool', sheep: 6 } }, campEat = () => 0, news = () => {}, storm = () => false, hazard = () => false, stopsAll = () => [], ROUTES = [], every = () => false, BEAT = {}, flowTick = () => {}, hz = () => false;
   const unitsOf = () => [], HEALTH = {}, TOAST = {}, coord = () => '', keepOf = () => ({}), regionAt = () => 1, reachFrom = () => true, dockNear = () => true, EVM = { gather: 1 }, WEATHER = { clear: {} }, SCALE = { kinds: [] }, isSoldier = (u) => u.kind !== 'vil', dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -515,49 +515,100 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
     pg, errs = await fresh(b)
     got = await pg.evaluate("(() => { FK.reset(); for (let i = 0; i < 6000; i++) FK.sim(0.1); const first = FK.D.ai.raise[0].code; return [FK.seed(), FK.things().some((t) => t.side === FK.D.players[1] && t.code === first)]; })()")
     ok('t-ai', got[1] and not errs, [got, errs[:2]]); await pg.close()
-# The pace (F17, QCB): five kinds of v100 walker and a wolf, each under dry ground, mud, snow, ice just under and just over freezing, a snow storm and all at once, plain, loaded and sick,
-# with no research, Roads, Field drains, Snow clearing + Oiled cloaks + Forced marches, Crampons, and Roads with Field drains: each one's pace over its walk and its chance of a slip
-# are Mid's frozen paceOf (its season at rest: the season's own speeds are out) and slipChance with the shares added (Albert, Nov 5 11:40), and the two drains stacked are not Mid's
-# compounded; the ground ice of a winter and a summer is Mid's frozen groundTick's, fed the same air and wetness; and on the page a walker in mud steps at its pace and one on ice slips and stands
+# The pace (F17, F17b, QCB): five kinds of v100 walker and a wolf on dry, flat, firm ground in still air, plain, with a full load and sick, with no research, Roads, Field drains,
+# Snow clearing + Oiled cloaks + Forced marches, Crampons, and Roads with Field drains: each one's pace over its walk is Mid's frozen paceOf under a clear sky (its season at rest:
+# the season's own speeds are out; a full load is Mid's 0.9 to a ten-thousandth, by W24), and each one's mud and snow costs are Mid's fxv under the effects law (two cuts, one on what
+# the other left: Mid's own compounding); the ground ice of a winter and a summer is Mid's frozen groundTick's, fed the same air and wetness; and on the page a walker in mud steps at
+# its pace and one on ice slips once, stands, and walks on wary. Where v100 now differs from Mid by design (Pandolf's mud, snow and grade, the wind, grip) is t-physics
 PKINDS = [('UV', 'vil', 0), ('UM1', 'spear', 0), ('UM2', 'archer', 0), ('UM3', 'cata', 0), ('UM4', 'ram', 0), ('MW4', 'wolf', -1)]
-PCLIMS = [dict(mud=0, snow=0, ice=0, T=10, storm=0), dict(mud=0.6, snow=0, ice=0, T=10, storm=0), dict(mud=0, snow=0.7, ice=0, T=-2, storm=0), dict(mud=0, snow=0, ice=0.8, T=-5, storm=0),
-          dict(mud=0, snow=0, ice=0.5, T=1, storm=0), dict(mud=0, snow=0, ice=0, T=-4, storm=1), dict(mud=0.4, snow=0.3, ice=0.6, T=-3, storm=1)]
-PSTATES = [dict(load=0, sick=0), dict(load=5, sick=0), dict(load=0, sick=1)]
+PSTATES = [dict(load=0, sick=0), dict(load=MEASURE['carry'], sick=0), dict(load=0, sick=1)]
 PSETS = [[], ['roads'], ['drainage'], ['snowclear', 'waterproof', 'marching'], ['crampons'], ['roads', 'drainage']]
-PACE = """(() => { const D = FK.D, K = FK.K, TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), out = [];
+PACE = """(() => { const D = FK.D, K = FK.K, TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), out = [], cost = [];
   for (const set of SETS) { FK.reset(); for (const k of set) FK.learn(0, TK[k]); const hk = FK.tileAt(FK.seatOf(0).bx, FK.seatOf(0).by); let k0 = -1;
     for (let d = 3; k0 < 0 && d < 60; d++) for (const q of [hk + d, hk - d, hk + d * FK.N, hk - d * FK.N]) if (k0 < 0 && FK.walkable(q) && !FK.MARSH[q]) k0 = q;
-    for (const [code, , side] of KINDS) { const u = FK.spawn(code, side, k0, FK.rng);
-      for (const C of CLIMS) for (const st of STATES) { if (st.load && !FK.has(u, 'Gather')) continue; Object.assign(K, { wet: C.mud, snow: C.snow * 5, gfd: C.ice * C.ice * D.groundIce.fdd, temp: C.T, snowing: C.storm, storm: C.storm }); u.load = st.load; u.sick = st.sick;
-        out.push([FK.pace(u) / FK.ref(FK.SH[code].pace), side < 0 ? null : FK.slips(FK.footing(u))]); } } }
+    for (const [code, , side] of KINDS) { const u = FK.spawn(code, side, k0, FK.rng); cost.push(side < 0 ? null : [FK.stat(code, side, 'mud') / D.walkCost.mud / (D.pace.sink[code] ?? D.pace.sink.foot), FK.stat(code, side, 'snow') / D.walkCost.snow]);
+      for (const st of STATES) { if (st.load && !FK.has(u, 'Gather')) continue; Object.assign(K, { wet: 0, snow: 0, gfd: 0, temp: 10, wind: 0 }); u.load = st.load; u.sick = st.sick;
+        out.push(FK.pace(u) / FK.ref(FK.SH[code].pace)); } } }
   FK.reset(); const rec = [], share = () => Math.sqrt(K.gfd / D.groundIce.fdd); K.t = D.season * 3 + 5; K.wet = 1;
   for (let i = 0; i < 1800; i++) { if (i === 900) K.t = D.season + 10; FK.sim(0.1); rec.push([K.temp, K.wet, share()]); }
   FK.reset(); const u = ECON.villagersOf(0)[0], far = [6, -6, 6 * FK.N, -6 * FK.N].map((d) => u.k + d).find(FK.walkable); let told = 0, stuck = 0, still = 0; FK.on('event', (e) => { told += e === 'slip'; });
-  Object.assign(K, { wet: 0.7, snow: 0, gfd: 0, temp: 5, snowing: 0, storm: 0 }); u.load = 0; FK.go(u, far); FK.step(0.1); const mud = [u.mps, FK.pace(u), FK.ref(FK.SH[u.code].pace)];
+  Object.assign(K, { wet: 0.7, snow: 0, gfd: 0, temp: 5, wind: 0 }); u.load = 0; FK.go(u, far); FK.step(0.1); const mud = [u.mps, FK.pace(u), FK.ref(FK.SH[u.code].pace)];
   Object.assign(K, { wet: 0, gfd: D.groundIce.fdd, temp: -5 }); for (let i = 0; i < 100; i++) { K.t += 0.1; const s = u.stuck > K.t; FK.step(0.1); if (s) { stuck++; still += u.mps === 0; } if (!u.path) FK.go(u, far); }
-  return { cases: out, rec, mud, stuck, still, told }; })()"""
-MIDPACE = r"""const fx = cut(core, 'function fxList', '// Two words'), add = fx.replace('if (f.m) m *= f.m;', 'if (f.m) m += f.m - 1;');
-const run = (law) => box([basics, units, blds, tech, tuning, law, cut(core, 'const clamp', 'const hyp'), cut(core, 'const baseKind', '\n'), cut(core, 'const unitKeys', 'const dmgOf'), cut(nav, 'const paceOf', '// One home'), cut(sim, 'const insulate', 'function step'),
+  return { cases: out, cost, rec, mud, stuck, still, told, wary: u.wary }; })()"""
+MIDPACE = r"""const fx = qca(cut(core, 'function fxList', '// Two words'));
+return box([basics, units, blds, tech, tuning, fx, cut(core, 'const clamp', 'const hyp'), cut(core, 'const baseKind', '\n'), cut(core, 'const unitKeys', 'const dmgOf'), cut(nav, 'const paceOf', '// One home'), cut(sim, 'const insulate', 'function step'),
   cut(events, 'const precip', '\n'), cut(events, 'const groundNeed', '// fire against'), cut(events, 'function groundTick', '// Traffic'),
   `const standing = () => false, EVM = { spd: 1 }, shapeOf = () => ({}), season = () => ({ name: 'Summer', spd: 1 }), hz = () => false, mudAt = () => G.clim.mud, relax = (x) => x;
-  const G = { t: 0, fxv: 0, wx: 'clear', clim: {}, P: [{ techs: new Set() }], blds: [] }; var OUT = { cases: [], ice: [] };
+  const G = { t: 0, fxv: 0, wx: 'clear', clim: { mud: 0, snow: 0, ice: 0, T: 10 }, P: [{ techs: new Set() }], blds: [] }; var OUT = { cases: [], cost: [], ice: [] };
   for (const set of RUN.sets) { G.P[0] = { techs: new Set(set) }; G.fxv++;
-    for (const [, kind, side] of RUN.kinds) for (const C of RUN.clims) for (const st of RUN.states) { if (st.load && kind !== 'vil') continue; G.clim = { mud: C.mud, snow: C.snow, ice: C.ice, T: C.T }; G.wx = C.storm ? 'blizzard' : 'clear';
-      const o = side < 0 ? WILD : 0, u = { owner: o, kind, x: 0, y: 0, carry: st.load, sick: st.sick }, keys = unitKeys(kind);
-      OUT.cases.push([paceOf(u, sideSpd(o)) / UNIT[kind].spd, o === WILD ? null : slipChance(u, groundNeed(keys), studded(o, keys))]); } }
-  const c = { W: 0, snow: 0, ice: 0, fdd: 0 }; for (const [T, W] of RUN.rec) { c.T = T; c.W = W; groundTick(c, 'clear', 0.1); OUT.ice.push(c.ice); }`]);
-return { added: run(add), compounded: run(fx) };"""
-async def pace(b):   # same walkers, same ground and weather, same pace and slips as Mid's frozen code with its shares added; ground ice as Mid's; a walk in mud and a slip on ice on the page
+    for (const [, kind, side] of RUN.kinds) { const o = side < 0 ? WILD : 0, keys = unitKeys(kind); OUT.cost.push(o === WILD ? null : [fxv(o, 'mud', keys).m, 1 - fxv(o, 'snow', keys).a]);
+      for (const st of RUN.states) { if (st.load && kind !== 'vil') continue; const u = { owner: o, kind, x: 0, y: 0, carry: st.load, sick: st.sick }; OUT.cases.push(paceOf(u, sideSpd(o)) / UNIT[kind].spd); } } }
+  const c = { W: 0, snow: 0, ice: 0, fdd: 0 }; for (const [T, W] of RUN.rec) { c.T = T; c.W = W; groundTick(c, 'clear', 0.1); OUT.ice.push(c.ice); }`]);"""
+async def pace(b):   # same walkers on dry flat ground, same pace as Mid's frozen code; the same research costs (cuts one at a time); ground ice as Mid's; a walk in mud and a slip on ice on the page
     pg, errs = await fresh(b)
-    v = await pg.evaluate(PACE.replace('SETS', json.dumps(PSETS)).replace('KINDS', json.dumps(PKINDS)).replace('CLIMS', json.dumps(PCLIMS)).replace('STATES', json.dumps(PSTATES))); await pg.close()
+    v = await pg.evaluate(PACE.replace('SETS', json.dumps(PSETS)).replace('KINDS', json.dumps(PKINDS)).replace('STATES', json.dumps(PSTATES))); await pg.close()
     mid, err = frozen({'basics': '01-rules-basics', 'units': '02-rules-units', 'blds': '03-rules-buildings', 'tech': '04-rules-tech', 'tuning': '06-rules-tuning', 'core': '08-core', 'nav': '09-nav', 'sim': '12-sim-core', 'events': '37-events'},
-                      MIDPACE, {'sets': PSETS, 'kinds': PKINDS, 'clims': PCLIMS, 'states': PSTATES, 'rec': [r[:2] for r in v['rec']]}); mid = mid or {}
-    add, comp = mid.get('added', {}), mid.get('compounded', {}); n = len(v['cases']) // len(PSETS); last = slice(n * (len(PSETS) - 1), None)
-    ice = [r[2] for r in v['rec']]
-    got = [bool(add) and close(v['cases'], add['cases']), bool(comp) and not close(v['cases'][last], comp['cases'][last]) and close(v['cases'][:n], comp['cases'][:n]),
-           bool(add) and close(ice, add['ice']) and max(ice[:900]) > 0.2 and ice[-1] < max(ice), len({round(c[0], 6) for c in v['cases']}) > 20,
-           close(v['mud'][0], v['mud'][1]) and v['mud'][1] < v['mud'][2], v['stuck'] > 0 and v['still'] == v['stuck'] and v['told'] == 1, not errs]
-    ok('t-pace', all(got), [got, v['mud'], v['stuck'], v['still'], v['told'], errs[:2], err[-400:]])
+                      MIDPACE, {'sets': PSETS, 'kinds': PKINDS, 'states': PSTATES, 'rec': [r[:2] for r in v['rec']]}); mid = mid or {}
+    ice = [r[2] for r in v['rec']]; near = lambda a, c: all(abs(x - y) <= 1e-4 for x, y in zip(a, c)) and len(a) == len(c)
+    snow = close([x[1] if x else 0 for x in v['cost']], [x[1] if x else 0 for x in mid.get('cost', [])])
+    got = [bool(mid) and near(v['cases'], mid['cases']), bool(mid) and close([x[0] if x else 0 for x in v['cost']], [x[0] if x else 0 for x in mid['cost']]) and snow and any(x and abs(x[0] - 0.35) < 1e-9 for x in v['cost']),
+           bool(mid) and close(ice, mid['ice']) and max(ice[:900]) > 0.2 and ice[-1] < max(ice), len({round(c, 6) for c in v['cases']}) > 3,
+           close(v['mud'][0], v['mud'][1]) and v['mud'][1] < v['mud'][2], v['stuck'] > 0 and v['still'] == v['stuck'] and v['told'] == 1 and v['wary'] is True, not errs]
+    ok('t-pace', all(got), [got, v['cases'][:8], mid.get('cases', [])[:8], v['cost'][:6], mid.get('cost', [])[:6], v['mud'], v['stuck'], v['still'], v['told'], errs[:2], err[-400:]])
+# The physics (F17b, Albert Nov 5 18:07 and 18:08): the pace is Pandolf's equation solved for the speed (QCB): flat, firm, unloaded and still, a villager walks exactly 1.52 m/s; loaded, up a
+# grade, in mud and snow (η) and into a wind (Pugh's drag counted as a grade), the speed v100 finds puts Pandolf's M back at the walker's power, computed here on its own from the books; the
+# effects law (QCA): boosts add, cuts one at a time, never 0 nor the base, every cut in the Tech book a share between 0 and 1; the weather (QCL): the particles falling are the pool times
+# the strength, the rates, wind and visibility are the law's, the blizzard flag turns exactly at the NWS's wind and visibility and after three game hours; grip (QR): a step slips
+# exactly when the friction it needs exceeds what the ground offers; Crampons give studs to those on foot and the engines' haulers, never to riders, who wait for Horseshoes; the scout's
+# pace and reach are Mid's
+MASS = keyed('mass'); GROUND = keyed('ground')
+PHYS = """(() => { const D = FK.D, K = FK.K, TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), out = {}; FK.reset();
+  const u = FK.units().find((v) => v.side === 0 && FK.has(v, 'Gather')), g0 = { ...FK.footing(u), mud: 0, snow: 0, ice: 0, rise: 0, along: 1 }; Object.assign(K, { wind: 0 }); u.load = 0; u.wary = false;
+  out.flat = FK.pace(u, g0); out.cases = CASES.map(([load, rise, mud, snow, wind]) => { u.load = load; K.wind = wind; return [load, rise, mud, snow, wind, FK.pace(u, { ...g0, rise, mud, snow })]; }); u.load = 0; K.wind = 0;
+  BOOKS.tech.O0 = { key: 'O0', value: { cost: {}, fx: [{ s: 'cost', k: 'UM1', p: 0.1 }, { s: 'cost', k: 'UM1', p: 0.08 }, ...CUTS.map((c) => ({ s: 'cost', k: 'UM1', c }))] }, name: 'a test step', cite: [], law: ['QCA'] }; FK.learn(0, 'O0');
+  out.cuts = [FK.stat('UM1', 0, 'cost'), FK.stat('UM1', 0, 'atk')]; BOOKS.tech.O0.value.fx = [{ s: 'atk', k: 'UM1', p: 0.1 }, { s: 'atk', k: 'UM1', p: 0.08 }, ...CUTS.map((c) => ({ s: 'atk', k: 'UM1', c }))]; FK.learn(0, 'O0'); out.cuts.push(FK.stat('UM1', 0, 'atk')); delete BOOKS.tech.O0; FK.reset();
+  out.sky = LEVELS.map((x) => [sky(x, 0), sky(0, x)]); out.drops = LEVELS.map((x) => { K.rain = x; K.snowing = 0; K.wind = 0; const y = DROPS.map((m) => m.y); drawSky(0.05); const r = DROPS.filter((m, i) => m.y !== y[i]).length; K.rain = 0; K.snowing = x; const y2 = DROPS.map((m) => m.y); drawSky(0.05); return [r, DROPS.filter((m, i) => m.y !== y2[i]).length]; });
+  const W = D.weather.blizzard, edge = W.wind / D.weather.wind.most / (1 + D.weather.wind.gust); out.edge = [blizzard(sky(0, edge * (1 - 1e-9))), blizzard(sky(0, Math.min(1, edge * (1 + 1e-9)))), blizzard(sky(1, 0))];
+  out.flags = [[1, W.wind, W.vis - 1e-6], [1, W.wind - 1e-6, W.vis - 1e-6], [1, W.wind, W.vis], [0, W.wind * 2, 1]].map(([S, gust, vis]) => blizzard({ S, gust, vis }));
+  FK.reset(); const play0 = play; play = () => 0; K.t = D.season * 3 + 1; FK.sim(0.1); Object.assign(K, { wetHour: true, I: 1, dir: 1, snowing: 1, rain: 0, blizT: 0 }); const hrs = [];
+  for (let i = 0; i < 40; i++) { FK.sim(0.5); hrs.push([K.blizT, K.bliz, K.temp <= 1]); } play = play0; out.hours = hrs; out.hour = D.day / 24;
+  FK.reset(); const w = FK.units().find((v) => v.side === 0 && FK.has(v, 'Gather')), far = [6, -6, 6 * FK.N, -6 * FK.N].map((d) => w.k + d).find(FK.walkable), need0 = FK.G.step.person; out.slip = [];
+  for (const [ice, land, dn] of [[1, 0, 1e-9], [1, 0, 0], [1, 0, -1e-9], [0.5, 0.99, 1e-9]]) { Object.assign(K, { wet: 0, snow: 0, temp: -5, gfd: ice * ice * D.groundIce.fdd, wind: 0 }); const g = FK.footing(w), on = land < ice ? g.on : g.ground;
+    FK.G.step.person = on + dn; w.stuck = 0; w.wary = false; w.tread = -1; FK.go(w, far); const p0 = play; play = () => land; FK.step(0.1); play = p0; out.slip.push([on + dn > on, w.stuck > K.t]); }
+  FK.G.step.person = need0; out.studs = [];
+  for (const set of [['crampons'], ['horseshoes']]) { FK.reset(); for (const k of set) FK.learn(0, TK[k]); out.studs.push(['UV', 'UM1', 'UM2', 'UM4', 'UM3'].map((c) => FK.stat(c, 0, 'studs') > 0)); }
+  out.scout = [FK.stat('US4', 0, 'spd'), D.stats.US4.rng, D.speed.walk]; out.tech = Object.values(BOOKS.tech).flatMap((e) => e.value.fx || []).filter((f) => f.p != null || f.c != null).map((f) => [f.p ?? null, f.c ?? null]);
+  return out; })()"""
+PCASES = [[0, 0, 0, 0, 0], [MEASURE['carry'], 0, 0, 0, 0], [0, 0.05, 0, 0, 0], [MEASURE['carry'] / 2, 0.08, 0, 0, 0], [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [0, 0, 0.5, 0.5, 0], [0, 0, 0, 0, -12], [MEASURE['carry'], 0.03, 0.3, 0, -6]]
+CUTS = [0.5, 0.3, 0.99, 0.99, 0.99, 0.99, 0.99, 0.99]; LEVELS = [0, 0.137, 0.37, 0.5, 0.81, 1]
+async def physics(b):   # Pandolf's pace, the effects law, the weather and grip, against the equations here, from the books
+    pg, errs = await fresh(b)
+    v = await pg.evaluate(PHYS.replace('CASES', json.dumps(PCASES)).replace('CUTS', json.dumps(CUTS)).replace('LEVELS', json.dumps(LEVELS))); await pg.close()
+    P, Wb, man, wx = MEASURE['pace']['pandolf'], MASS['person'], MASS['person']['kg'], MEASURE['weather']; g, v0 = MEASURE['g'], MEASURE['speed']['walk']
+    def M(V, L, G, eta, wind):   # Pandolf, Givoni & Goldman (1977), with Pugh's drag as a grade
+        F = Wb['drag'] * ((v0 - wind) * abs(v0 - wind) - v0 * v0)
+        return P['stand'] * man + P['load'] * (man + L) * (L / man) ** 2 + eta * (man + L) * (P['walk'] * V * V) + P['grade'] * V * max(0, eta * (man + L) * G * 100 + 100 * F / g)
+    power = P['stand'] * man + P['walk'] * man * v0 * v0
+    eta = lambda mud, snow: 1 + MEASURE['walkCost']['mud'] * mud + MEASURE['walkCost']['snow'] * snow
+    pand = [abs(M(V, load * MASS['carried']['kg'], rise, eta(mud, snow), wind) - power) / power < 1e-9 for load, rise, mud, snow, wind, V in v['cases']]
+    slower = all(c[5] < v0 for c in v['cases'][1:])
+    k = 1 + 0.1 + 0.08; cost0 = MEASURE['cost']['UM1']; prod = 1
+    for c in CUTS: prod *= 1 - c
+    cuts = all(abs(n - round(cost0[y] * k * prod)) <= 0 for y, n in v['cuts'][0].items()) and 0 < v['cuts'][2] < MEASURE['stats']['UM1']['atk'] * k and abs(v['cuts'][2] - MEASURE['stats']['UM1']['atk'] * k * prod) < 1e-9 and v['cuts'][1] == MEASURE['stats']['UM1']['atk']
+    book = all((p is None or p > 0) and (c is None or 0 < c < 1) for p, c in v['tech']) and any(c for _, c in v['tech'])
+    def sky(r, s):
+        R, S, w = r * wx['rain']['most'], s * wx['snow']['most'], max(r, s) * wx['wind']['most']; ext = wx['rain']['beta'] * R ** wx['rain']['pow'] + S / wx['snow']['c']
+        return {'R': R, 'S': S, 'wind': w, 'gust': w * (1 + wx['wind']['gust']), 'vis': wx['km'] * wx['k'] / ext if ext else float('inf')}
+    skies = all(all(a[y] == c[y] or abs(a[y] - c[y]) < 1e-9 * max(1, abs(c[y])) for y in c) for pair, x in zip(v['sky'], LEVELS) for a, c in zip(pair, [sky(x, 0), sky(0, x)]))
+    drops = v['drops'] == [[round(wx['pool'] * x), round(wx['pool'] * x)] for x in LEVELS]
+    edge = v['edge'] == [False, True, False] and v['flags'] == [True, False, False, False]
+    H = 3 * v['hour']; t_on = [h for h in v['hours'] if h[1]]
+    hours = all(h[2] for h in v['hours']) and all(h[1] == (h[0] >= wx['blizzard']['hours'] * v['hour']) for h in v['hours']) and any(h[1] for h in v['hours']) and not v['hours'][int(H / 0.5) - 2][1]
+    slip = all(a == b for a, b in v['slip']) and [s[1] for s in v['slip']] == [True, False, False, True]
+    studs = v['studs'] == [[True, True, True, True, False], [False, False, False, False, True]]
+    scout = abs(v['scout'][0] - v0 * 27 / 24) < 1e-9 and v['scout'][1] == 12 / 10
+    got = [abs(v['flat'] - v0) < 1e-12, all(pand) and slower, cuts and book, skies and drops, edge and hours, slip and studs, scout, not errs]
+    ok('t-physics', all(got), [got, v['flat'], [c[5] for c in v['cases']], pand, v['cuts'], v['drops'], v['edge'], v['flags'], v['hours'][25:33], v['slip'], v['studs'], v['scout'], errs[:2]])
 # The soldier kinds (F18, Albert's Unit shell, Nov 5 10:26): every kind a row of the one Unit shell, its settings Mid's UNIT and TEACH_TO (02-rules-units, 06-rules-tuning); after each
 # set of research its numbers are Mid's frozen stats() (08-core) with every share added, its tiers' too (Albert, Nov 5 11:40), and its sight Mid's with sightFx's adds; the scout's rank
 # its name and its pace; each army building trains exactly its class's kinds, each from its age; the army stops at ARMYMAX; and each figure at each rank and kit is Mid's sprite()'s pixels
@@ -580,7 +631,7 @@ ARTJS = """((src) => { const M = new Function('clamp', 'fault', src + '\\nreturn
     for (let i = 3; off >= 0 && i < da.length; i += 4) { if (da[i]) ink++; if (Math.abs(da[i - 3] - db[i - 3]) + Math.abs(da[i - 2] - db[i - 2]) + Math.abs(da[i - 1] - db[i - 1]) + Math.abs(da[i] - db[i]) > 8) off++; }
     out.push([look, lv, kit, fr, off, ink]); }
   return out; })"""
-MIDKINDS = r"""const fx = cut(core, 'function fxList', '// Two words').replace('if (f.m) m *= f.m;', 'if (f.m) m += f.m - 1;');
+MIDKINDS = r"""const fx = qca(cut(core, 'function fxList', '// Two words'));
 const st = cut(core, 'const unitKeys', 'const dmgOf').replace('tier = 0;', 'tier = 0, hpS = 0, spdS = 0;').replace('hp *= R.hp || 1;', 'hpS += (R.hp || 1) - 1;').replace('spd *= R.spd || 1;', 'spdS += (R.spd || 1) - 1;')
   .replace("hp: hp * fxv(o, 'uhp', keys).m", "hp: hp * (fxv(o, 'uhp', keys).m + hpS)").replace("spd: spd * fxv(o, 'spd', keys).m", "spd: spd * (fxv(o, 'spd', keys).m + spdS)");
 return box([basics, units, blds, tech, tuning, fx, st, cut(core, 'const baseKind', '\n'), cut(core, 'const armyRoom', 'const qMax'),
@@ -619,7 +670,7 @@ async def kinds(b):   # same kinds, same settings and same numbers after researc
            bool(mid) and [MEASURE['popMax'], MEASURE['armyMax'], MEASURE['squad']] == mid['max'] and v['ceiling'][:2] == [True, False] and v['ceiling'][2] == mid['full'].rstrip('.') and v['ceiling'][3:] == [MEASURE['armyMax'], MEASURE['armyMax'] - 1],
            not bad and len(art) > 300, not errs, bool(mid) and all(n == mid['t'].get(SHELLS[c]['look']) for c, n in MEASURE['train'].items())]
     ok('t-kinds', all(got), [got, bad[:6], v['ceiling'], v['wrong'][:4], [x for x in zip(trained, want) if x[0] != x[1]][:1], errs[:2], err[-400:]])
-PAGED = {'t-kinds': kinds, 't-pace': pace, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-ai': ai, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

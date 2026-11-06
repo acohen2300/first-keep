@@ -228,6 +228,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N175 |  | Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid's cite); from memory, to open | to open |
 | N176 |  | Design: Mid's soldiers (02-rules-units.js UNIT, spear to treb; 04-rules-tech.js the barracks, range, stable, smith and siege lines and their | opened |
 | N177 |  | Masses of arms and of the war elephant: a sword about 1.2 kg, a javelin 1 kg thrown at about 20 m/s, a crossbow 5 kg and its bolt 80 g at 45 | to open |
+| N178 |  | Gao, Abeysekera, Hirvonen & Aschan (2003), The effect of footwear sole abrasion on the coefficient of friction on melting and hard ice, Int. | opened |
+| N179 |  | Burnfield & Powers (2004), Prediction of slip events during walking: an analysis of utilized coefficient of friction and available slip resi | opened |
+| N180 |  | US National Weather Service glossary, blizzard (forecast.weather.gov/glossary.php?word=bliz; weather.gov/dtx/winter_defs): sustained wind or | opened |
+| N181 |  | Pugh (1971), The influence of wind resistance in running and walking and the mechanical efficiency of work against horizontal or vertical fo | to open |
+| N182 |  | Seliga, Hazen & Burnley, nowcasting snowfall rate from visibility (AMS paper 104640): S = c σ, c from about 0.6 early in an event to 0.2 lat | opened |
+| N183 |  | Rain's extinction of light β ≈ 0.312 R^0.67 a km, R in mm/h (an empirical fit used for visibility in rain); from memory, to open | to open |
+| N184 |  | Harper, Kepert & Ginger (2010), WMO guidelines for converting between various wind averaging periods: a gust about 1.4 times the mean wind o | to open |
+| N185 |  | Design: Albert, Nov 5 18:07–18:08: pace by the floor, the weather, mass and gravity, never by the calendar (Pandolf); the effects law, boost | opened |
+| N186 |  | Intensity's top: rain 50 mm/h (violent rain on the Met Office's scale), snow 5 mm/h of water, wind 20 m/s (a gale, Beaufort 8); from memory, | to open |
+| N187 |  | Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open | to open |
 
 ## colours
 
@@ -334,7 +344,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E85 |  | the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book (PN1 tool), the one home econ.js reads |  |
 | E86 |  | walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not |  |
 | E87 |  | inland water bearing ice (QQ): walked as if flat |  |
-| E88 |  | the pace's books (QCB): what slows a walker besides the ground (D224), the grip a step needs (G9), slipping (G10); the player's side, told w |  |
+| E88 |  | the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step needs (G9), slipping (G10); the player's side, tol |  |
 | E89 |  | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile |  |
 | E90 |  | most: the tiles it may open before giving up |  |
 | E91 |  | no cutting a corner |  |
@@ -346,7 +356,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E97 |  | to a tile along a building's edge (the ring of tiles round it, byB) |  |
 | E98 |  | a find used up is gone; its tile is free again |  |
 | E99 |  | one tick for every unit |  |
-| E100 |  | walking: toward the next point at the walker's pace (QCB): a tile's middle, or the spot a path ends on; true when it gets there |  |
+| E100 |  | walking: toward the next point at the walker's pace (QCB) over the ground it steps onto; true when it gets there |  |
 | E101 |  | metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) |  |
 | E102 |  | wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 |  |
 | E103 |  | M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking, buildings by D186; a new unit is filed as it com |  |
@@ -372,10 +382,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E123 |  | QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year from the spring equinox, H turns with the day (no |  |
 | E124 |  | light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) |  |
 | E125 |  | QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mid's relax: wetness here, and the market, nerve, he |  |
-| E126 |  | QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet / dry) and P(wet / wet) are D102; a wet hour is a storm with D1 |  |
+| E126 |  | QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet / dry) and P(wet / wet) are D102; a wet spell draws its intensi |  |
 | E127 |  | the season's mean, eased into the next |  |
 | E128 |  | what falls |  |
-| E129 |  | rain comes and goes over tens of seconds (SoRen) |  |
+| E129 |  | rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity |  |
 | E130 |  | QP settle: wet in D104, dry in D105 |  |
 | E131 |  | QO degree-day melt, rain on snow twice as fast |  |
 | E132 |  | QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground grows the same way while the ground is wet, full at |  |
@@ -384,16 +394,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E135 |  | QL, QM: strikes on Poisson waits in a storm |  |
 | E136 |  | a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the  |  |
 | E137 |  | a far flash: its thunder from beyond the screen |  |
-| E138 |  | the rain: a pool of drops whose size sets its speed (Marshall–Palmer sizes, QJ Atlas's fall speed), leaning a little; the snow: flakes that  |  |
+| E138 |  | the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling: the strength |  |
 | E139 |  | on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply), ice whitens the inland water |  |
-| E140 |  | over everything: what falls, the strikes, the flash, the night and the fog |  |
+| E140 |  | over everything: what falls, the strikes, the flash, the night, the white of low visibility and the fog |  |
 | E141 |  | SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three strokes from a soft glow to a bright core; its foot  |  |
 | E142 |  | the channel wanders but leans home to its foot |  |
 | E143 |  | the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of it |  |
 | E144 |  | KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze |  |
 | E145 |  | Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made |  |
 | E146 |  | Floor 7, display (layer 140): what the player sees. The fog of war: every tile is unseen, seen once, or in sight now (the player's units see |  |
-| E147 |  | the player's sight, every D119: what was in sight is remembered; what the units and buildings of side 0 reach now is seen |  |
+| E147 |  | the player's sight, every D119: what was in sight is remembered; what the units and buildings of side 0 reach now is seen, never past the vi |  |
 | E148 |  | the sea is never fogged |  |
 | E149 |  | the fog image is one tile a pixel in the grid's frame; one affine lays it on the ground (QBD): the turn, the tilt and the camera together |  |
 | E150 |  | QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown away from the sun; the sun rises on the right, stand |  |
@@ -526,7 +536,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E277 |  | QCA, the effects: what each side has learned, and each side's numbers worked out once until its learning changes; a new game forgets both |  |
 | E278 |  | a thing's keys, the names an effect may reach it by: every head of its code's letters (B, BR for BR1), its code, its ticks and a soldier's c |  |
 | E279 |  | a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's (D138), a find's or a field's rate, a price (D123 |  |
-| E280 |  | the one window for a kind's number after research (QCA): flat adds first, then the shares summed and applied once to that (Albert, Nov 5 11: |  |
+| E280 |  | the one window for a kind's number after research (QCA): flat adds first, then the boosts summed and applied once to that, then each cut on  |  |
 | E281 |  | learning a step puts its effects in force for that side; every unit and building of the side keeps its share of health as the most it can ha |  |
 | E282 |  | who counters whom: the counter's edge (D140) when the striker's class is the one it counters, else even; the one home the blow (QBO) and the |  |
 | E283 |  | QAF the odds an army gives itself against a side, the one home the computers read: the counters summed both ways over the first of each army |  |
@@ -566,7 +576,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E317 |  | taking a building down pays back half its price, all of it early in the build; its line is paid back in full first (Mid's shellBack, refundO |  |
 | E318 |  | a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing slips through a diagonal (Mid's wallLine); laid pie |  |
 | E319 |  | the walk starts on the Town Center's own floor; walls being laid count as built; everything is put back after |  |
-| E320 |  | a builder remembers the work it left (its find and yield, and whether it was pulled off it) so it can go back (Mid's sendBuilder) |  |
+| E320 |  | a builder remembers the work it left (its find and yield, and whether it was pulled off it) so it can go back (Mid's sendBuilder); one alrea |  |
 | E321 |  | a new site gets the nearest free villager; with none free, your nearest worker is pulled off and goes back after, a computer's lowest earner |  |
 | E322 |  | back to the very find it left if it still stands, else the best of its yield, else idle (Mid's backToWork) |  |
 | E323 |  | the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's repairTick) |  |
@@ -606,10 +616,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E357 |  | hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs |  |
 | E358 |  | a pasture's card counts its sheep |  |
 | E359 |  | the town is told what food, the seasons and the flock do, in the Words book's news |  |
-| E360 |  | the ground under a side's walker (QN, QR): its mud (the marsh always), its snow cover, its ice (D225), the grip its step needs by what steps |  |
-| E361 |  | QCB the pace: the walk with its research (QCA), × each state the walker is in (D224), less the snow storm's share less the cloaks' (QAP); a  |  |
-| E362 |  | QR the chance of a slip: the grip offered, dry to mud to snow to ice by their shares, against the need, a logistic step over G10's soft, onl |  |
-| E363 |  | a slipped walker stands G10's seconds; each walker on ice is checked once a second as it walks |  |
+| E360 |  | the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh always), its snow cover, its ice (D225), the friction  |  |
+| E361 |  | QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker's base (D86 with research, QCA) unloaded on flat f |  |
+| E362 |  | QR each second on ice: the step lands on the ice with the chance of its cover, else on the ground; it slips exactly when the friction it nee |  |
+| E363 |  | a slipped walker stands G10's seconds; which way it walks, for the wind |  |
 | E364 |  | above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the degree (D225) and its degree-seconds are set to ma |  |
 | E365 |  | the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ, Stefan) |  |
 | E366 |  | the armour kit a side has learned (Mid's KIT): 0 to 3 steps of the Sprites book's kit, each turning a person's slots (mail and a steel helm, |  |
@@ -620,6 +630,14 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E371 |  | the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid's ARMYMAX; a fallen side's share, capA, joins it  |  |
 | E372 |  | the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps to its own work and armyFree leaves them out (the r |  |
 | E373 |  | why a kind waits: the age it opens in (Mid's trainWhy) |  |
+| E374 |  | the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v/v/ (W1, by the mass to the ⅔, D224), v the walk against the wind ( |  |
+| E375 |  | aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c the standing and load terms less the walker's power; |  |
+| E376 |  | QCL the weather of the moment: rates, wind and visibility from the strengths; the wind signed and gusting; a blizzard's hours counted while  |  |
+| E377 |  | the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the start) and the particle pool (the looks' dice) |  |
+| E378 |  | QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain's and snow's extinction); a blizzard by the NWS:  |  |
+| E379 |  | rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's speed in metres a second on the screen, carried and  |  |
+| E380 |  | snow: flakes falling slow to fast by size, carried by the wind and swaying |  |
+| E381 |  | the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷ V) (QK) |  |
 
 ## ground
 
@@ -628,15 +646,15 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | G5 | dry grass; a boot's grip on dry ground | {mu: 0.35, grip: 0.7} | N104; N18; N173 |
 | G6 | mud: wet ground or marsh; a boot's grip on it | {mu: 0.25, grip: 0.45} | N105; N18; N173 |
 | G7 | snow cover; a boot's grip on packed snow | {mu: 0.14, grip: 0.3} | N106; N18; N173 |
-| G8 | ice that bears a walker; a boot's grip on it 0.08 at freezing, rising to cold at at °C under, melt above freezing (its film, Mid's 0.6 of 0.08) | {mu: 0.1, grip: 0.08, cold: 0.25, at: 20, melt: 0.048} | N107; N18; N175 |
-| G9 | the grip a step needs, by what steps: a man (Hanson), a horse and an engine's haulers (Mid's design) | {person: 0.2, horse: 0.25, engine: 0.3} | N19; N173 |
-| G10 | slipping on ice: iron studs give at least studs; a slip's chance rises over soft as a step needs more grip than is offered; stride the most a step loses on ice; a slip holds a walker secs; each walker is checked every second; the town is told at most every tell seconds | {studs: 0.28, soft: 0.03, stride: 0.25, secs: 1.5, every: 1, tell: 20} | N19; N174; N173 |
+| G8 | ice that bears a walker; a boot's grip on it: melting ice grip at and above freezing, rising to hard ice's cold at at °C under | {mu: 0.1, grip: 0.055, cold: 0.18, at: 20} | N107; N18; N178 |
+| G9 | the friction a step needs, by what steps: a person's utilized friction (Burnfield & Powers), a horse and an engine's haulers (Mid's design, to open) | {person: 0.21, horse: 0.25, engine: 0.3} | N179; N19; N173 |
+| G10 | slipping: iron studs give at least studs on ice; a slip holds a walker secs; each walker is checked every second; the town is told at most every tell seconds | {studs: 0.28, secs: 1.5, every: 1, tell: 20} | N174; N179; N173 |
 
 ## mass
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
-| W1 | a person | {kg: 70, height: 1.8, com: 0.99, foot: 0.26, stride: 1.524} | N108; N109; N110 |
+| W1 | a person; its drag ½ρCdA in N·s²/m² (ρ 1.2 kg/m³, CdA 0.45 m²) | {drag: 0.27, kg: 70, height: 1.8, com: 0.99, foot: 0.26, stride: 1.524} | N108; N109; N110; N181 |
 | W2 | a horse | {kg: 500, height: 1.6, com: 1.2, foot: 0.6, stride: 2.5} | N85 |
 | W3 | a deer | {kg: 70, height: 1.0, com: 0.7, foot: 0.4, stride: 1.5} | N85 |
 | W4 | a wolf | {kg: 40, height: 0.8, com: 0.5, foot: 0.35, stride: 1.4} | N85 |
@@ -659,6 +677,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | W21 | a crossbow, its blow a bolt | {kg: 5, blow: {kg: 0.08, mps: 45}} | N177 |
 | W22 | a matchlock gun, its blow a ball | {kg: 5, blow: {kg: 0.02, mps: 350}} | N177 |
 | W23 | a war elephant | {kg: 4000, height: 2.7, com: 1.5, foot: 0.45, stride: 2.5} | N177 |
+| W24 | a unit of a load carried: set so a full load (D87) is Mid's 0.9 of the walk under Pandolf (QCB) | {kg: 1.4019} | N173; N185 |
 
 ## measure
 
@@ -745,7 +764,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D83 | under this many pixels a tile things are dots and the grid is off | 5 | N112 |
 | D84 | the Town Center's spot in the corner's frame, Z2 on the road | [380, 380] | N112 |
 | D85 | units a metre, from the figure | 11.7 | N112 |
-| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the boar 30 and the bison 70 | {walk: 1.52, ride: 2.28, horse: 1.7, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933} | N71; N72; N73; N79; N170; N176 |
+| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the boar 30, the bison 70 and the scout 27 (F17b) | {walk: 1.52, ride: 2.28, horse: 1.7, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933, sc | N71; N72; N73; N79; N170; N176 |
 | D87 | a load | 10 | N112 |
 | D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
 | D89 | the next find within | 100 | N112 |
@@ -762,7 +781,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D100 | the seasons' mean air, spring to winter | [10, 22, 12, -6] | N112 |
 | D101 | the day's swing | 6 | N112 |
 | D102 | P(wet | dry), P(wet | wet) an hour | [0.12, 0.65] | N7 |
-| D103 | storms among wet hours | 0.25 | N112 |
+| D103 | a wet spell is a storm (lightning) from this intensity (the top quarter, as v100's 0.25 of wet hours before) | 0.75 | N112; N185 |
 | D104 | wet settles in | 20 | N112 |
 | D105 | dries out in | 50 | N112 |
 | D106 | walking costs of mud and snow | {mud: 0.8, snow: 0.6} | N112 |
@@ -881,10 +900,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D221 | a villager's javelin strikes game at blow times its blow (Mid's huntTick) | {blow: 5} | N170 |
 | D222 | a tree farm: amount wood at rate a second, then cut out; replanted at replant × its price (Mid's treefarm, Albert's 36 and 12) | {amount: 1200, rate: 0.55, replant: 0.5} | N170 |
 | D223 | the boar of each corner and its spot in the corner's frame, about 300 from the Town Center and clear of the home pond (Mid's boar, 280 to 380 from the keep) | {code: MW7, at: [470, 660]} | N170 |
-| D224 | what slows a walker besides the ground: each state it is in, by the field that holds it (a load 0.9, sickness 0.8); the share a snow storm takes off a march before cloaks (Mid's blizzard, 0.6 kept); a boot with no iron has no studs; how deep each sinks in mud, a foot 1 and the camp wagon's wheels 2 (Mid's wheelMud) | {state: {load: 0.9, sick: 0.8}, storm: 0.4, bare: 0, sink: {foot: 1, UT2: 2}} | N173 |
+| D224 | the pace (QCB): each state that slows a walker, by the field that holds it (sickness 0.8, Mid's); a boot with no iron has no studs; how deep each sinks in mud, a foot 1 and the camp wagon's wheels 2 (Mid's wheelMud); Pandolf's coefficients, standing, load, walking and grade (W, kg; V, m/s; G, %); a grade as a percent; a body's drag area grows as its mass to the two-thirds (geometric similarity) | {state: {sick: 0.8}, bare: 0, sink: {foot: 1, UT2: 2}, pandolf: {stand: 1.5, load: 2, walk: 1.5, grade: 0.35}, pct: 100, area: 0.6667} | N13; N173; N181; N185 |
 | D225 | ice on the ground: it grows while the ground is wetter than wet and the air below freezing, full at fdd freezing °C·s (thickness ∝ √), and thaws melt a °C·s above freezing (Mid's CLIMATE.ice) | {wet: 0.225, fdd: 500, melt: 0.0064} | N17; N173 |
 | D226 | the most soldiers a side may have, queued ones counted (Mid's ARMYMAX: the phone's ceiling); a fallen side's share adds to it | 120 | N176 |
 | D227 | the most soldiers a squad holds (Mid's BNSIZE), with the squads | 40 | N176 |
+| D229 | weather by one intensity I, 0 to 1, drawn at a wet spell's start (QCL): rain most mm/h (Marshall–Palmer drops, N0 and the rate's power; sizes dMin to dMax mm; extinction beta R^pow a km), snow most mm/h of water (extinction S ÷ c a km; flakes fall slow to fast m/s); a drop's fall speed a − b e^(−c D) (QJ); wind most m/s, gusting ± gust of it by a fractal of the day's dice (seed, k waves, dimension, period s), so a gust is 1 + gust of the wind; visibility k ÷ extinction a km, km metres to one (QK); a blizzard by the NWS: wind or gusts at least wind m/s (35 mph), visibility under vis m (a quarter mile), for hours; the white veil's most (Koschmieder's contrast lost over the screen's width); a pool of particles whose active count is the strength | {pool: 240, rain: {most: 50, n0: 4.1, exp: -0.21, dMin: 0.5, dMax: 4, beta: 0.312, pow: 0.67}, snow: {most: 5, c: 0.2, slow: 0.5, fast: 1.5} | N9; N10; N180; N182; N183; N184; N186; N187; N185 |
+| D230 | the most tiles the way (QBL) opens before it gives up; the most places tried for a wild group | {way: 20000, spot: 100} | N112 |
 | D228 | the share of a blow a soldier takes before its armour research, which keeps the lowest share it reaches (Mid's stats armor) | 1 | N176 |
 
 ## rules
@@ -944,8 +965,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X51 | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) | {stage: page} | N164 |
 | X52 | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring | {stage: page} | N168 |
 | X53 | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock | {stage: page} | N132; N170 |
-| X54 | a walker's pace is one law (QCB) and Mid's frozen paceOf for the same walkers: the walk with its research added once (Forced marches), a load and sickness, a snow storm less Oiled cloaks, mud less Roads and Field drains (their shares added, never compounded), snow less Snow clearing, and the stride lost on ground ice by the grip a step lacks, Crampons giving their grip; wild things slowed only by the weather; the chance of a slip is Mid's slipChance; ground ice grows and thaws as Mid's groundTick; on the page a walker in mud steps at its pace and one on ice slips, stands and the town is told once | {stage: page} | N132; N173 |
+| X54 | a walker's pace on dry, flat, firm ground in still air is Mid's frozen paceOf for the same walkers: the walk with its research added once (Forced marches), a full load (Mid's 0.9, by W24) and sickness; wild things too; mud's and snow's costs are Mid's under the effects law (Roads and Field drains one on what the other left, Snow clearing); ground ice grows and thaws as Mid's groundTick; on the page a walker in mud steps at its pace and one on ice slips once, stands, is told once and walks on wary | {stage: page} | N132; N173; N185 |
 | X55 | every soldier is the Unit shell with Mid's settings: each kind's class, age, look, teach, price, train time, health, blow, reach, sight and speed (by the foot's 3.4 mph) are Mid's UNIT and TEACH_TO; with research its name, rank, kit, health, blow, reach, speed, sight, armour and train time are Mid's frozen stats() with the shares added; each army building trains exactly its class's kinds, each from its age, and the army stops at the ceiling; every kind's figure at each rank and kit is Mid's own, pixel for pixel | {stage: page} | N132; N176 |
+| X56 | the physics of F17b: a villager walks exactly 1.52 m/s on flat firm ground, unloaded, in still air, and every load, grade, mud, snow and headwind gives the speed at which Pandolf's equation (with Pugh's drag as a grade) returns its power, each slower; the effects law adds boosts once and applies cuts one at a time, never reaching 0 nor the base, and every cut in the Tech book is a share between 0 and 1; the falling particles are the pool times the strength, the rates, wind and visibility the law's, and the blizzard flag turns exactly at the NWS's wind and visibility and after three game hours; a step slips exactly when the friction it needs exceeds what the ground offers; Crampons give studs to villagers, foot, archers and the engines' haulers and not riders, Horseshoes to riders; the scout's pace and reach are Mid's | {stage: page} | N185; N13; N180; N179 |
 
 ## screen
 
@@ -1204,7 +1226,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O21 | Windmill | {at: BI1, line: Harvest, age: 3, cost: {food: 430, wood: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.1}], when: 1180s, w: 6} | N160; N161 |
 | O22 | Seed drill | {at: BI1, line: Harvest, age: 4, cost: {food: 430, wood: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.15}], when: 1701, w: 6} | N160; N161 |
 | O23 | Bread ovens | {at: BI1, line: Stores, age: 1, cost: {food: 90, wood: 60}, time: 26, fx: [{s: rate, k: BCL1, p: 0.1}], when: 3000 BC, w: 4} | N160; N161 |
-| O24 | Stone granary | {at: BI1, line: Stores, age: 1, cost: {food: 110, wood: 70}, time: 30, fx: [{s: plague, p: -0.5}], need: [masonry], when: 2500 BC, w: 6} | N160; N161 |
+| O24 | Stone granary | {at: BI1, line: Stores, age: 1, cost: {food: 110, wood: 70}, time: 30, fx: [{s: plague, c: 0.5}], need: [masonry], when: 2500 BC, w: 6} | N160; N161 |
 | O25 | Wheelbarrow | {at: BI1, line: Stores, age: 3, cost: {food: 240, wood: 160}, time: 48, fx: [{s: carry, k: UV, a: 5}], when: 1100s, w: 4} | N160; N161 |
 | O26 | Antler picks | {at: BI3, line: Digging, age: 0, cost: {food: 50, stone: 30}, time: 17, fx: [{s: rate, k: R3, p: 0.2}, {s: rate, k: R2, p: 0.2}], when: 4000 | N160; N161 |
 | O27 | Fire-setting | {at: BI3, line: Digging, age: 1, cost: {food: 90, stone: 60}, time: 26, fx: [{s: rate, k: R3, p: 0.1}, {s: rate, k: R2, p: 0.1}], when: 3000 | N160; N161 |
@@ -1220,29 +1242,29 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O37 | Stone saws | {at: BCL4, line: Cutting, age: 4, cost: {wood: 350, iron: 230}, time: 61, fx: [{s: rate, k: BCL4, p: 0.2}], need: [sawmill], when: 1500s, w: | N160; N161 |
 | O38 | Rollers and sledges | {at: BCL4, line: Hauling, age: 2, cost: {wood: 130, iron: 90}, time: 32, fx: [{s: carry, k: UV, a: 2}], when: 2500 BC, w: 3} | N160; N161 |
 | O39 | Treadwheel crane | {at: BCL4, line: Hauling, age: 3, cost: {wood: 290, iron: 190}, time: 56, fx: [{s: rate, k: BCL4, p: 0.2}], when: 1200s, w: 6} | N160; N161 |
-| O40 | Tally sticks | {at: BTC1, line: Household, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: time, k: O, p: -0.05}], when: 20,000 BC, w: 3} | N160; N161 |
+| O40 | Tally sticks | {at: BTC1, line: Household, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: time, k: O, c: 0.05}], when: 20,000 BC, w: 3} | N160; N161 |
 | O41 | Baskets | {at: BTC1, line: Household, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: carry, k: UV, a: 3}], when: 8000 BC, w: 3} | N160; N161 |
 | O42 | Midwives | {at: BTC1, line: Household, age: 1, cost: {food: 150, gold: 50}, time: 30, fx: [{s: twin, k: UV, a: 1}], when: 1550 BC, w: 4} | N160; N161 |
-| O43 | Census | {at: BTC1, line: Household, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: train, k: UV, p: -0.2}], need: [writing], when: 500 BC, | N160; N161 |
+| O43 | Census | {at: BTC1, line: Household, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: train, k: UV, c: 0.2}], need: [writing], when: 500 BC,  | N160; N161 |
 | O44 | Town charter | {at: BTC1, line: Household, age: 3, cost: {food: 290, gold: 190}, time: 56, fx: [{s: room, k: BR1, a: 1}], when: 1100s, w: 6} | N160; N161 |
-| O45 | Hearth and pot | {at: BR1, line: Home, age: 0, cost: {wood: 40, food: 30}, time: 20, fx: [{s: eat, p: -0.1}], when: about 8000 BC, w: 4} | N160; N161 |
+| O45 | Hearth and pot | {at: BR1, line: Home, age: 0, cost: {wood: 40, food: 30}, time: 20, fx: [{s: eat, c: 0.1}], when: about 8000 BC, w: 4} | N160; N161 |
 | O46 | Ice house | {at: BR1, line: Home, age: 2, cost: {stone: 120, wood: 80}, time: 32, fx: [{s: rate, k: MW1, p: 0.15}, {s: rate, k: R6, p: 0.15}, {s: spoil, | N160; N161; N170 |
-| O47 | Chimney and fireplace | {at: BR1, line: Home, age: 3, cost: {stone: 180, wood: 120}, time: 40, fx: [{s: warm, a: 0.05}, {s: chill, p: -0.5}], when: 1100s, w: 5} | N160; N161 |
-| O48 | Calendar | {at: BTC1, line: Watch, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.05}, {s: time, k: O, p: -0.05}], need:  | N160; N161 |
+| O47 | Chimney and fireplace | {at: BR1, line: Home, age: 3, cost: {stone: 180, wood: 120}, time: 40, fx: [{s: warm, a: 0.05}, {s: chill, c: 0.5}], when: 1100s, w: 5} | N160; N161 |
+| O48 | Calendar | {at: BTC1, line: Watch, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.05}, {s: time, k: O, c: 0.05}], need: [ | N160; N161 |
 | O49 | Town watch | {at: BTC1, line: Watch, age: 3, cost: {food: 90, gold: 60}, time: 26, fx: [{s: rng, k: BTC1, a: 1.5}, {s: rng, k: BTC1, a: 1.5}], when: 1200 | N160; N161 |
 | O50 | Civic pride | {at: BTC1, line: Watch, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: shelter, p: 1}], when: 1300s, w: 4} | N160; N161 |
 | O51 | Lanterns | {at: BTC1, line: Watch, age: 3, cost: {wood: 200, gold: 120}, time: 40, fx: [{s: lamp, k: B, a: 0.6}], when: 1417, w: 4} | N160; N161 |
-| O52 | Writing | {at: BP1, line: Letters, age: 1, cost: {wood: 150, gold: 100}, time: 39, fx: [{s: time, k: O, p: -0.15}], when: 3200 BC, w: 10} | N160; N161 |
+| O52 | Writing | {at: BP1, line: Letters, age: 1, cost: {wood: 150, gold: 100}, time: 39, fx: [{s: time, k: O, c: 0.15}], when: 3200 BC, w: 10} | N160; N161 |
 | O53 | Record keeping | {at: BP1, line: Letters, age: 1, cost: {wood: 100, gold: 70}, time: 28, fx: [{s: queue, a: 1}], when: 3000 BC, w: 5} | N160; N161 |
 | O54 | Rhetoric | {at: BP1, line: Letters, age: 2, cost: {wood: 170, gold: 110}, time: 38, fx: [{s: diplo, a: 0.1}], when: 400 BC, w: 5} | N160; N161 |
-| O55 | Universities | {at: BP1, line: Letters, age: 3, cost: {wood: 320, gold: 210}, time: 60, fx: [{s: time, k: O, p: -0.1}], when: 1088, w: 7} | N160; N161 |
-| O56 | Natural philosophy | {at: BP1, line: Letters, age: 4, cost: {wood: 550, gold: 360}, time: 87, fx: [{s: time, k: O, p: -0.15}], need: [press], when: 1600s, w: 9} | N160; N161 |
+| O55 | Universities | {at: BP1, line: Letters, age: 3, cost: {wood: 320, gold: 210}, time: 60, fx: [{s: time, k: O, c: 0.1}], when: 1088, w: 7} | N160; N161 |
+| O56 | Natural philosophy | {at: BP1, line: Letters, age: 4, cost: {wood: 550, gold: 360}, time: 87, fx: [{s: time, k: O, c: 0.15}], need: [press], when: 1600s, w: 9} | N160; N161 |
 | O57 | Geometry | {at: BP1, line: Numbers, age: 2, cost: {wood: 110, gold: 70}, time: 30, fx: [{s: atk, k: [BTC1, BW3, BTC8], a: 2}], when: 300 BC, w: 6} | N160; N161 |
 | O58 | Algebra | {at: BP1, line: Numbers, age: 3, cost: {wood: 290, gold: 190}, time: 56, fx: [{s: rng, k: Engines, a: 1.0}], when: 820, w: 6} | N160; N161 |
 | O59 | Ballistics | {at: BP1, line: Numbers, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: atk, k: Engines, a: 5}], need: [algebra], when: 1537, w: 6 | N160; N161 |
-| O60 | Architecture | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: build, p: -0.2}], need: [masonry], when: 25 BC, w: 6} | N160; N161 |
+| O60 | Architecture | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: build, c: 0.2}], need: [masonry], when: 25 BC, w: 6} | N160; N161 |
 | O61 | Guilds | {at: BP2, line: Learning, age: 3, cost: {gold: 260, stone: 180}, time: 52, fx: [{s: queue, a: 2}], when: 1100s, w: 5} | N160; N161 |
-| O62 | Printing press | {at: BP2, line: Learning, age: 4, cost: {gold: 550, stone: 360}, time: 87, fx: [{s: time, k: O, p: -0.32}], when: 1450s, w: 9} | N160; N161 |
+| O62 | Printing press | {at: BP2, line: Learning, age: 4, cost: {gold: 550, stone: 360}, time: 87, fx: [{s: time, k: O, c: 0.32}], when: 1450s, w: 9} | N160; N161 |
 | O63 | Optics | {at: BP2, line: Learning, age: 4, cost: {gold: 430, stone: 290}, time: 71, fx: [{s: sight, k: *, a: 2.0}], need: [press], when: 1608, w: 6} | N160; N161 |
 | O64 | Seed selection | {at: BI1, line: Soil, age: 0, cost: {food: 60, wood: 40}, time: 19, fx: [{s: soil, a: 0.1}], when: 8000 BC, w: 6} | N160; N161; N170 |
 | O65 | Irrigation | {at: BI1, line: Soil, age: 1, cost: {food: 200, wood: 130}, time: 44, fx: [{s: soil, a: 0.15}], when: 3000 BC, w: 7} | N160; N161; N170 |
@@ -1252,7 +1274,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O69 | New World crops | {at: BI1, line: Crops, age: 0, cost: {wood: 290, iron: 190}, time: 56, fx: [{s: rate, k: BCL4, p: 0.2}], when: 1200s, w: 6} | N160; N161; N170 |
 | O70 | Fish traps | {at: BCT2, line: Fishing, age: 0, cost: {wood: 40, food: 30}, time: 15, fx: [{s: rate, k: MW1, p: 0.15}], when: 8000 BC, w: 3} | N160; N161; N170 |
 | O71 | Nets | {at: BCT2, line: Fishing, age: 0, cost: {wood: 100, food: 70}, time: 28, fx: [{s: rate, k: MW1, p: 0.3}], when: 6000 BC, w: 5} | N160; N161; N170 |
-| O72 | Salting | {at: BCT2, line: Fishing, age: 2, cost: {wood: 170, food: 110}, time: 38, fx: [{s: rate, k: MW1, p: 0.2}, {s: spoil, p: -0.5}], when: 300 BC | N160; N161; N170 |
+| O72 | Salting | {at: BCT2, line: Fishing, age: 2, cost: {wood: 170, food: 110}, time: 38, fx: [{s: rate, k: MW1, p: 0.2}, {s: spoil, c: 0.5}], when: 300 BC, | N160; N161; N170 |
 | O73 | Decked boats | {at: BCT2, line: Fishing, age: 3, cost: {wood: 290, food: 190}, time: 56, fx: [{s: rate, k: MW1, p: 0.3}], when: 1300s, w: 6} | N160; N161; N170 |
 | O74 | Trawl nets | {at: BCT2, line: Fishing, age: 4, cost: {wood: 350, food: 230}, time: 61, fx: [{s: rate, k: MW1, p: 0.2}], when: 1376, w: 4} | N160; N161; N170 |
 | O75 | Dugout canoes | {at: BCT2, line: Harbour, age: 0, cost: {wood: 50, food: 30}, time: 17, fx: [{s: rate, k: MW1, p: 0.1}], when: 8000 BC, w: 4} | N160; N161; N170 |
@@ -1262,11 +1284,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O79 | Lighthouse | {at: BCT2, line: Harbour, age: 4, cost: {wood: 310, food: 210}, time: 55, fx: [{s: sight, k: BCT2, a: 6}], when: 1500s, w: 3} | N160; N161; N170 |
 | O80 | Fieldcraft | {at: BM1, line: March, age: 0, cost: {food: 40, gold: 30}, time: 15, fx: [{s: sight, k: [Foot, Archers], a: 1}], when: Stone age, w: 3} | N160; N161; N173 |
 | O81 | Forced marches | {at: BM1, line: March, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: spd, k: [Foot, Archers], p: 0.08}], when: 200 BC, w: 5} | N160; N161; N173 |
-| O82 | Wool cloaks | {at: BM1, line: March, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: cold, p: -0.5}], need: [spinwheel], when: 1000s, w: 4} | N160; N161; N173 |
-| O83 | Oiled cloaks | {at: BM1, line: March, age: 4, cost: {food: 310, gold: 210}, time: 55, fx: [{s: wet, p: -0.5}], need: [warmclothes], when: 1500s, w: 3} | N160; N161; N173 |
-| O84 | Roads | {at: BP2, line: Weather, age: 2, cost: {gold: 200, stone: 130}, time: 44, fx: [{s: mud, p: -0.5}, {s: trade, p: 0.15}], when: 300 BC, w: 7} | N160; N161; N173 |
-| O85 | Field drains | {at: BP2, line: Weather, age: 2, cost: {gold: 170, stone: 110}, time: 38, fx: [{s: mud, p: -0.3}], when: 100 BC, w: 5} | N160; N161; N173 |
-| O86 | Snow clearing | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: snow, p: -0.5}], when: 1200s, w: 4} | N160; N161; N173 |
+| O82 | Wool cloaks | {at: BM1, line: March, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: cold, c: 0.5}], need: [spinwheel], when: 1000s, w: 4} | N160; N161; N173 |
+| O83 | Oiled cloaks | {at: BM1, line: March, age: 4, cost: {food: 310, gold: 210}, time: 55, fx: [{s: wet, c: 0.5}], need: [warmclothes], when: 1500s, w: 3} | N160; N161; N173 |
+| O84 | Roads | {at: BP2, line: Weather, age: 2, cost: {gold: 200, stone: 130}, time: 44, fx: [{s: mud, c: 0.5}, {s: trade, p: 0.15}], when: 300 BC, w: 7} | N160; N161; N173 |
+| O85 | Field drains | {at: BP2, line: Weather, age: 2, cost: {gold: 170, stone: 110}, time: 38, fx: [{s: mud, c: 0.3}], when: 100 BC, w: 5} | N160; N161; N173 |
+| O86 | Snow clearing | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: snow, c: 0.5}], when: 1200s, w: 4} | N160; N161; N173 |
 | O87 | Crampons | {at: BP2, line: Weather, age: 3, cost: {gold: 240, stone: 160}, time: 48, fx: [{s: studs, k: [UV, Foot, Archers, Engines, US1, US2, US3], a: | N160; N161; N173 |
 | O88 | Shields | {at: BM1, line: Ranks, age: 1, cost: {food: 50, gold: 40}, time: 18, fx: [{s: armor, k: [Foot, Archers], min: 0.92}], when: 3000 BC, w: 5} | N160; N161; N176 |
 | O89 | Spear wall | {at: BM1, line: Ranks, age: 1, cost: {food: 100, gold: 70}, time: 28, fx: [{s: hp, k: UM1, p: 0.1}], when: 2500 BC, w: 5} | N160; N161; N176 |
@@ -1290,8 +1312,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O107 | Bits and bridles | {at: BM3, line: Horse, age: 1, cost: {food: 80, gold: 50}, time: 24, fx: [{s: spd, k: Riders, p: 0.05}], when: 2000 BC, w: 3} | N160; N161; N176 |
 | O108 | Saddles | {at: BM3, line: Horse, age: 2, cost: {food: 150, gold: 100}, time: 35, fx: [{s: hp, k: Riders, p: 0.1}], when: 200 BC, w: 4} | N160; N161; N176 |
 | O109 | Stirrups | {at: BM3, line: Horse, age: 2, cost: {food: 220, gold: 150}, time: 47, fx: [{s: atk, k: Riders, a: 1}], need: [saddles], when: 300s, w: 8} | N160; N161; N176 |
-| O110 | Horseshoes | {at: BM3, line: Horse, age: 3, cost: {food: 260, gold: 180}, time: 52, fx: [{s: studs, k: Riders, a: 1}, {s: mud, k: Riders, p: -0.2}], when | N160; N161; N176 |
-| O111 | Stud farms | {at: BM3, line: Horse, age: 4, cost: {food: 350, gold: 230}, time: 61, fx: [{s: train, k: Riders, p: -0.2}], when: 1500s, w: 4} | N160; N161; N176 |
+| O110 | Horseshoes | {at: BM3, line: Horse, age: 3, cost: {food: 260, gold: 180}, time: 52, fx: [{s: studs, k: Riders, a: 1}, {s: mud, k: Riders, c: 0.2}], when: | N160; N161; N176 |
+| O111 | Stud farms | {at: BM3, line: Horse, age: 4, cost: {food: 350, gold: 230}, time: 61, fx: [{s: train, k: Riders, c: 0.2}], when: 1500s, w: 4} | N160; N161; N176 |
 | O112 | Cavalry | {at: BM3, line: Rider, age: 2, cost: {food: 200, gold: 130}, time: 44, fx: [{s: hp, k: UM10, p: 0.15}, {s: spd, k: UM10, p: 0.12}], rank: {k | N160; N161; N176 |
 | O113 | Knighthood | {at: BM3, line: Rider, age: 3, cost: {food: 320, gold: 210}, time: 60, fx: [{s: hp, k: UM3, p: 0.2}, {s: atk, k: UM3, a: 2}, {s: spd, k: UM3 | N160; N161; N176 |
 | O114 | Dragoons | {at: BM3, line: Rider, age: 4, cost: {food: 390, gold: 260}, time: 66, fx: [{s: spd, k: Riders, p: 0.1}], need: [musket], when: 1600s, w: 5} | N160; N161; N176 |
@@ -1307,7 +1329,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O124 | Plate armour | {at: BI9, line: Armour, age: 3, cost: {gold: 320, iron: 210}, time: 60, fx: [{s: armor, k: UM, min: 0.6}], kit: true, need: [chain, bellows] | N160; N161; N176 |
 | O125 | Oiled steel | {at: BI9, line: Armour, age: 4, cost: {gold: 310, iron: 210}, time: 55, fx: [{s: wear, a: 0.5}], need: [tempering], when: 1500s, w: 3} | N160; N161; N176 |
 | O126 | Torsion springs | {at: BM4, line: Engines, age: 2, cost: {wood: 180, gold: 120}, time: 41, fx: [{s: rng, k: UM5, a: 1.5}, {s: rng, k: UM15, a: 1.5}], when: 33 | N160; N161; N176 |
-| O127 | Siege engineers | {at: BM4, line: Engines, age: 2, cost: {wood: 170, gold: 110}, time: 38, fx: [{s: train, k: Engines, p: -0.25}], when: 300 BC, w: 5} | N160; N161; N176 |
+| O127 | Siege engineers | {at: BM4, line: Engines, age: 2, cost: {wood: 170, gold: 110}, time: 38, fx: [{s: train, k: Engines, c: 0.25}], when: 300 BC, w: 5} | N160; N161; N176 |
 | O128 | Burning shot | {at: BM4, line: Engines, age: 3, cost: {wood: 260, gold: 180}, time: 52, fx: [{s: fire, k: Engines, a: 1}], need: [firearrows], when: 600s,  | N160; N161; N176 |
 | O129 | Counterweight | {at: BM4, line: Engines, age: 3, cost: {wood: 320, gold: 210}, time: 60, fx: [{s: atk, k: UM16, a: 10}], when: 1100s, w: 7} | N160; N161; N176 |
 | O130 | Corned powder | {at: BM4, line: Engines, age: 4, cost: {wood: 510, gold: 340}, time: 82, fx: [{s: atk, k: UM14, a: 20}], when: 1420s, w: 8} | N160; N161; N176 |

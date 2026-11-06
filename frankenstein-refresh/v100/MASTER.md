@@ -103,10 +103,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E65** The door (floor 8): the modules (menu, econ, combat, ai) hang on these hooks and read the 
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
-- **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176)
+- **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176) · D139 (N69, N170) · D138 (N69, N170, N176) · D123 (N168, N176) · D124 (N169, N176) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69) · D228 (N176)
-- **E280** the one window for a kind's number after research (QCA): flat adds first, then the shares  · QCA (N154, N155, N156, N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176) · D139 (N69, N170) · D138 (N69, N170, N176) · D123 (N168, N176) · D124 (N169, N176) · D125 (N169, N168) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
+- **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
 - **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176) · D130 (N160)
 - **E370** a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give 
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
@@ -155,10 +155,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
-- **E88** the pace's books (QCB): what slows a walker besides the ground (D224), the grip a step nee · QCB (N13, N19, N46, N173) · D224 (N173) · G9 (N19, N173) · G10 (N19, N174, N173)
-- **E360** the ground under a side's walker (QN, QR): its mud (the marsh always), its snow cover, its · QN (N13) · QR (N18, N19, N174, N175) · D225 (N17, N173) · G9 (N19, N173) · G8 (N107, N18, N175) · G10 (N19, N174, N173)
-- **E361** QCB the pace: the walk with its research (QCA), × each state the walker is in (D224), less · QCB (N13, N19, N46, N173) · QCA (N154, N155, N156, N176) · D224 (N173) · QAP (N46) · QN (N13) · D106 (N112) · QR (N18, N19, N174, N175)
-- **E362** QR the chance of a slip: the grip offered, dry to mud to snow to ice by their shares, agai · QR (N18, N19, N174, N175) · G10 (N19, N174, N173)
+- **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
+- **E360** the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh alwa · QN (N13) · QR (N179, N178, N174, N18) · D225 (N17, N173) · G9 (N179, N19, N173) · G8 (N107, N18, N178) · G10 (N174, N179, N173)
+- **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185) · QR (N179, N178, N174, N18)
+- **E374** the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v|v| (W1, by the m · QN (N13) · W1 (N108, N109, N110, N181) · D224 (N13, N173, N181, N185)
+- **E375** aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c th
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E90** most: the tiles it may open before giving up
 - **E91** no cutting a corner
@@ -176,8 +177,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
 - **E98** a find used up is gone; its tile is free again
-- **E100** walking: toward the next point at the walker's pace (QCB): a tile's middle, or the spot a  · QCB (N13, N19, N46, N173)
-- **E363** a slipped walker stands G10's seconds; each walker on ice is checked once a second as it w · G10 (N19, N174, N173)
+- **E100** walking: toward the next point at the walker's pace (QCB) over the ground it steps onto; t · QCB (N13, N181, N19, N179, N185)
+- **E363** a slipped walker stands G10's seconds; which way it walks, for the wind · G10 (N174, N179, N173)
+- **E362** QR each second on ice: the step lands on the ice with the chance of its cover, else on the · QR (N179, N178, N174, N18)
 - **E101** metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) · QBU (N79) · QBT (N81, N82, N83, N18)
 - **E99** one tick for every unit
 - **E303** a path's last point is reached within near-enough (D196), any point within a pace when the · D196 (N164, N165, N166, N167)
@@ -218,10 +220,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
 - **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
-- **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · D103 (N112) · QI (N8)
+- **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185)
+- **E378** QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain · QCL (N9, N10, N180, N182, N183, N184, N186, N187) · QK (N10)
+- **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · QCL (N9, N10, N180, N182, N183, N184, N186, N187) · D103 (N112, N185) · QI (N8)
 - **E127** the season's mean, eased into the next
 - **E128** what falls
-- **E129** rain comes and goes over tens of seconds (SoRen)
+- **E129** rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity
+- **E376** QCL the weather of the moment: rates, wind and visibility from the strengths; the wind sig · QCL (N9, N10, N180, N182, N183, N184, N186, N187)
 - **E130** QP settle: wet in D104, dry in D105 · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
 - **E132** QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground g · QQ (N17) · D109 (N112) · D225 (N17, N173)
@@ -231,19 +236,22 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
 - **E137** a far flash: its thunder from beyond the screen
-- **E138** the rain: a pool of drops whose size sets its speed (Marshall–Palmer sizes, QJ Atlas's fal · QJ (N9)
+- **E138** the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling · QJ (N9)
 - **E139** on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply)
-- **E140** over everything: what falls, the strikes, the flash, the night and the fog
+- **E140** over everything: what falls, the strikes, the flash, the night, the white of low visibilit
+- **E379** rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's sp
+- **E380** snow: flakes falling slow to fast by size, carried by the wind and swaying
 - **E141** SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three st
 - **E142** the channel wanders but leans home to its foot
 - **E143** the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of
+- **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10)
 - **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10)
 - **E145** Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the l · D115 (N112) · D114 (N112)
 
 ## index.html#floor-7-display
 
 - **E146** Floor 7, display (layer 140): what the player sees. The fog of war: every tile is unseen,  · D117 (N112) · QK (N10) · D118 (N112) · QAT (N53)
-- **E147** the player's sight, every D119: what was in sight is remembered; what the units and buildi · D119 (N112)
+- **E147** the player's sight, every D119: what was in sight is remembered; what the units and buildi · D119 (N112) · QK (N10)
 - **E148** the sea is never fogged
 - **E149** the fog image is one tile a pixel in the grid's frame; one affine lays it on the ground (Q · QBD (N66)
 - **E150** QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown aw · QAT (N53) · D120 (N112)
@@ -348,7 +356,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t
 - **E214** seconds played, and when the bell rings
-- **E291** a find's or a field's rate after the side's research (QCA): the one window, D88 or the row · QCA (N154, N155, N156, N176) · D88 (N70, N164)
+- **E291** a find's or a field's rate after the side's research (QCA): the one window, D88 or the row · QCA (N154, N155, N156, N176, N185) · D88 (N70, N164)
 - **E215** gone: marked when it leaves the map (below)
 - **E216** paying: a side pays all of a cost or none of it (SB Cost)
 - **E268** earn and spend: every store in or out goes through these two, the one home for the stores, · J1 (N132)
@@ -364,7 +372,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
-- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176) · D124 (N169, N176) · D129 (N160)
+- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176) · D129 (N160)
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
 - **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
