@@ -1,6 +1,6 @@
 # The page's tests: the rules of stage "page" in books/rules.js, one test each, named by its key. They check only what needs the running page;
 # what the files alone prove is the gate's (index.py). Run: python3 test.py (all, as publish.py does) or python3 test.py --only t-a,t-b (a build's own; headless Chrome and Playwright)
-import asyncio, os, re, sys, json, shutil, subprocess, tempfile
+import asyncio, os, re, sys, json, math, shutil, subprocess, tempfile
 from playwright.async_api import async_playwright
 HERE = os.path.dirname(os.path.abspath(__file__)); SEED = 20261105; URL = 'file://' + os.path.join(HERE, 'index.html') + '#' + str(SEED)
 book = lambda n: json.loads(re.search(r'BOOK\("%s", ([\s\S]*)\);' % n, open(os.path.join(HERE, f'books/{n}.js')).read()).group(1))
@@ -55,9 +55,6 @@ async def main(b):
     await ev("FK.SIDES[0].store.food = 9999; FK.K.rain = 1; FK.restart ? location.hash = '#20261106' : 0")
     await pg.wait_for_timeout(1200)
     ok('t-start', await ev(f"(() => {{ const b = {start}; return [0, 2].every((s) => Object.keys(b).every((y) => Math.abs(FK.SIDES[s].store[y] - b[y]) < 1)) && FK.K.rain === 0; }})()"), await ev("[FK.SIDES[0].store, FK.K.rain]"))   # within the food the people ate since
-    far = "(() => { FK.show.fog = %s; const [vx, vy] = FK.toView(FK.MID, FK.MID, FK.D.land); FK.cam.x = vx; FK.cam.y = vy; FK.cam.z = 1; MENU.S.tab = null; MENU.render(true); FK.dirty(); return new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => { const c = document.getElementById('map'), d = c.getContext('2d').getImageData(c.width / 2, c.height / 2, 1, 1).data; r([d[0], d[1], d[2]]); }))); })()"
-    off, on = await ev(far % 'false'), await ev(far % 'true')
-    ok('t-fog', sum(on) < sum(off) - 30, [off, on])
     waited = await ev("""(() => { const h = FK.seatOf(0), s = FK.SIDES[0].store; s.food = 500; h.q = []; ECON.queue(h, FK.D.trains[h.code][0]); const ring = []; for (let y = h.j - 1; y <= h.j + h.n; y++) for (let x = h.i - 1; x <= h.i + h.n; x++) { const k = y * FK.N + x; if (FK.OCC[k] === 0) { ring.push(k); FK.OCC[k] = 2; } }
       const n0 = FK.units().length; h.qt = 0; FK.sim(0.1); const held = h.q.length === 1 && FK.units().length === n0; for (const k of ring) FK.OCC[k] = 0; FK.sim(0.1); return [held, FK.units().length === n0 + 1, h.q.length]; })()""")
     ok('t-wait', waited == [True, True, 0], waited)
@@ -68,7 +65,7 @@ async def main(b):
     ok('t-gone', gone == [True, True], gone)
     ok('t-errors', not errs, errs[:3]); await pg.close()
 SAME = """(() => { FK.reset(); let beats = 0, wet = 0; for (let i = 0; i < 3000; i++) { FK.sim(0.1); beats += FK.every(FK.D.beats.slow); wet += FK.K.wetHour; }   // 300 s of play, the weather in it
-  const r = (x) => Math.round(x * 1e6), state = [FK.units().map((u) => [u.code, u.side, r(u.bx), r(u.by), u.hp, r(u.cd), u.job]), FK.SIDES.map((s) => s.store), r(FK.K.wet), FK.K.fogT, ECON.score(0).total];
+  const r = (x) => Math.round(x * 1e6), state = [FK.units().map((u) => [u.code, u.side, r(u.bx), r(u.by), u.hp, r(u.cd), u.job]), FK.SIDES.map((s) => s.store), r(FK.K.wet), r(FK.K.dew), ECON.score(0).total];
   const near = [], us = FK.units(); for (const u of us.slice(0, 60)) for (const R of [30, 80, 200]) { const got = []; FK.unitsNear(u, R, (v) => got.push(us.indexOf(v))); near.push(JSON.stringify(got.sort((a, b) => a - b)) === JSON.stringify(us.map((v, i) => (v !== u && Math.abs(v.bx - u.bx) < R && Math.abs(v.by - u.by) < R ? i : -1)).filter((i) => i >= 0)));
     const bs = []; FK.bldsNear(u.bx, u.by, R, (t) => { bs.push(t); }); near.push(FK.things().every((t) => t.kind !== 'bld' || Math.abs(t.bx - u.bx) >= R || Math.abs(t.by - u.by) >= R || bs.includes(t))); }
   return { state: JSON.stringify(state), draws: Array.from({ length: 20 }, FK.rng), beats, wet, near: near.every(Boolean) && near.length > 0, mine: Array.from({ length: 1000 }, dice(20261105)), book: [FK.D.beats, FK.D.grid] }; })()"""
@@ -619,10 +616,10 @@ async def kinds(b):
         return (u.get('name') == e['name'] and ages.index(e['age']) == u.get('age') and at.get(u.get('at')) in MEASURE['trains'] and [k for k in MEASURE['trains'][at[u['at']]] if k not in SHELLS] == [e['class']]
                 and look.get(e.get('teach')) == mid['teach'].get(look[c]) and MEASURE['cost'][c] == {Y[k]: n for k, n in u['cost'].items()} and MEASURE['train'][c] == u['t']
                 and [s['hp'], s['atk'], s['rof']] == [u['hp'], u['dmg'], u['cd']] and near(s['rng'], u['rng'] / 10) and near(s['sight'], u['sight'] / 10) and near(MEASURE['speed'][e['pace'].split('.')[1]], walk * u['spd'] / 24, 1e-4))
-    def numbers(i, j, c):   # after research: v100 [level, name, kit, hp, atk, rng, spd, sight, armor, train] against Mid's [tier, name, kit, hp, dmg, rng, spd, sight + sightFx, armor, t × train]
+    def numbers(i, j, c):   # after research: v100 [level, name, kit, hp, atk, rng, spd, sight, armor, train] against Mid's [tier, name, kit, hp, dmg, rng, spd, sight + sightFx, armor, t × train]; sight is the eye's height now (QAL, Albert Nov 6): a person's plus Mid's research adds
         a, m = v['sets'][i][j], mid['sets'][i][j]
         if not cls[c]: return a[:2] == m[:2] and near(a[6] / v['sets'][0][j][6], m[6] / mid['sets'][0][j][6])
-        return (a[:3] == m[:3] and near(a[3], m[3]) and near(a[4], m[4]) and near(a[5], m[5] / 10) and near(a[6], walk * m[6] / 24, 1e-4) and near(a[7], m[7] / 10) and near(a[8], m[8]) and near(a[9], m[9]))
+        return (a[:3] == m[:3] and near(a[3], m[3]) and near(a[4], m[4]) and near(a[5], m[5] / 10) and near(a[6], walk * m[6] / 24, 1e-4) and near(a[7] - MEASURE['sight']['body'], (m[7] - mid['sets'][0][j][7]) / 10) and near(a[8], m[8]) and near(a[9], m[9]))
     trained = [[[b, sorted(look[c] for c in ks if c in look)] for b, ks in age] for age in v['trains']]
     want = [[[b, sorted(k for k in mid.get('sol', []) if (at.get(U[k]['at']) == b or b in [at.get(x) for x in U[k].get('also', [])]) and U[k]['age'] <= a)] for b, _ in age] for a, age in enumerate(v['trains'])]
     bad = [x for x in art if x[4] != 0 or x[5] < 20]
@@ -638,7 +635,8 @@ WARJS = """(() => { const D = FK.D, [me, foe] = D.players, out = {}, at = (s) =>
   const u = FK.spawn(CODES[0], me, at(me), FK.rng), v = FK.spawn(CODES[6], foe, at(me), FK.rng); out.worth = [WAR.worth(u, v, 0), WAR.worth(v, u, 0), u.hp, v.hp];
   const w = FK.spawn(CODES[0], foe, at(me), FK.rng), x = FK.spawn(CODES[1], me, at(me), FK.rng); Object.assign(w, { bx: u.bx + 9, by: u.by, fx: -1, fy: 0, target: v }); Object.assign(x, { bx: u.bx + 18, by: u.by });
   const back = WAR.damage(x, w); w.target = null; out.flank = back / WAR.damage(x, w);
-  FK.reset(); WAR.treaty(me, foe, 'war'); play = window.dice(SEED); const k = at(me), A = [], B = []; for (let i = 0; i < 6; i++) A.push(FK.spawn(CODES[0], me, k, FK.rng)); for (let i = 0; i < 8; i++) B.push(FK.spawn(CODES[7], foe, k + 6, FK.rng));
+  FK.reset(); WAR.treaty(me, foe, 'war'); play = window.dice(SEED); const k = at(me), A = [], B = []; for (let i = 0; i < 6; i++) A.push(FK.spawn(CODES[0], me, k, FK.rng)); for (let i = 0; i < 8; i++) B.push(FK.spawn(CODES[7], foe, k - 6, FK.rng));   // on the hall's open side, in sight of each other (QAM): across the hall they could not see to fight
+ 
   let broke = 0, back2 = 0; for (let t = 0; t < 900; t++) { FK.sim(0.1); for (const q of [...A, ...B]) { if (q.routAt != null && !q.seen) { q.seen = 1; broke++; } if (q.seen === 1 && q.routAt == null && !q.gone) { q.seen = 2; back2++; } } } out.rout = [broke, back2];
   FK.reset(); const h = FK.seatOf(me), s0 = FK.SIDES[me], place = (c) => $ring(h, 9, 60, (i, j) => { if (ECON.canPlace(c, i, j)) { const t = FK.build(c, i, j, s0.col); t.done = 1; t.hp = t.hpMax = WAR.hpMax(t); return t; } });
   const tw = place(Object.keys(D.tower).find((c) => !FK.SH[c].ticks.includes('Seat'))); tw.side = foe; const sold = FK.spawn(CODES[1], me, at(me), FK.rng), was = { ...s0.store }; tw.hp = 1; WAR.treaty(me, foe, 'war'); WAR.hit(sold, tw); out.plunder = Object.keys(D.cost[tw.code]).map((y) => s0.store[y] - was[y]);
@@ -681,7 +679,7 @@ ORD2 = r"""(() => { const D = FK.D, [me, foe] = D.players, out = {}, sim = $run,
   const [cx, cy] = FK.tileMid(cover), A = make('Foot', 2, FK.tileAt((cx + h.bx) / 2, (cy + h.by) / 2)); WAR.ambushAt(cover, A); for (let i = 0; i < 900 && !A.every((u) => u.hid); i++) FK.sim(0.1); const f = make('Foot', 1, FK.tileAt(A[0].bx, A[0].by), foe)[0];
   out.hid = [A.every((u) => u.hid), !WAR.enemies(f, A[0])]; f.bx = A[0].bx + 2 * D.tile; FK.sim(0.1); FK.sim(0.1); out.sprung = A.every((u) => !u.amb && u.chg > FK.K.t);
   const S = make('Foot', 2, tile(30, 0)), F = make('Foot', 6, tile(32, 0), foe), R = make('Archers', 8, tile(24, 0)); for (const [i, u] of R.entries()) { u.bx -= (i % 4) * D.tile; u.by += Math.floor(i / 4) * 2 * D.tile; FK.place(u); }
-  const ord = { k: S[0].k }; for (const u of S) { u.ord = ord; u.hp = u.hpMax = 300; WAR.fight(u, F[0]); } for (const v of F) v.hp = v.hpMax = 600; const m = { ord: S[0].ord, name: 'test', st: 'act' }, plan = WAR.reinforcePlan(m), res = WAR.free().filter((u) => !S.includes(u)), c = WAR.centreOf(S), rk = WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(res))), FK.tileAt(c.bx, c.by));
+  const ord = { k: S[0].k }; for (const u of S) { u.ord = ord; u.hp = u.hpMax = 300; WAR.fight(u, F[0]); } for (const v of F) v.hp = v.hpMax = 600; FK.look(99); const m = { ord: S[0].ord, name: 'test', st: 'act' }, plan = WAR.reinforcePlan(m), res = WAR.free().filter((u) => !S.includes(u)), c = WAR.centreOf(S), rk = WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(res))), FK.tileAt(c.bx, c.by));
   out.plan = plan && { go: plan.go.length, waves: plan.waves.map((w) => [w.t, w.list.length]) }; out.run = { S: S.map((u) => ({ hp: u.hp, pow: WAR.power1(u) })), F: F.map((v) => ({ pow: WAR.power1(v) })), dps: F.reduce((n, v) => n + WAR.dmgOf(v) / WAR.stat(v).rof, 0), mu: WAR.mixOf(S, F), res: res.map((u) => ({ t: (Math.hypot(u.bx - c.bx, u.by - c.by) / D.upm) * rk / FK.pace(u), pow: WAR.power1(u) })) };
   const E = R.slice(0, 4), ek = tile(0, 40), erk = WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(E))), ek), [ex, ey] = FK.tileMid(ek); out.eta = [out.eta, WAR.etaOf(E, ek, erk)]; out.run.eta = { S: E.map((u) => ({ d: Math.hypot(u.bx - ex, u.by - ey) / D.upm, p: FK.pace(u) })), k: erk };
   return out; })()"""
@@ -814,7 +812,8 @@ TRADEJS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}
   out.market = { gold: g, stock: { ...E.stock() } }; const t0 = FK.K.t; let n = 0; while (!FK.every(D.beats.slow) && n++ < 200) FK.sim(0.1); out.drift = { stock: { ...E.stock() }, held: n < 200 };
   // a caravan's run to a stop that wants beer, the stop held by the foe's post (the keeper's cut)
   fresh(); play = window.dice(SEED); const S2 = E.stops(), m2 = put(MKT, me); Object.assign(st(), { cloth: 12, beer: 5, food: 610, wood: 700, stone: 0, iron: 0, gold: 0 }); const stop = E.stops().find((f) => f.want === 'beer');
-  const post = FK.build(by((c) => FK.SH[c].ticks.includes('Post')), ...[stop.k % FK.N, Math.floor(stop.k / FK.N)], FK.SIDES[foe].col); Object.assign(post, { side: foe, done: 1 }); for (const q of D.players) if (q !== me) WAR.treaty(me, q, 'peace'); for (const g of FK.units().filter((u) => S2.includes(u.find))) FK.vanish(g);
+  const post = FK.build(by((c) => FK.SH[c].ticks.includes('Post')), ...[stop.k % FK.N, Math.floor(stop.k / FK.N)], FK.SIDES[foe].col); Object.assign(post, { side: foe, done: 1 }); for (const q of D.players) if (q !== me) WAR.treaty(me, q, 'peace'); for (const g of FK.units().filter((u) => S2.includes(u.find) || (!FK.SIDES[u.side] && FK.has(u, 'Fight')))) FK.vanish(g);   // the stops' guards and the wild hunters cleared: the run tests the trade; the post at the stop now shoots a wolf only once it sees it past the trees (QAM), after the wolf has reached the caravan
+ 
   const cv = FK.spawn(D.trains[m2.code][0], me, FK.tileAt(m2.bx, m2.by + (m2.n / 2 + 2) * D.tile), FK.rng); const est = E.estPay(me, stop, m2), load = E.cargo(me, stop, m2), fg = ~~FK.SIDES[foe].ledger.in.trade;
   E.setRoute(cv, stop, false, false); let left = 0, sold = null; for (let i = 0; i < 6000 && cv.route; i++) { FK.sim(0.1); if (cv.leg === 'back' && !left) [left, sold] = [gold(), { ...E.stock() }]; }
   out.run = { d: Math.hypot(stop.bx - m2.bx, stop.by - m2.by), want: stop.want, load, est, got: left, cut: FK.SIDES[foe].ledger.in.trade - fg, owner: stop.owner, stock: sold, home: !cv.route, store: { cloth: st().cloth, beer: st().beer, food: st().food, wood: st().wood } };
@@ -891,7 +890,7 @@ REALMJS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}
   const S4 = [0, 1, 2, 3].map((i) => mk(SP, me, dep.bx + (2 + i) * D.tile, dep.by + 3 * D.tile)); dep.supply = 50; const e1 = S4.reduce((a, u) => a + E.eats(u), 0); sim(5, () => S4.forEach((u) => { u.job = 'idle'; })); out.eat = [50 - dep.supply, e1 * 5, S4.some((u) => u.unfed)]; dep.supply = 0; sim(1); out.unfed = [S4.every((u) => u.unfed), S4[0].tire];
   // caltrops on a passing rider and spearman; a foe's pit hidden until a scout finds it
   fresh(); FK.SIDES[me].techs.add(TK('caltrops')); FK.learn(me, TK('caltrops')); const cal = put(look('caltrops'), me), r = mk(RD, foe, cal.bx, cal.by), f = mk(SP, foe, cal.bx, cal.by), t0 = FK.K.t, steps = []; for (const dt of [0, 1, 2.1, 3.2]) { FK.K.t = t0 + dt; WAR.traps(); steps.push([r.hp / r.hpMax, f.hp / f.hpMax, ~~cal.hits, !!cal.gone, (r.stuck || 0) - FK.K.t > 0]); } out.caltrops = steps;
-  fresh(); const pit = put(look('pit'), foe), hid0 = FK.fire('hide', pit), sc = mk(look('scout'), me, pit.bx + 4 * D.tile, pit.by); WAR.traps(); const hid1 = FK.fire('hide', pit), walker = mk(SP, me, pit.bx, pit.by); WAR.traps(); out.pit = [hid0, hid1, !!pit.gone, walker.hp === walker.hpMax];
+  fresh(); const pit = put(look('pit'), foe), hid0 = FK.fire('hide', pit), sc = mk(look('scout'), me, pit.bx + 4 * D.tile, pit.by); WAR.traps(); FK.look(99); const hid1 = FK.fire('hide', pit), walker = mk(SP, me, pit.bx, pit.by); WAR.traps(); out.pit = [hid0, hid1, !!pit.gone, walker.hp === walker.hpMax];
   // war after its notice; an envoy's answers
   fresh(); WAR.treaty(me, foe, 'peace'); out.notice = [E.setRel(me, foe, 'war'), E.noticeLeft(me, foe)]; sim(29); out.notice.push(WAR.stance(me, foe)); sim(2); out.notice.push(WAR.stance(me, foe));
   const answer = (who, ask, setup) => { fresh(); for (const q of D.players) if (q !== me && q !== foe) WAR.treaty(foe, q, 'peace'); setup(); const u = { ask, to: foe, side: me, job: 'envoy' }, o = [WAR.odds(WAR.armyOf(me), foe), WAR.odds(WAR.armyOf(foe), me)], g = FK.SIDES[me].store.gold; said.length = 0; E.judgeEnvoy(foe, me, u); return { who, ask, odds: o, said: said.slice(), stance: WAR.stance(me, foe), ally: FK.SIDES[foe].ally, paid: g - FK.SIDES[me].store.gold, back: u.job }; };
@@ -957,7 +956,6 @@ MINDJS = r"""(() => { const D = FK.D, K = FK.K, out = {}, side = D.players[1], s
       famine: AI.runsOut(side, 'food', plan.food, plan.food.n, draw.food), react: D.ai.diff[MENU.S.opt.diff].react, carry: FK.stat(vil, side, 'carry') }); }
   out.minds = D.players.slice(1).map((p) => [AI.mind[p].goal || null, ECON.villagersOf(p).length, FK.things().filter((t) => t.kind === 'bld' && t.side === p).length]);
   out.moon = [0, 1000, 5000, 12345, 40000].map((t) => { K.t = t; FK.sim(0); return [FK.moonPhase(), K.moonLit]; });
-  out.sight = [[-20, 0], [-20, 1], [-6, 0.5], [10, 1]].map(([a, k]) => { K.alt = a; K.moonLit = k; return FK.nightSight(); });
   FK.reset(); const us = FK.units(), u = ECON.villagersOf(0)[0]; us.splice(0, us.length, u); FK.RUTS.fill(0); const far = [8, -8, 8 * FK.N, -8 * FK.N].map((d) => u.k + d).find(FK.walkable); FK.go(u, far); let moved = 0;
   for (let i = 0; i < 200 && u.path; i++) { FK.step(0.1); moved += u.mps > 0; } out.wear = [FK.RUTS.reduce((a, b) => a + b, 0), moved * 0.1];
   FK.RUTS.fill(0); FK.RUTS[0] = 300; sim(25); out.heal = FK.RUTS[0];
@@ -993,16 +991,16 @@ async def mind(b):
     D = keyed('measure')
     books = bool(m) and all(pers(k, m['pers'][k]) for k in ('aggr', 'bal', 'fort')) and D['ai.pers']['of'][1:] == m['players'][1:4] and {k: D['ai.wave'][k] for k in m['wave']} == {**m['wave'], 'step': m['wave']['step'] / M['tile']} \
         and D['ai.save'] == m['save'] and [{k: r[k] for k in ('react', 'bold', 'opp', 'allyAt', 'gang', 'envoy')} for r in D['ai.diff']] == [m['diff'][d] for d in ('easy', 'normal', 'hard')] and D['ai.diff'][0]['safe'] == m['safe'] \
-        and D['moon']['month'] == m['synodic'] and D['moon']['sight'] == m['nightSight'] and M['day'] == m['day'] and {k: D['ruts'][k] for k in m['rut']} == m['rut'] and D['ruts']['shore'] == m['shore'] \
+        and D['moon']['month'] == m['synodic'] and M['day'] == m['day'] and {k: D['ruts'][k] for k in m['rut']} == m['rut'] and D['ruts']['shore'] == m['shore'] \
         and [D['flood'][k] for k in ('secs', 'hit')] == [m['flood'][k] for k in ('secs', 'hit')] and D['flood']['rise'] * M['tile'] == m['flood']['rise']
     def same(a, b): a, b = [float('inf') if x is None else x for x in (a, b)]; return a == b or abs(a - b) <= 1e-9 * max(1, abs(b))
     plans = bool(m) and len(m['plans']) == 4 and all(all(same(v['plan'][y][f], mm['plan'][y][f]) for y in Y for f in ('n', 'rho', 'inc', 'short', 't')) and v['famine'] == mm['famine'] for v, mm in zip(v['plans'], m['plans']))
     minds = all(g and n > MEASURE['villagers'] and nb > 1 for g, n, nb in v['minds'])
-    moon = bool(m) and all(same(a, c) and same(b, d) for (a, b), (c, d) in zip(v['moon'], m['moon'])) and all(same(a, c) for a, c in zip(v['sight'], m['sight']))
+    moon = bool(m) and all(same(a, c) and same(b, d) for (a, b), (c, d) in zip(v['moon'], m['moon']))
     ground = bool(m) and abs(v["wear"][0] - v["wear"][1]) < 1e-4 and v['wear'][1] > 1 and v['heal'] == m['heal'] and all(same(a[1], c[0]) and same(a[2], min(1, c[1])) and same(a[3], min(1, c[2])) for a, c in zip(v['ruts'], m['ruts']))
     f = v['flood']; flood = f['before'] and f['wet'] and not f['during'] and f['b'] and abs(f['lost'] - round(f['lost'])) < 1e-6 and 10 <= round(f['lost']) <= 11 and f['levees'] and f['kept'] == 0 and f['after']
     got = [books, plans, minds, moon, ground, flood, not errs]
-    ok('t-mind', all(got), [got, v['minds'], v['plans'][0]['plan'], (m.get('plans') or [{}])[0], v['moon'], m.get('moon'), v['sight'], m.get('sight'), v['wear'], v['heal'], m.get('heal'), v['ruts'], m.get('ruts'), f, errs[:2], err[-800:]])
+    ok('t-mind', all(got), [got, v['minds'], v['plans'][0]['plan'], (m.get('plans') or [{}])[0], v['moon'], m.get('moon'), v['wear'], v['heal'], m.get('heal'), v['ruts'], m.get('ruts'), f, errs[:2], err[-800:]])
 WILDJS = r"""(() => { const D = FK.D, K = FK.K, ME = D.players[0], out = {}, rows = D.finds.rows, codeOf = (t) => (FK.KIND[t.kind] || {}).code, said = [], rng0 = FK.rng;
   FK.on('say', (w) => { said.push([Math.round(K.t), w]); }); FK.reset();
   out.laid = FK.things().filter((t) => rows[codeOf(t)]).map((t) => { const g = FK.units().filter((u) => u.find === t); return [codeOf(t), g.map((u) => u.code), Math.max(0, ...g.map((u) => Math.hypot(u.bx - t.bx, u.by - t.by) / D.tile)), g.every((u) => u.home === t && u.side < 0)]; });
@@ -1126,43 +1124,53 @@ async def blaze(b):
     hs, mh = v['health']['sick'], (m.get('health') or {}).get('sick'); sick = bool(mh) and hs == mh and len(hs[0]) > 1 and any(set(c) - set(a) for c, a in zip(hs, hs[1:])) and any(set(a) - set(c) for c, a in zip(hs, hs[1:]))
     got = [books, laws, town, sick, not errs]
     ok('t-fire', all(got), [got, v['heat'], B.get('heat'), t, mt, hs, mh, errs[:2], err[-800:]])
-SIGHTJS = r"""(() => { const D = FK.D, K = FK.K, N = FK.N, T = D.tile, C = D.woods.cell, F = C * T, ME = D.players[0], foe = D.players[1], h = FK.seatOf(ME); $calm(ME, foe); FK.show.fog = true;
-  const tw = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'tower'), hs = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'house'), W = FK.woodsGrid(), NW = Math.ceil(N / C), cell = (b) => Math.floor(b / F);
-  const dusk = () => Object.assign(K, { alt: -D.moon.twilight / 2, moonLit: 0.5, vis: 12 }), woods = (i, j, r) => { let n = 0; for (let y = j - r; y <= j + r; y++) for (let x = i - r; x <= i + r; x++) n += W[y * NW + x] || 0; return n; };
-  const hidden = (i, j) => { const ci = Math.floor(i / C), cj = Math.floor(j / C); let n = 0, room = false; for (let y = cj - 3; y <= cj + 3; y++) for (let x = ci - 3; x <= ci + 3; x++) if (Math.hypot(x - ci, y - cj) <= 2 && !W[y * NW + x] && !FK.openLine(W, ci, cj, x, y)) { n++; for (let q = 0; q < C * C; q++) if (ECON.canPlace(hs, x * C + (q % C), y * C + Math.floor(q / C))) room = true; } return n >= 3 && room; };
-  let t = null; for (let j = 8; j < N - 8 && !t; j++) for (let i = 8; i < N - 8 && !t; i++) if (ECON.canPlace(tw, i, j) && hidden(i, j)) t = FK.build(tw, i, j, FK.SIDES[ME].col); if (!t) return null;
-  Object.assign(t, { side: ME, done: 1 }); FK.units().length = 0; for (const b of FK.things()) if (b.kind === 'bld' && b !== t && b.side === ME) b.done = 0.5; dusk();
-  const cases = [[0, 0, 99], [0.5, 0.5, 99], [1, 0, 99], [0.5, 0.5, 12]].map(([n, m, v]) => { Object.assign(K, { alt: -D.moon.twilight * n, moonLit: m, vis: v }); return [n, m, v * D.upm, FK.sightOf(t)]; }); dusk();
-  const r = FK.sightOf(t), [ex, ey] = FK.fromBoard(t.bx, t.by), cx0 = cell(ex), cy0 = cell(ey), inner = []; for (let j = cy0 - 6; j <= cy0 + 6; j++) for (let i = cx0 - 6; i <= cx0 + 6; i++) if (Math.hypot((i + 0.5) * F - ex, (j + 0.5) * F - ey) <= r - F) inner.push([i, j]);
-  const state = () => inner.map(([i, j]) => { const v = new Set(); for (let y = 0; y < C; y++) for (let x = 0; x < C; x++) v.add(FK.SEEN[(j * C + y) * N + i * C + x]); return v.size === 1 ? [...v][0] : -1; });
-  FK.SEEN.fill(0); K.fogT = 0; const look = () => { FK.look(99); }; look(); const s1 = state(), spot = (want) => { for (const [n, [i, j]] of inner.entries()) for (let y = 0; y < C; y++) for (let x = 0; x < C; x++) if (s1[n] === want && ECON.canPlace(hs, i * C + x, j * C + y)) return [i * C + x, j * C + y]; };
-  const hid = spot(0), lit = spot(2), foes = [hid, lit].map((c) => c && FK.build(hs, c[0], c[1], FK.SIDES[foe].col)); for (const b of foes) if (b) Object.assign(b, { side: foe, done: 1 });
-  look(); const k1 = foes.map((b) => b && !FK.fire('hide', b)); t.done = 0; look(); const s3 = state(), k3 = foes.map((b) => b && !FK.fire('hide', b));
-  const trees = []; for (let k = 0; k < N * N; k++) if (FK.OCC[k] === 1 && FK.FOR[k]) trees.push([(k % N) * T + T / 2, Math.floor(k / N) * T + T / 2]);
-  return { r, eye: [ex, ey], cases, inner, s1, s3, k1, k3, foes: foes.map((b) => b && FK.fromBoard(b.bx, b.by)), trees, W: [...W], fogN: NW }; })()"""
-MINIJS = r"""(async () => { const D = FK.D, ME = D.players[0], foe = D.players[1]; $calm(ME, foe); FK.show.fog = false; FK.show.M = true; MENU.S.tab = null; MENU.render(true);
+SIGHTJS = r"""(() => { const D = FK.D, K = FK.K, N = FK.N, ME = D.players[0], foe = D.players[1], out = {}; $calm(ME, foe); const vil = D.trains[FK.seatOf(ME).code][0], tree = (k) => FK.OCC[k] === 1 && FK.FOR[k];
+  for (const t of FK.things()) if (t.kind === 'bld') t.done = 0.5; FK.units().length = 0; const sky = (o) => Object.assign(K, { alt: 50, moonAlt: -10, moonLit: 0, wetHour: false, vis: Infinity }, o);
+  const eye = { kind: 'unit', code: vil, side: ME }; out.h = FK.stat(eye.code, ME, 'sight');
+  out.cases = [{}, { alt: -6 }, { alt: -30, moonAlt: 60, moonLit: 1 }, { alt: -30, moonAlt: 40, moonLit: 0.5 }, { alt: -30 }, { alt: -30, wetHour: true }, { vis: 300 }].map((o) => { sky(o); return [o, FK.sightOf(eye)]; });
+  let line = null; const ok = (k) => FK.walkable(k) && !tree(k) && Math.abs(FK.H[k] - FK.H[line0]) < 1; let line0 = 0;
+  for (let k = N * 9; k < N * (N - 9) && !line; k++) { const i = k % N; if (!tree(k) || i < 9 || i > N - 9) continue; line0 = k - 6; const L = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].map((d) => k + d); if (L.every(ok)) line = [k - 6, k, k + 6]; }
+  if (!line) return null; const [ka, kt, kb] = line, look = () => { FK.SEEN.clear(); FK.look(99); }; sky({});
+  const me = FK.spawn(vil, ME, ka, FK.rng), them = FK.spawn(vil, foe, kb, FK.rng); FK.tops(); look(); out.tree = [FK.inSight(them), FK.inSight(me, foe)];
+  const t = FK.things().find((x) => x.k === kt && x.kind === 'tree'); FK.take(t, t.amount); look(); out.felled = [FK.inSight(them), FK.inSight(me, foe), tree(kt)];
+  sky({ vis: (Math.hypot(me.bx - them.bx, me.by - them.by) / D.upm) * 0.5 }); look(); out.fog = [FK.inSight(them), FK.inSight(me, foe)]; sky({});
+  FK.units().splice(FK.units().indexOf(me), 1); look(); out.gone = [FK.inSight(them), FK.inSight(me, foe)];
+  out.d = Math.hypot(me.bx - them.bx, me.by - them.by); out.fogDraw = typeof FK.drawFog; return out; })()"""
+MINIJS = r"""(async () => { const D = FK.D, ME = D.players[0], foe = D.players[1]; $calm(ME, foe); FK.show.M = true; MENU.S.tab = null; MENU.render(true);
   const h = FK.seatOf(ME), sol = FK.kinds('Foot')[0] || Object.keys(D.stats).find((c) => (D.stats[c].tags || []).includes('infantry')), k0 = $ring(h, 14, 40, (i, j) => FK.walkable(j * FK.N + i) && j * FK.N + i);
   for (let n = 0; n < 3; n++) FK.spawn(sol, foe, k0, FK.rng); $run(2); for (let i = 0; i < 40 && !(FK.mini() && FK.mini().mark); i++) { FK.dirty(); await new Promise((r) => setTimeout(r, 50)); } const q = FK.near, M = FK.mini(); if (!q || !M || !M.mark) return { q: !!q, M: !!M };
   const [mx, my] = [M.mx + (M.mark[0] - M.cx) * M.k, M.my + (M.mark[1] - M.cy) * M.k], back = FK.miniAt(mx, my), p = { x0: mx, y0: my, x: mx, y: my, t: performance.now(), mode: null }; FK.fire('press', p);
   return { mark: M.mark, u: [q.u.vx, q.u.vy], back, mode: p.mode, eat: p.eat, to: [FK.cam.tx, FK.cam.ty], n: q.n, beat: D.mini.inc.beat }; })()"""
-MIDSIGHT = r"""const n = (re, t) => t.match(re)[0];
-return box([basics, units, blds, n(/const LOOKOUT = \{[^}]*\};/, tuning), `const G = { night: 0, wx: 'fog', ev: {}, fog: new Uint8Array(FOGN * FOGN), fogOn: true, seenB: {}, units: [], blds: [], nodes: RUN.trees.map(([x, y]) => ({ kind: 'tree', amt: 1, x, y })), treeV: 0 };
-  let MOON = 0; const FX1 = { a: 0, m: 1 }, fxv = () => FX1, bldKeys = () => [], unitKeys = () => [], stats = () => ({}), moonLight = () => MOON, EVM = { sight: 1 }, WEATHER = { fog: { vis: 99 } }, EVENTS = {}, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), hyp = Math.hypot, friendly = (a, b) => a === b, wearGround = () => {};`,
-  cut(core, 'const lookout', 'const groupSees'), cut(fog, 'const fogAt', 'let WOODS'), cut(fog, 'let WOODS', 'let fogOff'),
-  `var OUT = { cases: RUN.cases.map(([nt, m, v]) => { G.night = nt; MOON = m; WEATHER.fog.vis = v; return sightOf({ kind: 'tower', owner: 0 }); }) }; const [cn, cm, cv] = RUN.dusk; G.night = cn; MOON = cm; WEATHER.fog.vis = cv;
-  const tw = { id: 1, kind: 'tower', owner: 0, x: RUN.eye[0], y: RUN.eye[1], hp: 1, prog: 1 }, at = ([i, j]) => G.fog[j * FOGN + i]; G.blds.push(tw); OUT.r = sightOf(tw); OUT.W = [...woodsGrid()]; fogTick(); OUT.s1 = RUN.inner.map(at);
-  RUN.foes.forEach((p, i) => p && G.blds.push({ id: 2 + i, kind: 'house', owner: 1, x: p[0], y: p[1], hp: 1, prog: 1 })); fogTick(); const kn = () => RUN.foes.map((p, i) => p && knownB(G.blds.find((b) => b.id === 2 + i)));
-  OUT.k1 = kn(); tw.hp = 0; fogTick(); OUT.s3 = RUN.inner.map(at); OUT.k3 = kn(); OUT.fogN = FOGN; OUT.LOOKOUT = LOOKOUT; OUT.FOG = FOG;`]);"""
+def law(o, h):   # QAL from the books alone (D117 sight, D229 visibility), in Python
+    S = MEASURE['sight']; K = {'alt': 50, 'moonAlt': -10, 'moonLit': 0, 'wetHour': False, 'vis': float('inf'), **o}; sun = S['sun']
+    i = min(len(sun) - 1, max(1, sum(1 for r in sun if r[0] < K['alt']))); (a0, l0), (a1, l1) = sun[i - 1], sun[i]; f = min(1, (K['alt'] - a0) / (a1 - a0))
+    full, quarter = S['moon']; E = (0 if K['alt'] < a0 else l0 * (l1 / l0) ** f) + full * K['moonLit'] ** math.log2(full / quarter) * max(0, math.sin(math.radians(K['moonAlt']))) + S['star']
+    E *= S['overcast'] / S['star'] if K['wetHour'] else 1; a = min(1, (E / S['ref']) ** S['p']); upm = MEASURE['upm']
+    return min(math.sqrt(S['earth'] * h) * upm, S['day'] * upm * a, K['vis'] * upm)
 async def sight(b):
-    pg, errs = await fresh(b); v = await pg.evaluate(SIGHTJS); pg2, errs2 = await fresh(b); mn = await pg2.evaluate(MINIJS); await pg.close(); await pg2.close(); M = MEASURE
-    m, err = frozen('basics units blds tuning core fog=22-view-fog', MIDSIGHT, v and {**v, 'dusk': v['cases'][3][:3]}); m = m or {}
-    books = bool(m) and [M['lookout']['base'], M['lookout']['k']] == [m['LOOKOUT']['base'], m['LOOKOUT']['k']] and M['woods'] == {'cell': m['FOG'] // M['tile'], 'trees': 3}
-    num = bool(v and m) and all(abs(a[3] - c) < 1e-9 for a, c in zip(v['cases'], m['cases'])) and abs(v['r'] - m['r']) < 1e-9 and v['cases'][0][3] > v['cases'][2][3] > 0
-    grid = bool(v and m) and v['W'] == m['W'] and v['fogN'] == m['fogN'] and v['s1'] == m['s1'] and v['s3'] == m['s3'] and 0 in v['s1'] and 2 in v['s1'] and set(v['s3']) <= {0, 1} and 1 in v['s3']
-    known = bool(v and m) and v['k1'] == m['k1'] and v['k3'] == m['k3'] and v['k1'] == [False, True] and v['k3'] == [False, True]
+    pg, errs = await fresh(b); v = await pg.evaluate(SIGHTJS); pg2, errs2 = await fresh(b); mn = await pg2.evaluate(MINIJS); await pg.close(); await pg2.close(); v = v or {}
+    S = MEASURE['sight']; cases = v.get('cases') or []
+    num = len(cases) == 7 and v['h'] == S['body'] and all(abs(r - law(o, v['h'])) < 1e-6 * r for o, r in cases) and cases[0][1] > cases[2][1] > cases[4][1] > cases[5][1] and cases[6][1] == 300 * MEASURE['upm']
+    los = v.get('tree') == [False, False] and v.get('felled') == [True, True, False] and v.get('fog') == [False, False] and v.get('gone') == [False, False]
+    nofog = v.get('fogDraw') == 'undefined' and not any(k in MEASURE for k in ('fogDim', 'fogWait', 'fogLast', 'woods', 'fogTick')) and set(MEASURE['lookout']) == {'h'}
     mini = bool(mn.get('mark')) and mn['mark'] == mn['u'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['back'], mn['u'])) and mn['mode'] == 'mini' and mn['eat'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['to'], mn['u'])) and mn['beat'] == 350
-    got = [books, num, grid, known, mini, not errs and not errs2]
-    ok('t-sight', all(got), [got, v and {k: v[k] for k in ('r', 'cases', 's1', 's3', 'k1', 'k3')}, {k: m.get(k) for k in ('r', 'cases', 's1', 's3', 'k1', 'k3')}, mn, errs[:2], errs2[:2], err[-600:]])
+    got = [num, los, nofog, mini, not errs and not errs2]
+    ok('t-sight', all(got), [got, v, [law(o, v.get('h') or 0) for o, _ in cases], mn, errs[:2], errs2[:2]])
+DEWJS = """(() => { $calm(); const D = FK.D, K = FK.K, out = { steps: [] }; D.chain[0] = D.chain[1] = 0; K.ahead.length = 0; K.wetHour = false; K.I = 0;
+  const at = (want) => { for (let i = 0; i < 4000 && !want(); i++) FK.sim(0.1); return want(); }, snap = () => ({ T: K.temp, dew: K.dew, vis: K.vis, fog: K.fog, alt: K.alt, wind: K.wind });
+  out.dusk = at(() => K.alt > 6) && at(() => K.alt < -6); K.dew = K.temp - 0.2; out.before = snap(); out.formed = at(() => K.vis < D.weather.fog.wmo); out.fogged = snap();
+  FK.sim(0.1); out.after = snap(); K.wind = D.weather.fog.calm * 2; FK.sim(0.1); out.windy = snap(); out.lifted = at(() => K.alt > 6 && K.vis === Infinity); out.day = snap(); return out; })()"""
+async def dew(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(DEWJS); await pg.close(); F = MEASURE['weather']['fog']; W = MEASURE['weather']
+    es = lambda T: F['e'] * math.exp(F['a'] * T / (F['b'] + T)); C = lambda s: (es(s['dew']) - es(s['T'])) * F['per'] / (F['Rv'] * (s['T'] + F['K0']))
+    vis = lambda s: W['km'] * W['k'] / (F['beta'] * max(0, C(s)) ** F['pow']) if C(s) > 0 else float('inf')
+    b0, f, a, w, d = v['before'], v['fogged'], v['after'], v['windy'], v['day']
+    forms = v['dusk'] and v['formed'] and b0['vis'] == float('inf') and f['T'] < f['dew'] and f['alt'] < 0 and abs(f['wind']) <= F['calm'] and abs(f['vis'] - vis(f)) < 1e-6 * f['vis'] and f['vis'] < F['wmo'] and 0 < f['fog'] < 1
+    law = abs(a['vis'] - vis(a)) < 1e-6 * a['vis'] and C(a) <= F['lwc'] + 1e-9 and a['dew'] <= f['dew'] + 1e-9
+    calm = w['vis'] == float('inf') and w['fog'] == 0
+    lifts = v['lifted'] and d['T'] > d['dew'] and d['fog'] == 0 and d['alt'] > 0
+    got = [forms, law, calm, lifts, not errs]
+    ok('t-dew', all(got), [got, v, vis(f) if f else None, errs[:2]])
 STAGEJS = r"""(() => { $calm(); const D = FK.D, K = FK.K, ME = D.players[0], h = FK.seatOf(ME), out = {}; MENU.S.tab = null; MENU.render(true);
   FK.cam.z = FK.zmax(); FK.cam.x = h.vx + 80; FK.cam.y = h.vy + 60; FK.camStop(); FK.camGo(h.vx, h.vy); out.cam0 = [h.vx + 80, h.vy + 60, h.vx, h.vy]; out.cam = []; for (let i = 0; i < 30; i++) { FK.followCam(1 / 30); out.cam.push([FK.cam.x, FK.cam.y]); }
   const hs = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'house'), lm = Object.keys(FK.SH).find((c) => FK.SH[c].look === 'lumber'), lamp = Object.keys(BOOKS.tech).find((c) => BOOKS.tech[c].value.fx.some((f) => f.s === 'lamp'));
@@ -1194,7 +1202,7 @@ async def stage(b):
     shed = v['shed'] == m.get('shed') and v['shed'][1] > 0
     got = [books, cam, lights, colour, pop, shed, not errs]
     ok('t-stage', all(got), [got, v['cam'][:3], (m.get('cam') or [])[:3], v['lights'], m.get('lights'), v['blds'], v['shed'], m.get('shed'), v['pop'][:4], T.get('pop', [])[:4], errs[:2], err[-800:]])
-PAGED = {'t-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

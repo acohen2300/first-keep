@@ -11,9 +11,9 @@ const classes = () => Object.values(D.trains).flat().filter((k) => !FK.SH[k]), k
 const tall = (page) => !!(SCR[page] && SCR[page].ticks.includes('Tall')); // E175
 const OPTS = { // E176
   diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open'], ['Siege'], ['Silk Road'], ['Last Keep']],
-  world: [['Real'], ['Fantasy']], fog: [['Off', false], ['On', true]], tension: [['Winner'], ['Diplomacy']], daily: [['Off', false], ['On', true]],
+  world: [['Real'], ['Fantasy']], tension: [['Winner'], ['Diplomacy']], daily: [['Off', false], ['On', true]],
   civ: [['Roman'], ['Han'], ['Persian'], ['Mongol'], ['Maurya'], ['Mali']], hazard: [['Hardest'], ['Famine'], ['Weather'], ['Drought'], ['Outlaws'], ['Plague']] };
-const BUILT = { len: 1, fog: 1, daily: 1 }; // E177
+const BUILT = { len: 1, daily: 1 }; // E177
 const ICON = { food: '🍖', wood: '🪵', gold: '🪙', stone: '🪨', iron: '⛓' };
 const ORDER = ['food', 'wood', 'stone', 'gold', 'iron'], NAME = { food: 'Food', wood: 'Wood', stone: 'Stone', gold: 'Gold', iron: 'Iron' }; // E178
 // E179
@@ -81,7 +81,7 @@ const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id=
 const topEl = document.createElement('div'); topEl.className = 'topbar'; document.body.appendChild(topEl);
 const toastEl = document.createElement('div'); toastEl.id = 'toast'; document.body.appendChild(toastEl);
 const $ = (id) => document.getElementById(id);
-const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, fog: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Home', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
+const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Home', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
 const toast = (msg) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = D.toast; };
 const WD = fromBook('words'), TW = WD.troops, blessed = () => WAR.armyOf(ME).filter((u) => WAR.SQ.sel == null || u.bn === WAR.SQ.sel), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
@@ -105,7 +105,7 @@ const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
 const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null; };
 const trainer = (c) => ECON.lineFor(ME, c), P = D.place, line = (c) => FK.SH[c].ticks.includes('Line'), walled = (c) => line(c) || FK.SH[c].ticks.includes('Gate'); // E332
 const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === ME && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
-const summary = () => `${OPTS.len[S.opt.len][0]} · Fog ${OPTS.fog[S.opt.fog][0].toLowerCase()} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
+const summary = () => `${OPTS.len[S.opt.len][0]} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
 const aging = (c) => `${plural(U[c][0])} need the ${FK.SH[c].age} age`; // E373
 const isFind = (t) => t && t.kind !== 'unit' && t.kind !== 'bld' && ECON.yieldOf(t);
 // E184
@@ -137,7 +137,7 @@ const VERBS = {
   alarm: { label: (k) => `<span class="t">${SVG[AW.cells[k].icon]}</span>${AW.cells[k].name}`, whyNot: () => (FK.seatOf(ME) ? '' : AW.noSeat), run: (k) => ECON.alarm(k) }, // E451
   work: { label: () => `<span class="t">${SVG[AW.cells.work.icon]}</span>${AW.cells.work.name}`, whyNot: () => '', run: () => ECON.allClear() },
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // E189
-  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1]; ECON.setBell(o('len') || Infinity); show.fog = o('fog'); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
+  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1]; ECON.setBell(o('len') || Infinity); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
   job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(ME).length ? 'No villagers' : n < 0 && !ECON.jobs(ME)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(ME, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
   yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(ME)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[ME].rally = SIDES[ME].rally === y ? null : y; } }, // E191
@@ -195,7 +195,7 @@ const queue6 = (q, done, more) => { const n = SCR.mold.slots, shown = more ? q.s
   return [...shown.map(([name, t], i) => cell(`${name}<small>${clock(t)}</small>`, 'q').replace('class="', i ? 'class="' : `style="background:linear-gradient(90deg,color-mix(in srgb,var(--rg) 35%,var(--s2)) ${done * SAY.percent}%,var(--s2) ${done * SAY.percent}%)" class="`)), ...(more ? [cell(`+${more}`, 'q')] : []), ...Array(n - shown.length - (more ? 1 : 0)).fill('<i class="q"></i>')]; };
 const SCREENS = {
   Start: () => [head('A new game', !!S.prev), row(part('Difficulty', 3, 'diff', 3)), row(part('Length', 2, 'len', 4)), row(part('Scenario', 2, 'scen', 4)),
-    row(part('World', 1, 'world', 2), part('Fog', 1, 'fog', 2)), row(part('Tension', 1, 'tension', 2), part('Daily', 1, 'daily', 2)), row(part('', 0, 'civ', 6)),
+    row(part('World', 1, 'world', 2)), row(part('Tension', 1, 'tension', 2), part('Daily', 1, 'daily', 2)), row(part('', 0, 'civ', 6)),
     `<p class="blurb"><b>${OPTS.civ[S.opt.civ][0]}</b><br>Civilizations: not built yet</p>`, row(`<div class="cells seg" style="grid-column:span 6;--n:6">${OPTS.hazard.map(([h]) => vcell('later', h, null, 'two')).join('')}</div>`),
     row(span(6, vcell('start', null, null, 'go')))],
   Build: () => { const g = GROUPS[S.group];
@@ -316,7 +316,7 @@ FK.on('tap', (k, u, px, py) => {
   if (S.war) { aimSpot(k, u); S.aimT = performance.now(); FK.fire('event', 'tap', null); return true; }
   const hint = S.tab === 'Build' && !u && k >= 0 && !under(k) && suggest(k); // E341
   if (hint) { S.group = Object.keys(GROUPS).find((g) => GROUPS[g].includes(hint)); VERBS.pick.run(hint); if (line(hint)) { S.ghost.pts.push(k); wallSet(S.ghost); } else ghostTo(px, py, P.start); render(true); return true; }
-  const t = u || (onB(k) && FK.inSight(k) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
+  const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
   if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); } return true; }
   if (u && own(u)) { pickToggle(u); return true; }
   const P = FK.picked().filter(own); if (P.length) { if (t || onB(k)) { const sol = P.filter(isSoldier); if (WAR.order(P, t, k)) ECON.orderCost(ME, sol); } S.more = false; if (!P.some(isSoldier)) FK.select(null); render(true); return true; }
@@ -328,7 +328,7 @@ function pickToggle(u, hold) { const P = FK.picked(); FK.select(S.more && !hold 
 const ordAt = (px, py) => { let best = null, bd = TO.ord; for (const O of WAR.ORD) { const d = O.n ? Math.hypot(...onMap(O.k).map((v, n) => v - [px, py][n])) : Infinity; if (d < bd) [best, bd] = [O, d]; } return best; };
 const boardAt = (px, py) => { const [bx, by] = FK.tileMid(tileK(px, py)); return { bx, by }; }, aimK = () => (S.aim.t ? FK.tileAt(S.aim.t.bx, S.aim.t.by) : S.aim.k), toolSet = () => { const P = FK.picked().filter(isSoldier); return P.length ? P : WAR.sendable(); };
 const onB = (k) => k !== -1; // E433
-function aimSpot(k, u) { const t = u || (onB(k) && FK.inSight(k) ? under(k) : null); S.aim = { k: onB(k) ? k : S.aim.k, t: t && !own(t) && (t.kind === 'unit' || t.kind === 'bld' || isFind(t)) ? t : null }; } // E430
+function aimSpot(k, u) { const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null); S.aim = { k: onB(k) ? k : S.aim.k, t: t && !own(t) && (t.kind === 'unit' || t.kind === 'bld' || isFind(t)) ? t : null }; } // E430
 const aimNear = (px, py) => S.war && S.aim && Math.hypot(...aimAt().map((v, n) => v - [px, py][n])) < HUD.aim, aimAt = () => (S.aim.t ? FK.toScreen(S.aim.t.vx, S.aim.t.vy) : onMap(S.aim.k));
 function aimColor() { const t = S.aim.t, C = FK.C; if (t && t.side === ME) return C.green; if (t && WAR.isFoe(ME, t)) return C.red; if (t && SIDES[t.side] && WAR.friendly(ME, t.side)) return C.blue; return WAR.foesNear(boardAt(...aimAt()), HUD.danger).length ? C.red : C.white; }
 function boxPick(p) { const [x0, x1] = [p.x0, p.x].sort((a, b) => a - b), [y0, y1] = [p.y0, p.y].sort((a, b) => a - b), mine = units().filter((u) => (isSoldier(u) || isVil(u)) && !u.gone && ((x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1)(...FK.toScreen(u.vx, u.vy)));

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 2,961 | 453,689 | 453,827 |
-| Books | 1777 | 0 | 472,091 | 472,685 |
-| Laws | 87 | 0 | 15,620 | 16,070 |
-| Tools | 4 | 1,492 | 239,480 | 239,710 |
+| Game code | 29 | 2,951 | 453,511 | 453,648 |
+| Books | 1781 | 0 | 476,527 | 477,158 |
+| Laws | 87 | 0 | 16,969 | 17,457 |
+| Tools | 4 | 1,500 | 238,633 | 238,863 |
 
 ## The trades (code)
 
@@ -23,24 +23,24 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 48 | 5,779 | 5,783 | 81 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 942 | 946 | 14 |
-| index.html#the-door | 59 | 6,649 | 6,653 | 69 |
+| index.html#the-door | 58 | 6,587 | 6,591 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,842 | 50,846 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
 | index.html#floor-5-movables | 128 | 14,640 | 14,644 | 93 |
-| index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
+| index.html#the-body-s-laws | 31 | 2,561 | 2,565 | 34 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,210 | 5,214 | 92 |
-| index.html#floor-6-climate | 155 | 24,487 | 24,499 | 251 |
-| index.html#floor-7-display | 48 | 6,791 | 6,795 | 70 |
-| index.html#the-view-s-eyes-lights-and-stage | 119 | 22,198 | 22,202 | 0 |
-| index.html#the-woods-cache | 51 | 4,761 | 4,765 | 71 |
-| index.html#touch | 49 | 6,759 | 6,763 | 55 |
-| menu.js | 366 | 64,097 | 64,139 | 588 |
-| econ.js | 538 | 97,493 | 97,493 | 72 |
-| combat.js | 351 | 58,447 | 58,447 | 84 |
-| ai.js | 159 | 25,177 | 25,177 | 26 |
+| index.html#floor-6-climate | 154 | 24,617 | 24,629 | 237 |
+| index.html#floor-7-display | 43 | 7,174 | 7,178 | 55 |
+| index.html#the-view-s-eyes-lights-and-stage | 116 | 21,693 | 21,697 | 0 |
+| index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
+| index.html#touch | 49 | 6,742 | 6,746 | 54 |
+| menu.js | 366 | 63,965 | 64,006 | 583 |
+| econ.js | 538 | 97,491 | 97,491 | 72 |
+| combat.js | 351 | 58,473 | 58,473 | 84 |
+| ai.js | 159 | 25,200 | 25,200 | 26 |
 | sound.js | 57 | 5,774 | 5,774 | 66 |
 
 ## The books
@@ -49,13 +49,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 5 | 734 |
 | capabilities | 50 | 14,678 |
-| citations | 209 | 39,729 |
+| citations | 220 | 43,002 |
 | colours | 21 | 4,542 |
-| comments | 618 | 102,954 |
+| comments | 616 | 103,297 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 302 | 115,572 |
-| rules | 66 | 23,047 |
+| measure | 297 | 116,175 |
+| rules | 66 | 23,345 |
 | screen | 11 | 3,247 |
 | shells | 103 | 20,476 |
 | sides | 7 | 1,869 |
@@ -110,7 +110,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X32 | t-errors | page | the page runs with no errors |
 | X33 | t-proof | page | the gate stops each planted break: a second home, a bad tick, a shell named in code, swallowed code, one byte of a locked law |
 | X34 | t-start | page | a new game starts with the book's stores (D172), and a restart resets them and the weather |
-| X35 | t-fog | page | the fog is drawn only when the Start page turns it on |
 | X36 | t-wait | page | a paid unit with no room to stand waits in the queue, then appears |
 | X37 | t-bell | page | the bell rings at the length chosen at Start; the default is the book's |
 | X38 | t-gone | page | a find used up is gone at once, and never chosen again |
@@ -137,10 +136,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X60 | t-troops | page | Teach, prisoners, priests, medics, Zeal and spies (F24): Mid's TEACH, TEACH_TO, PRISON, CONVERT, ZEAL, SAB, the spy's stealth, heal and hrng, the priest's, medic's and spy's rows and the 18 research steps in the books; Mid's frozen teachCost and teachSecs for every kind that learns, its ransom, spySeen and healTick's lag for the same wound; on the page a spear learns to be a sword at the School keeping its share of health, a runner is taken, serves its captor after the wait and another is ransomed with the gold moved, Zeal costs Mid's gold and lifts the blow by its share for its seconds, a priest turns a villager in Mid's time, a medic binds a wound, a spy is unseen at 6 tiles and seen at 3, and sabotage stalls a barracks and burns a mill |
 | X61 | t-trade | page | the Market, coin, bank and ventures, goods and workshops, trade and caravans (F26+F27): Mid's TRADE, SELL, BUY, MKT_SELL, MKT_BUY, GOODS, PRICE, MINT, VENTURE, BANK_CAP, SCALE, LOAD, CARAVAN, POST, TRADE_CAP, TRADE_DIV, PLACES.stop and WARES in the books, and every building priced, timed and with its health; eight stops on the two routes wanting Mid's wares in turn; three lots sold, two bought, the coin debased and a slow beat's drift give Mid's frozen marketTrade, debase and priceDrift's gold and stock; a caravan's run to a held stop loads and is paid as Mid's frozen priceAt and loadable, less the keeper's cut; an ally's run, five minutes of a workshop with the loom, Learning by doing, a venture with Banking and the Bank's interest are Mid's frozen numbers; guards keep to a caravan, a guarded caravan is Mid's frozen guardedCart's, a robbed one Mid's frozen robbed |
 | X62 | t-realm | page | the war camp, field traps, relations and vassals (F25+F28): Mid's CAMP, CALTROPS, STAKES, NATIVE's traps, NOTICE, PEACE.truce, REGARD, GANG, REL_WORD, VASSAL, DEMAND and its fair TAX as the tribute in the books, and the camp pieces', traps', wagons', envoy's and rebels' rows; both camps' layouts at three facings are Mid's frozen campLayout snapped; the small camp unpacks as sites and a soldier's hands raise a piece at D279's build of a villager's; a medical tent binds a wound as Mid's healTick's lag; a caravan's supply run costs Mid's fee and food and stocks the depot; soldiers eat from it, and unsupplied they slow; caltrops on a rider and a spearman, and a pit a scout found, are Mid's frozen trapsTick; war comes after Mid's notice; an envoy's five answers and a truce's price are Mid's frozen judgeEnvoy on the same odds; ten minutes of a vassal's tribute, loyalty and unrest are Mid's frozen vassalTick; gifts buy Mid's giftGain (QCD) |
-| X63 | t-mind | page | the computers' minds and the sky, the moon and the ground (F29+F30): Mid's PERS, PLAYERS, WAVE, SAVE, DIFF, EASY_SAFE, SYNODIC, NIGHT_SIGHT, CLIMATE.rut, CLIMATE.shore and EVENTS.flood in the books; a computer's plan by need each minute over four minutes is Mid's frozen needOf and runsOut on the same hands, rates, stores, goal and draw, and every computer grows its town; the moon's phase, light and the night's sight are Mid's; a walker wears the ground a unit-second a second, and the ruts heal, deepen the mud and pool by water as Mid's frozen rutHeal, rutOf and mudAt; a flood blocks the land within its rise and harms a building there unless Levees, and goes |
+| X63 | t-mind | page | the computers' minds and the sky, the moon and the ground (F29+F30): Mid's PERS, PLAYERS, WAVE, SAVE, DIFF, EASY_SAFE, SYNODIC, CLIMATE.rut, CLIMATE.shore and EVENTS.flood in the books; a computer's plan by need each minute over four minutes is Mid's frozen needOf and runsOut on the same hands, rates, stores, goal and draw, and every computer grows its town; the moon's phase and light are Mid's (the night's sight is now QAL's, t-sight); a walker wears the ground a unit-second a second, and the ruts heal, deepen the mud and pool by water as Mid's frozen rutHeal, rutOf and mudAt; a flood blocks the land within its rise and harms a building there unless Levees, and goes |
 | X64 | t-wild | page | finds, wild guards, drifters, events and the hazards (F31): Mid's FINDS (guards, spoils, the ruins' scroll, the drifters' price), WAYFARER_EVERY, WILD_LOOK, the leash, NATIVE's raids, GROUP_R, EV_MEAN, EV_MIN, EV_WARN, the kept EVENTS, HAZARDS, HORDE and the bandit's and robber's UNIT rows in the books; on the seed every find laid with its guards on its ring (drifters by their fire); with every hazard on, the events in order with their warnings and the horde's warnings, arrival and number, fed one string of dice, are Mid's frozen eventsTick and hordeTick's (each event's doing set aside); a robbers' raid's band and mark are Mid's frozen natRaid's for the same camp, people and strengths; a drifter's refusals, price and three foot soldiers are Mid's frozen hireWhy and hire's; a chest taken pays Mid's frozen findsTick's spoils, the ruins a free research |
 | X65 | t-fire | page | fire and sickness (F32): Mid's FIRE, FIRE_SMOKE, FIREARMS and HEALTH in the books, its wooden buildings the ones that Burn, its water, sewer and quarantine research the measured shares (MEASURED); fireHeat and Rothermel's η are Mid's; a summer storm's strike on a wooden town of two clusters: the home with villagers beside it saved, its neighbour untouched, and the other cluster's three burning down one from another, each when Mid's frozen lightning, ignite, fireTick and repairTick's buckets do on the same town and dice (to the 3 s look); then an outbreak, beat by beat, sickens and cures the same people as Mid's frozen outbreak and healthTick |
-| X66 | t-sight | page | sight and the small map (F33): Mid's LOOKOUT and the woods' 40 square of three trees in the books; a tower at dusk in fog beside a wood sees as far as Mid's frozen sightOf (four nights, moons and fogs), the woods grid is Mid's woodsGrid, the tiles seen and then remembered when the tower is gone are Mid's frozen fogTick's grid square by square, and another side's house behind the wood stays hidden while the one in sight shows and stays shown, as Mid's knownB; the small map marks the army the alarm has coming, at its place, and a tap there takes the finger and glides the camera to it |
+| X66 | t-sight | page | sight by real math, no fog of war (Albert, Nov 6): a person's range equals QAL worked from the books alone at noon, dusk, a full and a half moon, starlight, an overcast night and a fog; a tree between two villagers hides each from the other's side, felled it opens both ways, a fog thinner than their distance hides them, and nothing is remembered once the eye is gone; no fog image, no fog-of-war numbers; the small map's incoming mark lands on the soldiers seen and a tap there glides the camera |
 | X67 | t-stage | page | lights, the glide, theatrics and the draw budget (F34): Mid's FLAME, LIGHT, CAM_W, the pop and the shed thresholds in the books; a glide to the Town Center follows Mid's frozen spring and followCam frame by frame; after dark the Town Center, a finished house, a burning house, a badly hurt and a lanterned camp give the lights Mid's frozen drawLight gives; each flame's colour and its life in the rain are Mid's kelvinRGB and flameLife; the finished house's pop runs Mid's popC frame by frame; a slow phone sheds and climbs back on Mid's frozen shed |
+| X68 | t-dew | page | fog by the atmosphere (Albert, Nov 6 14:44): on a dry calm evening with the dew point just under the air, the air cools to it and fog forms (visibility under the WMO's 1 km); the visibility equals CALVIS's 3.912 ÷ (144.7 C^0.88) for the vapour above saturation by Magnus, never past the typical fog's water; a breeze past 7 knots clears it; the sun lifts it once the air warms past the dew point |
 
-1897 items sealed · 1777 book entries · 87 laws · 209 citations, 40 still to open · 7 known
+1901 items sealed · 1781 book entries · 87 laws · 220 citations, 44 still to open · 7 known

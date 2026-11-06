@@ -236,19 +236,18 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
 - **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
-- **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185)
-- **E378** QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain · QCL (N9, N10, N180, N182, N183, N184, N186, N187) · QK (N10)
-- **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · QCL (N9, N10, N180, N182, N183, N184, N186, N187) · D103 (N112, N185) · QI (N8)
+- **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
+- **E378** QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · QK (N10, N210)
+- **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D103 (N112, N185) · QI (N8)
 - **E127** the season's mean, eased into the next
 - **E128** what falls
 - **E129** rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity
-- **E376** QCL the weather of the moment: rates, wind and visibility from the strengths; the wind sig · QCL (N9, N10, N180, N182, N183, N184, N186, N187)
+- **E133** fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or s · QK (N10, N210) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
+- **E376** QCL the weather of the moment: rates, wind and visibility from the strengths, fog's water  · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214)
 - **E130** QP settle: wet in D104, dry in D105 · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
 - **E132** QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground g · QQ (N17) · D109 (N112) · D225 (N17, N173)
 - **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173)
-- **E133** QM: fog comes on a Poisson wait (D110) and stays D111 · QM (N12) · D110 (N112) · D111 (N112)
-- **E134** fog, or mist after rain at dawn and dusk (KW8)
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
 - **E576** a bolt where it falls: drawn, the ground scorched, the thunder told
@@ -263,8 +262,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E142** the channel wanders but leans home to its foot
 - **E579** a falling star streaks down onto its spot
 - **E143** the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of
-- **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10)
-- **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10)
+- **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10, N210)
+- **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10, N210)
 - **E552** the sky told ahead, the sky's news, the flood and the ruts (D293–D295); the ground's marks · D293 (N7, N203) · D295 (N203)
 - **E553** the chain (QH) rolled ahead a forecast step for each step of Weather signs, never less tha · QH (N7)
 - **E554** when the sky turns its news is told, with why in the chain's own odds (Mid's skyTurn and w
@@ -290,10 +289,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## index.html#floor-7-display
 
-- **E146** Floor 7, display (layer 140): what the player sees. The fog of war: every tile is unseen,  · D117 (N112) · QK (N10) · D118 (N112) · QAT (N53)
-- **E147** the player's sight, every D119: what was in sight is remembered; what the units and buildi · D119 (N112) · QK (N10)
-- **E148** the sea is never fogged
-- **E149** the fog image is one tile a pixel in the grid's frame; one affine lays it on the ground (Q · QBD (N66)
+- **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N219, N220) · QAL (N41, N215, N216, N217, N218, N220) · QAM (N42, N219) · QAN (N43, N44, N220)
+- **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N219, N220)
+- **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
+- **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
+- **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220) · QAM (N42, N219)
 - **E150** QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown aw · QAT (N53) · D120 (N112)
 - **E151** left at sunrise, up at noon, right at sunset
 - **E152** under the buildings and units: a building's footprint thrown by its height, a unit's foot 
@@ -306,12 +306,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## index.html#the-view-s-eyes-lights-and-stage
 
-- **E598** the view's eyes, lights and stage: what your side sees (sight from height, the woods), the
-- **E599** how far a building sees from its height: base + k √h, rounded (QAL, Mid's lookout) · QAL (N41)
-- **E600** a thing's sight: its own (research adds), shortened at night (a lantern gives a building p
-- **E601** the woods as walls: a square of tiles with enough standing trees blocks sight (QAM, Mid's  · QAM (N42)
-- **E602** is one square in open sight of another: a grid line (Bresenham); the first wood on the way
-- **E603** another side's building shows only where you see it now or once saw it (Mid's knownB)
+- **E598** the view's eyes, lights and stage: the light and each eye's range (real math, Albert Nov 6
+- **E599** the light on the ground (D117): the sun's by its height, the moon's by its phase and heigh · D117 (N41, N215, N216, N217, N218, N219, N220)
+- **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220) · QK (N10, N210)
+- **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
 - **E606** a cache dropping its oldest picture gives the memory back at once (Mid's trim: iPhone drop

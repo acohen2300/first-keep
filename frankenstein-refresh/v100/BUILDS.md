@@ -2715,3 +2715,66 @@ MODIFIED (59):
 LOCKED (1838 of 1897): byte for byte as sealed, 778,307 bytes
 Tests: 40/40 rules hold
 Inventory: 1897 items sealed · 1777 book entries · 87 laws · 209 citations, 40 still to open · 7 known
+
+## S1 · sight by real math, no fog of war: the horizon, the eye by light, line of sight through ground, trees and buildings, fog from the dew point (Magnus, Kunkel, CALVIS); the computers see by the same rule · 2026-11-06 18:36
+Albert, Nov 5 11:40: yes yes F10–F39; Nov 6 14:44: fog grounded in atmospheric science, 14:45: ECS everything, 14:46: proceed; 15:03: no fog of war, sight by real visibility only, equal for all
+Opened: code:index.html, code:econ.js, code:menu.js, book:measure, book:words, book:tech, book:shells, book:sprites, book:capabilities, book:comments, book:citations, book:rules, law:QCH, law:QK, law:QCL, tool:test.py, code:ai.js, code:combat.js, book:screen, book:colours, law:QAL, law:QAM, law:QAN, tool:DICTIONARY.md
+MODIFIED (55):
+- book:citations:N210 · added
+- book:citations:N211 · added
+- book:citations:N212 · added
+- book:citations:N213 · added
+- book:citations:N214 · added
+- book:citations:N215 · added
+- book:citations:N216 · added
+- book:citations:N217 · added
+- book:citations:N218 · added
+- book:citations:N219 · added
+- book:citations:N220 · added
+- book:comments:E133 · 65 → 207 bytes
+- book:comments:E134 · removed
+- book:comments:E146 · 297 → 361 bytes
+- book:comments:E147 · 165 → 85 bytes
+- book:comments:E148 · 35 → 136 bytes
+- book:comments:E149 · 149 → 200 bytes
+- book:comments:E376 · 216 → 364 bytes
+- book:comments:E598 · 230 → 236 bytes
+- book:comments:E599 · 96 → 160 bytes
+- book:comments:E600 · 186 → 196 bytes
+- book:comments:E601 · removed
+- book:comments:E602 · removed
+- book:comments:E603 · 97 → 71 bytes
+- book:comments:E624 · added
+- book:measure:D110 · removed
+- book:measure:D111 · removed
+- book:measure:D117 · 128 → 948 bytes
+- book:measure:D118 · removed
+- book:measure:D119 · removed
+- book:measure:D229 · 1,292 → 1,989 bytes
+- book:measure:D292 · 554 → 446 bytes
+- book:measure:D312 · 975 → 918 bytes
+- book:measure:D313 · removed
+- book:rules:X35 · removed
+- book:rules:X63 · 803 → 813 bytes
+- book:rules:X66 · 693 → 611 bytes
+- book:rules:X68 · added
+- code:ai.js · 25,177 → 25,200 bytes
+- code:combat.js · 58,447 → 58,473 bytes
+- code:econ.js · 97,493 → 97,491 bytes
+- code:index.html#floor-6-climate · 24,499 → 24,629 bytes
+- code:index.html#floor-7-display · 6,795 → 7,178 bytes
+- code:index.html#the-body-s-laws · 2,585 → 2,565 bytes
+- code:index.html#the-door · 6,653 → 6,591 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,202 → 21,697 bytes
+- code:index.html#the-woods-cache · 4,765 → 4,763 bytes
+- code:index.html#touch · 6,763 → 6,746 bytes
+- code:menu.js · 64,139 → 64,006 bytes
+- law:QAL · 40 → 517 bytes
+- law:QAM · 48 → 259 bytes
+- law:QAN · 64 → 170 bytes
+- law:QCL · 754 → 1,196 bytes
+- law:QK · 36 → 187 bytes
+- tool:test.py · 210,883 → 210,036 bytes
+LOCKED (1855 of 1901): byte for byte as sealed, 643,751 bytes
+Tests: 40/40 rules hold
+Inventory: 1901 items sealed · 1781 book entries · 87 laws · 220 citations, 44 still to open · 7 known

@@ -479,3 +479,16 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 - Not fitting v100 (to Albert): Mid's rim (RIMC, drawRim: sea, cliffs and sky past the diamond) meets v100's fractal coast, which is the rim; the sky in the frame stays parked (Nov 3).
 - Changed from v100 to Mid's: the fog no longer shrinks sight by its own factor; the weather's visibility caps it (Mid's Build 61 visCap). A building sees by its height (D312) once finished; a unit inside sees nothing.
 - The small map is off until its cell (Map, the base row) is tapped; Mid's was always on. Follow is a cell on your unit's card.
+
+## For revisions with Albert: the small map as a weather radar (Albert, Nov 6 15:07–15:08)
+- Albert: weather should move across the small map, weather-satellite style; he comes back to the small map during revisions. Idea on the table: the small map shows the country around the board (about 20 km) with the board as a square in the middle, clouds, rain, snow and storms drifting with the real wind, so weather is seen coming (ties to the forecast). Real scale: the board is about 185 m, so a real storm covers it at once; the radar view is how its movement can be seen.
+
+## Cut: the fog of war and the made-up sight (Albert, Nov 6 15:03–15:06; build F35+F36's sight work)
+- The fog-of-war overlay: the fog image (one tile a pixel, laid by one affine), its dark over the unseen and the dimmer dark over the remembered (D118 fogDim 0.75, 0.4), the explored/remembered level of SEEN, the remembered buildings (F33, Mid's knownB, `t.spotted`), the Start page's Fog on/off choice, and the test t-fog.
+- The made-up ranges: a building's sight 60 + 24 √height (Mid's LOOKOUT base and k; the heights stay, as heights), the flat unit sight of 60 (D117 unit), the night's sight share (D292 moon sight 0.6, full 0.6/0.4), and the woods wall (D313: a 4 × 4 square with three trees blocks; Mid's woodsGrid and openLine), replaced by per-tree line of sight.
+- The fog's dice: a Poisson wait of 240 s (D110) for 40 s (D111) and the typed thickness 0.6 / 0.3; fog now forms at the dew point (CALVIS, Magnus).
+- Unused now, kept in the books: the units' sight in Mid's tiles (D138 stats, sight); the sight research now adds metres of eye height (a call for Albert).
+
+## For revisions with Albert: scale and board size (Albert, Nov 6 17:23–17:24)
+- Shrink the person to scale (real building heights stay); the board grows with it. One number, D.upm (units a metre). Done together in revisions so he sees the look and pace first.
+- Revisions (Albert, Nov 6 17:25): switch the rain and snow visibility terms to NOAA's CALVIS (rain 2.24·C^0.75, snow 10.36·C^0.7776, by water content), so every haze term comes from one source.

@@ -13,9 +13,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QH** Rain or dry → N7 · used by D102, D293, O205
 - **QI** Snow line → N8
 - **QJ** Raindrop speed → N9 · used by D229, X56
-- **QK** Visibility → N10 · used by D229, X56, X66
+- **QK** Visibility → N10, N210 · used by D229, X56, X68
 - **QL** Lightning → N11 · used by D112
-- **QM** Random events → N12 · used by SC9, D110, D181, D308, D309, D310, D311, X64, HX4
+- **QM** Random events → N12 · used by SC9, D181, D308, D309, D310, D311, X64, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
 - **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268, D271, D279, D283, D294, X63
@@ -39,7 +39,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
 - **QCK** Mending → N168 · used by SC5, D201, X52
-- **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187 · used by D103, D229, X56
+- **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214 · used by D103, D229, X56, X68
 - **QCE** Trade pay → N195, N197 · used by SC19, D278
 - **QCF** Returns → N195 · used by D274, D275
 - **QCD** Danegeld → N201, N198 · used by D282
@@ -52,9 +52,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAH** Fight or not → N38 · used by D305, X64
 - **QAI** Nerve → N76, N188 · used by SC6, D142, D231, X57
 - **QAJ** Arrow flight → N39, N40 · used by A5, SC7, W10, D143, D245, X57
-- **QAL** Sight from height → N41 · used by SC7, D312, X66
-- **QAM** Line of sight → N42 · used by D313, X66
-- **QAN** Many eyes → N43, N44
+- **QAL** Sight → N41, N215, N216, N217, N218, N220 · used by SC7, D117, D312, X66
+- **QAM** Line of sight → N42, N219 · used by D117, D312, X66
+- **QAN** Many eyes → N43, N44, N220 · used by D117, X66
 - **QAO** Flee → N45 · used by SC6, D231, D254
 - **QAP** Cold and wet → N46
 - **QAQ** Sickness → N47, N48 · used by D311, X65, O209, O210, O212, O213, O214, O215, O216, O219, O220, O222
@@ -95,7 +95,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 ## By citation
 
 - **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBO, QBP, QBT
-- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCD, QCM, QCN, QCO, D292
+- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCM, QCN, QCO, QAL, QAM, QAN, D292
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
@@ -114,8 +114,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, QCD, QCG, G9
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD, QCM, QCN, QCO, D294
-- **N21** Rothermel (1972); USDA RMRS-GTR-371 → QT, SC45, D310
-- **N22** Heskestad (1984); NFPA 72, the t² fire → QU, SC45, D310
+- **N21** Rothermel (1972); USDA RMRS-GTR-371 → QK, QT, QCL, QAL, QAM, SC45, D310
+- **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QAL, QAN, SC45, D310
 - **N23** Holling (1959), Can. Entomol. 91 → QV
 - **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW, QCM
 - **N25** Fretwell & Lucas (1970) → QX
@@ -134,8 +134,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N38** Maynard Smith & Price (1973), hawk–dove → QAH
 - **N39** Projectile motion from a height (standard) → QAJ, A5, D143, D245
 - **N40** Drag on a sphere (standard fluid dynamics) → QAJ, D143, D245
-- **N41** Horizon from a height, √(2Rh) (standard) → QAL, D312
-- **N42** Bresenham (1965), grid line → QAM, D313
+- **N41** Horizon from a height, √(2Rh) (standard) → QAL, D117, D312
+- **N42** Bresenham (1965), grid line → QAM
 - **N43** Pulliam (1973) → QAN
 - **N44** Lima (1995) → QAN
 - **N45** Ydenberg & Dill (1986) → QAO
@@ -205,7 +205,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D110, D111, D112, D113, D114, D115, D116, D117, D118, D119, D120, D121, D169, D170, D230
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D163, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -220,7 +220,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N124** Design: Mid's SGC (15-sim-spatial.js), brought by Albert's yes, Nov 5 11:40 (Frankenstein F10) → D186
 - **N125** Design: Albert's randomizer rule, Nov 5 (Frankenstein F10): no Math.random in the world, looks included → D187
 - **N126** Design: Albert, Nov 5 (the gate) → X1, X2, X3, X4, X5, X6, X7, X8, X9, X10, X11, X12, X13, X14, X15, X16, X17, X18, X19, X20, X21, X22, X23, X24, X25, X26, X27, X28, X29, X30, X31, X32, X33
-- **N127** Design: the audit of Nov 5, Build A: a test for each fix → X34, X35, X36, X37, X38
+- **N127** Design: the audit of Nov 5, Build A: a test for each fix → X34, X36, X37, X38
 - **N128** Design: Albert, Nov 5 (Frankenstein Refresh: map Mid with our tests) → X40
 - **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
 - **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
@@ -301,8 +301,19 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N205** Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_L → SC18, SC42, SC43, SC44, C18, D305, D306, D307, D308, D309, X64, MG1, MG2, MG4, MH1, MH3, MH4, MH5, MG7, MG8, MG9, MG10, MG11, MH7, PN1, J19
 - **N206** Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sick → SC45, C18, D310, D311, X65, BTC5, BTC6, BTC7, BTC8, BR1, BCR1, BCR2, BCT2, BI1, BI2, BI5, BI8, BM1, BM2, BM3, BW2, BW4, BF5, O208, O209, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J20
 - **N207** (to open) Alsan & Goldin (2019), Watersheds in Child Mortality: The Role of Effective Water and Sewerage Infrastructure, → O219, O220
-- **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, C22, D312, D313, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN14, P45
+- **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, C22, D312, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN14, P45
 - **N209** (to open) Tanner Helland (2012), How to Convert Temperature (K) to RGB: a fit to the CIE black-body locus, 1000 to 40000 → D318
+- **N210** NOAA/NCEP operational code CALVIS (rap.v5.1.20, rap_wrfpost.fd/CALVIS.f, nco.ncep.noaa.gov): vis = −ln(0.02)/β → QK, QCL, D229, X68
+- **N211** ITU-R P.840 liquid water content of fog, 0.05 g/m³ (AGI STK help, Rain Models / cloud and fog table, help.agi. → QCL, D229
+- **N212** US National Weather Service, Houston/Galveston fog guide (weather.gov/media/zhu/ZHU_Training_Page/fog_stuff/fo → QCL, D229, X68
+- **N213** Wærsted, Haeffelin, Dupont, Delanoë & Dubuisson (2017), Radiation in fog, Atmos. Chem. Phys. 17, 10811–10835:  → QCL, D229
+- **N214** (to open) Magnus formula over water, e_s = 6.112 exp(17.62 T / (243.12 + T)) hPa (WMO-No. 8, Guide to Instruments and Me → QCL, D229
+- **N215** USMC MCWP 3-16.6, Supporting Arms Observer, Spotter and Controller (1998), table 2-4 (via generalstaff.org/BBO → QAL, D117
+- **N216** Wikipedia, Daylight, illuminance table: brightest sunlight 120,000 lux, sunrise or sunset on a clear day 400,  → QAL, D117
+- **N217** (to open) Twilight illuminance on the ground: about 3.4 lux at the end of civil twilight (sun 6° down) and 0.008 lux at  → QAL, D117
+- **N218** (to open) Shlaer (1937), The relation between visual acuity and illumination, J. Gen. Physiol. 21, 165–188 (PMC2141937;  → QAL, D117
+- **N219** (to open) A mature temperate broadleaf tree stands about 20 m (oak, beech, ash of open woodland); from memory, to open → QAM, D117
+- **N220** Design: Albert, Nov 6 14:44–15:06: fog grounded in atmospheric science (CALVIS, the dew point); no fog of war  → QAL, QAN, D117, X66, X68
 
 ## Named exceptions
 

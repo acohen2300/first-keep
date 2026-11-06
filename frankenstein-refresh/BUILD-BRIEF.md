@@ -21,6 +21,12 @@ Albert's yes yes (Nov 5, 11:40) covers builds F10 to F39, in the order of `clean
 
 - **A new book** is loaded by the page: its `<script src="books/….js">` goes among the books in index.html's head (`code:index.html#page`), so a build that adds a book opens that item too.
 
+
+## The core values (Albert, Nov 6 16:07): check every piece, in order
+1. Is it fair? 2. Does it follow our logic and rules? 3. Is there a real-life solution? 4. Real-life math? 5. Science? 6. Purpose? 7. Function? 8. One home?
+
+Rigid: zero stray numbers. Every value lives in its designated book with its citation and its comment, with a rhyme or reason. Code reads books and asks by tick; a change is a change to a row. Do not add a typed number to code, even one the ratchet would allow; a number you touch in code moves to its book.
+
 ## Style
 v100's own: compact lines, a short comment that says why in plain words, one rule per capability, layers and floors in build order. Lean: no fixes on fixes, no second way to do what v100 does. Mid's code is the reference for what happens, never for how it is written.
 

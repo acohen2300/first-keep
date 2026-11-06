@@ -14,7 +14,7 @@ const stance = (a, b) => (a === b ? null : rel.get(a + ' ' + b) ?? SB.start), tr
 const atWar = (a, b) => stance(a, b) === 'war', friendly = (a, b) => a === b || stance(a, b) === 'ally';
 function isFoe(o, x, me) { if (x.side === o) return false; if (!SIDES[x.side]) { const g = groupOf(x); return g === 'beast' || atWar(o, g); } if (SIDES[o]) return atWar(o, x.side); // E288
   const g = (me && groupOf(me)) || 'nat'; return g === 'beast' || (atWar(x.side, g) && x.side === ME); } // E289
-const enemies = (a, b) => !b.hid && !b.veil && !FK.has(b, 'Envoy') && isFoe(a.side, b, a);
+const enemies = (a, b) => !b.hid && !b.veil && !FK.has(b, 'Envoy') && isFoe(a.side, b, a) && FK.inSight(b, a.side, a);
 const edgeDist = (u, t) => { if (t.kind !== 'bld') return FK.dist(u, t) / T; const [sx, sy] = FK.fromBoard(u.bx, u.by); return Math.hypot(Math.max(0, t.i * T - sx, sx - (t.i + t.n) * T), Math.max(0, t.j * T - sy, sy - (t.j + t.n) * T)) / T; }; // E228
 const alive = (t) => t.hp > 0 && !t.gone, up = (t) => t.done >= 1 && alive(t), due = (x) => !(x > 0), half = (x) => x / 2; // E229
 const gap = (u, p) => FK.dist(u, p) / T, dir = (dx, dy) => { const d = Math.hypot(dx, dy) || 1; return [dx / d, dy / d, d]; }, beast = (x) => groupOf(x) === 'beast';
@@ -161,7 +161,7 @@ function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.
 // E414
 const mUnits = (m) => units().filter((u) => u.side === ME && u.ord === m.ord && alive(u)), out = (slot) => MS[slot] && !MS[slot].end;
 const hostile = (v) => v.side !== ME && alive(v) && isFoe(ME, v) && (armed(v) || beast(v));
-const foesNear = (c, r = HU.near) => { const F = []; FK.unitsNear(c, r * T, (v) => { if (hostile(v) && FK.inSight(v.k) && gap(c, v) < r) F.push(v); }); return F; };
+const foesNear = (c, r = HU.near) => { const F = []; FK.unitsNear(c, r * T, (v) => { if (hostile(v) && FK.inSight(v) && gap(c, v) < r) F.push(v); }); return F; };
 const chance = (S, F) => { const r = (power(S) / Math.max(HU.least, power(F))) * mixOf(S, F); return (r * r) / (HU.least + r * r); };
 function ordersTick() { const by = new Map(); for (const u of units()) if (u.side === ME && u.ord && alive(u)) (by.get(u.ord) || by.set(u.ord, []).get(u.ord)).push(u); // E415
   for (const O of ORD) { const S = by.get(O); if (!S) { ORD.delete(O); continue; } const st = S.map(status), walk = S.filter((u, n) => st[n] === 'march');
@@ -227,12 +227,12 @@ function drawOrders(ctx, s, at, oval) { const O0 = ST.orders, [lw, rw, aw] = O0.
   const [sp, ph, dp] = L0.sway, [rx, ry] = L0.r, [t0, t1] = L0.turn; for (const u of units()) if (u.hid && u.side === ME) { const [x, y] = FK.toScreen(u.vx, u.vy); L0.at.forEach((m, i) => { const a = K.t * sp + i * ph + u.bx; ctx.fillStyle = L0.cols[i % L0.cols.length]; ctx.beginPath(); ctx.ellipse(x + m * L0.spread * s + Math.sin(a) * s, y - L0.up * s + L0.lift[i] * L0.rise * s + Math.cos(a) * dp * s, rx * s, ry * s, t0 + i * t1, ...ST.marks.arc); ctx.fill(); }); }
   ctx.restore(); }
 FK.on('spawn', (u) => { u.hp = u.hpMax = hpMax(u); u.cd = FK.rng(); u.mor = MO.full; if (u.side === ME && armed(u)) rebattalion(); });
-FK.on('start', () => { waves.fill(null); ORD.clear(); for (const k in MS) delete MS[k]; for (const k in AT) delete AT[k]; ordT = HU.beat; rel.clear(); reachs.clear(); fresh(); sparks.length = tracers.length = 0; for (const u of units()) if (u.hp == null) Object.assign(u, { hp: hpMax(u), hpMax: hpMax(u), mor: MO.full }); for (const t of things()) if (t.kind === 'bld') fill(t); });
+FK.on('start', () => { waves.fill(null); homeT = null; routSaid = -Infinity; ORD.clear(); for (const k in MS) delete MS[k]; for (const k in AT) delete AT[k]; ordT = HU.beat; rel.clear(); reachs.clear(); fresh(); sparks.length = tracers.length = 0; for (const u of units()) if (u.hp == null) Object.assign(u, { hp: hpMax(u), hpMax: hpMax(u), mor: MO.full }); for (const t of things()) if (t.kind === 'bld') fill(t); });
 const fill = (t) => { t.hpMax = hpMax(t); t.hp = t.done >= 1 ? t.hpMax : 1; };
 FK.on('tick', (dt) => {
   if (ECON.result()) return; heal(dt); if (FK.every(TP.beat)) traps(); homeT -= dt; if (due(homeT)) { homeT = D.scan; formHome(); }
   for (const t of things()) if (t.kind === 'bld') { if (t.hpMax == null) fill(t);
-    const tw = D.tower[t.code]; if (!tw || !up(t)) continue; t.cd -= dt; if (!due(t.cd)) continue; const reach = reachOf(t); let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (SIDES[u.side] && isFoe(t.side, u, t) && !u.veil && !FK.has(u, 'Envoy') && (!tw.only || FK.has(u, tw.only)) && edgeDist(u, t) <= reach && (!best || edgeDist(u, t) < edgeDist(best, t))) best = u; });
+    const tw = D.tower[t.code]; if (!tw || !up(t)) continue; t.cd -= dt; if (!due(t.cd)) continue; const reach = reachOf(t); let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (SIDES[u.side] && isFoe(t.side, u, t) && FK.inSight(u, t.side, t) && !u.veil && !FK.has(u, 'Envoy') && (!tw.only || FK.has(u, tw.only)) && edgeDist(u, t) <= reach && (!best || edgeDist(u, t) < edgeDist(best, t))) best = u; });
     if (best) { FK.fire('event', 'shot', t); shot(t, best, tw.h * mpt); hit(t, best, FK.stat(t.code, t.side, 'atk') + ECON.within(t)); t.cd = FK.stat(t.code, t.side, 'rof'); } }
   for (const u of units().slice()) { if (!alive(u) || u.inside || u.den) continue; const s = stat(u); u.cd -= dt; u.rp -= dt; u.sc -= dt; const look = due(u.sc); if (look) u.sc = D.scan; if (u.mps) u.mvT = K.t;
     if (!SIDES[u.side]) { if (wild(u, look)) continue; }
@@ -251,15 +251,15 @@ FK.on('tick', (dt) => {
 FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size(), MK = ST.marks, [a0, a1] = MK.arc, B = MK.bar, at = (x, y, up = 0) => FK.toScreen(...FK.toView(x, y, Math.max(0, FK.H[FK.tileAt(x, y)]) + up));
   const seen = (x, y, m) => x > -m && x < cw + m && y > -m && y < ch + m, bar = (x, y, w, f, col) => { ctx.save(); ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - half(w), y, w, B.h); ctx.restore(); ctx.fillStyle = col; ctx.fillRect(x - half(w), y, w * f, B.h); };
   const oval = (x, y, r, k, from = a0, to = a1) => { ctx.beginPath(); ctx.ellipse(x, y, r, r * k, a0, from, to); };
-  for (const u of units()) if (u.hp != null && u.hp < u.hpMax && (u.side === ME || FK.inSight(u.k))) { const [x, y] = FK.toScreen(u.vx, u.vy), [w, up, m] = B.unit; if (seen(x, y, m)) bar(x, y - up * s, w * s, u.hp / u.hpMax, SIDES[u.side] ? SIDES[u.side].col : C.white); }
-  for (const t of things()) if (t.kind === 'bld' && t.hp != null && t.hp < t.hpMax && up(t) && (t.side === ME || FK.inSight(t.k ?? FK.tileAt(t.bx, t.by)))) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, up, plus, m] = B.bld; if (seen(x, y, m)) bar(x, y - (t.n * up + plus) * s, t.n * w * s, t.hp / t.hpMax, SIDES[t.side].col); }
+  for (const u of units()) if (u.hp != null && u.hp < u.hpMax && FK.inSight(u)) { const [x, y] = FK.toScreen(u.vx, u.vy), [w, up, m] = B.unit; if (seen(x, y, m)) bar(x, y - up * s, w * s, u.hp / u.hpMax, SIDES[u.side] ? SIDES[u.side].col : C.white); }
+  for (const t of things()) if (t.kind === 'bld' && t.hp != null && t.hp < t.hpMax && up(t) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, up, plus, m] = B.bld; if (seen(x, y, m)) bar(x, y - (t.n * up + plus) * s, t.n * w * s, t.hp / t.hpMax, SIDES[t.side].col); }
   drawOrders(ctx, s, at, oval);
   ctx.strokeStyle = C.shaft; ctx.lineWidth = s; for (const r of tracers.slice()) { const P = r.P, n = P.length - 1, p = (K.t - r.t0) / (n * FLY.dt); if (p >= 1) { tracers.splice(tracers.indexOf(r), 1); continue; } // E399
     const [ux, uy] = r.u, pt = (f) => { const [x, y] = P[Math.round(Math.max(0, f) * n)], m = (x / mpt) * T; return at(r.a.bx + ux * m, r.a.by + uy * m, y * D.upm); };
     ctx.beginPath(); ctx.moveTo(...pt(p - FLY.tail)); ctx.lineTo(...pt(p)); ctx.stroke(); }
   const K0 = ST.spark; ctx.save(); ctx.strokeStyle = C.flame; ctx.lineWidth = K0.line * s; for (const k of sparks) { const a = (K.t - k.t) / FLY.spark; if (a < 0 || a >= 1) continue; const [x, y] = at(k.x, k.y, K0.lift), g = (K0.to + a * K0.grow) * s; ctx.globalAlpha = 1 - a; ctx.beginPath(); // E400
     for (let i = K0.rays; i--; ) { const an = i * K0.turn + k.t * K0.spin, c = Math.cos(an), e = Math.sin(an); ctx.moveTo(x + c * K0.from * s, y + e * K0.from * s); ctx.lineTo(x + c * g, y + e * g); } ctx.stroke(); } ctx.restore();
-  const S0 = ST.standard, grp = new Map(); if (FK.cam.z < S0.zoom) return; for (const u of units()) if (armed(u) && alive(u) && !engine(u) && (u.job === 'march' || u.job === 'hold' || u.was != null) && (u.side === ME || FK.inSight(u.k))) { const key = u.side + ' ' + (u.was ?? u.goal), g = grp.get(key) || grp.set(key, { o: u.side, us: [] }).get(key); g.us.push(u); } // E401
+  const S0 = ST.standard, grp = new Map(); if (FK.cam.z < S0.zoom) return; for (const u of units()) if (armed(u) && alive(u) && !engine(u) && (u.job === 'march' || u.job === 'hold' || u.was != null) && FK.inSight(u)) { const key = u.side + ' ' + (u.was ?? u.goal), g = grp.get(key) || grp.set(key, { o: u.side, us: [] }).get(key); g.us.push(u); } // E401
   for (const { o, us } of grp.values()) { if (us.length < S0.least) continue; const [x, y] = at(sum(us, (u) => u.bx) / us.length, sum(us, (u) => u.by) / us.length), h = S0.pole * s, [r0, r1] = S0.ring, r = r0 * s + r1, col = SIDES[o].col, [fw, f1, f2, f3] = S0.flag.map((v) => v * s), [sp, sw, tail] = S0.wave, a = Math.sin(K.t * sp + o) * sw * s, top = S0.top;
     ctx.lineWidth = S0.line * s; ctx.save(); ctx.strokeStyle = C.shade; ctx.globalAlpha = S0.alpha; oval(x, y, r, S0.tilt); ctx.stroke(); ctx.restore(); ctx.strokeStyle = col; oval(x, y, r, S0.tilt, top, top + (sum(us, (u) => u.hp) / sum(us, (u) => u.hpMax)) * a1); ctx.stroke();
     ctx.strokeStyle = C.pole; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - h); ctx.stroke(); ctx.fillStyle = col; ctx.strokeStyle = C.shade; ctx.lineWidth = s; ctx.beginPath(); ctx.moveTo(x, y - h); ctx.quadraticCurveTo(x + half(fw), y - h + a, x + fw, y - h + f1 + a * tail); ctx.lineTo(x + fw, y - h + f2 + a * tail); ctx.quadraticCurveTo(x + half(fw), y - h + f2 + a, x, y - h + f3); ctx.closePath(); ctx.fill(); ctx.stroke(); }
@@ -290,7 +290,7 @@ const guarded = (b) => FK.bldsNear(b.bx, b.by, SA.far * T, (d) => d.side === b.s
 function spy(u, look) { if (look) { let w = false; FK.unitsNear(u, SOL * T, (v) => { w = w || (!!SIDES[v.side] && armed(v) && atWar(v.side, u.side) && !v.inside && alive(v) && gap(u, v) < SOL); }); u.veil = !w && !FK.bldsNear(u.bx, u.by, SA.far * T, (b) => watches(b, u)); // E472
     let b = null; FK.bldsNear(u.bx, u.by, (SA.look + D.large) * T, (t) => !!(SIDES[t.side] && atWar(u.side, t.side) && alive(t) && edgeDist(u, t) < SA.look && (b = t))); if (b) ECON.intel(u.side, b.side); }
   if (u.job === 'sab') { const b = u.tid; if (!b || !alive(b) || !atWar(u.side, b.side)) Object.assign(u, { job: 'idle', tid: null }); else if (edgeDist(u, b) <= SA.at) sabotage(u, b); else if (!u.path && due(u.rp)) { u.rp = D.repath; FK.goBy(u, b); } return true; }
-  if (u.side !== ME && look && u.job === 'idle') { let b = null; FK.bldsNear(u.bx, u.by, stat(u).sight * T, (t) => !!(SIDES[t.side] && atWar(u.side, t.side) && alive(t) && SA.how[t.code] && !guarded(t) && (b = t))); if (b) Object.assign(u, { job: 'sab', tid: b }); } // E473
+  if (u.side !== ME && look && u.job === 'idle') { let b = null; FK.bldsNear(u.bx, u.by, FK.sightOf(u), (t) => !!(SIDES[t.side] && atWar(u.side, t.side) && alive(t) && FK.inSight(t, u.side, u) && SA.how[t.code] && !guarded(t) && (b = t))); if (b) Object.assign(u, { job: 'sab', tid: b }); } // E473
   return true; }
 function sabotage(u, b) { const how = SA.how[b.code], W = TW.sab, name = FK.SH[b.code].name; if (!how) { u.job = 'idle'; return; } // E474
   if (how === 'burn') { b.hp -= b.hpMax * SA.burn; if (!alive(b)) die(b, null); else ECON.ignite(b, 'sabotage'); } else { b.stall = K.t + SA.stall; const c = (b.q || []).shift(); if (c && D.ages.includes(c)) SIDES[b.side].aging = null; const [nx] = b.q || []; if (nx) b.qt = ECON.timeOf(b.side, nx); }

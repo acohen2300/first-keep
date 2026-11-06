@@ -58,7 +58,7 @@ function goalOf(side, P, saving) { const s = SIDES[side], n = inArmy(side), age 
     if (g === 'army' && n < aim(side)) { const [first] = A.troops, want = mind[side].want || first, at = trains(want); if (!count(side, at)) return { what: at, cost: D.cost[at] }; return { what: g, cost: ECON.addRes({}, FK.stat(want, side, 'cost'), Math.min(P.waveMin, aim(side) - n)) }; }
     if (g === 'build') { const [c] = P.build.find(([c, age, m, army]) => s.age >= age && count(side, c) < m && n >= army) || []; if (c) return { what: c, cost: D.cost[c] }; } }
   return null; }
-function bestCounter(side) { const m = mind[side], i = of(m.cyc), foes = units().filter((v) => SIDES[v.side] && WAR.atWar(side, v.side) && ECON.soldier(v.code)); m.cyc = i + 1; // E528
+function bestCounter(side) { const m = mind[side], i = of(m.cyc), foes = units().filter((v) => SIDES[v.side] && WAR.atWar(side, v.side) && ECON.soldier(v.code) && FK.inSight(v, side)); m.cyc = i + 1; // E528
   const can = [...new Set(ready(side).flatMap((t) => FK.trains(t.code)))].filter((c) => ECON.soldier(c) && FK.aged(c, side) && !CO.not.includes(FK.SH[c].class) && !(D.stats[c] || {}).bonly); if (!can.length) return null; if (!foes.length) return can[i % can.length];
   const sc = can.map((c) => { const me = { code: c, side }; return { c, s: total(foes, (v) => WAR.vs(me, v) / Math.max(CO.floor, WAR.vs(v, me))) / foes.length / (ECON.sumCost(D.cost[c]) / CO.per) ** CO.pow }; }).sort((a, b) => b.s - a.s);
   return sc[i % Math.min(CO.mix, sc.length)].c; }

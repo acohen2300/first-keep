@@ -136,8 +136,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E130 | index.html#floor-6-climate | QP settle: wet in D104, dry in D105 |
 | E131 | index.html#floor-6-climate | QO degree-day melt, rain on snow twice as fast |
 | E132 | index.html#floor-6-climate | QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground grows the same way while the ground is wet, full at D225 |
-| E133 | index.html#floor-6-climate | QM: fog comes on a Poisson wait (D110) and stays D111 |
-| E134 | index.html#floor-6-climate | fog, or mist after rain at dawn and dusk (KW8) |
+| E133 | index.html#floor-6-climate | fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or snow saturates it; past the fog's water the rest settles as dew and lowers the dew point (Magnus inverted) |
 | E135 | index.html#floor-6-climate | QL, QM: strikes on Poisson waits in a storm |
 | E136 | index.html#floor-6-climate | a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits |
 | E137 | index.html#floor-6-climate | a far flash: its thunder from beyond the screen |
@@ -149,10 +148,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E143 | index.html#floor-6-climate | the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of it |
 | E144 | index.html#floor-6-climate | KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze |
 | E145 | index.html#floor-6-climate | Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made · Why ground that is always mud (KI2), slow to cross, never built on · How count D114, lakes picked by the dice |
-| E146 | index.html#floor-7-display | Floor 7, display (layer 140): what the player sees. The fog of war: every tile is unseen, seen once, or in sight now (the player's units see D117, its buildings further; fog in the air shortens sight, QK); the unseen is dark, the remembered dim (D118). Shadows fall from the sun (QAT). |
-| E147 | index.html#floor-7-display | the player's sight, every D119: what was in sight is remembered; what the units and buildings of side 0 reach now is seen, never past the visibility (QK) |
-| E148 | index.html#floor-7-display | the sea is never fogged |
-| E149 | index.html#floor-7-display | the fog image is one tile a pixel in the grid's frame; one affine lays it on the ground (QBD): the turn, the tilt and the camera together |
+| E146 | index.html#floor-7-display | Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no fog of war; the land is always drawn). Every tick of D117 each side's eyes, its units and finished buildings, look at every other side's unit and building: seen when within the eye's range (QAL) and the line clears (QAM); the computers by the same rule (QAN) |
+| E147 | index.html#floor-7-display | a thing's height: a building's from its look (D312), a person's from D117 |
+| E148 | index.html#floor-7-display | each tile's top: the ground, a standing tree's height, a building's; worked out again when a thing is felled, lost or raised |
+| E149 | index.html#floor-7-display | the line of sight (QAM): from the eye's height to the target's top, tile by tile along the grid line (Bresenham), its own footprints aside; blocked where a tile's top stands above the line |
 | E150 | index.html#floor-7-display | QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown away from the sun; the sun rises on the right, stands over the bottom of the screen at noon (the camera looks north), sets on the left |
 | E151 | index.html#floor-7-display | left at sunrise, up at noon, right at sunset |
 | E152 | index.html#floor-7-display | under the buildings and units: a building's footprint thrown by its height, a unit's foot by its own; none under the trees (the woods are their own shade) |
@@ -375,7 +374,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E373 | menu.js | why a kind waits: the age it opens in (Mid's trainWhy) |
 | E374 | index.html#floor-5-movables | the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v/v/ (W1, by the mass to the ⅔, D224), v the walk against the wind (Pugh) |
 | E375 | index.html#floor-5-movables | aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c the standing and load terms less the walker's power; the positive root |
-| E376 | index.html#floor-6-climate | QCL the weather of the moment: rates, wind and visibility from the strengths; the wind signed and gusting; a blizzard's hours counted while its three conditions hold, and the flag at the NWS's three hours |
+| E376 | index.html#floor-6-climate | QCL the weather of the moment: rates, wind and visibility from the strengths, fog's water in calm air the vapour above saturation (CALVIS: Kunkel's fog term beside rain and snow); fog's share of a km's contrast for its looks; the wind signed and gusting; a blizzard's hours counted while its three conditions hold, and the flag at the NWS's three hours |
 | E377 | index.html#floor-6-climate | the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the start) and the particle pool (the looks' dice) |
 | E378 | index.html#floor-6-climate | QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain's and snow's extinction); a blizzard by the NWS: snow, wind or gusts at 35 mph or more, visibility under a quarter mile |
 | E379 | index.html#floor-6-climate | rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's speed in metres a second on the screen, carried and slanted by the wind |
@@ -596,12 +595,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E595 | econ.js | in a summer storm lightning strikes a wooden building now and then, and a forge throws sparks (Mid's lightning) |
 | E596 | econ.js | sickness: a town's people near its seat or a depot; more cases from outside in summer and winter, fewer with research |
 | E597 | econ.js | each health beat: cases from outside, the spread β S I / N (QAQ), and each sick one cured by a healer near, dying, or well again (Mid's healthTick) |
-| E598 | index.html#the-view-s-eyes-lights-and-stage | the view's eyes, lights and stage: what your side sees (sight from height, the woods), the camera's glide, the lights after dark, the theatrics, the dressing, the small map and the draw budget (Mid's view, F33 and F34) |
-| E599 | index.html#the-view-s-eyes-lights-and-stage | how far a building sees from its height: base + k √h, rounded (QAL, Mid's lookout) |
-| E600 | index.html#the-view-s-eyes-lights-and-stage | a thing's sight: its own (research adds), shortened at night (a lantern gives a building part back), never past what the weather lets anyone see (Mid's sightClear and visCap) |
-| E601 | index.html#the-view-s-eyes-lights-and-stage | the woods as walls: a square of tiles with enough standing trees blocks sight (QAM, Mid's woodsGrid); worked out each beat of the fog |
-| E602 | index.html#the-view-s-eyes-lights-and-stage | is one square in open sight of another: a grid line (Bresenham); the first wood on the way is seen, the rest is not; the viewer's own square never blocks (Mid's openLine) |
-| E603 | index.html#the-view-s-eyes-lights-and-stage | another side's building shows only where you see it now or once saw it (Mid's knownB) |
+| E598 | index.html#the-view-s-eyes-lights-and-stage | the view's eyes, lights and stage: the light and each eye's range (real math, Albert Nov 6), the camera's glide, the lights after dark, the theatrics, the dressing, the small map and the draw budget (Mid's view, F33 and F34) |
+| E599 | index.html#the-view-s-eyes-lights-and-stage | the light on the ground (D117): the sun's by its height, the moon's by its phase and height, the stars'; cloud dims it to the overcast night's share |
+| E600 | index.html#the-view-s-eyes-lights-and-stage | a thing's range (QAL): the least of the horizon from its eye, the eye's range in this light (a lantern gives a building part of the dark back) and what the weather lets anyone see (QK) |
+| E603 | index.html#the-view-s-eyes-lights-and-stage | another side's building shows only while your people see it |
 | E604 | index.html#the-view-s-eyes-lights-and-stage | the player's Reduce motion, read from the phone; the draw budget's level; still: is motion off, by the setting or by load (Mid's lessMotion, DRAW, still) |
 | E605 | index.html#the-view-s-eyes-lights-and-stage | a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, then half the pixels) and climbs back when fast again (Mid's shed) |
 | E606 | index.html#the-view-s-eyes-lights-and-stage | a cache dropping its oldest picture gives the memory back at once (Mid's trim: iPhone drops pages that hold too much) |
@@ -622,3 +619,4 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E621 | index.html#the-view-s-eyes-lights-and-stage | the grass mottled, greens then earth, kept to the land (Mid's makeBg) |
 | E622 | index.html#the-building-art | a banner on a building that flies live leaves its place to the view (Mid's FLAGS) |
 | E623 | index.html#floor-7-display | the shadows of the trees, bushes and rocks in sight, not the deep woods, cast like everything else (QAT, Mid's shadowPath); the draw budget sheds them first |
+| E624 | index.html#floor-7-display | is a thing in a side's sight: its own, the land's and the wild's always; another side's only when that side's eyes saw it at the last look, or the eye asking sees it now (range and line, QAL and QAM); the one check for the screen, the fight and the computers |

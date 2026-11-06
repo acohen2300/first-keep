@@ -56,10 +56,10 @@ Placement: Z1 and Z2 clean; Z3 one pond at D51, the same in every corner; the fo
 One sky over the whole board (it is 185 m across, so one weather). The clock is Y. Each hour of the day (its 24th) the rain is drawn by a two-state chain (QH, D102); a wet hour is a storm by D103; snow falls instead at or under 1 °C (QI). The air is the season's mean (D100) eased into the next, plus the day's swing (D101) by the light.
 KH Host: KH1 Sun (QA at D99: its height sets the light by SoRen's ramp with the twilights at −6°, −12°, −18°, QD; night a blue over all, the horizon's warmth within 8° of it) · KH2 Moon · KH3 Planets (nowhere to show yet: the board fills the screen; held)
 KS Sky: KS1 Stars · KS2 Aurora · KS3 Meteors · KS4 Comets (held with the Host: no horizon)
-KW Weather: KW1 Cloud (a quarter off the light while it rains or snows) · KW2 Rain (drops of Marshall–Palmer sizes at Atlas's speeds, QJ) · KW3 Snow · KW4 Sleet · KW5 Hail · KW6 Lightning (strikes on Poisson waits in a storm, D113; SoRen's bolt, three strokes and a fork or two, pinned to the ground it hits, its foot lit; a flash never within D112 of the last, QL; thunder its sound) · KW7 Fog (on a Poisson wait, D110, for D111) · KW8 Mist (after rain, at dawn and dusk)
+KW Weather: KW1 Cloud (a quarter off the light while it rains or snows) · KW2 Rain (drops of Marshall–Palmer sizes at Atlas's speeds, QJ) · KW3 Snow · KW4 Sleet · KW5 Hail · KW6 Lightning (strikes on Poisson waits in a storm, D113; SoRen's bolt, three strokes and a fork or two, pinned to the ground it hits, its foot lit; a flash never within D112 of the last, QL; thunder its sound) · KW7 Fog (forms where calm air cools to its dew point, lifts as the sun warms it; its water sets the visibility, QK, QCL) · KW8 Mist (after rain, at dawn and dusk)
 KI Impacts: KI1 Wet (settles in over D104, out over D105, QP; the land darkens) · KI2 Mud (a walker slows by D106, QN; the marsh always) · KI3 Pooling · KI4 Flood · KI5 Frozen (ice on the inland water when the freezing degree-seconds pass D109, QQ: walked as flat ground, whitened) · KI6 Snow cover (D107 a second; melts by the degree-day, D108, QO, twice as fast in rain; whitens the land; slows a walker) · KI8 Frost · KI9 Meltwater · KI10 Dust · KI11 Dry grass · KI12 Ash · KI13 Foot tracks · KI14 Animal tracks · KI15 Ruts
 Mixes: Storm (KW1+KW2+KW6) · Deluge (heavy KW2) · Slush (KI6+KI1) · Frozen mud (KI2+KI5)
-Held for later: KW4, KW5, KI3, KI4, KI8–KI15, the sound of thunder, fire from a strike (QT, QU), sight in fog (QK, the Display floor). Cut: wind, the eclipse.
+Held for later: KW4, KW5, KI3, KI4, KI8–KI15, the sound of thunder, fire from a strike (QT, QU). Cut: wind, the eclipse.
 
 ## S Shell (one mold for everything you can tap; the rows live in `books/shells.js`, the ticks in `books/capabilities.js`)
 SA Attributes (numbers → D): Health · Speed · Capacity · Sight · Size · Style (Open or Closed) · Attack · Range · Rate · Armour · Nerve · Price · Time · Upkeep · Population · Amount · Yield (→ R)
@@ -129,12 +129,12 @@ Town Center: Spawn Research Drop-off House Shelter Shoot · Tower: Shoot Shelter
 Line · Wedge · Square · Front · Choke · Support · the march in Column
 
 ## V View (layer 140; floor 7)
-Fog of war: every tile is unseen, remembered or in sight; the player's units see D117, its buildings further by their size; fog in the air (KW7) shortens sight (QK); the unseen dark and the remembered dim by D118; the sea is never fogged; another side's unit shows only in sight. Drawn as one picture a tile a pixel, laid on the ground by one affine (QBD).
+Sight (Albert, Nov 6: no fog of war): the land is always drawn; another side's units and buildings show only while one of your units or finished buildings sees them now, nothing remembered; the computers by the same check. An eye's range is the least of its horizon, the eye's range in the light (sun, moon, stars, cloud; D117, QAL) and the weather's visibility (rain, snow, fog; QK); the line of sight clears the ground, each standing tree and each building (QAM). The sea is never hidden.
 Shadows (QAT): a building's box and a unit's foot thrown by the sun's height, capped at D120 heights; left at sunrise, up at noon (the camera looks north), right at sunset; they fade with the light.
 Rings: every unit stands in a ring of its side's colour (C5–C8); the picked one in gold (C10).
 The grass: a 64-unit tile of blades in two tints of C4, baked on the grass (D121); the tile seams closed.
 The camera: the board never leaves the screen's middle (the camera rule); pinch and wheel zoom about the pointer; Fit on a new map.
-Held for later: labels, the small map, ripples and rain rings on water, clouds' shadows, sight from height (QAL) and the woods blocking sight (QAM), many eyes (QAN).
+Held for later: labels, the small map, ripples and rain rings on water, clouds' shadows.
 
 ## Screen (floor 8: menu.js, alone)
 One cell mold: slot 44, gap 6, UI Barlow Semi Condensed 13, display IM Fell English SC 18, the bar's colours (C). Four tabs along the bottom (Layers · Jobs · Build · War), one page above the bar, one card above the page for the subject (a unit, a building, a find: title, facts, actions), a reason at the top when a dim cell is tapped.
