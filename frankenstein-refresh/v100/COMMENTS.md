@@ -99,7 +99,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E93 | index.html#floor-5-movables | a path of one tile (already there) walks to its middle: no step past the end |
 | E94 | index.html#floor-5-movables | to a tile |
 | E95 | index.html#floor-5-movables | to a tile beside one |
-| E96 | index.html#floor-5-movables | the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field) |
+| E96 | index.html#floor-5-movables | the one distance and the one nearest search; the drop-off for a yield is the side's nearest building that takes it in (SC Drop-off, B's fifth field), a find the nearest of its kind within reach |
 | E97 | index.html#floor-5-movables | to a tile along a building's edge (the ring of tiles round it, byB) |
 | E98 | index.html#floor-5-movables | a find used up is gone; its tile is free again |
 | E99 | index.html#floor-5-movables | one tick for every unit |
@@ -227,7 +227,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E221 | econ.js | QV: the find of a yield whose rate of return R is best (the walk out, the walk home and the crowd counted), of those not full (D195), not left alone for no path (D137), in the box it was sent to cut, and within the look (D197) of the point given; the straight line under-counts the walk home, so finds are weighed by it first and walked (wayLen) best first until none can beat the best |
 | E222 | econ.js | a find no path reaches, or with no spot free on its ring, is left alone a while (D137), and the next beat chooses again: one walled in tries one find a beat and waits, never every find on the map at once |
 | E223 | econ.js | assign: + sends an idle or waiting villager (else the one earning least, QV, on another job, never one posted to a field) to the yield's best find; − sets one of the job's villagers idle |
-| E224 | econ.js | the tick: training and research, ages, upkeep, the villagers, the bell |
+| E224 | econ.js | a stroke of work (gathering or raising) faces its work and sounds on every other beat; the tick: training and research, ages, upkeep, the villagers, the bell |
 | E225 | econ.js | a new game: the book's stores (D172); the bell stays as Start set it |
 | E226 | econ.js | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's research, Mid's spent) ÷ D135 |
 | E227 | combat.js | First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), nerve and the rout (QAI, QAO, QBQ), a soldier's day (its yard, kiting, healing at a shelter), squads, shapes and tempers, towers' reach (QAJ), the missile, sparks and standards. Lives alone; touches the world only through FK. A soldier's jobs: idle (at home, guarding its yard), march (to a point, fighting what it meets), hold (standing at that point), fight, rout (broken and running, or called home) |

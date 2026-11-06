@@ -176,7 +176,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E93** a path of one tile (already there) walks to its middle: no step past the end
 - **E94** to a tile
 - **E95** to a tile beside one
-- **E96** the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's f
+- **E96** the one distance and the one nearest search; the drop-off for a yield is the side's neares
 - **E97** to a tile along a building's edge (the ring of tiles round it, byB)
 - **E296** the walked length (QBL) from a tile to beside a building: a straight step one tile, a diag · QBL (N74)
 - **E297** QCI standing spots: everyone stands on a spot of its own a pace (D196) apart. A point's sp · QCI (N165) · D196 (N164, N165, N166, N167) · D128 (N176)
@@ -459,7 +459,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E352** each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY · QAD (N32, N33) · QY (N27) · QZ (N28)
 - **E353** a cut-out plot is replanted at D222's share of its price and is full again; from a drop-of · D222 (N170)
 - **E354** send a hunter: the given villager, or the nearest idle one, else the nearest from other wo
-- **E224** the tick: training and research, ages, upkeep, the villagers, the bell
+- **E224** a stroke of work (gathering or raising) faces its work and sounds on every other beat; the
 - **E347** the gather beat: the field is worked now (its soil wears); a flock's food goes straight to
 - **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119, N195)

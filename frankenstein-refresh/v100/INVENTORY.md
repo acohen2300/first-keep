@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 2,835 | 430,723 | 430,857 |
-| Books | 1731 | 0 | 455,124 | 455,683 |
+| Game code | 28 | 2,835 | 430,031 | 430,165 |
+| Books | 1731 | 0 | 455,303 | 455,862 |
 | Laws | 87 | 0 | 15,620 | 16,070 |
-| Tools | 4 | 1,483 | 246,192 | 246,431 |
+| Tools | 4 | 1,424 | 226,396 | 226,626 |
 
 ## The trades (code)
 
@@ -29,17 +29,17 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 128 | 14,604 | 14,608 | 95 |
+| index.html#floor-5-movables | 128 | 14,640 | 14,644 | 93 |
 | index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 33 | 5,085 | 5,089 | 92 |
-| index.html#floor-6-climate | 155 | 24,622 | 24,634 | 251 |
+| index.html#floor-6-climate | 155 | 24,487 | 24,499 | 251 |
 | index.html#floor-7-display | 45 | 6,045 | 6,049 | 72 |
 | index.html#the-woods-cache | 51 | 5,093 | 5,097 | 79 |
-| index.html#touch | 49 | 6,429 | 6,433 | 55 |
-| menu.js | 364 | 64,046 | 64,088 | 588 |
-| econ.js | 538 | 97,727 | 97,727 | 75 |
-| combat.js | 351 | 58,532 | 58,532 | 84 |
-| ai.js | 159 | 25,300 | 25,300 | 27 |
+| index.html#touch | 49 | 6,443 | 6,447 | 55 |
+| menu.js | 364 | 63,881 | 63,923 | 588 |
+| econ.js | 538 | 97,493 | 97,493 | 72 |
+| combat.js | 351 | 58,447 | 58,447 | 84 |
+| ai.js | 159 | 25,177 | 25,177 | 26 |
 | sound.js | 57 | 5,774 | 5,774 | 66 |
 
 ## The books
@@ -50,7 +50,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 50 | 14,678 |
 | citations | 207 | 38,853 |
 | colours | 17 | 2,958 |
-| comments | 592 | 98,265 |
+| comments | 592 | 98,444 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
 | measure | 292 | 107,687 |

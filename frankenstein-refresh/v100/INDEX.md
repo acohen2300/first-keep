@@ -400,7 +400,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E93 |  | a path of one tile (already there) walks to its middle: no step past the end |  |
 | E94 |  | to a tile |  |
 | E95 |  | to a tile beside one |  |
-| E96 |  | the drop-off for a yield: the side's nearest building that takes it in (SC Drop-off, B's fifth field) |  |
+| E96 |  | the one distance and the one nearest search; the drop-off for a yield is the side's nearest building that takes it in (SC Drop-off, B's fift |  |
 | E97 |  | to a tile along a building's edge (the ring of tiles round it, byB) |  |
 | E98 |  | a find used up is gone; its tile is free again |  |
 | E99 |  | one tick for every unit |  |
@@ -528,7 +528,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E221 |  | QV: the find of a yield whose rate of return R is best (the walk out, the walk home and the crowd counted), of those not full (D195), not le |  |
 | E222 |  | a find no path reaches, or with no spot free on its ring, is left alone a while (D137), and the next beat chooses again: one walled in tries |  |
 | E223 |  | assign: + sends an idle or waiting villager (else the one earning least, QV, on another job, never one posted to a field) to the yield's bes |  |
-| E224 |  | the tick: training and research, ages, upkeep, the villagers, the bell |  |
+| E224 |  | a stroke of work (gathering or raising) faces its work and sounds on every other beat; the tick: training and research, ages, upkeep, the vi |  |
 | E225 |  | a new game: the book's stores (D172); the bell stays as Start set it |  |
 | E226 |  | the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what it paid for research and ages (the ledger's researc |  |
 | E227 |  | First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), nerve and the rout (QAI, QAO, QBQ), a soldier's day |  |

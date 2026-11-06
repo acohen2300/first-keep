@@ -2630,3 +2630,21 @@ MODIFIED (115):
 LOCKED (1735 of 1850): byte for byte as sealed, 632,913 bytes
 Tests: 38/38 rules hold
 Inventory: 1850 items sealed · 1731 book entries · 87 laws · 207 citations, 39 still to open · 7 known
+
+## C4 · cleanup: the computers' late Barracks found and fixed, t-ai back; duplicates merged; the tests trimmed · 2026-11-06 13:27
+Albert, Nov 6 07:36: check for duplicates and optimize the test; 07:39: concisely and lean, stick to rules
+Opened: code:index.html, code:econ.js, code:combat.js, code:ai.js, code:menu.js, code:sound.js, book:measure, book:capabilities, book:comments, book:citations, book:rules, tool:test.py
+MODIFIED (10):
+- book:comments:E224 · 82 → 169 bytes
+- book:comments:E96 · 113 → 205 bytes
+- code:ai.js · 25,300 → 25,177 bytes
+- code:combat.js · 58,532 → 58,447 bytes
+- code:econ.js · 97,727 → 97,493 bytes
+- code:index.html#floor-5-movables · 14,608 → 14,644 bytes
+- code:index.html#floor-6-climate · 24,634 → 24,499 bytes
+- code:index.html#touch · 6,433 → 6,447 bytes
+- code:menu.js · 64,088 → 63,923 bytes
+- tool:test.py · 217,604 → 197,799 bytes
+LOCKED (1840 of 1850): byte for byte as sealed, 639,920 bytes
+Tests: 38/38 rules hold
+Inventory: 1850 items sealed · 1731 book entries · 87 laws · 207 citations, 39 still to open · 7 known

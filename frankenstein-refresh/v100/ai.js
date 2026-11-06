@@ -6,11 +6,11 @@ const { D, B, SIDES, N } = FK;
 const things = FK.things, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
 const clock = SIDES.map(() => 0), mind = SIDES.map(() => ({})), of = (x) => x || 0, per = (side) => A.pers[A.pers.of[side]];
 const home = FK.seatOf, born = (h) => FK.trains(h.code)[0]; // E242
-const bought = (cap) => FK.ticked(cap).filter((c) => !FK.ticked('Seat').includes(c) && D.cost[c]); // E243
+const bought = FK.bought; // E243
 const [HOUSE] = bought('House'), [WALL] = bought('Line'), [GATE] = bought('Gate'), [WONDER] = bought('Wonder'), [MARKET] = bought('Trade'), [PASTURE] = bought('Flock'), [POST] = bought('Post'), [TOWER] = bought('Shoot').filter((c) => FK.has({ code: c }, 'Hold'));
 const WP = D.ai.walls, rings = new Map(), TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), SHOP = Object.keys(D.makes).find((c) => D.makes[c][EC.beer]);
 const camps = Object.fromEntries(Y.map((y) => [y, bought('Drop-off').find((c) => !FK.ticked('Shore').includes(c) && (FK.SH[c].drop || []).includes(y))])); // E244
-const dist = (a, b) => Math.hypot(a.bx - b.bx, a.by - b.by), tick = (c, k) => FK.has({ code: c }, k), kindOf = (k) => Object.keys(D.train).find((c) => tick(c, k) && tick(c, 'Walk'));
+const dist = FK.dist, tick = (c, k) => FK.has({ code: c }, k), kindOf = (k) => Object.keys(D.train).find((c) => tick(c, k) && tick(c, 'Walk'));
 let DF = A.diff[MENU.S.opt.diff];
 // E245
 function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);
@@ -31,7 +31,7 @@ function chokeClaim(side, enemy) { const t = FK.K.t; if (claimT.get(side) > t) r
   const foot = WAR.armyOf(side).filter((u) => u.job === 'idle' && !u.target && !AB.not.includes(FK.SH[u.code].class)); if (foot.length < AB.foot) return; const g = gapOnRoad(k, f); if (!g) return;
   WAR.dress(foot.filter((_, i) => i < g.w * AB.files), FK.tileAt(g.x, g.y), 'choke', { t0: t, until: t + AB.hold, cols: Math.min(CK.max, Math.max(CK.min, g.w)), f: g.f }); }
 // E525
-const total = (xs, f) => xs.reduce((n, x) => n + f(x), 0), pos = (x) => Math.max(0, x), up = (t) => t.done >= 1;
+const total = (xs, f) => xs.reduce((n, x) => n + f(x), 0), pos = (x) => Math.max(0, x), up = ECON.up;
 const blds = (side, code) => things().filter((t) => t.kind === 'bld' && t.side === side && (!code || t.code === code)), count = (side, code) => blds(side, code).length, rising = (side, code) => blds(side, code).some((t) => !up(t));
 const ready = (side, code) => blds(side, code).filter(up), lineOf = (t) => of(t.q && t.q.length), trainers = (side, code) => ready(side).filter((t) => FK.trains(t.code).includes(code)).sort((a, b) => lineOf(a) - lineOf(b));
 const train = (side, code) => { const [b] = code ? trainers(side, code) : []; return !!b && ECON.queue(b, code); }, queued = (side, ok) => total(blds(side), (t) => (t.q || []).filter((c) => FK.SH[c] && ok(c)).length);
