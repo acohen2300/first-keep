@@ -118,12 +118,12 @@
    "a side's whole store: with the B side's greed (AB)"
   ],
   "gapOnRoad": [
-   "bring",
-   "the narrowest gap on the road to a foe: with chokeClaim"
+   "in v100",
+   "F22: ai.js gapOnRoad (D251 ai)"
   ],
   "chokeClaim": [
-   "bring",
-   "idle foot soldiers hold the narrowest gap on the road to the nearest foe: with AB and the Choke formation"
+   "in v100",
+   "F22: ai.js chokeClaim"
   ]
  },
  "misfits": [

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 2,039 | 278,614 | 278,748 |
-| Books | 1339 | 0 | 285,853 | 286,265 |
+| Game code | 28 | 2,196 | 305,457 | 305,592 |
+| Books | 1385 | 0 | 300,957 | 301,371 |
 | Laws | 80 | 0 | 13,129 | 13,494 |
-| Tools | 4 | 1,002 | 142,692 | 142,846 |
+| Tools | 4 | 1,041 | 152,037 | 152,191 |
 
 ## The trades (code)
 
@@ -23,23 +23,23 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 45 | 4,943 | 4,947 | 82 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 59 | 6,259 | 6,263 | 69 |
+| index.html#the-door | 59 | 6,309 | 6,313 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,704 | 50,708 | 4096 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 120 | 12,943 | 12,947 | 95 |
+| index.html#floor-5-movables | 120 | 12,942 | 12,946 | 95 |
 | index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 24 | 3,282 | 3,286 | 92 |
 | index.html#floor-6-climate | 70 | 9,117 | 9,129 | 256 |
 | index.html#floor-7-display | 28 | 2,952 | 2,956 | 75 |
-| index.html#the-woods-cache | 51 | 4,849 | 4,853 | 79 |
-| index.html#touch | 40 | 4,663 | 4,667 | 59 |
-| menu.js | 312 | 53,396 | 53,438 | 595 |
-| econ.js | 221 | 32,996 | 32,996 | 79 |
-| combat.js | 174 | 27,884 | 27,884 | 84 |
-| ai.js | 49 | 6,372 | 6,372 | 34 |
+| index.html#the-woods-cache | 51 | 4,857 | 4,861 | 79 |
+| index.html#touch | 49 | 6,182 | 6,186 | 55 |
+| menu.js | 358 | 62,309 | 62,352 | 588 |
+| econ.js | 221 | 33,077 | 33,077 | 79 |
+| combat.js | 266 | 42,887 | 42,887 | 84 |
+| ai.js | 59 | 7,642 | 7,642 | 34 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
@@ -48,20 +48,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 5 | 734 |
 | capabilities | 33 | 9,093 |
-| citations | 189 | 28,600 |
+| citations | 191 | 29,775 |
 | colours | 13 | 1,363 |
-| comments | 405 | 64,907 |
+| comments | 435 | 70,221 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 238 | 50,262 |
-| rules | 57 | 15,021 |
+| measure | 245 | 54,402 |
+| rules | 58 | 15,574 |
 | screen | 10 | 2,689 |
 | shells | 89 | 17,061 |
 | sides | 4 | 1,202 |
 | sound | 51 | 11,159 |
-| sprites | 54 | 19,623 |
+| sprites | 59 | 21,687 |
 | tech | 151 | 44,679 |
-| words | 10 | 28,787 |
+| words | 11 | 31,000 |
 
 ## The shells
 
@@ -132,5 +132,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X55 | t-kinds | page | every soldier is the Unit shell with Mid's settings: each kind's class, age, look, teach, price, train time, health, blow, reach, sight and speed (by the foot's 3.4 mph) are Mid's UNIT and TEACH_TO; with research its name, rank, kit, health, blow, reach, speed, sight, armour and train time are Mid's frozen stats() with the shares added; each army building trains exactly its class's kinds, each from its age, and the army stops at the ceiling; every kind's figure at each rank and kit is Mid's own, pixel for pixel |
 | X56 | t-physics | page | the physics of F17b: a villager walks exactly 1.52 m/s on flat firm ground, unloaded, in still air, and every load, grade, mud, snow and headwind gives the speed at which Pandolf's equation (with Pugh's drag as a grade) returns its power, each slower; the effects law adds boosts once and applies cuts one at a time, never reaching 0 nor the base, and every cut in the Tech book is a share between 0 and 1; the falling particles are the pool times the strength, the rates, wind and visibility the law's, and the blizzard flag turns exactly at the NWS's wind and visibility and after three game hours; a step slips exactly when the friction it needs exceeds what the ground offers; Crampons give studs to villagers, foot, archers and the engines' haulers and not riders, Horseshoes to riders; the scout's pace and reach are Mid's |
 | X57 | t-war | page | the blow, nerve and the rout, a soldier's day, squads and muster (F19+F20): every kind's counters on every kind are Mid's frozen vsMul over its UNIT; a tower reaches as far as Mid's rangeFrom within 1% (the arrow's drag, QAJ); a foe's worth in reach is Mid's foeValue; the nerve, flank, yard, kite, shelter, shapes, tempers, plunder and wear are Mid's numbers; on the page a blow from behind lands × D141, a skirmish breaks a soldier who runs and comes back, a fallen tower pays D233 of its price, and Muster brings a squad's lack at twice the price |
+| X58 | t-orders | page | the finger, orders you can follow and the War Director (F21+F22): Mid's numbers (HOLD_MS, PRESS_SHOW, DBL_MS, HUD, ARMY_STILL, DIRECT, CHOKE, AMBUSH, CHARGE, FALLBACK, AB) in the books; Mid's frozen etaOf and reinforcePlan's waves for the same soldiers; on the page a box picks many, a tap is their order with its line and time, Go makes a mission, the charge quickens then tires, the choke stands as many files as the gap, an ambush hides |
 
-1451 items sealed · 1339 book entries · 80 laws · 189 citations, 33 still to open · 7 known
+1497 items sealed · 1385 book entries · 80 laws · 191 citations, 33 still to open · 7 known

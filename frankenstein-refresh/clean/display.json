@@ -478,8 +478,8 @@
    "when a walker last moved, to move its legs; v100 steps the frames by u.path and metres walked (QBU)"
   ],
   "leavesOver": [
-   "bring",
-   "leaves over a soldier in ambush (with the ambush)"
+   "in v100",
+   "F22: combat.js drawOrders, P41 leaves"
   ],
   "drawUnit": [
    "bring",
@@ -514,8 +514,8 @@
    "combat.js bar(), the health bars"
   ],
   "flagAt": [
-   "bring",
-   "the flag at your rally point"
+   "in v100",
+   "F22: combat.js drawOrders, P40 flag"
   ],
   "FONTF": [
    "cut",
@@ -602,8 +602,8 @@
    "index.html drawFog"
   ],
   "drawOrders": [
-   "bring",
-   "your groups on the march: a dashed line to where they go, a ring there, the time left; v100 has the War page's crosshair (combat.js)"
+   "in v100",
+   "F22: combat.js drawOrders, P39"
   ],
   "drawTracers": [
    "in v100",
@@ -626,8 +626,8 @@
    "a pale flash for a new age, a wonder, a victory (theatrics)"
   ],
   "drawTouch": [
-   "bring",
-   "the trees marked for cutting, the hold ring, the selection box, the choke being drawn (Touch)"
+   "in v100",
+   "F21: index.html touch draw (ring, box, P42) and menu.js draw (the choke being drawn); the marked trees wait for road cutting (Parked)"
   ],
   "RAINP": [
    "in v100",

@@ -6,20 +6,20 @@
    "index.html touch floor: ptrs, the fingers down"
   ],
   "drag": [
-   "bring",
-   "one-finger pan and the two-finger pinch are in v100 (index.html touch floor, zoomAt); bring the drag's other modes: place, wall corner, wall slide, box, choke, crosshair"
+   "in v100",
+   "F21: index.html touch floor, the gesture (press: pan, a line, the crosshair, a box); the place and wall modes were F15"
   ],
   "HOLD_MS": [
-   "bring",
-   "the hold 320 ms, its ring after 250 ms, the double tap 320 ms: part of the finger's rule (hold to pick more or box, double tap for the card)"
+   "in v100",
+   "F21: D246 touch (hold, show, dbl)"
   ],
   "holdT": [
-   "bring",
-   "the hold's timer: on one of yours, pick it and keep picking; on open ground, a box; on the crosshair, drag it"
+   "in v100",
+   "F21: index.html touch floor, the hold timer; menu.js FK.on(hold)"
   ],
   "holdStop": [
-   "bring",
-   "ends the hold; with the hold"
+   "in v100",
+   "F21: index.html touch floor, clearTimeout(holdT) on up, move and a second finger"
   ],
   "lp": [
    "cut",
@@ -66,56 +66,56 @@
    "the toast when you order an attack on a side you are not at war with; with diplomacy (Later)"
   ],
   "dropDrag": [
-   "bring",
-   "letting go of a drag in one place (box, crosshair glow, edge); with the hold and the crosshair"
+   "in v100",
+   "F21: index.html touch floor and menu.js FK.on(drop): a second finger or a cancel drops the line, the box and the crosshair glow"
   ],
   "miniAt": [
    "bring",
    "(Albert 11:16: bring, clean) the small map's finger (tap to jump, drag to sweep); Albert's held list: see misfits"
   ],
   "hitAt": [
-   "bring",
-   "what is under the finger: a unit first, a building by its foot or its drawn roof, a find, a resource, else the ground, never under fog; v100 has menu.js under() and the 16 px unit pick, bring the roof and the find order"
+   "in v100",
+   "F21: index.html hitAt (a unit first, by D246 hit and hitZ), menu.js under() for the rest; the roof hit is parked"
   ],
   "cardFor": [
    "cut",
    "a hit to a card's type; v100's card is the subject itself, its rows picked by ticks (SN4)"
   ],
   "lastTap": [
-   "bring",
-   "the last tap, for the double tap"
+   "in v100",
+   "F21: menu.js S.tap"
   ],
   "tapAt": [
-   "bring",
-   "Albert's one rule for the finger (Build 40, Nov 2): a tap picks a unit, a second opens its card, a building or find opens on one tap, with units picked a tap is the order, empty ground raises the sword and x, a cut-out plot replants; v100 has menu.js FK.on('tap') (pick and send), this replaces it"
+   "in v100",
+   "F21: menu.js FK.on('tap'), Albert's one rule (E429)"
   ],
   "ordAt": [
-   "bring",
-   "tap a marching group's ring to pick the group (26 px)"
+   "in v100",
+   "F21: menu.js ordAt (D246 ord)"
   ],
   "picked": [
-   "bring",
-   "the units the finger holds (many); v100 holds one (FK.sel)"
+   "in v100",
+   "F21: index.html pick, FK.picked()"
   ],
   "pickObj": [
-   "bring",
-   "a pick's thing; with many picked"
+   "in v100",
+   "F21: the pick list holds the units themselves (FK.picked)"
   ],
   "setPick": [
-   "bring",
-   "set what is picked; with many picked"
+   "in v100",
+   "F21: FK.select(one or many)"
   ],
   "pickToggle": [
-   "bring",
-   "tap adds or drops a unit while picking more; with many picked"
+   "in v100",
+   "F21: menu.js pickToggle"
   ],
   "pickSound": [
    "in v100",
    "each shell's voice in books/shells.js (pickHoof, pickTwang, pickMetal, pickWood: Sound book HU14 and its neighbours)"
   ],
   "order": [
-   "bring",
-   "the obvious order by tap for what is picked: attack, hunt, convert, gather, build, mend, work, walk, each villager to its own spot, the wagon's spot checked, the order's meal cost, the gold ripple; v100 has menu.js tap (gather, raise, fight, march), bring the rest"
+   "in v100",
+   "F21: combat.js order (E413), its meals in menu.js tap; convert, the shrine and the wagon check wait for their units (Parked)"
   ],
   "startPlace": [
    "in v100",
@@ -126,8 +126,8 @@
    "menu.js VERBS.close (S.ghost = null), and a second tap on the picked building"
   ],
   "boxPick": [
-   "bring",
-   "hold and drag a box: your people in it are picked; a box of trees and nobody opens the road-cutting card"
+   "in v100",
+   "F21: menu.js boxPick; the box of trees' road card is parked"
   ]
  },
  "misfits": [

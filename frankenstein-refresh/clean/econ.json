@@ -242,16 +242,16 @@
    "vassals (demand, tribute, levy; kept for after the core)"
   ],
   "chargeWhy": [
-   "bring",
-   "Charge, a command you steer (War); v100 has Attack and Recall"
+   "in v100",
+   "F22: combat.js chargeWhy"
   ],
   "charge": [
-   "bring",
-   "Charge: faster, then tired (War)"
+   "in v100",
+   "F22: combat.js charge: D249 pace, then tired by QP; the blow by QBT, not Mid's 1.3"
   ],
   "fallBack": [
-   "bring",
-   "Fall back, a command you steer (War)"
+   "in v100",
+   "F22: combat.js fallBack, damage × D250 hit, no rout while it lasts"
   ],
   "takePrisoner": [
    "bring",
@@ -418,20 +418,20 @@
    "F14: econ.js boxCut(side, box, n) and the patch: cut the box's finds, cut in from outside, then back to work; the hold-and-drag box and its card wait for the menu build"
   ],
   "centreOf": [
-   "bring",
-   "orders you can follow: a group's line, ring, count and time"
+   "in v100",
+   "F22: combat.js centreOf"
   ],
   "routeK": [
-   "bring",
-   "orders you can follow: the walk's length over the straight line"
+   "in v100",
+   "F22: combat.js routeK (QBL)"
   ],
   "etaOf": [
-   "bring",
-   "orders you can follow: the slowest marcher's time"
+   "in v100",
+   "F22: combat.js etaOf (QCB pace)"
   ],
   "march": [
-   "bring",
-   "a group order with its line and arrival time; v100 has combat.js march and attack without them"
+   "in v100",
+   "F22: combat.js mark (the group order), beside march"
   ],
   "sendHome": [
    "in v100",
@@ -442,8 +442,8 @@
    "a warning: a foe's group heading for you, how many and how soon"
   ],
   "ordersTick": [
-   "bring",
-   "orders you can follow: who is still walking, a message when all have stopped"
+   "in v100",
+   "F22: combat.js ordersTick"
   ],
   "isThreat": [
    "bring",

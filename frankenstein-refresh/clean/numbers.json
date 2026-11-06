@@ -638,8 +638,8 @@
    "F19+F20: D231, D239 rout"
   ],
   "CHARGE": [
-   "bring",
-   "the charge"
+   "in v100",
+   "F22: D249 charge (dmg left to QBT)"
   ],
   "ORDER": [
    "in v100",
@@ -702,8 +702,8 @@
    "with TEACH; F18: each kind's teach slot holds it (shells), the School's lesson comes with M26"
   ],
   "FALLBACK": [
-   "bring",
-   "fall back in order"
+   "in v100",
+   "F22: D250 fallback"
   ],
   "PRISON": [
    "bring",
@@ -722,12 +722,12 @@
    "F19+F20: D240 forms"
   ],
   "CHOKE": [
-   "bring",
-   "the choke"
+   "in v100",
+   "F22: D251 choke"
   ],
   "AMBUSH": [
-   "bring",
-   "the ambush"
+   "in v100",
+   "F22: D252 ambush"
   ],
   "COLUMN": [
    "in v100",
@@ -774,8 +774,8 @@
    "gatherers keep away from danger"
   ],
   "DIRECT": [
-   "bring",
-   "the War Director's orders"
+   "in v100",
+   "F22: D248 direct"
   ],
   "TOAST": [
    "in v100",

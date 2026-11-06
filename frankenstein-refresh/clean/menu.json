@@ -1450,12 +1450,12 @@
    "which taps teach which hint; teaching"
   ],
   "lpT": [
-   "bring",
-   "hold a button for its second move (Rally to Ambush, Attack to Home, a kind to its second move)"
+   "in v100",
+   "F21: menu.js lpT, held(), data-h (E428)"
   ],
   "lpStop": [
-   "bring",
-   "ends a button's hold; with the hold"
+   "in v100",
+   "F21: menu.js lpStop"
   ],
   "TAPS": [
    "bring",
@@ -1466,12 +1466,12 @@
    "counts a tap and a tap on a dim cell; Tap counts card"
   ],
   "HUD": [
-   "bring",
-   "the missions' measures (a fight's reach 140, losing below 0.4 ...); with squads and missions"
+   "in v100",
+   "F22: D247 hud"
   ],
   "mUnits": [
-   "bring",
-   "a mission's soldiers; missions"
+   "in v100",
+   "F22: combat.js mUnits"
   ],
   "sqUnits": [
    "in v100",
@@ -1482,12 +1482,12 @@
    "a squad is out; squads"
   ],
   "hostile": [
-   "bring",
-   "a foe for a mission; missions"
+   "in v100",
+   "F22: combat.js hostile"
   ],
   "foesNear": [
-   "bring",
-   "foes your people see near a group; missions"
+   "in v100",
+   "F22: combat.js foesNear"
   ],
   "powerSum": [
    "in v100",
@@ -1522,76 +1522,76 @@
    "F19+F20: menu.js, sqPlan"
   ],
   "aimSpot": [
-   "bring",
-   "the crosshair moved by a tap, what it is on; v100 aims by a tap once (menu.js S.arming)"
+   "in v100",
+   "F22: menu.js aimSpot (E430)"
   ],
   "aimNear": [
-   "bring",
-   "the finger on the crosshair (56 px) to drag it"
+   "in v100",
+   "F22: menu.js aimNear (D247 aim)"
   ],
   "aimAt": [
-   "bring",
-   "a tap moves the crosshair while War is open"
+   "in v100",
+   "F22: menu.js tap while War is open"
   ],
   "aimColor": [
-   "bring",
-   "the crosshair's colour: green yours, blue ally, white nature, red foe or hazard"
+   "in v100",
+   "F22: menu.js aimColor (C5 to C8)"
   ],
   "hazardAt": [
-   "bring",
-   "a hazard at a spot (sand, a fire); for the crosshair"
+   "in v100",
+   "F22: menu.js aimColor reads red near a hostile; sand, fire and cracks wait for their hazards (Parked)"
   ],
   "sqFree": [
-   "bring",
-   "who a squad sends; missions"
+   "in v100",
+   "F22: combat.js send (free by squad)"
   ],
   "hudEta": [
-   "bring",
-   "a squad's time to the crosshair"
+   "in v100",
+   "F22: menu.js etaNow, kept per crosshair, count and D247 settle"
   ],
   "hudFire": [
-   "bring",
-   "a squad marches on the crosshair and takes its slot"
+   "in v100",
+   "F22: combat.js send (E416)"
   ],
   "hudGo": [
-   "bring",
-   "Go: every ready squad, else every idle soldier; v100's Attack sends every idle soldier (menu.js VERBS.attack)"
+   "in v100",
+   "F22: combat.js go; the Attack cell"
   ],
   "hudAbort": [
-   "bring",
-   "a mission comes home"
+   "in v100",
+   "F22: combat.js callHome; a squad held"
   ],
   "hudAbortAll": [
-   "bring",
-   "every mission home"
+   "in v100",
+   "F22: combat.js everyHome; Attack held"
   ],
   "hudHome": [
    "in v100",
    "combat.js recall(), menu.js VERBS.recall"
   ],
   "setRally": [
-   "bring",
-   "where new soldiers go and which squad they join"
+   "in v100",
+   "F22: menu.js rally (SIDES[ME].flag), econ.js spawnBy marches new soldiers there"
   ],
   "missionsTick": [
-   "bring",
-   "each second: where a mission is, how it goes, what to say"
+   "in v100",
+   "F22: combat.js ordersTick (E415)"
   ],
   "reinforcePlan": [
-   "bring",
-   "who can reach a fight in time, by arrival"
+   "in v100",
+   "F22: combat.js reinforcePlan (E417)"
   ],
   "waveLine": [
-   "bring",
-   "the reinforcement in words"
+   "in v100",
+   "F22: menu.js waveLine"
   ],
   "hudJoin": [
-   "bring",
-   "reinforcements join a mission"
+   "in v100",
+   "F22: combat.js join"
   ],
   "hudReinforce": [
-   "bring",
-   "send more to a mission"
+   "in v100",
+   "F22: menu.js reinforce (the mission most in need)"
   ],
   "jobsPage": [
    "bring",
@@ -1618,8 +1618,8 @@
    "patches the row; menu.js render() and base()"
   ],
   "drawReticle": [
-   "bring",
-   "the crosshair's art: brackets, chevrons, scan line, sonar ring"
+   "in v100",
+   "F22: menu.js draw, P38 reticle (E432)"
   ],
   "INTENT": [
    "in v100",

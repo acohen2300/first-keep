@@ -18,6 +18,16 @@ function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n *
   const add = (i, j) => { const a = Math.atan2(j + H - cj, i + H - ci) - base; if (!off.has(j * N + i)) off.set(j * N + i, Math.abs(Math.atan2(Math.sin(a), Math.cos(a)))); };
   for (let s = -WP.steps; s <= WP.steps; s++) { const a = base + s * WP.step, i = Math.floor(ci + Math.cos(a) * R), j = Math.floor(cj + Math.sin(a) * R); if (pi !== null && i !== pi && j !== pj) add(i, pj); add(i, j); [pi, pj] = [i, j]; }
   const ks = [...off.keys()], gates = ks.slice().sort((a, b) => off.get(a) - off.get(b)).filter((k, n) => n < WP.gates); return [...gates.map((k) => [k, GATE]), ...ks.filter((k) => !gates.includes(k)).map((k) => [k, WALL])]; }
+// E434
+const AB = D.choke.ai, CK = D.choke, claimT = new Map();
+function gapOnRoad(a, b) { const T = D.tile, L = dist(a, b), ux = (b.bx - a.bx) / L, uy = (b.by - a.by) / L, open = (x, y) => FK.walkable(FK.tileAt(x, y)); let best = null;
+  for (let t = AB.from * T; t < L * D.place.half; t += AB.step * T) { const x = a.bx + ux * t, y = a.by + uy * t; if (!open(x, y)) continue; let w = CK.min;
+    for (const s of [CK.min, -CK.min]) for (let i = CK.min; i <= AB.max && open(x - uy * s * i * T, y + ux * s * i * T); i++) w++;
+    if (w >= AB.min && w <= AB.max && (!best || w < best.w)) best = { x, y, w, f: [ux, uy] }; }
+  return best; }
+function chokeClaim(side, enemy) { const t = FK.K.t; if (claimT.get(side) > t) return; claimT.set(side, t + AB.every); const k = home(side), f = home(enemy); if (!k || !f) return; // E435
+  const foot = WAR.armyOf(side).filter((u) => u.job === 'idle' && !u.target && !AB.not.includes(FK.SH[u.code].class)); if (foot.length < AB.foot) return; const g = gapOnRoad(k, f); if (!g) return;
+  WAR.dress(foot.filter((_, i) => i < g.w * AB.files), FK.tileAt(g.x, g.y), 'choke', { t0: t, until: t + AB.hold, cols: Math.min(CK.max, Math.max(CK.min, g.w)), f: g.f }); }
 const count = (side, code) => things().filter((t) => t.kind === 'bld' && t.side === side && t.code === code).length;
 const trainer = (side, code) => things().find((t) => t.kind === 'bld' && t.side === side && t.done >= 1 && FK.trains(t.code).includes(code) && !(t.q && t.q.length));
 function round(side) { const s = SIDES[side], h = home(side); if (!h) return; const age = s.age, jobs = ECON.jobs(side), vs = ECON.villagersOf(side), want = D.ai.people[age], mix = D.ai.mix[age], sites = things().filter((t) => t.kind === 'bld' && t.side === side && t.done < 1);
@@ -39,11 +49,11 @@ function round(side) { const s = SIDES[side], h = home(side); if (!h) return; co
   if (mine.length < D.ai.army[age]) { const T = D.ai.troops, score = (c) => theirs.reduce((n, u) => n + WAR.vs({ code: c, side }, u), 0), best = T.reduce((b, c) => (score(c) > score(b) ? c : b));
     for (const code of [best, ...T]) { const b = trainer(side, code); if (b && ECON.queue(b, code)) break; } }
   // E249
-  const eh = home(enemy), w = WAR.waves[side];
+  const eh = home(enemy), w = WAR.waves[side]; if (!w) chokeClaim(side, enemy);
   if (!w && mine.length >= D.ai.army[Math.max(1, age)] && eh) { if (WAR.odds(mine, enemy) >= D.ai.odds) WAR.attack(side, FK.tileAt(eh.bx, eh.by)); }
   else if (w && eh) { const hp = things().filter((t) => t.kind === 'bld' && t.side === enemy).reduce((n, t) => n + t.hp, 0) + theirs.reduce((n, u) => n + u.hp, 0); if (hp < seen[side].hp) seen[side].t = 0; else seen[side].t += D.ai.beat; seen[side].hp = hp; if (seen[side].t > D.ai.stall) { WAR.recall(side); seen[side].t = 0; } }
 }
-FK.on('start', () => { clock.fill(0); rings.clear(); for (const q of seen) { q.hp = 0; q.t = 0; } });
+FK.on('start', () => { clock.fill(0); rings.clear(); claimT.clear(); for (const q of seen) { q.hp = 0; q.t = 0; } });
 FK.on('tick', (dt) => { if (ECON.result()) return; for (const side of D.players) { if (side === 0) continue; clock[side] += dt; if (clock[side] >= D.ai.beat) { clock[side] = 0; round(side); } } });
-return { round, spot, raise, wallPlan };
+return { round, spot, raise, wallPlan, gapOnRoad, chokeClaim };
 })();

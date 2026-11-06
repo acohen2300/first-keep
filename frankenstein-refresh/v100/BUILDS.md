@@ -1968,3 +1968,70 @@ MODIFIED (113):
 LOCKED (1339 of 1451): byte for byte as sealed, 406,133 bytes
 Tests: 31/31 rules hold
 Inventory: 1451 items sealed · 1339 book entries · 80 laws · 189 citations, 33 still to open · 7 known
+
+## F21+F22 · touch: picking many, the obvious order; missions, the crosshair, orders you can follow; the War Director · 2026-11-05 20:38
+Albert, Nov 5 11:40: yes yes F10–F39; 13:30: one module a build; 19:25: merge small builds
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:screen, book:sprites, book:words, book:comments, book:rules, book:citations, tool:test.py
+MODIFIED (59):
+- book:citations:N190 · added
+- book:citations:N191 · added
+- book:comments:E162 · 79 → 147 bytes
+- book:comments:E164 · 214 → 226 bytes
+- book:comments:E311 · 144 → 214 bytes
+- book:comments:E406 · added
+- book:comments:E407 · added
+- book:comments:E408 · added
+- book:comments:E409 · added
+- book:comments:E410 · added
+- book:comments:E411 · added
+- book:comments:E412 · added
+- book:comments:E413 · added
+- book:comments:E414 · added
+- book:comments:E415 · added
+- book:comments:E416 · added
+- book:comments:E417 · added
+- book:comments:E418 · added
+- book:comments:E419 · added
+- book:comments:E420 · added
+- book:comments:E421 · added
+- book:comments:E422 · added
+- book:comments:E423 · added
+- book:comments:E424 · added
+- book:comments:E425 · added
+- book:comments:E426 · added
+- book:comments:E427 · added
+- book:comments:E428 · added
+- book:comments:E429 · added
+- book:comments:E430 · added
+- book:comments:E431 · added
+- book:comments:E432 · added
+- book:comments:E433 · added
+- book:comments:E434 · added
+- book:comments:E435 · added
+- book:measure:D246 · added
+- book:measure:D247 · added
+- book:measure:D248 · added
+- book:measure:D249 · added
+- book:measure:D250 · added
+- book:measure:D251 · added
+- book:measure:D252 · added
+- book:rules:X58 · added
+- book:sprites:P37 · 444 → 342 bytes
+- book:sprites:P38 · added
+- book:sprites:P39 · added
+- book:sprites:P40 · added
+- book:sprites:P41 · added
+- book:sprites:P42 · added
+- book:words:J11 · added
+- code:ai.js · 6,372 → 7,642 bytes
+- code:combat.js · 27,884 → 42,887 bytes
+- code:econ.js · 32,996 → 33,077 bytes
+- code:index.html#floor-5-movables · 12,947 → 12,946 bytes
+- code:index.html#the-door · 6,263 → 6,313 bytes
+- code:index.html#the-woods-cache · 4,853 → 4,861 bytes
+- code:index.html#touch · 4,667 → 6,186 bytes
+- code:menu.js · 53,438 → 62,352 bytes
+- tool:test.py · 114,019 → 123,364 bytes
+LOCKED (1438 of 1497): byte for byte as sealed, 457,033 bytes
+Tests: 32/32 rules hold
+Inventory: 1497 items sealed · 1385 book entries · 80 laws · 191 citations, 33 still to open · 7 known

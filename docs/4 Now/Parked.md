@@ -360,3 +360,15 @@ Parked: old text still has apostrophes (a sweep for stage 5 or later); region fi
   - The squads' menu redesigned: Alpha, Bravo, Charlie and Set up in War, the dials there; plan and Muster on the War Council's card.
   - Ticks: Shelter (Town Center, Castle, Barracks, Mess tent) and Squad (War Council); stance and formation fold into Squad.
 - Waiting: the Guide rows (TRIGGERS); a squad out on a mission (sqOut); All hands' going inside; the mess tent's fed rule; priests' nerve; prisoners; the computers' muster; the tower steps' names and hold; Garrison wards needs Hospitals; Gun founding needs Blasting.
+
+## Frankenstein F21+F22 · the finger: picking many and the obvious order; missions, the crosshair, orders you can follow; the War Director (Nov 5)
+- Built: Mid's finger rule (a tap picks yours, a second tap opens the card, a hold picks more or draws a box, a tap is the obvious order for all picked); orders you can follow (a line, a ring and the time left, "arrived"); missions by squad or army (Go, Home, losing, lost, reinforce by arrival waves); the crosshair while War is open (dragged when held, coloured by what is under it); the quick action's sword and close; the rally flag; the Director's moves (wall, advance, loose, fall back, charge, wheel, bombard); the choke drawn across a gap; the ambush in cover; the computer's choke on the road.
+- Cut: Mid's charge ×1.3 damage and its shove (QBT: the faster striker's momentum does it); Mid's second meal charge when an order went through order() as well as hudFire or direct (one order, one meal bill); mission slots (a mission is keyed by its squad, or the army).
+- For Albert's yes (not Mid's, or not real):
+  - War's menu redesigned: the middle's Map page is Rally (held: Ambush), Choke, Reinforce, Map; Direct shows each kind's tap move over its held move and its wait; Attack is Go, held Home; a squad held calls it home; a squad's cell shows its mission (time left, or its chance in a fight).
+  - The ambush goes to cover near the crosshair at once (Mid: the next tap); Reinforce helps the mission most in need (Mid: the mission's own card).
+  - General staff's +20% charge now adds to the charge's pace (1.5 × 1.2), since the blow is by QBT; Mid put it on the damage.
+  - Tired after a charge settles back by QP (0.8 → 1, τ 10 s); Mid held 0.8 for 10 s then 1.
+  - The Director's sounds use the events v100 has: the wall the blow's, loose the arrow's, the rest the horn (Mid: hooves for the wheel, a boom for the bombard).
+  - A box picks by the screen rectangle you draw (Mid: by the world box under it).
+- Waiting: the roof hit (a tap on a building's drawn height); the box of trees' road-cutting card; the priest's convert and shrine, the wagon's spot check in an order; hazards under the crosshair (sand, fire, cracks); the gold ripple on an order and the crosshair's ripple (ripples are held); the Attack-with card's counts per kind (qsPool, qsPick); the Guide rows (TRIGGERS: sending soldiers, the quick action, four missions).

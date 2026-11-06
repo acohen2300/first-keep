@@ -1817,7 +1817,7 @@
    {
     "You send soldiers somewhere": [
      "bring",
-     "what soldiers sent out show (states, ring, Recall, Follow): Guide, with the army"
+     "what soldiers sent out show (states, ring, Recall, Follow): Guide, with the army; F21+F22: the feature is in (combat.js, menu.js), its Guide row waits for the Guide (Parked)"
     ],
     "An enemy group you can see heads for your buildings": [
      "bring",
@@ -1973,7 +1973,7 @@
     ],
     "The quick action": [
      "bring",
-     "the quick action at your finger, with the screen"
+     "the quick action at your finger, with the screen; F21+F22: the feature is in (combat.js, menu.js), its Guide row waits for the Guide (Parked)"
     ],
     "The Natives and the Throne": [
      "bring",
@@ -2041,7 +2041,7 @@
     ],
     "War: four missions": [
      "bring",
-     "missions with a promised time, with the army (v100 has Set target, Attack, Recall)"
+     "missions with a promised time, with the army (v100 has Set target, Attack, Recall); F21+F22: the feature is in (combat.js, menu.js), its Guide row waits for the Guide (Parked)"
     ],
     "The Alarm: four orders": [
      "bring",

@@ -30,8 +30,8 @@
    "F19+F20: combat.js, nearHome"
   ],
   "ambushTick": [
-   "bring",
-   "the ambush in place: hidden soldiers spring on a foe within reach or a blow; part of the War Director's choke and ambush"
+   "in v100",
+   "F22: combat.js ambushTick, hidden by enemies()"
   ],
   "solTick": [
    "in v100",
@@ -142,40 +142,40 @@
    "F14: econ.js startWork(): a field's builder works it; a camp's builder goes to the best find it takes"
   ],
   "qsPool": [
-   "bring",
-   "who can go on an Attack with: the whole army or one battalion; part of the Attack with card (menu, Screen book)"
+   "in v100",
+   "F22: combat.js free and send by squad; the Attack with card's counts per kind are parked"
   ],
   "qsPick": [
-   "bring",
-   "Attack with picks idle soldiers first, then the nearest, by kind"
+   "in v100",
+   "F22: combat.js free (idle first); per-kind counts parked with the card"
   ],
   "qsHTML": [
    "bring",
    "the Attack with card: how many of each kind; v100's War tab has one Attack of every idle soldier; comes as Screen book rows"
   ],
   "sendable": [
-   "bring",
-   "the soldiers that can be sent (not guards, spies, students)"
+   "in v100",
+   "F22: combat.js sendable (no guards, spies or students in v100 yet)"
   ],
   "ARMY_STILL": [
-   "bring",
-   "2.5 s still: a soldier that has not moved is holding; part of the soldier's status word"
+   "in v100",
+   "F22: D247 still"
   ],
   "armyStatus": [
-   "bring",
-   "each soldier's status in one word: rally, march, fight, hold, rout"
+   "in v100",
+   "F22: combat.js status (E412)"
   ],
   "idleSoldier": [
-   "bring",
-   "an idle soldier: holding or rallying, not placed by hand"
+   "in v100",
+   "F22: combat.js idleSoldier"
   ],
   "free": [
-   "bring",
-   "the idle soldiers that can be sent"
+   "in v100",
+   "F22: combat.js free"
   ],
   "freeWhy": [
-   "bring",
-   "why nobody can be sent (none, or who is busy with what)"
+   "in v100",
+   "F22: combat.js freeWhy"
   ],
   "guardsOf": [
    "bring",
@@ -186,24 +186,24 @@
    "the card row to send or call back guards"
   ],
   "showQuick": [
-   "bring",
-   "the quick action: a tap on open ground with nothing picked puts the sword and the x there (Albert, Nov 3); v100's War tab has Set target and Attack"
+   "in v100",
+   "F21: menu.js S.qa and #qa"
   ],
   "hideQuick": [
-   "bring",
-   "closes the quick action"
+   "in v100",
+   "F21: menu.js qclose, a press or a tap"
   ],
   "quickGo": [
-   "bring",
-   "the quick action's sword: every soldier to the spot"
+   "in v100",
+   "F21: menu.js quick"
   ],
   "ofKind": [
-   "bring",
-   "the soldiers of one kind that can be sent; part of the War Director"
+   "in v100",
+   "F22: combat.js ofKind"
   ],
   "aimH": [
-   "bring",
-   "where the War Director aims: the crosshair or the camera's middle"
+   "in v100",
+   "F22: combat.js aimK (the crosshair, menu.js S.aim)"
   ],
   "drillOn": [
    "in v100",
@@ -218,40 +218,40 @@
    "F19+F20: combat.js, drillHold"
   ],
   "toolSet": [
-   "bring",
-   "the picked soldiers, else all that can be sent; for choke and ambush"
+   "in v100",
+   "F22: menu.js toolSet"
   ],
   "chokeAt": [
-   "bring",
-   "the choke: soldiers stand across a gap as many files as it holds (v100 Formations: Choke)"
+   "in v100",
+   "F22: combat.js chokeAt; the drag on the map with Choke on"
   ],
   "coverNear": [
-   "bring",
-   "the nearest cover (open ground with forest near) for an ambush"
+   "in v100",
+   "F22: combat.js coverNear"
   ],
   "ambushAt": [
-   "bring",
-   "the ambush: soldiers go to cover and go to ground"
+   "in v100",
+   "F22: combat.js ambushAt, at the crosshair (Rally held)"
   ],
   "DIRECT_WHY": [
-   "bring",
-   "the War Director's reasons when nobody can move"
+   "in v100",
+   "F22: J11 orders.why"
   ],
   "DIRECTS": [
-   "bring",
-   "the War Director's six moves: shield wall, advance, loose, fall back, charge, wheel"
+   "in v100",
+   "F22: combat.js DIRECTS (E419)"
   ],
   "DIRECT_OF": [
-   "bring",
-   "each kind's tap and hold moves, with the word and the sound"
+   "in v100",
+   "F22: J11 orders.direct"
   ],
   "direct": [
-   "bring",
-   "runs a War Director move and pays its order cost"
+   "in v100",
+   "F22: combat.js direct (E420)"
   ],
   "directWait": [
-   "bring",
-   "the wait before a kind's move is ready again (the reload, the charge)"
+   "in v100",
+   "F22: combat.js directWait"
   ],
   "SUGGEST": [
    "in v100",

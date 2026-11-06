@@ -273,9 +273,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## index.html#touch
 
-- **E162** Touch: one finger pans, two pinch; a wheel zooms about the pointer.
+- **E162** Touch: one finger pans, two pinch; a wheel zooms about the pointer; a held finger picks mo
 - **E163** the camera rule: the board never leaves the screen's middle; a board smaller than the scre
-- **E164** the tile under a tap, at the land's height, and the player's unit nearest it; the modules  · QCI (N165)
+- **E425** the finger's gesture: where it went down and is, when, and what a module made of it (a lin · D246 (N190)
+- **E164** what is under the finger: the tile at the land's height and the nearest unit it may see (y · D246 (N190)
+- **E426** the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)
 - **E165** The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a see · QBF (N65)
 - **E166** the door: what the modules may touch
 - **E167** the test hook
@@ -317,6 +319,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E191** tap a yield: new villagers go there (the ring)
 - **E192** tap picks, slide places the ghost, tap again builds
+- **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
 - **E194** a cell's object arguments live here by key, since the DOM holds strings
@@ -332,6 +335,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137)
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
+- **E428** a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) · D246 (N190)
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
@@ -344,6 +348,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
 - **E341** a tap on open ground while the Build page is open: what fits there is picked and its ghost
+- **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
+- **E433** a tile on the board (the floor gives -1 off it)
+- **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
+- **E431** the finger's holds and drags on the map: the choke drawn, the crosshair dragged, yours pic
+- **E432** the choke being drawn and the crosshair (Mid's drawReticle): brackets, a sonar ring, turni
 - **E359** the town is told what food, the seasons and the flock do, in the Words book's news
 - **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
 - **E208** one height for every page but the Tall ones: each is laid out once, the tallest sets the p
@@ -414,6 +423,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E227** First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), n · QBO (N69, N188) · QBT (N81, N82, N83, N18) · QAG (N36, N37, N188) · QAF (N35) · QAI (N76, N188) · QAO (N45) · QBQ (N76) · QAJ (N39, N40)
+- **E406** the orders, missions and the War Director's measures and words; the groups on the march (O
 - **E285** the Sides book (I) and the stances made in play, each pair's own; a new game forgets them
 - **E286** who belongs (the kind decides): a side's own are no group; an animal (I4) is a beast; a ki · I4 (N158, N170) · I3 (N158)
 - **E287** a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between i · I2 (N158) · N159
@@ -444,12 +454,30 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E391** a foe building in the way is struck (Mid's findBlocker)
 - **E372** the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps t
 - **E392** a group dressed into its shape at a tile (Mid's formUp): facing from home to there, the sq
+- **E407** the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, 
 - **E393** Albert's x% by x%: a soldier in a drill not D242's share of the way to its place by that s · D242 (N188)
 - **E394** at home an army stands in the yard of the building that trained it (or its Town Center), t
 - **E239** a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; ou · QAI (N76, N188) · QP (N16) · QAO (N45)
 - **E395** a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own p · D231 (N188, N76, N16)
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
+- **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
 - **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40)
+- **E409** the orders' shared measures: a point of a tile, the tile of a point, the length between, a
+- **E410** the walk over the straight line (Mid's routeK): the way by A* (QBL), its steps summed, hel · QBL (N74) · D247 (N190)
+- **E411** a group's order you can follow (Mid's march): its tile, label, start and walk ratio; each 
+- **E412** each soldier's one word (Mid's armyStatus): rout, fight, rally (sent home, walking to the  · D247 (N190)
+- **E413** the obvious order for what is picked (Mid's order, Albert Nov 2): a foe is fought, a beast
+- **E414** missions: a mission's soldiers, the hostile soldiers a group sees near it, and the chance  · QAF (N35)
+- **E415** each beat: every order's centre, count, fight and time left, arrived once all have stopped
+- **E416** Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshai
+- **E417** who can still reach a fight in time, fastest first, until the fight is even (Mid's reinfor
+- **E418** the War Director: the soldiers of a kind that can go, the crosshair's tile, a move's wait 
+- **E419** the Director's six moves and the bombard (Mid's DIRECTS): each returns what it says, a rea
+- **E420** a kind's move, tap or hold (Mid's direct): it says its word, pays its meals (D213) and sou · D213 (N170)
+- **E421** the choke (Mid's chokeAt): a drag across a gap, the soldiers stand in it as many files as 
+- **E422** the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D2 · D252 (N190)
+- **E423** an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a fo
+- **E424** your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there,
 - **E398** in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE),
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
 - **E399** the missiles in flight: a streak along the drag path, its tail D245's share of the flight · D245 (N188, N39, N40)
@@ -469,6 +497,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E244** each yield's camp: the drop-off that takes it in
 - **E245** a spot: the nearest free footprint to a point, searched in rings, kept off the home's own 
 - **E331** an arc of wall round the Town Center facing the middle, four-connected; its two squares ne
+- **E434** the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to h · D251 (N190)
+- **E435** the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foo · D251 (N190)
 - **E246** jobs by need: the yield whose share is most under its wanted share takes an idle villager,
 - **E247** people, homes, drop-offs, plots, the age
 - **E330** the computer's wall ring: from its age, with stone, a few pieces a round, gates first, whi

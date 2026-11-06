@@ -243,6 +243,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N187 |  | Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open | to open |
 | N188 |  | Design: Mid's blow, nerve, a soldier's day, squads, formations and muster (16-sim-fight.js fromWhere, hurt, plunder, plunderBld; 14-sim-troo | opened |
 | N189 |  | Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 to 3 on its shaft's cross-secti | to open |
+| N190 |  | Design: Mid's finger, orders, missions and the War Director (26-input.js hitAt, tapAt, picked, setPick, pickToggle, order, boxPick, ordAt, H | opened |
+| N191 |  | Design: Albert, Nov 5 (Frankenstein F21+F22, decisions.json): Mid's gameplay and controls come over (one tap picks, a second opens the card; | opened |
 
 ## colours
 
@@ -427,9 +429,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E159 |  | a hit moves to the back: the oldest goes first |  |
 | E160 |  | a wounded one sways about its feet (QBS) |  |
 | E161 |  | L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges |  |
-| E162 |  | Touch: one finger pans, two pinch; a wheel zooms about the pointer. |  |
+| E162 |  | Touch: one finger pans, two pinch; a wheel zooms about the pointer; a held finger picks more, drags the crosshair or draws a box (F21). |  |
 | E163 |  | the camera rule: the board never leaves the screen's middle; a board smaller than the screen sits centred |  |
-| E164 |  | the tile under a tap, at the land's height, and the player's unit nearest it; the modules answer first (menu), else a tap picks a villager o |  |
+| E164 |  | what is under the finger: the tile at the land's height and the nearest unit it may see (yours, or one in sight and not hidden), within the  |  |
 | E165 |  | The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it. |  |
 | E166 |  | the door: what the modules may touch |  |
 | E167 |  | the test hook |  |
@@ -576,7 +578,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E308 |  | a lost find (Mid's decision 1): it delivers what it carries, then looks from where the find ran out within the look (D197), widening over ta |  |
 | E309 |  | builders who finish a place of work take it up (Mid's startWork): a field if nobody works it; a camp (a drop-off that takes fewer than every |  |
 | E310 |  | a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds in it, from the nearest open one outside when none  |  |
-| E311 |  | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits |  |
+| E311 |  | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits; with y |  |
 | E312 |  | nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no tug of war with a walker, no shuffle between two on |  |
 | E313 |  | how many of a building a side may have now: its age's limit with research added (D199), none before its age (D200); why not, in Mid's words  |  |
 | E314 |  | why a building may not stand here, Mid's rules in order: the edge, the limit, the ground under it (a gate may take its owner's wall piece),  |  |
@@ -671,6 +673,36 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E403 |  | the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up opens them for the one picked or the whole army |  |
 | E404 |  | the squads' words and the step each dial waits for (Engagement, Formations, Battalions) |  |
 | E405 |  | the War Council's card: the three squads, the picked one's plan by class (− and +) and Muster for what it lacks |  |
+| E406 |  | the orders, missions and the War Director's measures and words; the groups on the march (ORD), the missions by squad or the whole army (MS), |  |
+| E407 |  | the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, a rank's gap apart along it, facing in |  |
+| E408 |  | a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16); while it lasts the pace is D249 spd times the ch |  |
+| E409 |  | the orders' shared measures: a point of a tile, the tile of a point, the length between, a group's centre, a tile's straight steps |  |
+| E410 |  | the walk over the straight line (Mid's routeK): the way by A* (QBL), its steps summed, held within D247 least and route |  |
+| E411 |  | a group's order you can follow (Mid's march): its tile, label, start and walk ratio; each soldier carries it, and the player hears where the |  |
+| E412 |  | each soldier's one word (Mid's armyStatus): rout, fight, rally (sent home, walking to the flag, or away from its place), march, or hold once |  |
+| E413 |  | the obvious order for what is picked (Mid's order, Albert Nov 2): a foe is fought, a beast hunted, a site raised or mended, a field or camp  |  |
+| E414 |  | missions: a mission's soldiers, the hostile soldiers a group sees near it, and the chance (QAF) of the group against them with the counters  |  |
+| E415 |  | each beat: every order's centre, count, fight and time left, arrived once all have stopped (Mid's ordersTick); every mission goes, acts or i |  |
+| E416 |  | Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshair as one order and one mission; every ready squad  |  |
+| E417 |  | who can still reach a fight in time, fastest first, until the fight is even (Mid's reinforcePlan); grouped into waves by arrival |  |
+| E418 |  | the War Director: the soldiers of a kind that can go, the crosshair's tile, a move's wait in seconds; the charge's reason, the charge, fall  |  |
+| E419 |  | the Director's six moves and the bombard (Mid's DIRECTS): each returns what it says, a reason without its bang when nobody moved |  |
+| E420 |  | a kind's move, tap or hold (Mid's direct): it says its word, pays its meals (D213) and sounds its event |  |
+| E421 |  | the choke (Mid's chokeAt): a drag across a gap, the soldiers stand in it as many files as it holds, facing the foe seen, else away from home |  |
+| E422 |  | the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D252 find of the crosshair |  |
+| E423 |  | an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a foe within reach or a blow springs them all with a c |  |
+| E424 |  | your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there, the time left; the rally flag (flagAt); leaves ov |  |
+| E425 |  | the finger's gesture: where it went down and is, when, and what a module made of it (a line, the crosshair, a box); a hold after D246 hold |  |
+| E426 |  | the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch) |  |
+| E427 |  | Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke tool; reinforce the mission most in need; a kind's |  |
+| E428 |  | a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) |  |
+| E429 |  | Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens the card; with yours picked a tap is the obvious o |  |
+| E430 |  | the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green yours, red a foe or a hostile near, blue an ally,  |  |
+| E431 |  | the finger's holds and drags on the map: the choke drawn, the crosshair dragged, yours picked to keep picking, a box picks yours in it |  |
+| E432 |  | the choke being drawn and the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, the cross, the time and  |  |
+| E433 |  | a tile on the board (the floor gives -1 off it) |  |
+| E434 |  | the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to half way, each ai.step tiles, the open width across |  |
+| E435 |  | the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foot, files deep across the narrowest gap on the road |  |
 
 ## ground
 
@@ -954,6 +986,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D243 | a squad's temper, Hold, Guard, Press: blows on it shake its nerve × nerve, it strikes × dmg, chases × chase (Mid's TEMPER) | [{nerve: 0.8, dmg: 1, chase: 1}, {nerve: 1, dmg: 1, chase: 1}, {nerve: 1.3, dmg: 1.1, chase: 1.3}] | N188 |
 | D244 | Muster: a squad's lack in one order at the War Council, cost times the price, the slowest kind's time shared by its buildings, times time (Mid's musterCost) | {cost: 2, time: 1.25} | N188 |
 | D245 | a missile's flight (QAJ): loosed at A5, stepped dt seconds, its speed found in tries halvings; drawn as a streak tail of its flight long; a blow's sparks last spark seconds, at most sparks at once | {dt: 0.01, tries: 24, tail: 0.12, spark: 0.3, sparks: 40} | N188; N39; N40 |
+| D246 | the finger (Mid's 26-input, Albert's one rule, Nov 2): held hold ms it picks more on one of yours, drags the crosshair on it, else draws a box; its ring shows after show ms (a tap never sees it), ring px wide; a second tap within dbl ms and slop px opens the card; a finger that moves move px looks around (v100's); a unit within the larger of hit px and hitZ px a zoom, lift px a zoom over its foot, is under the finger; a box under box px is a tap; a marching group's ring answers within ord px; ms a second | {hold: 320, show: 250, dbl: 320, ring: 26, move: 6, hit: 16, hitZ: 9, lift: 8, box: 12, slop: 26, ord: 26, ms: 1000} | N190 |
+| D247 | orders and missions (Mid's HUD, ARMY_STILL, routeK, ordersTick; distances Mid's px ÷ 10, in tiles): a fight is the hostile soldiers seen within near tiles of a group; a mission whose chance (QAF) falls under lose says it is losing, once until it climbs past clear; the chance moves smooth of the way each beat s; reinforcements arriving within gap s of each other are one wave, at most waves; a soldier still for still s holds; the finger within aim px of the crosshair drags it; a soldier over home tiles from its place is rallying; the walk (QBL) is least to route times the straight line; an order has arrived when all have stopped after settle s; reinforcements stop once the power ratio reaches even; the crosshair reads red with a hostile within danger tiles (Mid's 60 px) | {near: 14, lose: 0.4, clear: 0.5, smooth: 0.3, gap: 8, waves: 3, still: 2.5, aim: 56, home: 1.4, route: 3, least: 1, beat: 1, settle: 3, eve | N190 |
+| D248 | the War Director (Mid's DIRECT): a shield wall stands secs s in a line wearing the shape's trade, holding; the archers may loose again after loose s, in an arc at arc of the shortest bow's reach round the foe for arcSecs s (Mid's three volleys); riders may wheel again after wheel s, riding behind tiles past the foe away from home; engines bombard the foe's nearest building within bombard tiles of the crosshair | {wall: {secs: 12, shape: square, lay: line}, loose: 6, wheel: 15, behind: 7, arc: 0.8, arcSecs: 18, bombard: 30} | N190 |
+| D249 | the charge (Mid's CHARGE): spd times the pace for secs s, with nerve more nerve; then the pace drops to slow and settles back with time constant tired s (QP); once each cd s; its blow is its speed's momentum (QBT), not Mid's 1.3 | {secs: 6, spd: 1.5, tired: 10, slow: 0.8, cd: 30, nerve: 0.1} | N190; N191; N16; N82 |
+| D250 | fall back in order (Mid's FALLBACK): for secs s soldiers step back tiles away from the nearest foe within look tiles (else toward home), take blows × hit and do not rout | {secs: 6, back: 20, look: 20, hit: 0.7} | N190 |
+| D251 | the choke (Mid's CHOKE): a gap held min to max files across, a file a rank's gap; the computer's (Mid's AB): with foot or more idle foot soldiers, not of the classes in not, once each every s, it holds the narrowest gap of min to max tiles on the road to the nearest foe, looked for each step tiles from from tiles out to half way, files deep a tile of width, for hold s | {min: 1, max: 12, ai: {foot: 6, hold: 180, every: 240, min: 2, max: 10, step: 4, from: 15, files: 3, not: [Riders, Engines]}} | N190 |
+| D252 | the ambush (Mid's AMBUSH): cover is an open tile with forest within cover tiles, looked for within find tiles of the crosshair; a soldier within there tiles of its place goes to ground; a foe within spring tiles, or a blow within blow s, springs it with a charge | {cover: 1, spring: 4.5, find: 9, there: 0.8, blow: 0.5} | N190 |
 
 ## rules
 
@@ -1016,6 +1055,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X55 | every soldier is the Unit shell with Mid's settings: each kind's class, age, look, teach, price, train time, health, blow, reach, sight and speed (by the foot's 3.4 mph) are Mid's UNIT and TEACH_TO; with research its name, rank, kit, health, blow, reach, speed, sight, armour and train time are Mid's frozen stats() with the shares added; each army building trains exactly its class's kinds, each from its age, and the army stops at the ceiling; every kind's figure at each rank and kit is Mid's own, pixel for pixel | {stage: page} | N132; N176 |
 | X56 | the physics of F17b: a villager walks exactly 1.52 m/s on flat firm ground, unloaded, in still air, and every load, grade, mud, snow and headwind gives the speed at which Pandolf's equation (with Pugh's drag as a grade) returns its power, each slower; the effects law adds boosts once and applies cuts one at a time, never reaching 0 nor the base, and every cut in the Tech book is a share between 0 and 1; the falling particles are the pool times the strength, the rates, wind and visibility the law's, and the blizzard flag turns exactly at the NWS's wind and visibility and after three game hours; a step slips exactly when the friction it needs exceeds what the ground offers; Crampons give studs to villagers, foot, archers and the engines' haulers and not riders, Horseshoes to riders; the scout's pace and reach are Mid's | {stage: page} | N185; N13; N180; N179 |
 | X57 | the blow, nerve and the rout, a soldier's day, squads and muster (F19+F20): every kind's counters on every kind are Mid's frozen vsMul over its UNIT; a tower reaches as far as Mid's rangeFrom within 1% (the arrow's drag, QAJ); a foe's worth in reach is Mid's foeValue; the nerve, flank, yard, kite, shelter, shapes, tempers, plunder and wear are Mid's numbers; on the page a blow from behind lands × D141, a skirmish breaks a soldier who runs and comes back, a fallen tower pays D233 of its price, and Muster brings a squad's lack at twice the price | {stage: page} | N132; N188 |
+| X58 | the finger, orders you can follow and the War Director (F21+F22): Mid's numbers (HOLD_MS, PRESS_SHOW, DBL_MS, HUD, ARMY_STILL, DIRECT, CHOKE, AMBUSH, CHARGE, FALLBACK, AB) in the books; Mid's frozen etaOf and reinforcePlan's waves for the same soldiers; on the page a box picks many, a tap is their order with its line and time, Go makes a mission, the charge quickens then tires, the choke stands as many files as the gap, an ambush hides | {stage: page} | N132; N190; N191 |
 
 ## screen
 
@@ -1248,7 +1288,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | P34 | the elite rank's gold pennant on a staff, for a look marked elite at a rank (Mid's elitePennant, ELITE_LOOK) | {parts: [[L, 8, -4, 8, -30, #5a3a1c, 0.9], [P, [[8, -30], [16, -27.5], [8, -25]], #e6b947, #8a6a1a, 0.4], [P, [[8.6, -29], [13.5, -27.5], [8 | N150; N176 |
 | P35 | the standard an army on the move carries: drawn over a group of least or more once the zoom passes zoom; a pole pole tall, a ring at its foot as full as the group's health (radius, plus), filled from top (radians), the flag's width and its edges, its wave (speed, swing, the tail's share), the ring's tilt and its shadow's alpha (Mid's drawStandards) | {least: 5, zoom: 0.4, pole: 30, ring: [6, 2], line: 2.4, flag: [10, 1, 6, 7], wave: [4, 1.4, 1.5], tilt: 0.5, alpha: 0.6, top: -1.5708} | N188 |
 | P36 | a blow's sparks: rays rays turned turn apart and spinning spin, from from out to to plus grow over its life, lifted lift (Mid's sparkDraw) | {rays: 5, turn: 1.26, spin: 7, from: 2, to: 3, grow: 6, line: 1.4, lift: 6} | N188 |
-| P37 | the marks over the map: a health bar h tall, its shadow's alpha; a unit's width, lift and margin; a building's width and lift a tile of its size, plus, and margin; the wave's crosshair, its line, ring and arms; a whole turn | {bar: {h: 3, alpha: 0.5, unit: [16, 34, 20], bld: [10, 12, 20, 40]}, cross: {line: 1.5, r: [14, 7], arm: [20, 10]}, arc: [0, 6.2832]} | N114 |
+| P37 | the marks over the map: a health bar h tall, its shadow's alpha; a unit's width, lift and margin; a building's width and lift a tile of its size, plus, and margin; a whole turn | {bar: {h: 3, alpha: 0.5, unit: [16, 34, 20], bld: [10, 12, 20, 40]}, arc: [0, 6.2832]} | N114 |
+| P38 | the crosshair (Mid's drawReticle): its radius the larger of r[0] and r[1] a zoom plus r[2], fired times while it settles settle s after Go; corner brackets bracket of it long, line wide; held it glows (alpha, px more); a sonar ring (its beat, its fall, alpha, from px, out to times r); chevrons turning (speed, at share of r, length, half width, how many); a scan line (speed, inset px); the cross's arms out past r and its gap; its words label px above | {r: [30, 16, 6], fired: 0.8, settle: 0.4, bracket: 0.4, line: 1.5, glow: [0.14, 12], sonar: [0.5, 1.4, 0.8, 4, 1.3], chev: [1.2, 0.62, 7, 5, | N190 |
+| P39 | a group on the march (Mid's drawOrders): a dashed line from the group to where it goes (dash, flowing one px each flow ms), a ring there ring a zoom (tilt), faint once arrived (done); line widths (line, ring, arrived), alphas (line, ring, arrived, words); the time left up px over it | {dash: [6, 6], done: [3, 5], line: [1.5, 2, 1.2], alpha: [0.7, 0.85, 0.35, 0.95], ring: 14, flow: 60, up: 4, tilt: 0.5} | N190 |
+| P40 | your rally flag (Mid's flagAt): a pole pole a zoom, its fly out and down, line wide, the pole's paint | {pole: 16, fly: [10, 13, 10], line: 1.2, col: #2b2b2b} | N190 |
+| P41 | leaves over a soldier in ambush (Mid's leavesOver): a leaf at each of at (spread apart), lifted by lift (rise), up a zoom over its foot, spread apart and rise between, swaying (speed, phase apart, depth), r wide and tall, turned; the two greens | {at: [-1, 0, 1], lift: [0, 1, 0], up: 8, spread: 4.5, rise: 3, sway: [0.8, 2.1, 0.6], r: [3.6, 2.2], turn: [0.5, 0.9], cols: [rgba(96,142,66 | N190 |
+| P42 | the finger's marks (Mid's drawTouch): the hold's ring line; the box's fill alpha and line; the choke's line and its words up px; a whole turn from the top | {ring: 3, box: [0.12, 2], choke: 3, up: 12, turn: 6.2832, top: -1.5708} | N190 |
 
 ## tech
 
@@ -1420,4 +1465,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J8 | what the town is told when food, the seasons and the flock turn, or its people slip on ice, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170; N173 |
 | J9 | what a refusal or an order says for plots, the dock and the hunt (Mid's words) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
 | J10 | the army's words: the three squads (Mid's BN, the NATO names), the tempers, the shapes, the intents and the squad dials (Mid's TEMPER, FORM, INTENT) | {squads: [Alpha, Bravo, Charlie], all: Army, setup: Set up, tempers: [Hold, Guard, Press], forms: {line: Line, wedge: Wedge, square: Square, | N188 |
+| J11 | orders you can follow, the quick action, the choke, the ambush and the War Director: what each says (Mid's 11-orders, 28-army-quick, 39-huddle words); a move is [its id, its cell, the event it sounds, what it says] | {marching: {n} marching: {at}., arrived: {n} arrived: {at}., lost: {m} is lost., losing: {m} is losing., nobody: {m}: nobody idle in it., no | N190 |
 

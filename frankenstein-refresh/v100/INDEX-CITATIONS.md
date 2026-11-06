@@ -18,7 +18,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QM** Random events → N12 · used by SC9, D110, D181, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
-- **QP** Settle → N16 · used by SC27, D104, D231, D237
+- **QP** Settle → N16 · used by SC27, D104, D231, D237, D249
 - **QQ** Ice growth → N17 · used by D109, D225, X54
 - **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
 - **QS** Ruts → N20
@@ -35,12 +35,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAD** Spoilage → N32, N33 · used by D217, X53
 - **QAE** Price → N34
 - **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, X47, X50, X54, X55, X56, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O60, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151
-- **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
+- **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, D247, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, X51
 - **QCK** Mending → N168 · used by SC5, D201, X52
 - **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187 · used by D103, D229, X56
-- **QAF** Battle odds → N35 · used by SC6, D155, D177, D192, D193, D194, D238, X48
+- **QAF** Battle odds → N35 · used by SC6, D155, D177, D192, D193, D194, D238, D247, X48
 - **QAG** Who to fight → N36, N37, N188 · used by SC6, D238, X57
 - **QAH** Fight or not → N38
 - **QAI** Nerve → N76, N188 · used by SC6, D142, D231, X57
@@ -70,7 +70,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBH** A lake's size drawn from the power law (QBA) → N61
 - **QBI** Roads cross rivers at fords → N68
 - **QBK** The art frame → N66
-- **QBL** The way → N74 · used by SC1, D198, D207, D230, X52
+- **QBL** The way → N74 · used by SC1, D198, D207, D230, D247, X52
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17, D88, D197, X51
 - **QBJ** Z1's store → N69 · used by D129, X50
@@ -79,7 +79,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBQ** The break → N76 · used by D142
 - **QBR** The score → N75 · used by D135
 - **QBS** Wounded balance → N77, N78, N80 · used by SC8, W1, W3, W4, W5, W17, W18, W23, D167, D168
-- **QBT** Impact → N81, N82, N83, N18 · used by SC6, G5, G6, G7, G8, W1, W2, W3, W4, W5, W6, W7, W8, W9, W10, W11, W13, W14, W17, W18, W19, W20, W21, W22, W23, D166, D168, HC3
+- **QBT** Impact → N81, N82, N83, N18 · used by SC6, G5, G6, G7, G8, W1, W2, W3, W4, W5, W6, W7, W8, W9, W10, W11, W13, W14, W17, W18, W19, W20, W21, W22, W23, D166, D168, D249, HC3
 - **QBU** The stride → N79 · used by SC1, W1, W2, W3, W4, W5, W6, W17, W18, W23, D96
 - **QBW** The opening view → design · used by SC11, D165
 - **QBX** The air's top → N88 · used by HX5
@@ -102,7 +102,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N13** Pandolf, Givoni & Goldman (1977) → QN, QCB, D224, X56
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
-- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, SC27, D231, D237
+- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, SC27, D231, D237, D249
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, G9
@@ -168,7 +168,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3. → QBM, QBU, D86
 - **N80** (to open) Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing → QBS
 - **N81** Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45– → QBT
-- **N82** Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) → QBT
+- **N82** Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) → QBT, D249
 - **N83** Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) → QBT
 - **N84** (to open) ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) → unused
 - **N85** (to open) Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armo → W2, W3, W4, W5, W7, W8, W9, W10, W11, W13, W17, W18
@@ -218,7 +218,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N129** Design: Albert, Nov 5 (Frankenstein Refresh: delete nothing; prove it) → X41
 - **N130** Design: Albert, Nov 5 09:49 (Frankenstein 4: the match test) → X42
 - **N131** Design: Albert, Nov 5 09:47 (sort every piece) → X43
-- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, X54, X55, X57, J1, J2, J3, J4, J5, J6
+- **N132** Design: Albert, Nov 5 11:40 (Frankenstein F10) → D188, D189, D190, D191, X44, X46, X53, X54, X55, X57, X58, J1, J2, J3, J4, J5, J6
 - **N133** Design: Albert, the Rank Ribbon (Oct 30) and the Formation → SN1
 - **N134** Design: Albert, Nov 5 07:13–07:15 (his Land list; six tabs of up to nine) → SN2
 - **N135** Design: Albert, Nov 5 07:30 → SN3
@@ -276,6 +276,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N187** (to open) Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open → QCL, D229
 - **N188** Design: Mid's blow, nerve, a soldier's day, squads, formations and muster (16-sim-fight.js fromWhere, hurt, pl → QAG, QAI, QBO, A5, SC6, SC7, SC27, SC28, C11, C12, C13, C14, D138, D141, D143, D193, D231, D232, D233, D234, D235, D236, D237, D238, D239, D240, D241, D242, D243, D244, D245, X57, P35, P36, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, J10
 - **N189** (to open) Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 t → W10
+- **N190** Design: Mid's finger, orders, missions and the War Director (26-input.js hitAt, tapAt, picked, setPick, pickTo → D246, D247, D248, D249, D250, D251, D252, X58, P38, P39, P40, P41, P42, J11
+- **N191** Design: Albert, Nov 5 (Frankenstein F21+F22, decisions.json): Mid's gameplay and controls come over (one tap p → D249, X58
 
 ## Named exceptions
 

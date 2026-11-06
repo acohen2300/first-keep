@@ -76,7 +76,7 @@ const priceOf = (side, c) => (c.plan ? c.paid : D.ages.includes(c) ? D.age.cost[
 const order = (b, c) => { (b.q = b.q || []).push(c); if (b.q.length === 1) b.qt = timeOf(b.side, c); };
 function queue(b, code) { if (!up(b) || !FK.trains(b.code).includes(code) || !FK.aged(code, b.side) || !room(b)) return false; const cost = priceOf(b.side, code); if (!canPay(b.side, cost) || popOf(b.side) >= popCap(b.side) || (soldier(code) && armyFull(b.side))) return false; pay(b.side, cost, 'units'); order(b, code); return true; }
 function unqueue(b) { if (!b.q || !b.q.length) return; const code = b.q.pop(); payBack(b.side, priceOf(b.side, code), FK.SH[code] || code.plan ? 'units' : 'research'); if (D.ages.includes(code)) SIDES[b.side].aging = 0; if (!b.q.length) b.qt = 0; }
-function spawnBy(b, code) { const s = FK.spotFor(b, b); if (!s) return null; const u = FK.spawn(code, b.side, FK.tileAt(s.x, s.y), FK.rng); u.bx = s.x; u.by = s.y; u.hb = b; FK.place(u); return u; } // E311
+function spawnBy(b, code) { const s = FK.spotFor(b, b); if (!s) return null; const u = FK.spawn(code, b.side, FK.tileAt(s.x, s.y), FK.rng); u.bx = s.x; u.by = s.y; u.hb = b; FK.place(u); const fl = SIDES[b.side].flag; if (fl != null && WAR.armed(u)) WAR.march(u, fl); return u; } // E311
 // E402
 const musterN = sumCost, readyAt = (side, c) => things().filter((t) => t.side === side && up(t) && FK.trains(t.code).includes(c)).length;
 function musterCost(side, plan) { const cost = {}, ks = Object.keys(plan); for (const c of ks) addRes(cost, priceOf(side, c), plan[c] * D.muster.cost); return { cost, t: Math.ceil(Math.max(...ks.map((c) => (plan[c] * timeOf(side, c)) / readyAt(side, c))) * D.muster.time) }; }

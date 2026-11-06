@@ -165,9 +165,9 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E159 | index.html#the-woods-cache | a hit moves to the back: the oldest goes first |
 | E160 | index.html#the-woods-cache | a wounded one sways about its feet (QBS) |
 | E161 | index.html#the-woods-cache | L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges |
-| E162 | index.html#touch | Touch: one finger pans, two pinch; a wheel zooms about the pointer. |
+| E162 | index.html#touch | Touch: one finger pans, two pinch; a wheel zooms about the pointer; a held finger picks more, drags the crosshair or draws a box (F21). |
 | E163 | index.html#touch | the camera rule: the board never leaves the screen's middle; a board smaller than the screen sits centred |
-| E164 | index.html#touch | the tile under a tap, at the land's height, and the player's unit nearest it; the modules answer first (menu), else a tap picks a villager or sends the picked one to a spot of its own at that tile (QCI) |
+| E164 | index.html#touch | what is under the finger: the tile at the land's height and the nearest unit it may see (yours, or one in sight and not hidden), within the larger of D246 hit and hitZ a zoom (Mid's hitAt); the menu answers the tap |
 | E165 | index.html#touch | The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it. |
 | E166 | index.html#touch | the door: what the modules may touch |
 | E167 | index.html#touch | the test hook |
@@ -314,7 +314,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E308 | econ.js | a lost find (Mid's decision 1): it delivers what it carries, then looks from where the find ran out within the look (D197), widening over tau; nothing found, it waits on a spot at its drop-off and looks again every few seconds, with no end; a box that is done sends it back to its work |
 | E309 | econ.js | builders who finish a place of work take it up (Mid's startWork): a field if nobody works it; a camp (a drop-off that takes fewer than every yield) sends them to the best find it takes |
 | E310 | econ.js | a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds in it, from the nearest open one outside when none inside is open, then go back to the work they left; Send out: the last villager on a field goes idle; posted: on a field; idlePost: a finished field nobody works |
-| E311 | econ.js | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits |
+| E311 | econ.js | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits; with your rally flag up, a soldier marches to it (Mid's rally0, F21) |
 | E312 | index.html#floor-5-movables | nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no tug of war with a walker, no shuffle between two on their spots (a push moves each less than near-enough) |
 | E313 | econ.js | how many of a building a side may have now: its age's limit with research added (D199), none before its age (D200); why not, in Mid's words (capWhy) |
 | E314 | econ.js | why a building may not stand here, Mid's rules in order: the edge, the limit, the ground under it (a gate may take its owner's wall piece), two squares from every building unless one is a wall, gate or field, and never touching one that trains (canPlace) |
@@ -409,3 +409,33 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E403 | menu.js | the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up opens them for the one picked or the whole army |
 | E404 | menu.js | the squads' words and the step each dial waits for (Engagement, Formations, Battalions) |
 | E405 | menu.js | the War Council's card: the three squads, the picked one's plan by class (− and +) and Muster for what it lacks |
+| E406 | combat.js | the orders, missions and the War Director's measures and words; the groups on the march (ORD), the missions by squad or the whole army (MS), and the moves' waits (AT) |
+| E407 | combat.js | the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, a rank's gap apart along it, facing in |
+| E408 | combat.js | a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16); while it lasts the pace is D249 spd times the charge's research |
+| E409 | combat.js | the orders' shared measures: a point of a tile, the tile of a point, the length between, a group's centre, a tile's straight steps |
+| E410 | combat.js | the walk over the straight line (Mid's routeK): the way by A* (QBL), its steps summed, held within D247 least and route |
+| E411 | combat.js | a group's order you can follow (Mid's march): its tile, label, start and walk ratio; each soldier carries it, and the player hears where they march |
+| E412 | combat.js | each soldier's one word (Mid's armyStatus): rout, fight, rally (sent home, walking to the flag, or away from its place), march, or hold once still for D247 still |
+| E413 | combat.js | the obvious order for what is picked (Mid's order, Albert Nov 2): a foe is fought, a beast hunted, a site raised or mended, a field or camp worked, a find gathered, the ground walked, each villager to its own spot; a side not at war is refused |
+| E414 | combat.js | missions: a mission's soldiers, the hostile soldiers a group sees near it, and the chance (QAF) of the group against them with the counters both ways |
+| E415 | combat.js | each beat: every order's centre, count, fight and time left, arrived once all have stopped (Mid's ordersTick); every mission goes, acts or is done, its chance eased, lost or losing said once (Mid's missionsTick) |
+| E416 | combat.js | Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshair as one order and one mission; every ready squad goes, else the army |
+| E417 | combat.js | who can still reach a fight in time, fastest first, until the fight is even (Mid's reinforcePlan); grouped into waves by arrival |
+| E418 | combat.js | the War Director: the soldiers of a kind that can go, the crosshair's tile, a move's wait in seconds; the charge's reason, the charge, fall back in order |
+| E419 | combat.js | the Director's six moves and the bombard (Mid's DIRECTS): each returns what it says, a reason without its bang when nobody moved |
+| E420 | combat.js | a kind's move, tap or hold (Mid's direct): it says its word, pays its meals (D213) and sounds its event |
+| E421 | combat.js | the choke (Mid's chokeAt): a drag across a gap, the soldiers stand in it as many files as it holds, facing the foe seen, else away from home; a standing order |
+| E422 | combat.js | the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D252 find of the crosshair |
+| E423 | combat.js | an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a foe within reach or a blow springs them all with a charge |
+| E424 | combat.js | your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there, the time left; the rally flag (flagAt); leaves over a hidden soldier (leavesOver) |
+| E425 | index.html#touch | the finger's gesture: where it went down and is, when, and what a module made of it (a line, the crosshair, a box); a hold after D246 hold |
+| E426 | index.html#touch | the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch) |
+| E427 | menu.js | Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke tool; reinforce the mission most in need; a kind's two moves; the quick action's sword and close |
+| E428 | menu.js | a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) |
+| E429 | menu.js | Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens the card; with yours picked a tap is the obvious order; on open ground with nothing picked, the sword and close (Nov 3); a group's ring picks the group; a cut-out plot replants |
+| E430 | menu.js | the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green yours, red a foe or a hostile near, blue an ally, white nature |
+| E431 | menu.js | the finger's holds and drags on the map: the choke drawn, the crosshair dragged, yours picked to keep picking, a box picks yours in it |
+| E432 | menu.js | the choke being drawn and the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, the cross, the time and the square |
+| E433 | menu.js | a tile on the board (the floor gives -1 off it) |
+| E434 | ai.js | the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to half way, each ai.step tiles, the open width across the road, the narrowest of ai.min to ai.max |
+| E435 | ai.js | the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foot, files deep across the narrowest gap on the road to its nearest foe, for ai.hold |
