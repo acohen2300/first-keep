@@ -2277,3 +2277,114 @@ MODIFIED (90):
 LOCKED (1563 of 1653): byte for byte as sealed, 564,117 bytes
 Tests: 35/35 rules hold
 Inventory: 1653 items sealed · 1539 book entries · 82 laws · 197 citations, 35 still to open · 7 known
+
+## F25+F28 · the war camp (two sizes) and field traps; relations, diplomacy, vassals and tribute · 2026-11-06 00:02
+Albert, Nov 5 11:40: yes yes F10–F39; 11:16 (2): tribute, the tax parked; 11:16 (7): the war camp's wagon in two sizes, the large a safe zone; 16:07: the Palisade only with the war camp
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, code:ai.js, book:measure, book:shells, book:capabilities, book:screen, book:sprites, book:mass, book:tech, book:sides, book:words, book:comments, book:rules, book:citations, tool:test.py, law:QCD, law:QCG
+MODIFIED (103):
+- book:capabilities:SC18 · 142 → 194 bytes
+- book:capabilities:SC38 · added
+- book:capabilities:SC39 · added
+- book:capabilities:SC40 · added
+- book:capabilities:SC41 · added
+- book:citations:N198 · added
+- book:citations:N199 · added
+- book:citations:N200 · added
+- book:citations:N201 · added
+- book:comments:E494 · added
+- book:comments:E495 · added
+- book:comments:E496 · added
+- book:comments:E497 · added
+- book:comments:E498 · added
+- book:comments:E499 · added
+- book:comments:E500 · added
+- book:comments:E501 · added
+- book:comments:E502 · added
+- book:comments:E503 · added
+- book:comments:E504 · added
+- book:comments:E505 · added
+- book:comments:E506 · added
+- book:comments:E507 · added
+- book:comments:E508 · added
+- book:comments:E509 · added
+- book:comments:E510 · added
+- book:comments:E511 · added
+- book:comments:E512 · added
+- book:comments:E513 · added
+- book:comments:E514 · added
+- book:comments:E515 · added
+- book:comments:E516 · added
+- book:comments:E517 · added
+- book:comments:E518 · added
+- book:comments:E519 · added
+- book:comments:E520 · added
+- book:comments:E521 · added
+- book:comments:E522 · added
+- book:comments:E523 · added
+- book:comments:E524 · added
+- book:measure:D123 · 2,320 → 2,587 bytes
+- book:measure:D124 · 405 → 435 bytes
+- book:measure:D125 · 681 → 798 bytes
+- book:measure:D133 · 374 → 589 bytes
+- book:measure:D138 · 3,227 → 3,546 bytes
+- book:measure:D139 · 1,125 → 1,402 bytes
+- book:measure:D199 · 1,120 → 1,180 bytes
+- book:measure:D200 · 467 → 515 bytes
+- book:measure:D224 · 658 → 676 bytes
+- book:measure:D239 · 1,172 → 1,364 bytes
+- book:measure:D268 · 346 → 407 bytes
+- book:measure:D279 · added
+- book:measure:D280 · added
+- book:measure:D281 · added
+- book:measure:D282 · added
+- book:measure:D283 · added
+- book:measure:D284 · added
+- book:measure:D285 · added
+- book:measure:D286 · added
+- book:measure:D287 · added
+- book:measure:D288 · added
+- book:measure:D86 · 520 → 576 bytes
+- book:rules:X62 · added
+- book:screen:SN2 · 511 → 532 bytes
+- book:screen:SN3 · 281 → 342 bytes
+- book:shells:BF1 · added
+- book:shells:BF2 · added
+- book:shells:BF3 · added
+- book:shells:BF4 · added
+- book:shells:BF5 · 138 → 154 bytes
+- book:shells:BI5 · 134 → 223 bytes
+- book:shells:BTC5 · 143 → 167 bytes
+- book:shells:BTC6 · 146 → 171 bytes
+- book:shells:BTC7 · 150 → 168 bytes
+- book:shells:BTC8 · 150 → 168 bytes
+- book:shells:MH6 · added
+- book:shells:US5 · added
+- book:shells:UT2 · 194 → 274 bytes
+- book:shells:UT4 · added
+- book:sides:I1 · 210 → 293 bytes
+- book:sides:I5 · added
+- book:sides:I6 · added
+- book:sides:I7 · added
+- book:sprites:P43 · added
+- book:sprites:P44 · added
+- book:tech:O200 · added
+- book:tech:O201 · added
+- book:tech:O202 · added
+- book:tech:O203 · added
+- book:tech:O204 · added
+- book:words:J16 · added
+- book:words:J17 · added
+- book:words:J7 · 33,918 → 36,638 bytes
+- code:ai.js · 7,642 → 10,585 bytes
+- code:combat.js · 48,840 → 51,446 bytes
+- code:econ.js · 60,834 → 89,049 bytes
+- code:index.html#the-door · 6,353 → 6,386 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 3,507 → 4,345 bytes
+- code:index.html#the-woods-cache · 4,885 → 4,970 bytes
+- code:menu.js · 64,066 → 64,088 bytes
+- law:QCD · added
+- law:QCG · added
+- tool:test.py · 162,106 → 181,436 bytes
+LOCKED (1621 of 1724): byte for byte as sealed, 506,882 bytes
+Tests: 36/36 rules hold
+Inventory: 1724 items sealed · 1608 book entries · 84 laws · 201 citations, 37 still to open · 7 known

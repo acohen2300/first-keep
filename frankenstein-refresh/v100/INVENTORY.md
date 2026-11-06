@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 28 | 2,387 | 345,369 | 345,503 |
-| Books | 1539 | 0 | 362,574 | 363,021 |
-| Laws | 82 | 0 | 13,809 | 14,190 |
-| Tools | 4 | 1,214 | 190,769 | 190,933 |
+| Game code | 28 | 2,567 | 380,111 | 380,245 |
+| Books | 1608 | 0 | 398,178 | 398,657 |
+| Laws | 84 | 0 | 14,676 | 15,088 |
+| Tools | 4 | 1,302 | 210,095 | 210,263 |
 
 ## The trades (code)
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 46 | 5,301 | 5,305 | 81 |
 | index.html#drawn-once-in-the-view-frame | 47 | 4,130 | 4,134 | 123 |
 | index.html#the-view | 9 | 916 | 920 | 14 |
-| index.html#the-door | 59 | 6,349 | 6,353 | 69 |
+| index.html#the-door | 59 | 6,382 | 6,386 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,704 | 50,708 | 4096 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
@@ -31,15 +31,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
 | index.html#floor-5-movables | 124 | 13,793 | 13,797 | 95 |
 | index.html#the-body-s-laws | 31 | 2,581 | 2,585 | 35 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 25 | 3,503 | 3,507 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 30 | 4,341 | 4,345 | 92 |
 | index.html#floor-6-climate | 70 | 9,117 | 9,129 | 256 |
 | index.html#floor-7-display | 45 | 5,888 | 5,892 | 75 |
-| index.html#the-woods-cache | 51 | 4,881 | 4,885 | 79 |
+| index.html#the-woods-cache | 51 | 4,966 | 4,970 | 79 |
 | index.html#touch | 49 | 6,239 | 6,243 | 55 |
-| menu.js | 364 | 64,024 | 64,066 | 588 |
-| econ.js | 353 | 60,834 | 60,834 | 75 |
-| combat.js | 296 | 48,840 | 48,840 | 84 |
-| ai.js | 59 | 7,642 | 7,642 | 34 |
+| menu.js | 364 | 64,046 | 64,088 | 588 |
+| econ.js | 494 | 89,049 | 89,049 | 75 |
+| combat.js | 312 | 51,446 | 51,446 | 84 |
+| ai.js | 77 | 10,585 | 10,585 | 34 |
 | sound.js | 56 | 5,632 | 5,632 | 66 |
 
 ## The books
@@ -47,29 +47,29 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 5 | 734 |
-| capabilities | 42 | 12,045 |
-| citations | 197 | 33,403 |
+| capabilities | 46 | 13,236 |
+| citations | 201 | 35,424 |
 | colours | 13 | 1,363 |
-| comments | 492 | 80,572 |
+| comments | 523 | 87,768 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 271 | 70,950 |
-| rules | 61 | 18,237 |
-| screen | 10 | 2,808 |
-| shells | 90 | 17,604 |
-| sides | 4 | 1,202 |
+| measure | 281 | 83,197 |
+| rules | 62 | 19,288 |
+| screen | 10 | 2,959 |
+| shells | 97 | 19,255 |
+| sides | 7 | 1,869 |
 | sound | 51 | 11,159 |
-| sprites | 59 | 21,838 |
-| tech | 199 | 57,879 |
-| words | 15 | 44,164 |
+| sprites | 61 | 23,313 |
+| tech | 204 | 59,183 |
+| words | 17 | 51,656 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
 | 100 | 12 | 1 |
-| 110 | 46 | 15 |
-| 120 | 32 | 0 |
+| 110 | 50 | 11 |
+| 120 | 35 | 0 |
 
 ## The rules
 
@@ -136,5 +136,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X59 | t-alarm | page | the Alarm and the end, with the start's first jobs, builders that tell and reachable sites (F23): Mid's DANGER_R, SHELTER, EMG, WONDER_HOLD, SHARE_FALLEN, PLUNDER, SCORE and room in the books; who is a threat is Mid's frozen isThreat; Shelter fills the buildings as Mid's frozen villagersIn does; a rival's fall pays what Mid's frozen fall pays, shares the room and scores as its scoreAll; your fall, a wonder held and the bell end the game as its judge; and on the page every villager has a job within 3 s of a new game, a villager leaves a find a foe stands by, Work sends them back, a site in reach is built, one out of reach says why and a free villager is sent to one in reach, and a spot nobody can walk to is refused |
 | X60 | t-troops | page | Teach, prisoners, priests, medics, Zeal and spies (F24): Mid's TEACH, TEACH_TO, PRISON, CONVERT, ZEAL, SAB, the spy's stealth, heal and hrng, the priest's, medic's and spy's rows and the 18 research steps in the books; Mid's frozen teachCost and teachSecs for every kind that learns, its ransom, spySeen and healTick's lag for the same wound; on the page a spear learns to be a sword at the School keeping its share of health, a runner is taken, serves its captor after the wait and another is ransomed with the gold moved, Zeal costs Mid's gold and lifts the blow by its share for its seconds, a priest turns a villager in Mid's time, a medic binds a wound, a spy is unseen at 6 tiles and seen at 3, and sabotage stalls a barracks and burns a mill |
 | X61 | t-trade | page | the Market, coin, bank and ventures, goods and workshops, trade and caravans (F26+F27): Mid's TRADE, SELL, BUY, MKT_SELL, MKT_BUY, GOODS, PRICE, MINT, VENTURE, BANK_CAP, SCALE, LOAD, CARAVAN, POST, TRADE_CAP, TRADE_DIV, PLACES.stop and WARES in the books, and every building priced, timed and with its health; eight stops on the two routes wanting Mid's wares in turn; three lots sold, two bought, the coin debased and a slow beat's drift give Mid's frozen marketTrade, debase and priceDrift's gold and stock; a caravan's run to a held stop loads and is paid as Mid's frozen priceAt and loadable, less the keeper's cut; an ally's run, five minutes of a workshop with the loom, Learning by doing, a venture with Banking and the Bank's interest are Mid's frozen numbers; guards keep to a caravan, a guarded caravan is Mid's frozen guardedCart's, a robbed one Mid's frozen robbed |
+| X62 | t-realm | page | the war camp, field traps, relations and vassals (F25+F28): Mid's CAMP, CALTROPS, STAKES, NATIVE's traps, NOTICE, PEACE.truce, REGARD, GANG, REL_WORD, VASSAL, DEMAND and its fair TAX as the tribute in the books, and the camp pieces', traps', wagons', envoy's and rebels' rows; both camps' layouts at three facings are Mid's frozen campLayout snapped; the small camp unpacks as sites and a soldier's hands raise a piece at D279's build of a villager's; a medical tent binds a wound as Mid's healTick's lag; a caravan's supply run costs Mid's fee and food and stocks the depot; soldiers eat from it, and unsupplied they slow; caltrops on a rider and a spearman, and a pit a scout found, are Mid's frozen trapsTick; war comes after Mid's notice; an envoy's five answers and a truce's price are Mid's frozen judgeEnvoy on the same odds; ten minutes of a vassal's tribute, loyalty and unrest are Mid's frozen vassalTick; gifts buy Mid's giftGain (QCD) |
 
-1653 items sealed · 1539 book entries · 82 laws · 197 citations, 35 still to open · 7 known
+1724 items sealed · 1608 book entries · 84 laws · 201 citations, 37 still to open · 7 known

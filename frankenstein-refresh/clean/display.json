@@ -238,8 +238,8 @@
    "index.html blit(); flipped by ctx.scale in drawThings"
   ],
   "trapShown": [
-   "bring",
-   "a hidden trap shows only to its side, allies and a scout who found it (with the field defences, BF)"
+   "in v100",
+   "F25+F28: combat.js shown, the hide and own hooks; index.html trapArt (Sprites P44)"
   ],
   "WALL_LOOK": [
    "in v100",

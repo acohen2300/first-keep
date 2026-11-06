@@ -260,76 +260,76 @@
    "F16: econ.js inReach (any food find, own field, docked fish or game; the walking grid's region waits)"
   ],
   "CAMP_TENTS": [
-   "bring",
-   "the four camp tents (BTC5 Medical, BTC6 Training, BTC7 Mess, BI5 Depot); part of the war camps (BTC3, BTC4)"
+   "in v100",
+   "F25+F28: books/measure.js D287 (the pieces by code)"
   ],
   "campLayout": [
-   "bring",
-   "a camp's pieces: the Outpost a strip, the Camp a square with palisade, gate, towers, tents (Hyginus)"
+   "in v100",
+   "F25+F28: econ.js campLayout, D287"
   ],
   "campFacing": [
-   "bring",
-   "a camp faces home (its gate side)"
+   "in v100",
+   "F25+F28: econ.js facing"
   ],
   "campCells": [
-   "bring",
-   "the ground a camp takes"
+   "in v100",
+   "F25+F28: econ.js campCells"
   ],
   "campWhy": [
-   "bring",
-   "why a camp cannot stand at a spot"
+   "in v100",
+   "F25+F28: econ.js campWhy"
   ],
   "campUnpack": [
-   "bring",
-   "the Camp wagon (UT2) unpacks: trees under it burn, felled trees laid as abatis (BF5), the pieces become sites"
+   "in v100",
+   "F25+F28: econ.js unpack"
   ],
   "wagonTick": [
-   "bring",
-   "the Camp wagon drives to its spot and unpacks"
+   "in v100",
+   "F25+F28: econ.js sendWagon (combat.js order) and the camp tick"
   ],
   "campCap": [
-   "bring",
-   "how many camps a side may have out (one, two from the next age; the Camp wagons research and a Store)"
+   "in v100",
+   "F25+F28: econ.js campCap"
   ],
   "campsOut": [
-   "bring",
-   "the camps a side has out, wagons on the road counted"
+   "in v100",
+   "F25+F28: econ.js campsOut"
   ],
   "campWhyTrain": [
-   "bring",
-   "why a Camp wagon cannot be trained"
+   "in v100",
+   "F25+F28: econ.js campWhyTrain (queue, the Train cell)"
   ],
   "canRaise": [
-   "bring",
-   "a foot soldier idle near its camp's unraised piece lends a hand"
+   "in v100",
+   "F25+F28: econ.js raiser"
   ],
   "campRaise": [
-   "bring",
-   "soldiers raise and mend their camp at a villager's rate"
+   "in v100",
+   "F25+F28: econ.js campRaise"
   ],
   "campSendHome": [
-   "bring",
-   "the badly hurt and sick by a medical tent walk home to the Hospital"
+   "in v100",
+   "F25+F28: econ.js sendHome"
   ],
   "depotsOf": [
-   "bring",
-   "a side's depots (BI5)"
+   "in v100",
+   "F25+F28: econ.js depots (tick Supply)"
   ],
   "depotNear": [
-   "bring",
-   "the depot a unit eats from"
+   "in v100",
+   "F25+F28: econ.js depotFor"
   ],
   "campEat": [
-   "bring",
-   "soldiers in a depot's reach eat from it; unsupplied they slow and do not mend"
+   "in v100",
+   "F25+F28: econ.js camped (upkeep)"
   ],
   "supplyRun": [
-   "bring",
-   "a Market caravan runs food to a depot under half, for a carter's fee in gold"
+   "in v100",
+   "F25+F28: econ.js supply (the caravans' tick)"
   ],
   "campWearTick": [
-   "bring",
-   "rain, snow and frost wear a camp's pieces each minute"
+   "in v100",
+   "F25+F28: econ.js the camp tick, each minute"
   ],
   "throneB": [
    "bring",
@@ -344,44 +344,44 @@
    "the Natives' own state: the handover, the raids, the garrison's regrowth"
   ],
   "gangState": [
-   "bring",
-   "each group's regard for each side, its stance, its gifts; part of diplomacy (Later, kept)"
+   "in v100",
+   "F25+F28: econ.js gang"
   ],
   "regardOf": [
-   "bring",
-   "a group's regard for a side (0 to 100)"
+   "in v100",
+   "F25+F28: econ.js regardOf"
   ],
   "addRegard": [
-   "bring",
-   "regard rises or falls, and the stance follows"
+   "in v100",
+   "F25+F28: econ.js addRegard"
   ],
   "gangSet": [
-   "bring",
-   "a side's stance with a group is set; the Natives' gates open to a friend"
+   "in v100",
+   "F25+F28: combat.js treaty (a group's stance; the Natives' gate waits with the Natives)"
   ],
   "gangSync": [
-   "bring",
-   "peace and war follow regard; an alliance needs an emissary"
+   "in v100",
+   "F25+F28: econ.js gangSync"
   ],
   "giftsRecent": [
-   "bring",
-   "gifts given lately (the Danegeld window)"
+   "in v100",
+   "F25+F28: econ.js giftsRecent"
   ],
   "giftGain": [
-   "bring",
-   "each gift buys less regard than the last (Danegeld)"
+   "in v100",
+   "F25+F28: econ.js giftGain (QCD)"
   ],
   "giftWhy": [
-   "bring",
-   "why a gift cannot be given"
+   "in v100",
+   "F25+F28: econ.js giftWhy (Sides I7)"
   ],
   "giveGift": [
-   "bring",
-   "a gift of gold for regard"
+   "in v100",
+   "F25+F28: econ.js giveGift"
   ],
   "judgeGang": [
-   "bring",
-   "a group answers an emissary (the Natives' answer copied for every misfit group; their own rules are parked)"
+   "in v100",
+   "F25+F28: econ.js judgeGang (the Natives' gate waits with them)"
   ],
   "gunAge": [
    "bring",
@@ -404,16 +404,16 @@
    "the Throne changes hands, walls and towers with it; see misfits"
   ],
   "trapAt": [
-   "bring",
-   "lays a hidden trap (BF1 Pit, BF2 Net, BF3 Stakes, BF4 Caltrops)"
+   "in v100",
+   "F25+F28: the traps are built as buildings (BF1–BF4, Build menu Walls; the Net off it)"
   ],
   "layTraps": [
    "bring",
    "the Natives keep traps on each causeway to the Throne; see misfits"
   ],
   "trapsTick": [
-   "bring",
-   "traps spring on foes, scouts find them, allies walk free, caltrops wear flat"
+   "in v100",
+   "F25+F28: combat.js traps, spring"
   ],
   "natRaid": [
    "bring",

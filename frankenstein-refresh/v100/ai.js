@@ -46,14 +46,32 @@ function round(side) { const s = SIDES[side], h = home(side); if (!h) return; co
   if (vs.length >= want * D.ai.ageAt && ECON.ageCost(side) && ECON.canPay(side, ECON.ageCost(side))) ECON.ageUp(side);
   // E248
   const enemy = D.players.find((p) => WAR.atWar(side, p)), theirs = WAR.armyOf(enemy), mine = WAR.armyOf(side);
-  if (mine.length < D.ai.army[age]) { const T = D.ai.troops, score = (c) => theirs.reduce((n, u) => n + WAR.vs({ code: c, side }, u), 0), best = T.reduce((b, c) => (score(c) > score(b) ? c : b));
+  if (mine.length < (peaceAll(side) ? Math.ceil(D.ai.army[age] * DP.stand) : D.ai.army[age])) { const T = D.ai.troops, score = (c) => theirs.reduce((n, u) => n + WAR.vs({ code: c, side }, u), 0), best = T.reduce((b, c) => (score(c) > score(b) ? c : b));
     for (const code of [best, ...T]) { const b = trainer(side, code); if (b && ECON.queue(b, code)) break; } }
   // E249
   const eh = home(enemy), w = WAR.waves[side]; if (!w) chokeClaim(side, enemy);
   if (!w && mine.length >= D.ai.army[Math.max(1, age)] && eh) { if (WAR.odds(mine, enemy) >= D.ai.odds) WAR.attack(side, FK.tileAt(eh.bx, eh.by)); }
   else if (w && eh) { const hp = things().filter((t) => t.kind === 'bld' && t.side === enemy).reduce((n, t) => n + t.hp, 0) + theirs.reduce((n, u) => n + u.hp, 0); if (hp < seen[side].hp) seen[side].t = 0; else seen[side].t += D.ai.beat; seen[side].hp = hp; if (seen[side].t > D.ai.stall) { WAR.recall(side); seen[side].t = 0; } }
+  diplomacy(side); allyDuty(side);
 }
-FK.on('start', () => { clock.fill(0); rings.clear(); claimT.clear(); for (const q of seen) { q.hp = 0; q.t = 0; } });
-FK.on('tick', (dt) => { if (ECON.result()) return; for (const side of D.players) { if (side === 0) continue; clock[side] += dt; if (clock[side] >= D.ai.beat) { clock[side] = 0; round(side); } } });
-return { round, spot, raise, wallPlan, gapOnRoad, chokeClaim };
+// E522
+const DP = D.ai.diplo, LG = D.league, [ME] = D.players, [WARS, PEACE, ALLY] = fromBook('sides').stances, [ENVOY] = FK.ticked('Envoy'), helped = new Map(), score = (p) => ECON.score(p).total; let league = null;
+const peaceAll = (side) => !D.players.some((q) => q !== side && !ECON.fell(q) && (WAR.atWar(side, q) || ECON.noticeLeft(side, q) || ECON.noticeLeft(q, side)));
+function diplomacy(side) { const s = SIDES[side], rivals = D.players.filter((q) => q !== side && !ECON.fell(q)); if (!FK.aged(ENVOY, side) || s.envoyOut || FK.K.t - s.envoyAt < DP.envoy) return;
+  const [lead] = D.players.filter((q) => !ECON.fell(q)).sort((a, b) => score(b) - score(a)), warOn = rivals.some((q) => WAR.atWar(side, q) && SIDES[q].lord !== side);
+  for (const q of rivals) { if (SIDES[q].lord === side || s.lord === q) continue; const odds = WAR.odds(WAR.armyOf(side), q), rel = WAR.stance(side, q);
+    if (rel === WARS && odds < DP.peace && WAR.armyOf(side).length < DP.waveMin && ECON.setRel(side, q, PEACE)) return;
+    if (!warOn && rel === PEACE && !ECON.noticeLeft(side, q) && odds > DP.bold + DP.lift + DP.diff && ECON.setRel(side, q, WARS)) return;
+    if (s.ally == null && SIDES[q].ally == null && rel === PEACE && ECON.time() > DP.allyAt && (warOn || (DP.gang && lead !== side && lead !== q)) && ECON.setRel(side, q, ALLY)) return; } }
+function allyDuty(side) { const s = SIDES[side]; if (s.ally == null || FK.K.t - (helped.get(side) ?? -Infinity) < DP.help.gap) return; const ak = home(s.ally), mk = home(side);
+  const near = (k, o) => !!k && FK.units().some((u) => SIDES[u.side] && WAR.atWar(o, u.side) && ECON.soldier(u.code) && dist(u, k) < DP.help.near * D.tile);
+  if (ak && mk && !near(mk, side) && near(ak, s.ally)) { helped.set(side, FK.K.t); ECON.sendHelp(side, ak, s.ally === ME); } }
+function leagueTick() { const S = D.players.filter((p) => !ECON.fell(p) && !(SIDES[p].lord != null && !SIDES[p].rebel)).sort((a, b) => score(b) - score(a)), W = fromBook('words').realm.league, sides = fromBook('words').end.sides; if (S.length < LG.least) return; // E523
+  const [lead, next] = S, ratio = score(lead) / Math.max(LG.floor, score(next));
+  if (league == null) { if (ratio < LG.lead) return; league = lead; } else if (league !== lead || ratio < LG.release) { league = null; ECON.tell(W.off); return; }
+  const M = S.filter((p) => p !== lead && p !== ME && SIDES[p].lord !== lead); if (!M.length) return; const fresh = M.some((p) => WAR.stance(p, lead) !== WARS);
+  for (const p of M) { if (!WAR.atWar(p, lead)) ECON.declareWar(p, lead, W.why); for (const q of M) if (q !== p) WAR.treaty(p, q, ALLY); } if (fresh) ECON.tell(W.on, { sides: M.map((p) => sides[p]).join(fromBook('words').list.and), side: sides[lead] }); }
+FK.on('start', () => { clock.fill(0); rings.clear(); claimT.clear(); helped.clear(); league = null; for (const q of seen) { q.hp = 0; q.t = 0; } });
+FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === 0) continue; clock[side] += dt; if (clock[side] >= D.ai.beat) { clock[side] = 0; round(side); } } });
+return { round, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick };
 })();

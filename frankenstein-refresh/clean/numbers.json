@@ -82,8 +82,8 @@
    "the five stores: v100's yields, their colours in the Colours book, drop-offs by tick; Mid's short keys (f, w, s, g, i) are not needed"
   ],
   "REL_WORD": [
-   "bring",
-   "Foe, Neutral, Friend: with relations"
+   "in v100",
+   "F25+F28: Sides book I6"
   ],
   "CORNER": [
    "in v100",
@@ -114,8 +114,8 @@
    "F16: books/measure.js D216 (the field yield); its walking and tints parked: the climate's mud, snow and snow cover carry them (Parked)"
   ],
   "CAMP": [
-   "bring",
-   "the camp wagon's camp: building share, tents, healing, supply"
+   "in v100",
+   "F25+F28: books/measure.js D279 camp (and D268 BTC5, D224)"
   ],
   "UNIT": [
    "bring",
@@ -130,16 +130,16 @@
      "Scout → Scout; train Mid 12 v100 30; F15: D123 holds Mid's cost for the shell that wears it; F18: trained at the Town Center (Mid's keep); its rank by Horse breeding (Rider scout)"
     ],
     "envoy": [
-     "bring",
-     "Emissary"
+     "in v100",
+     "Emissary → Envoy; F25+F28: US5, econ.js sendEnvoy, envoyTick"
     ],
     "outpostcart": [
-     "bring",
-     "the war camp's wagon, two sizes (Albert 11:16): the outpost is the small war camp; the large holds an army like a wall, a safe zone"
+     "in v100",
+     "Outpost wagon → Small camp wagon; F25+F28: UT2, the small war camp (D287 small), at the Stable (Albert 11:16 (7))"
     ],
     "campcart": [
-     "bring",
-     "the war camp's wagon, two sizes (Albert 11:16): the outpost is the small war camp; the large holds an army like a wall, a safe zone"
+     "in v100",
+     "Camp wagon → Large camp wagon; F25+F28: UT4, the large war camp (D287 large), at the Stable, with Camp wagons and a Store"
     ],
     "caravan": [
      "in v100",
@@ -222,8 +222,8 @@
      "F18: shell UM16 (the Unit shell: class, age, look, pace, teach), D138, D123, D124, D86 by Mid's speed, sprites look treb"
     ],
     "rebel": [
-     "bring",
-     "Rebel"
+     "in v100",
+     "Rebel → Rebels; F25+F28: MH6, class Foot and never trained, econ.js rebel"
     ],
     "deer": [
      "in v100",
@@ -324,8 +324,8 @@
    "the vassal's tax rate: Albert 11:16, tax parked for later (tribute instead)"
   ],
   "VASSAL": [
-   "bring",
-   "vassals: loyalty, unrest, rebellion, tribute (Albert 11:16); the tax rate is parked"
+   "in v100",
+   "F25+F28: books/measure.js D283 vassal"
   ],
   "VENTURE": [
    "in v100",
@@ -384,20 +384,20 @@
      "Wall → Wall; hp Mid 100 v100 1800"
     ],
     "pit": [
-     "bring",
-     "Pit"
+     "in v100",
+     "Pit → Pit; F25+F28: BF1, a trap (combat.js traps, D280)"
     ],
     "net": [
-     "bring",
-     "Net"
+     "in v100",
+     "Net → Net; F25+F28: BF2, a trap, off the menu (the Natives' net)"
     ],
     "stakes": [
-     "bring",
-     "Stakes"
+     "in v100",
+     "Stakes → Stakes; F25+F28: BF3, a trap"
     ],
     "caltrops": [
-     "bring",
-     "Caltrops"
+     "in v100",
+     "Caltrops → Caltrops; F25+F28: BF4, a trap, after Caltrops (D286)"
     ],
     "gate": [
      "in v100",
@@ -562,12 +562,12 @@
    "F26+F27: measure D273"
   ],
   "NOTICE": [
-   "bring",
-   "30 s from declaring war to the first blow: with relations"
+   "in v100",
+   "F25+F28: books/measure.js D281 notice"
   ],
   "DEMAND": [
-   "bring",
-   "the Market's demand; F26+F27: not the Market's: the lord's demands of a vassal (a demand, forced tribute, a levy) come with the vassals (M37, F28)"
+   "in v100",
+   "F25+F28: books/measure.js D283 vassal.demand"
   ],
   "TRAINERS": [
    "cut",
@@ -590,12 +590,12 @@
    "how far a beast or a guard looks from its home (140): v100 has aggro ranges (D144, D146) without a home"
   ],
   "REGARD": [
-   "bring",
-   "how each side regards the others"
+   "in v100",
+   "F25+F28: books/measure.js D282"
   ],
   "GANG": [
-   "bring",
-   "the wild's bands by name: with the Natives and outlaws"
+   "in v100",
+   "F25+F28: Sides book I5"
   ],
   "NATIVE": [
    "bring",
@@ -650,12 +650,12 @@
    "F26+F27: measure D277 (QAB)"
   ],
   "CALTROPS": [
-   "bring",
-   "with the traps"
+   "in v100",
+   "F25+F28: books/measure.js D280 trap.kinds.caltrops"
   ],
   "STAKES": [
-   "bring",
-   "with the traps"
+   "in v100",
+   "F25+F28: books/measure.js D280 trap.stake; combat.js stake"
   ],
   "FORMING": [
    "in v100",

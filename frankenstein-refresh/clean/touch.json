@@ -62,8 +62,8 @@
    "F15: menu.js wallDrag"
   ],
   "foeFirst": [
-   "bring",
-   "the toast when you order an attack on a side you are not at war with; with diplomacy (Later)"
+   "in v100",
+   "F25+F28: combat.js order (WO.foeFirst, already in v100)"
   ],
   "dropDrag": [
    "in v100",

@@ -286,7 +286,7 @@ function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 
 function resize() { dpr = Math.min(2, devicePixelRatio || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
 // ── The door (E65)
-const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [], shut: [], press: [], hold: [], drag: [], drop: [], say: [] }; // E66
+const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [] }; // E66
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 // E277
 const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
@@ -301,7 +301,7 @@ function stat(code, side, key) { // E280
   const base = (BASE[key] || ((c) => (D.stats[c] || D.tower[c] || {})[key] ?? D.bases[key]))(code), v = base == null ? base : typeof base === 'object' ? Object.fromEntries(Object.entries(base).map(([y, n]) => [y, Math.round(law(n))])) : law(base);
   memo.set(id, v); return v;
 }
-const kinds = (cls) => SHELLS.filter((c) => SH[c].class === cls), trains = (c) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
+const kinds = (cls) => SHELLS.filter((c) => SH[c].class === cls && D.train[c]), trains = (c) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
 const RANKS = {}, KITS = []; for (const [c, e] of Object.entries(BOOKS.tech)) { if (e.value.rank) (RANKS[e.value.rank.k] = RANKS[e.value.rank.k] || []).push(c); if (e.value.kit) KITS.push(c); } // E370
 const ranks = (code, side) => (RANKS[code] || []).filter((c) => (known.get(side) || new Set()).has(c)), rankOf = (code, side) => ranks(code, side).length, kitOf = (side, code) => KITS.filter((c) => SH[code].class && (known.get(side) || new Set()).has(c)).length;
 const rankName = (code, side) => { const r = ranks(code, side); return r.length ? BOOKS.tech[r.at(-1)].value.rank.name : (SH[code] || {}).name; };
@@ -1041,6 +1041,11 @@ const GIFT = { // E120
   stop: (x, y, s) => { const { ring, w, e: [, , rx, ry, rot, a0, a1] } = SPRITE.nodes.stop; ctx.strokeStyle = ring; ctx.lineWidth = w * s; ctx.beginPath(); ctx.ellipse(x, y, rx * s, ry * s, rot, a0, a1); ctx.stroke(); },
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
+const TRAPS = SPRITE.traps; // E524
+function trapArt(x, y, s, t) { const A = TRAPS[t.done < D.camp.built ? 'site' : SH[t.code].trap], col = fire('own', t) ? A.own : A.foe; ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = ctx.fillStyle = col; ctx.lineWidth = Math.max(A.w || s, (A.w || s) * s); if (A.dash) ctx.setLineDash(A.dash);
+  if (A.e) { const [rx, ry, rot, a0, a1] = A.e; ctx.beginPath(); ctx.ellipse(x, y, rx * s, ry * s, rot, a0, a1); if (A.fill) ctx.fill(); else ctx.stroke(); }
+  const at = A.at ? A.at.filter((_, i) => i <= Math.max(D.camp.built, D.trap.kinds.caltrops.hits - ~~t.hits)) : [[]];
+  ctx.beginPath(); for (const [px, py] of at) for (const [a, b, c, d] of A.lines || []) { ctx.moveTo(x + (~~px + a) * s, y + (~~py + b) * s); ctx.lineTo(x + (~~px + c) * s, y + (~~py + d) * s); } ctx.stroke(); ctx.restore(); }
 const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // E121
 // ── Floor 6, climate (E122)
 const K = { t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: false, fog: 0, fogT: 0, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
@@ -1188,7 +1193,7 @@ function drawThings() {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
     if (t.deep && !dots) continue;
     const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
-    if (t.kind === 'bld') { if (!show.B) continue; if (t.done < 1) ctx.globalAlpha = 0.3 + 0.7 * t.done; blit(bldSprite(t.code, t.col, s, ...levelOf(t)), x, y, s); ctx.globalAlpha = 1; }
+    if (t.kind === 'bld') { if (!show.B || fire('hide', t)) continue; if (has(t, 'Trap')) { if (!dots) trapArt(x, y, s, t); continue; } if (t.done < 1) ctx.globalAlpha = 0.3 + 0.7 * t.done; blit(bldSprite(t.code, t.col, s, ...levelOf(t)), x, y, s); ctx.globalAlpha = 1; }
     else if (!show.T) continue;
     else if (GIFT[t.kind]) { if (!dots) GIFT[t.kind](x, y, s); }
     else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else { const z = s * t.size * (LEFT + (GROW * t.amount) / KIND[t.kind].amount); blit(nodeSprite(t.kind, t.v, z), x, y, z); } // E305

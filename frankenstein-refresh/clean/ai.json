@@ -50,8 +50,8 @@
    "the shift to plots: a plot is built when it beats the wild find and pays its cost back in the time left (marginal value, payback)"
   ],
   "peaceAll": [
-   "bring",
-   "at peace with every court: with diplomacy (the army stands down to a share)"
+   "in v100",
+   "F25+F28: ai.js peaceAll (the army stands down to D285 stand)"
   ],
   "armyAim": [
    "bring",
@@ -66,12 +66,12 @@
    "Mid's computer turn: by-need jobs, homes, camps, plots, saving for the age, the Market, the Wonder, priests, medics, siege, caravans, spies, the army mix, finds, war, by personality (PERS). v100/ai.js round already does jobs, homes, camps, farms, the age, the army and the wave for one balanced side; the rest comes, asking by tick · Albert 11:16: without its surplus selling (cut for everyone)"
   ],
   "aiDiplomacy": [
-   "bring",
-   "a computer's relations by its odds: peace when losing, war when strong, an ally when at war, all against the Throne's holder: with diplomacy (kept for after the core)"
+   "in v100",
+   "F25+F28: ai.js diplomacy (D285; the Throne's rule waits with the Throne)"
   ],
   "allyDuty": [
-   "bring",
-   "an ally defends a friend's town under attack, never at the cost of its own: with diplomacy"
+   "in v100",
+   "F25+F28: ai.js allyDuty"
   ],
   "armyCap": [
    "bring",
@@ -102,12 +102,12 @@
    "when and whom to attack, by odds against the personality's nerve: the opportunist, Easy's safe start, Hard waiting for winter, a rival's Wonder or the Throne at once, riders on the foe's camps; v100/ai.js round sends one wave at Lanchester odds D155"
   ],
   "LEAGUE": [
-   "bring",
-   "Dynamic Diplomacy's two numbers (forms at 1.4 of the next score, breaks below 1.15): with leagueTick"
+   "in v100",
+   "F25+F28: books/measure.js D284"
   ],
   "leagueTick": [
-   "bring",
-   "Dynamic Diplomacy (the Tension setting): the computers behind a runaway leader unite against it: with diplomacy (see misfits)"
+   "in v100",
+   "F25+F28: ai.js leagueTick"
   ],
   "AB": [
    "cut",

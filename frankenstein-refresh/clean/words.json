@@ -10,8 +10,8 @@
    "F11: menu.js, orList: its words J3"
   ],
   "investText": [
-   "bring",
-   "the loyalty each building buys near a vassal, with vassals"
+   "in v100",
+   "F25+F28: econ.js investText"
   ],
   "TITLE_SHORT": [
    "bring",
@@ -426,16 +426,16 @@
      "F17: books/words.js J7 why.fieldcraft"
     ],
     "camps": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "marching": [
      "in v100",
      "F17: books/words.js J7 why.marching"
     ],
     "archerstakes": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "viamil": [
      "bring",
@@ -518,12 +518,12 @@
      "F26+F27: Words book J7 (why), by its key"
     ],
     "campwagons": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "fieldlog": [
-     "bring",
-     "a research step's history and date, with the tech tree (the Content pull)"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "warmclothes": [
      "in v100",
@@ -1146,44 +1146,44 @@
      "the history card for Store (BI4), with its building"
     ],
     "caltrops": [
-     "bring",
-     "the history card for Caltrops (BF4), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "abatis": [
-     "bring",
-     "the history card for Abatis (BF5), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "medtent": [
-     "bring",
-     "the history card for Medical tent (BTC5), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "traintent": [
-     "bring",
-     "the history card for Training tent (BTC6), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "messtent": [
-     "bring",
-     "the history card for Mess tent (BTC7), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "depot": [
-     "bring",
-     "the history card for Depot (BI5) (Mid: Supply depot), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "camptower": [
-     "bring",
-     "the history card for Camp tower (BTC8), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "palisade": [
-     "bring",
-     "the history card for Palisade (BW4), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "outpostcart": [
-     "bring",
-     "the Outpost wagon's history, with war camps (see misfits)"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "campcart": [
-     "bring",
-     "the Camp wagon (UT2)'s history, with war camps"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "hospital": [
      "bring",
@@ -1214,16 +1214,16 @@
      "F26+F27: Words book J7 (why), by its key"
     ],
     "pit": [
-     "bring",
-     "the history card for Pit (BF1), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "net": [
-     "bring",
-     "the history card for Net (BF2), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "stakes": [
-     "bring",
-     "the history card for Stakes (BF3), with its building"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "workshop": [
      "in v100",
@@ -1278,8 +1278,8 @@
      "the history card for the Scout (v100 Scout, US4), with its unit"
     ],
     "envoy": [
-     "bring",
-     "the history card for the Emissary, with its unit"
+     "in v100",
+     "F25+F28: Words book J7 (why), by its key"
     ],
     "caravan": [
      "in v100",
@@ -1869,11 +1869,11 @@
     ],
     "You hold a vassal": [
      "bring",
-     "holding a vassal, tax and loyalty (investText), with vassals"
+     "holding a vassal, tax and loyalty (investText), with vassals; F25+F28: the feature is in (econ.js, combat.js, ai.js), its Guide row waits for the Guide (Parked)"
     ],
     "Unrest reaches 100": [
      "bring",
-     "a vassal's rebellion, with vassals"
+     "a vassal's rebellion, with vassals; F25+F28: the feature is in (econ.js, combat.js, ai.js), its Guide row waits for the Guide (Parked)"
     ],
     "You raze a building": [
      "bring",
@@ -1949,7 +1949,7 @@
     ],
     "War camps": [
      "bring",
-     "the war camps on wagons; Mid's Outpost wagon and Camp wagon against v100's one Camp wagon (misfits)"
+     "the war camps on wagons; Mid's Outpost wagon and Camp wagon against v100's one Camp wagon (misfits); F25+F28: the feature is in (econ.js, combat.js, ai.js), its Guide row waits for the Guide (Parked)"
     ],
     "Temper and shape": [
      "bring",
@@ -2009,15 +2009,15 @@
     ],
     "You hit someone you are at peace with or allied to": [
      "bring",
-     "striking a friend is war, with diplomacy"
+     "striking a friend is war, with diplomacy; F25+F28: the feature is in (econ.js, combat.js, ai.js), its Guide row waits for the Guide (Parked)"
     ],
     "You send an emissary (Bronze age)": [
      "bring",
-     "the emissary, with diplomacy"
+     "the emissary, with diplomacy; F25+F28: the feature is in (econ.js, combat.js, ai.js), its Guide row waits for the Guide (Parked)"
     ],
     "An ally": [
      "bring",
-     "what an ally does, with diplomacy"
+     "what an ally does, with diplomacy; F25+F28: the feature is in (econ.js, combat.js, ai.js), its Guide row waits for the Guide (Parked)"
     ],
     "A computer decides to attack": [
      "bring",

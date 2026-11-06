@@ -22,12 +22,12 @@
    "econ.js queue (D133 who trains where, D123 price, room D127)"
   ],
   "tentCost": [
-   "bring",
-   "a training tent's surcharge; the Camp buildings (BTC6)"
+   "in v100",
+   "F25+F28: econ.js tentCost (priceOf)"
   ],
   "tentOrNot": [
-   "bring",
-   "a training tent gives way to a building when it can't be paid; Camp buildings"
+   "in v100",
+   "F25+F28: econ.js lineFor"
   ],
   "whyOf": [
    "cut",
@@ -126,120 +126,120 @@
    "F15: econ.js cancel and menu.js scrap (the toast says what came back); never the hall (menu.js)"
   ],
   "declareWar": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js declareWar"
   ],
   "makePeace": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js makePeace"
   ],
   "makeAlly": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js makeAlly"
   ],
   "noticeLeft": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core): war's notice"
+   "in v100",
+   "F25+F28: econ.js noticeLeft"
   ],
   "gangKey": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core): the outlaw groups and the Natives on the Relations rows"
+   "in v100",
+   "F25+F28: a group is its key string (econ.js, the Sides book I3, I5)"
   ],
   "relWhy": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js relWhy"
   ],
   "envoyWhy": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js envoyWhy"
   ],
   "setRel": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js setRel"
   ],
   "noticeTick": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js the relations tick"
   ],
   "sendEnvoy": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js sendEnvoy"
   ],
   "oddsOf": [
    "in v100",
    "F12b: combat.js WAR.odds(army, side); ai.js round reads it (D155)"
   ],
   "judgeEnvoy": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js judgeEnvoy (D281; the truce PEACE.truce in D281)"
   ],
   "reply": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js reply"
   ],
   "sendHelp": [
-   "bring",
-   "an ally sends half its army to a friend under attack; diplomacy"
+   "in v100",
+   "F25+F28: econ.js sendHelp"
   ],
   "overlordWhy": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js overlordWhy"
   ],
   "offerOverlord": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js offerOverlord"
   ],
   "breakTies": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js breakTies"
   ],
   "demandCost": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js demandCost"
   ],
   "demandWhy": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js demandWhy"
   ],
   "demand": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js demand"
   ],
   "menAt": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js menAt"
   ],
   "tributeWhy": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js tributeWhy"
   ],
   "forceTribute": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js forceTribute"
   ],
   "levyOf": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js levyOf"
   ],
   "levyRoom": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js levyRoom"
   ],
   "levyWhy": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js levyWhy"
   ],
   "levy": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js levy"
   ],
   "releaseLevy": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js releaseLevy"
   ],
   "releaseAll": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js releaseAll"
   ],
   "chargeWhy": [
    "in v100",
@@ -638,8 +638,8 @@
    "the Scout (US4, SC18): treasure first, then a loop of the map"
   ],
   "envoyTick": [
-   "bring",
-   "diplomacy (ally, peace, war, envoys; kept for after the core): the envoy's walk"
+   "in v100",
+   "F25+F28: econ.js envoyTick"
   ],
   "caravanTick": [
    "in v100",
@@ -882,36 +882,36 @@
    "F26+F27: econ.js ventures, returnOf (QCF); the vassal's share of it waits with the vassals"
   ],
   "vassalsOf": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js vassalsOf"
   ],
   "shareUp": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core): a loyal vassal shares its trade"
+   "in v100",
+   "F25+F28: econ.js shareUp (trade, the routes' pay, ventures)"
   ],
   "loyaltyParts": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core): loyalty"
+   "in v100",
+   "F25+F28: econ.js loyaltyParts (D288 invest)"
   ],
   "makeVassal": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js makeVassal"
   ],
   "surrenderWhy": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core): a beaten side surrenders"
+   "in v100",
+   "F25+F28: econ.js surrenderWhy"
   ],
   "demandSurrender": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core)"
+   "in v100",
+   "F25+F28: econ.js demandSurrender"
   ],
   "rebel": [
-   "bring",
-   "vassals (demand, tribute, levy; kept for after the core): unrest and rebellion"
+   "in v100",
+   "F25+F28: econ.js rebel"
   ],
   "vassalTick": [
-   "bring",
-   "vassals: demand, tribute, levy, loyalty, unrest (Albert 11:16: tribute; the tax rate parked)"
+   "in v100",
+   "F25+F28: econ.js vassals (QCG; the tax rate parked, the one tribute Mid's fair row)"
   ]
  },
  "misfits": [

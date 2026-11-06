@@ -342,8 +342,8 @@
      "F17: books/tech.js O80 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "camps": [
-     "bring",
-     "Marching camps (barracks, Classical): Resting soldiers recover nerve 30% faster."
+     "in v100",
+     "F25+F28: books/tech.js O200 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "marching": [
      "in v100",
@@ -410,20 +410,20 @@
      "F26+F27: books/tech.js O182 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "campwagons": [
-     "bring",
-     "Camp wagons (stable, Classical): The Stable packs a whole war camp on two wagons: palisade, gate, four towers, the four tents, a yard for 32."
+     "in v100",
+     "F25+F28: books/tech.js O201 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "fieldlog": [
-     "bring",
-     "Field logistics (stable, Classical): Soldiers raise a camp as fast as villagers, and a tent trains at a tenth over the price, not a quarter."
+     "in v100",
+     "F25+F28: books/tech.js O202 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "caltrops": [
-     "bring",
-     "Caltrops (smith, Classical): Iron caltrops may be sown from the Build menu: a strip of spikes against horse."
+     "in v100",
+     "F25+F28: books/tech.js O203 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "archerstakes": [
-     "bring",
-     "Archer stakes (range, Medieval): A shooter who has stood five seconds plants a stake: a horse that charges it is hurt and thrown back."
+     "in v100",
+     "F25+F28: books/tech.js O204 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "horses": [
      "in v100",

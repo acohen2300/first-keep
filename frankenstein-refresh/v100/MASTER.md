@@ -9,7 +9,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#frames
 
 - **E1** First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here
-- **E2** A Book entry is { key, value, name, cite, law } under its code; the game sees each book as · D53 (N112) · D86 (N71, N72, N73, N79, N170, N176)
+- **E2** A Book entry is { key, value, name, cite, law } under its code; the game sees each book as · D53 (N112) · D86 (N71, N72, N73, N79, N170, N176, N198)
 - **E3** every code in every book
 - **E4** a slot's pointer, read
 - **E5** S the shells (books/shells.js): a row names its layer, ticks its capabilities (SC) and poi
@@ -106,9 +106,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176) · D139 (N69, N169, N170, N196) · D138 (N69, N170, N176, N188, N194, N195) · D123 (N168, N176, N194, N195) · D124 (N169, N176, N194, N195) · D125 (N169, N168, N195) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198) · D123 (N168, N176, N194, N195, N198) · D124 (N169, N176, N194, N195, N198) · D125 (N169, N168, N195, N198) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
-- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195) · D130 (N160)
+- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198) · D130 (N160)
 - **E370** a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give 
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
@@ -151,15 +151,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E82** Floor 5, movables (layer 120): U units and M moveables are shells that walk. Each stands a · QBL (N74)
 - **E83** one a corner (C5–C8); the player is 0 · C5 (N103) · C8 (N103)
-- **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79, N170, N176)
+- **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79, N170, N176, N198)
 - **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170, N195)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
 - **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
-- **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
+- **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185, N198) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
 - **E360** the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh alwa · QN (N13) · QR (N179, N178, N174, N18) · D225 (N17, N173) · G9 (N179, N19, N173) · G8 (N107, N18, N178) · G10 (N174, N179, N173)
-- **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185) · QR (N179, N178, N174, N18)
-- **E374** the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v|v| (W1, by the m · QN (N13) · W1 (N108, N109, N110, N181) · D224 (N13, N173, N181, N185)
+- **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176, N198) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185, N198) · QR (N179, N178, N174, N18)
+- **E374** the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v|v| (W1, by the m · QN (N13) · W1 (N108, N109, N110, N181) · D224 (N13, N173, N181, N185, N198)
 - **E375** aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c th
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E90** most: the tiles it may open before giving up
@@ -214,6 +214,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E118** W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's st
 - **E119** the node art's own small dice, seeded by the variant, so a tree's leaves fall the same eac
 - **E120** each drawn at its stand (x, y on the screen), s pixels a unit
+- **E524** A hidden trap is drawn flat on the ground from the Sprites book, in its side's shade or th
 - **E121** a find far out, from its look
 
 ## index.html#floor-6-climate
@@ -297,7 +298,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E171** the codes and their floors; Lock is a mark for us (no floor is locked yet)
 - **E172** the Screen book: the Build tabs are its; a building shows priced once econ prices it, else
 - **E173** the seat, and who it trains first: asked of the books, never named
-- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194, N195)
+- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194, N195, N198)
 - **E175** a page that keeps its own height (SC20) · SC20 (N101)
 - **E176** the new game's choices: the first is the label's row in Albert's template; built ones set 
 - **E177** which choices are floors yet
@@ -387,14 +388,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E271** each minute (D188) the minute's in and out become the last minute's · D188 (N132)
 - **E371** the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid · D226 (N176)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
-- **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168) · D200 (N168)
+- **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198)
 - **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
 - **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
-- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195) · D129 (N160)
+- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195, N198) · D129 (N160)
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
@@ -463,6 +464,30 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E489** robbers leave a caravan alone near its side's trade post or tower, or with a soldier of it
 - **E490** each frame the caravans; each beat a stop's holder, an armed caravan's blow and a whole ro
 - **E491** a caravan taken by a side pays its cargo and goods to the taker; one killed by the wild is
+- **E494** The war camp (F25, Mid's 38-camps; Albert, Nov 5 11:16 (7)): a wagon of two sizes (D287) u · D287 (N198, N199, N200) · D279 (N198, N199)
+- **E495** A camp's pieces: each spot [code, across, along toward home] turned by the facing and snap
+- **E496** Why a camp cannot stand here (Mid's campWhy): off the map's edge, on water, on a building,
+- **E497** The wagon unpacks (Mid's campUnpack): the trees within D279's burn of the camp burn and th · D279 (N198, N199)
+- **E498** How many camps of a size a side may have out (Mid's campCap, campsOut): none before its ag
+- **E499** Why a camp wagon cannot be trained (Mid's campWhyTrain): the queue and the Train cell ask 
+- **E500** Soldiers raise their camp (Mid's canRaise, campRaise): a soldier on foot, idle or holding, · D279 (N198, N199) · D204 (N168)
+- **E501** A soldier by a medical tent that is badly hurt or sick walks home to the Hospital (Mid's c
+- **E502** The depot feeds the camp (Mid's campEat, every second; here as the people eat): a soldier  · D279 (N198, N199)
+- **E503** A Market caravan with nothing to carry runs food to a depot under half (Mid's supplyRun):  · D279 (N198, N199)
+- **E504** The camp's tick: soldiers raise and mend, wagons that arrived unpack, the hurt are sent ho
+- **E505** Relations (F28, Mid's 11-orders diplomacy): one stance a pair of sides (combat.js treaty,  · D281 (N198, N199) · QAF (N35)
+- **E506** Why a side cannot take a stance toward another, or a group, now (Mid's relWhy, envoyWhy):  · D282 (N198, N199, N201)
+- **E507** An envoy rides from the Town Center to the court (its Town Center) or the group (its neare
+- **E508** The answer (Mid's judgeEnvoy): at war and not asked for peace, the envoy is killed; the pl
+- **E509** A wild group's regard for each side (Mid's gangState, regardOf, addRegard, gangSync): peac · D282 (N198, N199, N201)
+- **E510** Gifts (Mid's giftGain, QCD): each gift in the window buys less regard than the last, as th · QCD (N201, N198)
+- **E511** Vassals and tribute (F28, Mid's 36-economy; Albert, Nov 5 11:16 (2): tribute, the tax rate · QCG (N198)
+- **E512** A side becomes a vassal (Mid's makeVassal): by surrender, its army beaten and the lord's s
+- **E513** A lord's hand on a vassal (Mid's breakTies, demand, forceTribute, levy, releaseLevy): cut 
+- **E514** A rebellion (Mid's rebel): a share of its villagers take up arms as rebels and its army tu
+- **E515** Each slow beat (Mid's vassalTick): a rebellion is crushed or wins its freedom; otherwise t · QP (N16)
+- **E516** A new map: no notice running, every group's regard at its start.
+- **E517** A vassal's soldier lost under its lord's colours costs loyalty; a foe its lord kills near 
 
 ## combat.js
 
@@ -482,10 +507,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E385** a squad's plan by class (Mid's sqPlan): a step of one under ten, five above, the whole squ · D227 (N176)
 - **E386** what a squad lacks, by kind to train (Mid's musterGap): its plan less its soldiers and tho
 - **E230** the blow's strength (Mid's dmgOf): its blow after research, blades worn by frost, rain or  · D234 (N188)
-- **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194, N195) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
+- **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194, N195, N198) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
 - **E387** where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own a · D232 (N188)
 - **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188)
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
+- **E518** A blow on a shooter's stake, or on one of a wild group (its regard falls).
 - **E356** a building that falls pays its destroyer D233 of its price (Mid's plunderBld); game falls  · D233 (N188)
 - **E388** QAI a loss drains each soldier of its side within D231's lossR by 1 ÷ (D142 × n) (Mid's di · QAI (N76, N188) · D231 (N188, N76, N16) · D142 (N76)
 - **E232** QAF and QAG the foe (Mid's unitPower, groupPower, canBeat, foeValue): one its group can be · QAF (N35) · QAG (N36, N37, N188)
@@ -544,6 +570,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E472** a spy is unseen unless a foe's soldier or watching building is near; by a foe's building i
 - **E473** the computers' spy: it takes the first unguarded building it sees that can be sabotaged
 - **E474** sabotage (Mid's sabotage): a building burns a share of its health or stalls and loses the 
+- **E519** Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies  · D280 (N198, N199)
+- **E520** A trap sprung: caltrops spike each walker once a while and wear flat; the others go off on
+- **E521** The archers' stake (Mid's STAKES, Agincourt): a horse that strikes a staked shooter is hur
 
 ## ai.js
 
@@ -561,6 +590,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E330** the computer's wall ring: from its age, with stone, a few pieces a round, gates first, whi
 - **E248** the army: the troop whose counters strike hardest, summed over the enemy's soldiers (Mid's
 - **E249** the wave: it sets out at the odds (QAF, combat.js) of D155 or better against the other sid · QAF (N35) · D155 (N114)
+- **E522** The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll, by its balanced personali · D285 (N198, N199)
+- **E523** Dynamic Diplomacy (Mid's LEAGUE, leagueTick): when one side runs far ahead, the others (no
 
 ## sound.js
 
