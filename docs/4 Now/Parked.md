@@ -578,3 +578,7 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 - The Gate already burns (Burn tick, timber); the Wall and Tower are stone: nothing changed.
 - Lightning's spring, autumn and winter shares (0.20, 0.13, 0.03) are read from Holle & Cummins' Fig. 2, not quoted: confirm or correct.
 - Mid-match frame rate with Mid's richer pocket and the computers' head start: 44–49 fps after a reload (53 before G1); the reload cost is still the open item.
+
+## S1 (Nov 7), for Albert's yes
+- Seven sources stay marked unopened, each with what was and wasn't seen: N29 (White, Rothamsted), N67 (Webb/Bird), N80 (Winter 1998, seen only in a summary), N86 (Rossing), N181 (Pugh 1971, full text blocked), N189 (Park 2011, the drag value not in any opened page), N245 (Marshall & Palmer 1948, the M–P relation from secondary sources).
+- Sight now falls with the log of the light (Sloan 1968) from the end of nautical twilight to the day reference; the old 0.19 power is gone.

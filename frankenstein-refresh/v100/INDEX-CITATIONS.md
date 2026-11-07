@@ -119,7 +119,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, QCD, QCG, G9
-- **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD, QCM, QCN, QCO, D294
+- **N20** Wronski, E. B. & Humphreys, N. (1994) A method for evaluating the cumulative impact of ground-based logging sy → QS, QCD, QCM, QCN, QCO, D294
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QK, QT, QCL, QAL, QAM, SC45, D310
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QCH, QAL, QAN, QCP, QCQ, SC45, D310
 - **N23** Holling (1959), Can. Entomol. 91 → QV, QCP, QCQ, QCR
@@ -128,7 +128,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N26** Sutherland (1983) → QX
 - **N27** Verhulst (1838) → QY, D218, D219
 - **N28** Schaefer (1954) → QZ, D218, D219
-- **N29** (to open) White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/ → QAA, D214
+- **N29** (to open) White, L. (1962) Medieval Technology and Social Change, Oxford UP; Rothamsted Research (2017) Broadbalk mean l → QAA, D214
 - **N30** Wright (1936), learning curve → QAB, D277
 - **N31** Thomas & Smith (1990), overmanning → QAC
 - **N32** Labuza, first-order food loss → QAD, D217
@@ -163,31 +163,31 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N61** Downing et al. (2006), lake sizes → QBA, QBH
 - **N62** Leopold & Maddock (1953), USGS Paper 252 → QBB
 - **N63** Hutchinson (1957), shoreline development → QBC
-- **N64** (to open) Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory → QBE, A3
+- **N64** Beakawi Al-Hashemi, H. M. & Baghabra Al-Amoudi, O. S. (2018) A review on the angle of repose of granular mater → QBE, A3
 - **N65** Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule → QBF
-- **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
-- **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
-- **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
-- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBO, D127, D136, D138, D139
+- **N66** openage reverse-engineering docs, terrain media (AoE2 terrain tile 97x49 px): AoE2 tile 97x49 px, ~2:1. A 2:1  → QBD, QBK
+- **N67** (to open) Webb, P. Introduction to Oceanography, 13.3 Landforms of Coastal Erosion, LibreTexts (CC BY); Bird (2008) Coas → QBG
+- **N68** Wikipedia 'River ford' (Oxford, Frankfurt); Wiktionary 'Bedford' (OE Bedanford, Bede's/Bieda's ford): Oxford:  → QBI
+- **N69** Age of Empires II: Definitive Edition data, SiegeEngineers aoe2techtree data/data.json (Oct 2026); AoE2 fandom → QBO, D127, D136, D138, D139
 - **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
-- **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
-- **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
-- **N73** (to open) Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) → QBM, D86
+- **N71** US Army FM 21-18 Foot Marches: quick time 120 steps a minute at a 30-inch step, 3.4 mph = 1.52 m/s (the game's → QBM, D86
+- **N72** Wikipedia 'Horse gait' (walk ~7 km/h, trot ~13 km/h): Walk ~7 km/h = 1.94 m/s; trot ~13 km/h = 3.6 m/s → QBM, D86
+- **N73** Mech, L. D. (1994) Regular and homeward travel speeds of arctic wolves, Journal of Mammalogy, doi:10.2307/1382 → QBM, D86
 - **N74** Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* → QBL, D198
 - **N75** First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept) → QBR, D135
-- **N76** (to open) Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint nea → QAI, QBQ, D142, D231
+- **N76** US Army ADRP 1-02 (via Dupuy Institute, 'Breakpoints in U.S. Army Doctrine', 2018): destroyed at 30% losses; D → QAI, QBQ, D142, D231
 - **N77** Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxio → QBS, D167
 - **N78** FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper  → QBS, D167
 - **N79** NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3. → QBM, QBU, D86
-- **N80** (to open) Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing → QBS
+- **N80** (to open) Winter, Patla, Prince, Ishac & Gielo-Perczak (1998) Stiffness control of balance in quiet standing, J. Neuroph → QBS
 - **N81** Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45– → QBT
 - **N82** Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) → QBT, D249
 - **N83** Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) → QBT
-- **N84** (to open) ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) → unused
-- **N85** (to open) Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armo → W2, W3, W4, W5, W7, W8, W9, W10, W11, W13, W17, W18
-- **N86** (to open) Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried fro → HM1, HM2, HM3
-- **N87** (to open) Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) → W12, W15, W16
-- **N88** (to open) Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of  → QBX, HX5
+- **N84** ICRP Publication 23 (1975) Report of the Task Group on Reference Man, Pergamon: Reference Man 70 kg, 170 cm, a → unused
+- **N85** Wolf Haven gray wolf facts; USGS NPWRC Estimating Big Game Weights (ND white-tailed deer): Wolf 36-50 kg (male → W2, W3, W4, W5, W7, W8, W9, W10, W11, W13, W17, W18
+- **N86** (to open) Rossing, The Science of Sound (not opened); free-free bar ratios via Hopkin, Musical Instrument Design, in Uni → HM1, HM2, HM3
+- **N87** AmesWeb material density tables: Pure iron 7874; granite 2750, sandstone 2300, marble 2770; red oak 660, white → W12, W15, W16
+- **N88** Albert, D. G. (c.1990) Preliminary analysis of measured sound propagation over various seasonal snow covers, U → QBX, HX5
 - **N89** National Weather Service, Understanding Lightning: Thunder (weather.gov/safety/lightning-science-thunder): thu → QBY, HX7
 - **N90** Design: Albert, Nov 4 (the turned grid, "B") → A1
 - **N91** Design: Albert, Nov 5: matched to Base's squash of 0.66 (sin 41.3°), the look he played and liked → A2
@@ -258,66 +258,66 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N156** Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scale → QCA
 - **N157** Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 3 → D177, D192, D193, D194, X48
 - **N158** Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1 → X49, I1, I2, I3, I4
-- **N159** (to open) Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for  → I1
+- **N159** Vienna Convention on the Law of Treaties (1969), art. 34: 'A treaty does not create either obligations or righ → I1
 - **N160** Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning line → SC15, D129, D130, X50, PB3, PB4, PB6, PB12, PB13, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O208, O60, O209, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O223, O224, O225, O226, O199, O201, O202, O203, O204, O205, O206, O207, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, O227, O228, O229, O230, O231, J7
-- **N161** (to open) Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O208, O60, O209, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O223, O224, O225, O226, O199, O201, O202, O203, O204, O205, O206, O207, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, O227, O228, O229, O230, O231, O232, O233, O234, O235, O236, O237, O238, O239, O240, O241, O242, O243, O244, O245, O246, O247, O248, O249, O250, O251, O252, O253, J7, J23, J29
+- **N161** Spot-check only. Blasting: Slovak Spectator (2017), citing the Slovak Mining Museum and a mining office record → O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O208, O60, O209, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O223, O224, O225, O226, O199, O201, O202, O203, O204, O205, O206, O207, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, O227, O228, O229, O230, O231, O232, O233, O234, O235, O236, O237, O238, O239, O240, O241, O242, O243, O244, O245, O246, O247, O248, O249, O250, O251, O252, O253, J7, J23, J29
 - **N162** Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of t → X17
-- **N163** (to open) Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SI → QCJ
+- **N163** Reynolds, C. W. (1987) Flocks, herds, and schools: a distributed behavioral model, Computer Graphics 21(4):25- → QCJ
 - **N164** Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js → SC2, SC16, D88, D132, D195, D196, D197, X51, PN1
-- **N165** (to open) Hall, E. T. (1966), The Hidden Dimension: personal distance, 1.5 to 4 ft; and hexagonal circle packing, densit → QCI, D196
-- **N166** (to open) OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in  → D195, D196
-- **N167** (to open) Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechani → QCJ, D196
+- **N165** Hall, E. T. (1966) The Hidden Dimension, Doubleday/Anchor; hex packing density pi/(2 sqrt 3) (Lagrange 1773, l → QCI, D196
+- **N166** 29 CFR 1910.266(d)(6)(ii); 29 CFR 1910.142(b)(3): Adjacent occupied work areas at least two tree lengths apart → D195, D196
+- **N167** Moussaid, Helbing, Garnier, Johansson, Combe & Theraulaz (2009) Proc. R. Soc. B 276:2755-2762 (arXiv:0908.3131 → QCJ, D196
 - **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC5, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
 - **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D124, D125, D139
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, UM17, UM18, UM19, UM20, UM21, UM22, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
-- **N171** (to open) Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip → QBP, D212
+- **N171** Keys et al. (1950) The Biology of Human Starvation, Univ. of Minnesota Press; via Hargrove, Heinz & Heinz (200 → QBP, D212
 - **N172** Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the  → SN3
 - **N173** Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceM → G5, G6, G7, G9, G10, W24, D224, D225, X54, O80, O81, O82, O83, O84, O85, O86, O87, J8
-- **N174** (to open) Ichihara & Mizoguchi, studded tyres on ice and snow, Highway Research Board Special Report 115, Table 2 (Mid's → QR, G10
-- **N175** (to open) Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid' → unused
+- **N174** Scheibe, R. R. (2002) An Overview of Studded and Studless Tire Traction and Safety, WA-RD 551.1, Washington St → QR, G10
+- **N175** Hsu, J., Shaw, R., Novak, A., Li, Y., Ormerod, M., Newton, R., Dutta, T. & Fernie, G. (2016) Slip resistance o → unused
 - **N176** Design: Mid's soldiers (02-rules-units.js UNIT, spear to treb; 04-rules-tech.js the barracks, range, stable, s → QCA, SC03, SC13, D86, D123, D124, D128, D133, D138, D226, D227, D228, X55, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, UM17, UM18, UM19, UM20, UM21, UM22, P2, P3, P4, P5, P6, P10, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, J7
-- **N177** (to open) Masses of arms and of the war elephant: a sword about 1.2 kg, a javelin 1 kg thrown at about 20 m/s, a crossbo → W19, W20, W21, W22, W23
+- **N177** Asian elephant: San Diego Zoo Wildlife Alliance factsheet; arrows/bolts/guns: Williams, 'What can scientific a → W19, W20, W21, W22, W23
 - **N178** Gao, Abeysekera, Hirvonen & Aschan (2003), The effect of footwear sole abrasion on the coefficient of friction → QR, G8
 - **N179** Burnfield & Powers (2004), Prediction of slip events during walking: an analysis of utilized coefficient of fr → QR, QCB, G9, G10, X56
 - **N180** US National Weather Service glossary, blizzard (forecast.weather.gov/glossary.php?word=bliz; weather.gov/dtx/w → QCL, D229, X56
-- **N181** (to open) Pugh (1971), The influence of wind resistance in running and walking and the mechanical efficiency of work aga → QCB, W1, D224
+- **N181** (to open) Pugh, L. G. C. E. (1971) The influence of wind resistance in running and walking and the mechanical efficiency → QCB, W1, D224
 - **N182** Seliga, Hazen & Burnley, nowcasting snowfall rate from visibility (AMS paper 104640): S = c σ, c from about 0. → QCL, D229
-- **N183** Rain's extinction of light: CALVIS's 2.24 C^0.75 with Marshall–Palmer's C gives 0.31 R^0.66 a km, R in mm/h (A → QCL, D229
-- **N184** (to open) Harper, Kepert & Ginger (2010), WMO guidelines for converting between various wind averaging periods: a gust a → QCL, D229
+- **N183** Atlas, D. (1953) Optical extinction by rainfall, J. Meteorology 10:486-488, as given in Mulvey, G. J. (1973) T → QCL, D229
+- **N184** Harper, B. A., Kepert, J. D. & Ginger, J. D. (2010) Guidelines for converting between various wind averaging p → QCL, D229
 - **N185** Design: Albert, Nov 5 18:07–18:08: pace by the floor, the weather, mass and gravity, never by the calendar (Pa → QCA, QCB, W24, D103, D224, D229, X54, X56
-- **N186** (to open) Intensity's top: rain 50 mm/h (violent rain on the Met Office's scale), snow 5 mm/h of water, wind 20 m/s (a g → QCL, D229
-- **N187** (to open) Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open → QCL, D229
+- **N186** Rain classes per MANOBS via Barani Design; Beaufort scale (Wikipedia): Violent rain >50 mm/h (MANOBS, not show → QCL, D229
+- **N187** Locatelli, J. D. & Hobbs, P. V. (1974) Fall speeds and masses of solid precipitation particles, J. Geophys. Re → QCL, D229
 - **N188** Design: Mid's blow, nerve, a soldier's day, squads, formations and muster (16-sim-fight.js fromWhere, hurt, pl → QAG, QAI, QBO, A5, SC6, SC7, SC27, SC28, C11, C12, C13, C14, D138, D141, D143, D193, D231, D232, D233, D234, D235, D236, D237, D238, D239, D240, D241, D242, D243, D244, D245, X57, P35, P36, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O146, O147, O148, O149, O150, O151, J10
-- **N189** (to open) Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 t → W10
+- **N189** (to open) Park, J. L. (2011) Arrow behaviour in free flight, Proc. IMechE Part P: J. Sports Eng. Tech. 225(4):241-252, d → W10
 - **N190** Design: Mid's finger, orders, missions and the War Director (26-input.js hitAt, tapAt, picked, setPick, pickTo → D246, D247, D248, D249, D250, D251, D252, X58, P38, P39, P40, P41, P42, J11
 - **N191** Design: Albert, Nov 5 (Frankenstein F21+F22, decisions.json): Mid's gameplay and controls come over (one tap p → D249, X58
 - **N192** Design: Mid's alarm, danger map and the end (09-nav.js DANGER, discRows, stampDanger, dangerMap, dangerWhy; 12 → SC29, SC30, D253, D254, D255, D256, D257, D258, D259, D260, D261, D262, X59, J12, J13
 - **N193** Design: Albert, Nov 5 20:16 (Frankenstein F23): keep going; three playability fixes from his phone (everyone i → X59
 - **N194** Design: Mid's lessons, prisoners, priests, medics, Zeal and spies (11-orders.js teachTo, teachGap, teachCost,  → SC31, SC32, SC33, SC34, SC35, D123, D124, D133, D138, D143, D239, D263, D264, D265, D266, D267, D268, D269, X60, SN4, BP1, BP3, BP6, BP8, US1, US2, US3, J14
 - **N195** Design: Mid's Market, coin, bank and ventures; goods and workshops; trade and caravans (11-orders.js LOT, wort → QCE, QCF, SC19, SC36, SC37, D123, D124, D125, D133, D138, D143, D172, D219, D239, D270, D271, D272, D273, D274, D275, D276, D277, D278, X61, MT1, BCR1, BCT1, BI6, BI7, BI8, UT1, PN1, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O199, J7, J15
-- **N196** (to open) Age of Empires II (1999), the buildings' health: a Castle and a Wonder 4800, a Market, Monastery, University a → D139
-- **N197** (to open) Age of Empires II (1999), the trade cart and the trade cog: the gold a trip earns grows with the square of the → QCE, D278
+- **N196** Age of Empires II: DE data (SiegeEngineers aoe2techtree data.json): Castle and Wonder 4800, Monastery and Univ → D139
+- **N197** openage reverse-engineering, market.md (AoK: gold = (d/size + 0.3) x d x 0.46 + 0.5); AoE2 fandom Trade Cart:  → QCE, D278
 - **N198** Design: Mid's war camps, field traps, relations and diplomacy, vassals and tribute (38-camps.js CAMP_TENTS, ca → QCD, QCG, SC18, SC38, SC39, SC40, SC41, D86, D123, D124, D125, D133, D138, D139, D199, D200, D224, D239, D268, D279, D287, D280, D281, D282, D283, D288, D284, D285, D286, X62, SN3, BTC5, BTC6, BTC7, BTC8, BI5, BF5, BF1, BF2, BF3, BF4, US5, UT2, UT4, MH6, I1, I5, I6, I7, P43, P44, O200, O201, O202, O203, O204, J7, J16, J17
 - **N199** Design: Albert, Nov 5 11:16 (2): vassals pay tribute, the tax rate parked; 11:16 (7): the war camp's wagon in  → D279, D287, D280, D281, D282, D283, D288, D284, D285, D286, UT2, UT4
-- **N200** (to open) Hyginus (Pseudo-Hyginus), De munitionibus castrorum, about AD 100: §1 a century's tents in one line, eight men → D287
-- **N201** (to open) The Anglo-Saxon Chronicle, 991 and after: the Danegeld, tribute to buy off the Danes, 10,000 pounds in 991 and → QCD, D282, D322
+- **N200** Pseudo-Hyginus, De munitionibus castrorum (trans. at roman-britain.co.uk): Sec. 1: tent holds eight men; centu → D287
+- **N201** Anglo-Saxon Chronicle (MSS C, D, E), 991-1012, via Wikipedia 'Danegeld': 991: 10,000 pounds; 994: 16,000; 1007 → QCD, D282, D322
 - **N202** Design: Mid's computers (17-ai.js bestCounter, timeLeft, rateFrom, goalOf, needOf, runsOut, famineNear, PLOTS, → QCM, QCN, D122, D152, D176, D178, D180, D285, D289, D290, D291, D300, D337, D301, D302, D303, D304, X63, J17, J18
 - **N203** Design: Mid's sky, moon and ground (08-core.js moonVec, moonPhase, moonLight, NIGHT_SIGHT, SYNODIC; 37-events. → QCO, C15, C16, C17, D122, D292, D293, D294, D295, D296, D297, D298, D299, D303, X63, HA4, HX4, O205, O206, J18
-- **N204** (to open) Rosenzweig & Udry (2013), Forecasting Profitability, NBER Working Paper 19334, p. 21: farmers who plan by the  → O207
+- **N204** Rosenzweig, M. & Udry, C. (2013) Forecasting Profitability, NBER Working Paper 19334, p. 21: p. 21: forecast-r → O207
 - **N205** Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_L → SC18, SC42, SC43, SC44, C18, D305, D306, D307, D308, D309, X64, MG1, MG2, MG4, MH1, MH3, MH4, MH5, MG7, MG8, MG9, MG10, MG11, MH7, PN1, J19
 - **N206** Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sick → SC45, C18, D310, D311, X65, BTC5, BTC6, BTC7, BTC8, BR1, BCR1, BCR2, BCT2, BI1, BI2, BI5, BI8, BM1, BM2, BM3, BW2, BW4, BF5, O208, O209, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J20
-- **N207** (to open) Alsan & Goldin (2019), Watersheds in Child Mortality: The Role of Effective Water and Sewerage Infrastructure, → O219, O220
+- **N207** Alsan, M. & Goldin, C. (2019) Watersheds in Child Mortality, J. Political Economy 127(2):586-638, doi:10.1086/ → O219, O220
 - **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, C22, D312, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN14, P45
-- **N209** (to open) Tanner Helland (2012), How to Convert Temperature (K) to RGB: a fit to the CIE black-body locus, 1000 to 40000 → D318
+- **N209** Helland, T. (2012) How to Convert Temperature (K) to RGB: Algorithm and Sample Code, tannerhelland.com: All co → D318
 - **N210** NOAA/NCEP operational code CALVIS (rap.v5.1.20, rap_wrfpost.fd/CALVIS.f, nco.ncep.noaa.gov): vis = −ln(0.02)/β → QK, QCL, D229, X68
 - **N211** ITU-R P.840 liquid water content of fog, 0.05 g/m³ (AGI STK help, Rain Models / cloud and fog table, help.agi. → QCL, D229
 - **N212** US National Weather Service, Houston/Galveston fog guide (weather.gov/media/zhu/ZHU_Training_Page/fog_stuff/fo → QCL, D229, X68
 - **N213** Wærsted, Haeffelin, Dupont, Delanoë & Dubuisson (2017), Radiation in fog, Atmos. Chem. Phys. 17, 10811–10835:  → QCL, D229
-- **N214** (to open) Magnus formula over water, e_s = 6.112 exp(17.62 T / (243.12 + T)) hPa (WMO-No. 8, Guide to Instruments and Me → QCL, D229
+- **N214** WMO-No. 8, Guide to Instruments and Methods of Observation (2018 ed.), Annex 4.B, eq. 4.B.1 (as implemented in → QCL, D229
 - **N215** USMC MCWP 3-16.6, Supporting Arms Observer, Spotter and Controller (1998), table 2-4 (via generalstaff.org/BBO → QAL, D117
 - **N216** Wikipedia, Daylight, illuminance table: brightest sunlight 120,000 lux, sunrise or sunset on a clear day 400,  → QAL, D117
-- **N217** (to open) Twilight illuminance on the ground: about 3.4 lux at the end of civil twilight (sun 6° down) and 0.008 lux at  → QAL, D117
-- **N218** (to open) Shlaer (1937), The relation between visual acuity and illumination, J. Gen. Physiol. 21, 165–188 (PMC2141937;  → QAL, D117
+- **N217** AMS Glossary of Meteorology, 'civil twilight' and 'nautical twilight': End of civil ~3.5-2 lux; end of nautica → QAL, D117
+- **N218** Shlaer (1937) J. Gen. Physiol. 21(2):165-188; Sloan, L. L. (1968) Photopic acuity-luminance function with spec → QAL, D117
 - **N219** Tirmenstein, D. A. (1991), Quercus alba, in the Fire Effects Information System, USDA Forest Service, Rocky Mo → QAM, D326, X70
 - **N220** Design: Albert, Nov 6 14:44–15:06: fog grounded in atmospheric science (CALVIS, the dew point); no fog of war  → QAL, QAN, D117, X66, X68
 - **N221** Rogers, R. (1990), Quercus alba L., white oak, in Burns & Honkala, Silvics of North America vol. 2, Agricultur → D326, X70
@@ -326,16 +326,16 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N224** Design: Mid's milestones and tips (32-frame.js MS_TEST, msFill, milestoneTick, goldTight, NEEDS, advise; 26-in → D325, D328, X69, J24, J25
 - **N225** Design: Mid's civilisations (04-rules-tech.js CIVS, CIVK, the six unique units, the Hall rows and the six elit → SC03, D86, D123, D124, D138, D239, X70, UM17, UM18, UM19, UM20, UM21, UM22, P46, P47, P48, O232, O233, O234, O235, O236, O237, O238, O239, O240, O241, O242, O243, O244, O245, O246, O247, O248, O249, O250, O251, O252, O253, O254, O255, O256, O257, O258, O259, J7, J26
 - **N226** Design: Albert, Nov 6 17:23: the civilisations as Mid had them, if they come clean and within our rules; the G → D326, X69, X70, O254, O255, O256, O257, O258, O259
-- **N227** (to open) Age of Empires II (1999): each civilisation's bonuses are techs every side of that civilisation holds from the → O254, O255, O256, O257, O258, O259
+- **N227** Age of Empires forums, 'Creating custom OP civs with Advanced Genie Editor' (guide to the game's .dat file): M → O254, O255, O256, O257, O258, O259
 - **N228** Design: Albert, Nov 6 16:01–16:07: you start in the corner drawn at the bottom left of the screen, whatever th → QCP, A6, D63, D64, D65, D66, X71
 - **N229** Design: Mid's map character, new game and scenarios (06-rules-tuning.js LAND, SCENARIOS, UI_BUDGET; 07-text.js → QCQ, D329, D330, D333, X71, J28
 - **N230** Design: Mid's save and safety net (34-save.js saveGame, readSave, keepAside, clearSave, loadGame; 01-rules-bas → D331, D332, D334, D335, X72, J28
-- **N231** (to open) Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by deg → QCP, D65
+- **N231** Odum, E. P. (1959) Fundamentals of Ecology, 2nd ed., Saunders (per MLSU e-content notes): Ecotone = transition → QCP, D65
 - **N232** Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap pla → X71
-- **N233** (to open) Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-en → QCQ
+- **N233** Dijkstra, E. W. (1959) A note on two problems in connexion with graphs, Numerische Mathematik 1:269-271; 0-1 B → QCQ
 - **N235** Design: Mid's apartment (room 20), quarry (stone 0.45 a second, never runs out, one worker) and castle (dmg 12 → D127, D336, X74, BTC2, BR2, BCL4
 - **N236** Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's st → D338, D339, X74
-- **N237** (to open) A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a  → QCR, D339
+- **N237** Arithmetic: 1/60 s = 16.67 ms: 1000/60 = 16.67 ms → QCR, D339
 - **N239** Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a t → X75, X76
 - **N240** Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow cal → D341
 - **N241** Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, → SN5, SN15, J32

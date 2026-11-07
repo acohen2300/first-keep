@@ -3225,3 +3225,71 @@ MODIFIED (33):
 LOCKED (2076 of 2108): byte for byte as sealed, 1,160,153 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 47 still to open · 7 known
+
+## S1 · the sources opened: 22 corrections from the Nov 7 lookup (ruts' power, the horse's walk, studs' grip, the crossbow's and matchlock's speeds and the elephant's mass, the gust, the snowflake, the Market's and Smith's health, sight by the log law, the windmill's date) and every citation's text · 2026-11-07 17:15
+Albert, Nov 7 15:02-15:18: look up the 44 sources now, find real-world math for the six, good
+Opened: code:index.html, book:measure, book:ground, book:mass, book:tech, book:citations, book:comments, law:QAL, law:QS
+MODIFIED (60):
+- book:citations:N159 · 233 → 180 bytes
+- book:citations:N161 · 204 → 350 bytes
+- book:citations:N163 · 234 → 268 bytes
+- book:citations:N165 · 213 → 253 bytes
+- book:citations:N166 · 179 → 205 bytes
+- book:citations:N167 · 279 → 223 bytes
+- book:citations:N171 · 253 → 246 bytes
+- book:citations:N174 · 211 → 390 bytes
+- book:citations:N175 · 168 → 369 bytes
+- book:citations:N177 · 310 → 462 bytes
+- book:citations:N181 · 303 → 401 bytes
+- book:citations:N183 · 213 → 383 bytes
+- book:citations:N184 · 204 → 325 bytes
+- book:citations:N186 · 177 → 214 bytes
+- book:citations:N187 · 134 → 211 bytes
+- book:citations:N189 · 193 → 279 bytes
+- book:citations:N196 · 279 → 252 bytes
+- book:citations:N197 · 195 → 192 bytes
+- book:citations:N20 · 283 → 325 bytes
+- book:citations:N200 · 232 → 260 bytes
+- book:citations:N201 · 202 → 160 bytes
+- book:citations:N204 · 232 → 235 bytes
+- book:citations:N207 · 339 → 238 bytes
+- book:citations:N209 · 181 → 236 bytes
+- book:citations:N214 · 247 → 252 bytes
+- book:citations:N217 · 239 → 150 bytes
+- book:citations:N218 · 321 → 396 bytes
+- book:citations:N227 · 196 → 294 bytes
+- book:citations:N231 · 182 → 212 bytes
+- book:citations:N233 · 187 → 230 bytes
+- book:citations:N237 · 189 → 77 bytes
+- book:citations:N29 · 276 → 348 bytes
+- book:citations:N64 · 150 → 343 bytes
+- book:citations:N66 · 192 → 183 bytes
+- book:citations:N67 · 196 → 261 bytes
+- book:citations:N68 · 139 → 238 bytes
+- book:citations:N69 · 319 → 422 bytes
+- book:citations:N71 · 127 → 201 bytes
+- book:citations:N72 · 111 → 130 bytes
+- book:citations:N73 · 133 → 270 bytes
+- book:citations:N76 · 167 → 386 bytes
+- book:citations:N80 · 227 → 449 bytes
+- book:citations:N84 · 100 → 146 bytes
+- book:citations:N85 · 227 → 254 bytes
+- book:citations:N86 · 146 → 214 bytes
+- book:citations:N87 · 134 → 166 bytes
+- book:citations:N88 · 166 → 363 bytes
+- book:ground:G10 · 303 → 302 bytes
+- book:mass:W21 · 145 → 144 bytes
+- book:mass:W22 · 146 → 146 bytes
+- book:mass:W23 · 172 → 172 bytes
+- book:measure:D117 · 947 → 1,052 bytes
+- book:measure:D139 · 1,402 → 1,402 bytes
+- book:measure:D229 · 2,275 → 2,276 bytes
+- book:measure:D294 · 596 → 596 bytes
+- book:measure:D86 · 961 → 961 bytes
+- book:tech:O21 · 253 → 253 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 21,876 → 21,942 bytes
+- law:QAL · 517 → 635 bytes
+- law:QS · 36 → 92 bytes
+LOCKED (2048 of 2108): byte for byte as sealed, 1,321,718 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 7 still to open · 7 known

@@ -1318,7 +1318,7 @@ on('press', (p) => { if (RADAR && Math.hypot(p.x0 - RADAR.sx, p.y0 - RADAR.sy) <
 const LKO = D.lookout, LGT = D.light, FLM = D.flames, KLV = D.kelvin, STG = D.stage, DRS = D.dress, PDR = SPRITE.dress, MNI = D.mini, LBL = fromBook('screen').label, CLT = C.light, CDR = C.dress, CMN = C.mini, DRW = D.draw;
 const lux = () => { const S = EYE.sun, [full, quarter] = EYE.moon; const i = Math.min(S.length - ONE, Math.max(ONE, S.filter(([x]) => x < K.alt).length)), [[a0, l0], [a1, l1]] = [S[i - ONE], S[i]], f = Math.min(ONE, (K.alt - a0) / (a1 - a0)); // E599
   return ((K.alt < a0 ? null : l0 * (l1 / l0) ** f) + full * K.moonLit ** Math.log2(full / quarter) * Math.max(null, Math.sin((K.moonAlt * Math.PI) / EYE.deg)) + EYE.star) * (K.wetHour ? EYE.overcast / EYE.star : ONE); };
-const sightOf = (t) => { const lamp = (t.kind === 'bld' && stat(t.code, t.side, 'lamp')) || null, a = Math.min(ONE, (lux() / EYE.ref) ** EYE.p); const m = stat(t.code, t.side, 'sight') / stat(t.code, null, 'sight'); return Math.min(m * Math.sqrt(EYE.earth * stat(t.code, t.side, 'eye')) * D.upm, m * EYE.day * D.upm * (ONE - (ONE - a) * (ONE - lamp)), K.vis * D.upm); }; // E600
+const sightOf = (t) => { const lamp = (t.kind === 'bld' && stat(t.code, t.side, 'lamp')) || null, a = clamp(Math.log(lux() / EYE.sun.at(null).at(ONE)) / Math.log(EYE.ref / EYE.sun.at(null).at(ONE)), null, ONE); const m = stat(t.code, t.side, 'sight') / stat(t.code, null, 'sight'); return Math.min(m * Math.sqrt(EYE.earth * stat(t.code, t.side, 'eye')) * D.upm, m * EYE.day * D.upm * (ONE - (ONE - a) * (ONE - lamp)), K.vis * D.upm); }; // E600
 on('hide', (t) => !inSight(t)); // E603
 // E604
 let lessMotion = false; try { lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}

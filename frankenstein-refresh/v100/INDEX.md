@@ -92,7 +92,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N17 |  | Stefan (1891) | opened |
 | N18 |  | Bowden & Hughes (1939), friction on ice and snow | opened |
 | N19 |  | Hanson et al. (1999), slip and the grip a step needs | opened |
-| N20 |  | Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles (multi-pass) — from memory, to  | to open |
+| N20 |  | Wronski, E. B. & Humphreys, N. (1994) A method for evaluating the cumulative impact of ground-based logging systems on soils, Journal of For | opened |
 | N21 |  | Rothermel (1972); USDA RMRS-GTR-371 | opened |
 | N22 |  | Heskestad (1984); NFPA 72, the t² fire | opened |
 | N23 |  | Holling (1959), Can. Entomol. 91 | opened |
@@ -101,7 +101,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N26 |  | Sutherland (1983) | opened |
 | N27 |  | Verhulst (1838) | opened |
 | N28 |  | Schaefer (1954) | opened |
-| N29 |  | White (1962), Medieval Technology and Social Change: three-field rotation raised the sown share from 1/2 to 2/3 — from memory; Rothamsted Br | to open |
+| N29 |  | White, L. (1962) Medieval Technology and Social Change, Oxford UP; Rothamsted Research (2017) Broadbalk mean long-term winter wheat yields 1 | to open |
 | N30 |  | Wright (1936), learning curve | opened |
 | N31 |  | Thomas & Smith (1990), overmanning | opened |
 | N32 |  | Labuza, first-order food loss | opened |
@@ -136,31 +136,31 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N61 |  | Downing et al. (2006), lake sizes | opened |
 | N62 |  | Leopold & Maddock (1953), USGS Paper 252 | opened |
 | N63 |  | Hutchinson (1957), shoreline development | opened |
-| N64 |  | Angle of repose, dry sand about 34° (Al-Hashemi & Al-Amoudi 2018, Powder Technology 330, a review; from memory, to open) | to open |
+| N64 |  | Beakawi Al-Hashemi, H. M. & Baghabra Al-Amoudi, O. S. (2018) A review on the angle of repose of granular materials, Powder Technology 330:39 | opened |
 | N65 |  | Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule | opened |
-| N66 |  | Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the ground (from memory: Age of Empir | to open |
-| N67 |  | Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology, standard; Bird, Coastal Geomor | to open |
-| N68 |  | Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory | to open |
-| N69 |  | Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house 25 wood, the mill and the lum | to open |
+| N66 |  | openage reverse-engineering docs, terrain media (AoE2 terrain tile 97x49 px): AoE2 tile 97x49 px, ~2:1. A 2:1 tile = camera elevation 30 deg | opened |
+| N67 |  | Webb, P. Introduction to Oceanography, 13.3 Landforms of Coastal Erosion, LibreTexts (CC BY); Bird (2008) Coastal Geomorphology: An Introduc | to open |
+| N68 |  | Wikipedia 'River ford' (Oxford, Frankfurt); Wiktionary 'Bedford' (OE Bedanford, Bede's/Bieda's ford): Oxford: ford where oxen crossed; Frank | opened |
+| N69 |  | Age of Empires II: Definitive Edition data, SiegeEngineers aoe2techtree data/data.json (Oct 2026); AoE2 fandom Farm and Berry Bush pages; ag | opened |
 | N70 |  | First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6, stone 0.55, iron 0.5 (its time | opened |
-| N71 |  | Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) | to open |
-| N72 |  | Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) | to open |
-| N73 |  | Travel speeds of deer, wolf and bear at a walk or trot (natural history, standard; from memory, to open) | to open |
+| N71 |  | US Army FM 21-18 Foot Marches: quick time 120 steps a minute at a 30-inch step, 3.4 mph = 1.52 m/s (the game's walk; Bohannon 1997 gives 1.2 | opened |
+| N72 |  | Wikipedia 'Horse gait' (walk ~7 km/h, trot ~13 km/h): Walk ~7 km/h = 1.94 m/s; trot ~13 km/h = 3.6 m/s | opened |
+| N73 |  | Mech, L. D. (1994) Regular and homeward travel speeds of arctic wolves, Journal of Mammalogy, doi:10.2307/1382524; Wolf Haven, Basic facts a | opened |
 | N74 |  | Hart, Nilsson & Raphael (1968), IEEE Trans. SSC 4: A* | opened |
 | N75 |  | First Keep Build 42 (Oct 28), the old game's SCORE: unit 5, bld 5, tech 5, wealth 10 (its weights, kept) | opened |
-| N76 |  | Dupuy (1987), Understanding War: forces break at losses well short of annihilation; the classic breakpoint near 30% (from memory, to open) | to open |
+| N76 |  | US Army ADRP 1-02 (via Dupuy Institute, 'Breakpoints in U.S. Army Doctrine', 2018): destroyed at 30% losses; Dupuy Institute 'The 40% Rule'  | opened |
 | N77 |  | Ranger Medic Handbook (2025), p. 45, the classes of haemorrhagic shock: I up to 15% blood lost, slightly anxious; II 15–30%, mildly anxious; | opened |
 | N78 |  | FBI Academy, Handgun Wounding Factors and Effectiveness (Patrick, 1989): short of a hit to the brain or upper spinal cord, a wounded man is  | opened |
 | N79 |  | NAVMC 2691, Marine Corps Drill and Ceremonies Manual: quick time is 120 steps a minute at 30 inches a step (3.4 mph, 1.52 m/s); summary open | opened |
-| N80 |  | Winter (1995), Human balance and posture control during standing and walking, Gait & Posture 3: quiet standing as an inverted pendulum; the  | to open |
+| N80 |  | Winter, Patla, Prince, Ishac & Gielo-Perczak (1998) Stiffness control of balance in quiet standing, J. Neurophysiol. 80(3):1211-1221 (invert | to open |
 | N81 |  | Engineering ToolBox, Friction coefficients for common materials: rubber on dry concrete 0.6–0.85, on wet 0.45–0.75; car tyre on dry grass 0. | opened |
 | N82 |  | Conservation of momentum; the perfectly inelastic collision v = m₁v₁ / (m₁ + m₂) (standard mechanics) | opened |
 | N83 |  | Sliding to rest under Coulomb friction: d = v² / (2 μ g) (standard mechanics) | opened |
-| N84 |  | ICRP Publication 23 (1975), Reference Man: 70 kg (from memory, to open) | to open |
-| N85 |  | Masses of animals and arms: horse about 500 kg, deer 70, wolf 40, bear 200; spear 2.5 kg, shield 5, scale armour 12, lance 4; strides and bl | to open |
-| N86 |  | Rossing, The Science of Sound: the modes of a free bar at 1 : 2.756 : 5.404 (from memory, to open; carried from Base) | to open |
-| N87 |  | Densities: timber about 600 kg/m³, stone about 2,400, iron 7,870 (standard tables, from memory, to open) | to open |
-| N88 |  | Fresh snow is porous and absorbs sound, high frequencies most: a snowy landscape sounds muffled (acoustics of snow, from memory, to open) | to open |
+| N84 |  | ICRP Publication 23 (1975) Report of the Task Group on Reference Man, Pergamon: Reference Man 70 kg, 170 cm, age 20-30 | opened |
+| N85 |  | Wolf Haven gray wolf facts; USGS NPWRC Estimating Big Game Weights (ND white-tailed deer): Wolf 36-50 kg (male), 27-36 (female); white-taile | opened |
+| N86 |  | Rossing, The Science of Sound (not opened); free-free bar ratios via Hopkin, Musical Instrument Design, in Univ. Rochester PHY103 'Bars and  | to open |
+| N87 |  | AmesWeb material density tables: Pure iron 7874; granite 2750, sandstone 2300, marble 2770; red oak 660, white oak 690, shortleaf pine 500 | opened |
+| N88 |  | Albert, D. G. (c.1990) Preliminary analysis of measured sound propagation over various seasonal snow covers, US Army CRREL (NASA NTRS 199100 | opened |
 | N89 |  | National Weather Service, Understanding Lightning: Thunder (weather.gov/safety/lightning-science-thunder): thunder can be heard only about 1 | opened |
 | N90 |  | Design: Albert, Nov 4 (the turned grid, \B\) | opened |
 | N91 |  | Design: Albert, Nov 5: matched to Base's squash of 0.66 (sin 41.3°), the look he played and liked | opened |
@@ -231,66 +231,66 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N156 |  | Design: Mid's effects (08-core.js fxList, fxFits, fxv, keepHealth, rehealth, stats, maxHpB; 11-orders.js scaled, unitCost, techCost), brough | opened |
 | N157 |  | Design: Mid's battle odds (08-core.js unitPower, powerOf, lanchester; 17-ai.js powerFrom, estPower, matchup; 36-economy.js oddsOf) with its  | opened |
 | N158 |  | Design: Mid's one hostility test (08-core.js atWar, gangOf, gangRel, isFoe, friendly; decision 8, C1, answer 1b; 10-world.js every side at w | opened |
-| N159 |  | Vienna Convention on the Law of Treaties (1969), art. 34: a treaty creates neither obligations nor rights for a third state without its cons | to open |
+| N159 |  | Vienna Convention on the Law of Treaties (1969), art. 34: 'A treaty does not create either obligations or rights for a third State without i | opened |
 | N160 |  | Design: Mid's ages and research (01-rules-basics.js AGES; 04-rules-tech.js TECH, the economy and learning lines; 08-core.js lineOf, prevOf,  | opened |
-| N161 |  | Mid's history lines and dates for the ages and research steps (07-text.js WHY; 04-rules-tech.js when), written for Mid from general history; | to open |
+| N161 |  | Spot-check only. Blasting: Slovak Spectator (2017), citing the Slovak Mining Museum and a mining office record dated 16 Feb 1627; windmill:  | opened |
 | N162 |  | Design: Albert, Nov 5 13:30: one build carries a whole module (or a few small ones), never split; the cap of ten lifted for the refresh; the | opened |
-| N163 |  | Reynolds, C. W. (1987), Flocks, herds and schools: a distributed behavioral model, Computer Graphics 21(4) (SIGGRAPH '87): separation, steer | to open |
+| N163 |  | Reynolds, C. W. (1987) Flocks, herds, and schools: a distributed behavioral model, Computer Graphics 21(4):25-34 (SIGGRAPH '87): First rule  | opened |
 | N164 |  | Design: Mid's gathering and standing spots (12-sim-core.js recount, FORAGE, forage, forageNow; 13-sim-civil.js findCap, LATTICE, spotAt, tak | opened |
-| N165 |  | Hall, E. T. (1966), The Hidden Dimension: personal distance, 1.5 to 4 ft; and hexagonal circle packing, density π/(2√3) (Lagrange 1773; Thue | to open |
-| N166 |  | OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in apart; Mid's cites, from memor | to open |
-| N167 |  | Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechanisms underlying self-organizati | to open |
+| N165 |  | Hall, E. T. (1966) The Hidden Dimension, Doubleday/Anchor; hex packing density pi/(2 sqrt 3) (Lagrange 1773, lattice; Thue 1890/1910; Fejes  | opened |
+| N166 |  | 29 CFR 1910.266(d)(6)(ii); 29 CFR 1910.142(b)(3): Adjacent occupied work areas at least two tree lengths apart; beds not closer than 36 in l | opened |
+| N167 |  | Moussaid, Helbing, Garnier, Johansson, Combe & Theraulaz (2009) Proc. R. Soc. B 276:2755-2762 (arXiv:0908.3131): Slight right-hand preferenc | opened |
 | N168 |  | Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, repairCost, shellBack, refund | opened |
 | N169 |  | Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's | opened |
 | N170 |  | Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTick, natureTick, seasonTurn, FLE | opened |
-| N171 |  | Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip strength fell from 58.2 to 41 | to open |
+| N171 |  | Keys et al. (1950) The Biology of Human Starvation, Univ. of Minnesota Press; via Hargrove, Heinz & Heinz (2008) Dynamic Medicine 7:16, Tabl | opened |
 | N172 |  | Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the Walls tab | opened |
 | N173 |  | Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceMu, strideShare, groundSpd, muO | opened |
-| N174 |  | Ichihara & Mizoguchi, studded tyres on ice and snow, Highway Research Board Special Report 115, Table 2 (Mid's cite for studs' grip, 0.28 at | to open |
-| N175 |  | Hsu, Li, Bagheri, Fernie & Dutta (2016), Ergonomics 59: bare boots on wet ice 0.08, on cold dry ice 0.20 (Mid's cite); from memory, to open | to open |
+| N174 |  | Scheibe, R. R. (2002) An Overview of Studded and Studless Tire Traction and Safety, WA-RD 551.1, Washington State Transportation Center for  | opened |
+| N175 |  | Hsu, J., Shaw, R., Novak, A., Li, Y., Ormerod, M., Newton, R., Dutta, T. & Fernie, G. (2016) Slip resistance of winter footwear on snow and  | opened |
 | N176 |  | Design: Mid's soldiers (02-rules-units.js UNIT, spear to treb; 04-rules-tech.js the barracks, range, stable, smith and siege lines and their | opened |
-| N177 |  | Masses of arms and of the war elephant: a sword about 1.2 kg, a javelin 1 kg thrown at about 20 m/s, a crossbow 5 kg and its bolt 80 g at 45 | to open |
+| N177 |  | Asian elephant: San Diego Zoo Wildlife Alliance factsheet; arrows/bolts/guns: Williams, 'What can scientific analysis tell us about the effe | opened |
 | N178 |  | Gao, Abeysekera, Hirvonen & Aschan (2003), The effect of footwear sole abrasion on the coefficient of friction on melting and hard ice, Int. | opened |
 | N179 |  | Burnfield & Powers (2004), Prediction of slip events during walking: an analysis of utilized coefficient of friction and available slip resi | opened |
 | N180 |  | US National Weather Service glossary, blizzard (forecast.weather.gov/glossary.php?word=bliz; weather.gov/dtx/winter_defs): sustained wind or | opened |
-| N181 |  | Pugh (1971), The influence of wind resistance in running and walking and the mechanical efficiency of work against horizontal or vertical fo | to open |
+| N181 |  | Pugh, L. G. C. E. (1971) The influence of wind resistance in running and walking and the mechanical efficiency of work against horizontal or | to open |
 | N182 |  | Seliga, Hazen & Burnley, nowcasting snowfall rate from visibility (AMS paper 104640): S = c σ, c from about 0.6 early in an event to 0.2 lat | opened |
-| N183 |  | Rain's extinction of light: CALVIS's 2.24 C^0.75 with Marshall–Palmer's C gives 0.31 R^0.66 a km, R in mm/h (Atlas 1953 measured 0.42 R^0.67 | opened |
-| N184 |  | Harper, Kepert & Ginger (2010), WMO guidelines for converting between various wind averaging periods: a gust about 1.4 times the mean wind o | to open |
+| N183 |  | Atlas, D. (1953) Optical extinction by rainfall, J. Meteorology 10:486-488, as given in Mulvey, G. J. (1973) The investigation of snowfall r | opened |
+| N184 |  | Harper, B. A., Kepert, J. D. & Ginger, J. D. (2010) Guidelines for converting between various wind averaging periods in tropical cyclone con | opened |
 | N185 |  | Design: Albert, Nov 5 18:07–18:08: pace by the floor, the weather, mass and gravity, never by the calendar (Pandolf); the effects law, boost | opened |
-| N186 |  | Intensity's top: rain 50 mm/h (violent rain on the Met Office's scale), snow 5 mm/h of water, wind 20 m/s (a gale, Beaufort 8); from memory, | to open |
-| N187 |  | Locatelli & Hobbs (1974), J. Geophys. Res. 79: snowflakes fall about 0.5 to 1.5 m/s; from memory, to open | to open |
+| N186 |  | Rain classes per MANOBS via Barani Design; Beaufort scale (Wikipedia): Violent rain >50 mm/h (MANOBS, not shown as Met Office); Beaufort 8 g | opened |
+| N187 |  | Locatelli, J. D. & Hobbs, P. V. (1974) Fall speeds and masses of solid precipitation particles, J. Geophys. Res. 79(15):2185-2197: Unrimed d | opened |
 | N188 |  | Design: Mid's blow, nerve, a soldier's day, squads, formations and muster (16-sim-fight.js fromWhere, hurt, plunder, plunderBld; 14-sim-troo | opened |
-| N189 |  | Park, J. L. (2010s), arrow drag in free flight (Proc. IMechE, Part P): an arrow's drag coefficient about 1.5 to 3 on its shaft's cross-secti | to open |
+| N189 |  | Park, J. L. (2011) Arrow behaviour in free flight, Proc. IMechE Part P: J. Sports Eng. Tech. 225(4):241-252, doi:10.1177/1754337111398542: C | to open |
 | N190 |  | Design: Mid's finger, orders, missions and the War Director (26-input.js hitAt, tapAt, picked, setPick, pickToggle, order, boxPick, ordAt, H | opened |
 | N191 |  | Design: Albert, Nov 5 (Frankenstein F21+F22, decisions.json): Mid's gameplay and controls come over (one tap picks, a second opens the card; | opened |
 | N192 |  | Design: Mid's alarm, danger map and the end (09-nav.js DANGER, discRows, stampDanger, dangerMap, dangerWhy; 12-sim-core.js isThreat, recount | opened |
 | N193 |  | Design: Albert, Nov 5 20:16 (Frankenstein F23): keep going; three playability fixes from his phone (everyone idle, three sites never built): | opened |
 | N194 |  | Design: Mid's lessons, prisoners, priests, medics, Zeal and spies (11-orders.js teachTo, teachGap, teachCost, teachSecs, schooling, teachWhy | opened |
 | N195 |  | Design: Mid's Market, coin, bank and ventures; goods and workshops; trade and caravans (11-orders.js LOT, worth, coinOf, sellPrice, buyPrice | opened |
-| N196 |  | Age of Empires II (1999), the buildings' health: a Castle and a Wonder 4800, a Market, Monastery, University and Blacksmith 2100, a Barracks | to open |
-| N197 |  | Age of Empires II (1999), the trade cart and the trade cog: the gold a trip earns grows with the square of the distance between the two mark | to open |
+| N196 |  | Age of Empires II: DE data (SiegeEngineers aoe2techtree data.json): Castle and Wonder 4800, Monastery and University 2100, Market and Blacks | opened |
+| N197 |  | openage reverse-engineering, market.md (AoK: gold = (d/size + 0.3) x d x 0.46 + 0.5); AoE2 fandom Trade Cart: Gold almost quadratic in dista | opened |
 | N198 |  | Design: Mid's war camps, field traps, relations and diplomacy, vassals and tribute (38-camps.js CAMP_TENTS, campLayout, campFacing, campCell | opened |
 | N199 |  | Design: Albert, Nov 5 11:16 (2): vassals pay tribute, the tax rate parked; 11:16 (7): the war camp's wagon in two sizes, small (the outpost) | opened |
-| N200 |  | Hyginus (Pseudo-Hyginus), De munitionibus castrorum, about AD 100: §1 a century's tents in one line, eight men to a tent; §4 the hospital (v | to open |
-| N201 |  | The Anglo-Saxon Chronicle, 991 and after: the Danegeld, tribute to buy off the Danes, 10,000 pounds in 991 and more each time after, to 48,0 | to open |
+| N200 |  | Pseudo-Hyginus, De munitionibus castrorum (trans. at roman-britain.co.uk): Sec. 1: tent holds eight men; century has ten tents, eight pitche | opened |
+| N201 |  | Anglo-Saxon Chronicle (MSS C, D, E), 991-1012, via Wikipedia 'Danegeld': 991: 10,000 pounds; 994: 16,000; 1007: 36,000; 1012: 48,000 | opened |
 | N202 |  | Design: Mid's computers (17-ai.js bestCounter, timeLeft, rateFrom, goalOf, needOf, runsOut, famineNear, PLOTS, plotPays, think, armyCap, arm | opened |
 | N203 |  | Design: Mid's sky, moon and ground (08-core.js moonVec, moonPhase, moonLight, NIGHT_SIGHT, SYNODIC; 37-events.js skyTurn, wxWhy, ruts, rutsA | opened |
-| N204 |  | Rosenzweig & Udry (2013), Forecasting Profitability, NBER Working Paper 19334, p. 21: farmers who plan by the monsoon forecast earn R46,625  | to open |
+| N204 |  | Rosenzweig, M. & Udry, C. (2013) Forecasting Profitability, NBER Working Paper 19334, p. 21: p. 21: forecast-responsive farmer mean profits  | opened |
 | N205 |  | Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_LOOK, NATIVE raids; 14-sim-troo | opened |
 | N206 |  | Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sickRisk, outbreak, healthTick; 06 | opened |
-| N207 |  | Alsan & Goldin (2019), Watersheds in Child Mortality: The Role of Effective Water and Sewerage Infrastructure, 1880–1920, Journal of Politic | to open |
+| N207 |  | Alsan, M. & Goldin, C. (2019) Watersheds in Child Mortality, J. Political Economy 127(2):586-638, doi:10.1086/700766: Water alone -12.6 log  | opened |
 | N208 |  | Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, woodsGrid, openLine; 20-view-bas | opened |
-| N209 |  | Tanner Helland (2012), How to Convert Temperature (K) to RGB: a fit to the CIE black-body locus, 1000 to 40000 K (Mid's kelvinRGB; from memo | to open |
+| N209 |  | Helland, T. (2012) How to Convert Temperature (K) to RGB: Algorithm and Sample Code, tannerhelland.com: All constants match; 1000-40000 K; f | opened |
 | N210 |  | NOAA/NCEP operational code CALVIS (rap.v5.1.20, rap_wrfpost.fd/CALVIS.f, nco.ncep.noaa.gov): vis = −ln(0.02)/β; β (km⁻¹) the sum over the hy | opened |
 | N211 |  | ITU-R P.840 liquid water content of fog, 0.05 g/m³ (AGI STK help, Rain Models / cloud and fog table, help.agi.com/stk/Content/comm/ITU840-7. | opened |
 | N212 |  | US National Weather Service, Houston/Galveston fog guide (weather.gov/media/zhu/ZHU_Training_Page/fog_stuff/fog_guide/fog.pdf): radiation fo | opened |
 | N213 |  | Wærsted, Haeffelin, Dupont, Delanoë & Dubuisson (2017), Radiation in fog, Atmos. Chem. Phys. 17, 10811–10835: fog is droplets near the groun | opened |
-| N214 |  | Magnus formula over water, e_s = 6.112 exp(17.62 T / (243.12 + T)) hPa (WMO-No. 8, Guide to Instruments and Methods of Observation, Annex 4. | to open |
+| N214 |  | WMO-No. 8, Guide to Instruments and Methods of Observation (2018 ed.), Annex 4.B, eq. 4.B.1 (as implemented in NOC AirSeaFluxCode): e_s = 6. | opened |
 | N215 |  | USMC MCWP 3-16.6, Supporting Arms Observer, Spotter and Controller (1998), table 2-4 (via generalstaff.org/BBOW/Plans/Visual_Aural_Distances | opened |
 | N216 |  | Wikipedia, Daylight, illuminance table: brightest sunlight 120,000 lux, sunrise or sunset on a clear day 400, a full Moon 0.25, a quarter Mo | opened |
-| N217 |  | Twilight illuminance on the ground: about 3.4 lux at the end of civil twilight (sun 6° down) and 0.008 lux at the end of nautical (12° down) | to open |
-| N218 |  | Shlaer (1937), The relation between visual acuity and illumination, J. Gen. Physiol. 21, 165–188 (PMC2141937; abstract opened: the cone–rod  | to open |
+| N217 |  | AMS Glossary of Meteorology, 'civil twilight' and 'nautical twilight': End of civil ~3.5-2 lux; end of nautical ~0.008 lux | opened |
+| N218 |  | Shlaer (1937) J. Gen. Physiol. 21(2):165-188; Sloan, L. L. (1968) Photopic acuity-luminance function with special reference to parafoveal vi | opened |
 | N219 |  | Tirmenstein, D. A. (1991), Quercus alba, in the Fire Effects Information System, USDA Forest Service, Rocky Mountain Research Station (fs.us | opened |
 | N220 |  | Design: Albert, Nov 6 14:44–15:06: fog grounded in atmospheric science (CALVIS, the dew point); no fog of war (the land always drawn, anothe | opened |
 | N221 |  | Rogers, R. (1990), Quercus alba L., white oak, in Burns & Honkala, Silvics of North America vol. 2, Agriculture Handbook 654, USDA Forest Se | opened |
@@ -299,16 +299,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N224 |  | Design: Mid's milestones and tips (32-frame.js MS_TEST, msFill, milestoneTick, goldTight, NEEDS, advise; 26-input.js L, learn, learnAct; 07- | opened |
 | N225 |  | Design: Mid's civilisations (04-rules-tech.js CIVS, CIVK, the six unique units, the Hall rows and the six elite ranks; 08-core.js civOf, civ | opened |
 | N226 |  | Design: Albert, Nov 6 17:23: the civilisations as Mid had them, if they come clean and within our rules; the Games wait with the Throne; tre | opened |
-| N227 |  | Age of Empires II (1999): each civilisation's bonuses are techs every side of that civilisation holds from the start, applied as any researc | to open |
+| N227 |  | Age of Empires forums, 'Creating custom OP civs with Advanced Genie Editor' (guide to the game's .dat file): Most civ bonuses are technologi | opened |
 | N228 |  | Design: Albert, Nov 6 16:01–16:07: you start in the corner drawn at the bottom left of the screen, whatever the view's turn; the pocket (Z1) | opened |
 | N229 |  | Design: Mid's map character, new game and scenarios (06-rules-tuning.js LAND, SCENARIOS, UI_BUDGET; 07-text.js SCEN_TEXT; 10-world.js newGam | opened |
 | N230 |  | Design: Mid's save and safety net (34-save.js saveGame, readSave, keepAside, clearSave, loadGame; 01-rules-basics.js SAVE_EVERY; 41-boot.js  | opened |
-| N231 |  | Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by degrees across the edge (from mem | to open |
+| N231 |  | Odum, E. P. (1959) Fundamentals of Ecology, 2nd ed., Saunders (per MLSU e-content notes): Ecotone = transition zone along the edges of two a | opened |
 | N232 |  | Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap places it, with no second trip to | opened |
-| N233 |  | Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-ended queue, the 0-1 search (fro | to open |
+| N233 |  | Dijkstra, E. W. (1959) A note on two problems in connexion with graphs, Numerische Mathematik 1:269-271; 0-1 BFS: cp-algorithms: Citation co | opened |
 | N235 |  | Design: Mid's apartment (room 20), quarry (stone 0.45 a second, never runs out, one worker) and castle (dmg 12, bow 140, cd 1.0, h 40) in 03 | opened |
 | N236 |  | Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's stutter (Mid runs it at 60 fps,  | opened |
-| N237 |  | A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a whole frame late, a stutter);  | to open |
+| N237 |  | Arithmetic: 1/60 s = 16.67 ms: 1000/60 = 16.67 ms | opened |
 | N239 |  | Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a table names ticks what the tabl | opened |
 | N240 |  | Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow call, Nov 7 15:44 | opened |
 | N241 |  | Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, the Yard removed (test field  | opened |
@@ -1066,7 +1066,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | G7 | snow cover; a boot's grip on packed snow | {mu: 0.14, grip: 0.3} | N106; N18; N173 |
 | G8 | ice that bears a walker; a boot's grip on it: melting ice grip at and above freezing, rising to hard ice's cold at at °C under | {mu: 0.1, grip: 0.055, cold: 0.18, at: 20} | N107; N18; N178 |
 | G9 | the friction a step needs, by what steps: a person's utilized friction (Burnfield & Powers), a horse and an engine's haulers (Mid's design, to open) | {person: 0.21, horse: 0.25, engine: 0.3} | N179; N19; N173 |
-| G10 | slipping: iron studs give at least studs on ice; a slip holds a walker secs; each walker is checked every second; the town is told at most every tell seconds | {studs: 0.28, secs: 1.5, every: 1, tell: 20} | N174; N179; N173 |
+| G10 | slipping: iron studs give at least studs on ice; a slip holds a walker secs; each walker is checked every second; the town is told at most every tell seconds | {studs: 0.2, secs: 1.5, every: 1, tell: 20} | N174; N179; N173 |
 
 ## mass
 
@@ -1092,9 +1092,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | W18 | a bison | {kg: 700, height: 1.8, com: 1.1, foot: 0.6, stride: 2.2} | N85; N170 |
 | W19 | a sword | {kg: 1.2, blow: {kg: 1.2, mps: 8}} | N177 |
 | W20 | a javelin, its blow thrown | {kg: 1, blow: {kg: 1, mps: 20}} | N177 |
-| W21 | a crossbow, its blow a bolt | {kg: 5, blow: {kg: 0.08, mps: 45}} | N177 |
-| W22 | a matchlock gun, its blow a ball | {kg: 5, blow: {kg: 0.02, mps: 350}} | N177 |
-| W23 | a war elephant | {kg: 4000, height: 2.7, com: 1.5, foot: 0.45, stride: 2.5} | N177 |
+| W21 | a crossbow, its blow a bolt | {kg: 5, blow: {kg: 0.1, mps: 62}} | N177 |
+| W22 | a matchlock gun, its blow a ball | {kg: 5, blow: {kg: 0.02, mps: 449}} | N177 |
+| W23 | a war elephant | {kg: 3600, height: 2.7, com: 1.5, foot: 0.45, stride: 2.5} | N177 |
 | W24 | a unit of a load carried: set so a full load (D87) is Mid's 0.9 of the walk under Pandolf (QCB) | {kg: 1.4019} | N173; N185 |
 
 ## measure
@@ -1177,7 +1177,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D83 | under this many pixels a tile things are dots and the grid is off | 5 | N112 |
 | D84 | the Town Center's spot in the corner's frame, Z2 on the road | [380, 380] | N112 |
 | D85 | units a metre, from the figure | 11.7 | N112 |
-| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the small camp wagon 14 (cart), the boar 30, the bison 70, the scout 27 (F17b); the bandit 26, the robber 32, the vagabond 20, the wayfarer 22 and the wagon train 16 (F31); the Mongol horse archer 40 (steppe) and the Mali horseman 38 (F36, Mid's civ units); a post rider 49 (post: Mid's TELL.ride, F35) | {walk: 1.52, ride: 2.28, horse: 1.7, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933, sc | N71; N72; N73; N79; N170; N176; N198; N223; N225 |
+| D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the small camp wagon 14 (cart), the boar 30, the bison 70, the scout 27 (F17b); the bandit 26, the robber 32, the vagabond 20, the wayfarer 22 and the wagon train 16 (F31); the Mongol horse archer 40 (steppe) and the Mali horseman 38 (F36, Mid's civ units); a post rider 49 (post: Mid's TELL.ride, F35) | {walk: 1.52, ride: 2.28, horse: 1.9, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933, sc | N71; N72; N73; N79; N170; N176; N198; N223; N225 |
 | D87 | a load | 10 | N112 |
 | D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
 | D89 | the next find within | 100 | N112 |
@@ -1206,7 +1206,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D114 | marshy lakes | [1, 2] | N112 |
 | D115 | a marsh's width | 40 | N112 |
 | D116 | Fast, for testing | 8 | N112 |
-| D117 | sight by real math (QAL, QAM, QAN), looked again every tick s: a person is made out by day at day m; the eye's range falls with the light as (E ÷ ref lux)^p, at most the day's; the light E = the sun's by its height (sun: height in degrees, lux, between them by the logarithm), plus the moon's full lux × its lit fraction^log2(full ÷ quarter) × sin(its height) (deg to the half turn), plus the stars' star lux; under cloud all of it × overcast ÷ star; the horizon √(earth × h) for an eye h m up (earth the Earth's diameter, m); a person's eye and top body m; a standing tree as tall as D326 gives its kind | {tick: 0.5, day: 1500, body: 1.7, earth: 12742000, ref: 400, p: 0.19, sun: [[-12, 0.008], [-6, 3.4], [0, 400], [90, 120000]], moon: [0.25, 0 | N41; N215; N216; N217; N218; N220 |
+| D117 | sight by real math (QAL, QAM, QAN), looked again every tick s: a person is made out by day at day m; the eye's range falls with the light as the log of E from the night floor (the table's lowest lux) to ref lux (Sloan 1968: acuity linear in log luminance), was (E ÷ ref)^p, at most the day's; the light E = the sun's by its height (sun: height in degrees, lux, between them by the logarithm), plus the moon's full lux × its lit fraction^log2(full ÷ quarter) × sin(its height) (deg to the half turn), plus the stars' star lux; under cloud all of it × overcast ÷ star; the horizon √(earth × h) for an eye h m up (earth the Earth's diameter, m); a person's eye and top body m; a standing tree as tall as D326 gives its kind | {tick: 0.5, day: 1500, body: 1.7, earth: 12742000, ref: 400, sun: [[-12, 0.008], [-6, 3.4], [0, 400], [90, 120000]], moon: [0.25, 0.01], sta | N41; N215; N216; N217; N218; N220 |
 | D120 | a shadow at most this many heights | 3 | N112 |
 | D121 | the blades' strength | 0.45 | N112 |
 | D122 | the sides in play, by corner: you (0) and the three computers, Mid's Raiders (1), Rivals (2) and Fortress (3), the rival across the board listed first (v100's one rival before); the Natives' place, Mid's fifth side in the middle, waits for the Throne | [0, 2, 1, 3] | N114; N202; N203 |
@@ -1366,7 +1366,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D291 | a computer's turn (Mid's think and aiEconomy, its numbers): a site nobody raises is looked at each site s; an Apartment for a Home from age with cost; a drop-off where crew or more work a yield whose nearest find stands farther than near tiles from one; a Mill after mill farms; soldiers within threat tiles of its hall stop its saving; a Scout after at s with food; the hall's line kept to line; food over the age's price by spare; extra wood for a second barracks or place to train when every line holds line; a tower out tiles toward the middle with stone; a Wonder from age with an army and spare over its price; priests with an army, most 1 (3 for a shrine-keeper), Zeal with gold when busy soldiers fight; medics; engines kept as the personality's siege + one a per soldiers, by cycle, every turn-th the age's late engine from age from; caravans; spies; any research every research-th turn when the list is done; Muster in eights; a villager carrying under carry moves; the army kept grows armyAge an age; a personality bold under never makes war; counter: a kind's score is its mean (its blow on each foe ÷ the foe's on it, at least floor) ÷ (its price ÷ per)^pow, the best two mixed, never of the classes in not; the job mix: iron from age iron, a Wonder-builder adds wonder to each, and the Stone age's and the early shares (each yield + its share of others); econ: from age and at s, ventures with spare gold over the age, most at once, of amt; trade posts on a free stop within far tiles; a Market, a Pasture (not for the brewer), a workshop (the brewer makes beer, the others cloth; a plot shop makes its own yield); caravans; routes looked at each route [s, phase] | {site: 3, apart: {age: 2, cost: {stone: 60, wood: 120}}, drop: {crew: 2, near: 11}, mill: 3, threat: 40, scout: {at: 60, food: 200}, line: 2 | N202 |
 | D292 | the moon (KH2): its month, new to new, in game days (Meeus 49.1, the synodic month); the night's share by the sun below the horizon, full at nautical twilight; the night's blue is dark[0] − dark[1] × the lit fraction (darker toward the new moon); its shadow's strength (Mid's CAST.moon) | {month: 29.53, twilight: 12, dark: [1.15, 0.3], cast: 0.07} | N2; N203 |
 | D293 | the sky told ahead (Weather signs): a forecast step is step s (Mid's minute, WX_EVERY), the chain rolled that far ahead in game hours; the chain's odds told in tenths | {step: 60, tenths: 10} | N7; N203 |
-| D294 | the ground remembers (KI15, KI3): every unit-second walked on a square of cell tiles deepens its ruts toward deep × the mud at n0 unit-seconds as (passes ÷ n0)^0.4; they heal with tau s, looked at every heal [s, phase]; mud within near tiles of water is shore × deeper (pooling); the mud a step meets is the ground's wetness × the pooling × (1 + the ruts) (Mid's CLIMATE.rut, CLIMATE.shore, NAV.shore, mudAt) | {cell: 4, n0: 300, deep: 1, tau: 600, heal: [10, 7], shore: 1.5, near: 5, pow: 0.4} | N20; N203 |
+| D294 | the ground remembers (KI15, KI3): every unit-second walked on a square of cell tiles deepens its ruts toward deep × the mud at n0 unit-seconds as (passes ÷ n0)^0.4; they heal with tau s, looked at every heal [s, phase]; mud within near tiles of water is shore × deeper (pooling); the mud a step meets is the ground's wetness × the pooling × (1 + the ruts) (Mid's CLIMATE.rut, CLIMATE.shore, NAV.shore, mudAt) | {cell: 4, n0: 300, deep: 1, tau: 600, heal: [10, 7], shore: 1.5, near: 5, pow: 0.5} | N20; N203 |
 | D295 | a flood (KI4): the water stands rise tiles over every shore for secs s; flood water is waded only with Levees, and a finished building whose middle stands within rise of the water, less half its size, loses hit of its health a second, looked at each beat [s, phase], unless its side has Levees, told each say [s, phase]; the flood shows at show of the water's colour (Mid's EVENTS.flood, lakeGrid, drawFlood) | {secs: 90, rise: 4, hit: 0.004, beat: [1, 11], say: [10, 13], show: 0.55} | N203 |
 | D296 | the sky band along the top (Mid's SKY and drawSky), and a wash over the glass shows from least: h of the glass high, at most h px, at base strength fading down; the hour's colour (day, toward dusk by dusk × n × (1 − n) with n the night's share, night) cast toward the weather's by cast (rain the second); seven clouds crossing at speed + speed × their place in threes px a second, × calm + the wind's share of its most, placed on their own spacing (their place in threes, fours and twos: mod), w wide, tall, each with a second puff; their cover and darkness by the sky; the night darkens them by night; a frosty clear sky casts the frost colour at frost (Mid's WX_TINT) | {h: [0.16, 110], base: 0.6, dusk: 4, least: 0.005, cast: [0.55, 0.7], clouds: {n: 7, speed: [6, 3], calm: 0.4, x: [173, 240, 120], y: [8, 9] | N203 |
 | D297 | ripples on the lakes (Mid's drawLakeRipples): n a lake, the i-th at angle i × turn + spin × t, out at (from + span × ((i × step + drift × t) mod 1)) of the shore, w wide arcs raised lift, line px | {n: 18, turn: 2.4, spin: 0.05, from: 0.25, span: 0.6, step: 0.37, drift: 0.02, w: 6, lift: 2, line: 1.2} | N203 |
@@ -1787,7 +1787,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O18 | Water wheel | {at: BI1, line: Harvest, age: 2, cost: {food: 180, wood: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.1}], when: 300 BC, w: 6} | N160; N161 |
 | O19 | Horse collar | {at: BI1, line: Harvest, age: 3, cost: {food: 320, wood: 210}, time: 60, fx: [{s: rate, k: BCL1, p: 0.15}], need: [horses], when: 900s, w: 7 | N160; N161 |
 | O20 | Heavy plough | {at: BI1, line: Harvest, age: 3, cost: {food: 340, wood: 230}, time: 64, fx: [{s: rate, k: BCL1, p: 0.15}], when: 1000s, w: 8} | N160; N161 |
-| O21 | Windmill | {at: BI1, line: Harvest, age: 3, cost: {food: 430, wood: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.1}], when: 1180s, w: 6} | N160; N161 |
+| O21 | Windmill | {at: BI1, line: Harvest, age: 3, cost: {food: 430, wood: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.1}], when: 1130s, w: 6} | N160; N161 |
 | O22 | Seed drill | {at: BI1, line: Harvest, age: 4, cost: {food: 430, wood: 290}, time: 71, fx: [{s: rate, k: BCL1, p: 0.15}], when: 1701, w: 6} | N160; N161 |
 | O23 | Bread ovens | {at: BI1, line: Stores, age: 1, cost: {food: 90, wood: 60}, time: 26, fx: [{s: rate, k: BCL1, p: 0.1}], when: 3000 BC, w: 4} | N160; N161 |
 | O24 | Stone granary | {at: BI1, line: Stores, age: 1, cost: {food: 110, wood: 70}, time: 30, fx: [{s: plague, c: 0.5}], need: [masonry], when: 2500 BC, w: 6} | N160; N161 |

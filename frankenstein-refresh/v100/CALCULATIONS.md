@@ -23,7 +23,7 @@ QO Melt: degree-day, melt = k (T − 0); rain on snow faster · N14, N15
 QP Settle: x(t) = L + (x0 − L) e^(−t/τ) (wetness, healing, decay, nerve, loyalty) · N16
 QQ Ice growth: thickness ∝ √(freezing degree-seconds) · N17
 QR Slip: each second a walker's step lands on ice with the chance of the ground's ice cover (QQ), else on its cover (dry to mud by the mud, to snow by the snow, G5–G7); it slips exactly when the friction its step needs (G9, by what steps) exceeds what that ground offers (the ice's G8 by the air, melting to hard, or the studs' G10 where iron bites); a slip holds it G10's seconds, and it walks on with a shortened step, its pace × what is offered ÷ what is needed on its share of ice, until it is off the ice · N179, N178, N174, N18
-QS Ruts: depth ∝ passes^0.4 · N20
+QS Ruts: depth ∝ passes^0.5 (Wronski & Humphreys: z/D = 4.61 n^0.5 (CI/NGP)^−2.6) · N20
 QT Fire vs wetness: η = 1 − 2.59r + 5.11r² − 3.52r³ · N21
 QU Fire growth ∝ t²; heat to a neighbour ∝ (near / (gap + near))² · N22
 Work and economy
@@ -57,7 +57,7 @@ QAG Who to fight: first one its group can beat (QAF, its side within reach summe
 QAH Fight or not: probability V / C · N38
 QAI Nerve: steady at 1; each loss nearby drains 1 / (break × n); a blow that lands drains hit × harm ÷ most health, × side or rear by where it comes from, × the temper's nerve; a kill gives kill; outnumbered drains odds a second; at rest it settles back by QP; at 0 it runs (QAO) · N76, N188
 QAJ Arrow flight: projectile motion under gravity with quadratic drag, F = ½ ρ Cd A v²; the range is where it lands (replaces the no-drag range formula) · N39, N40
-QAL Sight: range = min(√(D⊕ h), R_day × (1 − (1 − a)(1 − lamp)), V) with a = min(1, (E ÷ E_ref)^0.19); the light E = E_sun(height, between the table's rows by the logarithm) + E_full × lit^log2(E_full ÷ E_quarter) × sin(moon's height) + E_stars, × E_overcast ÷ E_stars under cloud; D⊕ the Earth's diameter, h the eye's height (a person's 1.7 m, a building's its own, research adds); R_day 1,500 m (an individual made out by day); V the weather's visibility (QK) · N41, N215, N216, N217, N218, N220
+QAL Sight: range = min(√(D⊕ h), R_day × (1 − (1 − a)(1 − lamp)), V) with a = clamp(ln(E ÷ E_night) ÷ ln(E_ref ÷ E_night), 0, 1), E_night the end of nautical twilight (acuity linear in the log of the light, Sloan 1968); the light E = E_sun(height, between the table's rows by the logarithm) + E_full × lit^log2(E_full ÷ E_quarter) × sin(moon's height) + E_stars, × E_overcast ÷ E_stars under cloud; D⊕ the Earth's diameter, h the eye's height (a person's 1.7 m, a building's its own, research adds); R_day 1,500 m (an individual made out by day); V the weather's visibility (QK) · N41, N215, N216, N217, N218, N220
 QAM Line of sight: seen when, along the grid line from the eye (ground + eye height) to the target's top (ground + its height), no tile's top (ground, a standing tree's height, a building's) rises above the straight line; the two footprints aside · N42, N219
 QAN Many eyes: a side sees what any of its units or finished buildings sees now, and nothing else: no memory, no shroud; the computers by the same check · N43, N44, N220
 QAO Flee: run when staying costs more than running · N45
