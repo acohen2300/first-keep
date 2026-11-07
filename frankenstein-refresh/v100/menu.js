@@ -260,7 +260,7 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
   $('base').innerHTML = base(r); qaEl.className = S.qa ? 'on' : ''; if (S.qa) { const m = SCR.mold, [w] = FK.size(); qaEl.innerHTML = vcell('quick', null, null, 'ic red') + vcell('qclose', null, null, 'ic'); qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, S.qa.px - m.slot * P.half)) + 'px'; qaEl.style.top = S.qa.py - m.slot * P.half + 'px'; }
 }
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
-function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|');
+function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
   if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; render(true); return; } act(verb, argOf(a), argOf(a2)); }
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
@@ -369,12 +369,12 @@ function reach(text, m) { const at = m.at, h = FK.seatOf(ME); if (!at || m.told 
   if (m.cls === MWD.urgent && within([...mine, ...FK.units().filter((u) => u.side === ME)], TL.hear * TL.gun ** (SIDES[ME].age >= TL.gunAge))) return { text: MWD.fight.replace('{dir}', dirOf(h || at, at)) };
   const ally = D.players.some((q) => q !== ME && WAR.stance(ME, q) === ALLY && within(blds(q), TL.near)), need = within(mine, TL.near) ? TL.levels.near : within(mine, TL.far) ? TL.levels.far : ally ? TL.levels.ally : TL.levels.all, lvl = FK.stat('', ME, 'news');
   if (lvl < need || !h) return null; const L = FK.wayLen(FK.tileAt(at.bx, at.by), h); return { delay: (L < Infinity ? L : FK.dist(h, at)) / D.upm / D.speed[lvl >= TL.ridesAt ? TL.ride : TL.foot] }; }
-function say(text, m = {}) { if (tall(S.tab) && !m.told) return void post.push({ t: FK.K.t, text, m: { ...m, told: true } }); // E707
+function say(text, m = {}) { if (S.tab === 'Start' && !m.told) return void post.push({ t: FK.K.t, text, m: { ...m, told: true } }); // E707
   const N = reach(text, m); if (!N) return; if (N.delay > BEAT) return void post.push({ t: FK.K.t + N.delay, text, m: { ...m, told: true, why: MWD.post } }); if (N.text) { text = N.text; m = { ...m, at: null }; } // E638
   const grp = m.grp || 'reply', key = hush(text), same = mail.find((x) => x.grp === grp && x.key === key && FK.K.t - x.t < MS.merge), quiet = MWD.quiet.includes(m.cls);
   if (same) Object.assign(same, { t: FK.K.t, text }).times.push(FK.K.t); else { mail.unshift({ text, grp, key, cls: m.cls || '', why: m.why || '', at: m.at ? { bx: m.at.bx, by: m.at.by } : null, times: [FK.K.t], t: FK.K.t }); mail.length = Math.min(mail.length, MS.keep); }
   if (!quiet) toast(same ? `${text} ×${same.times.length}` : text, MS.secs); }
-function postTick() { if (tall(S.tab)) return; const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(null, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
+function postTick() { if (S.tab === 'Start') return; const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(null, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
 function newsTick() { if (FK.K.t - newsT < TL.every || FK.K.t < TL.after) return; newsT = FK.K.t; const L = WD.world[SIDES[ME].age] || WD.world.at(-1); say(L[++newsI % L.length], { grp: 'chronicle', cls: 'news' }); } // E640
 // E641
 const PEOPLES = () => Object.keys(CIVS).filter((k) => CIVS[k].name), civOf = (i) => PEOPLES().find((k) => CIVS[k].name === OPTS.civ[i].find(String)), civLine = (k) => { const u = Object.keys(FK.SH).find((c) => FK.SH[c].civ === k); return !u ? '' : CIVS.blurb.replace('{unit}', FK.SH[u].name).replace('{base}', FK.SH[FK.SH[u].replaces].name.toLowerCase()).replace('{wonder}', CIVS[k].wonder).replace('{bonus}', WD.why['bonus:' + k] || ''); };

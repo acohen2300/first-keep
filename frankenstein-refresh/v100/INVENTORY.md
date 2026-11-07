@@ -4,7 +4,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,149 | 494,618 | 494,757 |
+| Game code | 29 | 3,149 | 494,707 | 494,846 |
 | Books | 1982 | 0 | 563,723 | 564,395 |
 | Laws | 93 | 0 | 19,623 | 20,149 |
 | Tools | 4 | 1,759 | 284,794 | 285,032 |
@@ -20,10 +20,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,816 | 1,820 | 38 |
 | index.html#floor-2-terrain | 82 | 8,512 | 8,516 | 130 |
-| index.html#floor-3-non-movables | 63 | 8,722 | 8,726 | 75 |
+| index.html#floor-3-non-movables | 63 | 8,728 | 8,732 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 1,005 | 1,009 | 14 |
-| index.html#the-door | 94 | 13,977 | 13,981 | 69 |
+| index.html#the-door | 94 | 14,008 | 14,012 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
@@ -37,7 +37,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 21,938 | 21,942 | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
 | index.html#touch | 50 | 7,507 | 7,511 | 54 |
-| menu.js | 459 | 81,629 | 81,672 | 578 |
+| menu.js | 459 | 81,681 | 81,724 | 578 |
 | econ.js | 576 | 105,176 | 105,176 | 72 |
 | combat.js | 354 | 59,017 | 59,017 | 84 |
 | ai.js | 170 | 27,312 | 27,312 | 25 |

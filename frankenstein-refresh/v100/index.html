@@ -225,11 +225,11 @@ function makeThings(roll) {
   for (const t of things) if (D.Z3.finds.includes(t.kind) && !fixed.has(t.k)) t.amount = Math.round(t.amount * (LD.amt[KIND[t.kind].yield] ?? ONE)); // E654
   const fr = dice(seed ^ FN.seed); for (const [kind, n] of Object.entries(FN.lay)) for (let m = count(fr, n); m--; ) { const s = spot(KIND[kind].r, fr, kind); if (s) { put(kind, s.at(-1), fr); clearing(kind, s); } } // E564
   for (const [ax, ay] of TR.routes) for (const d of [FN.camp, -FN.camp]) { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('camp', k, fr); clearing('camp', [things.at(-1).bx, things.at(-1).by]); } }
-  things = things.filter((t) => !(felled.has(t.k) && t.kind === 'tree'));
-  things.sort((a, b) => a.vy - b.vy); // E50
+  things = things.filter((t) => !(felled.has(t.k) && t.kind === 'tree')); TV++;
   for (const t of things) if (t.kind === 'tree') deepen(t); // E51
   for (const L of lakes) for (let m = Math.round(L.r / D.fish.per), n = m; m--; ) { const a = (m / n) * A.round * RAD, [cx, cy] = [Math.cos(a), Math.sin(a)]; let d = D.fish.inset; // E344
     while (d < L.r + D.beach && !stratum(H[tileAt(L.x + cx * d, L.y + cy * d)])) d += D.fish.inset; const k = tileAt(L.x + cx * (d - D.fish.inset), L.y + cy * (d - D.fish.inset)); if (!OCC[k] && !stratum(H[k])) { put('fish', k, roll); things.at(-1).amount = things.at(-1).max = Math.round((D.fish.amt * L.r) / D.fish.r0); } }
+  things.sort((a, b) => a.vy - b.vy); // E50
 }
 function openWays(fixed) { // E652
   const cost = new Float64Array(N * N), back = new Int32Array(N * N), step = [ONE, -ONE, N, -N], quarter = (t) => { const d = CORNERS.map(([x, y]) => Math.hypot(t.bx - x, t.by - y)); return d.indexOf(Math.min(...d)); };
@@ -340,10 +340,10 @@ const task = (key, gen) => { if (!TASKS.some((t) => t.key === key)) TASKS.push({
 function work() { for (let n = D.work.slices; n-- && TASKS.length; ) { const t = TASKS.shift(); if (!t.gen.next().done) TASKS.push(t); } } // E685
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
 let paused = false; const resting = () => paused || !!fire('rest'), pause = (on = !paused) => { paused = on; dirty(); }; // E695
-function loop(now) { if (now - last >= 1000 / (resting() ? D.rest.idle : D.fps)) { const dt = paused ? null : Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); climate(dt); step(dt); fire('tick', dt); work(); look(dt); followCam(dt); draw(); shed(performance.now() - w0); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
+function loop(now) { if (now - last >= 1000 / (resting() ? D.rest.idle : D.fps)) { const dt = paused ? null : Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { climate(dt); step(dt); fire('tick', dt); work(); look(dt); } followCam(dt); draw(); shed(performance.now() - w0); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
 // E655
 const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\b/.test(location.search), seenErr = new Set(), BASE0 = {}; let fightT = null, failT = -Infinity;
-function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE && !paused) { try { const t = pack(); if (t != null) localStorage.setItem(SV.key + SV.bak, t); } catch (x) {} paused = true; fire('say', WS.fault, { line: m.split('\n').shift() }); fire('event', 'fault', null); MENU.S.tab = 'Pause'; } } // E656
+function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE && !paused) { try { const t = pack(); if (t != null) localStorage.setItem(SV.key + SV.bak, t); } catch (x) {} paused = true; fire('say', WS.fault.replace('{line}', m.split('\n').shift())); fire('event', 'fault', null); MENU.S.tab = 'Pause'; } } // E656
 addEventListener('error', (e) => fault(e.error || e.message)); addEventListener('unhandledrejection', (e) => fault(e.reason));
 const ARR = () => ({ H, OCC, FOR, MARSH, RUTS }), refill = (a, b) => { if (a instanceof Map || a instanceof Set) { a.clear(); for (const x of b) a instanceof Map ? a.set(...x) : a.add(x); } else if (Array.isArray(a)) a.splice(null, a.length, ...b); else { for (const k in a) delete a[k]; Object.assign(a, b); } };
 function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n) => [t, n])), base = new Map(BASE0.things.map((t, n) => [t, n])), S = { seed, dice: play.at(), things: [], units, K, SIDES, known, HZ, arr: {} }; // E657
@@ -367,7 +367,7 @@ function save(force) { if (TEST || seenErr.size > ONE) return; const fight = uni
 function readSave(key = SV.key) { try { const t = localStorage.getItem(key), S = t && JSON.parse(t); return S && S.things ? S : key === SV.key ? readSave(SV.key + SV.bak) : null; } // E660
   catch (e) { if (key !== SV.key) return null; aside(); return readSave(SV.key + SV.bak); } }
 const aside = () => { try { localStorage.setItem(SV.key + SV.lost, localStorage.getItem(SV.key)); localStorage.removeItem(SV.key); } catch (x) {} };
-function load(R) { WALKV++; const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
+function load(R) { WALKV++; TV++; const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
   for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v;
   GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = null; WOODS.clear(); for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
 let wakeL = null, wakeP = false; const wakeOn = async (on) => { if (wakeP) return; try { if (on && !wakeL && navigator.wakeLock) { wakeP = true; wakeL = await navigator.wakeLock.request('screen'); } else if (!on && wakeL) { const w = wakeL; wakeL = null; await w.release(); } } catch (e) { wakeL = null; } wakeP = false; }; // E696

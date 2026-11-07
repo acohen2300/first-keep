@@ -9940,8 +9940,8 @@
 "numbers": 130
 },
 "code:index.html#floor-3-non-movables": {
-"sha": "590227d979ecd875b9bd0fd644858852bdcb9cb6a806f3e7530f61bc284ea604",
-"bytes": 8726,
+"sha": "c4cde6352f504086ce2395e4cfe6f6e3cacaf7858c81525104c8b43d48a1b450",
+"bytes": 8732,
 "numbers": 75
 },
 "code:index.html#floor-5-movables": {
@@ -9995,8 +9995,8 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "5b2e3dbd84cbfd167d3c14cb462a95ee121e63788326dacc3074e74b3df27fbb",
-"bytes": 13981,
+"sha": "631c1acf5139d433600b0af82b3da1cc2a114ef424e88ffdc6e8da0988cc8f06",
+"bytes": 14012,
 "numbers": 69
 },
 "code:index.html#the-figures": {
@@ -10045,8 +10045,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "7b01a5cdcb290c525e1cedf640817c48b4621f5dc86111ebcfcdf89ee4aa8287",
-"bytes": 81672,
+"sha": "cf4f1eeaee29a032a43749d69a9659f74b1a1871e7f2420f60588b887a687131",
+"bytes": 81724,
 "numbers": 578
 },
 "code:sound.js": {

@@ -3293,3 +3293,14 @@ MODIFIED (60):
 LOCKED (2048 of 2108): byte for byte as sealed, 1,321,718 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 7 still to open · 7 known
+
+## R1 · the review's fixes before the 9 pm play · 2026-11-07 17:33
+Albert, Nov 7 07:54: lean audit and fixes before play
+Opened: code:index.html, code:econ.js, code:combat.js, code:ai.js, code:menu.js, book:comments, book:measure, book:words
+MODIFIED (3):
+- code:index.html#floor-3-non-movables · 8,726 → 8,732 bytes
+- code:index.html#the-door · 13,981 → 14,012 bytes
+- code:menu.js · 81,672 → 81,724 bytes
+LOCKED (2105 of 2108): byte for byte as sealed, 1,259,954 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 7 still to open · 7 known

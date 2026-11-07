@@ -86,9 +86,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
-- **E50** drawn back to front
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
 - **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170)
+- **E50** drawn back to front
 - **E652** The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by wo · QCQ (N229, N233)
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
 - **E52** 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23) · D23 (N112)

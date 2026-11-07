@@ -582,3 +582,8 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 ## S1 (Nov 7), for Albert's yes
 - Seven sources stay marked unopened, each with what was and wasn't seen: N29 (White, Rothamsted), N67 (Webb/Bird), N80 (Winter 1998, seen only in a summary), N86 (Rossing), N181 (Pugh 1971, full text blocked), N189 (Park 2011, the drag value not in any opened page), N245 (Marshall & Palmer 1948, the M–P relation from secondary sources).
 - Sight now falls with the log of the light (Sloan 1968) from the end of nautical twilight to the day reference; the old 0.19 power is gone.
+
+## R1 (Nov 7 review), for Albert's yes
+- Hazards toggle the live set from the Start sheet; a toggle mid-match (from Pause → New game → Start) changes the running game before Start is pressed. Decide: hazards read only at Start?
+- sees() now tests the eye's own cell for units: a unit standing in a gate tile may be blind and unseen (unconfirmed).
+- A single error that repeats every frame pauses nothing (the net pauses on the second distinct error): by design since A2; revisit if the phone shows a frozen screen with no card.
