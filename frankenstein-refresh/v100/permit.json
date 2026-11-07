@@ -1,5 +1,1 @@
-{
- "build": "",
- "agreed": "",
- "opens": []
-}
+{"build": "M1 · Base's menus, first part: the Build card above the jobs rows, Base's tab order, Base's text weight with nothing cut off", "agreed": "Albert, Nov 7 12:35: Base's menus are it; 12:51: go go go (items 2-4)", "opens": ["code:menu.js", "code:index.html", "book:screen", "book:words", "book:colours", "book:comments", "book:rules"]}
