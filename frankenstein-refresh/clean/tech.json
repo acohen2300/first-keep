@@ -274,24 +274,24 @@
      "F13a: books/tech.js O50 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "runners": [
-     "bring",
-     "Runners (keep, Bronze): News from your near lands, carried on foot."
+     "in v100",
+     "F35: books/tech.js, key runners (at, line, age, cost, time, fx as added shares)"
     ],
     "royalroad": [
-     "bring",
-     "Royal Road (keep, Classical): News from all your lands, by relays of riders."
+     "in v100",
+     "F35: books/tech.js, key royalroad (at, line, age, cost, time, fx as added shares)"
     ],
     "yam": [
-     "bring",
-     "Relay stations (keep, Medieval): News from your allies too."
+     "in v100",
+     "F35: books/tech.js, key yam (at, line, age, cost, time, fx as added shares)"
     ],
     "postal": [
-     "bring",
-     "Post riders (keep, Gunpowder): News from the whole board; emissaries are heard more readily."
+     "in v100",
+     "F35: books/tech.js, key postal (at, line, age, cost, time, fx as added shares)"
     ],
     "sheets": [
-     "bring",
-     "News sheets (keep, Gunpowder): A printed digest: every court that enters a new age is in it."
+     "in v100",
+     "F35: books/tech.js, key sheets (at, line, age, cost, time, fx as added shares)"
     ],
     "lanterns": [
      "in v100",
@@ -654,20 +654,20 @@
      "F13a: books/tech.js O63 (at, line, age, cost, time, fx as added shares, need, when, w)"
     ],
     "method": [
-     "bring",
-     "Scientific method (library, Enlightenment): Research is 25% faster."
+     "in v100",
+     "F35: books/tech.js, key method (at, line, age, cost, time, fx as added shares)"
     ],
     "fourcourse": [
-     "bring",
-     "Four-course rotation (library, Enlightenment): Fields give 25% more."
+     "in v100",
+     "F35: books/tech.js, key fourcourse (at, line, age, cost, time, fx as added shares)"
     ],
     "encyclopedia": [
-     "bring",
-     "Encyclopédie (library, Enlightenment): Research costs 15% less."
+     "in v100",
+     "F35: books/tech.js, key encyclopedia (at, line, age, cost, time, fx as added shares)"
     ],
     "schooling": [
-     "bring",
-     "Public schooling (library, Enlightenment): Every gatherer works 10% faster."
+     "in v100",
+     "F35: books/tech.js, key schooling (at, line, age, cost, time, fx as added shares)"
     ],
     "freetrade": [
      "in v100",
@@ -934,100 +934,100 @@
      "F32: tech book, key waterworks"
     ],
     "viamil": [
-     "bring",
-     "Via militaris (hall, Classical): The military road: foot soldiers march 20% faster (Vegetius: 20 miles in five hours at the common step, 24 at the full). See misfits."
+     "in v100",
+     "F36: books/tech.js, key viamil (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "horrea": [
-     "bring",
-     "Horrea (hall, Classical): State granaries on raised floors, 290 of them in Rome: food spoils half as fast again. See misfits."
+     "in v100",
+     "F36: books/tech.js, key horrea (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "castra": [
-     "bring",
-     "Castra (hall, Classical): Every legionary carried two stakes and dug the camp each night: soldiers raise a camp half again as fast, and its works stand half again as strong. See misfits."
+     "in v100",
+     "F36: books/tech.js, key castra (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "trigger": [
-     "bring",
-     "Bronze trigger (hall, Classical): The cast bronze trigger, made in thousands to one pattern: crossbows reach 20 farther (the Luoyang arsenal held 11,181 of them in 13 BC). See misfits."
+     "in v100",
+     "F36: books/tech.js, key trigger (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "changping": [
-     "bring",
-     "Ever-normal granary (hall, Classical): Geng Shouchang: the state bought in good years and sold in bad; prices swing half as far again for you. See misfits."
+     "in v100",
+     "F36: books/tech.js, key changping (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "taixue": [
-     "bring",
-     "Taixue (hall, Classical): The imperial academy, the first school of the state: every research 10% quicker. See misfits."
+     "in v100",
+     "F36: books/tech.js, key taixue (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "persianroad": [
-     "bring",
-     "Royal Road (hall, Classical): Herodotus: 111 stages from Sardis to Susa, ninety days on foot and nine by the royal couriers; caravans and wagons 20% faster. See misfits."
+     "in v100",
+     "F36: books/tech.js, key persianroad (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "satrapy": [
      "parked",
      "tax research (satrapy): parked with the tax, Albert 11:16"
     ],
     "immortals": [
-     "bring",
-     "The Immortals (hall, Classical): Kept at ten thousand, never more nor fewer, a fallen man replaced at once: Immortals train 25% faster. See misfits."
+     "in v100",
+     "F36: books/tech.js, key immortals (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "mongolyam": [
-     "bring",
-     "Yam (hall, Medieval): The relay of stations 20 to 40 miles apart, a rider 200 miles a day with spare horses: everything on horseback sees 20% farther. See misfits."
+     "in v100",
+     "F36: books/tech.js, key mongolyam (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "mongolremounts": [
-     "bring",
-     "Remounts (hall, Medieval): Three or four horses to a rider, a hundred miles a day in Hungary: a charge comes round 25% sooner. See misfits."
+     "in v100",
+     "F36: books/tech.js, key mongolremounts (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "tumen": [
-     "bring",
-     "Tumen (hall, Medieval): Tens, hundreds, thousands, ten thousands, and the composite bow that volleyed to 400 metres: horse archers reach 15 farther. See misfits."
+     "in v100",
+     "F36: books/tech.js, key tumen (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "sixth": [
      "parked",
      "tax research (sixth): parked with the tax, Albert 11:16"
     ],
     "hastin": [
-     "bring",
-     "Hastin (hall, Classical): Nine thousand elephants in the army Megasthenes saw: war elephants hit buildings 20% harder. See misfits."
+     "in v100",
+     "F36: books/tech.js, key hastin (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "pataliputra": [
-     "bring",
-     "Pataliputra (hall, Classical): A capital of 570 towers and 64 gates behind a moat: your walls, gates and towers stand a quarter stronger. See misfits."
+     "in v100",
+     "F36: books/tech.js, key pataliputra (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "bambuk": [
-     "bring",
-     "Bambuk gold (hall, Medieval): The gold of Bambuk and Bure; the gifts of Mansa Musa dropped the price of gold in Cairo 12% for twelve years: gold comes in 12% faster. See misfits."
+     "in v100",
+     "F36: books/tech.js, key bambuk (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "saltroad": [
-     "bring",
-     "Salt road (hall, Medieval): Ibn Battuta: salt from Taghaza sold at four times its price by the time it reached the capital: caravans earn 25% more. See misfits."
+     "in v100",
+     "F36: books/tech.js, key saltroad (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "sankore": [
-     "bring",
-     "Sankore (hall, Medieval): Timbuktu, where Leo Africanus found more profit in books than in any other trade: every research 10% quicker. See misfits."
+     "in v100",
+     "F36: books/tech.js, key sankore (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "elite_roman": [
-     "bring",
-     "Elite: Praetorian (castle, Medieval): The soldiers of your people become Praetorians, their finest: tougher, harder hitting. Upgrades the legion in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F36: books/tech.js, key elite_roman (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "elite_han": [
-     "bring",
-     "Elite: Elite crossbowman (castle, Medieval): The soldiers of your people become Elite crossbowmen, their finest: tougher, harder hitting. Upgrades the hanxbow in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F36: books/tech.js, key elite_han (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "elite_persian": [
-     "bring",
-     "Elite: Apple-bearer (castle, Medieval): The soldiers of your people become Apple-bearers, their finest: tougher, harder hitting. Upgrades the immortal in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F36: books/tech.js, key elite_persian (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "elite_mongol": [
-     "bring",
-     "Elite: Keshig (castle, Medieval): The soldiers of your people become Keshig guards, their finest: tougher, harder hitting. Upgrades the mongolha in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F36: books/tech.js, key elite_mongol (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "elite_maurya": [
-     "bring",
-     "Elite: Royal elephant (castle, Medieval): The soldiers of your people become Royal elephants, their finest: tougher, harder hitting. Upgrades the mauryael in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F36: books/tech.js, key elite_maurya (at, line, age, cost, time, fx as added shares, civ)"
     ],
     "elite_mali": [
-     "bring",
-     "Elite: Elite horseman (castle, Medieval): The soldiers of your people become Elite horsemen, their finest: tougher, harder hitting. Upgrades the malihorse in place (the Unit shell's Level). See misfits."
+     "in v100",
+     "F36: books/tech.js, key elite_mali (at, line, age, cost, time, fx as added shares, civ)"
     ]
    }
   ],
@@ -1036,12 +1036,12 @@
    "a lookup of research by id; the Tech book is keyed by its code"
   ],
   "CIVS": [
-   "bring",
-   "six civilisations (Roman, Han, Persian, Mongol, Maurya, Mali): each a unique unit, a small bonus as an effect, a wonder and a hall name; see misfits"
+   "in v100",
+   "F36: shells UM17-UM22, tech civ rows (bonus held from the start, Hall, elite), econ.js setCiv, index.html civKind, sprites, words civs"
   ],
   "CIVK": [
-   "bring",
-   "the civilisations' keys and their six unique units (Legionary, Han crossbowman, Immortal, Mongol horse archer, Maurya war elephant, Mali horseman), each a common unit's settings with a few changed: Unit shells by attribute; see misfits"
+   "in v100",
+   "F36: shells UM17-UM22, tech civ rows (bonus held from the start, Hall, elite), econ.js setCiv, index.html civKind, sprites, words civs"
   ],
   "ARMYK": [
    "cut",

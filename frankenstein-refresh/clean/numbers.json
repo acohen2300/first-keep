@@ -814,8 +814,8 @@
    "F16: books/measure.js D212 (grace in days, the work); the Famine hazard's leaving (every) waits for the hazards (Parked)"
   ],
   "TELL": [
-   "bring",
-   "how news reaches you"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "UI_BUDGET": [
    "bring",

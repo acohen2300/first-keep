@@ -244,8 +244,8 @@
    "F19+F20: combat.js wear, wearMul"
   ],
   "newsTick": [
-   "bring",
-   "the age's news lines every so often"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "herdTick": [
    "in v100",
@@ -424,72 +424,72 @@
    "the Natives' beat: traps, raids, regard's memory, the Throne's handover and score"
   ],
   "PEACE": [
-   "bring",
-   "the peace path's numbers: truce price, standing down, the Games, the hidden age after a year of peace, the crowns"
+   "in v100",
+   "F35: measure D322 peace (truce price D281); the Games' numbers wait with the Throne (F40)"
   ],
   "CARE": [
-   "bring",
-   "what counts as care for the Wellbeing crown (Hospital, Temple, Baths, Theatre, Tavern)"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "bestOf": [
    "bring",
-   "the best a side has of a measure over its soldier kinds (for the Games)"
+   "the best a side has of a measure over its soldier kinds (for the Games) · waits with the Throne (F40): the Games are held on its island (Albert, Nov 6 17:23)"
   ],
   "livingSides": [
    "cut",
    "the living sides; v100 reads D.players and the Seat (econ.js)"
   ],
   "truceAll": [
-   "bring",
-   "a board truce: no two living sides at war"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "truceFor": [
-   "bring",
-   "seconds the whole board has kept the peace"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "ageOpen": [
-   "bring",
-   "the hidden age (Enlightenment) opens once, for every side"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "nextAge": [
-   "bring",
-   "a side's next age, if open; v100 econ.js ageCost and ageUp walk the ages but know no hidden one"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "chron": [
-   "bring",
-   "the chronicle: the match's lines, kept to a count"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "peaceTick": [
-   "bring",
-   "once a second: the truce clock, the hidden age, standing down, the Games"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "standDown": [
-   "bring",
-   "at peace, soldiers above the keep share go home as villagers"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "holdGames": [
    "bring",
-   "the Games under a board truce, won on the square of each side's best; held on the Throne island, see misfits"
+   "the Games under a board truce, won on the square of each side's best; held on the Throne island, see misfits · waits with the Throne (F40): the Games are held on its island (Albert, Nov 6 17:23)"
   ],
   "crownsOf": [
-   "bring",
-   "the three crowns: Wealth, War, Wellbeing, and the overall"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "CROWN_NAME": [
-   "bring",
-   "the crowns' names (to the Words book)"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "crownsHTML": [
    "bring",
    "the crowns card and the chronicle, paged"
   ],
   "enlightenTick": [
-   "bring",
-   "the last research of the hidden age ends the match for everyone"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "chaseCrown": [
-   "bring",
-   "a computer's personality chases its crown (beyond balanced: Later, kept)"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ]
  },
  "misfits": [

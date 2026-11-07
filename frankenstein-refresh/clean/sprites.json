@@ -182,12 +182,12 @@
      "F18: Sprites book entry with key \"sword\", Mid's pixels (t-kinds)"
     ],
     "legion": [
-     "bring",
-     "the Roman legionary (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F36: shells UM17-UM22, tech civ rows (bonus held from the start, Hall, elite), econ.js setCiv, index.html civKind, sprites, words civs"
     ],
     "immortal": [
-     "bring",
-     "the Persian Immortal (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F36: shells UM17-UM22, tech civ rows (bonus held from the start, Hall, elite), econ.js setCiv, index.html civKind, sprites, words civs"
     ],
     "jav": [
      "in v100",
@@ -210,8 +210,8 @@
      "F18: Sprites book entry with key \"chariot\", Mid's pixels (t-kinds)"
     ],
     "malihorse": [
-     "bring",
-     "the Mali horseman (civ elite), with the civs; held as a skin in preview 49 (Parked, Nov 4), as a Sprites book entry"
+     "in v100",
+     "F36: shells UM17-UM22, tech civ rows (bonus held from the start, Hall, elite), econ.js setCiv, index.html civKind, sprites, words civs"
     ],
     "harcher": [
      "in v100",
@@ -608,8 +608,8 @@
      "F25+F28: index.html, the building art floor, ART.tent with its mark (the four tents' signs)"
     ],
     "hall": [
-     "bring",
-     "index.html, the building art floor has ART.hall (Roman front); the other five civ fronts come with the civs, held as a skin in preview 49 (Parked, Nov 4)"
+     "in v100",
+     "F36: index.html ART.hall, each people's front by its side's civ (bldSprite, drawBld)"
     ],
     "library": [
      "in v100",
@@ -632,8 +632,8 @@
      "F16: ART.treefarm spent (PB15)"
     ],
     "wonder": [
-     "bring",
-     "index.html, the building art floor has ART.wonder (wonderArt, the Roman); the civ fronts come with WONDERART"
+     "in v100",
+     "F36: index.html wonderArt, the Roman front for every people; the five other fronts parked (WONDERART rows)"
     ]
    }
   ],
@@ -670,24 +670,24 @@
      "index.html, the building art floor, wonderArt"
     ],
     "han": [
-     "bring",
-     "the Han Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+     "parked",
+     "the Han Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4) · F36: parked, its drawing is canvas code of a few hundred typed numbers; it comes as a Sprites book drawing list (zero stray numbers); the Roman front stands for all until then"
     ],
     "persian": [
-     "bring",
-     "the Persian Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+     "parked",
+     "the Persian Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4) · F36: parked, its drawing is canvas code of a few hundred typed numbers; it comes as a Sprites book drawing list (zero stray numbers); the Roman front stands for all until then"
     ],
     "mongol": [
-     "bring",
-     "the Mongol Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+     "parked",
+     "the Mongol Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4) · F36: parked, its drawing is canvas code of a few hundred typed numbers; it comes as a Sprites book drawing list (zero stray numbers); the Roman front stands for all until then"
     ],
     "maurya": [
-     "bring",
-     "the Maurya Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+     "parked",
+     "the Maurya Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4) · F36: parked, its drawing is canvas code of a few hundred typed numbers; it comes as a Sprites book drawing list (zero stray numbers); the Roman front stands for all until then"
     ],
     "mali": [
-     "bring",
-     "the Mali Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4)"
+     "parked",
+     "the Mali Wonder front, with the civs; held as a skin in preview 49 (Parked, Nov 4) · F36: parked, its drawing is canvas code of a few hundred typed numbers; it comes as a Sprites book drawing list (zero stray numbers); the Roman front stands for all until then"
     ]
    }
   ],

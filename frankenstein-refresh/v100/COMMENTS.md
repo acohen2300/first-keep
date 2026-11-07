@@ -367,7 +367,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E366 | index.html#the-figures | the armour kit a side has learned (Mid's KIT): 0 to 3 steps of the Sprites book's kit, each turning a person's slots (mail and a steel helm, then plate, the great helm, its crest and a cape in the figure's own colours), with a shoulder guard of leather, mail or steel |
 | E367 | index.html#the-figures | one drawing list for every figure that is not a person or a beast (the engines, the chariot, the elephant, the riders, the elite pennant): each part a brush (P, E, L, Q, rect, wheel, planks, helm, horse, person), in a frame moved and turned (at), or drawn only in the blow's frame (atk) or out of it (rest); a value may sway with the stride or change in the blow's frame. The numbers live in the Sprites book |
 | E368 | index.html#the-figures | a look by its rank: level 0 the look itself, level n the nth of its rank list, past the list its last (Mid's LOOKS by tier) |
-| E369 | index.html#the-door | the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a shell, or a class's kinds); a kind is open from its age (D130) |
+| E369 | index.html#the-door | the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a shell, or a class's kinds); a kind is open from its age (D130); a side's civilisation trains its own kind in place of the common one it replaces (Mid's civKind), and no other side trains it |
 | E370 | index.html#the-door | a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give its level and its name; the kit is how many armour steps a soldier's side has learned |
 | E371 | econ.js | the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid's ARMYMAX; a fallen side's share, capA, joins it with M30) |
 | E372 | combat.js | the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps to its own work and armyFree leaves them out (the routed now; the spy, the shrine, the escort and the school with their modules) |
@@ -620,3 +620,28 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E622 | index.html#the-building-art | a banner on a building that flies live leaves its place to the view (Mid's FLAGS) |
 | E623 | index.html#floor-7-display | the shadows of the trees, bushes and rocks in sight, not the deep woods, cast like everything else (QAT, Mid's shadowPath); the draw budget sheds them first |
 | E624 | index.html#floor-7-display | is a thing in a side's sight: its own, the land's and the wild's always; another side's only when that side's eyes saw it at the last look, or the eye asking sees it now (range and line, QAL and QAM); the one check for the screen, the fight and the computers |
+| E625 | econ.js | a board at peace (Mid's 39-games, D322): the truce clock, the hidden age it opens, standing down, the chronicle; the deal of the peoples for the next match |
+| E626 | econ.js | a board truce: no two living sides at war and no notice running; how long it has held |
+| E627 | econ.js | the chronicle: the match's lines, kept to D322's chron, newest last |
+| E628 | econ.js | standing down (demobilisation, as every peace since Rome): the soldiers at home above the keep go home as villagers, one for one; yours to your gathering job when you ask, a computer's above the army it keeps at peace |
+| E629 | econ.js | once a second: the truce clock starts or stops; a year of it opens the hidden age for every side; after D322's stand.after the computers stand down |
+| E630 | econ.js | the three crowns and the overall (Mid's crownsOf): Wealth all a side gathered, War the cost of the enemy people and buildings it destroyed, Wellbeing its people in health, its places of care and its laurels; each crown gives a side a point for every side below it, the score breaks a tie |
+| E631 | econ.js | the last step of the hidden age ends the match for everyone: everyone wins, the crowns say who won what |
+| E632 | econ.js | a side's people: its civilisation, and the bonus row it holds from the start (Mid's CIVS fx, applied by QCA as research is) |
+| E633 | econ.js | the War crown's count (Mid's warCredit): a side destroying another side's unit or building is credited its cost; the wild cost nothing |
+| E634 | econ.js | a raid on yours: an enemy strikes or fells one of your things; told by the mail, by sight, by ear or by messenger (QCH) |
+| E635 | menu.js | the mail (Mid's say and tell, D323): a line shows a while unless it is quiet, the same line within merge is a count on the first, the newest kept; news out of sight comes by the post (QCH) |
+| E636 | menu.js | which way a place lies from your Town Center, of eight |
+| E637 | menu.js | how a line reaches you (QCH): in sight now; a fight in earshot by its way only; else by a messenger walking from your Town Center, if the Post serves that far |
+| E638 | menu.js | a line said: by messenger later, heard as a fight, or now; merged with its repeat, kept, shown |
+| E639 | menu.js | the messengers arrive |
+| E640 | menu.js | the world's news: a line of your age every while, none at first |
+| E641 | menu.js | the peoples on the Start card: the one you pick and its line (its own soldier, the one it replaces, its wonder, its bonus); the others are dealt at random |
+| E642 | menu.js | the milestones and tips (Mid's MS_TEST, advise): each milestone said once a match the first time it is true; a tip names what the town needs next until you have done it |
+| E643 | menu.js | a hint retires once learned: what you did, counted on this phone, to D325's learned |
+| E644 | menu.js | what each tap teaches: training a kind, a job, a building, the next age |
+| E645 | menu.js | the fourteen milestones' tests, and their numbers filled from the books |
+| E646 | menu.js | gold short while another store is full |
+| E647 | menu.js | what the town needs next, first that holds: room, villagers, wood, idle hands, a barracks, spearmen, the next age, food, gold, a fire, sickness, gold work |
+| E648 | menu.js | every lesson beat: a new tip is said, then the first milestone newly true, one a beat |
+| E649 | ai.js | a computer chases its crown (Mid's chaseCrown): the wellbeing chaser builds each place of care it lacks; every side takes the hidden age when it opens and runs its steps, the match a race to the last |

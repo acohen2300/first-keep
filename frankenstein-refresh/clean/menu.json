@@ -610,80 +610,80 @@
    "who a unit not yours belongs to and how you stand; on its card"
   ],
   "MSG": [
-   "bring",
-   "the mail's measures: a line 4 s, merged within 30 s, 30 kept, 6 a page (N13)"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "GROUPS": [
-   "bring",
-   "the mail's groups (War, Home, Land, Trade, Realm...); with the Mail"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "MAIL_FILTERS": [
    "bring",
    "the Mail card's filters; with the Mail"
   ],
   "QUIET": [
-   "bring",
-   "quiet lines never preview; with the Mail"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "urgentCls": [
-   "bring",
-   "a warning line; with the Mail"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "ccOf": [
    "bring",
-   "a line's colour; with the Mail"
+   "a line's colour; with the Mail · waits for the Mail card (a line's colour by its kind); F35's preview is the one toast colour"
   ],
   "hiddenG": [
    "bring",
-   "a group whose previews are hidden; with the Mail"
+   "a group whose previews are hidden; with the Mail · waits for the Mail card (its per-group hide switch); F35 keeps every group shown"
   ],
   "news": [
-   "bring",
-   "say a line in a group; with the Mail"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "DIR8": [
-   "bring",
-   "news by messenger: a line from out of sight arrives late, with its direction (TELL); with the fog"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "tell": [
-   "bring",
-   "how news reaches you: seen now, heard, or brought; with the fog"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "postTick": [
-   "bring",
-   "the messengers arrive; with tell"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "say": [
-   "bring",
-   "a line on the screen and into the mail; v100 has menu.js toast()"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "hushKey": [
-   "bring",
-   "a line's kind, numbers aside, for merging; with the Mail"
+   "in v100",
+   "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "MS_TEST": [
-   "bring",
-   "the milestones' tests (first house, field, drop, soldier, squad, age, mud, snow, ice, hunger, fire, rout, trade, winter)"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "msFill": [
-   "bring",
-   "fills a milestone's numbers"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "milestoneTick": [
-   "bring",
-   "fires each milestone once a game"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "goldTight": [
-   "bring",
-   "gold short while another store is full; a tip"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "NEEDS": [
-   "bring",
-   "the tips' tests (house, barracks, lumber, farm, market, hospital); teaching"
+   "in v100",
+   "F35: menu.js advise, the needs folded into the tips (room, barracks, market, hospital); the lumber-camp, farm, walled-in, treasure, envoy and restless-vassal tips wait for the cards (Parked.md)"
   ],
   "advise": [
-   "bring",
-   "the next tip, a warning first; teaching (Parked 15: hand holding)"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "SEASON_ICON": [
    "in v100",
@@ -1438,16 +1438,16 @@
    "menu.js act() (VERBS, whyNot first)"
   ],
   "L": [
-   "bring",
-   "a hint learned (3 times) is not shown again; teaching"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "learn": [
-   "bring",
-   "counts what a hint teaches; teaching"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "learnAct": [
-   "bring",
-   "which taps teach which hint; teaching"
+   "in v100",
+   "F35: menu.js lessons (MS_TEST, advise, learn), D325, D328, words milestones and tips"
   ],
   "lpT": [
    "in v100",

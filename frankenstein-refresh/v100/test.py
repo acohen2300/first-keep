@@ -571,7 +571,7 @@ async def physics(b):
     scout = abs(v['scout'][0] - v0 * 27 / 24) < 1e-9 and v['scout'][1] == 12 / 10
     got = [abs(v['flat'] - v0) < 1e-12, all(pand) and slower, cuts and book, skies and drops, edge and hours, slip and studs, scout, not errs]
     ok('t-physics', all(got), [got, v['flat'], [c[5] for c in v['cases']], pand, v['cuts'], v['drops'], v['edge'], v['flags'], v['hours'][25:33], v['slip'], v['studs'], v['scout'], errs[:2]])
-TECH = book('tech'); KSHELL = [c for c, e in SHELLS.items() if 'class' in e and c in MEASURE['train']]; RANKED = sorted({e['value']['rank']['k'] for e in TECH.values() if 'rank' in e['value']} - set(KSHELL))
+TECH = book('tech'); KSHELL = [c for c, e in SHELLS.items() if 'class' in e and c in MEASURE['train'] and 'civ' not in e]; RANKED = sorted({e['value']['rank']['k'] for e in TECH.values() if 'rank' in e['value']} - set(KSHELL) - {c for c, e in SHELLS.items() if 'civ' in e})   # a people's own kind is t-civs'
 KSETS = [[], ['shields', 'spearwall', 'drill', 'bronze', 'spearheads', 'leather', 'helmets', 'slings', 'composite', 'horses', 'bridles', 'fieldcraft'],
          ['phalanx', 'legion', 'saddles', 'stirrups', 'cavalry', 'iron', 'chain', 'scale', 'torsion', 'engineers', 'marching'],
          ['pikesquare', 'arms', 'plate', 'bodkin', 'xbowdrill', 'longbow', 'knighthood', 'horseshoes', 'counterweight', 'firearrows', 'burningshot', 'tempering'],
@@ -644,14 +644,14 @@ WARJS = """(() => { const D = FK.D, [me, foe] = D.players, out = {}, at = (s) =>
   place(Object.keys(D.trains).find((c) => FK.trains(c).includes(CODES[0]))); place(Object.keys(FK.SH).find((c) => FK.SH[c].ticks.includes('Squad'))); WAR.plan(0, FK.SH[CODES[0]].class, true); WAR.plan(0, FK.SH[CODES[0]].class, true);
   const lack = WAR.lack(0), cost = ECON.musterCost(me, lack); out.muster = [JSON.stringify(lack), ECON.muster(me, lack, 0)]; for (let t = 0; t < 3000 && WAR.squad(0).length < 2; t++) FK.sim(0.1); out.muster.push(WAR.squad(0).length, cost.cost, cost.t);
   return out; })()"""
-MIDWAR = r"""return box([basics, units, blds, tuning, cut(core, 'const rangeFrom', 'const rangeOf'), cut(spatial, 'function foeValue', '\n}') + '\n}', cut(spatial, 'function vsMul', '\n}') + '\n}',
+MIDWAR = r"""return box([basics, units, blds, tech, tuning, cut(core, 'const rangeFrom', 'const rangeOf'), cut(spatial, 'function foeValue', '\n}') + '\n}', cut(spatial, 'function vsMul', '\n}') + '\n}',
   `const baseKind = (k) => k, stats = (o, k) => ({ ...UNIT[k] }); var OUT = { vs: RUN.looks.map((a) => RUN.looks.map((b) => vsMul({ owner: 0, kind: a }, { owner: 1, kind: b }))),
    reach: RUN.towers.map((k) => rangeFrom(BLD[k].bow, BLD[k].h) / 10), worth: [foeValue({ owner: 0, kind: RUN.looks[0], hp: RUN.hp[0] }, { owner: 1, kind: RUN.looks[6], hp: RUN.hp[1] }, 0), foeValue({ owner: 1, kind: RUN.looks[6], hp: RUN.hp[1] }, { owner: 0, kind: RUN.looks[0], hp: RUN.hp[0] }, 0)],
    nums: { MORALE, FLANKING, FLANK, YARD, KITE, GARRISON, FORM, COLUMN, TEMPER, PLUNDER, wear: CLIMATE.wear, unit: Object.fromEntries(RUN.looks.map((k) => [k, UNIT[k]])) } };`]);"""
 async def war(b):
     codes = [c for c, e in SHELLS.items() if e.get('class')]; looks = [SHELLS[c]['look'] for c in codes]; TW = {'BW3': 'tower', 'BTC1': 'keep', 'BTC8': 'camptower', 'BP8': 'courthouse', 'BCT1': 'tpost'}
     pg, errs = await fresh(b); v = await pg.evaluate(WARJS.replace('SEED', str(SEED)).replace('CODES', json.dumps(codes))); await pg.close()
-    mid, err = frozen('basics units blds tuning core spatial', MIDWAR, {'looks': looks, 'towers': [TW[c] for c in MEASURE['tower']], 'hp': v['worth'][2:]}); mid = mid or {}
+    mid, err = frozen('basics units blds tech tuning core spatial', MIDWAR, {'looks': looks, 'towers': [TW[c] for c in MEASURE['tower']], 'hp': v['worth'][2:]}); mid = mid or {}
     m, n = mid.get('nums', {}), MEASURE; MO, FL, S = n['nerve'], n['flanking'], n['stats']; near = lambda a, c, r=1e-9: abs(a - c) <= r * max(1, abs(a), abs(c))
     books = bool(m) and all(MO[k] == m['MORALE'][k] for k in ('hit', 'side', 'rear', 'kill', 'odds', 'tau', 'shelter', 'routHit', 'after', 'wild')) and MO['lossR'] * 10 == m['MORALE']['lossR'] and n['bases']['rout'] == m['MORALE']['rout'] \
         and [FL['cover'] * 10, FL['line'] * 10] == [m['FLANKING']['cover'], m['FLANKING']['line']] and n['flank'] == m['FLANK'] and n['yard'] * 10 == m['YARD'] and near(n['kite']['near'] * 10, m['KITE']) and n['shelter']['r'] * 10 == m['GARRISON']['r'] and n['bases']['garrison'] == m['GARRISON']['heal'] \
@@ -781,7 +781,7 @@ async def troops(b):
     pg, errs = await fresh(b, 1500); v = await pg.evaluate(TRJS); await pg.close()
     M, SH, T = keyed('measure'), book('shells'), keyed('tech'); LK = {s['look']: c for c, s in SH.items()}; RS = RK; cost = lambda c: {RS.get(k, k): x for k, x in (c or {}).items() if x}
     mid, err = frozen('basics units blds tech tuning core8 orders', MIDTR,
-        {'hp0': v['heal'][0], 'max': v['heal'][2], 'techs': [k for k, e in T.items() if e['at'] in ('BP3', 'BP8') or e['line'] in ('Levy', 'Teaching')]}); m = mid or {}
+        {'hp0': v['heal'][0], 'max': v['heal'][2], 'techs': [k for k, e in T.items() if e.get('at') in ('BP3', 'BP8') or e.get('line') in ('Levy', 'Teaching')]}); m = mid or {}
     te, pr, cv, ze, sb, hl = M['teach'], M['prison'], M['convert'], M['zeal'], M['sab'], M['heal']
     nums = bool(m) and te == m['TEACH'] and [pr['secs'], pr['ransom'], pr['after'], pr['r'] * 10] == [m['PRISON']['secs'], m['PRISON']['ransom'], *m['cap']] and [cv['r'] * 10, cv['secs'], cv['cd']] == [m['CONVERT'][k] for k in ('r', 'secs', 'cd')] \
         and [ze['cost']['gold'], ze['secs'], ze['cd'], ze['mul']] == [m['ZEAL']['cost']['g'], m['ZEAL']['secs'], m['ZEAL']['cd'], m['ZEAL']['mul']] and [sb['burn'], sb['stall']] == [m['SAB']['burn'], m['SAB']['stall']] and [round(x * 10, 6) for x in sb['seen']] == m['seen'] \
@@ -1202,7 +1202,98 @@ async def stage(b):
     shed = v['shed'] == m.get('shed') and v['shed'][1] > 0
     got = [books, cam, lights, colour, pop, shed, not errs]
     ok('t-stage', all(got), [got, v['cam'][:3], (m.get('cam') or [])[:3], v['lights'], m.get('lights'), v['blds'], v['shed'], m.get('shed'), v['pop'][:4], T.get('pop', [])[:4], errs[:2], err[-800:]])
-PAGED = {'t-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PEACEJS = r"""(() => { $calm(); const D = FK.D, K = FK.K, S = FK.SIDES, [ME, A, B] = D.players, out = {}, PZ = D.peace, TL = D.tell, T = BOOKS.tech;
+  for (const a of D.players) for (const b of D.players) if (a < b) WAR.treaty(a, b, 'peace');
+  K.t = PZ.quiet + 1; ECON.peaceTick(); out.t0 = ECON.truceFor(); const t0 = K.t, v = ECON.villagersOf(A)[0], sol = FK.kinds('Foot')[0], aim = AI.aim(A);
+  for (let i = 0; i < aim + 5; i++) FK.spawn(sol, A, v.k, FK.rng); const n0 = WAR.armyOf(A).length, v0 = ECON.villagersOf(A).length;
+  K.t = t0 + PZ.stand.after; ECON.peaceTick(); out.stand = [n0, aim, WAR.armyOf(A).length, ECON.villagersOf(A).length - v0];
+  S[A].age = D.age.hidden - 1; out.shut = [ECON.opened(), ECON.nextAge(A)]; K.t = t0 + PZ.years * D.year; ECON.peaceTick(); out.open = [ECON.opened(), ECON.nextAge(A), MENU.mail.some((m) => m.text.includes(D.ages[D.age.hidden]))];
+  WAR.treaty(ME, A, 'war'); ECON.peaceTick(); out.broken = ECON.truceFor();
+  const u = WAR.armyOf(A)[0], by = ECON.villagersOf(ME)[0], w0 = S[ME].war; WAR.die(u, by); out.war = [u.code, S[ME].war - w0];
+  const care = FK.ticked('Care'); $put(care[0], B); $put(care[1], B); $put(care[2], ME); ECON.villagersOf(ME)[1].sick = K.t + D.year; Object.assign(S[ME], { gathered: 700, laurels: 2 }); Object.assign(S[A], { gathered: 900 }); S[B].war = 40;
+  out.crowns = ECON.crowns(); out.sides = D.players.map((s) => ({ id: s, gathered: S[s].gathered, war: S[s].war, laurels: S[s].laurels, alive: !ECON.fell(s), total: ECON.score(s).total,
+    vil: ECON.villagersOf(s).map((x) => !!(x.sick > K.t)), care: FK.things().filter((t) => t.side === s && t.kind === 'bld' && t.done >= 1 && FK.has(t, 'Care')).length }));
+  // news by the post (QCH): night and cloud, so nothing new is seen; a line about a foe out of sight
+  Object.assign(K, { alt: -90, rain: 1 }); const h = FK.seatOf(ME), mine = FK.things().filter((t) => t.kind === 'bld' && t.side === ME), mineU = FK.units().filter((x) => x.side === ME), gap = (p, L) => Math.min(...L.map((t) => FK.dist(t, p))) / D.tile;
+  const spot = (lo, hi, L) => { for (let k = 0; k < FK.N * FK.N; k += 7) { const [bx, by] = FK.tileMid(k), p = { bx, by }; if (FK.walkable(k) && gap(p, L) > lo && gap(p, L) < hi) return k; } return -1; };
+  const kN = spot(TL.near / 2, TL.near, mine), kF = spot(TL.near + 5, TL.far, mine), kH = spot(-1, TL.hear - 2, mineU), say = (k, cls) => { const f = FK.spawn(sol, B, k, FK.rng); return [f, MENU.reach('x', { at: f, cls })]; };
+  out.cases = []; const L = (f) => FK.wayLen(FK.tileAt(f.bx, f.by), h), add = (name, k, cls, lvl) => { const [f, r] = say(k, cls); out.cases.push({ name, k, cls, lvl, seen: FK.inSight(f, ME), r, at: [f.bx, f.by], L: L(f) < Infinity ? L(f) : null, crow: FK.dist(h, f) }); };
+  add('near, no post', kN, '', 0); FK.learn(ME, $tk('runners')); add('near, runners', kN, '', 1); add('far, runners', kF, '', 1); FK.learn(ME, $tk('royalroad')); add('far, royal road', kF, '', 2); add('raid in earshot', kH, 'warn', 2);
+  out.mine = mine.map((t) => [t.bx, t.by]); out.mineU = mineU.map((t) => [t.bx, t.by]); out.seat = [h.bx, h.by]; out.age = S[ME].age; out.speed = [D.speed[TL.foot], D.speed[TL.ride], D.upm];
+  const [f] = say(kF, ''), n0m = MENU.mail.length; MENU.say('A raid far off.', { at: f, grp: 'war' }); const p = MENU.post.at(-1); out.posted = [MENU.mail.length === n0m, p && p.t - K.t]; $run(p ? p.t - K.t + 1.5 : 0); out.came = MENU.mail.some((m) => m.text === 'A raid far off.' && m.why);
+  for (let i = 0; i < 3; i++) MENU.say('Raid 3 at 5', { grp: 'war' }); out.merged = MENU.mail.filter((m) => m.key === 'Raid # at #').map((m) => m.times.length);
+  FK.reset(); K.t = TL.after; $run(1.2); out.news = MENU.mail.filter((m) => m.grp === 'chronicle').map((m) => m.text);
+  FK.reset(); const hs = FK.ticked('House').find((c) => !FK.SH[c].ticks.includes('Seat')); $put(hs, ME); $run(3.2); out.house = MENU.mail.filter((m) => m.grp === 'lesson').map((m) => m.text);
+  FK.reset(); ECON.villagersOf(ME).slice(2).forEach((x) => { x.gone = true; FK.units().splice(FK.units().indexOf(x), 1); }); const vil = FK.trains(FK.seatOf(ME).code)[0]; out.tip = [MENU.advise()]; MENU.learned['train:' + vil] = [1, 2, 3]; out.tip.push(MENU.advise());
+  return out; })()"""
+MIDPEACE = r"""const n = (re, t) => t.match(re)[0];
+const P = box([basics, units, blds, cut(games, 'const PEACE', 'function bestOf').replace(/YEAR/g, '720'), cut(games, 'const ageOpen', 'function chron'), cut(games, 'function standDown', '// the Games'), cut(games, 'function crownsOf', 'const CROWN_NAME'), cut(fight, 'function warCredit', 'function plunderBld'),
+  `const R = RUN; let made = 0; const G = { P: [], units: [], blds: [], enlight: false }, keepOf = () => ({}), soldiersOf = () => Array.from({ length: R.n0 }, () => ({ state: 'home' })), armyAim = () => R.aim, clsCount = () => 0, clsMax = () => Infinity, addUnit = () => (made++, {}), news = () => {}, chron = () => {}, TOAST = {}, scoreAll = () => {}, standing = (b, id) => b.owner === id, sumCost = (c) => Object.values(c || {}).reduce((a, b) => a + b, 0);
+  for (const s of R.sides) G.P[s.id] = { id: s.id, alive: s.alive, gathered: s.gathered, war: s.war, laurels: s.laurels, score: { total: s.total }, age: 4, name: '' };
+  for (const s of R.sides) { s.vil.forEach((sick) => G.units.push({ owner: s.id, kind: 'vil', sick: sick ? 1 : 0 })); for (let i = 0; i < s.care; i++) G.blds.push({ owner: s.id, kind: CARE[0] }); } G.t = 0.5;
+  const stood = standDown(1, true), shut = nextAge(1); G.enlight = true; const open = nextAge(1); const w = { id: 0, war: 0 }; G.P[0].war = 0; warCredit(0, 1, UNIT[R.look].cost);
+  var OUT = { stood, made, shut: shut ? AGES.indexOf(shut) : null, open: open ? AGES.indexOf(open) : null, war: G.P[0].war, crowns: crownsOf(), PEACE };`]);
+const T = box([cut(tuning, 'const TELL', 'const UI_BUDGET'), cut(frame, 'const DIR8', 'function postTick'), `const R = RUN, G = { fogOn: true, blds: R.mine.map(([x, y]) => ({ owner: 0, hp: 1, x, y })), units: R.mineU.map(([x, y]) => ({ owner: 0, hp: 1, x, y })), P: [{ age: R.age }], rel: [[]] }, fogAt = () => 0, dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y), keepOf = () => ({ x: R.seat[0], y: R.seat[1] });
+  let LV = 0, LEN = 0; const fxv = () => ({ a: LV }), wayLen = () => LEN; var OUT = R.cases.map((c) => { LV = c.lvl; LEN = (c.L != null ? c.L : c.crow) / R.upm * 24 / 1.52; return tell('x', c.cls, { x: c.at[0], y: c.at[1] }); });`]);
+const W = box([cut(text, 'const NEWS', '];') + '];', 'var OUT = NEWS;']);
+const H = box([basics, units, blds, tuning, cut(text, 'const slowPct', '// the loyalty'), cut(text, 'const MS_TEXT', 'const TRIGGERS'), 'var OUT = MS_TEXT.house[0];']);
+return { P, T, W, H };"""
+async def peace(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(PEACEJS); await pg.close()
+    m, err = frozen('basics units blds tuning text games fight frame=32-frame', MIDPEACE, {'n0': v['stand'][0], 'aim': v['stand'][1], 'sides': v['sides'], 'look': UKIND.get(v['war'][0], SHELLS[v['war'][0]]['look']), 'cases': v['cases'], 'mine': v['mine'], 'mineU': v['mineU'], 'seat': v['seat'], 'age': v['age'], 'upm': v['speed'][2]}); m = m or {}
+    P, T = m.get('P') or {}, m.get('T') or []; M = MEASURE; Z = P.get('PEACE') or {}
+    books = bool(Z) and [M['peace']['stand'], M['peace']['crown'], M['peace']['chron'], M['mail']] == [Z['stand'], Z['crown'], Z['chron'], {'secs': 4, 'merge': 30, 'keep': 30, 'page': 6}] and M['relations']['truce']['gold'] == Z['truce']['gold']
+    stand = v['t0'] == 0 and v['stand'][2] == v['stand'][1] and v['stand'][3] == P.get('made') == P.get('stood') == v['stand'][0] - v['stand'][1] > 0
+    age = v['shut'] == [False, None] and P.get('shut') is None and v['open'][:2] == [True, P.get('open')] and v['open'][2] and v['broken'] is None
+    crowns = v['war'][1] == P.get('war') > 0 and all([(r['side'], r['v']) for r in v['crowns'][c]] == [(r['id'], r['v']) for r in P['crowns'][c]] for c in ('wealth', 'war', 'wellbeing', 'overall')) if P.get('crowns') else False
+    def same(a, c):   # v100's reach against Mid's tell: now, a heard fight with its way, a delay, never
+        if c is None or a is None: return a is c
+        if 'delay' in c: return 'delay' in a and abs(a['delay'] - c['delay']) <= 1e-3 * c['delay']
+        return a.get('text') == c.get('text')
+    post = len(T) == len(v['cases']) and all(same(c['r'], t) for c, t in zip(v['cases'], T)) and not any(c['seen'] for c in v['cases']) and [c['r'] is None for c in v['cases']] == [True, False, True, False, False] and 'text' in v['cases'][-1]['r'] and v['posted'][0] and v['posted'][1] > 1 and v['came'] and v['merged'] == [3]
+    W = m.get('W') or []; news = bool(W) and keyed('words')['world'] == W and v['news'] == [W[0][1]]
+    lesson = bool(m.get('H')) and v['house'] == [m['H']] and v['tip'][0] == keyed('words')['tips']['more'] and v['tip'][1] != v['tip'][0]
+    got = [books, stand, age, crowns, post, news, lesson, not errs]
+    ok('t-peace', all(got), [got, v['stand'], P.get('stood'), v['open'], P.get('open'), v['war'], P.get('war'), [(c['name'], c['k'], c['r'], c['seen']) for c in v['cases']], T, v['posted'], v['merged'], v['news'], v['house'], m.get('H'), v['tip'], errs[:2], err[-600:]])
+CIVKEYS = {'roman': ['build', ['*', 'house'], 'BR1', 'build'], 'han': ['crop', ['*', 'food'], 'BCL1', 'rate'], 'persian': ['trade', ['*'], '', 'trade'], 'mongol': ['spd', ['*', 'cata', '#mounted'], 'UM3', 'spd'],
+           'maurya': ['train', ['*', 'cata', '#mounted'], 'UM3', 'train'], 'mali': ['gather', ['*', 'gold'], 'R2', 'rate']}
+CIVJS = r"""(() => { const D = FK.D, T = BOOKS.tech, out = {}, [ME, A] = D.players, keys = ['hp', 'atk', 'rng', 'rof', 'sight'];
+  for (const civ of CIVS) { FK.reset(); ECON.setCiv(ME, civ); const uu = Object.keys(FK.SH).find((c) => FK.SH[c].civ === civ), base = FK.SH[uu].replaces, at = Object.keys(D.trains).find((c) => FK.trains(c).includes(base));
+    const [, , code, key] = KEYS[civ], hall = Object.keys(T).filter((c) => T[c].value.civ === civ && T[c].value.at), elite = hall.find((c) => T[c].value.rank);
+    const o = { uu, base, mine: FK.trains(at, ME).includes(uu) && !FK.trains(at, ME).includes(base), theirs: FK.trains(at, A).includes(base) && !FK.trains(at, A).includes(uu), stats: D.stats[uu], cost: D.cost[uu], t: D.train[uu], age: D.ages.indexOf(FK.SH[uu].age), spd: FK.stat(uu, ME, 'spd'),
+      bonus: FK.stat(code, ME, key) / FK.stat(code, A, key), why: [ECON.researchWhy(A, hall[0]), ECON.researchWhy(ME, hall[0])], rows: hall.map((c) => [T[c].key, T[c].value.cost, T[c].value.time, T[c].value.age, T[c].value.line]) };
+    const s0 = keys.map((y) => FK.stat(uu, ME, y)); FK.learn(ME, elite); o.elite = [FK.rankName(uu, ME), ...keys.map((y, i) => FK.stat(uu, ME, y) - s0[i]), FK.stat(uu, ME, 'hp') / s0[0]]; out[civ] = o; }
+  FK.reset(); FK.tops(); const R1 = FK.SHELLS ? null : null, tree = Object.keys(D.trees)[0], h = D.trees[tree].h * D.upm, dt = []; for (let k = 0; k < FK.N * FK.N; k++) if (FK.OCC[k] === 1 && FK.TOPS[k] > FK.H[k] + 1e-6 && FK.TOPS[k] - FK.H[k] < h * 1.5) dt.push(FK.TOPS[k] - FK.H[k]);
+  out.tree = [dt.length, dt.every((x) => Math.abs(x - h) < 1e-3), h]; return out; })()"""
+MIDCIVS = r"""const fx = qca(cut(core, 'function fxList', '// Two words'));
+return box([basics, units, blds, tech, tuning, fx, cut(core, 'const baseKind', '\n'), `const standing = () => false, G = { t: 0, fxv: 0, P: [{ techs: new Set(), uc: {} }, { techs: new Set(), uc: {} }], blds: [] };
+  var OUT = {}; for (const civ of CIVK) { const C = CIVS[civ], u = UNIT[C.uu], [s, k] = RUN[civ]; G.P[0] = { techs: new Set(), uc: {}, civ }; G.fxv++; const el = TECH.find((t) => t.id === 'elite_' + civ);
+    OUT[civ] = { uu: C.uu, base: u.replaces, unit: u, baseSpd: UNIT[u.replaces].spd, m: fxv(0, s, k).m, tier: el.tier, rows: TECH.filter((t) => t.civ === civ && t.at === 'hall').map((t) => [t.id, t.cost, t.t, t.age]).concat([[el.id, el.cost, el.t, el.age]]) }; }`]);"""
+CIVLOOKS = ['legion', 'immortal', 'malihorse']
+async def civs(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(CIVJS.replace('CIVS', json.dumps(list(CIVKEYS))).replace('KEYS', json.dumps(CIVKEYS)))
+    fig = open(os.path.join(HERE, '../mid/src/18-figures.js')).read(); FAULT = "legs: shade(c, 0.6),\n\t\t\t\tbeard"   # Mid's Immortal: its legs an rgb() string, so its back leg's shade(o.legs) is NaN and keeps the last fill; the reference given the hex it meant
+    art = await pg.evaluate(ARTJS.replace('CASES', json.dumps([[l, 1, 3] for l in CIVLOOKS])), fig.replace(FAULT, "legs: '#' + shade(c, 0.6).match(/\\d+/g).map((n) => (+n).toString(16).padStart(2, '0')).join(''),\n\t\t\t\tbeard") if fig.count(FAULT) == 1 else ''); await pg.close()
+    m, err = frozen('basics units blds tech tuning core', MIDCIVS, {c: k[:2] for c, k in CIVKEYS.items()}); m = m or {}; Y = {'f': 'food', 'w': 'wood', 'g': 'gold', 'i': 'iron', 's': 'stone'}; M = MEASURE; walk = M['speed']['walk']
+    near = lambda a, b, r=1e-4: abs(a - b) <= r * max(1, abs(a), abs(b))
+    def civ(c):
+        a, z = v[c], m.get(c)
+        if not z: return False
+        u, s, rows = z['unit'], a['stats'], {r[0]: r for r in z['rows']}
+        unit = (SHELLS[a['uu']]['look'] in (u['look'], z['uu']) and UKIND.get(a['base'], SHELLS[a['base']]['look']) == z['base'] and [s['hp'], s['atk'], s['rof']] == [u['hp'], u['dmg'], u['cd']] and near(s['rng'], u['rng'] / 10)
+                and a['cost'] == {Y[k]: n for k, n in u['cost'].items()} and a['t'] == u['t'] and a['age'] == u['age'] and near(M['speed'][SHELLS[a['uu']]['pace'].split('.')[1]], walk * u['spd'] / 24))
+        vs = s.get('vs') == ({'infantry': 1.5, 'Riders': 1.6, 'Engines': 2} if c == 'persian' else M['stats'][a['base']].get('vs'))
+        bonus = near(a['bonus'], z['m'], 1e-9) and a['bonus'] != 1
+        tier = z['tier']; e = a['elite']; elite = e[0] == tier['name'] and near(e[-1], tier.get('hp', 1), 1e-9) and near(e[2], tier.get('dmg', 0)) and near(e[3], tier.get('rng', 0) / 10)
+        rows = {k: r for k, r in rows.items() if json.load(open(os.path.join(HERE, '../clean/tech.json')))['pieces']['TECH'][2].get(k, ['bring'])[0] != 'parked'}
+        hall = len(a['rows']) == len(rows) and all(k in rows and r[0] == {Y[q]: n for q, n in rows[k][1].items()} and r[1] == rows[k][2] and r[2] == rows[k][3] for k, *r in a['rows']) and a['why'][0] == 'civ' and a['why'][1] != 'civ'
+        return [unit, vs, bonus, elite, hall, a['mine'], a['theirs']]
+    per = {c: civ(c) for c in CIVKEYS}; bad = [x for x in art if x[4] != 0 or x[5] < 20]
+    trees = v['tree'][0] > 0 and v['tree'][1] and M['trees']['R1']['h'] == 21 and 'sight' in M and 'tree' not in M['sight'] and keyed('citations') if False else None
+    C = book('citations'); trees = v['tree'][0] > 0 and v['tree'][1] and M['trees']['R1']['h'] == 21 and 'tree' not in M['sight'] and C['N219']['opened'] and C['N221']['opened']
+    got = [all(all(x) for x in per.values()), not bad and len(art) == 72, trees, not errs]
+    ok('t-civs', all(got), [got, per, bad[:4], v['tree'], {c: [v[c]['bonus'], (m.get(c) or {}).get('m'), v[c]['elite'], (m.get(c) or {}).get('tier'), v[c]['why']] for c in CIVKEYS}, errs[:2], err[-600:]])
+PAGED = {'t-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

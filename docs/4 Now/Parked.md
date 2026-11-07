@@ -492,3 +492,21 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 ## For revisions with Albert: scale and board size (Albert, Nov 6 17:23–17:24)
 - Shrink the person to scale (real building heights stay); the board grows with it. One number, D.upm (units a metre). Done together in revisions so he sees the look and pace first.
 - Revisions (Albert, Nov 6 17:25): switch the rain and snow visibility terms to NOAA's CALVIS (rain 2.24·C^0.75, snow 10.36·C^0.7776, by water content), so every haze term comes from one source.
+
+## Albert's play test of S1 (Nov 6 19:08)
+- Start not at the bottom left: in F37+F38 (decisions Nov 6 16:01).
+- Units stutter or slow while walking: for revisions (check the pace law along the path, the frame time, the 0.5 s sight look).
+- Wind seen: good.
+- MUST FIX before play tests: placing buildings. There used to be a direct way to build; now he has to press the menu again. Restore the build flow (compare Mid's and v100's placement: does the build menu stay open, repeat placement, or return to it). Albert, 19:09: he tapped Build and got guide lines and a ghost building to place; check Mid's code (placement, ghost, guide lines) and bring it back. Goes in F37+F38.
+- Albert: refining waits until after the builds.
+
+## F35+F36: peace, mail, lessons, the civilisations (Nov 6)
+- The Games (holdGames, bestOf, their guide line): wait with the Throne (F40); Mid holds them on its island (Albert, Nov 6 17:23). Not cut.
+- The five civ Wonder fronts (Han, Persian, Mongol, Maurya, Mali; Mid's WONDERART): parked. Each is canvas code with a few hundred typed numbers; under zero stray numbers they come as Sprites book drawing lists. The Roman front stands for every people until then.
+- The mail's per-group hide switch and per-kind colours (hiddenG, ccOf): wait for the Mail card; every group shows, one toast colour.
+- Tips not brought: walled in (build a gate), lumber camp, farm when berries run low, treasure nearby, an ally on offer, a restless vassal. They need the cards or readings v100 does not have yet.
+- The milestones' fix buttons and targets (MS_TEXT fix, card): wait for the cards; the line and its why are in the Words book.
+- Satrapies and The sixth (Persian, Maurya Hall rows): stay parked with the tax (Albert, Nov 5 11:16). The Immortals follow the Royal Road (Persia) directly, and Hastin opens the Maurya line.
+- Trees by age: no Forest Service height-by-age curve could be opened (Carmean, Hahn & Jacobs 1989, GTR NC-128, refused by the proxy). The woods tree stands at its mature height until it opens. Trees in v100 have no age yet.
+- Mid's Immortal had a fault: its legs were an rgb() colour, so the back leg's shade came out as NaN and kept the last fill. v100 draws the shade Mid meant.
+- MUST FIX before play tests (Albert, 19:11): double tap zooms the page. Disable it: `touch-action: manipulation` on the page (iOS Safari ignores user-scalable=no). Goes in F37+F38.

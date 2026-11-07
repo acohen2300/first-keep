@@ -33,7 +33,7 @@ function chokeClaim(side, enemy) { const t = FK.K.t; if (claimT.get(side) > t) r
 // E525
 const total = (xs, f) => xs.reduce((n, x) => n + f(x), 0), pos = (x) => Math.max(0, x), up = ECON.up;
 const blds = (side, code) => things().filter((t) => t.kind === 'bld' && t.side === side && (!code || t.code === code)), count = (side, code) => blds(side, code).length, rising = (side, code) => blds(side, code).some((t) => !up(t));
-const ready = (side, code) => blds(side, code).filter(up), lineOf = (t) => of(t.q && t.q.length), trainers = (side, code) => ready(side).filter((t) => FK.trains(t.code).includes(code)).sort((a, b) => lineOf(a) - lineOf(b));
+const ready = (side, code) => blds(side, code).filter(up), lineOf = (t) => of(t.q && t.q.length), trainers = (side, code) => ready(side).filter((t) => FK.trains(t.code, side).includes(code)).sort((a, b) => lineOf(a) - lineOf(b));
 const train = (side, code) => { const [b] = code ? trainers(side, code) : []; return !!b && ECON.queue(b, code); }, queued = (side, ok) => total(blds(side), (t) => (t.q || []).filter((c) => FK.SH[c] && ok(c)).length);
 const mine = (side, ok) => units().filter((u) => u.side === side && ok(u.code)).length + queued(side, ok), inArmy = (side) => mine(side, ECON.soldier), is = (c) => (x) => x === c;
 // E526
@@ -50,21 +50,25 @@ function runsOut(side, y, P, n, demand, hold, until) { const gap = demand - n * 
   return (SIDES[side].store[y] - of(hold)) / gap < Math.max(lead, of(until)); }
 const famineNear = (side, plan, eat) => runsOut(side, FOOD, plan[FOOD], plan[FOOD].n, eat);
 // E527
-const peaceAll = (side) => !D.players.some((q) => q !== side && !ECON.fell(q) && (WAR.atWar(side, q) || ECON.noticeLeft(side, q) || ECON.noticeLeft(q, side)));
+const peaceAll = ECON.peaceAll;
 const cap = (side) => Math.min(D.armyMax, per(side).armyCap + AT.armyAge * SIDES[side].age), aim = (side) => Math.ceil(cap(side) * (peaceAll(side) ? DP.stand : 1));
-const trains = (code) => Object.keys(D.trains).find((c) => FK.trains(c).includes(code));
+const trains = (code) => Object.keys(D.trains).find((c) => FK.trains(c).includes(FK.SH[code].replaces || code));
 function goalOf(side, P, saving) { const s = SIDES[side], n = inArmy(side), age = { what: 'age', cost: ECON.ageCost(side) }; if (saving) return age;
   for (const g of P.goals) { if (g === 'age' && age.cost && !s.aging) return age;
     if (g === 'army' && n < aim(side)) { const [first] = A.troops, want = mind[side].want || first, at = trains(want); if (!count(side, at)) return { what: at, cost: D.cost[at] }; return { what: g, cost: ECON.addRes({}, FK.stat(want, side, 'cost'), Math.min(P.waveMin, aim(side) - n)) }; }
     if (g === 'build') { const [c] = P.build.find(([c, age, m, army]) => s.age >= age && count(side, c) < m && n >= army) || []; if (c) return { what: c, cost: D.cost[c] }; } }
   return null; }
 function bestCounter(side) { const m = mind[side], i = of(m.cyc), foes = units().filter((v) => SIDES[v.side] && WAR.atWar(side, v.side) && ECON.soldier(v.code) && FK.inSight(v, side)); m.cyc = i + 1; // E528
-  const can = [...new Set(ready(side).flatMap((t) => FK.trains(t.code)))].filter((c) => ECON.soldier(c) && FK.aged(c, side) && !CO.not.includes(FK.SH[c].class) && !(D.stats[c] || {}).bonly); if (!can.length) return null; if (!foes.length) return can[i % can.length];
+  const can = [...new Set(ready(side).flatMap((t) => FK.trains(t.code, side)))].filter((c) => ECON.soldier(c) && FK.aged(c, side) && !CO.not.includes(FK.SH[c].class) && !(D.stats[c] || {}).bonly); if (!can.length) return null; if (!foes.length) return can[i % can.length];
   const sc = can.map((c) => { const me = { code: c, side }; return { c, s: total(foes, (v) => WAR.vs(me, v) / Math.max(CO.floor, WAR.vs(v, me))) / foes.length / (ECON.sumCost(D.cost[c]) / CO.per) ** CO.pow }; }).sort((a, b) => b.s - a.s);
   return sc[i % Math.min(CO.mix, sc.length)].c; }
 function firstNeed(side, c) { if (!c || SIDES[side].techs.has(c)) return null; for (const n of ECON.needsOf(c)) if (!SIDES[side].techs.has(n)) return firstNeed(side, n); return c; }
 const young = (M, T) => Object.fromEntries(Y.map((y) => [y, M[y] + total(Object.entries(T[y] || {}), ([k, f]) => f * M[k])]));
 // E529
+function chaseCrown(side, put) { const s = SIDES[side], has = (c) => blds(side, c).length, T = BOOKS.tech, last = Object.keys(T).filter((c) => T[c].value.age === D.age.hidden && !T[c].value.civ); // E649
+  if (per(side).crown === 'wellbeing') FK.ticked('Care').some((c) => FK.aged(c, side) && !has(c) && ECON.canPay(side, D.cost[c]) && put(c));
+  if (ECON.opened() && ECON.nextAge(side) === D.age.hidden && !s.aging) ECON.ageUp(side);
+  if (s.age === D.age.hidden) { const [lab] = last.map((c) => T[c].value.at); if (!has(lab)) put(lab); else last.some((c) => ECON.research(side, c)); } }
 function think(side) { const s = SIDES[side], P = per(side), h = home(side), m = mind[side]; if (!h || !P) return; const R = s.store, vs = ECON.villagersOf(side), armyN = WAR.armyOf(side).length, t = FK.K.t, put = (code, at, [r0, r1]) => raise(side, code, at.bx, at.by, r0, r1), jobs = ECON.jobs(side), vil = born(h);
   if (t - of(m.siteT) >= AT.site) { m.siteT = t; for (const b of blds(side)) if (!up(b) && !ECON.wallish(b) && !vs.some((u) => u.target === b)) ECON.autoBuilder(side, b); }
   const due = {}, flat = s.age >= AT.apart.age && ECON.canPay(side, AT.apart.cost) ? A.apartment : HOUSE; // E530
@@ -95,7 +99,7 @@ function think(side) { const s = SIDES[side], P = per(side), h = home(side), m =
   const SG = AT.siege, sg = mine(side, (c) => FK.SH[c].class === SG.cls), late = SG.late[s.age - SG.from]; // E537
   if (P.siege && sg < P.siege + Math.floor(armyN / SG.per)) train(side, late && sg % SG.turn === SG.turn - 1 ? late : SG.cycle[sg % SG.cycle.length]);
   if (P.trade && s.age && armyN >= AT.caravan.army && !saving && count(side, MARKET) && mine(side, (c) => tick(c, 'Trade')) < AT.caravan.most && ECON.canPay(side, AT.caravan.cost)) train(side, kindOf('Trade'));
-  economy(side, P, h, saving, put);
+  economy(side, P, h, saving, put); chaseCrown(side, (c) => put(c, h, RG.build));
   const spy = kindOf('Spy'); if (P.spy && mine(side, is(spy)) < AT.spy.most && ECON.canPay(side, AT.spy.cost)) train(side, spy);
   if (!saving && !P.techs.some((k) => TK[k] && ECON.research(side, firstNeed(side, TK[k]) || TK[k])) && !((m.n = of(m.n) + 1) % AT.research)) Object.keys(BOOKS.tech).some((c) => ECON.research(side, c)); // E538
   if (!saving && WAR.knows(side, 'muster') && inArmy(side) + AT.muster <= aim(side)) { const want = (m.want = bestCounter(side)); if (want) ECON.muster(side, { [want]: AT.muster }); }
@@ -143,7 +147,7 @@ function diplomacy(side, P) { const s = SIDES[side], rivals = D.players.filter((
   const [lead] = D.players.filter((q) => !ECON.fell(q)).sort((a, b) => score(b) - score(a)), warOn = rivals.some((q) => WAR.atWar(side, q) && SIDES[q].lord !== side);
   for (const q of rivals) { if (SIDES[q].lord === side || s.lord === q) continue; const odds = WAR.odds(WAR.armyOf(side), q), rel = WAR.stance(side, q);
     if (rel === WARS && odds < DP.peace && WAR.armyOf(side).length < P.waveMin && ECON.setRel(side, q, PEACE)) return;
-    if (!warOn && rel === PEACE && !ECON.noticeLeft(side, q) && odds > P.bold + DP.lift + DF.bold && ECON.setRel(side, q, WARS)) return;
+    if (!warOn && rel === PEACE && !ECON.noticeLeft(side, q) && odds > P.bold + DP.lift + DF.bold && (P.crown === 'war' || ECON.truceFor() === null) && ECON.setRel(side, q, WARS)) return;
     if (s.ally == null && SIDES[q].ally == null && rel === PEACE && ECON.time() > DF.allyAt && (warOn || (DF.gang && lead !== side && lead !== q)) && ECON.setRel(side, q, ALLY)) return; } }
 function allyDuty(side) { const s = SIDES[side]; if (s.ally == null || FK.K.t - (helped.get(side) ?? -Infinity) < DP.help.gap) return; const ak = home(s.ally), mk = home(side);
   const near = (k, o) => !!k && FK.units().some((u) => SIDES[u.side] && WAR.atWar(o, u.side) && ECON.soldier(u.code) && dist(u, k) < DP.help.near * D.tile);

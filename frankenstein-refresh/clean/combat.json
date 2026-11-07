@@ -106,8 +106,8 @@
    "F19+F20: combat.js, plunder"
   ],
   "warCredit": [
-   "bring",
-   "the War crown's count: the cost of enemy people and buildings destroyed; part of the crowns (39-games)"
+   "in v100",
+   "F35: econ.js peace (peaceTick, standDown, crowns, chron, enlightened), D322, words peace"
   ],
   "plunderBld": [
    "in v100",

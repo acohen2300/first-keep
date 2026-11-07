@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 2,951 | 453,511 | 453,648 |
-| Books | 1781 | 0 | 476,527 | 477,158 |
-| Laws | 87 | 0 | 16,969 | 17,457 |
-| Tools | 4 | 1,500 | 238,633 | 238,863 |
+| Game code | 29 | 3,020 | 467,184 | 467,322 |
+| Books | 1876 | 0 | 522,349 | 523,006 |
+| Laws | 88 | 0 | 17,519 | 18,009 |
+| Tools | 4 | 1,591 | 253,925 | 254,155 |
 
 ## The trades (code)
 
@@ -23,24 +23,24 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 48 | 5,779 | 5,783 | 81 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 942 | 946 | 14 |
-| index.html#the-door | 58 | 6,587 | 6,591 | 69 |
+| index.html#the-door | 58 | 6,756 | 6,760 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
-| index.html#the-building-art | 324 | 50,842 | 50,846 | 4095 |
+| index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
 | index.html#floor-5-movables | 128 | 14,640 | 14,644 | 93 |
 | index.html#the-body-s-laws | 31 | 2,561 | 2,565 | 34 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,210 | 5,214 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
 | index.html#floor-6-climate | 154 | 24,617 | 24,629 | 237 |
-| index.html#floor-7-display | 43 | 7,174 | 7,178 | 55 |
-| index.html#the-view-s-eyes-lights-and-stage | 116 | 21,693 | 21,697 | 0 |
+| index.html#floor-7-display | 43 | 7,191 | 7,195 | 55 |
+| index.html#the-view-s-eyes-lights-and-stage | 116 | 21,729 | 21,733 | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
-| index.html#touch | 49 | 6,742 | 6,746 | 54 |
-| menu.js | 366 | 63,965 | 64,006 | 583 |
-| econ.js | 538 | 97,491 | 97,491 | 72 |
-| combat.js | 351 | 58,473 | 58,473 | 84 |
-| ai.js | 159 | 25,200 | 25,200 | 26 |
+| index.html#touch | 49 | 6,757 | 6,761 | 54 |
+| menu.js | 410 | 72,214 | 72,256 | 583 |
+| econ.js | 559 | 101,997 | 101,997 | 72 |
+| combat.js | 351 | 58,540 | 58,540 | 84 |
+| ai.js | 163 | 25,794 | 25,794 | 26 |
 | sound.js | 57 | 5,774 | 5,774 | 66 |
 
 ## The books
@@ -48,29 +48,29 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 5 | 734 |
-| capabilities | 50 | 14,678 |
-| citations | 220 | 43,002 |
+| capabilities | 51 | 15,092 |
+| citations | 227 | 45,209 |
 | colours | 21 | 4,542 |
-| comments | 616 | 103,297 |
+| comments | 641 | 107,037 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 297 | 116,175 |
-| rules | 66 | 23,345 |
+| measure | 304 | 121,610 |
+| rules | 68 | 24,784 |
 | screen | 11 | 3,247 |
-| shells | 103 | 20,476 |
+| shells | 109 | 22,563 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
-| sprites | 62 | 24,413 |
-| tech | 222 | 64,240 |
-| words | 20 | 59,224 |
+| sprites | 65 | 25,607 |
+| tech | 259 | 75,552 |
+| words | 27 | 78,277 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
 | 100 | 17 | 0 |
-| 110 | 50 | 10 |
-| 120 | 36 | 0 |
+| 110 | 50 | 8 |
+| 120 | 42 | 0 |
 
 ## The rules
 
@@ -142,5 +142,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X66 | t-sight | page | sight by real math, no fog of war (Albert, Nov 6): a person's range equals QAL worked from the books alone at noon, dusk, a full and a half moon, starlight, an overcast night and a fog; a tree between two villagers hides each from the other's side, felled it opens both ways, a fog thinner than their distance hides them, and nothing is remembered once the eye is gone; no fog image, no fog-of-war numbers; the small map's incoming mark lands on the soldiers seen and a tap there glides the camera |
 | X67 | t-stage | page | lights, the glide, theatrics and the draw budget (F34): Mid's FLAME, LIGHT, CAM_W, the pop and the shed thresholds in the books; a glide to the Town Center follows Mid's frozen spring and followCam frame by frame; after dark the Town Center, a finished house, a burning house, a badly hurt and a lanterned camp give the lights Mid's frozen drawLight gives; each flame's colour and its life in the rain are Mid's kelvinRGB and flameLife; the finished house's pop runs Mid's popC frame by frame; a slow phone sheds and climbs back on Mid's frozen shed |
 | X68 | t-dew | page | fog by the atmosphere (Albert, Nov 6 14:44): on a dry calm evening with the dew point just under the air, the air cools to it and fog forms (visibility under the WMO's 1 km); the visibility equals CALVIS's 3.912 ÷ (144.7 C^0.88) for the vapour above saturation by Magnus, never past the typical fog's water; a breeze past 7 knots clears it; the sun lifts it once the air warms past the dew point |
+| X69 | t-peace | page | peace, the crowns, the mail, the messengers, milestones and tips (F35): a board truce stands a computer's soldiers above Mid's armyAim down to villagers one for one as Mid's frozen standDown; a year of it opens the hidden age as Mid's nextAge; a kill credits its cost as warCredit; the Wealth, War, Wellbeing and overall crowns equal Mid's crownsOf on the same sides; news of a foe out of sight is never told, told by a runner or a rider at Mid's tell's delay for the same walked metres, or heard as a fight with its way, as Mid's tell; repeats merge; the world's news and the first-house line equal Mid's NEWS and MS_TEXT; a tip done three times retires; the Games wait with the Throne |
+| X70 | t-civs | page | the civilisations (F36): each of the six trains its own kind in place of the common one and no other side does; the kind's numbers, cost, time, age and pace equal Mid's UNIT; its bonus applied by QCA equals Mid's fxv for the civ; its elite rank equals Mid's tier; its Hall rows equal Mid's and only its side may research them; the legionary, Immortal and Mali horseman draw as Mid's figures; every standing tree in the woods stands its kind's Forest Service height (D326) in line of sight |
 
-1901 items sealed · 1781 book entries · 87 laws · 220 citations, 44 still to open · 7 known
+1997 items sealed · 1876 book entries · 88 laws · 227 citations, 44 still to open · 7 known
