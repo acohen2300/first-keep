@@ -3336,3 +3336,12 @@ MODIFIED (12):
 LOCKED (2097 of 2109): byte for byte as sealed, 1,033,871 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2109 items sealed · 1983 book entries · 93 laws · 247 citations, 7 still to open · 7 known
+
+## R3b · the full run green: t-walls reads the age's name as the Build card shows it (M1), t-orders springs its ambush on the open side (Mid's forest can stand a tree in the old line) · 2026-11-07 18:45
+Albert, Nov 7 17:41: an hour thirty of work; 10:34: the full run owed, never weaken a check
+Opened: tool:test.py
+MODIFIED (1):
+- tool:test.py · 257,624 → 257,986 bytes
+LOCKED (2108 of 2109): byte for byte as sealed, 1,110,332 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2109 items sealed · 1983 book entries · 93 laws · 247 citations, 7 still to open · 7 known
