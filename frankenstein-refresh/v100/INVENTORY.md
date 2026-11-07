@@ -4,9 +4,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,149 | 494,707 | 494,846 |
-| Books | 1982 | 0 | 563,723 | 564,395 |
-| Laws | 93 | 0 | 19,623 | 20,149 |
+| Game code | 29 | 3,149 | 494,733 | 494,872 |
+| Books | 1982 | 0 | 563,717 | 564,389 |
+| Laws | 93 | 0 | 19,626 | 20,149 |
 | Tools | 4 | 1,759 | 284,794 | 285,032 |
 
 ## The trades (code)
@@ -20,7 +20,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,816 | 1,820 | 38 |
 | index.html#floor-2-terrain | 82 | 8,512 | 8,516 | 130 |
-| index.html#floor-3-non-movables | 63 | 8,728 | 8,732 | 75 |
+| index.html#floor-3-non-movables | 63 | 8,741 | 8,745 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 1,005 | 1,009 | 14 |
 | index.html#the-door | 94 | 14,008 | 14,012 | 69 |
@@ -35,7 +35,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-6-climate | 154 | 24,829 | 24,841 | 236 |
 | index.html#floor-7-display | 44 | 7,337 | 7,341 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 21,938 | 21,942 | 0 |
-| index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
+| index.html#the-woods-cache | 51 | 4,772 | 4,776 | 71 |
 | index.html#touch | 50 | 7,507 | 7,511 | 54 |
 | menu.js | 459 | 81,681 | 81,724 | 578 |
 | econ.js | 576 | 105,176 | 105,176 | 72 |
@@ -54,7 +54,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | comments | 706 | 119,236 |
 | ground | 6 | 1,523 |
 | mass | 24 | 3,739 |
-| measure | 313 | 129,666 |
+| measure | 313 | 129,660 |
 | rules | 74 | 28,016 |
 | screen | 12 | 3,616 |
 | shells | 109 | 23,178 |

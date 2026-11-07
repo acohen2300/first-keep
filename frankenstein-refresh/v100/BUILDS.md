@@ -3304,3 +3304,15 @@ MODIFIED (3):
 LOCKED (2105 of 2108): byte for byte as sealed, 1,259,954 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 7 still to open · 7 known
+
+## R2 · the finds drawn no bigger than full; Z3 laid as Mid's wild finds (piles and amounts), not as a multiple of the pocket · 2026-11-07 17:42
+Albert, Nov 7 17:37: that's a big berry bush, zoomed giant
+Opened: code:index.html, book:measure, law:QCS
+MODIFIED (4):
+- book:measure:D65 · 682 → 676 bytes
+- code:index.html#floor-3-non-movables · 8,732 → 8,745 bytes
+- code:index.html#the-woods-cache · 4,763 → 4,776 bytes
+- law:QCS · 498 → 498 bytes
+LOCKED (2104 of 2108): byte for byte as sealed, 1,349,747 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 7 still to open · 7 known

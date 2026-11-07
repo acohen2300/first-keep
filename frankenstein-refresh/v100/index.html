@@ -210,7 +210,7 @@ function makeThings(roll) {
   const LS = D.lands, names = Object.keys(LS.rows), lr = dice(seed ^ LS.seed), fixed = new Set(), [, z2, z3] = D.zone; land = names[Math.floor(lr() * names.length)]; const LD = LS.rows[land];
   CORNERS.forEach((_, c) => { const hr = dice(seed ^ 0x9e3779b9), spot3 = (n) => { for (let t = D.tries.spot; t--; ) { const r = between(hr, [z2 + reachOf(n), z3 - reachOf(n)]), a = hr() * QT * RAD, [x, y] = corner(c, r * Math.cos(a), r * Math.sin(a)); if (laneDist(x, y) >= D.lane + D.tile && free(tileAt(x, y))) return [x, y]; } return null; };
     for (const kind in D.z1) { const { n, amount } = pocketOf(kind); cluster(kind, ...corner(c, ...D.z1[kind]), n, hr, amount / n).forEach((k) => fixed.add(k)); }
-    for (const [kind, x] of [...D.Z3.finds.map((f) => [f, D.Z3.x]), ...(LD.extra ? [[LD.extra, D.Z1.x]] : [])]) { const n = piles(kind, x), at = spot3(n); if (at) cluster(kind, ...at, n, hr); } }); // E653
+    for (const [kind, [n, each]] of [...Object.entries(D.Z3.finds), ...(LD.extra ? [[LD.extra, D.Z3.finds[LD.extra]]] : [])]) { const at = spot3(n); if (at) cluster(kind, ...at, n, hr, each * PK.findSize[kind]); } }); // E653
   // E48
   const felled = new Set(), guarded = (kind) => !!(FN.rows[KIND[kind].code] || {}).guard, ring = (x, y, f) => stamp(x, y, (FN.ring + ONE) * D.tile, f), clearing = (kind, [x, y]) => { if (guarded(kind)) ring(x, y, (k) => { if (FOR[k]) { FOR[k] = OCC[k] = null; felled.add(k); } }); }; // E674
   const open = (kind, x, y) => { let ok = true; if (guarded(kind)) ring(x, y, (k) => { if (H[k] < D.land || (OCC[k] && !FOR[k])) ok = false; }); return ok; };
@@ -222,7 +222,7 @@ function makeThings(roll) {
   openWays(fixed);
   // E49
   for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
-  for (const t of things) if (D.Z3.finds.includes(t.kind) && !fixed.has(t.k)) t.amount = Math.round(t.amount * (LD.amt[KIND[t.kind].yield] ?? ONE)); // E654
+  for (const t of things) if (t.kind in D.Z3.finds && !fixed.has(t.k)) t.amount = Math.round(t.amount * (LD.amt[KIND[t.kind].yield] ?? ONE)); // E654
   const fr = dice(seed ^ FN.seed); for (const [kind, n] of Object.entries(FN.lay)) for (let m = count(fr, n); m--; ) { const s = spot(KIND[kind].r, fr, kind); if (s) { put(kind, s.at(-1), fr); clearing(kind, s); } } // E564
   for (const [ax, ay] of TR.routes) for (const d of [FN.camp, -FN.camp]) { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('camp', k, fr); clearing('camp', [things.at(-1).bx, things.at(-1).by]); } }
   things = things.filter((t) => !(felled.has(t.k) && t.kind === 'tree')); TV++;
@@ -1464,7 +1464,7 @@ function drawThings() {
     if (t.kind === 'bld') { if (!show.B || fire('hide', t)) continue; if (has(t, 'Trap')) { if (!dots) trapArt(x, y, s, t); continue; } drawBld(t, x, y, s, dots); }
     else if (!show.T) continue;
     else if (GIFT[KIND[t.kind].look]) { if (!dots) GIFT[KIND[t.kind].look](x, y, s); }
-    else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else { const z = s * t.size * (LEFT + (GROW * t.amount) / KIND[t.kind].amount); blit(nodeSprite(t.kind, t.v, z), x, y, z); if (K.burn.has(t)) blaze(x, y, s, ONE, t.size); } // E305
+    else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else { const z = s * t.size * (LEFT + GROW * Math.min(ONE, t.amount / KIND[t.kind].amount)); blit(nodeSprite(t.kind, t.v, z), x, y, z); if (K.burn.has(t)) blaze(x, y, s, ONE, t.size); } // E305
   }
   while (n < us.length) unit(us[n++]);
 }
