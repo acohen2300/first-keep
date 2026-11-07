@@ -10,12 +10,12 @@
    "Mid ran fixed steps and caught up to six behind; v100's loop runs one step a frame at D98 fps with the step capped at 0.1 s"
   ],
   "seenErr": [
-   "bring",
-   "the safety net: each kind of error logged once (with fault)"
+   "in v100",
+   "F38: index.html seenErr"
   ],
   "fault": [
-   "bring",
-   "the safety net: an error costs a frame, never the game; a second kind pauses and offers a restart (needs Saving for the last good save)"
+   "in v100",
+   "F38: index.html fault (loop's catch; a second kind holds the save and says so); the pause and the fault card parked"
   ],
   "shed": [
    "in v100",
@@ -30,16 +30,16 @@
    "the game speeds dropping under the pause button; v100 has only Fast (D116) on the Layers page"
   ],
   "TEST_FIELD": [
-   "bring",
-   "the ?test address that opens the test field"
+   "in v100",
+   "F37: index.html TEST (?test)"
   ],
   "testField": [
-   "bring",
-   "Albert's test field (Nov 3): you and one rival at war, no fog, both armies out, never saved"
+   "in v100",
+   "F37: econ.js testField (D333); the mine site, gold and wolf parked"
   ],
   "clip": [
-   "bring",
-   "copy to the clipboard, for the History page's copy (Menus); the test hook window.__fk at its end is v100's window.fk (index.html)"
+   "in v100",
+   "F38: menu.js copyLog"
   ]
  },
  "misfits": []

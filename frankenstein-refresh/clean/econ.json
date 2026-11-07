@@ -694,8 +694,8 @@
    "F11: econ.js, on the minute's beat (D188, FK.every): the minute's in and out become the last minute's"
   ],
   "initEconomy": [
-   "bring",
-   "a new game's weather, harvest, prices and routes; v100's start resets the stores and the weather"
+   "in v100",
+   "F37: econ.js start hook (weather, harvest, prices reset)"
   ],
   "distF": [
    "in v100",

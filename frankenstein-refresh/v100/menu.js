@@ -10,10 +10,10 @@ const seatCode = () => FK.ticked('Seat')[0], born = () => FK.trains(seatCode())[
 const classes = () => Object.values(D.trains).flat().filter((k) => !FK.SH[k]), kindOf = (cls) => FK.kinds(cls).find((c) => FK.aged(c, ME)) || FK.kinds(cls)[0]; // E174
 const tall = (page) => !!(SCR[page] && SCR[page].ticks.includes('Tall')); // E175
 const OPTS = { // E176
-  diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open'], ['Siege'], ['Silk Road'], ['Last Keep']],
+  diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open', 'open'], ['Siege', 'siege'], ['Silk Road', 'road'], ['Last Keep', 'last']],
   world: [['Real'], ['Fantasy']], tension: [['Winner'], ['Diplomacy']], daily: [['Off', false], ['On', true]],
   civ: [['Roman'], ['Han'], ['Persian'], ['Mongol'], ['Maurya'], ['Mali']], hazard: [['Hardest'], ['Famine'], ['Weather'], ['Drought'], ['Outlaws'], ['Plague']] };
-const BUILT = { len: 1, daily: 1, civ: true }; // E177
+const BUILT = { len: 1, daily: 1, civ: true, scen: true }; // E177
 const ICON = { food: '🍖', wood: '🪵', gold: '🪙', stone: '🪨', iron: '⛓' };
 const ORDER = ['food', 'wood', 'stone', 'gold', 'iron'], NAME = { food: 'Food', wood: 'Wood', stone: 'Stone', gold: 'Gold', iron: 'Iron' }; // E178
 // E179
@@ -118,6 +118,7 @@ const VERBS = {
   lock: { label: () => 'Lock', whyNot: () => '', run: (c) => { S.lock[c] = !S.lock[c]; try { localStorage.setItem('fk.lock', JSON.stringify(S.lock)); } catch (e) {} } },
   fast: { label: () => 'Fast', whyNot: () => '', run: () => { show.fast = !show.fast; } },
   new: { label: () => 'New', whyNot: () => '', run: () => { S.prev = S.tab; S.tab = 'Start'; } },
+  copylog: { label: () => WT.copy, whyNot: () => '', run: () => copyLog() },
   close: { label: () => SVG.close, whyNot: () => '', run: () => { S.tab = null; S.subject = null; S.ghost = null; FK.dirty(); } },
   back: { label: () => SVG.back, whyNot: () => '', run: () => { S.tab = S.prev; S.prev = null; } },
   squad: { label: (i) => `${WA.squads[i]}<small>${WAR.squad(i).length} ${msnSay(i)}</small>`, whyNot: () => (WAR.knows(ME, 'command') ? '' : 'Needs Battalions'), run: (i) => { if (WAR.SQ.sel === i) S.mid = 'setup'; else WAR.SQ.sel = i; } }, // E403
@@ -143,7 +144,7 @@ const VERBS = {
   yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(ME)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[ME].rally = SIDES[ME].rally === y ? null : y; } }, // E191
   ageUp: { label: () => { const r = read(); return !r.next ? 'Last age' : `${r.next} age${r.aging ? `<small>rising, ${Math.ceil(r.aging)}s</small>` : price(r.ageCost)}`; }, whyNot: () => { const c = ECON.ageCost(ME); return !c ? 'Last age' : SIDES[ME].aging ? 'Already rising' : !ECON.canPay(ME, c) ? `Needs ${costText(c)}` : ''; }, run: () => ECON.ageUp(ME) },
   pick: { label: (c) => `${B[c][0]} ${count(c)}${picked(c) ? `<small>${ghostSay(S.ghost)}</small>` : price(D.cost[c])}`, // E192
-    whyNot: (c) => (picked(c) ? VERBS.build.whyNot() : ECON.capWhy(ME, c) || (!ECON.canPay(ME, D.cost[c] || {}) ? `Needs ${costText(D.cost[c])}` : '')), run: (c) => { if (picked(c)) return VERBS.build.run(); S.ghost = { code: c, i: -99, j: -99, ok: false, pts: [], cells: [] }; if (!line(c)) { const [w, h] = FK.size(); ghostTo(w * P.half, h * P.half, P.start); } } },
+    whyNot: (c) => (picked(c) ? VERBS.build.whyNot() : ECON.capWhy(ME, c) || (!ECON.canPay(ME, D.cost[c] || {}) ? `Needs ${costText(D.cost[c])}` : '')), run: (c) => { if (picked(c)) return VERBS.build.run(); S.tab = null; S.ghost = { code: c, i: -99, j: -99, ok: false, pts: [], cells: [] }; if (!line(c)) { const [w, h] = FK.size(); ghostTo(w * P.half, h * P.half, P.start); } } },
   build: { label: () => 'Build', whyNot: () => { const g = S.ghost; return !g ? 'Pick a building' : line(g.code) ? (!g.cells.length ? 'Tap the corners' : g.bad === g.cells.length ? 'Something is in the way' : '') : g.ok ? '' : g.why || 'Slide to place'; }, run: () => place(S.ghost) },
   group: { label: (g) => g, whyNot: () => '', run: (g) => { S.group = g; S.ghost = null; FK.dirty(); } },
   attack: { label: () => `<span class="t">${SVG.attack}</span>Attack<small>${msnSay(WA.all)}</small>`, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => { WAR.go(S.aim); S.firedT = performance.now(); } }, // E427
@@ -176,7 +177,7 @@ const VERBS = {
   zeal: { label: (t) => `${TW.zeal.label}${price(ECON.zealCost(ME, t))}`, whyNot: (t) => ECON.zealWhy(ME, t, blessed()).replace('{cost}', costText(ECON.zealCost(ME, t))), run: (t) => ECON.zeal(ME, t, blessed()) },
   ransom: { label: (i) => { const x = ECON.prisonersOf(ME)[i]; return x ? `${TW.prison.label} ${FK.SH[x.code].name}${price({ gold: x.ransom })}` : ''; }, whyNot: (i) => { const x = ECON.prisonersOf(ME)[i]; return x && !ECON.canPay(ME, { gold: x.ransom }) ? `Needs ${costText({ gold: x.ransom })}` : ''; }, run: (i) => ECON.payRansom(ME, +i) },
 };
-function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2); if (why) { FK.fire('event', 'err', null); toast(why); return false; } FK.fire('event', verb === 'build' ? 'place' : 'tap', null); learnAct(verb, arg, arg2); v.run(arg, arg2); render(true); return true; }
+function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2); tapCount(verb, !!why); if (why) { FK.fire('event', 'err', null); toast(why); return false; } FK.fire('event', verb === 'build' ? 'place' : 'tap', null); learnAct(verb, arg, arg2); v.run(arg, arg2); render(true); return true; }
 // E193
 const cell = (text, cls = '', on = null) => `<button class="cell ${cls}" ${on ? `data-v="${on.join('|')}"` : ''}>${text}</button>`;
 const vcell = (verb, arg, arg2, cls = '', on = false) => { const v = VERBS[verb], a = ARGS[arg] ?? arg, a2 = ARGS[arg2] ?? arg2, why = v.whyNot(a, a2); return cell(v.label(a, a2), `${cls} ${why && !why.startsWith('Needs ') ? 'dim' : ''} ${on ? 'on' : ''}`, [verb, String(arg ?? ''), String(arg2 ?? '')]); };
@@ -227,7 +228,8 @@ const ROWS = { // E199
       : t.kind === 'bld' ? (own(t) ? (t.max ? vcell('replant', k) : ECON.cutOut(ME, t).length ? vcell('replantAll', k) : '') + vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
     return sq + (a ? `<div class="row">${a}</div>` : ''); },
 };
-function cardText(r) { const t = S.subject; if (!t) return ''; return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
+function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S.ghost)}</p><div class="row">${vcell('build')}${vcell('close')}</div>`; if (!t) return ''; // E669
+  return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
 const base = (r) => S.war ? row(tab('Layers', 'Yard', 'yard'), gap(3), vcell('map', null, null, '', FK.show.M), vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`)) + warBase()
@@ -249,7 +251,7 @@ const topbar = (r) => `<div class="strip big">${SCR.top.map((c) => (TOPCELL[c] ?
 let acc = 0;
 function render(force) { const r = read();
   const tb = topbar(r); if (tb !== S.lastTop) { topEl.innerHTML = tb; S.lastTop = tb; }
-  if (r.result) { S.tab = null; S.ghost = null; const you = r.result.winner === 0; $('card').className = 'on'; $('card').innerHTML = `<h2>${EW.head[+!you]}</h2><p>${r.result.text}</p><div class="row">${vcell('new')}</div>`; $('panel').className = ''; return; }
+  if (r.result) { S.tab = null; S.ghost = null; const you = r.result.winner === 0; $('card').className = 'on'; $('card').innerHTML = `<h2>${EW.head[+!you]}</h2><p>${r.result.text}</p><div class="row">${vcell('new')}${vcell('copylog')}</div>`; $('panel').className = ''; return; }
   if (S.subject && (S.subject.kind === 'unit' ? units().indexOf(S.subject) < 0 : things().indexOf(S.subject) < 0)) S.subject = null;
   const html = page(r), card = cardText(r), sig = html + card + S.tab + base(r); if (!force && sig === S.last) return; S.last = sig;
   $('panel').innerHTML = html; $('panel').style.height = tall(S.tab) || !PANEL ? '' : PANEL + 'px'; $('panel').className = S.tab ? 'on' : ''; $('card').innerHTML = card; $('card').className = card && !S.tab ? 'on' : ''; // E205
@@ -311,7 +313,7 @@ function suggest(k) { const G = D.suggest, [bx, by] = FK.tileMid(k), [ki, kj] = 
   const [best] = Object.keys(sc).sort((a, b) => sc[b] - sc[a]); return best || null; }
 const under = (k) => things().find((t) => t.kind === 'bld' ? k % N >= t.i && k % N < t.i + t.n && Math.floor(k / N) >= t.j && Math.floor(k / N) < t.j + t.n : t.k === k && !t.deep);
 FK.on('tap', (k, u, px, py) => {
-  if (S.ghost) { if (!line(S.ghost.code)) ghostTo(px, py); else if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); } return true; }
+  if (S.ghost) { if (!line(S.ghost.code)) { ghostTo(px, py); render(true); } else if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); } return true; }
   if (S.qa) { S.qa = null; render(true); return true; }
   if (S.war) { aimSpot(k, u); S.aimT = performance.now(); FK.fire('event', 'tap', null); return true; }
   const hint = S.tab === 'Build' && !u && k >= 0 && !under(k) && suggest(k); // E341
@@ -406,5 +408,17 @@ let PANEL = 0; function sizePanel() { const el = $('panel'), keep = S.tab; PANEL
 addEventListener('resize', sizePanel); let sized = false; // E210
 FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } Object.assign(S, { subject: null, ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, line: null, eta: null, last: '' }); const h = FK.seatOf(ME); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // E211
 $('ver').textContent = 'v' + D.version; document.title = 'First Keep v' + D.version; // E212
-return { clock, read, act, VERBS, S, render, SCR, fmt, plural, some, orList, slowPct, coord, ledgerLine, say, mail, post, reach, dirOf, advise, MS_TEST, learned, civLine };
+// E670
+const WT = fromBook('words').start, LOG = { rows: [] }, TAPS = (() => { try { return JSON.parse(localStorage.getItem(D.log.taps)) || {}; } catch (e) { return {}; } })();
+function tapCount(verb, dim) { const t = TAPS[verb] || (TAPS[verb] = [null, null]); t[+dim]++; try { localStorage.setItem(D.log.taps, JSON.stringify(TAPS)); } catch (e) {} }
+FK.on('tick', () => { if (!FK.every([D.log.row, null])) return; const SD = FK.SIDES, soldier = (u, p) => u.side === p && FK.has(u, 'Fight') && !FK.has(u, 'Gather'); // E671
+  LOG.rows.push({ m: Math.round(FK.K.t / D.log.row), s: D.players.map((p) => (ECON.fell(p) ? null : [SD[p].age, ECON.villagersOf(p).length, FK.units().filter((u) => soldier(u, p)).length, ...ORDER.map((y) => Math.round(SD[p].store[y] || null))])) }); });
+const logText = () => JSON.stringify({ version: D.version, seed: FK.seed(), land: FK.land(), cols: ['age', 'villagers', 'soldiers', ...ORDER], rows: LOG.rows, mail: mail.filter((m) => m.grp === 'war' || m.grp === 'realm').map((m) => [clock(m.t), m.text]) });
+function copyLog() { const t = logText(), ok = () => say(WT.copied), fall = () => { const a = Object.assign(document.createElement('textarea'), { value: t }); document.body.append(a); a.select(); const done = document.execCommand && document.execCommand('copy'); a.remove(); done ? ok() : say(WT.copyFail); }; // E672
+  try { navigator.clipboard.writeText(t).then(ok, fall); } catch (e) { fall(); } }
+FK.on('start', () => { LOG.rows = []; });
+FK.on('save', (X) => { X.menu = { mail, post, newsI, newsT, shown, slipT, mustered, tipNow, opt: S.opt, log: LOG.rows }; }); // E673
+FK.on('load', ({ menu: M }) => { FK.refill(mail, M.mail); FK.refill(post, M.post); ({ newsI, newsT, slipT, mustered, tipNow, shown } = M); Object.assign(S.opt, M.opt); LOG.rows = M.log; S.tab = null; render(true); });
+const second = ([, x]) => x;
+return { scen: () => second(OPTS.scen[S.opt.scen]), daily: () => second(OPTS.daily[S.opt.daily]), log: LOG, logText, copyLog, TAPS, clock, read, act, VERBS, S, render, SCR, fmt, plural, some, orList, slowPct, coord, ledgerLine, say, mail, post, reach, dirOf, advise, MS_TEST, learned, civLine };
 })();

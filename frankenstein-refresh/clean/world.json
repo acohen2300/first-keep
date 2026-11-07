@@ -30,12 +30,12 @@
    "distance from a point to a segment; index.html segDist"
   ],
   "openWays": [
-   "bring",
-   "nothing walled in: a find cut off by trees gets a way cut home through the woods; v100's map-maker has no such check"
+   "in v100",
+   "F37: index.html floor 3, openWays (QCQ)"
   ],
   "wayHome": [
-   "bring",
-   "finds that way: the fewest trees between a find and its home, never across water (with openWays)"
+   "in v100",
+   "F37: index.html floor 3, openWays' 0-1 search (QCQ)"
   ],
   "DEEP": [
    "cut",
@@ -74,8 +74,8 @@
    "squares off the land are solid; in v100 the sea is in the height field (walkable)"
   ],
   "layMovers": [
-   "bring",
-   "the start: v100's makeUnits places D67 villagers round the Town Center and herds in Z4; Mid also gives each side first jobs, a scout, deer and a boar near home, and a chest, ruins, wolf den, cemetery and drifters' camp each corner (where: by v100's zones); F23: the first jobs are in (econ.js start, D260: the second on wood, the rest on food)"
+   "in v100",
+   "F37: as v100 lays them (makeUnits, F23 first jobs, the boar, the finds' guards)"
   ],
   "layCamps": [
    "in v100",
@@ -114,8 +114,8 @@
    "index.html cluster()"
   ],
   "makeMap": [
-   "bring",
-   "(Albert 11:16: bring, clean) Mid's map-maker; v100's makeGround, makeTerrain, makeThings. The land's character per game: see misfits"
+   "in v100",
+   "F37: index.html floors 2–3, the map-maker; the land's character rolled once a game (D329), each zone a row (D63–D66, QCP); Mid's ring spread cut (Parked)"
   ],
   "SHORE": [
    "cut",
@@ -198,16 +198,16 @@
    "a new game's blank state; v100's start() resets; each field (mail, milestones, truce, hazards) comes with its feature"
   ],
   "mkPlayer": [
-   "bring",
-   "a side's record: v100's SIDES has colour and store; age, research, relations, the crowns' tally and the computer's state come with their features"
+   "in v100",
+   "F37: v100's SIDES and econ.js fresh()"
   ],
   "newGame": [
-   "bring",
-   "a new game: v100's start() (seed of the day QBF, the opening view QBW); the hazards drawn each game, the scenario and the computers' handicap come with their features: see misfits · Albert 11:16: no computers' handicap"
+   "in v100",
+   "F37: index.html start() and the begin hook; the land's line; no computers' handicap (Albert 11:16)"
   ],
   "applyScenario": [
-   "bring",
-   "a scenario: an age, a store, relations, buildings already up (v100's Start page lists Open, Siege, Silk Road, Last Keep, not built)"
+   "in v100",
+   "F37: econ.js applyScenario (D330); Siege's walls, horde and hazards, Silk Road's truce and sworn peace parked"
   ],
   "inBox": [
    "cut",

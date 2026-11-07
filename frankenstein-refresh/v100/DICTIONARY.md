@@ -11,9 +11,9 @@ G1 Water · G2 Sand · G3 Dirt · G4 Grass
 The four are strata: water at 0, sand to D14, dirt to D15, grass above. A tile's top layer is whichever stratum its height reaches (L1). Cut lowers a tile's height, Raise lifts it; the layer that shows follows (L2, L3).
 
 ## Z Zones (measured from each corner of the board)
-Z1 Pocket: resources for one age up, calculated: a few villagers, a mill, a lumber camp, a couple of homes, a barracks; gold, stone, trees, berries
+Z1 Pocket: resources for one age up, calculated (QBJ, D62): a few villagers, a mill, a lumber camp, a couple of homes, a barracks; gold, stone, trees, berries
 Z2 Town: the Town Center stands here
-Z3 Homestead: the clearing, more resources
+Z3 Transition: laid by the Randomizer, more open space than Z4 to build out, trees thickening toward Z4, resources through it
 Z4 The rest of the board: laid by the Randomizer (L13)
 
 ## D Measurements (the book `books/measure.js`)
@@ -49,8 +49,8 @@ TC Cut: TC1 Lake (a bowl, D27, inside a fractal shore, QAZ; sizes on the power l
 A cliff is any cut with a fall steeper than A3 (L4): not a terrain of its own.
 TW Wet: TW1 Marsh (always Wet, KI1; built with Climate)
 TR Raise: TR1 Hills (a smooth dome, D38, its slope under A3) · TR2 Rock (raised D41 in one step, every edge a face; its top bare, D23)
-TF Forest: TF1 Forest (where the trees grow: a wall round every home at D50 with the road through it, and patches over Z4 where a rolled surface rises past D49; never on water, slopes or roads; the trees come on floor 3)
-Placement: Z1 and Z2 clean; Z3 one pond at D51, the same in every corner; the four roads (corner to middle, D46) and the middle (D47) kept clear; Z4 by the Randomizer with its six answers beside each roll (L13)
+TF Forest: TF1 Forest (where the trees grow: a wall round every home at D50 with the road through it, and each zone's tree share (D63–D66, QCP): none in Z1 and Z2, thickening across Z3 to Z4's share; a find walled in by trees gets a way cut home (QCQ); never on water, slopes or roads; the trees come on floor 3)
+Placement: Z1 and Z2 clean; Z3 one pond at D51 and its finds laid by the Randomizer, the same in every corner; the four roads (corner to middle, D46) and the middle (D47) kept clear; Z4 by the Randomizer with its six answers beside each roll (L13)
 
 ## K Climate (layer 130; acts on everything below; floor 6)
 One sky over the whole board (it is 185 m across, so one weather). The clock is Y. Each hour of the day (its 24th) the rain is drawn by a two-state chain (QH, D102); a wet hour is a storm by D103; snow falls instead at or under 1 °C (QI). The air is the season's mean (D100) eased into the next, plus the day's swing (D101) by the light.
@@ -76,7 +76,7 @@ US Support: US1 Priest · US2 Medic · US3 Spy · US4 Scout (all walk)
 UT Transport: UT1 Caravan · UT2 Camp wagon (Speed horse) · UT3 Boat (no picture yet; Sail comes with water)
 Speed: D86 in metres a second × D85. Health, Sight, Attack and the rest come with the three tiers. The figures are preview 49's (18-figures.js), one look a code; the rest of its roster is held there as skins.
 Walking (QBL): tile to tile by A*, eight ways; land and fords are walked, a thing, a closed building and a step past A3 are not (L5).
-At start: D67 villagers round every Town Center (L12), the player's at corner 0 (C5), the computers' at the others (C6–C8).
+At start: D67 villagers round every Town Center (L12), the player's at corner 0, the bottom left of the screen (A6, C5), the computers' at the others (C6–C8).
 
 ## M Moveables (shells, layer 120; they come and go)
 MH Hazards: MH1 Outlaws · MH2 Hordes · MH3 Robbers · MH4 Vagabonds · MH5 Wayfarers
@@ -87,7 +87,7 @@ MG Gifts (layer 100; floor 3 places MG1–MG4 in Z4 by the dice, D78–D81): MG1
 
 ## R Resources (shells, layer 100)
 R1 Trees (yield wood, amount D53; one on every tile of woods, TF1, and in the groves) · R2 Gold (gold, D55) · R3 Stone (stone, D56) · R4 Iron (iron, D57) · R5 Berries (food, D54)
-Where (floor 3): Z1 a berry patch, a grove, one gold, one stone at D70, counts from QBJ · Z3 the same at D71, D72 times, with iron · Z4 by the dice, D73–D77 · the same in every corner (L12) · a thing stands on one flat tile of land, its stand wandering by D82; a pile takes the tiles under it
+Where (floor 3): Z1 a berry patch, a grove, gold and stone at D70, counts from QBJ · Z3 three pockets' worth with iron, at rolled spots in its ring (D65), and the land's specialty once more · past the pocket each find is worth its land's share (D329, rolled once a game) · Z4 by the dice, D73–D77 · the same in every corner (L12) · a thing stands on one flat tile of land, its stand wandering by D82; a pile takes the tiles under it
 
 ## B Buildings (shells without Walk, layer 110; floor 4)
 Each: a size in tiles (D8–D11; a wall piece one tile, D12) · Open or Closed · the picture it wears (preview 49's art, pulled Nov 4). Health, prices and times come with the Content pull.

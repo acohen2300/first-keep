@@ -818,8 +818,8 @@
    "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "UI_BUDGET": [
-   "bring",
-   "no more than 33 buttons always on screen: a rule for the gate"
+   "in v100",
+   "F38: measure D334, checked by t-save"
   ],
   "SAVE": [
    "in v100",
@@ -874,24 +874,24 @@
    "a find's size: v100's sizes (D8-D11) and room (D169)"
   ],
   "LAND": [
-   "bring",
-   "four kinds of land (fertile, timber, stony, gold country), each richer in one store"
+   "in v100",
+   "F37: measure D329 lands (names in words J28)"
   ],
   "LANDK": [
-   "bring",
-   "with LAND"
+   "in v100",
+   "F37: with D329"
   ],
   "CLEAR": [
-   "bring",
-   "no water within 360 of a Town Center"
+   "in v100",
+   "F37: kept by the zones: lakes and rivers lie past Z3, farther than 360 from a Town Center; the home pond (D51) is nearer (to Albert, Parked)"
   ],
   "LANE": [
    "in v100",
    "the lanes kept clear: D46"
   ],
   "HOME": [
-   "bring",
-   "the home finds' walk (the first bush at 150, v70's great map)"
+   "in v100",
+   "F37: Albert's zones carry the home finds: the pocket (D62, D70) and Z3 (D65)"
   ],
   "WALL_R": [
    "in v100",
@@ -910,12 +910,12 @@
    "F14: econ.js searchR()"
   ],
   "BACK_MARGIN": [
-   "bring",
-   "the room behind a home"
+   "in v100",
+   "F37: the pocket's law QBJ (D62: villagers D67, the buildings bought, the margin)"
   ],
   "WATER": [
-   "bring",
-   "lakes with fractal shores (Mandelbrot), rivers whose width grows with √flow (Leopold), fords, fish: v100 lays its own water (D24-D35); Mid's laws to compare at step 7"
+   "in v100",
+   "F37: compared: v100 lays its own water (D24–D35, QAZ, QBA, QBB); Mid's kept as the reference"
   ],
   "START_VILS": [
    "in v100",
@@ -930,8 +930,8 @@
    "the computers' free mill and farm: Albert 11:16, killed (they win enough)"
   ],
   "SCENARIOS": [
-   "bring",
-   "the scenarios (Open, Siege, Silk Road, Last Keep): the Start page shows them, not built"
+   "in v100",
+   "F37: measure D330"
   ],
   "RES": [
    "in v100",

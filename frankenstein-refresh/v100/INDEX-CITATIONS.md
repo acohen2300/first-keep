@@ -81,7 +81,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBL** The way → N74 · used by SC1, D198, D207, D230, D247, X52
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17, D88, D197, X51
-- **QBJ** Z1's store → N69 · used by D129, X50
+- **QBJ** The pocket's store (Z1) → N168, N228 · used by D62, D63, D65, D129, X50, X71
+- **QCP** The woods' edge → N228, N231 · used by D63, D64, D65, D66, X71
+- **QCQ** The way home → N229, N233 · used by X71
 - **QBO** The blow → N69, N188 · used by SC6, SC10, D138, D141, D143, D221, D232, X57
 - **QBP** Upkeep → N170, N171 · used by D131, D211, D212, D213, X53
 - **QBQ** The break → N76 · used by D142
@@ -95,12 +97,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBO, QBP, QBT
-- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCH, QCM, QCN, QCO, QAL, QAM, QAN, D292
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBJ, QBO, QBP, QBT
+- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCH, QCM, QCN, QCO, QAL, QAM, QAN, QBJ, QCP, QCQ, D292
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
-- **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBJ, QBO
+- **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBO
 - **N7** Gabriel & Neumann (1962), QJRMS 88 → QH, QAI, QBL, QBM, QBN, QBQ, QBR, QBS, QBU, D102, D293
 - **N8** Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148 → QI, QBS, QBT, QBX, QBY
 - **N9** Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949) → QJ, QCL, D229
@@ -110,14 +112,14 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N13** Pandolf, Givoni & Goldman (1977) → QN, QCB, D224, X56
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
-- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, SC27, D231, D237, D249
+- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, QBJ, SC27, D231, D237, D249
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, QCD, QCG, G9
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD, QCM, QCN, QCO, D294
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QK, QT, QCL, QAL, QAM, SC45, D310
-- **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QCH, QAL, QAN, SC45, D310
-- **N23** Holling (1959), Can. Entomol. 91 → QV
+- **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QCH, QAL, QAN, QBJ, QCP, QCQ, SC45, D310
+- **N23** Holling (1959), Can. Entomol. 91 → QV, QCP, QCQ
 - **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW, QCM
 - **N25** Fretwell & Lucas (1970) → QX
 - **N26** Sutherland (1983) → QX
@@ -163,7 +165,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N66** (to open) Parallel (dimetric) projection; the classic turned-view RTS draws the ground at 2:1, a camera 30° over the gro → QBD, QBK
 - **N67** (to open) Wave refraction on an indented coast: energy converges on headlands, diverges in bays (coastal geomorphology,  → QBG
 - **N68** (to open) Towns and roads at fords: Oxford, Frankfurt (Franconofurd, the Franks' ford), Bedford; the record, from memory → QBI
-- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBJ, QBO, D127, D136, D138, D139
+- **N69** (to open) Age of Empires II (1999), the genre's prices and amounts: the second age 500 food, a villager 50 food, a house → QBO, D127, D136, D138, D139
 - **N70** First Keep Build 42 (Oct 28), the old game's own gathering rates a second: berries 0.9, trees 0.75, gold 0.6,  → QBN, D88
 - **N71** (to open) Bohannon (1997), Age and Ageing 26: comfortable walking speed about 1.4 m/s (from memory, to open) → QBM, D86
 - **N72** (to open) Horse gaits: walk about 1.7 m/s, trot about 3.6 m/s (standard equine, from memory) → QBM, D86
@@ -206,7 +208,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D49, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D62, D63, D64, D65, D66, D67, D68, D69, D70, D71, D72, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D163, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -262,7 +264,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N165** (to open) Hall, E. T. (1966), The Hidden Dimension: personal distance, 1.5 to 4 ft; and hexagonal circle packing, densit → QCI, D196
 - **N166** (to open) OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in  → D195, D196
 - **N167** (to open) Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechani → QCJ, D196
-- **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC5, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
+- **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, QBJ, SC4, SC5, SC21, SC22, D62, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
 - **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D124, D125, D139
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, UM17, UM18, UM19, UM20, UM21, UM22, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** (to open) Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip → QBP, D212
@@ -322,6 +324,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N225** Design: Mid's civilisations (04-rules-tech.js CIVS, CIVK, the six unique units, the Hall rows and the six elit → SC03, D86, D123, D124, D138, D239, X70, UM17, UM18, UM19, UM20, UM21, UM22, P46, P47, P48, O232, O233, O234, O235, O236, O237, O238, O239, O240, O241, O242, O243, O244, O245, O246, O247, O248, O249, O250, O251, O252, O253, O254, O255, O256, O257, O258, O259, J7, J26
 - **N226** Design: Albert, Nov 6 17:23: the civilisations as Mid had them, if they come clean and within our rules; the G → D326, X69, X70, O254, O255, O256, O257, O258, O259
 - **N227** (to open) Age of Empires II (1999): each civilisation's bonuses are techs every side of that civilisation holds from the → O254, O255, O256, O257, O258, O259
+- **N228** Design: Albert, Nov 6 16:01–16:07: you start in the corner drawn at the bottom left of the screen, whatever th → QBJ, QCP, A6, D62, D63, D64, D65, D66, X71
+- **N229** Design: Mid's map character, new game and scenarios (06-rules-tuning.js LAND, SCENARIOS, UI_BUDGET; 07-text.js → QCQ, D329, D330, D333, X71, J28
+- **N230** Design: Mid's save and safety net (34-save.js saveGame, readSave, keepAside, clearSave, loadGame; 01-rules-bas → D331, D332, D334, D335, X72, J28
+- **N231** (to open) Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by deg → QCP, D65
+- **N232** Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap pla → X71
+- **N233** (to open) Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-en → QCQ
 
 ## Named exceptions
 

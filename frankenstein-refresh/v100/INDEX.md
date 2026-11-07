@@ -11,6 +11,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | A3 | the angle of repose, dry sand: steeper is a face, not a slope | 34 | N64 |
 | A4 | a full turn: the fish spots go round a lake's shore | 360 | N170 |
 | A5 | a missile is loosed at this rise: the farthest reach (Mid's rangeFrom) | 45 | N39; N188 |
+| A6 | your corner: the board's corners go clockwise a quarter turn apart from the top left of the screen; yours, the first, is this far round, the bottom left, whatever the grid's turn (Albert, Nov 6 16:01) | 270 | N228 |
 
 ## capabilities
 
@@ -299,6 +300,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N225 |  | Design: Mid's civilisations (04-rules-tech.js CIVS, CIVK, the six unique units, the Hall rows and the six elite ranks; 08-core.js civOf, civ | opened |
 | N226 |  | Design: Albert, Nov 6 17:23: the civilisations as Mid had them, if they come clean and within our rules; the Games wait with the Throne; tre | opened |
 | N227 |  | Age of Empires II (1999): each civilisation's bonuses are techs every side of that civilisation holds from the start, applied as any researc | to open |
+| N228 |  | Design: Albert, Nov 6 16:01–16:07: you start in the corner drawn at the bottom left of the screen, whatever the view's turn; the pocket (Z1) | opened |
+| N229 |  | Design: Mid's map character, new game and scenarios (06-rules-tuning.js LAND, SCENARIOS, UI_BUDGET; 07-text.js SCEN_TEXT; 10-world.js newGam | opened |
+| N230 |  | Design: Mid's save and safety net (34-save.js saveGame, readSave, keepAside, clearSave, loadGame; 01-rules-basics.js SAVE_EVERY; 41-boot.js  | opened |
+| N231 |  | Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by degrees across the edge (from mem | to open |
+| N232 |  | Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap places it, with no second trip to | opened |
+| N233 |  | Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-ended queue, the 0-1 search (fro | to open |
 
 ## colours
 
@@ -352,7 +359,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E20 |  | the way in from the coast at a board point, and the coast's cliffness there |  |
 | E21 |  | the drawn corners (QBE): at every grid corner the tiles round it are sorted by height and split where a step passes the angle of repose; eac |  |
 | E22 |  | Floor 2, terrain (layer 90): every piece is a Cut or a Raise on the one height field (L2, L3); the layer that shows follows (L1), a step pas |  |
-| E23 |  | a spot in a corner's own frame (u along one edge, v along the other), the same in all four (L12) |  |
+| E23 |  | a spot in a corner's own frame (u along one edge, v along the other), the frame turned with its corner, the same in all four (L12) |  |
 | E24 |  | the four roads: corner to middle |  |
 | E25 |  | every tile whose middle lies within r of a board point: fn(k, d, dx, dy) |  |
 | E26 |  | a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land stands out into it the shore is a face, where it  |  |
@@ -371,12 +378,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E39 |  | the wood's edge keeps one tile from any slope or water |  |
 | E40 |  | Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each stands on one flat tile of land; a big one takes the |  |
 | E41 |  | the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clear |  |
-| E42 |  | QBJ Z1's store, from what the first age up costs (D129, Mid's Bronze; Albert's rule): food for the age and the villagers, wood for the mill, |  |
+| E42 |  | QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the buildings at their costs, with the margin); a kin |  |
 | E43 |  | what stands on each tile, and the shells themselves |  |
 | E44 |  | the free tile nearest a spot |  |
 | E45 |  | a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a grid |  |
 | E46 |  | the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry patch |  |
-| E47 |  | The home finds: Who every corner · What Z1's berries, grove, gold and stone, sized by QBJ; Z3's the same at D72 times, with iron · Where fix |  |
+| E47 |  | The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70's spots, sized by QBJ; Z3's finds (D65) at three  |  |
 | E48 |  | Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts: ruins, cemeteries, campfires, treasure · Where Z |  |
 | E49 |  | The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size and shade · Where its tile · When the map is made  |  |
 | E50 |  | drawn back to front |  |
@@ -971,6 +978,31 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E647 |  | what the town needs next, first that holds: room, villagers, wood, idle hands, a barracks, spearmen, the next age, food, gold, a fire, sickn |  |
 | E648 |  | every lesson beat: a new tip is said, then the first milestone newly true, one a beat |  |
 | E649 |  | a computer chases its crown (Mid's chaseCrown): the wellbeing chaser builds each place of care it lacks; every side takes the hidden age whe |  |
+| E650 |  | The corners: the board's four, clockwise a quarter turn apart from the screen's top left; yours, the first, sits A6 round (the bottom left,  |  |
+| E651 |  | a tile's tree share: its zone's row (D63–D66), straight from the inner edge's share to the outer edge's (QCP) |  |
+| E652 |  | The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by woods gets the fewest trees cleared between it and i |  |
+| E653 |  | Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's specialty once more at one pocket's, at a rolled spot i |  |
+| E654 |  | The land's character (D329, Mid's LAND): past the pocket every find is worth its store's share |  |
+| E655 |  | The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save beat and on leaving, keeps the one before, waits  |  |
+| E656 |  | each kind of error logged once; a second kind holds the save (the last good one stands) and says so |  |
+| E657 |  | the save: the seed (the map is laid again from it), the lists, the climate, the sides, what they know, and what differs from the fresh map;  |  |
+| E658 |  | a save opened: the places turned back into the things and units, the Maps, Sets and Infinity by their tags (D331) |  |
+| E659 |  | the save waits while you fight, at most D331's fight; a failed save says so once in D331's fail; the test field is never saved |  |
+| E660 |  | a save that will not open is kept aside, never written over; the one before opens instead |  |
+| E661 |  | the game opened from a save: the fresh map from its seed, then the lists, the sides and the changes laid back, then each module's own |  |
+| E662 |  | The opening: the game opens where you left it, unless the address names another seed; ?test opens the test field on its own seed |  |
+| E663 |  | New game (Mid's applyScenario and testField): the scenario's buildings and people placed by the placing rules nearest their spot |  |
+| E664 |  | A scenario (D330): the age, the store and the research for you (or every court), the relations, the buildings and villagers, the length |  |
+| E665 |  | The test field (D333): you and one rival at war, the other two gone, every store full, both armies down the road from your Town Center |  |
+| E666 |  | the economy's part of the save: a finished game clears the save instead |  |
+| E667 |  | the war's part of the save: the waves, the orders, the relations, the squads |  |
+| E668 |  | the computers' part of the save: their clocks, plans and minds |  |
+| E669 |  | the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the menu stays closed so the ghost and its guides are  |  |
+| E670 |  | The test tools (Mid's matchLog, copyLog, tapCount): the match log for Claude to read, tap counts kept on this phone |  |
+| E671 |  | a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fell |  |
+| E672 |  | copied to the clipboard, or through a hidden box where the clipboard is refused |  |
+| E673 |  | the menu's part of the save: the mail, the news, the options, the match log |  |
+| E674 |  | a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26 from home): it is laid only where the ring is ope |  |
 
 ## ground
 
@@ -1061,7 +1093,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D46 | a road's clear half-width | 50 | N112 |
 | D47 | the middle kept clear | 150 | N112 |
 | D48 | the woods' longest wave | 500 | N112 |
-| D49 | the woods stand where the surface rises past | 0.1 | N112 |
 | D50 | the forest wall round a home, from and to | [920, 1080] | N112 |
 | D51 | the home pond's spot in the corner's frame | [700, 450] | N112 |
 | D52 | the home pond's radius | 50 | N112 |
@@ -1073,17 +1104,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D58 | a ruin's stone | 200 | N112 |
 | D59 | a campfire's food | 100 | N112 |
 | D60 | a treasure's gold | 300 | N112 |
-| D62 | a villager | 50 | N112 |
-| D63 | the mill | 100 | N112 |
-| D64 | the lumber camp | 100 | N112 |
-| D65 | a home | 25 | N112 |
-| D66 | the barracks | 175 | N112 |
+| D62 | the pocket (Z1): one age up, calculated (QBJ): the price of the age (D129, its index here), D67 villagers and these buildings at their costs (D123), a quarter more for the margin; the store it holds (Albert, Nov 6 16:01) | {age: 1, buys: {BI1: 1, BI2: 1, BR1: 2, BM1: 1}, margin: 0.25, store: {food: 750, wood: 588, gold: 0, stone: 0}} | N168; N228 |
+| D63 | Z1 the pocket: no woods, open from edge to edge; the pocket's store once, at D70's spots | {trees: [0, 0], x: 1} | N228 |
+| D64 | Z2 the town: no woods, no finds, open to build | {trees: [0, 0], x: 0} | N228 |
+| D65 | Z3 the transition: the woods thicken from none at its inner edge to Z4's share at its outer edge (an ecotone), so it is more open than Z4; three pockets' store laid by the Randomizer, the same in every corner (Albert, Nov 6 16:01–16:03) | {trees: [0, 0.4], x: 3, finds: [bush, tree, gold, stone, iron]} | N228; N231 |
+| D66 | Z4 the wilds: the woods' share of the land they may grow on, about the woods D49's threshold gave (a quarter of all Z4's land, the roads, the middle and the slopes counted) | {trees: [0.4, 0.4]} | N112; N228 |
 | D67 | villagers counted | 6 | N112 |
-| D68 | homes counted | 2 | N112 |
-| D69 | the margin | 0.25 | N112 |
 | D70 | Z1's spots in the corner's frame | {bush: [250, 140], tree: [140, 250], gold: [200, 120], stone: [120, 200]} | N112 |
-| D71 | Z3's spots | {bush: [820, 300], tree: [300, 820], iron: [560, 680], stone: [450, 750], gold: [680, 560]} | N112 |
-| D72 | Z3 holds this many times Z1 | 3 | N112 |
 | D73 | Z4's gold piles | [4, 6] | N112 |
 | D74 | stone piles | [3, 5] | N112 |
 | D75 | iron piles | [3, 5] | N112 |
@@ -1320,6 +1347,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D326 | a standing tree's height in metres by its kind (the woods tree, a temperate broadleaf: white oak, Quercus alba), the middle of the 18 to 24 m it commonly reaches (the Forest Service's FEIS; Silvics of North America gives 24 to 30 m on good forest sites and 13 to 19 m at age 50); mature only, as the woods stand grown and no sourced height-by-age curve was opened; line of sight reads it | {R1: {h: 21}} | N219; N221; N226 |
 | D327 | the peace beat: every second, phase 2 frames (Mid's tick % 30 === 2: peaceTick, postTick, newsTick) | [1, 2] | N222; N223 |
 | D328 | the lesson beat: every 3 s, phase 7 frames (Mid's tick % 90 === 7: milestoneTick) | [3, 7] | N224 |
+| D329 | the land's character (Mid's LAND): one of rows rolled a game on a dice of its own (seed: the game's seed XOR this, so the roll moves no other draw), the same in every corner; amt what each store's finds are worth past the pocket, extra its specialty laid once more in Z3, one pocket's worth | {seed: 1013904223, rows: {fertile: {amt: {food: 1.4, wood: 1, stone: 0.8, gold: 1, iron: 1}, extra: bush}, timber: {amt: {food: 1, wood: 1.3 | N229 |
+| D330 | the scenarios (Mid's SCENARIOS): an age, a store at least this, research with what it waits on, your relation with every court (rel) and theirs with each other (among: Mid's peace, and Last Keep's league), buildings beside your Town Center by their offset, more villagers, all within within of it (Mid's findSpot reach), the game's length; all: the age and the store go to every court | {open: {}, siege: {age: 3, store: {food: 1200, wood: 900, stone: 900, gold: 500, iron: 150}, techs: [masonry, greattower], rel: war, blds: [ | N229 |
+| D331 | the save (Mid's saveGame): its place on the phone, the one before kept as .bak, a save that will not open kept aside as .lost; it waits out a fight at most fight s; a failed save says so once in fail s; the tags that keep links, Maps, Sets and Infinity | {key: fk.save, bak: .bak, lost: .lost, fight: 60, fail: 60, tags: {ref: @, map: $M, set: $S, num: $N, base: #}} | N230 |
+| D332 | the save beat: every 10 s (Mid's SAVE_EVERY), phase 5 frames, off the other beats' frames | [10, 5] | N230 |
+| D333 | the test field (?test, Mid's testField): Mid's seed, every store, the age and the War Council's ladder; you and one rival at war, each army in rows of a kind at its distance down the road from your Town Center, a row and a file apart; never saved | {seed: 11, store: 5000, age: 2, techs: [engage, command, formations], army: [[150, [[UM1, 10], [UM2, 8], [UM10, 4], [UM5, 2]]], [750, [[UM1, | N229 |
+| D334 | the buttons always on the play screen, at most (Mid's UI_BUDGET): a new control replaces one | 33 | N230 |
+| D335 | the match log: a row a minute (Mid's matchLog), for Claude to read; the tap counts' place on the phone (Mid's TAPS) | {row: 60, taps: fk.taps} | N230 |
 
 ## rules
 
@@ -1393,6 +1427,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X68 | fog by the atmosphere (Albert, Nov 6 14:44): on a dry calm evening with the dew point just under the air, the air cools to it and fog forms (visibility under the WMO's 1 km); the visibility equals CALVIS's 3.912 ÷ (144.7 C^0.88) for the vapour above saturation by Magnus, never past the typical fog's water; a breeze past 7 knots clears it; the sun lifts it once the air warms past the dew point | {stage: page} | N220; N210; N212 |
 | X69 | peace, the crowns, the mail, the messengers, milestones and tips (F35): a board truce stands a computer's soldiers above Mid's armyAim down to villagers one for one as Mid's frozen standDown; a year of it opens the hidden age as Mid's nextAge; a kill credits its cost as warCredit; the Wealth, War, Wellbeing and overall crowns equal Mid's crownsOf on the same sides; news of a foe out of sight is never told, told by a runner or a rider at Mid's tell's delay for the same walked metres, or heard as a fight with its way, as Mid's tell; repeats merge; the world's news and the first-house line equal Mid's NEWS and MS_TEXT; a tip done three times retires; the Games wait with the Throne | {stage: page} | N222; N223; N224; N226 |
 | X70 | the civilisations (F36): each of the six trains its own kind in place of the common one and no other side does; the kind's numbers, cost, time, age and pace equal Mid's UNIT; its bonus applied by QCA equals Mid's fxv for the civ; its elite rank equals Mid's tier; its Hall rows equal Mid's and only its side may research them; the legionary, Immortal and Mali horseman draw as Mid's figures; every standing tree in the woods stands its kind's Forest Service height (D326) in line of sight | {stage: page} | N225; N226; N219; N221 |
+| X71 | the map's character, new game and scenarios (F37), with Albert's map calls: the lands and the scenarios equal Mid's frozen LAND, SCENARIOS and MODES, and each scenario plays as its row (age, store, research, relations, buildings by their spot, villagers, its line); past the pocket each find is worth its land's share; no find of your quarter is walled in by trees (only water may cut it off); your Town Center is at the bottom left of the screen; the pocket holds QBJ's amounts from the costs and the Bronze price; Z3 thickens toward Z4, is more open than Z4, Z2 has no woods, and Z3's finds are more than the pocket's and less than the wilds' | {stage: page} | N229; N228; N232 |
+| X72 | saving, the safety net and the test tools (F38): the save beat, the fight wait, the failure's minute and the button budget equal Mid's frozen SAVE_EVERY, saveGame and UI_BUDGET; a save waits out a fight up to its limit, keeps the one before, and opens to the same units, finds, buildings, stores, climate, relations and mail; a damaged save is kept aside and the one before opens; no seen or remembered state is saved; a thrown error costs a frame and the game runs on; taps are counted; the match log rows a minute; the test field (?test) is you and one rival at war with both armies out, never saved; the game opens where you left it | {stage: page} | N230 |
 
 ## screen
 
@@ -1957,4 +1993,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J25 | the tips: what the town needs next, in order, each until you have done it three times (Mid's advise; a ! line is a warning and always shows) | {full: You are full: Build → House., more: More villagers, more of everything., wood: Wood is low. Tap + under Wood., idle: {n} villagers id | N224 |
 | J26 | the six peoples (Mid's CIVS names, wonders and halls; TITLE_SHORT, short card titles for long names); the Start card's line for the people you pick | {roman: {name: Roman, wonder: Colosseum, hall: Forum}, han: {name: Han, wonder: Weiyang Palace, hall: Taixue}, persian: {name: Persian, wond | N225 |
 | J27 | the guide's lines for peace, the crowns, the mail and the news (Mid's TRIGGERS: when, then why); the Games' line waits with the Throne | {Messages and sound: [Every message is 10 words or fewer, one at a time. Tips and Messages can each be turned off; warnings stay on., A phon | N222; N223 |
+| J28 | the start: the lands' names (Mid's LAND), the scenarios' names and lines (Mid's SCEN_TEXT, without what v100 has not built: the walls, the horde, the truce, the Games), the safety net's and the save's lines (Mid's fault, saveGame, copyLog, testField) | {lands: {fertile: Fertile land, timber: Timberland, stony: Stony hills, golden: Gold country}, land: {land}. Gather, grow, explore., scen: { | N229; N230 |
 

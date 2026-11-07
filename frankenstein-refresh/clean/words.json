@@ -22,8 +22,8 @@
    "F11: Words book J1 (the tithe waits on the Throne; tax parked); menu.js ledgerLine says a ledger in them, 'nothing yet' J2"
   ],
   "SCEN_TEXT": [
-   "bring",
-   "the four scenarios' descriptions; v100 has their names (menu.js OPTS.scen: Open, Siege, Silk Road, Last Keep); 'a keep' (misfits)"
+   "in v100",
+   "F37: words J28 start.scen"
   ],
   "WHY": [
    "bring",
@@ -1824,8 +1824,8 @@
      "F23: the feature is in (econ.js watch, the marker's count and time, index.html floor 7), its Guide row waits for the Guide (Parked)"
     ],
     "You start a game": [
-     "bring",
-     "the civilisations at the start, with civilisations"
+     "in v100",
+     "F37: the land's line on every new game and the scenario's line (words J28, econ.js begin hook); its Guide row waits for the Guide (Parked)"
     ],
     "You order a unit and the town is full": [
      "bring",
@@ -2104,8 +2104,8 @@
      "walking round walls, with walking; F15: the rule is in, its Guide row waits for the Guide (Parked)"
     ],
     "The game saves itself": [
-     "bring",
-     "the save every few seconds, with saving"
+     "in v100",
+     "F38: the save (index.html); its Guide row waits for the Guide (Parked)"
     ],
     "Difficulty": [
      "bring",

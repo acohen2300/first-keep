@@ -159,5 +159,7 @@ function leagueTick() { const S = D.players.filter((p) => !ECON.fell(p) && !(SID
   for (const p of M) { if (!WAR.atWar(p, lead)) ECON.declareWar(p, lead, W.why); for (const q of M) if (q !== p) WAR.treaty(p, q, ALLY); } if (fresh) ECON.tell(W.on, { sides: M.map((p) => sides[p]).join(fromBook('words').list.and), side: sides[lead] }); }
 FK.on('start', () => { clock.fill(0); rings.clear(); claimT.clear(); helped.clear(); league = null; mind.forEach((_, i) => { mind[i] = {}; }); DF = A.diff[MENU.S.opt.diff]; });
 FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] = 0; think(side); } } });
+FK.on('save', (X) => { X.ai = { clock, rings, claimT, helped, league, mind }; }); // E668
+FK.on('load', ({ ai: M }) => { league = M.league; const keep = { clock, rings, claimT, helped, mind }; for (const k in keep) FK.refill(keep[k], M[k]); });
 return { think, mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim };
 })();

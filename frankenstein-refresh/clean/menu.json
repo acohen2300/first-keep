@@ -424,12 +424,12 @@
      "the stores: each resource, in and out a minute, who is on it (Parked 27 was a Warehouse view; this is Mid's)"
     ],
     "fault": [
-     "bring",
-     "something went wrong: restart from the save or carry on; with Saving"
+     "in v100",
+     "F38: a line (words J28 fault) and the save held; the card with restart parked"
     ],
     "resume": [
-     "bring",
-     "welcome back: resume the saved game; with Saving"
+     "in v100",
+     "F38: no card: the game opens where you left it, with a welcome line (words J28 back); a Resume card parked"
     ],
     "setup": [
      "in v100",
@@ -472,8 +472,8 @@
      "menu.js the Yard's three volumes (SN13, VERBS.vol, HX10)"
     ],
     "taps": [
-     "bring",
-     "Tap counts: what you tap, on this phone"
+     "in v100",
+     "F38: counted (menu.js TAPS); the card parked until a Help page"
     ],
     "help": [
      "bring",
@@ -782,8 +782,8 @@
      "the buzz on or off (v100 HX6 buzz)"
     ],
     "copylog": [
-     "bring",
-     "copy the match log"
+     "in v100",
+     "F38: menu.js VERBS.copylog, on the end card"
     ],
     "menu": [
      "in v100",
@@ -1458,12 +1458,12 @@
    "F21: menu.js lpStop"
   ],
   "TAPS": [
-   "bring",
-   "tap counts, kept on this phone"
+   "in v100",
+   "F38: menu.js TAPS (D335 taps)"
   ],
   "tapCount": [
-   "bring",
-   "counts a tap and a tap on a dim cell; Tap counts card"
+   "in v100",
+   "F38: menu.js tapCount in act(); the Tap counts card parked"
   ],
   "HUD": [
    "in v100",
@@ -1642,20 +1642,20 @@
    "(Albert 11:16: bring, clean) Mid's Yard, a holding pen for controls without a home; see misfits"
   ],
   "matchLog": [
-   "bring",
-   "the match log a second and a minute, for Claude to read (preview only)"
+   "in v100",
+   "F38: menu.js LOG (D335)"
   ],
   "matchLogText": [
-   "bring",
-   "the match log as text"
+   "in v100",
+   "F38: menu.js logText"
   ],
   "copyLog": [
-   "bring",
-   "copy the match log"
+   "in v100",
+   "F38: menu.js copyLog, the end card's Copy log"
   ],
   "fallbackCopy": [
-   "bring",
-   "copy where the clipboard is refused"
+   "in v100",
+   "F38: menu.js copyLog's hidden box"
   ],
   "EMERGENCY": [
    "in v100",

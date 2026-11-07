@@ -510,3 +510,13 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 - Trees by age: no Forest Service height-by-age curve could be opened (Carmean, Hahn & Jacobs 1989, GTR NC-128, refused by the proxy). The woods tree stands at its mature height until it opens. Trees in v100 have no age yet.
 - Mid's Immortal had a fault: its legs were an rgb() colour, so the back leg's shade came out as NaN and kept the last fill. v100 draws the shade Mid meant.
 - MUST FIX before play tests (Albert, 19:11): double tap zooms the page. Disable it: `touch-action: manipulation` on the page (iOS Safari ignores user-scalable=no). Goes in F37+F38.
+
+## F37+F38: the map's character, new game and scenarios; saving, the safety net and test tools; Albert's map calls and play-test fixes (Nov 6)
+- Cut from v100's map: D49 (the woods' threshold), D62–D66 and D68–D69 (the genre's placeholder prices, homes and margin: the pocket now reads the costs book D123 and the Bronze price D129, QBJ), D71–D72 (Z3's fixed spots and multiple: Z3 is a row, D65, laid by the Randomizer).
+- Not brought: Mid's ring spread (SPREAD: v100's zones are Albert's fixed edges, D3).
+- For Albert: Mid's CLEAR (no water within 360 of a Town Center) meets the home pond (D51): its shore is about 280 from the Town Center. Lakes and rivers keep past Z3. Keep the pond, or move it?
+- For Albert: the pocket's law gives no gold and no stone (Bronze and the buildings cost none), so the pocket and Z3 hold one pile of each, the floor of one; and Z3's gold and stone come out equal to the pocket's.
+- Scenarios waiting for their features: the Siege's walls, horde and hazards (the Start page's hazards are not built), the Silk Road's running truce and sworn peace, Last Keep's one-ally slot.
+- The test field's mine site, gold pile and wolf, and its camera; the pause on a second error and the fault card (restart); the Resume card (holdSave, cardLocked: v100 opens where you left it); the Tap counts card (needs a Help page); the save's hundredths (v100 keeps exact numbers; the map comes from its seed, unchanged finds by their place).
+- Not saved: the dice's position, the ground's scars and the danger maps (redrawn); no seen or remembered state (no fog since S1).
+- Placement (Albert 19:09): picking a building closes the menu and shows the ghost with its guides and a bar (what it says, Build, ✕), Mid's startPlace and place bar; a tap on Build places it. Double tap: `touch-action: manipulation` on the page.

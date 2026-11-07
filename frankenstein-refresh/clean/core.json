@@ -162,16 +162,16 @@
    "growth with room (Verhulst): flocks; F10 left it for the flocks, its first caller"
   ],
   "SET": [
-   "bring",
-   "the settings kept on the phone: with Saving"
+   "in v100",
+   "F38: the menu's options (S.opt) saved with the game"
   ],
   "PLACE": [
-   "bring",
-   "the settings kept on the phone: with Saving"
+   "in v100",
+   "F38: with the menu's part of the save"
   ],
   "saveSet": [
-   "bring",
-   "the settings kept on the phone: with Saving"
+   "in v100",
+   "F38: with the menu's part of the save"
   ],
   "lineOf": [
    "in v100",
@@ -194,12 +194,12 @@
    "F13a: folded into nextStep: nextStep(side, c) === c"
   ],
   "todaySeed": [
-   "bring",
-   "the day's challenge seed and the game's modes"
+   "in v100",
+   "F37: index.html today() (QBF)"
   ],
   "MODES": [
-   "bring",
-   "the day's challenge seed and the game's modes"
+   "in v100",
+   "F37: menu.js OPTS.len, the scenarios' length (D330 len)"
   ],
   "QC": [
    "cut",

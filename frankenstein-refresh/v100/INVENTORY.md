@@ -4,26 +4,26 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,020 | 467,184 | 467,322 |
-| Books | 1876 | 0 | 522,349 | 523,006 |
-| Laws | 88 | 0 | 17,519 | 18,009 |
-| Tools | 4 | 1,591 | 253,925 | 254,155 |
+| Game code | 29 | 3,096 | 480,976 | 481,114 |
+| Books | 1913 | 0 | 534,470 | 535,137 |
+| Laws | 90 | 0 | 18,345 | 18,837 |
+| Tools | 4 | 1,674 | 269,896 | 270,126 |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 30 | 1,736 | 1,736 | 11 |
+| index.html#page | 30 | 1,764 | 1,764 | 11 |
 | index.html#frames | 13 | 1,035 | 1,035 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,071 | 1,075 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,816 | 1,820 | 38 |
-| index.html#floor-2-terrain | 81 | 7,995 | 7,999 | 131 |
-| index.html#floor-3-non-movables | 48 | 5,779 | 5,783 | 81 |
+| index.html#floor-2-terrain | 82 | 8,512 | 8,516 | 130 |
+| index.html#floor-3-non-movables | 60 | 7,851 | 7,855 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 942 | 946 | 14 |
-| index.html#the-door | 58 | 6,756 | 6,760 | 69 |
+| index.html#the-door | 85 | 11,323 | 11,327 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
@@ -36,33 +36,33 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-7-display | 43 | 7,191 | 7,195 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 21,729 | 21,733 | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
-| index.html#touch | 49 | 6,757 | 6,761 | 54 |
-| menu.js | 410 | 72,214 | 72,256 | 583 |
-| econ.js | 559 | 101,997 | 101,997 | 72 |
-| combat.js | 351 | 58,540 | 58,540 | 84 |
-| ai.js | 163 | 25,794 | 25,794 | 26 |
+| index.html#touch | 50 | 7,377 | 7,381 | 54 |
+| menu.js | 424 | 74,513 | 74,555 | 583 |
+| econ.js | 576 | 105,151 | 105,151 | 72 |
+| combat.js | 353 | 58,830 | 58,830 | 84 |
+| ai.js | 165 | 26,039 | 26,039 | 26 |
 | sound.js | 57 | 5,774 | 5,774 | 66 |
 
 ## The books
 
 | Book | Entries | Bytes |
 |---|---|---|
-| angles | 5 | 734 |
+| angles | 6 | 1,006 |
 | capabilities | 51 | 15,092 |
-| citations | 227 | 45,209 |
+| citations | 233 | 46,788 |
 | colours | 21 | 4,542 |
-| comments | 641 | 107,037 |
+| comments | 666 | 111,064 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 304 | 121,610 |
-| rules | 68 | 24,784 |
+| measure | 306 | 125,425 |
+| rules | 70 | 26,290 |
 | screen | 11 | 3,247 |
 | shells | 109 | 22,563 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
 | sprites | 65 | 25,607 |
 | tech | 259 | 75,552 |
-| words | 27 | 78,277 |
+| words | 28 | 79,607 |
 
 ## The shells
 
@@ -144,5 +144,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X68 | t-dew | page | fog by the atmosphere (Albert, Nov 6 14:44): on a dry calm evening with the dew point just under the air, the air cools to it and fog forms (visibility under the WMO's 1 km); the visibility equals CALVIS's 3.912 ÷ (144.7 C^0.88) for the vapour above saturation by Magnus, never past the typical fog's water; a breeze past 7 knots clears it; the sun lifts it once the air warms past the dew point |
 | X69 | t-peace | page | peace, the crowns, the mail, the messengers, milestones and tips (F35): a board truce stands a computer's soldiers above Mid's armyAim down to villagers one for one as Mid's frozen standDown; a year of it opens the hidden age as Mid's nextAge; a kill credits its cost as warCredit; the Wealth, War, Wellbeing and overall crowns equal Mid's crownsOf on the same sides; news of a foe out of sight is never told, told by a runner or a rider at Mid's tell's delay for the same walked metres, or heard as a fight with its way, as Mid's tell; repeats merge; the world's news and the first-house line equal Mid's NEWS and MS_TEXT; a tip done three times retires; the Games wait with the Throne |
 | X70 | t-civs | page | the civilisations (F36): each of the six trains its own kind in place of the common one and no other side does; the kind's numbers, cost, time, age and pace equal Mid's UNIT; its bonus applied by QCA equals Mid's fxv for the civ; its elite rank equals Mid's tier; its Hall rows equal Mid's and only its side may research them; the legionary, Immortal and Mali horseman draw as Mid's figures; every standing tree in the woods stands its kind's Forest Service height (D326) in line of sight |
+| X71 | t-land | page | the map's character, new game and scenarios (F37), with Albert's map calls: the lands and the scenarios equal Mid's frozen LAND, SCENARIOS and MODES, and each scenario plays as its row (age, store, research, relations, buildings by their spot, villagers, its line); past the pocket each find is worth its land's share; no find of your quarter is walled in by trees (only water may cut it off); your Town Center is at the bottom left of the screen; the pocket holds QBJ's amounts from the costs and the Bronze price; Z3 thickens toward Z4, is more open than Z4, Z2 has no woods, and Z3's finds are more than the pocket's and less than the wilds' |
+| X72 | t-save | page | saving, the safety net and the test tools (F38): the save beat, the fight wait, the failure's minute and the button budget equal Mid's frozen SAVE_EVERY, saveGame and UI_BUDGET; a save waits out a fight up to its limit, keeps the one before, and opens to the same units, finds, buildings, stores, climate, relations and mail; a damaged save is kept aside and the one before opens; no seen or remembered state is saved; a thrown error costs a frame and the game runs on; taps are counted; the match log rows a minute; the test field (?test) is you and one rival at war with both armies out, never saved; the game opens where you left it |
 
-1997 items sealed · 1876 book entries · 88 laws · 227 citations, 44 still to open · 7 known
+2036 items sealed · 1913 book entries · 90 laws · 233 citations, 46 still to open · 7 known

@@ -45,7 +45,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#floor-2-terrain
 
 - **E22** Floor 2, terrain (layer 90): every piece is a Cut or a Raise on the one height field (L2,  · QBE (N64)
-- **E23** a spot in a corner's own frame (u along one edge, v along the other), the same in all four
+- **E650** The corners: the board's four, clockwise a quarter turn apart from the screen's top left;  · A6 (N228)
+- **E23** a spot in a corner's own frame (u along one edge, v along the other), the frame turned wit
 - **E24** the four roads: corner to middle
 - **E25** every tile whose middle lies within r of a board point: fn(k, d, dx, dy)
 - **E26** a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land · D27 (N112) · QAZ (N60) · D28 (N112) · QBG (N67) · D32 (N112) · D16 (N112)
@@ -60,26 +61,31 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E35** Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 ·  · D34 (N112) · D35 (N112)
 - **E36** Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry l · D39 (N112) · D40 (N112) · D41 (N112) · QBE (N64) · D23 (N112)
 - **E37** Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads  · D42 (N112) · D45 (N112) · D44 (N112)
-- **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · QAZ (N60) · D48 (N112) · D49 (N112)
+- **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
+- **E651** a tile's tree share: its zone's row (D63–D66), straight from the inner edge's share to the · D63 (N228) · D66 (N112, N228) · QCP (N228, N231)
 - **E39** the wood's edge keeps one tile from any slope or water
 
 ## index.html#floor-3-non-movables
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ Z1's store, from what the first age up costs (D129, Mid's Bronze; Albert's rule): food · QBJ (N69) · D129 (N160) · D62 (N112) · D69 (N112)
+- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · QBJ (N168, N228) · D62 (N168, N228) · D63 (N228) · D65 (N228, N231)
 - **E43** what stands on each tile, and the shells themselves
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
-- **E47** The home finds: Who every corner · What Z1's berries, grove, gold and stone, sized by QBJ; · QBJ (N69) · D72 (N112) · D70 (N112) · D71 (N112) · QBF (N65)
+- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112) · QBJ (N168, N228) · D65 (N228, N231) · QBF (N65)
+- **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
+- **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
+- **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
 - **E50** drawn back to front
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
 - **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170)
+- **E652** The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by wo · QCQ (N229, N233)
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
 - **E52** 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23) · D23 (N112)
 - **E53** the first band is what can be waded (D24) · D24 (N112)
@@ -118,6 +124,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E370** a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give 
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
+- **E655** The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save
+- **E656** each kind of error logged once; a second kind holds the save (the last good one stands) an
+- **E657** the save: the seed (the map is laid again from it), the lists, the climate, the sides, wha
+- **E658** a save opened: the places turned back into the things and units, the Maps, Sets and Infini · D331 (N230)
+- **E659** the save waits while you fight, at most D331's fight; a failed save says so once in D331's · D331 (N230)
+- **E660** a save that will not open is kept aside, never written over; the one before opens instead
+- **E661** the game opened from a save: the fresh map from its seed, then the lists, the sides and th
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)
 - **E70** Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the groun · D3 (N112)
@@ -349,6 +362,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E164** what is under the finger: the tile at the land's height and the nearest unit it may see (y · D246 (N190)
 - **E426** the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)
 - **E165** The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a see · QBF (N65)
+- **E662** The opening: the game opens where you left it, unless the address names another seed; ?tes
 - **E166** the door: what the modules may touch
 - **E167** the test hook
 
@@ -402,6 +416,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
 - **E358** a pasture's card counts its sheep
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
+- **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
@@ -447,6 +462,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E210** sized once the modules and fonts are in (the first start)
 - **E211** the game opens on the player's hall
 - **E212** the version, said once (D171) · D171 (N118)
+- **E670** The test tools (Mid's matchLog, copyLog, tapCount): the match log for Claude to read, tap 
+- **E671** a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fe · D335 (N230)
+- **E672** copied to the clipboard, or through a hidden box where the clipboard is refused
+- **E673** the menu's part of the save: the mail, the news, the options, the match log
 
 ## econ.js
 
@@ -582,6 +601,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E632** a side's people: its civilisation, and the bonus row it holds from the start (Mid's CIVS f · QCA (N154, N155, N156, N176, N185)
 - **E633** the War crown's count (Mid's warCredit): a side destroying another side's unit or building
 - **E634** a raid on yours: an enemy strikes or fells one of your things; told by the mail, by sight, · QCH (N223)
+- **E663** New game (Mid's applyScenario and testField): the scenario's buildings and people placed b
+- **E664** A scenario (D330): the age, the store and the research for you (or every court), the relat · D330 (N229)
+- **E665** The test field (D333): you and one rival at war, the other two gone, every store full, bot · D333 (N229)
+- **E666** the economy's part of the save: a finished game clears the save instead
 
 ## combat.js
 
@@ -675,6 +698,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E519** Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies  · D280 (N198, N199)
 - **E520** A trap sprung: caltrops spike each walker once a while and wear flat; the others go off on
 - **E521** The archers' stake (Mid's STAKES, Agincourt): a horse that strikes a staked shooter is hur
+- **E667** the war's part of the save: the waves, the orders, the relations, the squads
 
 ## ai.js
 
@@ -712,6 +736,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E545** the wave sets out, its guard kept home; a few riders go for the foe's nearest drop-off to 
 - **E522** The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll): its personality's bold a · D304 (N202) · D285 (N198, N199, N202)
 - **E523** Dynamic Diplomacy (Mid's LEAGUE, leagueTick): when one side runs far ahead, the others (no
+- **E668** the computers' part of the save: their clocks, plans and minds
 
 ## sound.js
 

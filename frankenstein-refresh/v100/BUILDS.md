@@ -2910,3 +2910,80 @@ MODIFIED (124):
 LOCKED (1873 of 1997): byte for byte as sealed, 577,193 bytes
 Tests: 42/42 rules hold
 Inventory: 1997 items sealed · 1876 book entries · 88 laws · 227 citations, 44 still to open · 7 known
+
+## F37+F38 · the map's character, new game, modes and scenarios; saving, the safety net and test tools; Albert's map calls (bottom-left start, pocket and corner resources, Z3 transition zone) and the play-test must-fixes (Mid's ghost placement with guide lines, no double-tap zoom) · 2026-11-07 01:50
+Albert, Nov 5 11:40: yes yes F10–F39; Nov 6 16:01–16:07 map calls and core values; 19:08–19:11 play-test must-fixes
+Opened: code:index.html, code:menu.js, code:econ.js, code:ai.js, book:measure, book:ground, book:words, book:screen, book:shells, book:capabilities, book:comments, book:citations, book:rules, tool:test.py, tool:DICTIONARY.md, code:combat.js, book:angles, law:QBJ, law:QCP, law:QCQ
+MODIFIED (69):
+- book:angles:A6 · added
+- book:citations:N228 · added
+- book:citations:N229 · added
+- book:citations:N230 · added
+- book:citations:N231 · added
+- book:citations:N232 · added
+- book:citations:N233 · added
+- book:comments:E23 · 108 → 142 bytes
+- book:comments:E38 · 406 → 528 bytes
+- book:comments:E42 · 228 → 219 bytes
+- book:comments:E47 · 432 → 509 bytes
+- book:comments:E650 · added
+- book:comments:E651 · added
+- book:comments:E652 · added
+- book:comments:E653 · added
+- book:comments:E654 · added
+- book:comments:E655 · added
+- book:comments:E656 · added
+- book:comments:E657 · added
+- book:comments:E658 · added
+- book:comments:E659 · added
+- book:comments:E660 · added
+- book:comments:E661 · added
+- book:comments:E662 · added
+- book:comments:E663 · added
+- book:comments:E664 · added
+- book:comments:E665 · added
+- book:comments:E666 · added
+- book:comments:E667 · added
+- book:comments:E668 · added
+- book:comments:E669 · added
+- book:comments:E670 · added
+- book:comments:E671 · added
+- book:comments:E672 · added
+- book:comments:E673 · added
+- book:comments:E674 · added
+- book:measure:D329 · added
+- book:measure:D330 · added
+- book:measure:D331 · added
+- book:measure:D332 · added
+- book:measure:D333 · added
+- book:measure:D334 · added
+- book:measure:D335 · added
+- book:measure:D49 · removed
+- book:measure:D62 · 83 → 438 bytes
+- book:measure:D63 · 78 → 190 bytes
+- book:measure:D64 · 87 → 141 bytes
+- book:measure:D65 · 75 → 402 bytes
+- book:measure:D66 · 86 → 271 bytes
+- book:measure:D68 · removed
+- book:measure:D69 · removed
+- book:measure:D71 · removed
+- book:measure:D72 · removed
+- book:rules:X71 · added
+- book:rules:X72 · added
+- book:words:J28 · added
+- code:ai.js · 25,794 → 26,039 bytes
+- code:combat.js · 58,540 → 58,830 bytes
+- code:econ.js · 101,997 → 105,151 bytes
+- code:index.html#floor-2-terrain · 7,999 → 8,516 bytes
+- code:index.html#floor-3-non-movables · 5,783 → 7,855 bytes
+- code:index.html#page · 1,736 → 1,764 bytes
+- code:index.html#the-door · 6,760 → 11,327 bytes
+- code:index.html#touch · 6,761 → 7,381 bytes
+- code:menu.js · 72,256 → 74,555 bytes
+- law:QBJ · 280 → 398 bytes
+- law:QCP · added
+- law:QCQ · added
+- tool:test.py · 225,328 → 241,299 bytes
+LOCKED (1972 of 2036): byte for byte as sealed, 747,119 bytes
+Tests: 44/44 rules hold
+Inventory: 2036 items sealed · 1913 book entries · 90 laws · 233 citations, 46 still to open · 7 known

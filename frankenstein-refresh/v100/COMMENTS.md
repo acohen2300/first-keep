@@ -26,7 +26,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E20 | index.html#the-ground | the way in from the coast at a board point, and the coast's cliffness there |
 | E21 | index.html#the-ground | the drawn corners (QBE): at every grid corner the tiles round it are sorted by height and split where a step passes the angle of repose; each group shares one height, so a slope meets without a crack and a face stands where it should |
 | E22 | index.html#floor-2-terrain | Floor 2, terrain (layer 90): every piece is a Cut or a Raise on the one height field (L2, L3); the layer that shows follows (L1), a step past the angle of repose is a face (QBE). |
-| E23 | index.html#floor-2-terrain | a spot in a corner's own frame (u along one edge, v along the other), the same in all four (L12) |
+| E23 | index.html#floor-2-terrain | a spot in a corner's own frame (u along one edge, v along the other), the frame turned with its corner, the same in all four (L12) |
 | E24 | index.html#floor-2-terrain | the four roads: corner to middle |
 | E25 | index.html#floor-2-terrain | every tile whose middle lies within r of a board point: fn(k, d, dx, dy) |
 | E26 | index.html#floor-2-terrain | a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land stands out into it the shore is a face, where it bends back a bank (QBG); a lake's bank falls over D32, the sea's beach over D16 (L4) |
@@ -41,16 +41,16 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E35 | index.html#floor-2-terrain | Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 · When with the hills · Why water springs where ground rises · How a channel of D34 by D35 |
 | E36 | index.html#floor-2-terrain | Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry land, off the roads · When the map is made · Why cover and chokepoints inland · How count D39, radius D40, raised D41 in one step so every edge is a face (QBE); its top is bare (D23) |
 | E37 | index.html#floor-2-terrain | Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads and water · When the map is made · Why a line that cannot be walked, without water · How count D42, a wandering line of D45, cut to D44 so both walls are faces |
-| E38 | index.html#floor-2-terrain | Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor 3) · Where a wall round every home at D50 with the road through it (the same for all, L12), and patches over Z4 by a rolled surface; never on water, slopes or roads · When the map is made · Why woods to cut, to hide in, to go round · How QAZ as a surface, scale D48, standing where it rises past D49 |
+| E38 | index.html#floor-2-terrain | Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor 3) · Where a wall round every home at D50 with the road through it (the same for all, L12); elsewhere each zone's tree share (D63–D66): none in Z1 and Z2, thickening across Z3 to Z4's own (QCP); never on water, slopes or roads · When the map is made · Why woods to cut, to hide in, to go round, and room to build out near home (Albert, Nov 6) · How QAZ as a surface, scale D48, ranked so each zone holds its share (QCP) |
 | E39 | index.html#floor-2-terrain | the wood's edge keeps one tile from any slope or water |
 | E40 | index.html#floor-3-non-movables | Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each stands on one flat tile of land; a big one takes the tiles under it. Nothing here moves; floor 5 takes from the amounts. |
 | E41 | index.html#floor-3-non-movables | the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clear |
-| E42 | index.html#floor-3-non-movables | QBJ Z1's store, from what the first age up costs (D129, Mid's Bronze; Albert's rule): food for the age and the villagers, wood for the mill, the lumber camp, the homes and the barracks, each with a margin (D62–D69) |
+| E42 | index.html#floor-3-non-movables | QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the buildings at their costs, with the margin); a kind's finds in a zone are its pockets' worth (D63, D65), at least one |
 | E43 | index.html#floor-3-non-movables | what stands on each tile, and the shells themselves |
 | E44 | index.html#floor-3-non-movables | the free tile nearest a spot |
 | E45 | index.html#floor-3-non-movables | a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a grid |
 | E46 | index.html#floor-3-non-movables | the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry patch |
-| E47 | index.html#floor-3-non-movables | The home finds: Who every corner · What Z1's berries, grove, gold and stone, sized by QBJ; Z3's the same at D72 times, with iron · Where fixed spots in the corner's frame (D70, D71), the same in all four (L12) · When the map is made · Why every player starts with the same ground and the same means to the next age · How one home dice (QBF), restarted at each corner, so the four are alike to the stand of each bush |
+| E47 | index.html#floor-3-non-movables | The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70's spots, sized by QBJ; Z3's finds (D65) at three pockets' worth, laid by the Randomizer in the ring between Z2 and Z4, off the road; the land's specialty once more · Where the corner's own frame, the same in all four (L12) · When the map is made · Why every player starts with the same ground and the same means to the next age · How one home dice (QBF), restarted at each corner, so the corners match |
 | E48 | index.html#floor-3-non-movables | Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts: ruins, cemeteries, campfires, treasure · Where Z4, on flat free land, off the roads, the middle and the play edge · When the map is made · Why the game beyond the homestead is to be found, not known · How counts D73–D81, places uniform until one is clear, each a roll |
 | E49 | index.html#floor-3-non-movables | The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size and shade · Where its tile · When the map is made · Why the woods are what is cut for wood (R1) · How three rolls a tile |
 | E50 | index.html#floor-3-non-movables | drawn back to front |
@@ -645,3 +645,28 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E647 | menu.js | what the town needs next, first that holds: room, villagers, wood, idle hands, a barracks, spearmen, the next age, food, gold, a fire, sickness, gold work |
 | E648 | menu.js | every lesson beat: a new tip is said, then the first milestone newly true, one a beat |
 | E649 | ai.js | a computer chases its crown (Mid's chaseCrown): the wellbeing chaser builds each place of care it lacks; every side takes the hidden age when it opens and runs its steps, the match a race to the last |
+| E650 | index.html#floor-2-terrain | The corners: the board's four, clockwise a quarter turn apart from the screen's top left; yours, the first, sits A6 round (the bottom left, Albert Nov 6), the computers' follow in turn |
+| E651 | index.html#floor-2-terrain | a tile's tree share: its zone's row (D63–D66), straight from the inner edge's share to the outer edge's (QCP) |
+| E652 | index.html#floor-3-non-movables | The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by woods gets the fewest trees cleared between it and its Town Center, never across water; the pocket's grove is kept |
+| E653 | index.html#floor-3-non-movables | Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's specialty once more at one pocket's, at a rolled spot in the ring, off the road; the same dice in every corner |
+| E654 | index.html#floor-3-non-movables | The land's character (D329, Mid's LAND): past the pocket every find is worth its store's share |
+| E655 | index.html#the-door | The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save beat and on leaving, keeps the one before, waits out a fight; an error costs a frame, never the game |
+| E656 | index.html#the-door | each kind of error logged once; a second kind holds the save (the last good one stands) and says so |
+| E657 | index.html#the-door | the save: the seed (the map is laid again from it), the lists, the climate, the sides, what they know, and what differs from the fresh map; each module adds its own on the save hook; a thing or a unit is kept as its place in the lists |
+| E658 | index.html#the-door | a save opened: the places turned back into the things and units, the Maps, Sets and Infinity by their tags (D331) |
+| E659 | index.html#the-door | the save waits while you fight, at most D331's fight; a failed save says so once in D331's fail; the test field is never saved |
+| E660 | index.html#the-door | a save that will not open is kept aside, never written over; the one before opens instead |
+| E661 | index.html#the-door | the game opened from a save: the fresh map from its seed, then the lists, the sides and the changes laid back, then each module's own |
+| E662 | index.html#touch | The opening: the game opens where you left it, unless the address names another seed; ?test opens the test field on its own seed |
+| E663 | econ.js | New game (Mid's applyScenario and testField): the scenario's buildings and people placed by the placing rules nearest their spot |
+| E664 | econ.js | A scenario (D330): the age, the store and the research for you (or every court), the relations, the buildings and villagers, the length |
+| E665 | econ.js | The test field (D333): you and one rival at war, the other two gone, every store full, both armies down the road from your Town Center |
+| E666 | econ.js | the economy's part of the save: a finished game clears the save instead |
+| E667 | combat.js | the war's part of the save: the waves, the orders, the relations, the squads |
+| E668 | ai.js | the computers' part of the save: their clocks, plans and minds |
+| E669 | menu.js | the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the menu stays closed so the ghost and its guides are seen |
+| E670 | menu.js | The test tools (Mid's matchLog, copyLog, tapCount): the match log for Claude to read, tap counts kept on this phone |
+| E671 | menu.js | a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fell |
+| E672 | menu.js | copied to the clipboard, or through a hidden box where the clipboard is refused |
+| E673 | menu.js | the menu's part of the save: the mail, the news, the options, the match log |
+| E674 | index.html#floor-3-non-movables | a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26 from home): it is laid only where the ring is open land, and the trees on the ring are cleared, as the pocket's grove is kept |

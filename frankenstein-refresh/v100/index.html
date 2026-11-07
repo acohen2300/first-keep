@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600&family=IM+Fell+English+SC&display=swap">
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; } /* the slot and the gap come from the Screen book (SN1), set by menu.js */
-html, body { margin: 0; height: 100%; background: #214a63; overflow: hidden; -webkit-user-select: none; user-select: none; font-family: var(--ui); font-weight: 600; font-size: 14px; color: #ece5d3; }
+html, body { margin: 0; height: 100%; background: #214a63; overflow: hidden; -webkit-user-select: none; user-select: none; touch-action: manipulation; font-family: var(--ui); font-weight: 600; font-size: 14px; color: #ece5d3; }
 canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; }
 #top { display: none; } /* the floors' own readout, kept for the tests; the glass (menu.js) is what is seen */
 </style>
@@ -103,8 +103,8 @@ function makeGround(sd) {
 }
 
 // ── Floor 2, terrain (E22)
-const CORNERS = [[B0, B0], [B1, B0], [B1, B1], [B0, B1]];
-const corner = (c, u, v) => { const [cx, cy] = CORNERS[c], a = c * 90 * RAD; return [cx + u * Math.cos(a) - v * Math.sin(a), cy + u * Math.sin(a) + v * Math.cos(a)]; }; // E23
+const RING = [[B0, B0], [B1, B0], [B1, B1], [B0, B1]], QT = A.round / RING.length, CORNERS = RING.map((_, c) => RING[(c + A.corner / QT) % RING.length]); // E650
+const corner = (c, u, v) => { const [cx, cy] = CORNERS[c], a = (A.corner + c * QT) * RAD; return [cx + u * Math.cos(a) - v * Math.sin(a), cy + u * Math.sin(a) + v * Math.cos(a)]; }; // E23
 const cornerDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => Math.hypot(bx - cx, by - cy)));
 const segDist = (px, py, ax, ay, bx, by) => { const vx = bx - ax, vy = by - ay, t = clamp(((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy), 0, 1); return Math.hypot(px - ax - t * vx, py - ay - t * vy); };
 const laneDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => segDist(bx, by, cx, cy, MID, MID))); // E24
@@ -174,20 +174,20 @@ function makeTerrain(roll) {
     if (!inZ4(bx, by, D.creviceW) || !inZ4(ex, ey, D.creviceW) || !landAt(bx, by) || !landAt(ex, ey)) continue; made++;
     const pts = wanderLine(roll, [bx, by], [ex, ey], D.riverWander / 3, (x, y) => inZ4(x, y, D.creviceW) && landAt(x, y)); if (pts) for (const [x, y] of pts) stamp(x, y, D.creviceW, (k) => { H[k] = Math.min(H[k], D.creviceFloor); }); }
   // E38
-  const woods = fractal2(roll, 6, 1.3, D.forestScale);
+  const woods = fractal2(roll, 6, 1.3, D.forestScale), ZN = Object.keys(D).filter((z) => /^Z\d$/.test(z)).sort().map((z) => D[z]), may = [];
+  const share = (cd) => { const z = D.zone.filter((e) => cd >= e).length, lo = D.zone[z - ONE] ?? null, hi = D.zone[z] ?? lo, [d0, d1] = ZN[z].trees; return d0 + (d1 - d0) * (hi > lo ? clamp((cd - lo) / (hi - lo), null, ONE) : null); }; // E651
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const k = j * N + i; if (H[k] !== D.land) continue;
     const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), cd = cornerDist(bx, by);
     if (laneDist(bx, by) < D.lane || Math.hypot(bx - MID, by - MID) < D.middle || DEP[k] < D.edge + D.tile) continue;
-    const wall = cd >= D.wall[0] && cd <= D.wall[1], patch = cd > D.wall[1] && woods(bx, by) > D.forestShare;
-    if (wall || patch) FOR[k] = 1; }
+    if (cd >= D.wall[0] && cd <= D.wall[1]) FOR[k] = ONE; else may.push([woods(bx, by), k, share(cd)]); }
+  may.sort((a, b) => a[0] - b[0]).forEach(([, k, d], n) => { if (n / may.length >= ONE - d) FOR[k] = ONE; });
   for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) { const k = j * N + i; if (FOR[k] && [k - 1, k + 1, k - N, k + N].some((q) => H[q] !== D.land)) FOR[k] = 2; } // E39
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
 }
 // ── Floor 3, non-movables (E40)
 const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, look: e.look, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0, open: e.style === 'Open' }; } // E41
 // E42
-const [, AGE1] = D.age.cost, Z1 = { food: (AGE1.food + D.villagers * D.villager) * (1 + D.margin), wood: (D.mill + D.lumber + D.homes * D.home + D.barracks) * (1 + D.margin) };
-const z1 = { bush: Math.ceil(Z1.food / D.bushFood), tree: Math.ceil(Z1.wood / D.treeWood) };
+const Z1 = D.pocket.store, piles = (kind, x) => Math.max(ONE, Math.ceil((x * (Z1[KIND[kind].yield] || null)) / KIND[kind].amount)); let land = null;
 const OCC = new Uint8Array(N * N), FN = D.finds, rowOf = (t) => FN.rows[(KIND[t.kind] || {}).code]; let things = []; // E43
 const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
 const free = (k) => flatAt(k) && !OCC[k] && !FOR[k];
@@ -197,29 +197,42 @@ function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3)) { // E45
   const i = k % N, j = (k - i) / N, [bx, by] = toBoard((i + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter, (j + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter), [vx, vy] = toView(bx, by, H[k]);
   things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
 }
+const reachOf = (n) => Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile;
 function cluster(kind, bx, by, n, roll) { // E46
-  const got = []; stamp(bx, by, Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile, (k, d) => { if (free(k)) got.push([d, k]); });
-  for (const [, k] of got.sort((a, b) => a[0] - b[0]).slice(0, n)) kind === 'tree' ? (FOR[k] = 1) : put(kind, k, roll);
+  const got = []; stamp(bx, by, reachOf(n), (k, d) => { if (free(k)) got.push([d, k]); });
+  const ks = got.sort((a, b) => a[0] - b[0]).slice(0, n).map(([, k]) => k); for (const k of ks) kind === 'tree' ? (FOR[k] = 1) : put(kind, k, roll); return ks;
 }
 function makeThings(roll) {
   // E47
-  for (let c = 0; c < 4; c++) { const hr = dice(seed ^ 0x9e3779b9), at = (z, key) => corner(c, ...D[z][key]), one = (kind, z) => { const k = nearest(...at(z, kind), 3 * D.tile); if (k >= 0) put(kind, k, hr); };
-    cluster('bush', ...at('z1', 'bush'), z1.bush, hr); cluster('tree', ...at('z1', 'tree'), z1.tree, hr); one('gold', 'z1'); one('stone', 'z1');
-    cluster('bush', ...at('z3', 'bush'), z1.bush * D.z3x, hr); cluster('tree', ...at('z3', 'tree'), z1.tree * D.z3x, hr); one('gold', 'z3'); one('stone', 'z3'); one('iron', 'z3'); }
+  const LS = D.lands, names = Object.keys(LS.rows), lr = dice(seed ^ LS.seed), fixed = new Set(), [, z2, z3] = D.zone; land = names[Math.floor(lr() * names.length)]; const LD = LS.rows[land];
+  CORNERS.forEach((_, c) => { const hr = dice(seed ^ 0x9e3779b9), spot3 = (n) => { for (let t = D.tries.spot; t--; ) { const r = between(hr, [z2 + reachOf(n), z3 - reachOf(n)]), a = hr() * QT * RAD, [x, y] = corner(c, r * Math.cos(a), r * Math.sin(a)); if (laneDist(x, y) >= D.lane + D.tile && free(tileAt(x, y))) return [x, y]; } return null; };
+    for (const kind in D.z1) cluster(kind, ...corner(c, ...D.z1[kind]), piles(kind, D.Z1.x), hr).forEach((k) => fixed.add(k));
+    for (const [kind, x] of [...D.Z3.finds.map((f) => [f, D.Z3.x]), ...(LD.extra ? [[LD.extra, D.Z1.x]] : [])]) { const n = piles(kind, x), at = spot3(n); if (at) cluster(kind, ...at, n, hr); } }); // E653
   // E48
-  const spot = (r, roll2 = roll) => { for (let t = 0; t < 200; t++) { const bx = between(roll2, [B0, B1]), by = between(roll2, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r)) return [bx, by, k]; } return null; };
+  const felled = new Set(), guarded = (kind) => !!(FN.rows[KIND[kind].code] || {}).guard, ring = (x, y, f) => stamp(x, y, (FN.ring + ONE) * D.tile, f), clearing = (kind, [x, y]) => { if (guarded(kind)) ring(x, y, (k) => { if (FOR[k]) { FOR[k] = OCC[k] = null; felled.add(k); } }); }; // E674
+  const open = (kind, x, y) => { let ok = true; if (guarded(kind)) ring(x, y, (k) => { if (H[k] < D.land || (OCC[k] && !FOR[k])) ok = false; }); return ok; };
+  const spot = (r, roll2 = roll, kind = null) => { for (let t = 0; t < 200; t++) { const bx = between(roll2, [B0, B1]), by = between(roll2, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r) && (!kind || open(kind, bx, by))) return [bx, by, k]; } return null; };
   for (const [kind, n] of [['gold', 'goldZ4'], ['stone', 'stoneZ4'], ['iron', 'ironZ4'], ['ruins', 'ruins'], ['cemetery', 'cemeteries'], ['campfire', 'campfires'], ['treasure', 'treasures']])
-    for (let m = count(roll, D[n]); m > 0; m--) { const s = spot(KIND[kind].r); if (s) put(kind, s[2], roll); }
+    for (let m = count(roll, D[n]); m > 0; m--) { const s = spot(KIND[kind].r, roll, kind); if (s) { put(kind, s[2], roll); clearing(kind, s); } }
   for (let m = count(roll, D.patches); m > 0; m--) { const s = spot(2 * D.tile); if (s) cluster('bush', s[0], s[1], count(roll, D.patch), roll); }
-  const TR = D.trade; TR.routes.forEach(([ax, ay], r) => TR.stops.forEach((d, i) => { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('stop', k, roll); Object.assign(things.at(-1), { route: r, want: TR.wares[(r + i) % TR.wares.length], owner: null }); } })); // E492
+  const TR = D.trade; TR.routes.forEach(([ax, ay], r) => TR.stops.forEach((d, i) => { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('stop', k, roll); const t = things.at(-1); Object.assign(t, { route: r, want: TR.wares[(r + i) % TR.wares.length], owner: null }); clearing('stop', [t.bx, t.by]); } })); // E492
+  openWays(fixed);
   // E49
   for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
-  const fr = dice(seed ^ FN.seed); for (const [kind, n] of Object.entries(FN.lay)) for (let m = count(fr, n); m--; ) { const s = spot(KIND[kind].r, fr); if (s) put(kind, s.at(-1), fr); } // E564
-  for (const [ax, ay] of TR.routes) for (const d of [FN.camp, -FN.camp]) { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) put('camp', k, fr); }
+  for (const t of things) if (D.Z3.finds.includes(t.kind) && !fixed.has(t.k)) t.amount = Math.round(t.amount * (LD.amt[KIND[t.kind].yield] ?? ONE)); // E654
+  const fr = dice(seed ^ FN.seed); for (const [kind, n] of Object.entries(FN.lay)) for (let m = count(fr, n); m--; ) { const s = spot(KIND[kind].r, fr, kind); if (s) { put(kind, s.at(-1), fr); clearing(kind, s); } } // E564
+  for (const [ax, ay] of TR.routes) for (const d of [FN.camp, -FN.camp]) { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('camp', k, fr); clearing('camp', [things.at(-1).bx, things.at(-1).by]); } }
+  things = things.filter((t) => !(felled.has(t.k) && t.kind === 'tree'));
   things.sort((a, b) => a.vy - b.vy); // E50
   for (const t of things) if (t.kind === 'tree') deepen(t); // E51
   for (const L of lakes) for (let m = Math.round(L.r / D.fish.per), n = m; m--; ) { const a = (m / n) * A.round * RAD, [cx, cy] = [Math.cos(a), Math.sin(a)]; let d = D.fish.inset; // E344
     while (d < L.r + D.beach && !stratum(H[tileAt(L.x + cx * d, L.y + cy * d)])) d += D.fish.inset; const k = tileAt(L.x + cx * (d - D.fish.inset), L.y + cy * (d - D.fish.inset)); if (!OCC[k] && !stratum(H[k])) { put('fish', k, roll); things.at(-1).amount = things.at(-1).max = Math.round((D.fish.amt * L.r) / D.fish.r0); } }
+}
+function openWays(fixed) { // E652
+  const cost = new Float64Array(N * N), back = new Int32Array(N * N), step = [ONE, -ONE, N, -N], quarter = (t) => { const d = CORNERS.map(([x, y]) => Math.hypot(t.bx - x, t.by - y)); return d.indexOf(Math.min(...d)); };
+  CORNERS.forEach((_, c) => { const at = tileAt(...corner(c, ...D.tc)); let now = [at], next = []; cost.fill(Infinity); cost[at] = null;
+    while (now.length) { for (const k of now) for (const d of step) { const n = k + d, w = cost[k] + FOR[n]; if (!walkable(n) || fixed.has(n) || w >= cost[n]) continue; cost[n] = w; back[n] = k; (FOR[n] ? next : now).push(n); } [now, next] = [next, []]; }
+    for (const t of things) if (quarter(t) === c) { const [best] = step.map((d) => t.k + d).sort((a, b) => cost[a] - cost[b]); for (let k = best; cost[k] > null && cost[k] < Infinity; k = back[k]) FOR[k] = null; } });
 }
 const lay = (kind, bx, by, amount) => { put(kind, tileAt(bx, by), rng); return Object.assign(things.at(-1), { amount }); }; // E345
 const byLake = (bx, by, r) => lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + D.beach + r);
@@ -297,7 +310,7 @@ function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 
 function resize() { dpr = Math.min(2, devicePixelRatio || 1) * DRW.half ** !!show.half; cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
 // ── The door (E65)
-const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [] }; // E66
+const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], begin: [], save: [], load: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [] }; // E66
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 // E277
 const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
@@ -319,7 +332,34 @@ const rankName = (code, side) => { const r = ranks(code, side); return r.length 
 function learn(side, id) { (known.get(side) || known.set(side, new Set()).get(side)).add(id); FXC.delete(side); for (const t of [...units, ...things]) if (t.side === side && t.hpMax) { const M = stat(t.code, side, 'hp'); t.hp *= M / t.hpMax; t.hpMax = M; } learnt(side, id); } // E281
 let last = 0, frameDt = 0;
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
-function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) { const w0 = performance.now(); climate(dt); step(dt); fire('tick', dt); look(dt); followCam(dt); draw(); shed(performance.now() - w0); } } requestAnimationFrame(loop); }
+function loop(now) { if (now - last >= 1000 / D.fps) { const dt = Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); climate(dt); step(dt); fire('tick', dt); look(dt); followCam(dt); draw(); shed(performance.now() - w0); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
+// E655
+const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\b/.test(location.search), seenErr = new Set(), BASE0 = {}; let fightT = null, failT = -Infinity;
+function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE) fire('say', WS.fault); } // E656
+addEventListener('error', (e) => fault(e.error || e.message)); addEventListener('unhandledrejection', (e) => fault(e.reason));
+const ARR = () => ({ H, OCC, FOR, MARSH, RUTS }), refill = (a, b) => { if (a instanceof Map || a instanceof Set) { a.clear(); for (const x of b) a instanceof Map ? a.set(...x) : a.add(x); } else if (Array.isArray(a)) a.splice(null, a.length, ...b); else { for (const k in a) delete a[k]; Object.assign(a, b); } };
+function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n) => [t, n])), base = new Map(BASE0.things.map((t, n) => [t, n])), S = { seed, things: [], units, K, SIDES, known, HZ, arr: {} }; // E657
+  S.things = things.map((t) => { const n = base.get(t); if (n == null) return t; const was = BASE0.shot[n], d = {}; for (const k in t) if (t[k] !== was[k] || (t[k] && typeof t[k] === 'object')) d[k] = t[k]; return Object.keys(d).length ? { [TG.base]: n, ...d } : n; });
+  for (const [name, a] of Object.entries(ARR())) { const d = []; a.forEach((v, k) => { if (v !== BASE0[name][k]) d.push([k, v]); }); S.arr[name] = d; }
+  if (fire('save', S)) return null;
+  return JSON.stringify(S, function (k, v) { if (typeof v === 'number' && !Number.isFinite(v)) return { [TG.num]: String(v) }; if (!v || typeof v !== 'object') return v; if (ids.has(v) && this !== S.things && this !== units) return { [TG.ref]: ids.get(v) };
+    if (v instanceof Map) return { [TG.map]: [...v] }; if (v instanceof Set) return { [TG.set]: [...v] }; return v.constructor && v.constructor !== Object && v.constructor !== Array ? undefined : v; }); }
+function unpack(S) { const fresh = BASE0.things; S.things = S.things.map((e) => (typeof e === 'number' ? fresh[e] : TG.base in e ? Object.assign(fresh[e[TG.base]], e) : e)); S.things.forEach((t) => delete t[TG.base]); // E658
+  const all = [...S.things, ...S.units], fix = (v) => { if (!v || typeof v !== 'object') return v; if (Array.isArray(v)) { v.forEach((x, n) => { v[n] = fix(x); }); return v; }
+  if (TG.ref in v) return all[v[TG.ref]]; if (TG.num in v) return Number(v[TG.num]); if (TG.map in v) return new Map(fix(v[TG.map])); if (TG.set in v) return new Set(fix(v[TG.set])); for (const k in v) v[k] = fix(v[k]); return v; };
+  for (const k in S) S[k] = fix(S[k]); return S; }
+const clearSave = () => { try { localStorage.removeItem(SV.key); localStorage.removeItem(SV.key + SV.bak); } catch (e) {} };
+function save(force) { if (TEST || seenErr.size > ONE) return; const fight = units.some((u) => u.side === ME && u.target && u.target.hp > null && u.target.side !== ME && u.target.side != null); // E659
+  if (!force && fight && (fightT ??= K.t) > K.t - SV.fight) return; fightT = null;
+  try { const t = pack(); if (t == null) return clearSave(); const prev = localStorage.getItem(SV.key); if (prev) localStorage.setItem(SV.key + SV.bak, prev); localStorage.setItem(SV.key, t); }
+  catch (e) { if (K.t - failT > SV.fail) { failT = K.t; fire('say', WS.saveFail); } } }
+function readSave(key = SV.key) { try { const t = localStorage.getItem(key), S = t && JSON.parse(t); return S && S.things ? S : key === SV.key ? readSave(SV.key + SV.bak) : null; } // E660
+  catch (e) { if (key !== SV.key) return null; aside(); return readSave(SV.key + SV.bak); } }
+const aside = () => { try { localStorage.setItem(SV.key + SV.lost, localStorage.getItem(SV.key)); localStorage.removeItem(SV.key); } catch (x) {} };
+function load(R) { const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); // E661
+  for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v;
+  GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = null; WOODS.clear(); for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
+on('tick', () => { if (every(D.saveBeat)) save(); }); addEventListener('pagehide', () => save(true)); document.addEventListener('visibilitychange', () => { if (document.hidden) save(true); });
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1464,9 +1504,10 @@ on('draw', (c) => { if (!press || press.moved) return; const f = (performance.no
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); camStop(); keepOn(); dirty(); }, { passive: false });
 // E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start() { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); topN = -1; GATES.clear(); seeT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); dirty(); }
-addEventListener('hashchange', start); addEventListener('resize', resize);
-window.FK = { look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, HZ, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+function start(sd, S = null) { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); topN = -1; GATES.clear(); seeT = 0; K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
+const boot = () => { const h = Number(location.hash.slice(ONE)), got = TEST ? null : readSave(), S = got && (!h || got.seed === h) ? got : null; if (S) try { start(null, S); return fire('say', WS.back); } catch (e) { fault(e); aside(); } start(TEST ? D.testField.seed : null); }; // E662
+addEventListener('hashchange', () => start()); addEventListener('resize', resize);
+window.FK = { look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, HZ, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); look(dt); }, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>
@@ -1475,6 +1516,6 @@ window.fk = FK; // E167
 <script src="combat.js"></script>
 <script src="ai.js"></script>
 <script src="sound.js"></script>
-<script>resize(); start(); requestAnimationFrame(loop);</script>
+<script>resize(); boot(); requestAnimationFrame(loop);</script>
 </body>
 </html>

@@ -2,76 +2,76 @@
  "about": "Step 6, temp book staging/save.js (Mid's 34-save): every piece. v100 has no save yet; its home is new: a save module. in v100: already home. bring: comes with the save module, as v100's own code and book entries, never Mid's field names. cut: v100 does it another way.",
  "pieces": {
   "SAVEKEY": [
-   "bring",
-   "the save's key on the phone and its shape number (SAVEV): with the save module"
+   "in v100",
+   "F38: measure D331 key; no shape number: v100 starts fresh (Albert 11:16 (8))"
   ],
   "MIGRATE": [
-   "bring",
-   "twenty steps that open Mid's older save shapes; the way (a step per old shape) comes with the save module, Mid's steps only if old saves must open (see misfits)"
+   "in v100",
+   "F38: none needed: v100 starts fresh (Albert 11:16 (8)); the way is the save's own fields"
   ],
   "reTurn": [
    "cut",
    "turns a save laid at another view angle; v100 keeps places on its square grid apart from the turn (index.html, the frames floor, toBoard / fromBoard, QBD), so a save never needs turning"
   ],
   "evSave": [
-   "bring",
-   "the running event saved without its objects: with the events module and the save"
+   "in v100",
+   "F38: K is saved whole (the event in K.ev)"
   ],
   "staleSave": [
-   "bring",
-   "remembers a save that could not open, so the setup card can say so: with the save and Start"
+   "in v100",
+   "F38: a save that will not open is kept aside (.lost) and the one before opens"
   ],
   "SKIP_U": [
-   "bring",
-   "what of a unit is not saved (passing things: paths, targets, drawing marks): with the save, as v100's own list"
+   "in v100",
+   "F38: index.html pack: only plain data is kept (canvases and typed caches dropped)"
   ],
   "cardLocked": [
-   "bring",
-   "the Resume card holds the whole screen until answered, so no game starts unsaved: with the save and the Resume card (menu)"
+   "in v100",
+   "F38: no Resume card: the game opens where you left it (boot); parked"
   ],
   "freshSlate": [
-   "bring",
-   "a new game starts clean of the last game's save holds and error count: with the save"
+   "in v100",
+   "F38: each module's start hook"
   ],
   "holdSave": [
-   "bring",
-   "while the Resume card waits, nothing overwrites the save it offers: with the save"
+   "in v100",
+   "F38: with the Resume card, parked"
   ],
   "inFight": [
-   "bring",
-   "is the player in a fight: the save waits out a battle (at most a minute): with saveGame"
+   "in v100",
+   "F38: index.html save(): a unit of yours with a live foe as its target"
   ],
   "fightHold": [
-   "bring",
-   "when the save began waiting for a battle: with saveGame"
+   "in v100",
+   "F38: index.html save(), D331 fight"
   ],
   "saveFailT": [
-   "bring",
-   "a failed save says so once a minute (\"Storage may be full\"): with saveGame"
+   "in v100",
+   "F38: index.html save(), D331 fail, words J28 saveFail"
   ],
   "saveGame": [
-   "bring",
-   "the save every 10 s and on leaving: everything that changes, trees as five numbers, hundredths, the save before kept as .bak; v100's save writes v100's own state, not Mid's field list (some of its fields are for cut features: see misfits)"
+   "in v100",
+   "F38: index.html pack/save (the beat D332, on leaving, the .bak); the map from its seed, fresh finds by their place, only changes kept"
   ],
   "readSave": [
-   "bring",
-   "opens the save, falls back to .bak, sets aside one it cannot open (never lost): with the save"
+   "in v100",
+   "F38: index.html readSave"
   ],
   "keepAside": [
-   "bring",
-   "a damaged save is kept aside, never written over: with the save"
+   "in v100",
+   "F38: index.html aside"
   ],
   "migrateChain": [
-   "bring",
-   "the check that every old shape has a step to the next: with MIGRATE"
+   "in v100",
+   "F38: none needed (v100 starts fresh)"
   ],
   "clearSave": [
-   "bring",
-   "a finished game clears the save and its backup: with the save"
+   "in v100",
+   "F38: index.html clearSave, when econ's save hook says the game is over"
   ],
   "loadGame": [
-   "bring",
-   "rebuilds the game from a save (links between units, finds and buildings restored by id; a damaged unit or building left out, not the whole save): with the save"
+   "in v100",
+   "F38: index.html unpack/load and each module's load hook"
   ]
  },
  "misfits": [
