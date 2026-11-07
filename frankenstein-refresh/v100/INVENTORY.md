@@ -4,9 +4,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 2,951 | 453,511 | 453,648 |
-| Books | 1781 | 0 | 476,527 | 477,158 |
-| Laws | 87 | 0 | 16,969 | 17,457 |
+| Game code | 29 | 3,020 | 467,192 | 467,330 (+13,682) |
+| Books | 1874 | 0 | 520,889 | 521,546 (+11,889) |
+| Laws | 88 | 0 | 17,519 | 18,009 (+116) |
 | Tools | 4 | 1,500 | 238,633 | 238,863 |
 
 ## The trades (code)
@@ -23,24 +23,24 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 48 | 5,779 | 5,783 | 81 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 942 | 946 | 14 |
-| index.html#the-door | 58 | 6,587 | 6,591 | 69 |
+| index.html#the-door | 58 | 6,756 | 6,760 (+169) | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
-| index.html#the-building-art | 324 | 50,842 | 50,846 | 4095 |
+| index.html#the-building-art | 324 | 50,846 | 50,850 (+4) | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
 | index.html#floor-5-movables | 128 | 14,640 | 14,644 | 93 |
 | index.html#the-body-s-laws | 31 | 2,561 | 2,565 | 34 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,210 | 5,214 | 92 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 (+16) | 92 |
 | index.html#floor-6-climate | 154 | 24,617 | 24,629 | 237 |
-| index.html#floor-7-display | 43 | 7,174 | 7,178 | 55 |
-| index.html#the-view-s-eyes-lights-and-stage | 116 | 21,693 | 21,697 | 0 |
+| index.html#floor-7-display | 43 | 7,191 | 7,195 (+17) | 55 |
+| index.html#the-view-s-eyes-lights-and-stage | 116 | 21,729 | 21,733 (+36) | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
-| index.html#touch | 49 | 6,742 | 6,746 | 54 |
-| menu.js | 366 | 63,965 | 64,006 | 583 |
-| econ.js | 538 | 97,491 | 97,491 | 72 |
-| combat.js | 351 | 58,473 | 58,473 | 84 |
-| ai.js | 159 | 25,200 | 25,200 | 26 |
+| index.html#touch | 49 | 6,757 | 6,761 (+15) | 54 |
+| menu.js | 410 | 72,220 | 72,262 (+8,256) | 583 |
+| econ.js | 559 | 101,999 | 101,999 (+4,508) | 72 |
+| combat.js | 351 | 58,540 | 58,540 (+67) | 84 |
+| ai.js | 163 | 25,794 | 25,794 (+594) | 26 |
 | sound.js | 57 | 5,774 | 5,774 | 66 |
 
 ## The books
@@ -48,29 +48,29 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 5 | 734 |
-| capabilities | 50 | 14,678 |
-| citations | 220 | 43,002 |
+| capabilities | 51 | 15,092 |
+| citations | 227 | 45,209 |
 | colours | 21 | 4,542 |
-| comments | 616 | 103,297 |
+| comments | 641 | 107,037 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 297 | 116,175 |
+| measure | 304 | 121,614 |
 | rules | 66 | 23,345 |
 | screen | 11 | 3,247 |
-| shells | 103 | 20,476 |
+| shells | 109 | 22,563 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
-| sprites | 62 | 24,413 |
-| tech | 222 | 64,240 |
-| words | 20 | 59,224 |
+| sprites | 65 | 25,562 |
+| tech | 259 | 75,552 |
+| words | 27 | 78,277 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
 | 100 | 17 | 0 |
-| 110 | 50 | 10 |
-| 120 | 36 | 0 |
+| 110 | 50 | 8 |
+| 120 | 42 | 0 |
 
 ## The rules
 
@@ -143,4 +143,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X67 | t-stage | page | lights, the glide, theatrics and the draw budget (F34): Mid's FLAME, LIGHT, CAM_W, the pop and the shed thresholds in the books; a glide to the Town Center follows Mid's frozen spring and followCam frame by frame; after dark the Town Center, a finished house, a burning house, a badly hurt and a lanterned camp give the lights Mid's frozen drawLight gives; each flame's colour and its life in the rain are Mid's kelvinRGB and flameLife; the finished house's pop runs Mid's popC frame by frame; a slow phone sheds and climbs back on Mid's frozen shed |
 | X68 | t-dew | page | fog by the atmosphere (Albert, Nov 6 14:44): on a dry calm evening with the dew point just under the air, the air cools to it and fog forms (visibility under the WMO's 1 km); the visibility equals CALVIS's 3.912 ÷ (144.7 C^0.88) for the vapour above saturation by Magnus, never past the typical fog's water; a breeze past 7 knots clears it; the sun lifts it once the air warms past the dew point |
 
-1901 items sealed · 1781 book entries · 87 laws · 220 citations, 44 still to open · 7 known
+1995 items sealed · 1874 book entries · 88 laws · 227 citations, 44 still to open · 7 known

@@ -38,7 +38,7 @@ function plan(i, cls, up) { const P = SQ.plan[i], cur = P[cls] ?? 0, [ten, one, 
   P[cls] = Math.min(Math.max(cur, D.squad - others), Math.max(0, up ? cur + st : cur - st)); if (!P[cls]) delete P[cls]; rebattalion(); }
 const squad = (i) => armyOf(ME).filter((u) => u.bn === i), orders = (side) => armyFree(side, 'rout').filter((u) => side !== ME || SQ.sel == null || u.bn === SQ.sel);
 function lack(i) { const gap = { ...SQ.plan[i] }, less = (c, n) => { gap[clsOf(c)] -= n; }; for (const u of squad(i)) less(u.code, 1); for (const b of things()) if (b.side === ME) for (const j of b.q || []) if (j.plan && j.bn === i) for (const c in j.plan) less(c, j.plan[c]); // E386
-  const out = {}; for (const cls in gap) { const k = FK.kinds(cls).find((c) => FK.aged(c, ME)); if (gap[cls] > 0 && k) out[k] = gap[cls]; } return out; }
+  const out = {}; for (const cls in gap) { const k = FK.civKind(FK.kinds(cls).find((c) => FK.aged(FK.civKind(c, ME), ME)), ME); if (gap[cls] > 0 && k) out[k] = gap[cls]; } return out; }
 // E230
 const wear = (u) => (SIDES[u.side] && (K.rain + K.snowing > 0 || K.temp < 0) ? 1 - D.wear * (1 - Math.min(1, FK.stat(u.code, u.side, 'wear'))) : 1);
 const dmgOf = (u) => FK.stat(u.code, u.side, 'atk') * wear(u) * (rider(u) ? shapeOf(u).dmg : 1) * temper(u).dmg * ECON.hungerOf(u.side) * ZE.mul ** (u.zeal > K.t) * D.health.dmg ** (u.sick > K.t);
@@ -187,7 +187,7 @@ function join(S, m) { const O = order(S, null, kOf(centreOf(mUnits(m)))); if (!O
 // E418
 const ofKind = (cls) => sendable().filter((u) => clsOf(u.code) === cls), aimK = (aim) => (aim.t ? kOf(aim.t) : aim.k), wait = (k) => Math.ceil(Math.max(K.t, AT[k] ?? K.t) - K.t);
 const chargeWhy = (S) => (!S.some((u) => !stat(u).bonly) ? WO.why.charge : AT['charge' + ME] > K.t ? WO.why.winded.replace('{n}', wait('charge' + ME)) : '');
-function charge(S) { const [s0] = S; AT['charge' + s0.side] = K.t + CH.cd; for (const u of S) if (!stat(u).bonly) { u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } }
+function charge(S) { const [s0] = S; AT['charge' + s0.side] = K.t + CH.cd * FK.stat('', s0.side, 'chargecd'); for (const u of S) if (!stat(u).bonly) { u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } }
 function fallBack(S) { const h = home(ME); if (!h || !S.length) return false; for (const u of S) { const f = nearest(u, FB.look), [dx, dy] = f ? dir(u.bx - f.bx, u.by - f.by) : dir(h.bx - u.bx, h.by - u.by), k = FK.tileAt(u.bx + dx * FB.back * T, u.by + dy * FB.back * T);
   Object.assign(u, { fb: K.t + FB.secs, target: null, focus: null, ord: null, sent: false }); march(u, FK.walkable(k) ? k : u.k); } return true; }
 const DIRECTS = { // E419
