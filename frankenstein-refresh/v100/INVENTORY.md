@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,142 | 491,425 | 491,563 |
-| Books | 1953 | 0 | 552,694 | 553,366 |
+| Game code | 29 | 3,142 | 491,384 | 491,522 |
+| Books | 1954 | 0 | 552,907 | 553,579 |
 | Laws | 91 | 0 | 18,646 | 19,146 |
 | Tools | 4 | 1,759 | 284,794 | 285,032 |
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 60 | 7,860 | 7,864 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 942 | 946 | 14 |
-| index.html#the-door | 94 | 13,802 | 13,806 | 69 |
+| index.html#the-door | 94 | 13,869 | 13,873 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
@@ -37,7 +37,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 21,806 | 21,810 | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
 | index.html#touch | 50 | 7,468 | 7,472 | 54 |
-| menu.js | 456 | 80,165 | 80,207 | 583 |
+| menu.js | 456 | 80,057 | 80,099 | 578 |
 | econ.js | 576 | 105,311 | 105,311 | 72 |
 | combat.js | 354 | 59,036 | 59,036 | 84 |
 | ai.js | 169 | 26,971 | 26,971 | 25 |
@@ -56,13 +56,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | mass | 24 | 3,740 |
 | measure | 311 | 127,149 |
 | rules | 74 | 28,016 |
-| screen | 11 | 3,247 |
+| screen | 11 | 3,264 |
 | shells | 109 | 23,178 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
 | sprites | 65 | 25,607 |
 | tech | 259 | 75,753 |
-| words | 30 | 87,370 |
+| words | 31 | 87,576 |
 
 ## The shells
 
@@ -151,4 +151,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 
-2077 items sealed · 1953 book entries · 91 laws · 239 citations, 47 still to open · 7 known
+2078 items sealed · 1954 book entries · 91 laws · 239 citations, 47 still to open · 7 known

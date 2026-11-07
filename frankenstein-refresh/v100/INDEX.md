@@ -1473,7 +1473,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | Code | Name | Value | Cited |
 |---|---|---|---|
 | SN1 | the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6 | {slots: 6, slot: 44, gap: 6} | N133 |
-| SN2 | the Build tabs: six, up to nine buildings each, three to a row (each cell two slots wide) | {Home: [BTC1, BR1, BR2, BCR2, BP4, BP6, BP7], Land: [BCL1, BI1, BCL2, BI3, BCT2, BI2, BCL3, BCL4, BI5], Trade: [BCR1, BCT1, BI6, BI4, BI7, B | N134 |
+| SN2 | the Build tabs: six, in Base's order, up to nine buildings each, three to a row (each cell two slots wide) | {Home: [BTC1, BR1, BR2, BCR2, BP4, BP6, BP7], Land: [BCL1, BI1, BCL2, BI3, BCT2, BI2, BCL3, BCL4, BI5], War: [BM1, BM2, BM3, BM4, BI9, BP10, | N134 |
 | SN3 | buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the Net is the Natives' (it waits with them) | [BS1, BTC5, BTC6, BTC7, BTC8, BW4, BF2] | N135; N172; N198 |
 | SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [queue, Spawn], [train, Spawn], [tech, Research], [troops, | N136; N170; N194 |
 | SN5 | the top ribbon: the five stores, sound, play, mail | [food, wood, stone, gold, iron, mute, play, mail] | N137 |
@@ -2034,4 +2034,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J28 | the start: the lands' names (Mid's LAND), the scenarios' names and lines (Mid's SCEN_TEXT, without what v100 has not built: the walls, the horde, the truce, the Games), the safety net's and the save's lines (Mid's fault, saveGame, copyLog, testField) | {lands: {fertile: Fertile land, timber: Timberland, stony: Stony hills, golden: Gold country}, land: {land}. Gather, grow, explore., scen: { | N229; N230 |
 | J29 | the Guide's and History's fixed words (Mid's guideModel, HIST_NOTE, HIST_ASK, yearOf, guideMd): where a unit no building trains is trained, a building off the Build menu and where it comes from, a shell whose history line is not under its look (key), the eras History dates by name (a year, BC below none), the Markdown's headings | {at: the Town Center, start: where you start, secs:  s, by: ×, beats: {times:  ×, bld: buildings, only: buildings only}, off: {BS1: stands o | N234; N161 |
 | J30 | the song line, said by the Guide and the Sound page (Mid's SONG) | There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed | N234 |
+| J31 | a Build cell's second line when the store cannot pay: the word, its colour how near (the shortfall is in the tap's Needs) | Short | N132 |
 

@@ -3122,3 +3122,15 @@ MODIFIED (105):
 LOCKED (1972 of 2077): byte for byte as sealed, 632,831 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2077 items sealed · 1953 book entries · 91 laws · 239 citations, 47 still to open · 7 known
+
+## M1 · Base's menus, first part: the Build card above the jobs rows, Base's tab order, Base's text weight with nothing cut off; the screen lock requested once · 2026-11-07 13:05
+Albert, Nov 7 12:35: Base's menus are it; 12:51: go go go (items 2-4)
+Opened: code:menu.js, code:index.html, book:screen, book:words, book:colours, book:comments, book:rules
+MODIFIED (4):
+- book:screen:SN2 · 532 → 549 bytes
+- book:words:J31 · added
+- code:index.html#the-door · 13,806 → 13,873 bytes
+- code:menu.js · 80,207 → 80,099 bytes
+LOCKED (2074 of 2078): byte for byte as sealed, 1,254,562 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2078 items sealed · 1954 book entries · 91 laws · 239 citations, 47 still to open · 7 known

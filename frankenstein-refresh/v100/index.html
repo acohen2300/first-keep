@@ -367,7 +367,7 @@ const aside = () => { try { localStorage.setItem(SV.key + SV.lost, localStorage.
 function load(R) { WALKV++; const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
   for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v;
   GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = null; WOODS.clear(); for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
-let wakeL = null; const wakeOn = async (on) => { try { if (on && !wakeL && navigator.wakeLock) wakeL = await navigator.wakeLock.request('screen'); else if (!on && wakeL) { const w = wakeL; wakeL = null; await w.release(); } } catch (e) { wakeL = null; } }; // E696
+let wakeL = null, wakeP = false; const wakeOn = async (on) => { if (wakeP) return; try { if (on && !wakeL && navigator.wakeLock) { wakeP = true; wakeL = await navigator.wakeLock.request('screen'); } else if (!on && wakeL) { const w = wakeL; wakeL = null; await w.release(); } } catch (e) { wakeL = null; } wakeP = false; }; // E696
 on('tick', () => { if (every(D.saveBeat)) save(); wakeOn(!document.hidden && !resting()); }); addEventListener('pagehide', () => save(true)); document.addEventListener('visibilitychange', () => { if (document.hidden) { save(true); wakeOn(false); } });
 function draw() {
   queued = false;

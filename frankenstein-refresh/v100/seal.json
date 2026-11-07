@@ -7135,8 +7135,8 @@
 "numbers": 0
 },
 "book:screen:SN2": {
-"sha": "f359052030562cb3b2df31ff654343f57fd829c4515907bc3bff9bf29e0d138c",
-"bytes": 532,
+"sha": "ea5e63347807ea798ff3ddf2312599446631299d5f2fe3dd4e896d7912c5b6a2",
+"bytes": 549,
 "numbers": 0
 },
 "book:screen:SN3": {
@@ -9734,6 +9734,11 @@
 "bytes": 292,
 "numbers": 0
 },
+"book:words:J31": {
+"sha": "e88dc6efa176d68f608d234cedd8cec6e22f9ce02594ee3b57eb6c8025c6f2ab",
+"bytes": 196,
+"numbers": 0
+},
 "book:words:J4": {
 "sha": "2d45ea4e73e2da1257df4805fa5e5415a45576fe54c1738ac66fbaadc0ec2735",
 "bytes": 98,
@@ -9850,8 +9855,8 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "25826a803887b33c5de652a6cc01a79522164757d75c85fedb1dbcef2073ab23",
-"bytes": 13806,
+"sha": "4ff81c530a0121c6302a8833c0e3479f5e570156adf14d9f95676a83ce1da812",
+"bytes": 13873,
 "numbers": 69
 },
 "code:index.html#the-figures": {
@@ -9900,9 +9905,9 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "3333aab687449769ebf452fbb188d1c51921b32885883d3a8af29868efc22df2",
-"bytes": 80207,
-"numbers": 583
+"sha": "89ebc3ee58afc098f6846ecbc3c86792b570e29d2943decdbe0975eea9f84bf2",
+"bytes": 80099,
+"numbers": 578
 },
 "code:sound.js": {
 "sha": "a513af408ac136e112ea980b4e5c0225d5345b116c26314d7e44db718a3b7449",

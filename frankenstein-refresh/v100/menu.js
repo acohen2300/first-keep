@@ -64,8 +64,8 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 .row6 > .q { background: var(--s2); border: 1px solid var(--s3); } .row6 > i.q { background: var(--s1); border-color: var(--s2); } /* the queue: the mold's six slots, steel (§10 Q1) */
 .blurb { margin: 0 6px; color: var(--wdim); line-height: 1.3; } .blurb b { color: var(--rw); }
 .info { flex: 1; overflow-y: auto; border: 1px solid var(--b3); border-radius: 9px; padding: 8px 12px; line-height: 1.45; font-weight: 500; } .info p { margin: 0 0 8px; } .info b { font-weight: 600; }
-/* the card: solid over the map, bottom-anchored over the base; one height, but a Tall page keeps its own (Albert, Nov 5) */
-#panel { position: absolute; left: 0; right: 0; bottom: 0; z-index: 2; box-sizing: border-box; display: none; flex-direction: column; gap: var(--gap); } #panel.on { display: flex; background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; padding: var(--gap); }
+/* the card: solid over the map, above the base (Base); one height, but a Tall page keeps its own (Albert, Nov 5) */
+#panel { box-sizing: border-box; display: none; flex-direction: column; gap: var(--gap); } #panel.on { display: flex; background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; padding: var(--gap); }
 #base { display: flex; flex-direction: column; gap: var(--gap); } .pairs { display: flex; gap: var(--gap); } .pairs .cell { flex: 1; padding: 0; } #base .pairs .cell { font-size: 18px; }
 /* war: steel, the war tiles a faint red; the middle box one block, thin dividers, a white edge (§8 the battle station) */
 .warbase { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: var(--slot) var(--slot); gap: var(--gap); } .cell.red { background: color-mix(in srgb, var(--rr) 22%, var(--s2)); border-color: color-mix(in srgb, var(--rr) 30%, var(--s3)); } .cell.warx { background: var(--s1); border-color: var(--rr); box-shadow: inset 0 0 0 1px var(--rr); }
@@ -94,7 +94,7 @@ const coord = (bx, by) => { const n = Math.ceil(D.board / D.coord), at = (v) => 
 const ledgerLine = (o) => Object.entries(o || {}).filter(([, v]) => v >= D.flow.half).sort(([, a], [, b]) => b - a).map(([w, v]) => `${WD.ledger[w] || w} ${fmt(v)}`).join(WD.list.dot) || WD.none; // E276
 const mixc = (a, b, t) => '#' + [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i + 1, 2), 16) * (1 - t) + parseInt(b.substr(i + 1, 2), 16) * t).toString(16).padStart(2, '0')).join('');
 const price = (c) => { const st = SIDES[ME].store, miss = Object.entries(c || {}).map(([y, n]) => [y, Math.ceil(n - (st[y] || 0)), n]).filter(([, m]) => m > 0); if (!miss.length) return `<small class="c">${costText(c)}</small>`;
-  const f = Math.min(...miss.map(([, m, n]) => 1 - m / n)); return `<small style="color:${f < 0.5 ? mixc(COL.rr, COL.rw, f * 2) : mixc(COL.rw, COL.rg, f * 2 - 1)};opacity:1">Short ${miss.map(([y, m]) => m + y[0]).join(' ')}</small>`; };
+  const f = Math.min(...miss.map(([, m, n]) => 1 - m / n)); return `<small style="color:${f < 0.5 ? mixc(COL.rr, COL.rw, f * 2) : mixc(COL.rw, COL.rg, f * 2 - 1)};opacity:1">${WD.short}</small>`; };
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
 const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || 'free'; // E183
 const own = (t) => t && t.side === ME, AW = WD.alarm, EW = WD.end, NEWS = WD.news, TELL = WD.say, WA = WD.army, DIALTECH = { temper: 'engage', form: 'formations', intent: 'command' }, TECHOF = FK.TK; // E404
