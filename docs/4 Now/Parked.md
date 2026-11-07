@@ -581,9 +581,16 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 
 ## S1 (Nov 7), for Albert's yes
 - Seven sources stay marked unopened, each with what was and wasn't seen: N29 (White, Rothamsted), N67 (Webb/Bird), N80 (Winter 1998, seen only in a summary), N86 (Rossing), N181 (Pugh 1971, full text blocked), N189 (Park 2011, the drag value not in any opened page), N245 (Marshall & Palmer 1948, the M–P relation from secondary sources).
-- Sight now falls with the log of the light (Sloan 1968) from the end of nautical twilight to the day reference; the old 0.19 power is gone.
+- Sight now falls with the log of the light (Sloan 1968) to the day reference; the old 0.19 power is gone. R3: the floor moved from the twilight table's lowest row (0.008 lux: a moonless night left NO sight, every unit blind) to the eye's absolute threshold (1.6e-5 lux, Hecht, Shlaer & Pirenne 1942, N247): starlight leaves 425 m of 1,500, full moon 850 (Mid: 540 and 900). Confirm the floor.
 
 ## R1 (Nov 7 review), for Albert's yes
 - Hazards toggle the live set from the Start sheet; a toggle mid-match (from Pause → New game → Start) changes the running game before Start is pressed. Decide: hazards read only at Start?
 - sees() now tests the eye's own cell for units: a unit standing in a gate tile may be blind and unseen (unconfirmed).
 - A single error that repeats every frame pauses nothing (the net pauses on the second distinct error): by design since A2; revisit if the phone shows a frozen screen with no card.
+
+## Fresh-eyes audit (Nov 7 evening), for Albert's yes
+Fairness: 1. the computers judge a war by your whole army and towers (odds, combat.js ~270), you by sight; your Nov 6 call was "all-seeing, as Mid", so it stands until you say otherwise. 2. Robbers raid only you (E587, E289), the computers take an abstract loss (loot): Mid did the same; the fix is to raid the nearest seat at war with the robbers, any side. 3. The computers' Mill and Farm handicap applies on every difficulty (D342); make it per difficulty under D304?
+One home: 4. ONE is borrowed from the hazards' score base (D309) and used 103 times as a plain 1; a named-constants row (zero, one, half) is the number sweep's first build. 5. OCC codes 0/1/2/3 are magic in six places. 6. Research cuts compound while gains add (index.html ~327), against the Nov 5 call that percents add. 7. 54 English strings and the ICON emoji still typed in menu.js; six placement reasons in econ.js.
+Fixed tonight: the snow and wet thresholds (one row, G7 full/covers).
+Debts: 5 dead names (YIELD, bodyOf, piles, ICON, PWD), 22 unread book rows (D90–D93, D338, 13 sound rows, 2 screen, P41, J30), duplicate rows D90=D91 and D92=D93.
+Test fixes tonight (R3): t-wait (a paid unit appears further out), t-a1 (the windmill's corrected date), t-guide (every trainer named), t-land (the pocket as Mid's, Z3's table), t-sight (the log law, the eye height stat), and every paged test starts with the Start sheet closed, as a player who pressed Start., t-physics (the blizzard's edge by both NWS gates), t-kinds (sight compared to Mid's in m; the eye height is its own stat), t-orders (was the blind night).

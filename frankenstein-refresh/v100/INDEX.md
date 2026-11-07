@@ -318,6 +318,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N245 |  | Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water content M = 0.072 R^0.88 g/m³ f | to open |
 | N246 |  | The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the finite-source form E = I ÷ (d² + s | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
+| N247 |  | Hecht, Shlaer & Pirenne (1942), Energy, quanta and vision, J. Gen. Physiol. 25: the eye's absolute threshold, a few quanta at the retina, ab | opened |
 | N234 |  | Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, | opened |
 
 ## colours
@@ -1063,7 +1064,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 |---|---|---|---|
 | G5 | dry grass; a boot's grip on dry ground | {mu: 0.35, grip: 0.7} | N104; N18; N173 |
 | G6 | mud: wet ground or marsh; a boot's grip on it | {mu: 0.25, grip: 0.45} | N105; N18; N173 |
-| G7 | snow cover; a boot's grip on packed snow | {mu: 0.14, grip: 0.3} | N106; N18; N173 |
+| G7 | snow cover; a boot's grip on packed snow; full: the depth (mm of water on the ground) at which the ground is wholly snow for footing and the skin, covers: the depth from which the ground counts as snow (and wet ground as mud at the same share) | {mu: 0.14, grip: 0.3, full: 5, covers: 0.5} | N106; N18; N173 |
 | G8 | ice that bears a walker; a boot's grip on it: melting ice grip at and above freezing, rising to hard ice's cold at at °C under | {mu: 0.1, grip: 0.055, cold: 0.18, at: 20} | N107; N18; N178 |
 | G9 | the friction a step needs, by what steps: a person's utilized friction (Burnfield & Powers), a horse and an engine's haulers (Mid's design, to open) | {person: 0.21, horse: 0.25, engine: 0.3} | N179; N19; N173 |
 | G10 | slipping: iron studs give at least studs on ice; a slip holds a walker secs; each walker is checked every second; the town is told at most every tell seconds | {studs: 0.2, secs: 1.5, every: 1, tell: 20} | N174; N179; N173 |
@@ -1163,7 +1164,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D65 | Z3 the transition: the woods thicken from none at its inner edge to Z4's share at its outer edge (an ecotone), so it is more open than Z4; its finds laid by the Randomizer, the same in every corner, as Mid's wild finds, [piles, a pile's amount at RICH 2.5]: two bush patches of 7 x 180, groves of 20 and 14 x 120, a pair each of gold, stone and iron x 350, each pile then x FIND_SIZE and the land's amt (QCS) (Albert, Nov 6 16:01–16:03; Nov 7 14:47 copy Mid) | {trees: [0, 0.4], finds: {bush: [14, 450], tree: [34, 300], gold: [2, 875], stone: [2, 875], iron: [2, 875]}} | N228; N231; N242 |
 | D66 | Z4 the wilds: the woods' share of the land they may grow on, about the woods D49's threshold gave (a quarter of all Z4's land, the roads, the middle and the slopes counted) | {trees: [0.4, 0.4]} | N112; N228 |
 | D67 | villagers counted | 6 | N112 |
-| D70 | Z1's spots in the corner's frame; iron added with Mid's fifth home find (Nov 7) | {bush: [250, 140], tree: [140, 250], gold: [200, 120], stone: [120, 200], iron: [250, 250]} | N112 |
+| D70 | Z1's spots in the corner's frame; iron added with Mid's fifth home find (Nov 7) | {bush: [250, 140], tree: [140, 250], gold: [200, 120], stone: [120, 200], iron: [190, 190]} | N112 |
 | D73 | Z4's gold piles | [4, 6] | N112 |
 | D74 | stone piles | [3, 5] | N112 |
 | D75 | iron piles | [3, 5] | N112 |
@@ -1206,7 +1207,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D114 | marshy lakes | [1, 2] | N112 |
 | D115 | a marsh's width | 40 | N112 |
 | D116 | Fast, for testing | 8 | N112 |
-| D117 | sight by real math (QAL, QAM, QAN), looked again every tick s: a person is made out by day at day m; the eye's range falls with the light as the log of E from the night floor (the table's lowest lux) to ref lux (Sloan 1968: acuity linear in log luminance), was (E ÷ ref)^p, at most the day's; the light E = the sun's by its height (sun: height in degrees, lux, between them by the logarithm), plus the moon's full lux × its lit fraction^log2(full ÷ quarter) × sin(its height) (deg to the half turn), plus the stars' star lux; under cloud all of it × overcast ÷ star; the horizon √(earth × h) for an eye h m up (earth the Earth's diameter, m); a person's eye and top body m; a standing tree as tall as D326 gives its kind | {tick: 0.5, day: 1500, body: 1.7, earth: 12742000, ref: 400, sun: [[-12, 0.008], [-6, 3.4], [0, 400], [90, 120000]], moon: [0.25, 0.01], sta | N41; N215; N216; N217; N218; N220 |
+| D117 | sight by real math (QAL, QAM, QAN), looked again every tick s: a person is made out by day at day m; the eye's range falls with the light as the log of E from floor lux (the eye's absolute threshold, 1e-6 cd/m² seen on a grey of 0.2 reflectance: Hecht, Shlaer & Pirenne 1942) to ref lux (Sloan 1968: acuity linear in log luminance; by starlight that leaves near Mid's night share), was (E ÷ ref)^p, at most the day's; the light E = the sun's by its height (sun: height in degrees, lux, between them by the logarithm), plus the moon's full lux × its lit fraction^log2(full ÷ quarter) × sin(its height) (deg to the half turn), plus the stars' star lux; under cloud all of it × overcast ÷ star; the horizon √(earth × h) for an eye h m up (earth the Earth's diameter, m); a person's eye and top body m; a standing tree as tall as D326 gives its kind | {tick: 0.5, day: 1500, body: 1.7, earth: 12742000, ref: 400, floor: 1.6e-05, sun: [[-12, 0.008], [-6, 3.4], [0, 400], [90, 120000]], moon: [ | N41; N215; N216; N217; N218; N220; N247 |
 | D120 | a shadow at most this many heights | 3 | N112 |
 | D121 | the blades' strength | 0.45 | N112 |
 | D122 | the sides in play, by corner: you (0) and the three computers, Mid's Raiders (1), Rivals (2) and Fortress (3), the rival across the board listed first (v100's one rival before); the Natives' place, Mid's fifth side in the middle, waits for the Throne | [0, 2, 1, 3] | N114; N202; N203 |
@@ -1453,7 +1454,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X32 | the page runs with no errors | {stage: page} | N126 |
 | X33 | the gate stops each planted break: a second home, a bad tick, a shell named in code, swallowed code, one byte of a locked law | {stage: page} | N126 |
 | X34 | a new game starts with the book's stores (D172), and a restart resets them and the weather | {stage: page} | N127 |
-| X36 | a paid unit with no room to stand waits in the queue, then appears | {stage: page} | N127 |
+| X36 | a paid unit with no room to stand beside its building appears further out and the queue empties (A2, Albert Nov 7: every paid unit must appear; before, it waited in the queue) | {stage: page} | N127; N241 |
 | X37 | the bell rings at the length chosen at Start; the default is the book's | {stage: page} | N127 |
 | X38 | a find used up is gone at once, and never chosen again | {stage: page} | N127 |
 | X40 | code that asks what a thing is by a typed name (kind === 'tree'): ask by tick | {stage: survey} | N128 |

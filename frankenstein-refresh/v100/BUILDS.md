@@ -3316,3 +3316,23 @@ MODIFIED (4):
 LOCKED (2104 of 2108): byte for byte as sealed, 1,349,747 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 7 still to open · 7 known
+
+## R3 · the full run's findings: three tests brought to the new rules (a paid unit appears further out, the windmill's corrected date, the Guide naming every trainer), the Z3 table in t-land, the blizzard's edge by both gates; night sight from the eye's absolute threshold (N247), not the twilight table's lowest row, so a moonless night leaves Mid's share of sight and not none; the start page points at the hand-off · 2026-11-07 18:30
+Albert, Nov 7 17:41: an hour thirty of work and a fresh-eyes audit
+Opened: tool:test.py, book:rules, code:index.html, code:econ.js, code:combat.js, code:ai.js, code:menu.js, book:measure, book:comments, book:words, book:ground, book:citations, law:QAL
+MODIFIED (12):
+- book:citations:N247 · added
+- book:ground:G7 · 158 → 387 bytes
+- book:measure:D117 · 1,052 → 1,204 bytes
+- book:measure:D70 · 245 → 245 bytes
+- book:rules:X36 · 152 → 269 bytes
+- code:index.html#floor-3-non-movables · 8,745 → 8,880 bytes
+- code:index.html#floor-5-movables · 15,100 → 15,110 bytes
+- code:index.html#floor-6-climate · 24,841 → 24,851 bytes
+- code:index.html#the-body-s-laws · 2,568 → 2,588 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 21,942 → 21,912 bytes
+- law:QAL · 635 → 683 bytes
+- tool:test.py · 255,133 → 257,624 bytes
+LOCKED (2097 of 2109): byte for byte as sealed, 1,033,871 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2109 items sealed · 1983 book entries · 93 laws · 247 citations, 7 still to open · 7 known

@@ -191,7 +191,7 @@ const PK = D.pocket, age1 = D.age.cost[PK.age], z1Need = { food: age1.food + PK.
 const pocketOf = (kind) => { const [n, each] = PK.home[kind], y = KIND[kind].yield, back = PK.back[y === 'food' ? 'bushes' : y === 'wood' ? 'trees' : ''] || null; return { n: n + back, amount: each * n * PK.rich * PK.homeRich * PK.findSize[kind] + (z1Need[y] || null) }; };
 const Z1 = Object.fromEntries(Object.keys(PK.home).map((k) => [KIND[k].yield, pocketOf(k).amount])), piles = (kind, x) => Math.max(ONE, Math.ceil(((x[KIND[kind].yield] ?? x) * (Z1[KIND[kind].yield] || null)) / KIND[kind].amount)); let land = null;
 const OCC = new Uint8Array(N * N), FN = D.finds, rowOf = (t) => FN.rows[(KIND[t.kind] || {}).code]; let things = [], TV = null; // E43
-const BLDS = { v: NaN, list: [] }, blds = () => { if (BLDS.v !== TV || BLDS.n !== things.length) { BLDS.v = TV; BLDS.n = things.length; BLDS.list = things.filter((t) => t.kind === 'bld'); } return BLDS.list; }; // E709
+const TREEAMT = new Map(), BLDS = { v: NaN, list: [] }, blds = () => { if (BLDS.v !== TV || BLDS.n !== things.length) { BLDS.v = TV; BLDS.n = things.length; BLDS.list = things.filter((t) => t.kind === 'bld'); } return BLDS.list; }; // E709
 const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
 const free = (k) => flatAt(k) && !OCC[k] && !FOR[k];
 const clear = (bx, by, r) => { let ok = true; stamp(bx, by, r, (k) => { if (!free(k)) ok = false; }); return ok; };
@@ -201,16 +201,16 @@ function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3), amount = KIND[
   TV++; things.push({ kind, k, bx, by, vx, vy, amount, size, v }); WALKV++; OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
 }
 const reachOf = (n) => Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile;
-function cluster(kind, bx, by, n, roll, amount) { // E46
+function cluster(kind, bx, by, n, roll, total) { // E46
   const got = []; stamp(bx, by, reachOf(n), (k, d) => { if (free(k)) got.push([d, k]); });
-  const ks = got.sort((a, b) => a[0] - b[0]).slice(0, n).map(([, k]) => k); for (const k of ks) kind === 'tree' ? (FOR[k] = 1) : put(kind, k, roll, undefined, undefined, amount); return ks;
+  const ks = got.sort((a, b) => a[0] - b[0]).slice(0, n).map(([, k]) => k), amount = total && total / ks.length; for (const k of ks) if (kind === 'tree') { FOR[k] = 1; if (amount) TREEAMT.set(k, amount); } else put(kind, k, roll, undefined, undefined, amount); return ks;
 }
 function makeThings(roll) {
   // E47
   const LS = D.lands, names = Object.keys(LS.rows), lr = dice(seed ^ LS.seed), fixed = new Set(), [, z2, z3] = D.zone; land = names[Math.floor(lr() * names.length)]; const LD = LS.rows[land];
   CORNERS.forEach((_, c) => { const hr = dice(seed ^ 0x9e3779b9), spot3 = (n) => { for (let t = D.tries.spot; t--; ) { const r = between(hr, [z2 + reachOf(n), z3 - reachOf(n)]), a = hr() * QT * RAD, [x, y] = corner(c, r * Math.cos(a), r * Math.sin(a)); if (laneDist(x, y) >= D.lane + D.tile && free(tileAt(x, y))) return [x, y]; } return null; };
-    for (const kind in D.z1) { const { n, amount } = pocketOf(kind); cluster(kind, ...corner(c, ...D.z1[kind]), n, hr, amount / n).forEach((k) => fixed.add(k)); }
-    for (const [kind, [n, each]] of [...Object.entries(D.Z3.finds), ...(LD.extra ? [[LD.extra, D.Z3.finds[LD.extra]]] : [])]) { const at = spot3(n); if (at) cluster(kind, ...at, n, hr, each * PK.findSize[kind]); } }); // E653
+    for (const kind in D.z1) { const { n, amount } = pocketOf(kind); cluster(kind, ...corner(c, ...D.z1[kind]), n, hr, amount).forEach((k) => fixed.add(k)); }
+    for (const [kind, [n, each]] of [...Object.entries(D.Z3.finds), ...(LD.extra ? [[LD.extra, D.Z3.finds[LD.extra]]] : [])]) { const at = spot3(n); if (at) cluster(kind, ...at, n, hr, each * n * PK.findSize[kind]); } }); // E653
   // E48
   const felled = new Set(), guarded = (kind) => !!(FN.rows[KIND[kind].code] || {}).guard, ring = (x, y, f) => stamp(x, y, (FN.ring + ONE) * D.tile, f), clearing = (kind, [x, y]) => { if (guarded(kind)) ring(x, y, (k) => { if (FOR[k]) { FOR[k] = OCC[k] = null; felled.add(k); } }); }; // E674
   const open = (kind, x, y) => { let ok = true; if (guarded(kind)) ring(x, y, (k) => { if (H[k] < D.land || (OCC[k] && !FOR[k])) ok = false; }); return ok; };
@@ -221,7 +221,7 @@ function makeThings(roll) {
   const TR = D.trade; TR.routes.forEach(([ax, ay], r) => TR.stops.forEach((d, i) => { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('stop', k, roll); const t = things.at(-1); Object.assign(t, { route: r, want: TR.wares[(r + i) % TR.wares.length], owner: null }); clearing('stop', [t.bx, t.by]); } })); // E492
   openWays(fixed);
   // E49
-  for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6));
+  for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6), TREEAMT.get(k)); TREEAMT.clear();
   for (const t of things) if (t.kind in D.Z3.finds && !fixed.has(t.k)) t.amount = Math.round(t.amount * (LD.amt[KIND[t.kind].yield] ?? ONE)); // E654
   const fr = dice(seed ^ FN.seed); for (const [kind, n] of Object.entries(FN.lay)) for (let m = count(fr, n); m--; ) { const s = spot(KIND[kind].r, fr, kind); if (s) { put(kind, s.at(-1), fr); clearing(kind, s); } } // E564
   for (const [ax, ay] of TR.routes) for (const d of [FN.camp, -FN.camp]) { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('camp', k, fr); clearing('camp', [things.at(-1).bx, things.at(-1).by]); } }
@@ -938,7 +938,7 @@ const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k
 const stepOk = (a, b, who) => walkable(b, who) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
 const [ME] = D.players, PACE = D.pace, PAN = D.pace.pandolf, NEED = G.step, SLIP = G.slip; // E88
 function footing(u, to = u.k) { // E360
-  const c = u.code, bare = clamp(G.ice.grip - ((G.ice.cold - G.ice.grip) * K.temp) / G.ice.at, G.ice.grip, G.ice.cold), mud = Math.max(MARSH[u.k], mudAt(u.k)), snow = Math.min(1, K.snow / 5), d = G.grass.grip + (G.mud.grip - G.grass.grip) * mud;
+  const c = u.code, bare = clamp(G.ice.grip - ((G.ice.cold - G.ice.grip) * K.temp) / G.ice.at, G.ice.grip, G.ice.cold), mud = Math.max(MARSH[u.k], mudAt(u.k)), snow = Math.min(1, K.snow / G.snow.full), d = G.grass.grip + (G.mud.grip - G.grass.grip) * mud;
   return { mud, snow, ice: sheet(), need: NEED[SH[c].mount || SH[c].body], ground: d + (G.snow.grip - d) * snow, on: stat(c, u.side, 'studs') ? Math.max(bare, SLIP.studs) : bare, rise: (hAt(to) - hAt(u.k)) / stepLen(u.k, to) || 0, along: u.ux || 0 };
 }
 function pace(u, g = footing(u)) { // E361
@@ -1054,7 +1054,7 @@ const bodyOf = (code) => W[SH[code].body];
 // ── The body's laws (E111)
 const massOf = (code) => { const e = SH[code]; let m = W[e.body].kg + (e.mount ? W[e.mount].kg : 0); for (const k of e.kit || []) m += W[k].kg; return m; };
 const blowOf = (code) => { for (const k of SH[code].kit || []) if (W[k].blow && W[k].blow.mps) return W[k].blow; return null; };
-const groundAt = (k) => (iced(k) ? G.ice : K.snow > 0.5 ? G.snow : MARSH[k] || K.wet > 0.5 ? G.mud : G.grass);
+const groundAt = (k) => (iced(k) ? G.ice : K.snow > G.snow.covers ? G.snow : MARSH[k] || K.wet > G.snow.covers ? G.mud : G.grass);
 let jolt = { t: 0, px: 0 };
 function impact(a, t) { // E112
   if (t.kind !== 'unit') { fire('event', 'hitBld', t); return 0; }
@@ -1158,7 +1158,7 @@ function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glanc
 // E138
 const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active = (strength) => Math.round(WX.pool * strength);
 function drawSkin() { // E139
-  const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / 5);
+  const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / G.snow.full);
   if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
   if (K.wet > 0.05) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.45 * K.wet; ctx.drawImage(maskDark, gx, gy, w, h); ctx.restore(); }
   if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
@@ -1318,7 +1318,7 @@ on('press', (p) => { if (RADAR && Math.hypot(p.x0 - RADAR.sx, p.y0 - RADAR.sy) <
 const LKO = D.lookout, LGT = D.light, FLM = D.flames, KLV = D.kelvin, STG = D.stage, DRS = D.dress, PDR = SPRITE.dress, MNI = D.mini, LBL = fromBook('screen').label, CLT = C.light, CDR = C.dress, CMN = C.mini, DRW = D.draw;
 const lux = () => { const S = EYE.sun, [full, quarter] = EYE.moon; const i = Math.min(S.length - ONE, Math.max(ONE, S.filter(([x]) => x < K.alt).length)), [[a0, l0], [a1, l1]] = [S[i - ONE], S[i]], f = Math.min(ONE, (K.alt - a0) / (a1 - a0)); // E599
   return ((K.alt < a0 ? null : l0 * (l1 / l0) ** f) + full * K.moonLit ** Math.log2(full / quarter) * Math.max(null, Math.sin((K.moonAlt * Math.PI) / EYE.deg)) + EYE.star) * (K.wetHour ? EYE.overcast / EYE.star : ONE); };
-const sightOf = (t) => { const lamp = (t.kind === 'bld' && stat(t.code, t.side, 'lamp')) || null, a = clamp(Math.log(lux() / EYE.sun.at(null).at(ONE)) / Math.log(EYE.ref / EYE.sun.at(null).at(ONE)), null, ONE); const m = stat(t.code, t.side, 'sight') / stat(t.code, null, 'sight'); return Math.min(m * Math.sqrt(EYE.earth * stat(t.code, t.side, 'eye')) * D.upm, m * EYE.day * D.upm * (ONE - (ONE - a) * (ONE - lamp)), K.vis * D.upm); }; // E600
+const sightOf = (t) => { const lamp = (t.kind === 'bld' && stat(t.code, t.side, 'lamp')) || null, a = clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), null, ONE); const m = stat(t.code, t.side, 'sight') / stat(t.code, null, 'sight'); return Math.min(m * Math.sqrt(EYE.earth * stat(t.code, t.side, 'eye')) * D.upm, m * EYE.day * D.upm * (ONE - (ONE - a) * (ONE - lamp)), K.vis * D.upm); }; // E600
 on('hide', (t) => !inSight(t)); // E603
 // E604
 let lessMotion = false; try { lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}

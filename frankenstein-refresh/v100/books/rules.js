@@ -34,7 +34,7 @@ BOOK("rules", {
  "X32": {"key": "t-errors", "value": {"stage": "page"}, "name": "the page runs with no errors", "cite": ["N126"], "law": []},
  "X33": {"key": "t-proof", "value": {"stage": "page"}, "name": "the gate stops each planted break: a second home, a bad tick, a shell named in code, swallowed code, one byte of a locked law", "cite": ["N126"], "law": []},
  "X34": {"key": "t-start", "value": {"stage": "page"}, "name": "a new game starts with the book's stores (D172), and a restart resets them and the weather", "cite": ["N127"], "law": []},
- "X36": {"key": "t-wait", "value": {"stage": "page"}, "name": "a paid unit with no room to stand waits in the queue, then appears", "cite": ["N127"], "law": []},
+ "X36": {"key": "t-wait", "value": {"stage": "page"}, "name": "a paid unit with no room to stand beside its building appears further out and the queue empties (A2, Albert Nov 7: every paid unit must appear; before, it waited in the queue)", "cite": ["N127", "N241"], "law": []},
  "X37": {"key": "t-bell", "value": {"stage": "page"}, "name": "the bell rings at the length chosen at Start; the default is the book's", "cite": ["N127"], "law": []},
  "X38": {"key": "t-gone", "value": {"stage": "page"}, "name": "a find used up is gone at once, and never chosen again", "cite": ["N127"], "law": []},
  "X40": {"key": "byname", "value": {"stage": "survey"}, "name": "code that asks what a thing is by a typed name (kind === 'tree'): ask by tick", "cite": ["N128"], "law": []},

@@ -1,3 +1,11 @@
+# First Keep: start here [2026-11-07 18:00]
+
+**The current work is the Frankenstein Refresh.** Read `frankenstein-refresh/HANDOFF.md` first; it is the start for all work on the game now. The rest of this page describes the older v80 line (`/preview`, `/v70-restoration`), kept for history. [2026-11-07 18:00]
+
+**The three versions (Albert, Nov 7):** gameplay Base (`frankenstein-refresh/base/`, preview 49), features Mid (`frankenstein-refresh/mid/`), structure v100 (`frankenstein-refresh/v100/`, the game being built). Previews: https://acohen2300.github.io/first-keep/frankenstein-refresh/v100/ · .../base/ · .../mid/
+
+---
+
 # First Keep: start here [2026-11-03 20:40]
 
 **Where things stand (Albert's words):**

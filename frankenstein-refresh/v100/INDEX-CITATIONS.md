@@ -53,7 +53,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAH** Fight or not → N38 · used by D305, X64
 - **QAI** Nerve → N76, N188 · used by SC6, D142, D231, X57
 - **QAJ** Arrow flight → N39, N40 · used by A5, SC7, W10, D143, D245, X57
-- **QAL** Sight → N41, N215, N216, N217, N218, N220 · used by SC7, D117, D312, X66
+- **QAL** Sight → N41, N215, N216, N217, N218, N220, N247 · used by SC7, D117, D312, X66
 - **QAM** Line of sight → N42, N219 · used by D117, D312, D326, X66, X70
 - **QAN** Many eyes → N43, N44, N220 · used by D117, X66
 - **QAO** Flee → N45 · used by SC6, D231, D254
@@ -123,7 +123,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QK, QT, QCL, QAL, QAM, SC45, D310
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QCH, QAL, QAN, QCP, QCQ, SC45, D310
 - **N23** Holling (1959), Can. Entomol. 91 → QV, QCP, QCQ, QCR
-- **N24** Charnov (1976), Theor. Pop. Biol. 9 → QK, QV, QW, QCM, QCS, QCT, QCU
+- **N24** Charnov (1976), Theor. Pop. Biol. 9 → QK, QV, QW, QCM, QAL, QCS, QCT, QCU
 - **N25** Fretwell & Lucas (1970) → QX
 - **N26** Sutherland (1983) → QX
 - **N27** Verhulst (1838) → QY, D218, D219
@@ -338,13 +338,14 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N237** Arithmetic: 1/60 s = 16.67 ms: 1000/60 = 16.67 ms → QCR, D339
 - **N239** Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a t → X75, X76
 - **N240** Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow cal → D341
-- **N241** Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, → SN5, SN15, J32
+- **N241** Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, → X36, SN5, SN15, J32
 - **N242** Design: Mid's pocket, 06-rules-tuning.js BACK and HOME (zone 1: AGES[1].cost + 6 villagers' food and 5 houses' → QCS, D62, D63, D65
 - **N243** Holle, R. L. and K. L. Cummins, Seasonal Lightning Distributions over North America (Vaisala; NLDN 2005–2014): → QCT, D113
 - **N244** Design: Mid's HANDICAP (06-rules-tuning.js: blds mill and farm, r 60–170; laid in 10-world.js by findSpot, fin → D342
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
+- **N247** Hecht, Shlaer & Pirenne (1942), Energy, quanta and vision, J. Gen. Physiol. 25: the eye's absolute threshold,  → QAL, D117
 - **N234** Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guid → X73, J7, J27, J29, J30
 
 ## Named exceptions

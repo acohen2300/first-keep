@@ -19,7 +19,7 @@ window.$rich = (s) => Object.assign(FK.SIDES[s].store, { food: 1e4, wood: 1e4, g
 window.$tk = (k) => Object.keys(BOOKS.tech).find((c) => BOOKS.tech[c].key === k);
 window.$put = (code, side, d0 = 8, d1 = 60, chk) => $ring(FK.seatOf(side), d0, d1, (i, j) => { if (chk && !ECON.canPlace(code, i, j, side)) return; const t = FK.build(code, i, j, FK.SIDES[side].col); if (t) { if (chk) t.side = side; t.done = 1; t.hp = t.hpMax = WAR.hpMax(t); return t; } });"""
 async def fresh(b, wait=800):   # a new page on the seed, its errors gathered, PRE's helpers in it
-    pg = await b.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e))); await pg.add_init_script(PRE); await pg.goto(URL); await pg.wait_for_timeout(wait); return pg, errs
+    pg = await b.new_page(viewport={'width': 390, 'height': 844}); errs = []; pg.on('pageerror', lambda e: errs.append(str(e))); await pg.add_init_script(PRE); await pg.goto(URL); await pg.wait_for_timeout(wait); await pg.evaluate("MENU.S.tab = null; MENU.render(true)"); return pg, errs   # the Start sheet closed, as a player who pressed Start: messages wait while it is open (F1, E707)
 # The one loader of Mid's frozen code (mid/src) into node's vm. parts {name: file} are read as text; body is JS that returns what is held to the page, with cut(text, from, to)
 # (to the end when to is empty), qca(text) Mid's fxv under the effects law (QCA, Albert Nov 5 18:07: its boosts added, its cuts one at a time) and box(code, more): code (a string or a list joined) run in a fresh context holding RUN and more, its OUT returned. RUN comes in on stdin
 MIDJS = r"""const vm = require('vm'), fs = require('fs'), RUN = JSON.parse(fs.readFileSync(0, 'utf8')), src = (f) => fs.readFileSync(DIR + '/' + f + '.js', 'utf8');
@@ -67,7 +67,7 @@ async def main(b):
     ok('t-start', await ev(f"(() => {{ const b = {start}; return [0, 2].every((s) => Object.keys(b).every((y) => Math.abs(FK.SIDES[s].store[y] - b[y]) < 1)) && FK.K.rain === 0; }})()"), await ev("[FK.SIDES[0].store, FK.K.rain]"))   # within the food the people ate since
     waited = await ev("""(() => { const h = FK.seatOf(0), s = FK.SIDES[0].store; s.food = 500; h.q = []; ECON.queue(h, FK.D.trains[h.code][0]); const ring = []; for (let y = h.j - 1; y <= h.j + h.n; y++) for (let x = h.i - 1; x <= h.i + h.n; x++) { const k = y * FK.N + x; if (FK.OCC[k] === 0) { ring.push(k); FK.OCC[k] = 2; } }
       const n0 = FK.units().length; h.qt = 0; FK.sim(0.1); const held = h.q.length === 1 && FK.units().length === n0; for (const k of ring) FK.OCC[k] = 0; FK.sim(0.1); return [held, FK.units().length === n0 + 1, h.q.length]; })()""")
-    ok('t-wait', waited == [True, True, 0], waited)
+    ok('t-wait', waited == [False, True, 0], waited)   # A2 (Albert, Nov 7): a paid unit with no room beside its building appears further out instead of waiting; the queue still empties
     bells = await ev("(() => { const v = MENU.VERBS, o = MENU.S.opt, out = [FK.D.bell === ECON.bell()]; o.len = 1; v.start.run(); out.push(ECON.bell()); MENU.S.opt.len = 0; v.start.run(); out.push(ECON.bell() === Infinity); return out; })()")
     await pg.wait_for_timeout(1200)
     ok('t-bell', bells == [True, 900, True], bells)
@@ -277,13 +277,13 @@ async def research(b):
                       MIDRES, {'orders': [o for o in ORDERS if o[0] in ('age', 'tech', 'done')], 'carry': MEASURE['carry']}); mid = mid or {}
     steps = lambda o: [x[:3] + x[4:] if x[0] == 'done' else x for x in o]   # a wait is held to Mid's time within a tick, below
     waits = [abs(a[3] - m[3]) <= 1 for a, m in zip(v['out'], mid.get('out', [])) if a[0] == 'done']
-    x, nm, first = v['x'], mid.get('names', {}), mid.get('first', ['', 0])
+    x, nm, first, PK = v['x'], mid.get('names', {}), mid.get('first', ['', 0]), MEASURE['pocket']
     got = [bool(mid) and len(v['out']) == len(mid['out']) and close(steps(v['out']), steps(mid['out'])) and all(waits) and len(waits) == 6,
            bool(mid) and all(v[k] == mid[k] for k in ('line', 'next', 'needs', 'queued')),
            [y[3] for y in v['out'] if y[0] == 'tech'] == ['', '', 'need', '', 'busy', 'age', '', '', 'need', 'known'] and close(v['out'][7][5], 18 * 0.95) and v['out'][-3][7] == MEASURE['carry'] + 3 and v['out'][-3][8] == 1,
            [[c for c in q if c] for q in x['hall']] == [[nm.get('tally')], [nm.get('age'), SHELLS['UV']['name']]] and x['train'] and x['aged'][1] == first[1] and len(x['held']) > 300 and all(x['held']),
            f"{first[0]} age" in x['start'][0] and f"{first[1]}s to rise" in x['start'][1] and 'Classical age' in x['bronze'][0],
-           x['gun'][:3] == ['Last age', mid.get('gun', [0])[0], 1] and x['gun'][3] and x['gun'][4], x['z1'] == math.ceil((mid.get('z1food', 0) + MEASURE['villagers'] * MEASURE['cost']['UV']['food'] + sum(n * MEASURE['cost'][c].get('food', 0) for c, n in MEASURE['pocket']['buys'].items())) * (1 + MEASURE['pocket']['margin'])), not errs]
+           x['gun'][:3] == ['Last age', mid.get('gun', [0])[0], 1] and x['gun'][3] and x['gun'][4], abs(x['z1'] - (PK['home']['bush'][1] * PK['home']['bush'][0] * PK['rich'] * PK['homeRich'] * PK['findSize']['bush'] + mid.get('z1food', 0) + PK['back']['vils'] * MEASURE['cost']['UV']['food'])) < 1e-9, not errs]   # G1: the pocket's food is Mid's (QCS): the home bushes × rich × homeRich × the find's size, plus the price of age and six villagers (was QBJ's buys and margin)
     ok('t-research', all(got), [got, v['out'], mid.get('out'), x, errs[:2], err[-400:]])
 GATHER = """(() => { FK.reset(); const D = FK.D, h = FK.seatOf(0), vil = D.trains[h.code][0], dt = 0.1, upm = D.upm, SP = FK.SP / upm;
   const ring = []; for (let y = h.j - 1; y <= h.j + h.n; y++) for (let x = h.i - 1; x <= h.i + h.n; x++) if (FK.walkable(y * FK.N + x)) ring.push(y * FK.N + x);
@@ -441,7 +441,7 @@ FOOD = """(() => { FK.reset(); const D = FK.D, E = ECON, s = FK.SIDES[0], h = FK
   while (E.villagersOf(0).length < 20) FK.spawn('UV', 0, near(h.k ?? FK.tileAt(h.bx, h.by)), Math.random);
   for (const c of ['UM1', 'UM1', 'UM1', 'UM1', 'UM1', 'UM3', 'UM3', 'UM3', 'UM3', 'UM3']) FK.spawn(c, 0, near(FK.tileAt(h.bx, h.by)), Math.random);
   for (const u of FK.units()) if (u.side === 0) { u.job = 'idle'; u.target = u.path = null; }
-  const bushes = FK.things().filter((t) => t.kind === 'bush').slice(0, 5); E.villagersOf(0).slice(0, 5).forEach((u, i) => Object.assign(u, { job: 'gather', target: bushes[i], carry: 'food' }));
+  const bushes = FK.things().filter((t) => t.kind === 'bush').slice(0, 5); out.bushes = bushes.map((b) => b.amount); for (const u of FK.units()) if (u.side !== 0 && bushes.includes(u.target)) { u.target = null; u.job = 'idle'; } E.villagersOf(0).slice(0, 5).forEach((u, i) => Object.assign(u, { job: 'gather', target: bushes[i], carry: 'food' }));
   const wolf = FK.spawn('MW4', -1, near(FK.tileAt(h.bx, h.by)), Math.random), away = [pen.bx + 2 * D.flock.wolf, pen.by], base = FK.stat('BCL1', 0, 'rate'); let got = 0;
   out.units = FK.units().filter((u) => u.side === 0).map((u) => u.code); out.base = base; const rng = FK.rng; FK.rng = () => R.draws[n++];
   for (let t = 1; t <= R.secs; t++) { FK.K.t = t; const w = R.wolfAt.includes(t); wolf.bx = w ? pen.bx : away[0]; wolf.by = w ? pen.by : away[1];
@@ -480,9 +480,9 @@ async def food(b):
     run = {'techs': TECHS, 'food': 1300, 'draws': [0.7, 0.3, 0.1], 'fert': [1, 0.705, 0.65, 1], 'worked': 2, 'sheep': 11, 'wolfAt': [540, 720], 'secs': 900}
     v = await pg.evaluate(FOOD.replace('RUN', json.dumps(run)))
     fishMax = await pg.evaluate("FK.things().find((t) => t.kind === 'fish').max"); await pg.close()
-    v0 = v['snaps'][0]
+    v0 = v['snaps'][0]   # G1: the pocket's bushes hold Mid's share of zone 1's food (QCS), so Mid is given the bushes as the page laid them (v.bushes); a computer's villagers walking to one of them (they eat from it on the way, as Mid's do) are sent idle first, so the two towns eat the same
     mid, err = frozen('basics blds tuning core eco events', MIDFOOD,
-                      {**run, 'fx': fx, 'tags': {'cata': ['mounted']}, 'units': v['units'], 'fishMax': fishMax, 'bushes': [MEASURE['bushFood']] * 5, 'order': v['order'][0]})
+                      {**run, 'fx': fx, 'tags': {'cata': ['mounted']}, 'units': v['units'], 'fishMax': fishMax, 'bushes': v['bushes'], 'order': v['order'][0]})
     m0 = MEASURE['rate'] and 0.8   # Mid's farm rate: v100's harvest is read against its own base, Mid's against its gatherMul alone
     same = bool(mid) and len(mid['snaps']) == len(v['snaps']) and all(close(a, b) for a, b in zip(v['snaps'], mid['snaps']))
     flips = bool(mid) and any(x[2] for x in v['snaps']) and not v['snaps'][-1][2] and v['snaps'][-1][4] < run['sheep']   # it went hungry, was fed again by the cull, and the wolf took sheep
@@ -540,7 +540,7 @@ PHYS = """(() => { const D = FK.D, K = FK.K, TK = Object.fromEntries(Object.entr
   BOOKS.tech.O0 = { key: 'O0', value: { cost: {}, fx: [{ s: 'cost', k: 'UM1', p: 0.1 }, { s: 'cost', k: 'UM1', p: 0.08 }, ...CUTS.map((c) => ({ s: 'cost', k: 'UM1', c }))] }, name: 'a test step', cite: [], law: ['QCA'] }; FK.learn(0, 'O0');
   out.cuts = [FK.stat('UM1', 0, 'cost'), FK.stat('UM1', 0, 'atk')]; BOOKS.tech.O0.value.fx = [{ s: 'atk', k: 'UM1', p: 0.1 }, { s: 'atk', k: 'UM1', p: 0.08 }, ...CUTS.map((c) => ({ s: 'atk', k: 'UM1', c }))]; FK.learn(0, 'O0'); out.cuts.push(FK.stat('UM1', 0, 'atk')); delete BOOKS.tech.O0; FK.reset();
   out.sky = LEVELS.map((x) => [sky(x, 0), sky(0, x)]); out.drops = LEVELS.map((x) => { K.rain = x; K.snowing = 0; K.wind = 0; const y = DROPS.map((m) => m.y); drawSky(0.05); const r = DROPS.filter((m, i) => m.y !== y[i]).length; K.rain = 0; K.snowing = x; const y2 = DROPS.map((m) => m.y); drawSky(0.05); return [r, DROPS.filter((m, i) => m.y !== y2[i]).length]; });
-  const W = D.weather.blizzard, edge = W.wind / D.weather.wind.most / (1 + D.weather.wind.gust); out.edge = [blizzard(sky(0, edge * (1 - 1e-9))), blizzard(sky(0, Math.min(1, edge * (1 + 1e-9)))), blizzard(sky(1, 0))];
+  const W = D.weather.blizzard, WX = D.weather, flake = (WX.snow.slow + WX.snow.fast) / 2, sVis = WX.perHour * flake * Math.pow((WX.km * WX.k) / (W.vis * WX.snow.beta), 1 / WX.snow.pow), edge = Math.max(W.wind / WX.wind.most / (1 + WX.wind.gust), sVis / WX.snow.most); out.edge = [blizzard(sky(0, edge * (1 - 1e-9))), blizzard(sky(0, Math.min(1, edge * (1 + 1e-9)))), blizzard(sky(1, 0))];
   out.flags = [[1, W.wind, W.vis - 1e-6], [1, W.wind - 1e-6, W.vis - 1e-6], [1, W.wind, W.vis], [0, W.wind * 2, 1]].map(([S, gust, vis]) => blizzard({ S, gust, vis }));
   FK.reset(); const play0 = play; play = () => 0; K.t = D.season * 3 + 1; FK.sim(0.1); Object.assign(K, { wetHour: true, I: 1, dir: 1, snowing: 1, rain: 0, blizT: 0 }); const hrs = [];
   for (let i = 0; i < 40; i++) { FK.sim(0.5); hrs.push([K.blizT, K.bliz, K.temp <= 1]); } play = play0; out.hours = hrs; out.hour = D.day / 24;
@@ -569,7 +569,7 @@ async def physics(b):
     cuts = all(abs(n - round(cost0[y] * k * prod)) <= 0 for y, n in v['cuts'][0].items()) and 0 < v['cuts'][2] < MEASURE['stats']['UM1']['atk'] * k and abs(v['cuts'][2] - MEASURE['stats']['UM1']['atk'] * k * prod) < 1e-9 and v['cuts'][1] == MEASURE['stats']['UM1']['atk']
     book = all((p is None or p > 0) and (c is None or 0 < c < 1) for p, c in v['tech']) and any(c for _, c in v['tech'])
     def sky(r, s):
-        R, S, w = r * wx['rain']['most'], s * wx['snow']['most'], max(r, s) * wx['wind']['most']; ext = wx['rain']['beta'] * R ** wx['rain']['pow'] + S / wx['snow']['c']
+        R, S, w = r * wx['rain']['most'], s * wx['snow']['most'], max(r, s) * wx['wind']['most']; flake = (wx['snow']['slow'] + wx['snow']['fast']) / 2; ext = wx['rain']['beta'] * (wx['rain']['mp']['a'] * R ** wx['rain']['mp']['b']) ** wx['rain']['pow'] + wx['snow']['beta'] * (S / (wx['perHour'] * flake)) ** wx['snow']['pow']   # G1: CALVIS from water content (QK)
         return {'R': R, 'S': S, 'wind': w, 'gust': w * (1 + wx['wind']['gust']), 'vis': wx['km'] * wx['k'] / ext if ext else float('inf')}
     skies = all(all(a[y] == c[y] or abs(a[y] - c[y]) < 1e-9 * max(1, abs(c[y])) for y in c) for pair, x in zip(v['sky'], LEVELS) for a, c in zip(pair, [sky(x, 0), sky(0, x)]))
     drops = v['drops'] == [[round(wx['pool'] * x), round(wx['pool'] * x)] for x in LEVELS]
@@ -626,10 +626,10 @@ async def kinds(b):
         return (u.get('name') == e['name'] and ages.index(e['age']) == u.get('age') and at.get(u.get('at')) in MEASURE['trains'] and [k for k in MEASURE['trains'][at[u['at']]] if k not in SHELLS] == [e['class']]
                 and look.get(e.get('teach')) == mid['teach'].get(look[c]) and MEASURE['cost'][c] == {Y[k]: n for k, n in u['cost'].items()} and MEASURE['train'][c] == u['t']
                 and [s['hp'], s['atk'], s['rof']] == [u['hp'], u['dmg'], u['cd']] and near(s['rng'], u['rng'] / 10) and near(s['sight'], u['sight'] / 10) and near(MEASURE['speed'][e['pace'].split('.')[1]], walk * u['spd'] / 24, 1e-4))
-    def numbers(i, j, c):   # after research: v100 [level, name, kit, hp, atk, rng, spd, sight, armor, train] against Mid's [tier, name, kit, hp, dmg, rng, spd, sight + sightFx, armor, t × train]; sight is the eye's height now (QAL, Albert Nov 6): a person's plus Mid's research adds
+    def numbers(i, j, c):   # after research: v100 [level, name, kit, hp, atk, rng, spd, sight, armor, train] against Mid's [tier, name, kit, hp, dmg, rng, spd, sight + sightFx, armor, t × train]; sight is Mid's sight again, in m (the eye's height is its own stat, eye, since S1: the research adds scale the day's range, QAL)
         a, m = v['sets'][i][j], mid['sets'][i][j]
         if not cls[c]: return a[:2] == m[:2] and near(a[6] / v['sets'][0][j][6], m[6] / mid['sets'][0][j][6])
-        return (a[:3] == m[:3] and near(a[3], m[3]) and near(a[4], m[4]) and near(a[5], m[5] / 10) and near(a[6], walk * m[6] / 24, 1e-4) and near(a[7] - MEASURE['sight']['body'], (m[7] - mid['sets'][0][j][7]) / 10) and near(a[8], m[8]) and near(a[9], m[9]))
+        return (a[:3] == m[:3] and near(a[3], m[3]) and near(a[4], m[4]) and near(a[5], m[5] / 10) and near(a[6], walk * m[6] / 24, 1e-4) and near(a[7], m[7] / 10) and near(a[8], m[8]) and near(a[9], m[9]))
     trained = [[[b, sorted(look[c] for c in ks if c in look)] for b, ks in age] for age in v['trains']]
     want = [[[b, sorted(k for k in mid.get('sol', []) if (at.get(U[k]['at']) == b or b in [at.get(x) for x in U[k].get('also', [])]) and U[k]['age'] <= a)] for b, _ in age] for a, age in enumerate(v['trains'])]
     bad = [x for x in art if x[4] != 0 or x[5] < 20]
@@ -638,7 +638,8 @@ async def kinds(b):
            trained == want and not v['wrong'] and any(len(ks) > 1 for age in trained for _, ks in age),
            bool(mid) and [MEASURE['popMax'], MEASURE['armyMax'], MEASURE['squad']] == mid['max'] and v['ceiling'][:2] == [True, False] and v['ceiling'][2] == mid['full'].rstrip('.') and v['ceiling'][3:] == [MEASURE['armyMax'], MEASURE['armyMax'] - 1],
            not bad and len(art) > 300, not errs, bool(mid) and all(n == mid['t'].get(UKIND[c]) for c, n in MEASURE['train'].items())]
-    ok('t-kinds', all(got), [got, bad[:6], v['ceiling'], v['wrong'][:4], [x for x in zip(trained, want) if x[0] != x[1]][:1], errs[:2], err[-400:]])
+    miss = [(KSETS[i][-1:] or ['none'], c, v['sets'][i][j], mid['sets'][i][j]) for i in range(len(KSETS)) for j, c in enumerate(codes) if mid and not numbers(i, j, c)][:4]
+    ok('t-kinds', all(got), [got, miss, bad[:6], v['ceiling'], v['wrong'][:4], [x for x in zip(trained, want) if x[0] != x[1]][:1], errs[:2], err[-400:]])
 WARJS = """(() => { const D = FK.D, [me, foe] = D.players, out = {}, at = (s) => FK.units().find((v) => v.side === s).k; $calm(me, foe);
   out.vs = CODES.map((a) => CODES.map((b) => WAR.vs({ code: a, side: me }, { code: b, side: foe })));
   out.reach = Object.keys(D.tower).map((c) => WAR.reachOf({ code: c, side: me }));
@@ -982,7 +983,8 @@ const rut = n(/rut: \{[^}]*\}/, tuning), shore = n(/shore: [\d.]+/, tuning), nig
 return box([basics, n(/const PERS = \{[\s\S]*?\n\};/, wild), n(/const WAVE = \{[^}]*\};/, wild), n(/const SAVE = \{[^}]*\};/, tuning), n(/const EVENTS = \{[\s\S]*?\n\};/, tuning),
   `const CLIMATE = { ${rut}, ${shore} }, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), G = { t: 0, clim: { mud: 0 }, tread: null, night: 0 }, NAV = { shore: [0] }, gcell = () => 0; let RATE_ = {}, REACT_ = 1, CARRY_ = 1;
    const forageNow = (v) => v.rho, rateFrom = (o, r) => RATE_[r], react = () => REACT_, carryOf = () => CARRY_`,
-  cut(ai, 'function needOf', '// The reorder point'), cut(ai, 'function runsOut', '// The shift to plots'), cut(core, 'const moonPhase', 'const civOf'), cut(core, 'const nightOf', 'const nightness'), cut(events, 'const ruts = ', '// what a step needs'),
+  cut(ai, 'function needOf', '// The reorder point'), cut(ai, 'function runsOut', '// The shift to plots'), cut(core, 'const moonPhase', 'const civOf'), cut(core, 'const nightOf', 'const nightness'), cut(events, 'const ruts = ', '// what a step needs').replace('** 0.4', '** ' + RUN.rutPow),   // S1 (N20, Wronski & Humphreys): depth grows as passes^0.5; Mid typed 0.4, so Mid's formula is run at the book's power
+ 
   `var OUT = { pers: PERS, wave: WAVE, save: SAVE, diff: DIFF, safe: EASY_SAFE, players: PLAYERS.map((p) => p.pers), synodic: SYNODIC, day: DAY_LEN, nightSight: NIGHT_SIGHT, flood: EVENTS.flood, rut: CLIMATE.rut, shore: CLIMATE.shore, plans: [] };
   for (const P of RUN.plans) { RATE_ = P.rate; REACT_ = P.react; CARRY_ = P.carry; const p = { id: 1, eats: P.draw.food * 60, res: Object.fromEntries(RES.map((r) => [KEY[r], P.store[r]])) }, vils = P.jobs.map(([job, rho]) => ({ job, rho }));
     const plan = needOf(p, vils, Object.fromEntries(Object.entries(P.cost).map(([r, c]) => [KEY[r], c])), null, P.draw); OUT.plans.push({ plan: JSON.parse(JSON.stringify(plan)), famine: famineNear(p, plan) }); }
@@ -991,7 +993,7 @@ return box([basics, n(/const PERS = \{[\s\S]*?\n\};/, wild), n(/const WAVE = \{[
   OUT.ruts = RUN.ruts.map(([c]) => { T[0] = c; G.clim.mud = 0.4; NAV.shore[0] = 1; const wet = mudAt({ x: 0, y: 0 }); NAV.shore[0] = 0; return [rutOf(0, 0), wet, mudAt({ x: 0, y: 0 })]; });`]);"""
 async def mind(b):
     pg, errs = await fresh(b); v = await pg.evaluate(MINDJS); await pg.close()
-    m, err = frozen('basics wild tuning core ai events', MIDMIND, {'plans': [{k: P[k] for k in ('jobs', 'rate', 'store', 'cost', 'draw', 'react', 'carry')} for P in v['plans']], 'moon': [0, 1000, 5000, 12345, 40000], 'sight': [[-20, 0], [-20, 1], [-6, 0.5], [10, 1]], 'ruts': v['ruts']})
+    m, err = frozen('basics wild tuning core ai events', MIDMIND, {'plans': [{k: P[k] for k in ('jobs', 'rate', 'store', 'cost', 'draw', 'react', 'carry')} for P in v['plans']], 'moon': [0, 1000, 5000, 12345, 40000], 'sight': [[-20, 0], [-20, 1], [-6, 0.5], [10, 1]], 'ruts': v['ruts'], 'rutPow': MEASURE['ruts']['pow']})
     M, Y = MEASURE, ['food', 'wood', 'gold', 'stone', 'iron']; m = m or {}
     names = {k: re.search(r'→ ([^;)]+)', r[1]).group(1).strip() for k, r in piece('BLD').items() if re.search(r'→ ([^;)]+)', r[1])}
     KEYS = RK
@@ -1136,7 +1138,7 @@ async def blaze(b):
     ok('t-fire', all(got), [got, v['heat'], B.get('heat'), t, mt, hs, mh, errs[:2], err[-800:]])
 SIGHTJS = r"""(() => { const D = FK.D, K = FK.K, N = FK.N, ME = D.players[0], foe = D.players[1], out = {}; $calm(ME, foe); const vil = D.trains[FK.seatOf(ME).code][0], tree = (k) => FK.OCC[k] === 1 && FK.FOR[k];
   for (const t of FK.things()) if (t.kind === 'bld') t.done = 0.5; FK.units().length = 0; const sky = (o) => Object.assign(K, { alt: 50, moonAlt: -10, moonLit: 0, wetHour: false, vis: Infinity }, o);
-  const eye = { kind: 'unit', code: vil, side: ME }; out.h = FK.stat(eye.code, ME, 'sight');
+  const eye = { kind: 'unit', code: vil, side: ME }; out.h = FK.stat(eye.code, ME, 'eye');   // A2: 'eye' is the height, 'sight' the range
   out.cases = [{}, { alt: -6 }, { alt: -30, moonAlt: 60, moonLit: 1 }, { alt: -30, moonAlt: 40, moonLit: 0.5 }, { alt: -30 }, { alt: -30, wetHour: true }, { vis: 300 }].map((o) => { sky(o); return [o, FK.sightOf(eye)]; });
   let line = null; const ok = (k) => FK.walkable(k) && !tree(k) && Math.abs(FK.H[k] - FK.H[line0]) < 1; let line0 = 0;
   for (let k = N * 9; k < N * (N - 9) && !line; k++) { const i = k % N; if (!tree(k) || i < 9 || i > N - 9) continue; line0 = k - 6; const L = [-6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6].map((d) => k + d); if (L.every(ok)) line = [k - 6, k, k + 6]; }
@@ -1155,12 +1157,12 @@ def law(o, h):   # QAL from the books alone (D117 sight, D229 visibility), in Py
     S = MEASURE['sight']; K = {'alt': 50, 'moonAlt': -10, 'moonLit': 0, 'wetHour': False, 'vis': float('inf'), **o}; sun = S['sun']
     i = min(len(sun) - 1, max(1, sum(1 for r in sun if r[0] < K['alt']))); (a0, l0), (a1, l1) = sun[i - 1], sun[i]; f = min(1, (K['alt'] - a0) / (a1 - a0))
     full, quarter = S['moon']; E = (0 if K['alt'] < a0 else l0 * (l1 / l0) ** f) + full * K['moonLit'] ** math.log2(full / quarter) * max(0, math.sin(math.radians(K['moonAlt']))) + S['star']
-    E *= S['overcast'] / S['star'] if K['wetHour'] else 1; a = min(1, (E / S['ref']) ** S['p']); upm = MEASURE['upm']
+    E *= S['overcast'] / S['star'] if K['wetHour'] else 1; a = max(0, min(1, math.log(E / S['floor']) / math.log(S['ref'] / S['floor']))); upm = MEASURE['upm']   # S1/R3: sight falls with the log of the light (Sloan 1968), from the eye's absolute threshold (N247) to the day reference
     return min(math.sqrt(S['earth'] * h) * upm, S['day'] * upm * a, K['vis'] * upm)
 async def sight(b):
     pg, errs = await fresh(b); v = await pg.evaluate(SIGHTJS); pg2, errs2 = await fresh(b); mn = await pg2.evaluate(MINIJS); await pg.close(); await pg2.close(); v = v or {}
     S = MEASURE['sight']; cases = v.get('cases') or []
-    num = len(cases) == 7 and v['h'] == S['body'] and all(abs(r - law(o, v['h'])) < 1e-6 * r for o, r in cases) and cases[0][1] > cases[2][1] > cases[4][1] > cases[5][1] and cases[6][1] == 300 * MEASURE['upm']
+    num = len(cases) == 7 and v['h'] == S['body'] and all(abs(r - law(o, v['h'])) <= 1e-6 * r + 1e-9 for o, r in cases) and cases[0][1] > cases[2][1] > cases[4][1] >= cases[5][1] and cases[6][1] == 300 * MEASURE['upm']
     los = v.get('tree') == [False, False] and v.get('felled') == [True, True, False] and v.get('fog') == [False, False] and v.get('gone') == [False, False]
     nofog = v.get('fogDraw') == 'undefined' and not any(k in MEASURE for k in ('fogDim', 'fogWait', 'fogLast', 'woods', 'fogTick')) and set(MEASURE['lookout']) == {'h'}
     mini = bool(mn.get('mark')) and mn['mark'] == mn['u'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['back'], mn['u'])) and mn['mode'] == 'mini' and mn['eat'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['to'], mn['u'])) and mn['beat'] == 350
@@ -1305,21 +1307,21 @@ async def civs(b):
     ok('t-civs', all(got), [got, per, bad[:4], v['tree'], {c: [v[c]['bonus'], (m.get(c) or {}).get('m'), v[c]['elite'], (m.get(c) or {}).get('tier'), v[c]['why']] for c in CIVKEYS}, errs[:2], err[-600:]])
 # F37: the map's character, new game and scenarios; Albert's map calls (the bottom-left corner, the pocket's law, Z3 the transition)
 LANDJS = r"""(() => { const D = FK.D, N = FK.N, out = { scen: {} }, ME = D.players[0], C = (s) => FK.things().filter((t) => t.side === s && FK.has(t, 'Seat'))[0];
-  for (const [n, key] of [[1, 'siege'], [2, 'road'], [3, 'last']]) { MENU.S.opt.scen = n; FK.reset(); const S = FK.SIDES, h = C(ME); out.scen[key] = { age: D.players.map((p) => S[p].age), store: D.players.map((p) => S[p].store), vils: ECON.villagersOf(ME).length,
+  for (const [n, key] of [[1, 'siege'], [2, 'road'], [3, 'last']]) { MENU.S.opt.scen = n; MENU.S.tab = null; FK.reset(); const S = FK.SIDES, h = C(ME); out.scen[key] = { age: D.players.map((p) => S[p].age), store: D.players.map((p) => S[p].store), vils: ECON.villagersOf(ME).length,
     blds: FK.things().filter((t) => t.kind === 'bld' && t.side === ME && !FK.has(t, 'Seat')).map((t) => [t.code, (D.scenarios[key].blds || []).some(([c, dx]) => c === t.code && Math.hypot(t.bx - h.bx - dx, t.by - h.by) <= D.scenarios[key].within + t.n * D.tile)]),
     rel: D.players.flatMap((a) => D.players.filter((b) => b > a).map((b) => [a, b, WAR.stance(a, b)])), techs: [...S[ME].techs].map((c) => BOOKS.tech[c].key), said: MENU.mail.some((m) => m.text.startsWith(fromBook('words').start.scen[key][0] + ':')) }; }
   MENU.S.opt.scen = 0; FK.reset(); const h = C(ME), mid = FK.toView(FK.MID, FK.MID, D.land); out.corner = [h.vx < mid[0], h.vy > mid[1], D.players.map((p) => { const t = C(p); return [Math.sign(t.bx - FK.MID), Math.sign(t.by - FK.MID)]; })];
   const cd = (t) => Math.hypot(...FK.corner(ME, 0, 0).map((v, i) => [t.bx, t.by][i] - v)), land = D.lands.rows[FK.land()], Y = (t) => FK.KIND[t.kind].yield, A = (t) => FK.KIND[t.kind].amount, [z1, z2, z3] = D.zone;
-  const pocket = FK.things().filter((t) => D.Z3.finds.includes(t.kind) && cd(t) < z1), ring = FK.things().filter((t) => D.Z3.finds.includes(t.kind) && cd(t) >= z2 && cd(t) < z3 + D.tile), wild = FK.things().filter((t) => D.Z3.finds.includes(t.kind) && Math.min(...[0, 1, 2, 3].map((c) => Math.hypot(...FK.corner(c, 0, 0).map((v, i) => [t.bx, t.by][i] - v)))) > D.wall[1]);
+  const pocket = FK.things().filter((t) => (t.kind in D.Z3.finds) && cd(t) < z1), ring = FK.things().filter((t) => (t.kind in D.Z3.finds) && cd(t) >= z2 && cd(t) < z3 + D.tile), wild = FK.things().filter((t) => (t.kind in D.Z3.finds) && Math.min(...[0, 1, 2, 3].map((c) => Math.hypot(...FK.corner(c, 0, 0).map((v, i) => [t.bx, t.by][i] - v)))) > D.wall[1]);
   const sum = (L, y) => L.filter((t) => Y(t) === y).reduce((a, t) => a + t.amount, 0), count = (L, k) => L.filter((t) => t.kind === k).length;
-  out.pocket = Object.fromEntries(Object.keys(D.z1).map((k) => [k, [count(pocket, k), pocket.filter((t) => t.kind === k).every((t) => t.amount === A(t))]]));
-  out.ring = Object.fromEntries(D.Z3.finds.map((k) => [k, count(ring, k)])); out.more = ['food', 'wood'].map((y) => [sum(pocket, y), sum(ring, y), sum(wild, y)]);
+  out.pocket = Object.fromEntries(Object.keys(D.z1).map((k) => [k, [count(pocket, k), Math.round(pocket.filter((t) => t.kind === k).reduce((a, t) => a + t.amount, 0))]]));
+  out.ring = Object.fromEntries(Object.keys(D.Z3.finds).map((k) => [k, count(ring, k)])); out.more = ['food', 'wood'].map((y) => [sum(pocket, y), sum(ring, y), sum(wild, y)]);
   out.amt = wild.filter((t) => t.kind !== 'tree').slice(0, 20).every((t) => t.amount === Math.round(A(t) * (land.amt[Y(t)] ?? 1)));
   const share = (lo, hi) => { let n = 0, w = 0; for (let k = 0; k < N * N; k++) { if (FK.H[k] !== D.land || FK.OCC[k] > 1) continue; const i = k % N, [bx, by] = FK.toBoard((i + .5) * D.tile, ((k - i) / N + .5) * D.tile), c = Math.min(...[0, 1, 2, 3].map((q) => Math.hypot(...FK.corner(q, 0, 0).map((v, j) => [bx, by][j] - v)))); if (c >= lo && c < hi) { n++; w += !!FK.FOR[k]; } } return w / n; };
   out.woods = [share(z2, (z2 + z3) / 2), share((z2 + z3) / 2, z3), share(z2, z3), share(D.wall[1], 1e9), share((z1 + z2) / 2, z2)];
   const reach = (trees) => { const seen = new Uint8Array(N * N), q = [FK.tileAt(...FK.corner(ME, ...D.tc))], tree = (k) => FK.FOR[k] && FK.OCC[k] === 1, pass = (k) => FK.walkable(k) || (FK.OCC[k] && (trees || !tree(k))); seen[q[0]] = 1;
     for (const k of q) for (const d of [1, -1, N, -N]) { const n = k + d; if (!seen[n] && pass(n)) { seen[n] = 1; q.push(n); } } return seen; }, seen = reach(false), any = reach(true);
-  const mine = FK.things().filter((t) => FK.D.Z3.finds.includes(t.kind) && t.kind !== 'tree' && FK.H[t.k] > 0 && cd(t) < Math.min(...[1, 2, 3].map((c) => Math.hypot(...FK.corner(c, 0, 0).map((v, i) => [t.bx, t.by][i] - v)))));
+  const mine = FK.things().filter((t) => (t.kind in FK.D.Z3.finds) && t.kind !== 'tree' && FK.H[t.k] > 0 && cd(t) < Math.min(...[1, 2, 3].map((c) => Math.hypot(...FK.corner(c, 0, 0).map((v, i) => [t.bx, t.by][i] - v)))));
   out.ways = [mine.filter((t) => any[t.k]).length, mine.filter((t) => any[t.k] && !seen[t.k]).map((t) => [t.kind, t.k])]; out.land = FK.land(); return out; })()"""
 MIDLAND = r"""return box([basics, units, blds, tech, tuning, cut(core, 'const MODES', '};') + '};', 'var OUT = { LAND, CLEAR, SCENARIOS, MODES, UI_BUDGET };']);"""
 async def land(b):
@@ -1338,17 +1340,17 @@ async def land(b):
                 and sorted(c for c, _ in g['blds']) == sorted(c for c, _ in w.get('blds', [])) and all(x for _, x in g['blds']) and g['vils'] == M['villagers'] + w.get('vils', 0)
                 and all(s == (w['rel'] if a == me else w.get('among', s)) for a, b2, s in g['rel']) and set(w.get('techs', [])) <= set(g['techs']) and g['said'])
     played = [ran(k) for k in ('siege', 'road', 'last')]
-    cost, age = M['cost'], M['age']['cost'][M['pocket']['age']]; P = M['pocket']
-    need = {y: math.ceil((age.get(y, 0) + M['villagers'] * cost['UV'].get(y, 0) + sum(n * cost[c].get(y, 0) for c, n in P['buys'].items())) * (1 + P['margin'])) for y in ('food', 'wood', 'gold', 'stone')}
-    famt = {e['find']: next(r['value'] for c2, r in book('measure').items() if c2 == e['amount']) for e in SHELLS.values() if e.get('layer') == 100 and e.get('amount') and e.get('find') in M['Z3']['finds']}
+    cost, age = M['cost'], M['age']['cost'][M['pocket']['age']]; P = M['pocket']   # QCS (G1, Albert Nov 7: the pocket as Mid's): zone 1's need plus the home finds, Mid's piles each carrying its share
     yld = {e['find']: e['yield'] for e in SHELLS.values() if e.get('layer') == 100 and e.get('find') in M['Z3']['finds']}
-    piles = lambda k, x: max(1, math.ceil(x * need.get(yld[k], 0) / famt[k]))
+    z1need = {'food': age.get('food', 0) + P['back']['vils'] * cost['UV']['food'], 'wood': age.get('wood', 0) + P['back']['houses'] * cost['BR1']['wood']}
+    back = {'bush': P['back']['bushes'], 'tree': P['back']['trees']}
+    expect = {k: [n + back.get(k, 0), round(each * n * P['rich'] * P['homeRich'] * P['findSize'][k] + z1need.get(yld[k], 0))] for k, (n, each) in P['home'].items()}
     b_ = [v['corner'][0] and v['corner'][1] and v['corner'][2][0] == [-1, 1],                                              # your corner on screen is the bottom left
-          need == P['store'] and all(v['pocket'][k] == [piles(k, M['Z1']['x']), True] for k in M['z1']),                   # the pocket holds the law's amounts, untouched by the land
+          all(0 < v['pocket'][k][0] <= expect[k][0] and expect[k][1] * (expect[k][0] - 2) / expect[k][0] - 1 <= v['pocket'][k][1] <= expect[k][1] + 1 for k in M['z1']),   # the pocket holds Mid's totals (QCS) in at most Mid's piles, untouched by the land; up to two pocket trees may be felled for a clearing or a path (E674), their share lost
           v['woods'][0] < v['woods'][1] and v['woods'][2] < v['woods'][3] and v['woods'][4] == 0 and M['Z3']['trees'] == [0, M['Z4']['trees'][0]],   # Z3: thickening toward Z4, more open than Z4; Z2 none
-          all(v['ring'][k] >= 1 for k in M['Z3']['finds']) and all(p < r < w for p, r, w in v['more'])]                  # Z3's finds: more than the pocket, less than the wilds
+          all(v['ring'][k] >= 1 for k in M['Z3']['finds']) and all(w > 0 for p, r, w in v['more'])]                      # Z3's finds, Mid's wild finds, in every corner; the wilds beyond hold finds too (the Nov 6 ordering pocket < ring < wild ended with Mid's pocket, G1)
     got = tables + played + b_ + [v['amt'], v['ways'][0] > 0 and not v['ways'][1], v['land'] in M['lands']['rows'], not errs]
-    ok('t-land', all(got), [got, v['corner'], v['pocket'], need, v['woods'], v['ring'], v['more'], v['ways'][1][:5], {k: v['scen'][k] for k in v['scen']} if not all(played) else '', errs[:2], err[-400:]])
+    ok('t-land', all(got), [got, v['corner'], v['pocket'], expect, v['woods'], v['ring'], v['more'], v['ways'][1][:5], {k: v['scen'][k] for k in v['scen']} if not all(played) else '', errs[:2], err[-400:]])
 # F38: the save, the safety net and the test tools
 SAVEJS = r"""(async () => { const D = FK.D, SV = D.save, ME = D.players[0], foe = D.players[1], out = {}; MENU.S.opt.scen = 0; FK.reset(); $run(30); localStorage.removeItem(SV.key); localStorage.removeItem(SV.key + SV.bak);
   const sig = () => ({ u: FK.units().map((u) => [u.code, u.side, u.k, u.hp, u.load || 0, u.target ? FK.things().indexOf(u.target) + ':' + FK.units().indexOf(u.target) : null]), t: FK.things().map((t) => [t.kind, t.code, t.k, t.amount, t.done, t.hp, t.gone]),
@@ -1403,6 +1405,7 @@ async def guidebook(b):
     pg, errs = await fresh(b); v = await pg.evaluate(GUIDEJS); await pg.close()
     rules = [[fillrule(w), fillrule(t), fillrule(y)] for w, (t, y) in keyed('words')['guide'].items()]
     m, err = frozen('core guide=31-guide', MIDGUIDE, {'tables': v['tables'], 'rules': rules}); m = m or {}; M, g = json.loads(re.sub(r'"(?:null|undefined) s"', '""', json.dumps(m.get('model') or {}))), v['g']   # Mid prints a missing time (the Envoy is sent, not trained) as 'undefined s'; v100 leaves it out
+    for u in g.get('units', []): u['at'] = u['at'].split(', ')[0] if u.get('at') else u.get('at')   # A2 (Albert, Nov 7): v100's Guide names every building that trains a unit; Mid named the first, so the first is compared
     same = {k: M.get(k) == g[k] for k in ('buildings', 'units', 'techs', 'ages', 'civs', 'finds', 'rules')}
     open_ = [r for r in g['rules'] if re.search(r'\{\w+:', json.dumps(r))]; whyless = [x['id'] for k in ('buildings', 'units', 'finds') for x in g[k] if not x.get('why')]
     got = [all(same.values()), m.get('hist') == v['hist'] and len(v['hist']) > len(MEASURE['ages']), not open_, set(whyless) <= set(v['off']),
@@ -1446,8 +1449,8 @@ async def a1(b):
     await pg.evaluate("FK.reset()"); await pg.wait_for_timeout(1500); frames = min([await pg.evaluate(win) for _ in range(3)]); await pg.close()   # a hitch of the game's own repeats every turn; a stall of the machine's does not
     m, err = frozen('basics units blds tech', "return box([basics, units, blds, tech, 'var OUT = { tech: TECH, apt: BLD.apartment.room, quarry: BLD.quarry.rate, castle: [BLD.castle.dmg, BLD.castle.cd, BLD.castle.bow, BLD.castle.h] };']);"); m = m or {}
     T, R = {e['key']: e['value'] for e in book('tech').values()}, {'f': 'food', 'w': 'wood', 'g': 'gold', 's': 'stone', 'i': 'iron'}
-    mt = {t['id']: t for t in m.get('tech', [])}; cut = {'satrapy', 'sixth'}   # parked with the tax (Albert, Nov 5 11:16)
-    same = lambda k, t: T.get(k) and T[k].get('age', 0) == t.get('age', 0) and T[k].get('time') == t.get('t') and T[k].get('when') == t.get('when') and T[k].get('cost') == {R[x]: n for x, n in t.get('cost', {}).items()} and [n for n in T[k].get('need', [])] == [n for n in t.get('need', []) if n not in cut]
+    mt = {t['id']: t for t in m.get('tech', [])}; cut = {'satrapy', 'sixth'}; DATED = {'windmill'}   # parked with the tax (Albert, Nov 5 11:16); DATED: dates corrected to the record in S1 (N161: the first English windmill before 1137, Mid said 1180s)
+    same = lambda k, t: T.get(k) and T[k].get('age', 0) == t.get('age', 0) and T[k].get('time') == t.get('t') and (T[k].get('when') == t.get('when') or k in DATED) and T[k].get('cost') == {R[x]: n for x, n in t.get('cost', {}).items()} and [n for n in T[k].get('need', [])] == [n for n in t.get('need', []) if n not in cut]
     tech = bool(mt) and all(same(k, t) for k, t in mt.items() if k not in cut) and T['potato']['line'] == mt['potato']['line'] and T['potato']['fx'][0]['p'] == round(mt['potato']['fx'][0]['m'] - 1, 9) and len(T['townwatch']['fx']) == 1
     TW = MEASURE['tower'].get(next(c for c, e in SHELLS.items() if e.get('look') == 'castle'), {})
     got = [all(v['join']), all(v['drill']), all(v['save']), v['civ'] and all(all(x) for x in v['civ']), v['foe'] and all(all(x) for x in v['foe']),

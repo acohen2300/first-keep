@@ -316,12 +316,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## index.html#floor-7-display
 
-- **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N220) · QAL (N41, N215, N216, N217, N218, N220) · QAM (N42, N219) · QAN (N43, N44, N220)
-- **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N220)
+- **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N220, N247) · QAL (N41, N215, N216, N217, N218, N220, N247) · QAM (N42, N219) · QAN (N43, N44, N220)
+- **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N220, N247)
 - **E689** the tops are made again when a building is added, removed or raised further: a site counts
 - **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
-- **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220) · QAM (N42, N219)
+- **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247) · QAM (N42, N219)
 - **E150** QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown aw · QAT (N53) · D120 (N112)
 - **E151** left at sunrise, up at noon, right at sunset
 - **E152** under the buildings and units: a building's footprint thrown by its height, a unit's foot 
@@ -335,8 +335,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#the-view-s-eyes-lights-and-stage
 
 - **E598** the view's eyes, lights and stage: the light and each eye's range (real math, Albert Nov 6
-- **E599** the light on the ground (D117): the sun's by its height, the moon's by its phase and heigh · D117 (N41, N215, N216, N217, N218, N220)
-- **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220) · QK (N10, N210, N245)
+- **E599** the light on the ground (D117): the sun's by its height, the moon's by its phase and heigh · D117 (N41, N215, N216, N217, N218, N220, N247)
+- **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220, N247) · QK (N10, N210, N245)
 - **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
