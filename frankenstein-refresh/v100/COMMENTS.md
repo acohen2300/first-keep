@@ -28,6 +28,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E708 | index.html#frames | a shell's ticks as a Set, built once from the Shells book: has() is asked hundreds of thousands of times a second, and a Set answers in one step where a list walks |
 | E709 | index.html#floor-3-non-movables | the buildings as their own list, a derived index of things rebuilt only when things change (TV, the things version): buildings are a few dozen among ten thousand things, and most scans want only them |
 | E710 | index.html#b-the-buildings | a new building slides into the things list at its depth instead of re-sorting ten thousand things, which was a felt hitch every time anyone built |
+| E711 | index.html#floor-3-non-movables | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; Z1 lays Mid's pile counts, each pile carrying its share, and Z3's finds scale from the same totals |
+| E712 | ai.js | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person; placed by the same site rules the computers always use, so the lanes and the gap from finds hold |
+| E713 | index.html#floor-6-climate | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze terms come from one source |
+| E714 | index.html#the-view-s-eyes-lights-and-stage | the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, instead of two guessed stops |
 | E1 | index.html#frames | First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each. |
 | E2 | index.html#frames | A Book entry is { key, value, name, cite, law } under its code; the game sees each book as one object by key (D, A, C, W, G), and a shell's slot points at a code (D53, D86.walk). |
 | E3 | index.html#frames | every code in every book |

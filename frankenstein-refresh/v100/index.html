@@ -187,27 +187,29 @@ function makeTerrain(roll) {
 // ── Floor 3, non-movables (E40)
 const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, look: e.look, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0, open: e.style === 'Open' }; } // E41
 // E42
-const Z1 = D.pocket.store, piles = (kind, x) => Math.max(ONE, Math.ceil((x * (Z1[KIND[kind].yield] || null)) / KIND[kind].amount)); let land = null;
+const PK = D.pocket, age1 = D.age.cost[PK.age], z1Need = { food: age1.food + PK.back.vils * D.cost.UV.food, wood: age1.wood + PK.back.houses * D.cost.BR1.wood }; // E711
+const pocketOf = (kind) => { const [n, each] = PK.home[kind], y = KIND[kind].yield, back = PK.back[y === 'food' ? 'bushes' : y === 'wood' ? 'trees' : ''] || null; return { n: n + back, amount: each * n * PK.rich * PK.homeRich * PK.findSize[kind] + (z1Need[y] || null) }; };
+const Z1 = Object.fromEntries(Object.keys(PK.home).map((k) => [KIND[k].yield, pocketOf(k).amount])), piles = (kind, x) => Math.max(ONE, Math.ceil(((x[KIND[kind].yield] ?? x) * (Z1[KIND[kind].yield] || null)) / KIND[kind].amount)); let land = null;
 const OCC = new Uint8Array(N * N), FN = D.finds, rowOf = (t) => FN.rows[(KIND[t.kind] || {}).code]; let things = [], TV = null; // E43
 const BLDS = { v: NaN, list: [] }, blds = () => { if (BLDS.v !== TV || BLDS.n !== things.length) { BLDS.v = TV; BLDS.n = things.length; BLDS.list = things.filter((t) => t.kind === 'bld'); } return BLDS.list; }; // E709
 const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
 const free = (k) => flatAt(k) && !OCC[k] && !FOR[k];
 const clear = (bx, by, r) => { let ok = true; stamp(bx, by, r, (k) => { if (!free(k)) ok = false; }); return ok; };
 const nearest = (bx, by, r) => { let best = null; stamp(bx, by, r, (k, d) => { if (free(k) && (!best || d < best[0])) best = [d, k]; }); return best ? best[1] : -1; }; // E44
-function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3)) { // E45
+function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3), amount = KIND[kind].amount) { // E45
   const i = k % N, j = (k - i) / N, [bx, by] = toBoard((i + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter, (j + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter), [vx, vy] = toView(bx, by, H[k]);
-  TV++; things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); WALKV++; OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
+  TV++; things.push({ kind, k, bx, by, vx, vy, amount, size, v }); WALKV++; OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
 }
 const reachOf = (n) => Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile;
-function cluster(kind, bx, by, n, roll) { // E46
+function cluster(kind, bx, by, n, roll, amount) { // E46
   const got = []; stamp(bx, by, reachOf(n), (k, d) => { if (free(k)) got.push([d, k]); });
-  const ks = got.sort((a, b) => a[0] - b[0]).slice(0, n).map(([, k]) => k); for (const k of ks) kind === 'tree' ? (FOR[k] = 1) : put(kind, k, roll); return ks;
+  const ks = got.sort((a, b) => a[0] - b[0]).slice(0, n).map(([, k]) => k); for (const k of ks) kind === 'tree' ? (FOR[k] = 1) : put(kind, k, roll, undefined, undefined, amount); return ks;
 }
 function makeThings(roll) {
   // E47
   const LS = D.lands, names = Object.keys(LS.rows), lr = dice(seed ^ LS.seed), fixed = new Set(), [, z2, z3] = D.zone; land = names[Math.floor(lr() * names.length)]; const LD = LS.rows[land];
   CORNERS.forEach((_, c) => { const hr = dice(seed ^ 0x9e3779b9), spot3 = (n) => { for (let t = D.tries.spot; t--; ) { const r = between(hr, [z2 + reachOf(n), z3 - reachOf(n)]), a = hr() * QT * RAD, [x, y] = corner(c, r * Math.cos(a), r * Math.sin(a)); if (laneDist(x, y) >= D.lane + D.tile && free(tileAt(x, y))) return [x, y]; } return null; };
-    for (const kind in D.z1) cluster(kind, ...corner(c, ...D.z1[kind]), piles(kind, D.Z1.x), hr).forEach((k) => fixed.add(k));
+    for (const kind in D.z1) { const { n, amount } = pocketOf(kind); cluster(kind, ...corner(c, ...D.z1[kind]), n, hr, amount / n).forEach((k) => fixed.add(k)); }
     for (const [kind, x] of [...D.Z3.finds.map((f) => [f, D.Z3.x]), ...(LD.extra ? [[LD.extra, D.Z1.x]] : [])]) { const n = piles(kind, x), at = spot3(n); if (at) cluster(kind, ...at, n, hr); } }); // E653
   // E48
   const felled = new Set(), guarded = (kind) => !!(FN.rows[KIND[kind].code] || {}).guard, ring = (x, y, f) => stamp(x, y, (FN.ring + ONE) * D.tile, f), clearing = (kind, [x, y]) => { if (guarded(kind)) ring(x, y, (k) => { if (FOR[k]) { FOR[k] = OCC[k] = null; felled.add(k); } }); }; // E674
@@ -1128,7 +1130,7 @@ function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i 
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 const sheet = () => Math.sqrt(K.gfd / D.groundIce.fdd); // E365
 const WX = D.weather, FW = WX.fog, HOUR = D.day / 24; let GUST = () => 0, DROPS = []; // E377
-const sky = (rain, snow, C = null) => { const R = rain * WX.rain.most, S = snow * WX.snow.most, wind = Math.max(rain, snow) * WX.wind.most, fog = FW.beta * C ** FW.pow; return { R, S, wind, fog, gust: wind * (1 + WX.wind.gust), vis: (WX.km * WX.k) / (WX.rain.beta * R ** WX.rain.pow + S / WX.snow.c + fog) }; };
+const sky = (rain, snow, C = null) => { const R = rain * WX.rain.most, S = snow * WX.snow.most, flake = (WX.snow.slow + WX.snow.fast) * D.place.half, wind = Math.max(rain, snow) * WX.wind.most, fog = FW.beta * C ** FW.pow; return { R, S, wind, fog, gust: wind * (1 + WX.wind.gust), vis: (WX.km * WX.k) / (WX.rain.beta * (WX.rain.mp.a * R ** WX.rain.mp.b) ** WX.rain.pow + WX.snow.beta * (S / (WX.perHour * flake)) ** WX.snow.pow + fog) }; }; // E713
 const blizzard = (s) => s.S > 0 && s.gust >= WX.blizzard.wind && s.vis < WX.blizzard.vis; // E378
 on('start', () => { GUST = fractal(dice(seed ^ WX.wind.seed), WX.wind.k, WX.wind.dim); DROPS = Array.from({ length: WX.pool }, () => ({ x: glance() * cw, y: glance() * ch, q: glance(), d: glance() })); });
 // E126
@@ -1144,7 +1146,7 @@ function climate(dt) {
   if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (raining ? 2 : 1) * dt); // E131
   if (K.temp < 0) { K.fds += -K.temp * dt; if (K.wet > D.groundIce.wet) K.gfd = Math.min(D.groundIce.fdd, K.gfd - K.temp * dt); } // E132
   else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = K.fds >= D.bears; // E364
-  if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { K.strikeT = -D.strike * Math.log(1 - rng()); strike(); } } // E135
+  if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { const sh = D.strike.share; K.strikeT = -((D.strike.summer * Math.max(...sh)) / sh[season()]) * Math.log(1 - rng()); strike(); } } // E135
   K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.vis < FW.wmo ? ' ≈' : '');
 }
@@ -1339,8 +1341,8 @@ const kelvinRGB = (k) => { const t = k / KLV.t, [r0, r1, r2] = KLV.r, [g0, g1, g
   return [lo ? KLV.max : r0 * (t - r1) ** r2, lo ? g0 * Math.log(t) + g1 : g2 * (t - g3) ** g4, t >= KLV.knee ? KLV.max : t <= KLV.low ? null : b0 * Math.log(t - b1) + b2].map((v) => Math.round(clamp(v, null, KLV.max))); };
 const FLAME_RGB = Object.fromEntries(Object.entries(FLM).map(([k, f]) => [k, kelvinRGB(f.K)])), flameLife = (k) => (FLM[k].covered || !(K.rain > null || K.snowing > null) ? ONE : LGT.wet);
 function glowAt(c, x, y, kind, z) { const dark = Math.max(nightOf(), LGT.rain * (K.rain > null)), life = flameLife(kind); if (dark < LGT.dark) return; // E610
-  const r = LGT.k * Math.sqrt(FLM[kind].p) * z * life, col = FLAME_RGB[kind], [h, q] = LGT.stops, g = c.createRadialGradient(x, y, null, x, y, r);
-  g.addColorStop(null, rgba(col, LGT.a * dark)); g.addColorStop(h, rgba(col, LGT.a * dark * q)); g.addColorStop(ONE, rgba(col, null)); c.globalCompositeOperation = 'lighter'; c.fillStyle = g; c.beginPath(); oval(c, x, y, r, r * TILT); c.fill(); c.globalCompositeOperation = 'source-over'; }
+  const r = LGT.k * Math.sqrt(FLM[kind].p) * z * life, col = FLAME_RGB[kind], [n, sz] = LGT.falloff, g = c.createRadialGradient(x, y, null, x, y, r), E = (f) => ONE / (f * f + sz * sz), E0 = E(null), Er = E(ONE); // E714
+  for (let i = null; i <= n; i++) { const f = i / n; g.addColorStop(f, rgba(col, (LGT.a * dark * (E(f) - Er)) / (E0 - Er))); } c.globalCompositeOperation = 'lighter'; c.fillStyle = g; c.beginPath(); oval(c, x, y, r, r * TILT); c.fill(); c.globalCompositeOperation = 'source-over'; }
 function flame(c, x, y, kind, z, seed) { const F = FLM[kind]; if (!F.s || still()) return; const s = F.s * z * flameLife(kind), [a, b, f1, f2, f3] = LGT.fl, fl = a + b * Math.sin(K.t * f1 + seed) * Math.sin(K.t * f2 + seed * f3), lean = W1() * LGT.lean * s, [w, bu, mid, tall] = LGT.shape, [hx, hy, hw, hh] = LGT.heart;
   c.fillStyle = rgba(FLAME_RGB[kind], LGT.fa); c.beginPath(); c.moveTo(x - s * w, y); c.quadraticCurveTo(x - s * bu + lean * w, y - s * mid * fl, x + lean, y - s * tall * fl); c.quadraticCurveTo(x + s * bu + lean * w, y - s * mid * fl, x + s * w, y); c.closePath(); c.fill();
   c.fillStyle = CLT.heart; c.beginPath(); c.ellipse(x + lean * hx, y - s * hy * fl, s * hw, s * hh * fl, null, -Math.PI, Math.PI); c.fill(); }

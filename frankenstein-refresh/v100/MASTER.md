@@ -63,22 +63,23 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E35** Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 ·  · D34 (N112) · D35 (N112)
 - **E36** Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry l · D39 (N112) · D40 (N112) · D41 (N112) · QBE (N64) · D23 (N112)
 - **E37** Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads  · D42 (N112) · D45 (N112) · D44 (N112)
-- **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
-- **E651** a tile's tree share: its zone's row (D63–D66), straight from the inner edge's share to the · D63 (N228) · D66 (N112, N228) · QCP (N228, N231)
+- **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
+- **E651** a tile's tree share: its zone's row (D63–D66), straight from the inner edge's share to the · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231)
 - **E39** the wood's edge keeps one tile from any slope or water
 
 ## index.html#floor-3-non-movables
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · QBJ (N168, N228) · D62 (N168, N228) · D63 (N228) · D65 (N228, N231)
+- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N242) · D63 (N228, N242) · D65 (N228, N231, N242)
+- **E711** the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and  · QCS (N242)
 - **E43** what stands on each tile, and the shells themselves
 - **E709** the buildings as their own list, a derived index of things rebuilt only when things change
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
-- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112) · QBJ (N168, N228) · D65 (N228, N231) · QBF (N65)
-- **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231)
+- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112) · D65 (N228, N231, N242) · QBF (N65)
+- **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231, N242)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
@@ -262,12 +263,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
 - **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
 - **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
-- **E378** QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · QK (N10, N210)
+- **E713** visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Pa · QK (N10, N210, N245)
+- **E378** QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · QK (N10, N210, N245)
 - **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D103 (N112, N185) · QI (N8)
 - **E127** the season's mean, eased into the next
 - **E128** what falls
 - **E129** rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity
-- **E133** fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or s · QK (N10, N210) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
+- **E133** fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or s · QK (N10, N210, N245) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
 - **E376** QCL the weather of the moment: rates, wind and visibility from the strengths, fog's water  · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214)
 - **E130** QP settle: wet in D104, dry in D105 · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
@@ -287,8 +289,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E142** the channel wanders but leans home to its foot
 - **E579** a falling star streaks down onto its spot
 - **E143** the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of
-- **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10, N210)
-- **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10, N210)
+- **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10, N210, N245)
+- **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10, N210, N245)
 - **E552** the sky told ahead, the sky's news, the flood and the ruts (D293–D295); the ground's marks · D293 (N7, N203) · D295 (N203)
 - **E553** the chain (QH) rolled ahead a forecast step for each step of Weather signs, never less tha · QH (N7)
 - **E554** when the sky turns its news is told, with why in the chain's own odds (Mid's skyTurn and w
@@ -334,7 +336,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E598** the view's eyes, lights and stage: the light and each eye's range (real math, Albert Nov 6
 - **E599** the light on the ground (D117): the sun's by its height, the moon's by its phase and heigh · D117 (N41, N215, N216, N217, N218, N220)
-- **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220) · QK (N10, N210)
+- **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220) · QK (N10, N210, N245)
 - **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
@@ -343,6 +345,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
 - **E609** fire's colour from its temperature (QF, a black body), its life in the rain (an open flame · QF (N4, N5, N54) · QAU (N54)
 - **E610** a flame's light on the ground: a disc fading to a quarter at half its reach, added to the 
+- **E714** the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, inst · QCU (N246)
 - **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
 - **E613** words on the map scale with the zoom down to a floor; a label is a pill (Mid's labelK, map
@@ -770,6 +773,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E545** the wave sets out, its guard kept home; a few riders go for the foe's nearest drop-off to 
 - **E522** The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll): its personality's bold a · D304 (N202) · D285 (N198, N199, N202)
 - **E523** Dynamic Diplomacy (Mid's LEAGUE, leagueTick): when one side runs far ahead, the others (no
+- **E712** the computers' first buildings (D342), standing and free when the match begins: Mid's hand · D342 (N244)
 - **E683** the computers' clocks start spread over one turn (react ÷ how many), so no two think on th
 - **E668** the computers' part of the save: their clocks, plans and minds
 

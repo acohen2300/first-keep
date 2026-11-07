@@ -13,7 +13,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QH** Rain or dry → N7 · used by D102, D293, O205
 - **QI** Snow line → N8
 - **QJ** Raindrop speed → N9 · used by D229, X56
-- **QK** Visibility → N10, N210 · used by D229, X56, X68
+- **QK** Visibility → N10, N210, N245 · used by D229, X56, X68
 - **QL** Lightning → N11 · used by D112
 - **QM** Random events → N12 · used by SC9, D181, D308, D309, D310, D311, X64, HX4
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
@@ -81,10 +81,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBL** The way → N74 · used by SC1, D198, D207, D230, D247, X52
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
 - **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17, D88, D197, X51
-- **QBJ** The pocket's store (Z1) → N168, N228 · used by D62, D63, D65, D129, X50, X71
 - **QCP** The woods' edge → N228, N231 · used by D63, D64, D65, D66, X71
 - **QCQ** The way home → N229, N233 · used by X71
 - **QCR** Frame budget → N237 · used by D339
+- **QCS** The pocket's store, Mid's (Z1) → N242 · used by D62, D63, D65, D129, X50, X71
+- **QCT** Lightning through the year → N243 · used by D113
+- **QCU** A flame's glow on the ground → N246
 - **QBO** The blow → N69, N188 · used by SC6, SC10, D138, D141, D143, D221, D232, X57
 - **QBP** Upkeep → N170, N171 · used by D131, D211, D212, D213, X53
 - **QBQ** The break → N76 · used by D142
@@ -98,8 +100,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By citation
 
-- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBJ, QBO, QBP, QBT
-- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCH, QCM, QCN, QCO, QAL, QAM, QAN, QBJ, QCP, QCQ, QCR, D292
+- **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBO, QBP, QBT
+- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCH, QCM, QCN, QCO, QAL, QAM, QAN, QCP, QCQ, QCR, QCS, QCT, QCU, D292
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
@@ -113,15 +115,15 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N13** Pandolf, Givoni & Goldman (1977) → QN, QCB, D224, X56
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
-- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, QBJ, SC27, D231, D237, D249
+- **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, SC27, D231, D237, D249
 - **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, QCD, QCG, G9
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD, QCM, QCN, QCO, D294
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QK, QT, QCL, QAL, QAM, SC45, D310
-- **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QCH, QAL, QAN, QBJ, QCP, QCQ, SC45, D310
+- **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QCH, QAL, QAN, QCP, QCQ, SC45, D310
 - **N23** Holling (1959), Can. Entomol. 91 → QV, QCP, QCQ, QCR
-- **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW, QCM
+- **N24** Charnov (1976), Theor. Pop. Biol. 9 → QK, QV, QW, QCM, QCS, QCT, QCU
 - **N25** Fretwell & Lucas (1970) → QX
 - **N26** Sutherland (1983) → QX
 - **N27** Verhulst (1838) → QY, D218, D219
@@ -265,7 +267,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N165** (to open) Hall, E. T. (1966), The Hidden Dimension: personal distance, 1.5 to 4 ft; and hexagonal circle packing, densit → QCI, D196
 - **N166** (to open) OSHA 29 CFR 1910.266(d)(6)(ii), fellers at least two tree lengths apart; 29 CFR 1910.142, beds at least 36 in  → D195, D196
 - **N167** (to open) Moussaïd, Helbing, Garnier, Johansson, Combe & Theraulaz (2009), Experimental study of the behavioural mechani → QCJ, D196
-- **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, QBJ, SC4, SC5, SC21, SC22, D62, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
+- **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC5, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
 - **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D124, D125, D139
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, UM17, UM18, UM19, UM20, UM21, UM22, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** (to open) Keys, Brožek, Henschel, Mickelsen & Taylor (1950), The Biology of Human Starvation (the Minnesota study): grip → QBP, D212
@@ -280,7 +282,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N180** US National Weather Service glossary, blizzard (forecast.weather.gov/glossary.php?word=bliz; weather.gov/dtx/w → QCL, D229, X56
 - **N181** (to open) Pugh (1971), The influence of wind resistance in running and walking and the mechanical efficiency of work aga → QCB, W1, D224
 - **N182** Seliga, Hazen & Burnley, nowcasting snowfall rate from visibility (AMS paper 104640): S = c σ, c from about 0. → QCL, D229
-- **N183** (to open) Rain's extinction of light β ≈ 0.312 R^0.67 a km, R in mm/h (an empirical fit used for visibility in rain); fr → QCL, D229
+- **N183** Rain's extinction of light: CALVIS's 2.24 C^0.75 with Marshall–Palmer's C gives 0.31 R^0.66 a km, R in mm/h (A → QCL, D229
 - **N184** (to open) Harper, Kepert & Ginger (2010), WMO guidelines for converting between various wind averaging periods: a gust a → QCL, D229
 - **N185** Design: Albert, Nov 5 18:07–18:08: pace by the floor, the weather, mass and gravity, never by the calendar (Pa → QCA, QCB, W24, D103, D224, D229, X54, X56
 - **N186** (to open) Intensity's top: rain 50 mm/h (violent rain on the Met Office's scale), snow 5 mm/h of water, wind 20 m/s (a g → QCL, D229
@@ -325,7 +327,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N225** Design: Mid's civilisations (04-rules-tech.js CIVS, CIVK, the six unique units, the Hall rows and the six elit → SC03, D86, D123, D124, D138, D239, X70, UM17, UM18, UM19, UM20, UM21, UM22, P46, P47, P48, O232, O233, O234, O235, O236, O237, O238, O239, O240, O241, O242, O243, O244, O245, O246, O247, O248, O249, O250, O251, O252, O253, O254, O255, O256, O257, O258, O259, J7, J26
 - **N226** Design: Albert, Nov 6 17:23: the civilisations as Mid had them, if they come clean and within our rules; the G → D326, X69, X70, O254, O255, O256, O257, O258, O259
 - **N227** (to open) Age of Empires II (1999): each civilisation's bonuses are techs every side of that civilisation holds from the → O254, O255, O256, O257, O258, O259
-- **N228** Design: Albert, Nov 6 16:01–16:07: you start in the corner drawn at the bottom left of the screen, whatever th → QBJ, QCP, A6, D62, D63, D64, D65, D66, X71
+- **N228** Design: Albert, Nov 6 16:01–16:07: you start in the corner drawn at the bottom left of the screen, whatever th → QCP, A6, D63, D64, D65, D66, X71
 - **N229** Design: Mid's map character, new game and scenarios (06-rules-tuning.js LAND, SCENARIOS, UI_BUDGET; 07-text.js → QCQ, D329, D330, D333, X71, J28
 - **N230** Design: Mid's save and safety net (34-save.js saveGame, readSave, keepAside, clearSave, loadGame; 01-rules-bas → D331, D332, D334, D335, X72, J28
 - **N231** (to open) Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by deg → QCP, D65
@@ -337,6 +339,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N239** Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a t → X75, X76
 - **N240** Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow cal → D341
 - **N241** Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, → SN5, SN15, J32
+- **N242** Design: Mid's pocket, 06-rules-tuning.js BACK and HOME (zone 1: AGES[1].cost + 6 villagers' food and 5 houses' → QCS, D62, D63, D65
+- **N243** Holle, R. L. and K. L. Cummins, Seasonal Lightning Distributions over North America (Vaisala; NLDN 2005–2014): → QCT, D113
+- **N244** Design: Mid's HANDICAP (06-rules-tuning.js: blds mill and farm, r 60–170; laid in 10-world.js by findSpot, fin → D342
+- **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
+- **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
 - **N234** Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guid → X73, J7, J27, J29, J30
 

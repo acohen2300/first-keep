@@ -3184,3 +3184,44 @@ MODIFIED (33):
 LOCKED (2063 of 2096): byte for byte as sealed, 1,002,607 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2096 items sealed · 1972 book entries · 91 laws · 241 citations, 47 still to open · 7 known
+
+## G1 · Albert's calls of Nov 7 14:47: the pocket as Mid's (QCS), the computers' first Mill and Farm, all weather real (CALVIS), treasure (v100 gold + Mid spoils), lightning all year by the record, wood burns (the Gate), lantern light by the inverse square, buildings block sight · 2026-11-07 17:10
+Albert, Nov 7 14:47 (items 9, 11, 12, 16, 19-23); 15:46: do it all yourself
+Opened: code:index.html, code:econ.js, code:combat.js, code:ai.js, book:measure, book:ground, book:shells, book:capabilities, book:words, book:comments, book:citations, book:rules, book:sprites, law:QCS, law:QCT, law:QCU, law:QCV, law:QBJ, law:QK
+MODIFIED (33):
+- book:citations:N183 · 160 → 213 bytes
+- book:citations:N242 · added
+- book:citations:N243 · added
+- book:citations:N244 · added
+- book:citations:N245 · added
+- book:citations:N246 · added
+- book:comments:E711 · added
+- book:comments:E712 · added
+- book:comments:E713 · added
+- book:comments:E714 · added
+- book:measure:D113 · 96 → 507 bytes
+- book:measure:D129 · 520 → 520 bytes
+- book:measure:D178 · 497 → 515 bytes
+- book:measure:D204 · 195 → 255 bytes
+- book:measure:D229 · 1,989 → 2,275 bytes
+- book:measure:D317 · 1,253 → 1,463 bytes
+- book:measure:D342 · added
+- book:measure:D62 · 438 → 719 bytes
+- book:measure:D63 · 190 → 198 bytes
+- book:measure:D65 · 402 → 682 bytes
+- book:measure:D70 · 178 → 245 bytes
+- book:rules:X50 · 690 → 690 bytes
+- book:rules:X71 · 765 → 765 bytes
+- code:ai.js · 26,952 → 27,312 bytes
+- code:econ.js · 105,170 → 105,176 bytes
+- code:index.html#floor-3-non-movables · 8,100 → 8,726 bytes
+- code:index.html#floor-6-climate · 24,632 → 24,841 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 21,810 → 21,876 bytes
+- law:QBJ · removed
+- law:QCS · added
+- law:QCT · added
+- law:QCU · added
+- law:QK · 187 → 375 bytes
+LOCKED (2076 of 2108): byte for byte as sealed, 1,160,153 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2108 items sealed · 1982 book entries · 93 laws · 246 citations, 47 still to open · 7 known

@@ -571,3 +571,10 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 - The Yard (layer toggles) shows only in the test field (?test), from the Pause screen.
 - Reload still costs speed: the same match runs about 1.6× slower after a reload than before (was 2.8×), from object shapes the save rebuilds; look overnight.
 - Show active sightlines when the player needs them: UI design, mockup first (Albert, Nov 7 14:47, item 23).
+- QBJ (the pocket as one age up, calculated; Albert, Nov 6) retired in G1: the pocket is Mid's (QCS), Albert Nov 7 14:47.
+
+## G1 (Nov 7), for Albert's yes
+- Treasure already pays Mid's spoils (food 100, gold 150 on touch) and keeps v100's 300 gold to gather: both, as asked; nothing changed.
+- The Gate already burns (Burn tick, timber); the Wall and Tower are stone: nothing changed.
+- Lightning's spring, autumn and winter shares (0.20, 0.13, 0.03) are read from Holle & Cummins' Fig. 2, not quoted: confirm or correct.
+- Mid-match frame rate with Mid's richer pocket and the computers' head start: 44–49 fps after a reload (53 before G1); the reload cost is still the open item.
