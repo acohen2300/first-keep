@@ -4,7 +4,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,142 | 491,384 | 491,522 |
+| Game code | 29 | 3,142 | 491,283 | 491,421 |
 | Books | 1954 | 0 | 552,907 | 553,579 |
 | Laws | 91 | 0 | 18,646 | 19,146 |
 | Tools | 4 | 1,759 | 284,794 | 285,032 |
@@ -13,7 +13,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 30 | 1,764 | 1,764 | 11 |
+| index.html#page | 30 | 1,663 | 1,663 | 10 |
 | index.html#frames | 13 | 1,035 | 1,035 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |

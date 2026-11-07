@@ -3134,3 +3134,12 @@ MODIFIED (4):
 LOCKED (2074 of 2078): byte for byte as sealed, 1,254,562 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2078 items sealed · 1954 book entries · 91 laws · 239 citations, 47 still to open · 7 known
+
+## M1b · the fonts carried inside the game: everything works offline · 2026-11-07 13:33
+Albert, Nov 7 13:28: yes, as Base; everything has to work offline
+Opened: code:index.html
+MODIFIED (1):
+- code:index.html#page · 1,764 → 1,663 bytes
+LOCKED (2077 of 2078): byte for byte as sealed, 1,347,515 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2078 items sealed · 1954 book entries · 91 laws · 239 citations, 47 still to open · 7 known
