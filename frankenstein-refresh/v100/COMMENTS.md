@@ -670,3 +670,9 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E672 | menu.js | copied to the clipboard, or through a hidden box where the clipboard is refused |
 | E673 | menu.js | the menu's part of the save: the mail, the news, the options, the match log |
 | E674 | index.html#floor-3-non-movables | a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26 from home): it is laid only where the ring is open land, and the trees on the ring are cleared, as the pocket's grove is kept |
+| E675 | menu.js | The Guide, written from the books (Mid's guideModel): every building, unit, research step, age, people, find and rule, its numbers read from the tables, so it stays true as they change; an age is a building's or a kind's, or the first |
+| E676 | menu.js | a unit is trained at the first building that trains it (or the kind it replaces), as Mid gives each its one home; a history line sits under the shell's look unless the Guide's key says otherwise; a step's line under tech:key, else its key |
+| E677 | menu.js | a rule's numbers and names are filled from the books: {D:path} a measurement, {S:code} a shell's name, {J:key} a words entry, {fx:stat} the research that raises it |
+| E678 | menu.js | Mid's guideModel, field for field, on v100's tables (a building's menu is its Build tab, else why it is off the menu); no line of what a thing does yet: v100's books hold none |
+| E679 | menu.js | History (Mid's yearOf, histRows, histText): a step's date as a year (BC below none; an era by name; undated last), the dated steps in order, a row as text to copy |
+| E680 | menu.js | the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a bar in a cell made a slash |

@@ -1054,28 +1054,28 @@
      "F32: J7"
     ],
     "keep": [
-     "bring",
-     "the history card for Town Center (BTC1), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "town": [
-     "bring",
-     "the history card for a second Town Center (BTC1, Mid's new town), with towns"
+     "cut",
+     "F39: v100 has one Town Center shell (BTC1), so a second one reads the Town Center's line (keep); logged in Parked"
     ],
     "venture": [
      "in v100",
      "F26+F27: Words book J7 (why), by its key"
     ],
     "house": [
-     "bring",
-     "the history card for Home (BR1) (Mid: House), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "apartment": [
-     "bring",
-     "the history card for Apartment (BR2), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "aqueduct": [
-     "bring",
-     "the history card for Aqueduct (BP7), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "farm": [
      "in v100",
@@ -1086,36 +1086,36 @@
      "F16: Words book J7 (why), by its key"
     ],
     "mill": [
-     "bring",
-     "the history card for Mill (BI1), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "lumber": [
-     "bring",
-     "the history card for Lumber camp (BI2), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "mining": [
-     "bring",
-     "the history card for Mining camp (BI3) (Mid: Mine), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "barracks": [
-     "bring",
-     "the history card for Barracks (BM1), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "range": [
-     "bring",
-     "the history card for Range (BM2) (Mid: Archery range), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "stable": [
-     "bring",
-     "the history card for Stable (BM3), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "smith": [
-     "bring",
-     "the history card for Smith (BI9) (Mid: Smithy), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "siege": [
-     "bring",
-     "the history card for Siege workshop (BM4), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "council": [
      "in v100",
@@ -1134,16 +1134,16 @@
      "the history card for School (BP1), with its building · F24: Words book J7 (why), by its key"
     ],
     "library": [
-     "bring",
-     "the history card for Library (BP2), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "hall": [
-     "bring",
-     "the history card for Hall (BP9), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "store": [
-     "bring",
-     "the history card for Store (BI4), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "caltrops": [
      "in v100",
@@ -1190,16 +1190,16 @@
      "F32: J7"
     ],
     "baths": [
-     "bring",
-     "the history card for Baths (BP4), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look (its 'Game:' line waits for the building's effect, Parked)"
     ],
     "theatre": [
-     "bring",
-     "the history card for Theatre (BP5), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look (its 'Game:' line waits for the building's effect, Parked)"
     ],
     "tavern": [
-     "bring",
-     "the history card for Tavern (BCR2), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look (its 'Game:' line waits for the building's effect, Parked)"
     ],
     "temple": [
      "in v100",
@@ -1234,8 +1234,8 @@
      "F26+F27: Words book J7 (why), by its key"
     ],
     "quarry": [
-     "bring",
-     "the history card for Quarry (BCL4), with its building"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "throne": [
      "bring",
@@ -1270,12 +1270,12 @@
      "F23: Words book J7 (why), by its key"
     ],
     "vil": [
-     "bring",
-     "the history card for the Villager (v100 Villager, UV), with its unit"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "scout": [
-     "bring",
-     "the history card for the Scout (v100 Scout, US4), with its unit"
+     "in v100",
+     "F39: Words book J7 (why), by its look"
     ],
     "envoy": [
      "in v100",
@@ -1500,8 +1500,8 @@
    "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
   ],
   "SONG": [
-   "bring",
-   "the song line, said by the Guide and the Sound page"
+   "in v100",
+   "F39: words J30 (song), said by the Guide's rule 'The song' ({J:song}); the Sound page's line waits with the Sound page"
   ],
   "MS_TEXT": [
    "in v100",
@@ -1828,8 +1828,8 @@
      "F37: the land's line on every new game and the scenario's line (words J28, econ.js begin hook); its Guide row waits for the Guide (Parked)"
     ],
     "You order a unit and the town is full": [
-     "bring",
-     "an order waits for room; names a House (misfits); v100's train whyNot says 'No room: build a home'"
+     "in v100",
+     "F39: words J27, as v100 does it: Train says No room and nothing is paid; names from shells ({S:BR1}, {S:BTC1})"
     ],
     "The screen": [
      "bring",
@@ -1840,8 +1840,8 @@
      "F35: menu.js mail (say, reach, postTick, newsTick), D323, D324 (QCH), words mail and world, tech Post line"
     ],
     "Room": [
-     "bring",
-     "one population, homes hold people; names a House (misfits); Mid's POPMAX 180 against v100's 200 (numbers.json)"
+     "in v100",
+     "F39: words J27, its numbers from the books (pop, popMax, armyMax) and the room research from the tech book ({fx:room})"
     ],
     "Limits": [
      "bring",
@@ -1960,8 +1960,8 @@
      "nerve and the rout (Dupuy), with the Nerve attribute"
     ],
     "The song": [
-     "bring",
-     "the song (SONG); names the wind (cut) and thunder (held) as sounds (misfits)"
+     "in v100",
+     "F39: words J27 with J30; the wind and the thunder are in v100's Sound book (HA3, HA4); 'crews fall into step' left out (Parked)"
     ],
     "Hit from behind": [
      "bring",

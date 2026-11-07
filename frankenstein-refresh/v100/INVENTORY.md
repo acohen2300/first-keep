@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,096 | 480,976 | 481,114 |
-| Books | 1913 | 0 | 534,470 | 535,137 |
+| Game code | 29 | 3,127 | 486,099 | 486,237 |
+| Books | 1923 | 0 | 543,464 | 544,133 |
 | Laws | 90 | 0 | 18,345 | 18,837 |
-| Tools | 4 | 1,674 | 269,896 | 270,126 |
+| Tools | 4 | 1,706 | 275,042 | 275,280 |
 
 ## The trades (code)
 
@@ -37,7 +37,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 21,729 | 21,733 | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
 | index.html#touch | 50 | 7,377 | 7,381 | 54 |
-| menu.js | 424 | 74,513 | 74,555 | 583 |
+| menu.js | 455 | 79,636 | 79,678 | 583 |
 | econ.js | 576 | 105,151 | 105,151 | 72 |
 | combat.js | 353 | 58,830 | 58,830 | 84 |
 | ai.js | 165 | 26,039 | 26,039 | 26 |
@@ -49,20 +49,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,092 |
-| citations | 233 | 46,788 |
+| citations | 234 | 47,058 |
 | colours | 21 | 4,542 |
-| comments | 666 | 111,064 |
+| comments | 672 | 112,288 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
 | measure | 306 | 125,425 |
-| rules | 70 | 26,290 |
+| rules | 71 | 26,846 |
 | screen | 11 | 3,247 |
 | shells | 109 | 22,563 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
 | sprites | 65 | 25,607 |
 | tech | 259 | 75,552 |
-| words | 28 | 79,607 |
+| words | 30 | 86,660 |
 
 ## The shells
 
@@ -146,5 +146,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X70 | t-civs | page | the civilisations (F36): each of the six trains its own kind in place of the common one and no other side does; the kind's numbers, cost, time, age and pace equal Mid's UNIT; its bonus applied by QCA equals Mid's fxv for the civ; its elite rank equals Mid's tier; its Hall rows equal Mid's and only its side may research them; the legionary, Immortal and Mali horseman draw as Mid's figures; every standing tree in the woods stands its kind's Forest Service height (D326) in line of sight |
 | X71 | t-land | page | the map's character, new game and scenarios (F37), with Albert's map calls: the lands and the scenarios equal Mid's frozen LAND, SCENARIOS and MODES, and each scenario plays as its row (age, store, research, relations, buildings by their spot, villagers, its line); past the pocket each find is worth its land's share; no find of your quarter is walled in by trees (only water may cut it off); your Town Center is at the bottom left of the screen; the pocket holds QBJ's amounts from the costs and the Bronze price; Z3 thickens toward Z4, is more open than Z4, Z2 has no woods, and Z3's finds are more than the pocket's and less than the wilds' |
 | X72 | t-save | page | saving, the safety net and the test tools (F38): the save beat, the fight wait, the failure's minute and the button budget equal Mid's frozen SAVE_EVERY, saveGame and UI_BUDGET; a save waits out a fight up to its limit, keeps the one before, and opens to the same units, finds, buildings, stores, climate, relations and mail; a damaged save is kept aside and the one before opens; no seen or remembered state is saved; a thrown error costs a frame and the game runs on; taps are counted; the match log rows a minute; the test field (?test) is you and one rival at war with both armies out, never saved; the game opens where you left it |
+| X73 | t-guide | page | the Guide and History, written from the books (F39): Mid's frozen guideModel and histRows, run on v100's tables, list the same buildings, units, research, ages, peoples, finds and rules, with the same numbers, names, lines and order as v100's guide() and hist(); every rule's numbers and names are filled from the books (none left open), each building, unit and find has its history line where the Words book holds one, and the Markdown holds one row an entry |
 
-2036 items sealed · 1913 book entries · 90 laws · 233 citations, 46 still to open · 7 known
+2046 items sealed · 1923 book entries · 90 laws · 234 citations, 46 still to open · 7 known

@@ -250,7 +250,7 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | capabilities.js | Element cards | 2 | 27 | 2,176 | 2,196 | 2 in v100, 0 bring, 0 cut, 0 parked |
 | numbers.js | Numbers | 5 | 2,581 | 103,299 | 104,141 | 120 in v100, 5 bring, 13 cut, 1 parked |
 | tech.js | Ages and tech | 1 | 3,375 | 73,123 | 73,159 | 3 in v100, 1 bring, 2 cut, 0 parked |
-| words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 11 in v100, 5 bring, 1 cut, 0 parked |
+| words.js | Words | 1 | 1,215 | 103,803 | 104,005 | 12 in v100, 4 bring, 1 cut, 0 parked |
 | core.js | Core | 2 | 957 | 47,164 | 47,714 | 153 in v100, 12 bring, 12 cut, 0 parked |
 | paths.js | Walking grid | 1 | 846 | 34,215 | 34,437 | 36 in v100, 0 bring, 9 cut, 0 parked |
 | world.js | World | 7 | 1,095 | 52,496 | 53,361 | 18 in v100, 1 bring, 37 cut, 0 parked |
@@ -260,7 +260,7 @@ Typed numbers: numbers and colours typed into code (they belong in a book). Asks
 | sprites.js | Art | 2 | 5,134 | 122,368 | 122,642 | 77 in v100, 3 bring, 3 cut, 0 parked |
 | display.js | View | 6 | 3,369 | 127,181 | 127,457 | 124 in v100, 9 bring, 34 cut, 0 parked |
 | touch.js | Touch | 1 | 669 | 21,388 | 21,512 | 30 in v100, 0 bring, 2 cut, 0 parked |
-| menu.js | Menus | 8 | 4,871 | 212,969 | 214,200 | 105 in v100, 98 bring, 21 cut, 0 parked |
+| menu.js | Menus | 8 | 4,871 | 212,969 | 214,200 | 112 in v100, 91 bring, 21 cut, 0 parked |
 | save.js | Saving | 1 | 771 | 27,462 | 27,595 | 17 in v100, 0 bring, 1 cut, 0 parked |
 | sound.js | Sound | 1 | 478 | 14,907 | 15,043 | 21 in v100, 0 bring, 2 cut, 5 parked |
 | events.js | Events, camps, natives, peace | 4 | 1,636 | 67,062 | 67,392 | 83 in v100, 13 bring, 9 cut, 0 parked |

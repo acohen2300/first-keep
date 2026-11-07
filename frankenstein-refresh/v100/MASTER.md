@@ -466,6 +466,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E671** a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fe · D335 (N230)
 - **E672** copied to the clipboard, or through a hidden box where the clipboard is refused
 - **E673** the menu's part of the save: the mail, the news, the options, the match log
+- **E675** The Guide, written from the books (Mid's guideModel): every building, unit, research step,
+- **E676** a unit is trained at the first building that trains it (or the kind it replaces), as Mid g
+- **E677** a rule's numbers and names are filled from the books: {D:path} a measurement, {S:code} a s
+- **E678** Mid's guideModel, field for field, on v100's tables (a building's menu is its Build tab, e
+- **E679** History (Mid's yearOf, histRows, histText): a step's date as a year (BC below none; an era
+- **E680** the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a ba
 
 ## econ.js
 

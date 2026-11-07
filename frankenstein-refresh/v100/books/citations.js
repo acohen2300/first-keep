@@ -232,5 +232,6 @@ BOOK("citations", {
  "N230": {"text": "Design: Mid's save and safety net (34-save.js saveGame, readSave, keepAside, clearSave, loadGame; 01-rules-basics.js SAVE_EVERY; 41-boot.js fault; 39-huddle.js matchLog, copyLog; 33-verbs.js tapCount)", "opened": true, "kind": "design"},
  "N231": {"text": "Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by degrees across the edge (from memory, to open)", "opened": false},
  "N232": {"text": "Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap places it, with no second trip to the menu; a double tap must not zoom the page", "opened": true, "kind": "design"},
- "N233": {"text": "Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-ended queue, the 0-1 search (from memory, to open)", "opened": false}
+ "N233": {"text": "Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-ended queue, the 0-1 search (from memory, to open)", "opened": false},
+ "N234": {"text": "Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, SONG), written from v100's books (Albert, Nov 5 11:40, Frankenstein F39)", "opened": true, "kind": "design"}
 });

@@ -498,40 +498,40 @@
    "draws the card with its title bar and book; v100's render() and cardText()"
   ],
   "guideModel": [
-   "bring",
-   "the Guide written from the tables (what leads to what, and why)"
+   "in v100",
+   "F39: menu.js guide(): every building, unit, step, age, people, find and rule from the books (shells, measure, tech, words J7, J27, J29), E675–E678"
   ],
   "guideHTML": [
    "bring",
    "the Guide's pages"
   ],
   "HIST_NOTE": [
-   "bring",
-   "History's caveat line; with History (beta)"
+   "in v100",
+   "F39: words J29 (guidebook) note"
   ],
   "HIST_ASK": [
-   "bring",
-   "History's ask for corrections; with History"
+   "in v100",
+   "F39: words J29 (guidebook) ask"
   ],
   "yearOf": [
-   "bring",
-   "a date's year for History's order"
+   "in v100",
+   "F39: menu.js yearOf (E679), the eras in words J29"
   ],
   "histRows": [
-   "bring",
-   "History's rows from the research"
+   "in v100",
+   "F39: menu.js hist() (E679)"
   ],
   "histText": [
-   "bring",
-   "a History row as text to copy"
+   "in v100",
+   "F39: menu.js histText (E679)"
   ],
   "histHTML": [
    "bring",
    "History, searchable"
   ],
   "guideMd": [
-   "bring",
-   "the Guide as Markdown (the GUIDE snapshot docs)"
+   "in v100",
+   "F39: menu.js guideMd() (E680), its headings in words J29 md"
   ],
   "SVG": [
    "in v100",

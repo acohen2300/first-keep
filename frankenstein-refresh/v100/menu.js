@@ -419,6 +419,37 @@ function copyLog() { const t = logText(), ok = () => say(WT.copied), fall = () =
 FK.on('start', () => { LOG.rows = []; });
 FK.on('save', (X) => { X.menu = { mail, post, newsI, newsT, shown, slipT, mustered, tipNow, opt: S.opt, log: LOG.rows }; }); // E673
 FK.on('load', ({ menu: M }) => { FK.refill(mail, M.mail); FK.refill(post, M.post); ({ newsI, newsT, slipT, mustered, tipNow, shown } = M); Object.assign(S.opt, M.opt); LOG.rows = M.log; S.tab = null; render(true); });
+// E675
+const GW = WD.guidebook, TB = BOOKS.tech, TV = (c) => TB[c].value, SN = (c) => FK.SH[c].name, [AGE0] = D.ages, ageOf = (c) => FK.SH[c].age || D.ages[D.bldAge[c]] || AGE0, secs = (t) => (t ? t + GW.secs : '');
+const homeOf = (c) => Object.keys(D.trains).find((b) => FK.trains(b).includes(FK.SH[c].replaces || c)), whyOf = (c) => WD.why[GW.key[c] || FK.SH[c].look], techWhy = (c) => WD.why['tech:' + TB[c].key] ?? WD.why[TB[c].key]; // E676
+const fill = (s) => s.replace(/\{(\w+):([^}]+)\}/g, (_, k, p) => (k === 'D' ? p.split('.').reduce((o, x) => o[x], D) : k === 'S' ? SN(p) : k === 'J' ? WD[p] : Object.keys(TB).filter((c) => TV(c).fx.some((f) => f.s === p)).map((c) => TB[c].name).join(WD.list.and))); // E677
+function guide() { // E678
+  const T = Object.keys(TB).filter((c) => TV(c).at), UN = Object.keys(U).filter((c) => D.cost[c]), aged = (c, i) => D.ages.indexOf(ageOf(c)) === i, names = (L) => L.map((c) => TB[c].name);
+  const buildings = Object.keys(B).map((c) => ({ id: c, name: SN(c), menu: Object.keys(SCR.tabs).find((m) => SCR.tabs[m].includes(c)) || GW.off[c], age: ageOf(c), cost: costText(D.cost[c]), secs: secs(D.buildTime[c]), squares: FK.ref(FK.SH[c].size) + GW.by + FK.ref(FK.SH[c].size),
+    trains: UN.filter((u) => !FK.SH[u].civ && homeOf(u) === c).map(SN), research: names(T.filter((t) => TV(t).at === c)), why: whyOf(c) }));
+  const units = UN.map((c) => { const s = D.stats[c], h = homeOf(c), e = FK.SH[c]; return { id: c, name: SN(c), at: h ? SN(h) : GW.at, age: ageOf(c), cost: costText(D.cost[c]), secs: secs(D.train[c]), hp: s.hp, dmg: s.atk, rng: s.rng, spd: FK.ref(e.pace), civ: e.civ ? CIVS[e.civ].name : '', replaces: e.replaces ? SN(e.replaces) : '',
+    beats: Object.entries(s.vs || {}).map(([k, m]) => k + GW.beats.times + m).concat(s.bld && s.bld !== D.bases.bld ? [GW.beats.bld + GW.beats.times + s.bld] : [], s.bonly ? [GW.beats.only] : []),
+    tiers: T.filter((t) => (TV(t).rank || {}).k === c).map((t) => `${TV(t).rank.name} (${TB[t].name})`), why: whyOf(c) }; });
+  const techs = T.map((c) => { const v = TV(c); return { id: c, name: TB[c].name, at: SN(v.at), age: D.ages[v.age], line: v.line, when: v.when, w: v.w, need: names(ECON.needsOf(c)).join(WD.list.and), cost: costText(v.cost), secs: secs(v.time), why: techWhy(c) }; });
+  const ages = D.ages.map((name, i) => ({ id: 'age' + i, name, cost: i ? costText(D.age.cost[i]) : GW.start, secs: secs(D.age.time[i]), why: WD.why['age' + i],
+    opens: { buildings: Object.keys(B).filter((c) => aged(c, i)).map(SN), units: UN.filter((c) => !FK.SH[c].civ && aged(c, i)).map(SN), research: names(T.filter((c) => TV(c).age === i)) } }));
+  const civs = PEOPLES().map((k) => { const u = Object.keys(FK.SH).find((c) => FK.SH[c].civ === k); return { id: k, name: CIVS[k].name, unit: SN(u), replaces: SN(FK.SH[u].replaces), wonder: CIVS[k].wonder, why: WD.why['bonus:' + k], wwhy: WD.why['wonder:' + k], uwhy: whyOf(u) }; });
+  const finds = Object.keys(D.finds.rows).map((c) => ({ id: c, name: SN(c), why: whyOf(c) }));
+  return { buildings, units, techs, ages, civs, finds, rules: Object.entries(WD.guide).map(([when, [then, why]]) => ({ when: fill(when), then: fill(then), why: fill(why) })) };
+}
+const yearOf = (w) => { const s = String(w || ''), [, bc] = s.match(/([\d,]+)\s*BC/) || [], [, ad] = s.match(/(\d+)/) || []; return !w ? Infinity : bc ? -parseInt(bc.replace(/,/g, '')) : ad ? parseInt(ad) : GW.eras[s] || Infinity; }; // E679
+const hist = () => guide().techs.filter((t) => t.when).map((t) => ({ ...t, y: yearOf(t.when) })).sort((a, b) => a.y - b.y), histText = (t) => `${[t.name, t.when, t.line].join(WD.list.dot)}, ${t.at}. ${t.why || ''}`;
+function guideMd() { // E680
+  const g = guide(), M = GW.md, L = WD.list, cell = (s) => String(s || '-').replace(/\|/g, '/'), then = (a, t) => [a, t].filter(Boolean).join(L.and), opens = (o) => [o.buildings, o.units, o.research].map((x) => x.join(L.and)).filter(Boolean).join('; ');
+  const table = ([head, ...cols], rows) => ['', `## ${head}`, '', `| ${cols.join(' | ')} |`, `|${cols.map(() => '---|').join('')}`, ...rows.map((r) => `| ${r.map(cell).join(' | ')} |`)];
+  return [M.title.replace('{v}', D.version), '', M.lede,
+    ...table(M.ages, g.ages.map((a) => [a.name, then(a.cost, a.secs), opens(a.opens), a.why])),
+    ...table(M.civs, g.civs.map((c) => [c.name, `${c.unit} (${M.for} ${c.replaces})`, c.wonder, [c.why, c.uwhy, c.wwhy].join(' ')])),
+    ...table(M.buildings, g.buildings.map((b) => [b.name, b.menu, b.age, then(b.cost, b.secs), [b.trains.length ? `${M.trains} ${b.trains.join(L.and)}` : '', b.research.length ? `${M.research} ${b.research.join(L.and)}` : ''].filter(Boolean).join('; '), b.why])),
+    ...table(M.units, g.units.map((u) => [u.name + (u.civ ? ` (${u.civ})` : ''), u.at, u.age, then(u.cost, u.secs), u.hp, u.beats.join(L.and), u.tiers.join(L.and), u.why])),
+    ...table(M.techs, g.techs.map((t) => [t.name, t.at, t.age, t.need, then(t.cost, t.secs), t.why])),
+    ...table(M.finds, g.finds.map((f) => [f.name, f.why])), ...table(M.rules, g.rules.map((r) => [r.when, r.then, r.why]))].join('\n');
+}
 const second = ([, x]) => x;
-return { scen: () => second(OPTS.scen[S.opt.scen]), daily: () => second(OPTS.daily[S.opt.daily]), log: LOG, logText, copyLog, TAPS, clock, read, act, VERBS, S, render, SCR, fmt, plural, some, orList, slowPct, coord, ledgerLine, say, mail, post, reach, dirOf, advise, MS_TEST, learned, civLine };
+return { scen: () => second(OPTS.scen[S.opt.scen]), daily: () => second(OPTS.daily[S.opt.daily]), log: LOG, logText, copyLog, TAPS, clock, read, act, VERBS, S, render, SCR, fmt, plural, some, orList, slowPct, coord, ledgerLine, say, mail, post, reach, dirOf, advise, MS_TEST, learned, civLine, guide, hist, histText, guideMd };
 })();

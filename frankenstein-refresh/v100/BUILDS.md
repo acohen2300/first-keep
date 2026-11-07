@@ -2987,3 +2987,25 @@ MODIFIED (69):
 LOCKED (1972 of 2036): byte for byte as sealed, 747,119 bytes
 Tests: 44/44 rules hold
 Inventory: 2036 items sealed · 1913 book entries · 90 laws · 233 citations, 46 still to open · 7 known
+
+## F39 · history and the Guide, written from the books · 2026-11-07 03:22
+Albert, Nov 5 11:40: yes yes F10–F39; Nov 6 21:52: finish up
+Opened: code:menu.js, book:words, book:comments, book:citations, book:rules, tool:test.py
+MODIFIED (14):
+- book:citations:N234 · added
+- book:comments:E675 · added
+- book:comments:E676 · added
+- book:comments:E677 · added
+- book:comments:E678 · added
+- book:comments:E679 · added
+- book:comments:E680 · added
+- book:rules:X73 · added
+- book:words:J27 · 2,003 → 3,061 bytes
+- book:words:J29 · added
+- book:words:J30 · added
+- book:words:J7 · 49,947 → 53,569 bytes
+- code:menu.js · 74,555 → 79,678 bytes
+- tool:test.py · 241,299 → 246,453 bytes
+LOCKED (2032 of 2046): byte for byte as sealed, 937,410 bytes
+Tests: 45/45 rules hold
+Inventory: 2046 items sealed · 1923 book entries · 90 laws · 234 citations, 46 still to open · 7 known

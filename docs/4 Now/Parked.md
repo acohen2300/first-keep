@@ -520,3 +520,16 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 - The test field's mine site, gold pile and wolf, and its camera; the pause on a second error and the fault card (restart); the Resume card (holdSave, cardLocked: v100 opens where you left it); the Tap counts card (needs a Help page); the save's hundredths (v100 keeps exact numbers; the map comes from its seed, unchanged finds by their place).
 - Not saved: the dice's position, the ground's scars and the danger maps (redrawn); no seen or remembered state (no fog since S1).
 - Placement (Albert 19:09): picking a building closes the menu and shows the ghost with its guides and a bar (what it says, Build, ✕), Mid's startPlace and place bar; a tap on Build places it. Double tap: `touch-action: manipulation` on the page.
+
+
+## Frankenstein F39 (history and the Guide, written from the books), Nov 7
+
+- Cut: Mid's WHY line for a second Town Center ('town'). v100 has one Town Center shell (BTC1), so a second one reads the Town Center's line.
+- Waiting: the 'Game:' sentences of the Baths, Theatre and Tavern lines (less sickness, nerve, loyalty). They come back with the buildings' own effects.
+- Left out of the rule 'The song': 'crews fall into step on their own' (not checked in v100's sound). It comes back if the sound does it.
+- Waiting: what each building, unit, research step and find does (Mid's desc), and each people's bonus in words (Mid's CIVS bonus). v100's books hold none of these, so the Guide shows no 'what it does' column. The bonus is in the tech book's fx; its words would be new rows.
+- The Guide gives each unit one home: the first building in D133 that trains it, as Mid does. So the Training tent shows nothing under Trains.
+- The Town Center opens in the Classical age in the Guide, because D200 gives it the age of a second one.
+- The Envoy has no train time (D124), so the Guide shows none for it.
+- Noticed, not changed: an Apartment holds no one at base (D127 has no BR2), only through Fired brick, Plumbing and Waterworks.
+- Waiting: the other Guide rows (words TRIGGERS, about 60, each owned by its module and marked 'waits for the Guide'). They now have a home: words J27, in Mid's order, with {D:…}, {S:…}, {J:…} and {fx:…} filled from the books. Mid's 'Fog of war' row needs rewriting for S1's sight rule before it comes. The Guide's and History's pages come with M73.

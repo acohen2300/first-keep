@@ -1376,7 +1376,39 @@ async def saving(b):
                  f[:4] == [True, True, sorted(MEASURE['players'][:2]), 'war'] and f[4] == army[0] and f[5] >= army[1] and all(f[6:]), back[0] == SEED and back[1] >= 4321 and back[2] is None, not errs and not fe and not re_]
     ok('t-save', all(got), [got, v, f, back, errs[:2], fe[:2], re_[:2], err[-400:]])
 
-PAGED = {'t-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+# F39: the Guide and History, written from the books; Mid's frozen guideModel and histRows run on v100's tables (each building, kind, step, age, people and find as Mid's table rows)
+GUIDEJS = r"""(() => { const D = FK.D, SH = FK.SH, W = fromBook('words'), GW = W.guidebook, T = BOOKS.tech, Y = { food: 'f', wood: 'w', gold: 'g', stone: 's', iron: 'i' }, mk = (c) => Object.fromEntries(Object.entries(c || {}).map(([y, n]) => [Y[y], n]));
+  const TK = Object.fromEntries(Object.entries(T).map(([c, e]) => [e.key, c])), home = (c) => Object.keys(D.trains).find((b) => FK.trains(b).includes(SH[c].replaces || c)), age = (n) => (n ? D.ages.indexOf(n) : undefined), WHY = {};
+  const BLD = Object.fromEntries(Object.keys(FK.B).map((c) => [c, { name: SH[c].name, age: D.bldAge[c], cost: mk(D.cost[c]), t: D.buildTime[c], fp: FK.ref(SH[c].size) }]));
+  const UNIT = Object.fromEntries(Object.keys(FK.U).filter((c) => D.cost[c]).map((c) => { const s = D.stats[c]; return [c, { name: SH[c].name, at: home(c), age: age(SH[c].age), cost: mk(D.cost[c]), t: D.train[c], hp: s.hp, dmg: s.atk, rng: s.rng, spd: FK.ref(SH[c].pace), civ: SH[c].civ, replaces: SH[c].replaces, vs: s.vs, bld: s.bld, bonly: s.bonly }]; }));
+  const TECH = Object.keys(T).filter((c) => T[c].value.at).map((c) => { const v = T[c].value; return { id: c, name: T[c].name, at: v.at, age: v.age, line: v.line, when: v.when, w: v.w, need: (v.need || []).map((k) => TK[k] || k), cost: mk(v.cost), t: v.time, civ: v.civ, tier: v.rank && { unit: v.rank.k, name: v.rank.name } }; });
+  for (const c of [...Object.keys(BLD), ...Object.keys(UNIT), ...Object.keys(D.finds.rows)]) WHY[c] = W.why[GW.key[c] || SH[c].look];
+  for (const t of TECH) WHY['tech:' + t.id] = W.why['tech:' + T[t.id].key] ?? W.why[T[t.id].key];
+  for (const k of Object.keys(W.why).filter((k) => /^(age|bonus:|wonder:)/.test(k))) WHY[k] = W.why[k];
+  const CIVK = Object.keys(W.civs).filter((k) => W.civs[k].name), CIVS = Object.fromEntries(CIVK.map((k) => [k, { name: W.civs[k].name, wonder: W.civs[k].wonder, uu: Object.keys(SH).find((c) => SH[c].civ === k) }]));
+  const MENUS = Object.entries(MENU.SCR.tabs).map(([name, items]) => ({ name, items })).concat(Object.entries(GW.off).map(([c, name]) => ({ name, items: [c] })));
+  const tables = { BLD, UNIT, TECH, WHY, CIVK, CIVS, MENUS, AGES: D.ages.map((name, i) => ({ name, cost: mk(D.age.cost[i]), t: D.age.time[i] })), FINDS: Object.fromEntries(Object.keys(D.finds.rows).map((c) => [c, { name: SH[c].name }])) };
+  const g = MENU.guide(), md = MENU.guideMd();
+  return { tables, g, hist: MENU.hist().map((t) => t.id), md: [md.split('\n').filter((l) => /^\| /.test(l)).length, md.startsWith(GW.md.title.replace('{v}', D.version))], off: FK.D && fromBook('screen').offmenu, text: MENU.histText(MENU.hist()[0]) }; })()"""
+MIDGUIDE = r"""const g = cut(guide, 'function guideModel', 'function guideHTML'), h = cut(guide, 'const yearOf', 'function histHTML'), T = RUN.tables;
+return box([cut(core, 'const costText', 'const afford'), cut(core, 'const lineOf', 'const nextStep'), 'const TECHBY = Object.fromEntries(TECH.map((t) => [t.id, t]))', 'const techWhy = (id) => WHY[\'tech:\' + id] ?? WHY[id]', 'const TRIGGERS = () => RUN.rules', g, h, 'var OUT = { model: guideModel(), hist: histRows().map((t) => t.id) }'], T);"""
+def fillrule(s):   # a rule's {D:…}, {S:…}, {J:…}, {fx:…} filled from the books, in Python
+    W, T = keyed('words'), book('tech')
+    def one(m):
+        k, p = m.group(1), m.group(2)
+        if k == 'D': v = MEASURE; [v := v[x] for x in p.split('.')]; return str(v)
+        return SHELLS[p]['name'] if k == 'S' else W[p] if k == 'J' else W['list']['and'].join(e['name'] for e in T.values() if any(f['s'] == p for f in e['value']['fx']))
+    return re.sub(r'\{(\w+):([^}]+)\}', one, s)
+async def guidebook(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(GUIDEJS); await pg.close()
+    rules = [[fillrule(w), fillrule(t), fillrule(y)] for w, (t, y) in keyed('words')['guide'].items()]
+    m, err = frozen('core guide=31-guide', MIDGUIDE, {'tables': v['tables'], 'rules': rules}); m = m or {}; M, g = json.loads(re.sub(r'"(?:null|undefined) s"', '""', json.dumps(m.get('model') or {}))), v['g']   # Mid prints a missing time (the Envoy is sent, not trained) as 'undefined s'; v100 leaves it out
+    same = {k: M.get(k) == g[k] for k in ('buildings', 'units', 'techs', 'ages', 'civs', 'finds', 'rules')}
+    open_ = [r for r in g['rules'] if re.search(r'\{\w+:', json.dumps(r))]; whyless = [x['id'] for k in ('buildings', 'units', 'finds') for x in g[k] if not x.get('why')]
+    got = [all(same.values()), m.get('hist') == v['hist'] and len(v['hist']) > len(MEASURE['ages']), not open_, set(whyless) <= set(v['off']),
+           v['md'] == [sum(len(g[k]) for k in same) + len(same), True], v['text'].startswith(next(t['name'] + keyed('words')['list']['dot'] + t['when'] for t in g['techs'] if t['id'] == v['hist'][0])), not errs]
+    ok('t-guide', all(got), [got, {k: next(([a, z] for a, z in zip(M.get(k) or [], g[k]) if a != z), None) for k, s in same.items() if not s}, open_, whyless, v['md'], errs[:2], err[-600:]])
+PAGED = {'t-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:
