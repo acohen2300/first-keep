@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,127 | 486,099 | 486,237 |
-| Books | 1923 | 0 | 543,464 | 544,133 |
-| Laws | 90 | 0 | 18,345 | 18,837 |
-| Tools | 4 | 1,706 | 275,042 | 275,280 |
+| Game code | 29 | 3,142 | 491,425 | 491,563 |
+| Books | 1953 | 0 | 552,694 | 553,366 |
+| Laws | 91 | 0 | 18,646 | 19,146 |
+| Tools | 4 | 1,759 | 284,794 | 285,032 |
 
 ## The trades (code)
 
@@ -16,32 +16,32 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#page | 30 | 1,764 | 1,764 | 11 |
 | index.html#frames | 13 | 1,035 | 1,035 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
-| index.html#qbf-the-dice | 10 | 1,071 | 1,075 | 25 |
+| index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,816 | 1,820 | 38 |
 | index.html#floor-2-terrain | 82 | 8,512 | 8,516 | 130 |
-| index.html#floor-3-non-movables | 60 | 7,851 | 7,855 | 75 |
+| index.html#floor-3-non-movables | 60 | 7,860 | 7,864 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 942 | 946 | 14 |
-| index.html#the-door | 85 | 11,323 | 11,327 | 69 |
+| index.html#the-door | 94 | 13,802 | 13,806 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
-| index.html#b-the-buildings | 15 | 1,369 | 1,373 | 20 |
-| index.html#floor-5-movables | 128 | 14,640 | 14,644 | 93 |
-| index.html#the-body-s-laws | 31 | 2,561 | 2,565 | 34 |
+| index.html#b-the-buildings | 15 | 1,387 | 1,391 | 20 |
+| index.html#floor-5-movables | 127 | 15,090 | 15,094 | 93 |
+| index.html#the-body-s-laws | 31 | 2,564 | 2,568 | 34 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
 | index.html#floor-6-climate | 154 | 24,617 | 24,629 | 237 |
-| index.html#floor-7-display | 43 | 7,191 | 7,195 | 55 |
-| index.html#the-view-s-eyes-lights-and-stage | 116 | 21,729 | 21,733 | 0 |
+| index.html#floor-7-display | 44 | 7,337 | 7,341 | 55 |
+| index.html#the-view-s-eyes-lights-and-stage | 116 | 21,806 | 21,810 | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
-| index.html#touch | 50 | 7,377 | 7,381 | 54 |
-| menu.js | 455 | 79,636 | 79,678 | 583 |
-| econ.js | 576 | 105,151 | 105,151 | 72 |
-| combat.js | 353 | 58,830 | 58,830 | 84 |
-| ai.js | 165 | 26,039 | 26,039 | 26 |
-| sound.js | 57 | 5,774 | 5,774 | 66 |
+| index.html#touch | 50 | 7,468 | 7,472 | 54 |
+| menu.js | 456 | 80,165 | 80,207 | 583 |
+| econ.js | 576 | 105,311 | 105,311 | 72 |
+| combat.js | 354 | 59,036 | 59,036 | 84 |
+| ai.js | 169 | 26,971 | 26,971 | 25 |
+| sound.js | 57 | 5,938 | 5,938 | 66 |
 
 ## The books
 
@@ -49,27 +49,27 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,092 |
-| citations | 234 | 47,058 |
+| citations | 239 | 48,252 |
 | colours | 21 | 4,542 |
-| comments | 672 | 112,288 |
+| comments | 689 | 116,234 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 306 | 125,425 |
-| rules | 71 | 26,846 |
+| measure | 311 | 127,149 |
+| rules | 74 | 28,016 |
 | screen | 11 | 3,247 |
-| shells | 109 | 22,563 |
+| shells | 109 | 23,178 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
 | sprites | 65 | 25,607 |
-| tech | 259 | 75,552 |
-| words | 30 | 86,660 |
+| tech | 259 | 75,753 |
+| words | 30 | 87,370 |
 
 ## The shells
 
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
 | 100 | 17 | 0 |
-| 110 | 50 | 8 |
+| 110 | 50 | 1 |
 | 120 | 42 | 0 |
 
 ## The rules
@@ -147,5 +147,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X71 | t-land | page | the map's character, new game and scenarios (F37), with Albert's map calls: the lands and the scenarios equal Mid's frozen LAND, SCENARIOS and MODES, and each scenario plays as its row (age, store, research, relations, buildings by their spot, villagers, its line); past the pocket each find is worth its land's share; no find of your quarter is walled in by trees (only water may cut it off); your Town Center is at the bottom left of the screen; the pocket holds QBJ's amounts from the costs and the Bronze price; Z3 thickens toward Z4, is more open than Z4, Z2 has no woods, and Z3's finds are more than the pocket's and less than the wilds' |
 | X72 | t-save | page | saving, the safety net and the test tools (F38): the save beat, the fight wait, the failure's minute and the button budget equal Mid's frozen SAVE_EVERY, saveGame and UI_BUDGET; a save waits out a fight up to its limit, keeps the one before, and opens to the same units, finds, buildings, stores, climate, relations and mail; a damaged save is kept aside and the one before opens; no seen or remembered state is saved; a thrown error costs a frame and the game runs on; taps are counted; the match log rows a minute; the test field (?test) is you and one rival at war with both armies out, never saved; the game opens where you left it |
 | X73 | t-guide | page | the Guide and History, written from the books (F39): Mid's frozen guideModel and histRows, run on v100's tables, list the same buildings, units, research, ages, peoples, finds and rules, with the same numbers, names, lines and order as v100's guide() and hist(); every rule's numbers and names are filled from the books (none left open), each building, unit and find has its history line where the Words book holds one, and the Markdown holds one row an entry |
+| X75 | rawstats | code | G1: code reading the raw stats table (D.stats[…]) outside stat's own home: ask FK.stat |
+| X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
+| X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 
-2046 items sealed · 1923 book entries · 90 laws · 234 citations, 46 still to open · 7 known
+2077 items sealed · 1953 book entries · 91 laws · 239 citations, 47 still to open · 7 known

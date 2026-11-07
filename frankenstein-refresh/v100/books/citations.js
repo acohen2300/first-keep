@@ -233,5 +233,10 @@ BOOK("citations", {
  "N231": {"text": "Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by degrees across the edge (from memory, to open)", "opened": false},
  "N232": {"text": "Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap places it, with no second trip to the menu; a double tap must not zoom the page", "opened": true, "kind": "design"},
  "N233": {"text": "Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-ended queue, the 0-1 search (from memory, to open)", "opened": false},
+ "N235": {"text": "Design: Mid's apartment (room 20), quarry (stone 0.45 a second, never runs out, one worker) and castle (dmg 12, bow 140, cd 1.0, h 40) in 03-rules-buildings.js BLD, and its PLOTS in 17-ai.js; opened this session (A1)", "opened": true, "kind": "design"},
+ "N236": {"text": "Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's stutter (Mid runs it at 60 fps, its worst frame 17-33 ms)", "opened": true, "kind": "design"},
+ "N237": {"text": "A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a whole frame late, a stutter); from memory, to open", "opened": false},
+ "N239": {"text": "Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a table names ticks what the table asks", "opened": true, "kind": "design"},
+ "N238": {"text": "Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestWake, the safety net on a second fault), Albert's yes for First Keep A2 (Nov 7); opened this session", "opened": true, "kind": "design"},
  "N234": {"text": "Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, SONG), written from v100's books (Albert, Nov 5 11:40, Frankenstein F39)", "opened": true, "kind": "design"}
 });

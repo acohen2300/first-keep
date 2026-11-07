@@ -306,6 +306,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N231 |  | Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by degrees across the edge (from mem | to open |
 | N232 |  | Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap places it, with no second trip to | opened |
 | N233 |  | Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-ended queue, the 0-1 search (fro | to open |
+| N235 |  | Design: Mid's apartment (room 20), quarry (stone 0.45 a second, never runs out, one worker) and castle (dmg 12, bow 140, cd 1.0, h 40) in 03 | opened |
+| N236 |  | Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's stutter (Mid runs it at 60 fps,  | opened |
+| N237 |  | A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a whole frame late, a stutter);  | to open |
+| N239 |  | Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a table names ticks what the tabl | opened |
+| N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
 | N234 |  | Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, | opened |
 
 ## colours
@@ -338,6 +343,17 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
+| E687 |  | past the lane beside a building, the next ring a pace further out, as many rings as the most people need (Mid's spot further out): every pai |  |
+| E688 |  | a computer's soldier holding a choke whose time is up, or sent to help an ally and still there D285's stay s, goes back to the pool for the  |  |
+| E689 |  | the tops are made again when a building is added, removed or raised further: a site counts at its built share of its height |  |
+| E690 |  | the dice can tell and set where they are, so a save opened rolls on as it would have |  |
+| E691 |  | a captive is taken alive: gone from the field with no corpse, no killer and no blow to anyone's nerve; who aimed at it looks again |  |
+| E692 |  | any touch on any surface clears a hold before it begins; a finger that moves further than D246's move from where it went down cancels the ho |  |
+| E693 |  | the arguments the cells point at are made again with each render, so the table holds only what is on the screen |  |
+| E694 |  | a unit's row of numbers with its side's research applied, kept until the research changes: code reads the stats through here, never the raw  |  |
+| E695 |  | at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, as SoRen does; paused, time stands still |  |
+| E696 |  | the screen stays awake while a match runs; let go when paused, at rest or hidden; a browser without the lock plays on |  |
+| E697 |  | the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touch builds it again |  |
 | E1 |  | First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each. |  |
 | E2 |  | A Book entry is { key, value, name, cite, law } under its code; the game sees each book as one object by key (D, A, C, W, G), and a shell's  |  |
 | E3 |  | every code in every book |  |
@@ -428,7 +444,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E88 |  | the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step needs (G9), slipping (G10); the player's side, tol |  |
 | E89 |  | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile |  |
 | E90 |  | most: the tiles it may open before giving up |  |
-| E91 |  | no cutting a corner |  |
+| E91 |  | the tiles one step from a tile, by the eight ways of D198, that a walker may step to (walkable, within the slope); no cutting a corner; the  |  |
 | E92 |  | a unit on a tile; its stand wanders in the tile (D82) |  |
 | E93 |  | a path of one tile (already there) walks to its middle: no step past the end |  |
 | E94 |  | to a tile |  |
@@ -783,8 +799,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E448 |  | who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s wins for its side, the first finished first; a ti |  |
 | E449 |  | the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with the hazards setting), the best won score kept on  |  |
 | E451 |  | the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends it |  |
-| E452 |  | the danger map's home on the walking grid (econ draws it) and each side's reach, cached by what changes the walkable tiles |  |
-| E453 |  | the tiles a side's people can walk to: flooded by the way (QBL) from round its Town Center, gates as its own see them; a building's spot is  |  |
+| E452 |  | the danger map's home on the walking grid (econ draws it) and each side's reach, cached by what changes the walkable tiles: WALKV counts eve |  |
+| E453 |  | the tiles a side's people can walk to: one flood fill over the walking grid (a queue, a typed array) from round its Town Center, by the same |  |
 | E454 |  | the fallen, the hit glow and the marker (Mid's fallen, drawHitGlow, drawRadar; D258, D262, D261) |  |
 | E455 |  | a figure that dies in sight topples back, away from the way it faced, and fades |  |
 | E456 |  | something of yours hit: the screen's edge glows, red for a rival, the flame's for the wild, fading |  |
@@ -1009,6 +1025,12 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E677 |  | a rule's numbers and names are filled from the books: {D:path} a measurement, {S:code} a shell's name, {J:key} a words entry, {fx:stat} the  |  |
 | E678 |  | Mid's guideModel, field for field, on v100's tables (a building's menu is its Build tab, else why it is off the menu); no line of what a thi |  |
 | E679 |  | History (Mid's yearOf, histRows, histText): a step's date as a year (BC below none; an era by name; undated last), the dated steps in order, |  |
+| E681 |  | a plain record held in two places (a war order, a camp, an ambush) is saved once, tagged own, and its other places as same; opened, they are |  |
+| E682 |  | a computer's estimate of what one more worker earns on a yield is kept for the slow beat (D182: the computers' slow looks) and not worked ou |  |
+| E683 |  | the computers' clocks start spread over one turn (react ÷ how many), so no two think on the same frame; each keeps its own turn |  |
+| E684 |  | the work queue: slow jobs, each a generator that yields where it may stop; one job of a key at a time (a computer whose last turn is still r |  |
+| E685 |  | a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, not timed, so the game does not depend on the machin |  |
+| E686 |  | a site the computer cannot pay for, or may not build, is not searched for: plan() would refuse it after the search (the same answer, without |  |
 | E680 |  | the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a bar in a cell made a slash |  |
 
 ## ground
@@ -1168,7 +1190,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D124 | seconds to train (Mid's UNIT t for every unit, Albert, Nov 5 10:06) | {UV: 8, UM1: 10, UM6: 12, UM2: 10, UM7: 9, UM8: 12, UM9: 14, UM10: 12, UM3: 16, UM11: 14, UM12: 28, UM4: 20, UM13: 24, UM5: 25, UM14: 40, UM | N169; N176; N194; N195; N198; N225 |
 | D125 | one villager's seconds to raise a site (Mid's build times, BLD t; the Town Center a second one, Mid's town; every building that had none, Mid's, F26+F27) | {BTC1: 60, BR1: 12, BI1: 15, BI2: 15, BI3: 15, BCL1: 10, BM1: 25, BM2: 25, BM3: 25, BM4: 30, BW1: 10, BW2: 12, BW3: 25, BW4: 6, BCL2: 12, BC | N169; N168; N195; N198 |
 | D126 | n villagers raise it at n^this | 0.7 | N114 |
-| D127 | the people a building houses | {BTC1: 10, BR1: 5} | N69 |
+| D127 | the people a building houses (the Apartment Mid's twenty) | {BTC1: 10, BR1: 5, BR2: 20} | N69; N235 |
 | D128 | the most people, soldiers among them (Mid's POPMAX, by the 10:31 rule) | 180 | N176 |
 | D129 | each age's price and its wait in seconds, by the ages of D130 (Mid's AGES); the sixth is hidden until a year of peace opens it; the first age up sizes Z1's food (Mid's pocket) | {cost: [{}, {food: 300, wood: 100}, {food: 600, gold: 200}, {food: 1000, gold: 500, stone: 200}, {food: 1600, gold: 900, stone: 300, iron: 4 | N160 |
 | D130 | the six ages (Mid's names; Albert, Nov 5 10:30) | [Stone, Bronze, Classical, Medieval, Gunpowder, Enlightenment] | N160 |
@@ -1183,7 +1205,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D139 | a building's health, Age of Empires II's by Albert's call (Nov 5 10:06): the same kind of building there, or its class: a castle or wonder 4800; a market, temple, school, library, hospital and the other halls of a town, and a smith's, mint's, foundry's or workshop's shop 2100 (its Market, Monastery, University, Blacksmith); a war council a barracks' 1200; an apartment or tavern a house's 550; the store a camp's 600; the tree farm, pasture and quarry a farm's 480; the trade post an outpost's 500; the dock Age of Empires II's; a camp's tents and depot a camp's 600, its tower a watch tower's 1020, the abatis a palisade's 250; the traps Mid's (no kind in Age of Empires II) | {BTC1: 2400, BR1: 550, BI1: 600, BI2: 600, BI3: 600, BCL1: 480, BM1: 1200, BM2: 1200, BM3: 1200, BM4: 1500, BW1: 1800, BW2: 2750, BW3: 1020, | N69; N169; N170; N196; N198 |
 | D141 | a blow from behind the line lands this much harder (Mid's FLANK) | 1.3 | N188 |
 | D142 | a wave breaks under this share of its start (QBQ); a soldier's loss drains each one near 1 ÷ (this × n) (QAI) | 0.3 | N76 |
-| D143 | what shoots: its blow, seconds a shot, the reach of its bow from the ground and its height (tiles), its reach's research (rng adds): Mid's watchtower, Town Center, camp tower and trade post; it shoots as far as an arrow loosed from that height lands (QAJ); the Courthouse shoots only what ticks its only (Mid's spyonly) | {BW3: {atk: 10, rof: 1.2, bow: 10.6, h: 4.4, rng: 0}, BTC1: {atk: 7, rof: 1, bow: 10.6, h: 3.4, rng: 0}, BTC8: {atk: 6, rof: 1.4, bow: 9, h: | N188; N39; N40; N194; N195 |
+| D143 | what shoots: its blow, seconds a shot, the reach of its bow from the ground and its height (tiles), its reach's research (rng adds): Mid's watchtower, Town Center, camp tower, trade post and castle; it shoots as far as an arrow loosed from that height lands (QAJ); the Courthouse shoots only what ticks its only (Mid's spyonly) | {BW3: {atk: 10, rof: 1.2, bow: 10.6, h: 4.4, rng: 0}, BTC1: {atk: 7, rof: 1, bow: 10.6, h: 3.4, rng: 0}, BTC8: {atk: 6, rof: 1.4, bow: 9, h: | N188; N39; N40; N194; N195 |
 | D144 | a soldier takes up a fight within | 8 | N114 |
 | D145 | seconds between its path checks | 1 | N114 |
 | D146 | wildlife bites within | 3 | N114 |
@@ -1313,7 +1335,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D283 | vassals and tribute (Mid's VASSAL, DEMAND, makeVassal, surrenderWhy, rebel, vassalTick; its fair TAX row as the one tribute: Albert, Nov 5 11:16 (2), the tax rate parked), reaches ÷ D12 in tiles (QCG): a side with surrender.men soldiers within surrender.r tiles of a rival's Town Center, the rival's army no more than strong of theirs, may make it a vassal (loyalty loyal0, light if it asked to be an ally's, unrest unrest0); each slow beat it pays tribute.take of what it gathered since (forced: × the second), its loyalty settles with tau s toward base + the lord's buildings within r tiles (D288, else invest) + garrison a lord's soldier there (at most garrisonMax) + protect (kill a foe the lord kills near it, at most protectMax, × decay a beat) − tribute.hate, its unrest moves by tribute.push (forced: + push's second) − loyalty ÷ calm, on scale; at giftAt it sends giftShare × (loyalty − giftFrom) ÷ 100 of each store each gift beat; at shareAt it gives share of its trade's gold up; over warn its lord is warned each warnGap s; at the top it rebels: rise of its villagers take up arms (rebel), its army turns, and it is crushed when under crushed of its fighters are left (unrest after, loyalty − lost, n0 at least) or free after freeAfter s; the lord may demand amt of a store (loyalty loses loyal × each demand in recent s), force tribute for tribute s with tributeMen soldiers at its town (unrest + tributeUnrest), or levy at least least and up to levyMax of its soldiers (each lost costs levyLoyal); two or more restless vassals may rise together each coalition beat: chance Σ(unrest ÷ 100)^pow × k × their number, warned over warn each gap s, those at rise or more | {r: 45, tau: 195, garrison: 0.5, garrisonMax: 15, kill: 1, protectMax: 20, decay: 0.98, gift: [60, 150], giftShare: 0.1, giftFrom: 50, giftA | N198; N199 |
 | D288 | the loyalty a lord's building buys near a vassal's Town Center (Mid's BLD invest: a house, farm, store, tower, market, baths, theatre, tavern, town, castle, pasture, council, trade post, mint and hall); any other D283's invest | {BR1: 1, BCL1: 2, BI4: 2, BW3: 6, BCR1: 10, BP4: 5, BP5: 6, BCR2: 4, BTC1: 15, BTC2: 20, BCL3: 2, BP10: 6, BCT1: 6, BI6: 6, BP9: 3} | N198; N199 |
 | D284 | Dynamic Diplomacy (Mid's LEAGUE): with least sides standing, when the leader's score is lead × the next best's the others (not the player, not its vassals) ally and make war on it; it breaks up under release, or when another leads; the next best counts at least floor | {lead: 1.4, release: 1.15, least: 3, floor: 1} | N198; N199 |
-| D285 | the computer's relations (Mid's aiDiplomacy, allyDuty and peaceAll): losing at war (odds under peace, fewer than its personality's waveMin soldiers) it asks peace; at peace with no war on its hands it gives notice when its odds pass its personality's bold + lift + the difficulty's bold; at peace with every side it keeps stand of its army; an ally sends help each gap s at most, when foes stand within near tiles of its friend's town and none of its own; the envoy's gap, when it courts allies and whether it gangs up are the difficulty's (D304) | {lift: 0.15, peace: 0.3, stand: 0.5, help: {gap: 30, near: 32}} | N198; N199; N202 |
+| D285 | the computer's relations (Mid's aiDiplomacy, allyDuty and peaceAll): losing at war (odds under peace, fewer than its personality's waveMin soldiers) it asks peace; at peace with no war on its hands it gives notice when its odds pass its personality's bold + lift + the difficulty's bold; at peace with every side it keeps stand of its army; an ally sends help each gap s at most, when foes stand within near tiles of its friend's town and none of its own, and its helpers go back to the pool after stay s still (Mid's assist idleT); the envoy's gap, when it courts allies and whether it gangs up are the difficulty's (D304) | {lift: 0.15, peace: 0.3, stand: 0.5, help: {gap: 30, near: 32, stay: 20}} | N198; N199; N202 |
 | D286 | a building that needs research before it is placed (Mid's BLD tech) | {BF4: caltrops} | N198; N199 |
 | D289 | a wave (Mid's WAVE and decideWar): it goes home beaten under broke of those who set out, or after stall s with neither a step tiles nearer its mark (the mean of its soldiers' distances) nor a blow within fight s; a side it stalled against is left alone cool s; a rival's Wonder is worth at least threat odds; within full of its army's ceiling it settles for settle odds; wonder soldiers go for a Wonder; its riders go for the foe's nearest drop-off | {broke: 0.35, stall: 45, step: 3, fight: 30, cool: 180, threat: 0.75, settle: 0.4, full: 2, wonder: 4, riders: Riders} | N202 |
 | D290 | a computer saving for an age (Mid's SAVE): progress counts in steps of the age's price; stall s without one and it spends freely for spend s | {step: 0.02, stall: 90, spend: 45} | N202 |
@@ -1326,7 +1348,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D297 | ripples on the lakes (Mid's drawLakeRipples): n a lake, the i-th at angle i × turn + spin × t, out at (from + span × ((i × step + drift × t) mod 1)) of the shore, w wide arcs raised lift, line px | {n: 18, turn: 2.4, spin: 0.05, from: 0.25, span: 0.6, step: 0.37, drift: 0.02, w: 6, lift: 2, line: 1.2} | N203 |
 | D298 | rain rings on the ground (Mid's drawRainRings): on a grid of cell units, one cell in show holds a ring at full rain (fewer as the rain eases), growing from r[0] to r[0] + r[1] px × the zoom, at most r[2], rate times a second, from zoom on | {cell: 120, zoom: 1.2, show: 3, rate: 1.6, r: [1, 4, 10], line: 1} | N203 |
 | D299 | the ground remembers (Mid's scarCv): a layer over the ground at res of its scale, cleared with each map; worn earth round a finished building (an ellipse offset and sized by its width), the dark where one fell (bigger for a big body, with a blade's cut for a soldier), the scorch where lightning struck, burnt ground and five stones where a building fell | {res: 0.5, wear: [0.08, 0.12, 0.86, 0.72], fall: {rx: 4, big: 30, more: 3, ry: 2.2}, cut: [4, 1, 3, 1.5, 0.7], strike: [6, 4], burn: [1.05,  | N203 |
-| D300 | the plots a computer builds and what each makes (Mid's PLOTS; its quarry waits for the Quarry's work): one at a time, no more than its hands on that yield, when the plot's rate beats the best wild find's and pays its price back in the time left (QCM) | {BCL1: food, BCL2: wood, BI6: gold, BI7: iron} | N202 |
+| D300 | the plots a computer builds and what each makes (Mid's PLOTS): one at a time, no more than its hands on that yield, when the plot's rate beats the best wild find's and pays its price back in the time left (QCM) | {BCL1: food, BCL2: wood, BCL4: stone, BI6: gold, BI7: iron} | N202 |
+| D337 | the tower a computer raises toward the middle (Mid's tower, not the castle) | BW3 | N202 |
 | D301 | the home a computer raises from D291's age when it has the stone and wood (Mid's apartment) | BR2 | N202 |
 | D302 | the places to train a computer adds a second of when every one's line is full (Mid's barracks, range, stable) | [BM1, BM2, BM3] | N202 |
 | D303 | the computers' three personalities, one brain (Mid's PERS): of, the personality of each side; goals, what its hands work toward first; mix, its share of villagers on food, wood, gold, stone, iron when nothing is short; extraBarracks, armyCap (the army it keeps, + D291's armyAge an age), waveMin (a wave's least), bold (the odds it needs to attack), guard (the share kept home), raid (riders sent at a foe's drop-off), towers, walls, opportunist (how much a foe busy with another war tempts it), early (villagers before soldiers), ageArmy (soldiers before it saves for an age), diplo, trade, spy, loot, wonder, siege (engines kept), shrine (priests kept); build: [building, from age, how many, with an army of at least, with stock in store]; techs: the research it wants, in order (Mid's crown, the games' goal, waits for the games); crown, the crown it chases (Mid's PERS crown: the war chaser alone breaks a board truce, the wellbeing chaser builds care) | {of: [null, aggr, bal, fort], aggr: {goals: [army, age, build], extraBarracks: 1, armyCap: 34, waveMin: 5, bold: 0.5, guard: 0.15, raid: 3,  | N202; N203; N222 |
@@ -1356,10 +1379,14 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D328 | the lesson beat: every 3 s, phase 7 frames (Mid's tick % 90 === 7: milestoneTick) | [3, 7] | N224 |
 | D329 | the land's character (Mid's LAND): one of rows rolled a game on a dice of its own (seed: the game's seed XOR this, so the roll moves no other draw), the same in every corner; amt what each store's finds are worth past the pocket, extra its specialty laid once more in Z3, one pocket's worth | {seed: 1013904223, rows: {fertile: {amt: {food: 1.4, wood: 1, stone: 0.8, gold: 1, iron: 1}, extra: bush}, timber: {amt: {food: 1, wood: 1.3 | N229 |
 | D330 | the scenarios (Mid's SCENARIOS): an age, a store at least this, research with what it waits on, your relation with every court (rel) and theirs with each other (among: Mid's peace, and Last Keep's league), buildings beside your Town Center by their offset, more villagers, all within within of it (Mid's findSpot reach), the game's length; all: the age and the store go to every court | {open: {}, siege: {age: 3, store: {food: 1200, wood: 900, stone: 900, gold: 500, iron: 150}, techs: [masonry, greattower], rel: war, blds: [ | N229 |
-| D331 | the save (Mid's saveGame): its place on the phone, the one before kept as .bak, a save that will not open kept aside as .lost; it waits out a fight at most fight s; a failed save says so once in fail s; the tags that keep links, Maps, Sets and Infinity | {key: fk.save, bak: .bak, lost: .lost, fight: 60, fail: 60, tags: {ref: @, map: $M, set: $S, num: $N, base: #}} | N230 |
+| D331 | the save (Mid's saveGame): its place on the phone, the one before kept as .bak, a save that will not open kept aside as .lost; it waits out a fight at most fight s; a failed save says so once in fail s; the tags that keep links, Maps, Sets and Infinity, and a record held in two places (an order, a camp, an ambush) kept as one: own on its first, same on the rest | {key: fk.save, bak: .bak, lost: .lost, fight: 60, fail: 60, tags: {ref: @, map: $M, set: $S, num: $N, base: #, own: $O, same: $R}} | N230 |
+| D336 | a quarry's stone a second, to its one worker, never running out (Mid's quarry) | 0.45 | N235 |
+| D338 | the longest a frame may take on the new-game screen with the world running, in ms (the A1 speed test: a frame of 50 ms is a stutter the eye sees; at the game's 30 frames a second a frame has 33 ms) | 50 | N236 |
+| D339 | the slow work (a computer's turn) is done in slices from one queue, each in turn, at most slices a frame, each resuming where it stopped; counted in slices, not ms, so the same seed plays the same game on any machine (t-same); a turn is about 40 slices of a few ms, so 12 keep a frame's share of the turns under a 60 Hz frame of 16.7 ms with room for drawing and the step (QCR) | {slices: 12} | N236; N237 |
 | D332 | the save beat: every 10 s (Mid's SAVE_EVERY), phase 5 frames, off the other beats' frames | [10, 5] | N230 |
 | D333 | the test field (?test, Mid's testField): Mid's seed, every store, the age and the War Council's ladder; you and one rival at war, each army in rows of a kind at its distance down the road from your Town Center, a row and a file apart; never saved | {seed: 11, store: 5000, age: 2, techs: [engage, command, formations], army: [[150, [[UM1, 10], [UM2, 8], [UM10, 4], [UM5, 2]]], [750, [[UM1, | N229 |
 | D334 | the buttons always on the play screen, at most (Mid's UI_BUDGET): a new control replaces one | 33 | N230 |
+| D340 | the draw rate at rest (SoRen's tick: 50 ms a frame live, 150 ms idle, 250 ms dark): paused, behind a full-screen page or card, or with nothing moving, the world steps and draws idle frames a second; hidden, dark | {idle: 15, dark: 4} | N238 |
 | D335 | the match log: a row a minute (Mid's matchLog), for Claude to read; the tap counts' place on the phone (Mid's TAPS) | {row: 60, taps: fk.taps} | N230 |
 
 ## rules
@@ -1437,6 +1464,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X71 | the map's character, new game and scenarios (F37), with Albert's map calls: the lands and the scenarios equal Mid's frozen LAND, SCENARIOS and MODES, and each scenario plays as its row (age, store, research, relations, buildings by their spot, villagers, its line); past the pocket each find is worth its land's share; no find of your quarter is walled in by trees (only water may cut it off); your Town Center is at the bottom left of the screen; the pocket holds QBJ's amounts from the costs and the Bronze price; Z3 thickens toward Z4, is more open than Z4, Z2 has no woods, and Z3's finds are more than the pocket's and less than the wilds' | {stage: page} | N229; N228; N232 |
 | X72 | saving, the safety net and the test tools (F38): the save beat, the fight wait, the failure's minute and the button budget equal Mid's frozen SAVE_EVERY, saveGame and UI_BUDGET; a save waits out a fight up to its limit, keeps the one before, and opens to the same units, finds, buildings, stores, climate, relations and mail; a damaged save is kept aside and the one before opens; no seen or remembered state is saved; a thrown error costs a frame and the game runs on; taps are counted; the match log rows a minute; the test field (?test) is you and one rival at war with both armies out, never saved; the game opens where you left it | {stage: page} | N230 |
 | X73 | the Guide and History, written from the books (F39): Mid's frozen guideModel and histRows, run on v100's tables, list the same buildings, units, research, ages, peoples, finds and rules, with the same numbers, names, lines and order as v100's guide() and hist(); every rule's numbers and names are filled from the books (none left open), each building, unit and find has its history line where the Words book holds one, and the Markdown holds one row an entry | {stage: page} | N234 |
+| X75 | G1: code reading the raw stats table (D.stats[…]) outside stat's own home: ask FK.stat | {stage: code} | N239 |
+| X76 | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) | {stage: books} | N239 |
+| X74 | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 | {stage: page} | N235; N236 |
 
 ## screen
 
@@ -1471,47 +1501,47 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | MG4 | Treasure | [Yield, Take] | N144; N205 |
 | MT1 | Trade stop | [Trade] | N195 |
 | BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health, Shelter, Hold] | N144 |
-| BTC2 | Castle | [Shelter, Hold] | N144 |
+| BTC2 | Castle | [Shoot, Health, Shelter, Hold, Research] | N144; N235 |
 | BTC5 | Medical tent | [Heal, Health, Burn] | N144; N198; N206 |
 | BTC6 | Training tent | [Spawn, Health, Burn] | N144; N198; N206 |
 | BTC7 | Mess tent | [Shelter, Health, Burn] | N144; N198; N206 |
 | BTC8 | Camp tower | [Shoot, Health, Burn] | N144; N198; N206 |
-| BR1 | Home | [House, Health, Burn] | N144; N206 |
-| BR2 | Apartment | [] | N144 |
-| BCR1 | Market | [Trade, Spawn, Burn] | N144; N195; N206 |
-| BCR2 | Tavern | [Burn, Care] | N144; N206 |
+| BR1 | Home | [House, Health, Burn, Research] | N144; N206 |
+| BR2 | Apartment | [House, Health] | N144; N235 |
+| BCR1 | Market | [Trade, Spawn, Burn, Health, Research] | N144; N195; N206 |
+| BCR2 | Tavern | [Burn, Care, Health] | N144; N206 |
 | BCL1 | Farm | [Field, Health, Soil] | N144; N170 |
 | BCL2 | Tree farm | [Field, Health] | N144; N170 |
 | BCL3 | Pasture | [Field, Health, Flock] | N144; N170 |
-| BCL4 | Quarry | [] | N144 |
-| BCT1 | Trade post | [Post, Shoot] | N144; N195 |
-| BCT2 | Dock | [Drop-off, Health, Shore, Burn] | N144; N170; N206 |
-| BP1 | School | [Teach] | N144; N194 |
-| BP2 | Library | [] | N144 |
-| BP3 | Temple | [Spawn, Zeal, Care] | N144; N194 |
-| BP4 | Baths | [Care] | N144 |
-| BP5 | Theatre | [Care] | N144 |
-| BP6 | Hospital | [Spawn, Heal, Care] | N144; N194 |
-| BP7 | Aqueduct | [] | N144 |
-| BP8 | Courthouse | [Spawn, Shoot] | N144; N194 |
-| BP9 | Hall | [] | N144 |
-| BP10 | War Council | [Squad] | N144 |
-| BI1 | Mill | [Drop-off, Health, Burn] | N144; N206 |
-| BI2 | Lumber camp | [Drop-off, Health, Burn] | N144; N206 |
-| BI3 | Mining camp | [Drop-off, Health] | N144 |
-| BI4 | Store | [] | N144 |
+| BCL4 | Quarry | [Field, Health, Research] | N144; N235 |
+| BCT1 | Trade post | [Post, Shoot, Health, Research] | N144; N195 |
+| BCT2 | Dock | [Drop-off, Health, Shore, Burn, Research] | N144; N170; N206 |
+| BP1 | School | [Teach, Health, Research] | N144; N194 |
+| BP2 | Library | [Health, Research] | N144 |
+| BP3 | Temple | [Spawn, Zeal, Care, Health, Research] | N144; N194 |
+| BP4 | Baths | [Care, Health] | N144 |
+| BP5 | Theatre | [Care, Health] | N144 |
+| BP6 | Hospital | [Spawn, Heal, Care, Health, Research] | N144; N194 |
+| BP7 | Aqueduct | [Health, Research] | N144 |
+| BP8 | Courthouse | [Spawn, Shoot, Health, Research] | N144; N194 |
+| BP9 | Hall | [Health, Research] | N144 |
+| BP10 | War Council | [Squad, Health, Research] | N144 |
+| BI1 | Mill | [Drop-off, Health, Burn, Research] | N144; N206 |
+| BI2 | Lumber camp | [Drop-off, Health, Burn, Research] | N144; N206 |
+| BI3 | Mining camp | [Drop-off, Health, Research] | N144 |
+| BI4 | Store | [Health, Research] | N144 |
 | BI5 | Depot | [Drop-off, Supply, Health, Burn] | N144; N198; N206 |
-| BI6 | Mint | [Make] | N144; N195 |
-| BI7 | Foundry | [Make] | N144; N195 |
-| BI8 | Workshop | [Make, Burn] | N144; N195; N206 |
-| BI9 | Smith | [] | N144 |
-| BM1 | Barracks | [Spawn, Health, Shelter, Burn] | N144; N206 |
-| BM2 | Range | [Spawn, Health, Burn] | N144; N206 |
-| BM3 | Stable | [Spawn, Health, Burn] | N144; N206 |
-| BM4 | Siege workshop | [Spawn, Health] | N144 |
+| BI6 | Mint | [Make, Health, Research] | N144; N195 |
+| BI7 | Foundry | [Make, Health, Research] | N144; N195 |
+| BI8 | Workshop | [Make, Burn, Health, Research] | N144; N195; N206 |
+| BI9 | Smith | [Health, Research] | N144 |
+| BM1 | Barracks | [Spawn, Health, Shelter, Burn, Research] | N144; N206 |
+| BM2 | Range | [Spawn, Health, Burn, Research] | N144; N206 |
+| BM3 | Stable | [Spawn, Health, Burn, Research] | N144; N206 |
+| BM4 | Siege workshop | [Spawn, Health, Research] | N144 |
 | BW1 | Wall | [Health, Line] | N144 |
 | BW2 | Gate | [Health, Gate, Burn] | N144; N206 |
-| BW3 | Tower | [Shoot, Health, Hold] | N144 |
+| BW3 | Tower | [Shoot, Health, Hold, Research] | N144 |
 | BW4 | Palisade | [Health, Line, Burn] | N144; N206 |
 | BF5 | Abatis | [Health, Burn] | N144; N198; N206 |
 | BF1 | Pit | [Trap, Health] | N144; N198 |
@@ -1519,7 +1549,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BF3 | Stakes | [Trap, Health] | N144; N198 |
 | BF4 | Caltrops | [Trap, Health] | N144; N198 |
 | BS1 | Throne | [] | N144 |
-| BS2 | Wonder | [Wonder] | N144 |
+| BS2 | Wonder | [Wonder, Health] | N144 |
 | UV | Villager | [Walk, Gather, Carry, Build, Repair, Fight, Health] | N144; N170 |
 | UM1 | Spearman | [Walk, Fight, Health] | N144; N170; N176 |
 | UM6 | Swordsman | [Walk, Fight, Health] | N144; N170; N176 |
@@ -1758,7 +1788,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O46 | Ice house | {at: BR1, line: Home, age: 2, cost: {stone: 120, wood: 80}, time: 32, fx: [{s: rate, k: MW1, p: 0.15}, {s: rate, k: R6, p: 0.15}, {s: spoil, | N160; N161; N170 |
 | O47 | Chimney and fireplace | {at: BR1, line: Home, age: 3, cost: {stone: 180, wood: 120}, time: 40, fx: [{s: warm, a: 0.05}, {s: chill, c: 0.5}], when: 1100s, w: 5} | N160; N161 |
 | O48 | Calendar | {at: BTC1, line: Watch, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.05}, {s: time, k: O, c: 0.05}], need: [ | N160; N161 |
-| O49 | Town watch | {at: BTC1, line: Watch, age: 3, cost: {food: 90, gold: 60}, time: 26, fx: [{s: rng, k: BTC1, a: 1.5}, {s: rng, k: BTC1, a: 1.5}], when: 1200 | N160; N161 |
+| O49 | Town watch | {at: BTC1, line: Watch, age: 3, cost: {food: 90, gold: 60}, time: 26, fx: [{s: rng, k: BTC1, a: 1.5}], when: 1200s, w: 4} | N160; N161 |
 | O50 | Civic pride | {at: BTC1, line: Watch, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: shelter, p: 1}], when: 1300s, w: 4} | N160; N161 |
 | O51 | Lanterns | {at: BTC1, line: Watch, age: 3, cost: {wood: 200, gold: 120}, time: 40, fx: [{s: lamp, k: B, a: 0.6}], when: 1417, w: 4} | N160; N161 |
 | O52 | Writing | {at: BP1, line: Letters, age: 1, cost: {wood: 150, gold: 100}, time: 39, fx: [{s: time, k: O, c: 0.15}], when: 3200 BC, w: 10} | N160; N161 |
@@ -1771,7 +1801,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O59 | Ballistics | {at: BP1, line: Numbers, age: 4, cost: {wood: 430, gold: 290}, time: 71, fx: [{s: atk, k: Engines, a: 5}], need: [algebra], when: 1537, w: 6 | N160; N161 |
 | O208 | Medicine | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: heal, p: 0.5}], when: 400 BC, w: 6} | N160; N161; N206 |
 | O60 | Architecture | {at: BP2, line: Learning, age: 2, cost: {gold: 180, stone: 120}, time: 41, fx: [{s: build, c: 0.2}], need: [masonry], when: 25 BC, w: 6} | N160; N161 |
-| O209 | Medical school | {at: BP2, line: Learning, age: 3, cost: {gold: 290, stone: 190}, time: 56, fx: [{s: death, c: 0.5}, {s: cure, p: 1}], when: 1000s, w: 6} | N160; N161; N206 |
+| O209 | Medical school | {at: BP2, line: Learning, age: 3, cost: {gold: 290, stone: 190}, time: 56, fx: [{s: death, c: 0.5}, {s: cure, p: 1}], need: [medicine], when | N160; N161; N206 |
 | O61 | Guilds | {at: BP2, line: Learning, age: 3, cost: {gold: 260, stone: 180}, time: 52, fx: [{s: queue, a: 2}], when: 1100s, w: 5} | N160; N161 |
 | O62 | Printing press | {at: BP2, line: Learning, age: 4, cost: {gold: 550, stone: 360}, time: 87, fx: [{s: time, k: O, c: 0.32}], when: 1450s, w: 9} | N160; N161 |
 | O63 | Optics | {at: BP2, line: Learning, age: 4, cost: {gold: 430, stone: 290}, time: 71, fx: [{s: sight, k: *, a: 2.0}], need: [press], when: 1608, w: 6} | N160; N161 |
@@ -1780,7 +1810,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O66 | Manuring | {at: BI1, line: Soil, age: 1, cost: {food: 90, wood: 60}, time: 26, fx: [{s: soil, a: 0.1}], when: 2000 BC, w: 4} | N160; N161; N170 |
 | O67 | Crop rotation | {at: BI1, line: Soil, age: 3, cost: {food: 340, wood: 230}, time: 64, fx: [{s: rate, k: BCL1, p: 0.2}, {s: limit, k: BCL1, a: 3}], when: 800 | N160; N161; N170 |
 | O68 | Enclosure | {at: BI1, line: Soil, age: 4, cost: {food: 390, wood: 260}, time: 66, fx: [{s: limit, k: BCL1, a: 3}], when: 1500s, w: 5} | N160; N161; N170 |
-| O69 | New World crops | {at: BI1, line: Crops, age: 0, cost: {wood: 290, iron: 190}, time: 56, fx: [{s: rate, k: BCL4, p: 0.2}], when: 1200s, w: 6} | N160; N161; N170 |
+| O69 | New World crops | {at: BI1, line: Soil, age: 4, cost: {food: 510, wood: 340}, time: 82, fx: [{s: rate, k: BCL1, p: 0.2}], need: [deepboats], when: 1570s, w: 8 | N160; N161; N170 |
 | O70 | Fish traps | {at: BCT2, line: Fishing, age: 0, cost: {wood: 40, food: 30}, time: 15, fx: [{s: rate, k: MW1, p: 0.15}], when: 8000 BC, w: 3} | N160; N161; N170 |
 | O71 | Nets | {at: BCT2, line: Fishing, age: 0, cost: {wood: 100, food: 70}, time: 28, fx: [{s: rate, k: MW1, p: 0.3}], when: 6000 BC, w: 5} | N160; N161; N170 |
 | O72 | Salting | {at: BCT2, line: Fishing, age: 2, cost: {wood: 170, food: 110}, time: 38, fx: [{s: rate, k: MW1, p: 0.2}, {s: spoil, c: 0.5}], when: 300 BC, | N160; N161; N170 |
@@ -1848,7 +1878,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O133 | Arrow slits | {at: BI9, line: Walls, age: 2, cost: {gold: 150, iron: 100}, time: 35, fx: [{s: rng, k: Shoot, a: 2.0}], when: 200 BC, w: 4} | N160; N161; N188 |
 | O134 | Curtain walls | {at: BI9, line: Walls, age: 3, cost: {gold: 290, iron: 190}, time: 56, fx: [{s: hp, k: [Line, Gate], p: 0.6}, {s: hp, k: BW3, p: 0.4}], need | N160; N161; N188 |
 | O135 | Machicolations | {at: BI9, line: Walls, age: 3, cost: {gold: 240, iron: 160}, time: 48, fx: [{s: atk, k: BW3, a: 5}], need: [fortify], when: 1200s, w: 4} | N160; N161; N188 |
-| O136 | Gun founding | {at: BI9, line: Walls, age: 4, cost: {gold: 470, iron: 310}, time: 77, fx: [{s: atk, k: [UM9, UM14], a: 10}], need: [blasting], when: 1400s, | N160; N161; N188 |
+| O136 | Gun founding | {at: BI9, line: Walls, age: 4, cost: {gold: 470, iron: 310}, time: 77, fx: [{s: atk, k: [UM9, UM14], a: 10}], need: [blast], when: 1400s, w: | N160; N161; N188 |
 | O137 | Star fort | {at: BI9, line: Walls, age: 4, cost: {gold: 510, iron: 340}, time: 82, fx: [{s: hp, k: [Line, Gate], p: 0.5}, {s: hp, k: Shoot, p: 0.3}], ne | N160; N161; N188 |
 | O138 | Beacons | {at: BW3, line: Towers, age: 2, cost: {wood: 150, gold: 80}, time: 35, fx: [{s: sight, k: Shoot, a: 6.0}], when: about 200 BC, w: 4} | N160; N161; N188 |
 | O139 | Great towers | {at: BW3, line: Towers, age: 3, cost: {stone: 300, gold: 150}, time: 50, fx: [{s: hp, k: BW3, p: 0.4}, {s: atk, k: BW3, a: 4}, {s: rng, k: B | N160; N161; N188 |
@@ -1942,21 +1972,21 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O230 | Post riders | {at: BTC1, line: Post, age: 4, cost: {food: 390, gold: 260}, time: 66, fx: [{s: news, a: 1}, {s: diplo, a: 0.1}], when: 1490, w: 5} | N160; N161; N223 |
 | O231 | News sheets | {at: BTC1, line: Post, age: 4, cost: {gold: 300, wood: 150}, time: 50, fx: [{s: news, a: 1}], when: 1605, w: 4} | N160; N161; N223 |
 | O232 | Via militaris | {at: BP9, line: Rome, age: 2, cost: {wood: 200, stone: 150}, time: 40, fx: [{s: spd, k: [Foot, Archers], p: 0.2}], when: 312 BC, w: 6, civ:  | N161; N225 |
-| O233 | Horrea | {at: BP9, line: Rome, age: 2, cost: {wood: 220, stone: 200}, time: 42, fx: [{s: spoil, c: 0.5}], when: 100s, w: 5, civ: roman} | N161; N225 |
-| O234 | Castra | {at: BP9, line: Rome, age: 2, cost: {wood: 260, gold: 140}, time: 45, fx: [{s: campbuild, p: 0.5}, {s: hp, k: [BW4, BTC8, BF5], p: 0.5}], wh | N161; N225 |
+| O233 | Horrea | {at: BP9, line: Rome, age: 2, cost: {wood: 220, stone: 200}, time: 42, fx: [{s: spoil, c: 0.5}], need: [viamil], when: 100s, w: 5, civ: roma | N161; N225 |
+| O234 | Castra | {at: BP9, line: Rome, age: 2, cost: {wood: 260, gold: 140}, time: 45, fx: [{s: campbuild, p: 0.5}, {s: hp, k: [BW4, BTC8, BF5], p: 0.5}], ne | N161; N225 |
 | O235 | Bronze trigger | {at: BP9, line: Han, age: 2, cost: {wood: 200, iron: 120}, time: 40, fx: [{s: rng, k: [UM8, UM18], a: 2}], when: 200s BC, w: 6, civ: han} | N161; N225 |
-| O236 | Ever-normal granary | {at: BP9, line: Han, age: 2, cost: {wood: 220, gold: 140}, time: 42, fx: [{s: band, c: 0.5}], when: 54 BC, w: 5, civ: han} | N161; N225 |
-| O237 | Taixue | {at: BP9, line: Han, age: 2, cost: {wood: 260, gold: 180}, time: 45, fx: [{s: time, k: O, c: 0.1}], when: 124 BC, w: 6, civ: han} | N161; N225 |
+| O236 | Ever-normal granary | {at: BP9, line: Han, age: 2, cost: {wood: 220, gold: 140}, time: 42, fx: [{s: band, c: 0.5}], need: [trigger], when: 54 BC, w: 5, civ: han} | N161; N225 |
+| O237 | Taixue | {at: BP9, line: Han, age: 2, cost: {wood: 260, gold: 180}, time: 45, fx: [{s: time, k: O, c: 0.1}], need: [changping], when: 124 BC, w: 6, c | N161; N225 |
 | O238 | Royal Road (Persia) | {at: BP9, line: Persia, age: 2, cost: {wood: 200, gold: 150}, time: 40, fx: [{s: spd, k: [UT1, UT2, UT4], p: 0.2}], when: 500 BC, w: 6, civ: | N161; N225 |
 | O239 | The Immortals | {at: BP9, line: Persia, age: 2, cost: {wood: 260, gold: 200}, time: 45, fx: [{s: train, k: UM19, c: 0.25}], when: 480 BC, w: 6, civ: persian | N161; N225 |
 | O240 | Yam | {at: BP9, line: Mongol, age: 3, cost: {wood: 200, food: 150}, time: 40, fx: [{s: sight, k: Riders, p: 0.2}], when: 1234, w: 6, civ: mongol} | N161; N225 |
-| O241 | Remounts (Mongol) | {at: BP9, line: Mongol, age: 3, cost: {food: 240, gold: 140}, time: 42, fx: [{s: chargecd, c: 0.25}], when: 1241, w: 5, civ: mongol} | N161; N225 |
-| O242 | Tumen | {at: BP9, line: Mongol, age: 3, cost: {wood: 260, gold: 180}, time: 45, fx: [{s: rng, k: [UM11, UM20], a: 1.5}], when: 1206, w: 6, civ: mong | N161; N225 |
+| O241 | Remounts (Mongol) | {at: BP9, line: Mongol, age: 3, cost: {food: 240, gold: 140}, time: 42, fx: [{s: chargecd, c: 0.25}], need: [mongolyam], when: 1241, w: 5, c | N161; N225 |
+| O242 | Tumen | {at: BP9, line: Mongol, age: 3, cost: {wood: 260, gold: 180}, time: 45, fx: [{s: rng, k: [UM11, UM20], a: 1.5}], need: [mongolremounts], whe | N161; N225 |
 | O243 | Hastin | {at: BP9, line: Maurya, age: 2, cost: {food: 260, gold: 160}, time: 42, fx: [{s: bld, k: [UM12, UM21], p: 0.2}], when: 305 BC, w: 5, civ: ma | N161; N225 |
-| O244 | Pataliputra | {at: BP9, line: Maurya, age: 2, cost: {wood: 280, stone: 200}, time: 45, fx: [{s: hp, k: [BW3, BW1, BW2], p: 0.25}], when: 300 BC, w: 6, civ | N161; N225 |
+| O244 | Pataliputra | {at: BP9, line: Maurya, age: 2, cost: {wood: 280, stone: 200}, time: 45, fx: [{s: hp, k: [BW3, BW1, BW2], p: 0.25}], need: [hastin], when: 3 | N161; N225 |
 | O245 | Bambuk gold | {at: BP9, line: Mali, age: 3, cost: {wood: 200, gold: 100}, time: 40, fx: [{s: rate, k: R2, p: 0.12}, {s: make, k: gold, p: 0.12}], when: 13 | N161; N225 |
-| O246 | Salt road | {at: BP9, line: Mali, age: 3, cost: {wood: 220, gold: 160}, time: 42, fx: [{s: trade, p: 0.25}], when: 1352, w: 5, civ: mali} | N161; N225 |
-| O247 | Sankore | {at: BP9, line: Mali, age: 3, cost: {wood: 260, gold: 200}, time: 45, fx: [{s: time, k: O, c: 0.1}], when: 1400s, w: 6, civ: mali} | N161; N225 |
+| O246 | Salt road | {at: BP9, line: Mali, age: 3, cost: {wood: 220, gold: 160}, time: 42, fx: [{s: trade, p: 0.25}], need: [bambuk], when: 1352, w: 5, civ: mali | N161; N225 |
+| O247 | Sankore | {at: BP9, line: Mali, age: 3, cost: {wood: 260, gold: 200}, time: 45, fx: [{s: time, k: O, c: 0.1}], need: [saltroad], when: 1400s, w: 6, ci | N161; N225 |
 | O248 | Elite: Praetorian | {at: BTC2, line: Rome, age: 3, cost: {food: 400, gold: 400, iron: 150}, time: 60, fx: [{s: hp, p: 0.25, k: UM17}, {s: atk, a: 3, k: UM17}],  | N161; N225 |
 | O249 | Elite: Elite crossbowman | {at: BTC2, line: Han, age: 3, cost: {food: 400, gold: 400, iron: 150}, time: 60, fx: [{s: atk, a: 2, k: UM18}, {s: rng, a: 1.5, k: UM18}], w | N161; N225 |
 | O250 | Elite: Apple-bearer | {at: BTC2, line: Persia, age: 3, cost: {food: 400, gold: 400, iron: 150}, time: 60, fx: [{s: hp, p: 0.25, k: UM19}, {s: atk, a: 2, k: UM19}] | N161; N225 |
@@ -1980,7 +2010,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J4 | a number shortened: 1.2k | k | N132 |
 | J5 | one, two: the first ending that fits, as [pattern, flags, ending] (a man-at-arms, men-at-arms; a spearman; a wolf; an ally; a ditch; the rest take s) | [[^(m)an(-at-arms)$, i, $1en$2], [man$, , men], [(wol)f$, i, $1ves], [([^aeiou])y$, , $1ies], [(s/x/ch/sh)$, , $1es], [$, , s]] | N132 |
 | J6 | the map's lettered squares: a letter across, a number down (A1 to V22 on the board, D190) | ABCDEFGHIJKLMNOPQRSTUVWXYZ | N132 |
-| J7 | the history line of each age (age0 to age4), each research step and each soldier kind, by its key (a step that shares a kind's key: tech:key): what it was and when (Mid's WHY); each building, villager and scout by its look (F39) | {wonder: The great work of each civilisation: built to be seen, and costly enough to show a state at its height., age0: Farming villages of  | N160; N161; N170; N176; N195; N198; N222; N223; N225; N234 |
+| J7 | the history line of each age (age0 to age4), each research step and each soldier kind, by its key (a step that shares a kind's key: tech:key): what it was and when (Mid's WHY); each building, villager and scout by its look (F39) | {throne: The citadel in the middle of the world: Constantinople held the straits, and whoever held it took a cut of every cargo. Thrones wer | N160; N161; N170; N176; N195; N198; N222; N223; N225; N234 |
 | J8 | what the town is told when food, the seasons and the flock turn, or its people slip on ice, by the event that tells it (Mid's news; {n}, {m} and {at} filled in) | {hungry: Food stores empty: put villagers on food., fed: Your people are fed again., famine: Famine: no food in reach. Two days to recover., | N170; N173 |
 | J9 | what a refusal or an order says for plots, the dock, the hunt, a spot nobody can walk to and a site nobody can reach (Mid's words; the last two F23's) | {replanted: {n} replanted., broke: Not enough to replant., hands: No free hands: train more villagers., hunt: A villager goes hunting., shor | N170 |
 | J10 | the army's words: the three squads (Mid's BN, the NATO names), the tempers, the shapes, the intents and the squad dials (Mid's TEMPER, FORM, INTENT) | {squads: [Alpha, Bravo, Charlie], all: Army, setup: Set up, tempers: [Hold, Guard, Press], forms: {line: Line, wedge: Wedge, square: Square, | N188 |

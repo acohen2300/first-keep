@@ -4,6 +4,17 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 
 | Code | In | Why |
 |---|---|---|
+| E687 | index.html#floor-5-movables | past the lane beside a building, the next ring a pace further out, as many rings as the most people need (Mid's spot further out): every paid unit stands somewhere |
+| E688 | ai.js | a computer's soldier holding a choke whose time is up, or sent to help an ally and still there D285's stay s, goes back to the pool for the next wave (Mid's state 'home', 17-ai and assist) |
+| E689 | index.html#floor-7-display | the tops are made again when a building is added, removed or raised further: a site counts at its built share of its height |
+| E690 | index.html#qbf-the-dice | the dice can tell and set where they are, so a save opened rolls on as it would have |
+| E691 | combat.js | a captive is taken alive: gone from the field with no corpse, no killer and no blow to anyone's nerve; who aimed at it looks again |
+| E692 | menu.js | any touch on any surface clears a hold before it begins; a finger that moves further than D246's move from where it went down cancels the hold |
+| E693 | menu.js | the arguments the cells point at are made again with each render, so the table holds only what is on the screen |
+| E694 | index.html#the-door | a unit's row of numbers with its side's research applied, kept until the research changes: code reads the stats through here, never the raw table |
+| E695 | index.html#the-door | at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, as SoRen does; paused, time stands still |
+| E696 | index.html#the-door | the screen stays awake while a match runs; let go when paused, at rest or hidden; a browser without the lock plays on |
+| E697 | sound.js | the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touch builds it again |
 | E1 | index.html#frames | First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each. |
 | E2 | index.html#frames | A Book entry is { key, value, name, cite, law } under its code; the game sees each book as one object by key (D, A, C, W, G), and a shell's slot points at a code (D53, D86.walk). |
 | E3 | index.html#frames | every code in every book |
@@ -92,9 +103,9 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E86 | index.html#floor-5-movables | walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step past the angle of repose is not |
 | E87 | index.html#floor-5-movables | inland water bearing ice (QQ): walked as if flat |
 | E88 | index.html#floor-5-movables | the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step needs (G9), slipping (G10); the player's side, told when its people slip |
-| E89 | index.html#floor-5-movables | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null |
+| E89 | index.html#floor-5-movables | QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic the octile distance (N74). goal(k) says when a tile will do; returns the tiles to walk, or null. Each open entry keeps the priority it was pushed with; a tile reached again by a shorter way is pushed again, and the old entry is skipped when it comes up (lazy deletion: the heap's order never changes under it) |
 | E90 | index.html#floor-5-movables | most: the tiles it may open before giving up |
-| E91 | index.html#floor-5-movables | no cutting a corner |
+| E91 | index.html#floor-5-movables | the tiles one step from a tile, by the eight ways of D198, that a walker may step to (walkable, within the slope); no cutting a corner; the pathfinder and the reach both step by it |
 | E92 | index.html#floor-5-movables | a unit on a tile; its stand wanders in the tile (D82) |
 | E93 | index.html#floor-5-movables | a path of one tile (already there) walks to its middle: no step past the end |
 | E94 | index.html#floor-5-movables | to a tile |
@@ -312,7 +323,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E311 | econ.js | a trained unit steps out onto the free spot of its building's outline nearest the middle (Mid's stepOut); none free, the queue waits; with your rally flag up, a soldier marches to it (Mid's rally0, F21) |
 | E312 | index.html#floor-5-movables | nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no tug of war with a walker, no shuffle between two on their spots (a push moves each less than near-enough) |
 | E313 | econ.js | how many of a building a side may have now: its age's limit with research added (D199), none before its age (D200); why not, in Mid's words (capWhy) |
-| E314 | econ.js | why a building may not stand here, Mid's rules in order: the edge, the limit, the ground under it (a gate may take its owner's wall piece), two squares from every building unless one is a wall, gate or field, and never touching one that trains (canPlace) |
+| E314 | econ.js | why a building may not stand here, Mid's rules in order: the edge, the limit, the ground under it (a gate may take its owner's wall piece), two squares from every building unless one is a wall, gate or field, and never touching one that trains (canPlace); capped: the limit already asked by the caller (the computer's site search, E686) |
 | E315 | econ.js | two squares from every find too, measured from the footprint's edge to the find's middle (Mid's nodesNear) |
 | E316 | econ.js | the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apart, edges or middles in line) or in line with one farther off; else it stays where the finger is (Mid's snapGhost) |
 | E317 | econ.js | taking a building down pays back half its price, all of it early in the build; its line is paid back in full first (Mid's shellBack, refundOf, demolish) |
@@ -449,8 +460,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E448 | econ.js | who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s wins for its side, the first finished first; a timed game warns at D259 and the top score wins at the bell |
 | E449 | econ.js | the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with the hazards setting), the best won score kept on this device |
 | E451 | menu.js | the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends it |
-| E452 | index.html#floor-5-movables | the danger map's home on the walking grid (econ draws it) and each side's reach, cached by what changes the walkable tiles |
-| E453 | index.html#floor-5-movables | the tiles a side's people can walk to: flooded by the way (QBL) from round its Town Center, gates as its own see them; a building's spot is reached when a tile round it is (F23: a spot nobody can walk to is refused) |
+| E452 | index.html#floor-5-movables | the danger map's home on the walking grid (econ draws it) and each side's reach, cached by what changes the walkable tiles: WALKV counts every change to them (a find laid or spent, a building raised or taken down, a save opened) |
+| E453 | index.html#floor-5-movables | the tiles a side's people can walk to: one flood fill over the walking grid (a queue, a typed array) from round its Town Center, by the same steps as the pathfinder (E91), gates as its own see them, a flood as its research lets it; made again only when the walkable tiles, the ice, the flood or a gate's answer change; a building's spot is reached when a tile round it is (F23: a spot nobody can walk to is refused) |
 | E454 | index.html#floor-7-display | the fallen, the hit glow and the marker (Mid's fallen, drawHitGlow, drawRadar; D258, D262, D261) |
 | E455 | index.html#floor-7-display | a figure that dies in sight topples back, away from the way it faced, and fades |
 | E456 | index.html#floor-7-display | something of yours hit: the screen's edge glows, red for a rival, the flame's for the wild, fading |
@@ -675,4 +686,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E677 | menu.js | a rule's numbers and names are filled from the books: {D:path} a measurement, {S:code} a shell's name, {J:key} a words entry, {fx:stat} the research that raises it |
 | E678 | menu.js | Mid's guideModel, field for field, on v100's tables (a building's menu is its Build tab, else why it is off the menu); no line of what a thing does yet: v100's books hold none |
 | E679 | menu.js | History (Mid's yearOf, histRows, histText): a step's date as a year (BC below none; an era by name; undated last), the dated steps in order, a row as text to copy |
+| E681 | index.html#the-door | a plain record held in two places (a war order, a camp, an ambush) is saved once, tagged own, and its other places as same; opened, they are one record again (the save first walks what it holds and counts which records it meets twice; the things and units are walked by their fields, each once) |
+| E682 | ai.js | a computer's estimate of what one more worker earns on a yield is kept for the slow beat (D182: the computers' slow looks) and not worked out again each turn: the finds change slower than that; when they run out, one is worked out again a frame and the rest keep theirs till a later turn, so a turn never works them all at once |
+| E683 | ai.js | the computers' clocks start spread over one turn (react ÷ how many), so no two think on the same frame; each keeps its own turn |
+| E684 | index.html#the-door | the work queue: slow jobs, each a generator that yields where it may stop; one job of a key at a time (a computer whose last turn is still running does not start another) |
+| E685 | index.html#the-door | a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, not timed, so the game does not depend on the machine); a job not done goes to the back and resumes next frame |
+| E686 | ai.js | a site the computer cannot pay for, or may not build, is not searched for: plan() would refuse it after the search (the same answer, without the rings); the search then asks each tile only about the ground (its limit asked once, here) |
 | E680 | menu.js | the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a bar in a cell made a slash |

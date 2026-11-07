@@ -13,9 +13,9 @@ function wake() { // E253
   const lim = AC.createDynamicsCompressor(); for (const [k, v] of Object.entries(HB.limiter)) lim[k].value = v; lim.connect(AC.destination); // E255
   air = AC.createBiquadFilter(); air.type = 'lowpass'; air.frequency.value = HB.muffle.open; air.connect(lim);
   master = AC.createGain(); master.gain.value = 0.5; master.connect(air);
-  NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = FK.glance() * 2 - 1;
 }
-addEventListener('pointerdown', wake, { passive: true });
+addEventListener('pointerdown', wake, { passive: true }); document.addEventListener('visibilitychange', () => { if (!document.hidden || !AC) return; const c = AC; AC = master = air = NOISE = null; c.close().catch(() => {}); }); // E697
 function out(gn, pan) { if (pan && AC.createStereoPanner) { const p = AC.createStereoPanner(); p.pan.value = pan; gn.connect(p); p.connect(master); } else gn.connect(master); }
 function env(gn, t0, vol, dur) { gn.gain.setValueAtTime(0.0001, t0); gn.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol), t0 + 0.01); gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); }
 function tone(at, pan, f, dur, wave, vol, f2, start = 0, p2 = 0) { const t0 = at + start, o = AC.createOscillator(), gn = AC.createGain(); o.type = wave; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); env(gn, t0, vol, dur); o.connect(gn); out(gn, p2 || pan); o.start(t0); o.stop(t0 + dur + 0.03); voices++; o.onended = () => voices--; }
@@ -47,11 +47,11 @@ FK.on('event', (name, t, u) => {
 // E265
 FK.on('tick', (dt) => { if (!AC || (ambT -= dt) > 0) return; ambT = 1;
   const share = Math.min(1, FK.K.snow / 5); air.frequency.setTargetAtTime(HB.muffle.open * (HB.muffle.snow / HB.muffle.open) ** share, AC.currentTime, 2); // E266
-  const wind = Math.abs(FK.K.wind) / D.weather.wind.most; if (wind > HB.amb.wind && Math.random() < wind * HB.amb.gust) play('wind'); // E563
+  const wind = Math.abs(FK.K.wind) / D.weather.wind.most; if (wind > HB.amb.wind && FK.glance() < wind * HB.amb.gust) play('wind'); // E563
   if (FK.season() === 3) return; const [cw, ch] = FK.size(), z = cam.z, day = FK.K.alt > 0;
   if (day) { const T = []; for (const t of FK.things()) if (t.kind === 'tree' && Math.abs(t.vx - cam.x) < cw / 2 / z && Math.abs(t.vy - cam.y) < ch / 2 / z && T.push(t) >= HB.amb.singers) break;
-    if (T.length && Math.random() < 1 - Math.exp(-HB.amb.bird * T.length)) play('bird', T[Math.floor(Math.random() * T.length)]); }
-  else if (Math.random() < 1 - Math.exp(-HB.amb.cricket * HB.amb.singers)) play('cricket', { vx: cam.x + (Math.random() - 0.5) * cw / z, vy: cam.y + (Math.random() - 0.5) * ch / z });
+    if (T.length && FK.glance() < 1 - Math.exp(-HB.amb.bird * T.length)) play('bird', T[Math.floor(FK.glance() * T.length)]); }
+  else if (FK.glance() < 1 - Math.exp(-HB.amb.cricket * HB.amb.singers)) play('cricket', { vx: cam.x + (FK.glance() - 0.5) * cw / z, vy: cam.y + (FK.glance() - 0.5) * ch / z });
 });
 return { play, toggle: () => { on = !on; wake(); return on; }, on: () => on, mix: (c) => { const [[, word]] = mix[c]; return word; }, step: (c) => { const [s, ...rest] = mix[c]; mix[c] = [...rest, s]; } };
 })();

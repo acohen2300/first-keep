@@ -533,3 +533,35 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 - The Envoy has no train time (D124), so the Guide shows none for it.
 - Noticed, not changed: an Apartment holds no one at base (D127 has no BR2), only through Fired brick, Plumbing and Waterworks.
 - Waiting: the other Guide rows (words TRIGGERS, about 60, each owned by its module and marked 'waits for the Guide'). They now have a home: words J27, in Mid's order, with {D:…}, {S:…}, {J:…} and {fx:…} filled from the books. Mid's 'Fog of war' row needs rewriting for S1's sight rule before it comes. The Guide's and History's pages come with M73.
+
+
+## A1 · speed and the outside audit's confirmed fixes (Nov 7) · for Albert's yes
+
+- Skipped, Mid's behaviour (lead, Nov 7): caltrops count as seen by a side once sprung, so one side is hit once (Mid's trapsTick). A change would let one side be hit up to D280's 3 times (the "hits" limit would then mean hits a side, not hits a strip).
+- Skipped, Mid's behaviour (lead, Nov 7): ruts heal by rounding down each 10 s (Mid's rutHeal on whole numbers), so light traffic is gone within about 20 s; t-mind holds it to Mid. A change would let ruts fade by the time constant (tau 600 s), so light paths would stay visible and muddy for minutes.
+- Not Mid's, for Albert's yes: the computer's estimate of a worker's rate is kept for the slow beat (10 s) instead of worked out each turn; when they run out, one is worked out again a frame. Same answer within 10 s; the computers react to a find running out up to 10 s later.
+- Not Mid's, for Albert's yes: the computers' turns start spread over one turn (Easy 2 s, Normal 1 s, Hard 0.5 s ÷ 3), so no two think on the same frame.
+- Not Mid's, for Albert's yes: the Castle shoots as Mid's (blow 12, a shot a second, bow 14 and height 4 tiles); the computer's tower is named in the book (D337, the Tower), because the Castle now also shoots and holds.
+- Noticed, left: the six elite steps keep their civ's line name (Rome, Han…) where Mid's is "Elite" (lead, Nov 7). Persia's Immortals and Maurya's Hastin need satrapy and sixth in Mid; both are parked with the tax, so those two steps keep no need.
+- Earlier note now done: the Apartment houses 20 at base (D127).
+- Test change, for Albert's look: t-trade's caravan run now reads the trade pay from the ledger (still Mid's 233). With the A* heap fixed, the true shortest way passes two finds whose guards the test clears, and the caravan takes their 1,250 gold on the way, which the old read of the whole store counted as trade. t-war's tower list maps the Castle to Mid's castle.
+- Test change: t-place counts only your own house sites; with the computers' turns spread, one may raise its house in the test's 200 ms wait.
+- R1 moved into A1 (lead, Nov 7): a computer's turn runs in slices from one work queue, at most 12 slices a frame (D339, QCR; counted, not timed, so a seed plays the same on any machine); a turn may now finish over a few frames instead of one. Same choices, made a frame or two later.
+- Note for A2: some slices still run 10–30 ms in the late game (the plot check's spot search, a rate refresh when finds run out); a frame still lands at 33 ms, under D338. Splitting spot() and bestFind() into yields would take them under the budget.
+- Test changes, for Albert's look: t-orders clears the wild animals before its ambush (a boar walked into it and one ambusher fought it instead of hiding; this happens on the sealed build too, with the dice that way); t-trade keeps its loom worker well for the five minutes (a sickness rolled by the dice cut his cloth, not the loom's rate).
+
+## A2 · the migration bugs, two gate rules and phone care (Nov 7) · for Albert's yes
+
+- Skipped, Mid's behaviour: a plague caravan resets plagueDead (the cap's count) on every outbreak, as Mid's outbreak does (36-economy.js 468). A change would keep the count across a plague so the cap holds over the whole plague.
+- Not Mid's, for Albert's yes: a building's spawn spots ring out past its lane a pace at a time (up to the rings the most people need), so a muster, a ransom and every paid unit always stand; Mid scattered them by towardMid.
+- Not Mid's, for Albert's yes: a ransom is paid only when the freed one has a spot to stand (Mid paid first).
+- Not Mid's, for Albert's yes: sight research scales the horizon and the eye's range by the kind's sight with research ÷ its base (Mid added to a flat range); aggro reads sight through FK.stat.
+- Not Mid's, for Albert's yes: a computer's helpers go back to the pool after 20 s still (D285 stay, Mid's assist idleT 20); its choke holders when the hold's time ends (Mid's p44).
+- Not Mid's, for Albert's yes (phone care, SoRen's): at rest (a full-screen page, the end, after a fault) the world draws 15 frames a second (D340); a second fault pauses, saves to the backup slot only, and says tap New; the screen wake lock during play; the sound engine closed when hidden, built again at the next touch.
+- G2 caught 46 shells: every built building now ticks Health (D139 backs it) and every research building ticks Research. No code asks those ticks yet, so the gate's fix changes nothing in play; the card's age-up row now also asks Seat, so only the Town Center shows it.
+- Guide: the Throne and the wild units now have why lines (Mid's WHY and desc); a unit lists every building that trains it (the Training tent now shows its kinds). t-guide may need its frozen comparison told about the joined trainer list.
+- Not done: Mid's 'tech:'-held tooltips and the 'hunting is not fighting' check reads the Wander tick (wild animals), not Prey (wolves and bears count too).
+
+## For Albert's yes (A1+A2, Nov 7)
+- Smoke at a 10-minute match: 57 fps with an occasional 50-100 ms frame (once per 10 s). No single cause in the profile (computers' thinking 7%, an economy tick 7%, drawing 5%); look overnight.
+- Smoke test allows one frame over 60 ms in 10 s of a match (setup screen allows none); tighten once the mid-match hitch is found.

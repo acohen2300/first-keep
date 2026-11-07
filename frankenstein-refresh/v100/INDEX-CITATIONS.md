@@ -84,6 +84,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBJ** The pocket's store (Z1) → N168, N228 · used by D62, D63, D65, D129, X50, X71
 - **QCP** The woods' edge → N228, N231 · used by D63, D64, D65, D66, X71
 - **QCQ** The way home → N229, N233 · used by X71
+- **QCR** Frame budget → N237 · used by D339
 - **QBO** The blow → N69, N188 · used by SC6, SC10, D138, D141, D143, D221, D232, X57
 - **QBP** Upkeep → N170, N171 · used by D131, D211, D212, D213, X53
 - **QBQ** The break → N76 · used by D142
@@ -98,7 +99,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 ## By citation
 
 - **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBJ, QBO, QBP, QBT
-- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCH, QCM, QCN, QCO, QAL, QAM, QAN, QBJ, QCP, QCQ, D292
+- **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCH, QCM, QCN, QCO, QAL, QAM, QAN, QBJ, QCP, QCQ, QCR, D292
 - **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
@@ -119,7 +120,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N20** (to open) Bekker (1960), Off-the-Road Locomotion: pressure–sinkage p = (kc/b + kφ) zⁿ; Wong, Theory of Ground Vehicles ( → QS, QCD, QCM, QCN, QCO, D294
 - **N21** Rothermel (1972); USDA RMRS-GTR-371 → QK, QT, QCL, QAL, QAM, SC45, D310
 - **N22** Heskestad (1984); NFPA 72, the t² fire → QU, QCH, QAL, QAN, QBJ, QCP, QCQ, SC45, D310
-- **N23** Holling (1959), Can. Entomol. 91 → QV, QCP, QCQ
+- **N23** Holling (1959), Can. Entomol. 91 → QV, QCP, QCQ, QCR
 - **N24** Charnov (1976), Theor. Pop. Biol. 9 → QV, QW, QCM
 - **N25** Fretwell & Lucas (1970) → QX
 - **N26** Sutherland (1983) → QX
@@ -298,7 +299,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N199** Design: Albert, Nov 5 11:16 (2): vassals pay tribute, the tax rate parked; 11:16 (7): the war camp's wagon in  → D279, D287, D280, D281, D282, D283, D288, D284, D285, D286, UT2, UT4
 - **N200** (to open) Hyginus (Pseudo-Hyginus), De munitionibus castrorum, about AD 100: §1 a century's tents in one line, eight men → D287
 - **N201** (to open) The Anglo-Saxon Chronicle, 991 and after: the Danegeld, tribute to buy off the Danes, 10,000 pounds in 991 and → QCD, D282, D322
-- **N202** Design: Mid's computers (17-ai.js bestCounter, timeLeft, rateFrom, goalOf, needOf, runsOut, famineNear, PLOTS, → QCM, QCN, D122, D152, D176, D178, D180, D285, D289, D290, D291, D300, D301, D302, D303, D304, X63, J17, J18
+- **N202** Design: Mid's computers (17-ai.js bestCounter, timeLeft, rateFrom, goalOf, needOf, runsOut, famineNear, PLOTS, → QCM, QCN, D122, D152, D176, D178, D180, D285, D289, D290, D291, D300, D337, D301, D302, D303, D304, X63, J17, J18
 - **N203** Design: Mid's sky, moon and ground (08-core.js moonVec, moonPhase, moonLight, NIGHT_SIGHT, SYNODIC; 37-events. → QCO, C15, C16, C17, D122, D292, D293, D294, D295, D296, D297, D298, D299, D303, X63, HA4, HX4, O205, O206, J18
 - **N204** (to open) Rosenzweig & Udry (2013), Forecasting Profitability, NBER Working Paper 19334, p. 21: farmers who plan by the  → O207
 - **N205** Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_L → SC18, SC42, SC43, SC44, C18, D305, D306, D307, D308, D309, X64, MG1, MG2, MG4, MH1, MH3, MH4, MH5, MG7, MG8, MG9, MG10, MG11, MH7, PN1, J19
@@ -330,6 +331,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N231** (to open) Odum, Fundamentals of Ecology: the ecotone, the transition between two communities, where cover changes by deg → QCP, D65
 - **N232** Design: Albert's play test, Nov 6 19:08–19:11: tapping Build gives the ghost and its guide lines and a tap pla → X71
 - **N233** (to open) Dijkstra (1959), Numerische Mathematik 1: the shortest path; with costs of none and one it runs as a double-en → QCQ
+- **N235** Design: Mid's apartment (room 20), quarry (stone 0.45 a second, never runs out, one worker) and castle (dmg 12 → D127, D336, X74, BTC2, BR2, BCL4
+- **N236** Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's st → D338, D339, X74
+- **N237** (to open) A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a  → QCR, D339
+- **N239** Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a t → X75, X76
+- **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
 - **N234** Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guid → X73, J7, J27, J29, J30
 
 ## Named exceptions

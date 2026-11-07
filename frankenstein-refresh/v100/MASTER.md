@@ -23,6 +23,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#qbf-the-dice
 
 - **E9** QBF the dice (N65): one seed, Mulberry32. Every roll names Who, What, Where, When, Why and · QBF (N65) · N65
+- **E690** the dice can tell and set where they are, so a save opened rolls on as it would have
 - **E10** two streams from the map's seed, dealt fresh at makeUnits: the rules' (M1), so the same se · D187 (N125)
 - **E11** QAZ a fractal line (N60): K waves, the k-th of amplitude k^(−H), H = 2 − Dim; a coast's Di · QAZ (N60) · N60
 - **E12** QAZ as a surface: K plane waves in rolled directions, the same amplitudes; scale is the lo · QAZ (N60)
@@ -118,19 +119,25 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144, N206)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225) · D125 (N169, N168, N195, N198) · SN1 (N133) · D87 (N112) · D127 (N69) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225) · D125 (N169, N168, N195, N198) · SN1 (N133) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
+- **E694** a unit's row of numbers with its side's research applied, kept until the research changes:
 - **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198) · D130 (N160)
 - **E370** a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give 
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
+- **E684** the work queue: slow jobs, each a generator that yields where it may stop; one job of a ke
+- **E685** a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, no · D339 (N236, N237) · QCR (N237)
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
+- **E695** at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, · D340 (N238)
 - **E655** The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save
 - **E656** each kind of error logged once; a second kind holds the save (the last good one stands) an
 - **E657** the save: the seed (the map is laid again from it), the lists, the climate, the sides, wha
+- **E681** a plain record held in two places (a war order, a camp, an ambush) is saved once, tagged o
 - **E658** a save opened: the places turned back into the things and units, the Maps, Sets and Infini · D331 (N230)
 - **E659** the save waits while you fight, at most D331's fight; a failed save says so once in D331's · D331 (N230)
 - **E660** a save that will not open is kept aside, never written over; the one before opens instead
 - **E661** the game opened from a save: the fresh map from its seed, then the lists, the sides and th
+- **E696** the screen stays awake while a match runs; let go when paused, at rest or hidden; a browse
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)
 - **E70** Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the groun · D3 (N112)
@@ -182,10 +189,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E374** the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v|v| (W1, by the m · QN (N13) · W1 (N108, N109, N110, N181) · D224 (N13, N173, N181, N185, N198)
 - **E375** aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c th
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
+- **E91** the tiles one step from a tile, by the eight ways of D198, that a walker may step to (walk · D198 (N74)
 - **E90** most: the tiles it may open before giving up
-- **E91** no cutting a corner
 - **E452** the danger map's home on the walking grid (econ draws it) and each side's reach, cached by
-- **E453** the tiles a side's people can walk to: flooded by the way (QBL) from round its Town Center · QBL (N74)
+- **E453** the tiles a side's people can walk to: one flood fill over the walking grid (a queue, a ty · E91
 - **E92** a unit on a tile; its stand wanders in the tile (D82) · D82 (N112)
 - **E93** a path of one tile (already there) walks to its middle: no step past the end
 - **E94** to a tile
@@ -196,6 +203,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E297** QCI standing spots: everyone stands on a spot of its own a pace (D196) apart. A point's sp · QCI (N165) · D196 (N164, N165, N166, N167) · D128 (N176)
 - **E298** a find's working ring (Mid's WORK_R, D196): as many spots as fit a pace apart round it, ⌊2 · D196 (N164, N165, N166, N167) · D169 (N112)
 - **E299** spot i of c: round a find on its ring; round a building on its outline, the lane of tiles 
+- **E687** past the lane beside a building, the next ring a pace further out, as many rings as the mo
 - **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167)
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
@@ -304,6 +312,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N220) · QAL (N41, N215, N216, N217, N218, N220) · QAM (N42, N219) · QAN (N43, N44, N220)
 - **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N220)
+- **E689** the tops are made again when a building is added, removed or raised further: a site counts
 - **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
 - **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220) · QAM (N42, N219)
@@ -422,8 +431,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137)
+- **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
 - **E428** a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) · D246 (N190)
+- **E692** any touch on any surface clears a hold before it begins; a finger that moves further than  · D246 (N190)
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
@@ -490,7 +501,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E371** the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid · D226 (N176)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
 - **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198)
-- **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u
+- **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · E686
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
 - **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
@@ -705,6 +716,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E520** A trap sprung: caltrops spike each walker once a while and wear flat; the others go off on
 - **E521** The archers' stake (Mid's STAKES, Agincourt): a horse that strikes a staked shooter is hur
 - **E667** the war's part of the save: the waves, the orders, the relations, the squads
+- **E691** a captive is taken alive: gone from the field with no corpse, no killer and no blow to any
 
 ## ai.js
 
@@ -714,11 +726,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E243** the shells a side can pay for that tick a capability
 - **E244** each yield's camp: the drop-off that takes it in
 - **E245** a spot: the nearest free footprint to a point, searched in rings, kept off the home's own 
+- **E686** a site the computer cannot pay for, or may not build, is not searched for: plan() would re
 - **E331** an arc of wall round the Town Center facing the middle, four-connected; its two squares ne
 - **E434** the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to h · D251 (N190)
 - **E435** the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foo · D251 (N190)
 - **E525** what a side stands, raises, trains and has queued, asked of the things themselves
 - **E526** the by-need plan's eyes (QCM, QV): the seconds to the bell, what one more hand earns at th · QCM (N24, N202) · QV (N23, N24)
+- **E682** a computer's estimate of what one more worker earns on a yield is kept for the slow beat ( · D182 (N122)
 - **E527** the army a side keeps: its personality's ceiling plus D291's armyAge an age, at most D226; · D291 (N202) · D226 (N176) · D285 (N198, N199, N202)
 - **E528** the counter (QCN, Mid's bestCounter): among the soldiers it can train now, the best answer · QCN (N202)
 - **E529** a computer's turn, every D304 react s (Mid's think), in Mid's order: a site nobody raises, · D304 (N202)
@@ -737,11 +751,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E540** a hand moves to the bottleneck from a yield the goal does not need whose store does not th
 - **E541** with nothing short, the personality's mix: no stone and less gold in the Stone age, no iro
 - **E542** a waiting villager goes to the first yield in need it can find work for, else the one payi
+- **E688** a computer's soldier holding a choke whose time is up, or sent to help an ally and still t · D285 (N198, N199, N202)
 - **E543** the computers' economy (Mid's aiEconomy, without surplus selling, Albert 11:16 (5)): staff
 - **E544** the war (Mid's decideWar, QAF): a wave out is judged by its progress (D289): a blow or a s · QAF (N35) · D289 (N202)
 - **E545** the wave sets out, its guard kept home; a few riders go for the foe's nearest drop-off to 
 - **E522** The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll): its personality's bold a · D304 (N202) · D285 (N198, N199, N202)
 - **E523** Dynamic Diplomacy (Mid's LEAGUE, leagueTick): when one side runs far ahead, the others (no
+- **E683** the computers' clocks start spread over one turn (react ÷ how many), so no two think on th
 - **E668** the computers' part of the save: their clocks, plans and minds
 
 ## sound.js
@@ -752,6 +768,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E253** a phone opens its audio only on a touch
 - **E254** the Ring/Silent switch silences the game; the player's music plays on (HX8) · HX8 (N148)
 - **E255** a battle's many blows never clip a phone speaker
+- **E697** the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touc
 - **E256** QAY: each mode dies with time constant tau ÷ Hz, to 80 dB down · QAY (N59)
 - **E257** QAX: the ear sits over the screen's middle at the height a lens of HX1's field of view nee · QAX (N58) · HX1 (N58)
 - **E258** full within the closest zoom's height, then falling as 1 ÷ distance (the inverse-square la

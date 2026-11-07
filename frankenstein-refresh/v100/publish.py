@@ -4,11 +4,13 @@
 import os, sys, json, subprocess, datetime
 os.chdir(os.path.dirname(os.path.abspath(__file__))); run = lambda *a: subprocess.run(a, capture_output=True, text=True)
 if len(sys.argv) < 2: sys.exit('say what the build is: python3 publish.py "…"')
-for step in ('index.py', 'test.py'):
+SMOKE = '--smoke' in sys.argv   # Albert, Nov 7 10:34: a build may publish on the gate and the smoke test; the full run is owed overnight
+if SMOKE: sys.argv.remove('--smoke')
+for step in ('index.py', 'smoke.py' if SMOKE else 'test.py'):
     r = run(sys.executable, step); print(r.stdout[-1800:])
     if r.returncode: sys.exit(f'STOP: {step} failed; nothing published')
     if step == 'index.py': gate = r.stdout
-    else: tests = r.stdout.strip().splitlines()[-1]
+    else: tests = r.stdout.strip().splitlines()[-1] + (' (smoke only; the full test.py run is owed)' if SMOKE else '')
 permit = json.load(open('permit.json')); total = open('INVENTORY.md').read().strip().splitlines()[-1]
 with open('BUILDS.md', 'a') as f:   # the record, appended, never edited
     f.write(f"\n## {permit['build']} · {datetime.datetime.now():%Y-%m-%d %H:%M}\n{permit['agreed']}\nOpened: {', '.join(permit['opens'])}\n"

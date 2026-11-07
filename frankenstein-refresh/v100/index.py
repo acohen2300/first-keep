@@ -151,6 +151,11 @@ for k, t in NOW.items():
         rule('comments', m, f'{k} comments in words, not by code: {c.group(1).strip()[:50]}')
         if m: e = m.group(1) or m.group(2); EUSE.setdefault(e, []).append(k); rule('comments', e in EC, f'{k} names {e}, not in the Comments book')
 for e in EC: rule('comments', e in EUSE, f'{e} is in the Comments book but no code names it')
+for k, t in NOW.items():   # G1: the stats are read through FK.stat (and its row), never raw, outside the door that holds stat itself
+    if k.startswith('code:') and k != 'code:index.html#the-door': rule('rawstats', not re.search(r'\bD\.stats\[|\bstats\[', t), f'{k} reads the raw stats table: ask FK.stat')
+MEAS = book('measure'); TABLES = {'Health': MEAS['buildTime'], 'Research': {e['value']['at']: 1 for e in BOOKS['tech'].values() if e['value'].get('at')}, 'Spawn': MEAS['trains'], 'Field|Make': MEAS['ai.plots']}
+for need, tab in TABLES.items():   # G2: a shell a table names has the ticks that table's work asks of it
+    for c in tab: rule('ticked', c not in BOOKS['shells'] or any(x in BOOKS['shells'][c]['ticks'] for x in need.split('|')), f'{c} is in a {need} table but does not tick {need}')
 rule('version', not re.search(r'v100 · \d', text('index.html')), 'index.html types the version; it lives in D171')
 def parses(key, name, js):
     with tempfile.NamedTemporaryFile('w', suffix='.js', delete=False) as t: t.write(js)

@@ -56,9 +56,9 @@ async def main(b):
         const at = ev.indexOf(P.dash.guide.join()); return at >= 0 && ev.slice(at + 1).findIndex((x) => x !== 'L') !== 0 && ev[at + 1] === 'L'; };
       FK.SIDES[0].store.wood = 2000; MENU.act('pick', code); const g = MENU.S.ghost, n = FK.B[code][1], h = FK.seatOf(0), hc = h.j + h.n * P.half, off = !FK.things().some((b) => b.kind === 'bld' && b.side === 0 && (b.i + b.n * P.half === g.i + n * P.half || b.j + b.n * P.half === g.j + n * P.half));
       const lone = off ? !(await frame()) : true; const keep = [g.i, g.j]; g.j = hc - n * P.half; const lined = await frame(); [g.i, g.j] = keep;
-      return [MENU.S.tab, g.code === code && g.ok, lone && lined, !!document.querySelector('#card.on [data-v^="build|"]'), FK.things().filter((t) => t.code === code && t.done < 1).length]; })()""")
+      return [MENU.S.tab, g.code === code && g.ok, lone && lined, !!document.querySelector('#card.on [data-v^="build|"]'), FK.things().filter((t) => t.code === code && t.done < 1 && t.side === 0).length]; })()""")
     await ev("document.querySelector('#card [data-v^=\"build|\"]').click()"); await pg.wait_for_timeout(200)   # the tap on the bar's Build, through the menu's own click
-    placed = await ev("FK.things().filter((t) => t.code === MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')) && t.done < 1).length")
+    placed = await ev("FK.things().filter((t) => t.code === MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')) && t.done < 1 && t.side === 0).length")   # yours: a computer may raise its own house in the wait (A1: their turns are spread)
     mid = open(os.path.join(HERE, '../mid/src/26-input.js')).read(); sp = mid[mid.index('function startPlace'):mid.index('function cancelPlace')]
     ok('t-place', flow[:4] == [None, True, True, True] and placed == flow[4] + 1 and 'closeCard();' in sp and 'G.place = {' in sp, [flow, placed])   # C4 (Albert, Nov 6 19:09): Build gives the ghost and its guides with the menu closed, as Mid's startPlace; one tap on Build places
     start = await ev("JSON.stringify(FK.D.start)")
@@ -659,7 +659,7 @@ MIDWAR = r"""return box([basics, units, blds, tech, tuning, cut(core, 'const ran
    reach: RUN.towers.map((k) => rangeFrom(BLD[k].bow, BLD[k].h) / 10), worth: [foeValue({ owner: 0, kind: RUN.looks[0], hp: RUN.hp[0] }, { owner: 1, kind: RUN.looks[6], hp: RUN.hp[1] }, 0), foeValue({ owner: 1, kind: RUN.looks[6], hp: RUN.hp[1] }, { owner: 0, kind: RUN.looks[0], hp: RUN.hp[0] }, 0)],
    nums: { MORALE, FLANKING, FLANK, YARD, KITE, GARRISON, FORM, COLUMN, TEMPER, PLUNDER, wear: CLIMATE.wear, unit: Object.fromEntries(RUN.looks.map((k) => [k, UNIT[k]])) } };`]);"""
 async def war(b):
-    codes = [c for c, e in SHELLS.items() if e.get('class')]; looks = [SHELLS[c]['look'] for c in codes]; TW = {'BW3': 'tower', 'BTC1': 'keep', 'BTC8': 'camptower', 'BP8': 'courthouse', 'BCT1': 'tpost'}
+    codes = [c for c, e in SHELLS.items() if e.get('class')]; looks = [SHELLS[c]['look'] for c in codes]; TW = {'BW3': 'tower', 'BTC1': 'keep', 'BTC8': 'camptower', 'BP8': 'courthouse', 'BCT1': 'tpost', 'BTC2': 'castle'}
     pg, errs = await fresh(b); v = await pg.evaluate(WARJS.replace('SEED', str(SEED)).replace('CODES', json.dumps(codes))); await pg.close()
     mid, err = frozen('basics units blds tech tuning core spatial', MIDWAR, {'looks': looks, 'towers': [TW[c] for c in MEASURE['tower']], 'hp': v['worth'][2:]}); mid = mid or {}
     m, n = mid.get('nums', {}), MEASURE; MO, FL, S = n['nerve'], n['flanking'], n['stats']; near = lambda a, c, r=1e-9: abs(a - c) <= r * max(1, abs(a), abs(c))
@@ -686,7 +686,7 @@ ORD2 = r"""(() => { const D = FK.D, [me, foe] = D.players, out = {}, sim = $run,
   const C = make('Foot', 8, tile(-8, 0)), [ax, ay] = FK.tileMid(tile(-8, -6)), a = { bx: ax, by: ay }, b = { bx: ax + 6 * D.ranks.gap * D.tile, by: ay }; WAR.chokeAt(a, b, C); out.choke = C.map((u) => u.drill && u.drill.shape === 'choke' && u.drill.cols === 6 && u.job === 'march');
   const wall = make('Foot', 3, tile(-10, 0)); WAR.direct('Foot', false, { k: tile(-10, 8), t: null }); out.wall = wall.every((u) => u.wall > FK.K.t && WAR.shapeOf(u) === D.forms.square && WAR.temperOf(u) === D.army.temper.hold);
   let cover = null; for (let d = 1; d < 120 && cover == null; d++) for (const [x, y] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (cover == null && FK.FOR[FK.tileAt(h.bx + x * d * D.tile, h.by + y * d * D.tile)]) cover = FK.tileAt(h.bx + x * (d - 2) * D.tile, h.by + y * (d - 2) * D.tile);
-  const [cx, cy] = FK.tileMid(cover), A = make('Foot', 2, FK.tileAt((cx + h.bx) / 2, (cy + h.by) / 2)); WAR.ambushAt(cover, A); for (let i = 0; i < 900 && !A.every((u) => u.hid); i++) FK.sim(0.1); const f = make('Foot', 1, FK.tileAt(A[0].bx, A[0].by), foe)[0];
+  const [cx, cy] = FK.tileMid(cover), A = make('Foot', 2, FK.tileAt((cx + h.bx) / 2, (cy + h.by) / 2)); for (const g of FK.units().filter((u) => !FK.SIDES[u.side])) FK.vanish(g); WAR.ambushAt(cover, A); for (let i = 0; i < 900 && !A.every((u) => u.hid); i++) FK.sim(0.1); const f = make('Foot', 1, FK.tileAt(A[0].bx, A[0].by), foe)[0];   // the wild cleared first: a boar wandering by (the dice's) is not the ambush
   out.hid = [A.every((u) => u.hid), !WAR.enemies(f, A[0])]; f.bx = A[0].bx + 2 * D.tile; FK.sim(0.1); FK.sim(0.1); out.sprung = A.every((u) => !u.amb && u.chg > FK.K.t);
   const S = make('Foot', 2, tile(30, 0)), F = make('Foot', 6, tile(32, 0), foe), R = make('Archers', 8, tile(24, 0)); for (const [i, u] of R.entries()) { u.bx -= (i % 4) * D.tile; u.by += Math.floor(i / 4) * 2 * D.tile; FK.place(u); }
   const ord = { k: S[0].k }; for (const u of S) { u.ord = ord; u.hp = u.hpMax = 300; WAR.fight(u, F[0]); } for (const v of F) v.hp = v.hpMax = 600; FK.look(99); const m = { ord: S[0].ord, name: 'test', st: 'act' }, plan = WAR.reinforcePlan(m), res = WAR.free().filter((u) => !S.includes(u)), c = WAR.centreOf(S), rk = WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(res))), FK.tileAt(c.bx, c.by));
@@ -825,11 +825,11 @@ TRADEJS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}
   const post = FK.build(by((c) => FK.SH[c].ticks.includes('Post')), ...[stop.k % FK.N, Math.floor(stop.k / FK.N)], FK.SIDES[foe].col); Object.assign(post, { side: foe, done: 1 }); for (const q of D.players) if (q !== me) WAR.treaty(me, q, 'peace'); for (const g of FK.units().filter((u) => S2.includes(u.find) || (!FK.SIDES[u.side] && FK.has(u, 'Fight')))) FK.vanish(g);   // the stops' guards and the wild hunters cleared: the run tests the trade; the post at the stop now shoots a wolf only once it sees it past the trees (QAM), after the wolf has reached the caravan
  
   const cv = FK.spawn(D.trains[m2.code][0], me, FK.tileAt(m2.bx, m2.by + (m2.n / 2 + 2) * D.tile), FK.rng); const est = E.estPay(me, stop, m2), load = E.cargo(me, stop, m2), fg = ~~FK.SIDES[foe].ledger.in.trade;
-  E.setRoute(cv, stop, false, false); let left = 0, sold = null; for (let i = 0; i < 6000 && cv.route; i++) { FK.sim(0.1); if (cv.leg === 'back' && !left) [left, sold] = [gold(), { ...E.stock() }]; }
+  E.setRoute(cv, stop, false, false); let left = 0, sold = null; for (let i = 0; i < 6000 && cv.route; i++) { FK.sim(0.1); if (cv.leg === 'back' && !left) [left, sold] = [FK.SIDES[me].ledger.in.trade, { ...E.stock() }]; }   // its trade pay (A1: the true shortest way may pass a find whose guards were cleared, and take it)
   out.run = { d: Math.hypot(stop.bx - m2.bx, stop.by - m2.by), want: stop.want, load, est, got: left, cut: FK.SIDES[foe].ledger.in.trade - fg, owner: stop.owner, stock: sold, home: !cv.route, store: { cloth: st().cloth, beer: st().beer, food: st().food, wood: st().wood } };
   // an ally's run: the ally's Market beside ours; and a workshop on cloth for five minutes with the loom
   fresh(); WAR.treaty(me, foe, 'ally'); const m4 = Object.assign(put(MKT, me), { side: foe }), m3 = put(MKT, me); const c3 = FK.spawn(D.trains[m3.code][0], me, FK.tileAt(m3.bx, m3.by + (m3.n / 2 + 2) * D.tile), FK.rng), ga = gold(); FK.sim(0.1); const to = c3.dest, cg = c3.cargo, at = FK.tileAt(to.bx, to.by + (to.n / 2 + 1) * D.tile); Object.assign(c3, { bx: FK.tileMid(at)[0], by: FK.tileMid(at)[1], k: at, path: null }); sim(1); out.ally = { d: Math.hypot(to.bx - m3.bx, to.by - m3.by), cargo: cg, got: gold() - ga, said: said.filter((s) => s.includes('ally')).length, back: c3.dest === m3 };
-  fresh(); play = window.dice(SEED); const ws = put(by((c) => (D.makes[c] || {}).cloth), me); FK.learn(me, TK('looms')); Object.assign(st(), { wool: 100, cloth: 0 }); const v = E.villagersOf(me)[0]; E.gatherAt(v, ws); let work = 0; sim(300, () => { if (v.job === 'gather' && v.target === ws && FK.atB(v, ws)) work += 0.1; });
+  fresh(); play = window.dice(SEED); const ws = put(by((c) => (D.makes[c] || {}).cloth), me); FK.learn(me, TK('looms')); Object.assign(st(), { wool: 100, cloth: 0 }); const v = E.villagersOf(me)[0]; E.gatherAt(v, ws); let work = 0; sim(300, () => { v.sick = null; if (v.job === 'gather' && v.target === ws && FK.atB(v, ws)) work += 0.1; });   // kept well: a sickness the rules' dice may roll is not the loom's rate (A1: the computers' spread turns move the dice)
   out.shop = { work, cloth: st().cloth, wool: st().wool, job: E.jobOf(v), choice: [E.setMake(ws, 'beer'), E.setMake(ws, 'iron'), E.makeOf(ws).rate] };
   fresh(); FK.learn(me, TK('learning')); const mints = [0, 1, 2].map(() => put(by((c) => (D.makes[c] || {}).gold), me)); out.scale = E.scaleOf(mints[0], me);
   // a venture with Banking, the Bank's interest, the guards and a robbed caravan
@@ -1408,7 +1408,53 @@ async def guidebook(b):
     got = [all(same.values()), m.get('hist') == v['hist'] and len(v['hist']) > len(MEASURE['ages']), not open_, set(whyless) <= set(v['off']),
            v['md'] == [sum(len(g[k]) for k in same) + len(same), True], v['text'].startswith(next(t['name'] + keyed('words')['list']['dot'] + t['when'] for t in g['techs'] if t['id'] == v['hist'][0])), not errs]
     ok('t-guide', all(got), [got, {k: next(([a, z] for a, z in zip(M.get(k) or [], g[k]) if a != z), None) for k, s in same.items() if not s}, open_, whyless, v['md'], errs[:2], err[-600:]])
-PAGED = {'t-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+# A1: speed and the audit's confirmed fixes; each check fails if its fix is undone
+A1JS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}, look = (l) => Object.keys(FK.SH).find((c) => FK.SH[c].look === l), SP = look('spear');
+  const mk = (c, s, bx, by) => { const u = FK.spawn(c, s, FK.tileAt(bx, by), FK.rng); Object.assign(u, { bx, by, path: null }); FK.place(u); return u; }, ring = (h, n, d) => { const L = []; FK.stamp(h.bx, h.by, (h.n / 2 + d) * D.tile, (k, r) => { if (FK.walkable(k) && r > (h.n / 2 + 2) * D.tile) L.push([r, k]); }); return L.sort((a, b) => a[0] - b[0]).slice(0, n).map(([, k]) => FK.tileMid(k)); };
+  // Reinforce: the reserve takes the fight's order (WAR.reinforce, menu's Reinforce)
+  $calm(me, foe); $rich(me); const h = FK.seatOf(me), A = ring(h, 8, 12).map((p) => mk(SP, me, ...p)), [m0, ...rest] = A, front = rest.slice(0, 3), back = rest.slice(3);
+  const O = WAR.order(front, null, FK.tileAt(h.bx + 20 * D.tile, h.by)); const m = { ord: O }; WAR.reinforce(back, m); out.join = [!!O, back.every((u) => u.ord === O), !!WAR.reinforce, !WAR.join];
+  // a drill holds its shape past its first frame, and after its soldiers settle
+  $calm(); const S = ring(h, 6, 10).map((p) => mk(SP, me, ...p)); WAR.dress(S, FK.tileAt(h.bx + 18 * D.tile, h.by + 18 * D.tile), 'line', { t0: FK.K.t, until: FK.K.t + 30 }); FK.sim(0.1); const d1 = S.map(WAR.drillOn); $run(20); out.drill = [d1.every(Boolean), S.every(WAR.drillOn), new Set(S.map((u) => u.goal)).size === S.length];
+  // a save opened: an order, a camp and an ambush stay one record each; the camp count holds; the fresh map is untouched
+  $calm(me, foe); $rich(me); const G = ring(h, 6, 14).map((p) => mk(SP, me, ...p)), O2 = WAR.order(G.slice(0, 3), null, FK.tileAt(h.bx + 25 * D.tile, h.by)); WAR.MS.t = { name: 't', ord: O2, n0: 3, t: FK.K.t, st: 'go' };
+  const amb = { k: G[3].k }; G.slice(3).forEach((u) => { u.amb = amb; }); const tent = $put(look('medtent'), me, 14, 80), tow = $put(look('camptower'), me, 24, 80), camp = { size: 'small' }; tent.camp = tow.camp = camp;
+  const n0 = E.campsOut(me, 'small'), base0 = JSON.stringify(FK.things().slice(0, 50).map((t) => [t.kind, t.amount, t.k])), txt = FK.pack(); FK.resume(JSON.parse(txt));
+  const U = FK.units().filter((u) => u.side === me && u.code === SP), T = FK.things().filter((t) => t.camp), M = WAR.MS.t;
+  out.save = [!!M && U.filter((u) => u.ord).every((u) => u.ord === M.ord) && [...WAR.ORD].includes(M.ord), T.length === 2 && T[0].camp === T[1].camp, E.campsOut(me, 'small') === n0, (() => { const a = U.filter((u) => u.amb); return a.length === 3 && a.every((u) => u.amb === a[0].amb); })()];
+  FK.reset(); out.save.push(JSON.stringify(FK.things().slice(0, 50).map((t) => [t.kind, t.amount, t.k])) === base0);
+  // a civilisation's own kind on its building's card, trained from it
+  const civs = Object.keys(FK.SH).filter((c) => FK.SH[c].civ && FK.SH[c].replaces); out.civ = civs.map((uu) => { FK.reset(); $rich(me); E.setCiv(me, FK.SH[uu].civ); FK.SIDES[me].age = D.ages.length; const at = Object.keys(D.trains).find((c) => FK.trains(c, me).includes(uu)), b = $put(at, me, 10, 80); b.side = me;
+    MENU.S.tab = null; MENU.S.subject = b; MENU.render(true); const cell = [...document.querySelectorAll('#card [data-v^="train|"]')].find((e) => e.dataset.v.split('|')[1] === uu); if (cell) cell.click(); return [!!cell, (b.q || []).includes(uu)]; });
+  // a support unit beside a soldier: its threat is none, never NaN; the soldier picks the armed foe
+  $calm(me, foe); const sup = Object.keys(D.stats).filter((c) => D.stats[c].atk === 0 && FK.SH[c] && FK.SH[c].layer === 120), [p0] = ring(h, 1, 10), me1 = mk(SP, me, ...p0);
+  out.foe = sup.map((c) => { const v = mk(c, foe, p0[0] + D.tile, p0[1]), a = mk(SP, foe, p0[0] + 2 * D.tile, p0[1]); a.hp = a.hpMax / D.players.length; const w = WAR.worth(me1, v, 1), pick = WAR.bestFoe(me1, D.ai.reach); WAR.die(v); WAR.die(a); return [Number.isFinite(w), pick === a]; });
+  // the Apartment houses Mid's room; the Quarry is worked for its stone
+  FK.reset(); $rich(me); FK.SIDES[me].age = D.ages.length; const r0 = E.popCap(me), ap = $put(look('apartment'), me, 10, 80); ap.side = me; out.room = [E.popCap(me) - r0, FK.stat(ap.code, me, 'room')];
+  const q = $put(look('quarry'), me, 10, 80), qs = (q.side = me), v = E.villagersOf(me)[0], st0 = FK.SIDES[me].store.stone; E.gatherAt(v, q); $run(60); out.quarry = [E.yieldOf(q), FK.SIDES[me].store.stone > st0, FK.stat(q.code, me, 'rate')];
+  out.tw = [FK.has(FK.seatOf(me) && { code: look('castle') }, 'Shoot'), !!D.tower[look('castle')]];
+  // a side's reach: the flood equals the pathfinder's walk
+  FK.reset(); const R = FK.reach(me), far = []; for (let k = 0; k < FK.N * FK.N; k += 997) if (FK.walkable(k)) far.push(k); const from = FK.tileAt(h.bx, h.by + (h.n / 2 + 2) * D.tile);
+  out.reach = far.slice(0, 40).map((k) => R.has(k) === !!FK.findPath(FK.units().find((u) => u.side === me).k, (q) => q === k, k, Infinity));
+  // the A* heap: each entry's priority fixed; the path the octile-shortest on open ground
+  const cost = (p) => p.reduce((L, q, n) => L + (n && (q % FK.N !== p[n - 1] % FK.N && Math.floor(q / FK.N) !== Math.floor(p[n - 1] / FK.N)) ? Math.SQRT2 : n ? 1 : 0), 0), way = (a, b) => FK.findPath(a, (q) => q === b, b, Infinity), near = (x, y) => Math.abs(x - y) < 1e-9;
+  out.path = far.filter((k) => R.has(k)).slice(0, 40).map((k) => { const a = from, p = way(a, k), back = way(k, a), m = p && p[p.length >> 1], half = m && way(a, m); return !!p && !!back && near(cost(p), cost(back)) && near(cost(p.slice(0, (p.length >> 1) + 1)), cost(half)); });
+  return out; })()"""
+async def a1(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(A1JS)
+    win = "(async () => { let last = performance.now(), worst = 0; const t0 = last; await new Promise((r) => { const f = (t) => { worst = Math.max(worst, t - last); last = t; if (t - t0 < 5000) requestAnimationFrame(f); else r(); }; requestAnimationFrame(f); }); return worst; })()"
+    await pg.evaluate("FK.reset()"); await pg.wait_for_timeout(1500); frames = min([await pg.evaluate(win) for _ in range(3)]); await pg.close()   # a hitch of the game's own repeats every turn; a stall of the machine's does not
+    m, err = frozen('basics units blds tech', "return box([basics, units, blds, tech, 'var OUT = { tech: TECH, apt: BLD.apartment.room, quarry: BLD.quarry.rate, castle: [BLD.castle.dmg, BLD.castle.cd, BLD.castle.bow, BLD.castle.h] };']);"); m = m or {}
+    T, R = {e['key']: e['value'] for e in book('tech').values()}, {'f': 'food', 'w': 'wood', 'g': 'gold', 's': 'stone', 'i': 'iron'}
+    mt = {t['id']: t for t in m.get('tech', [])}; cut = {'satrapy', 'sixth'}   # parked with the tax (Albert, Nov 5 11:16)
+    same = lambda k, t: T.get(k) and T[k].get('age', 0) == t.get('age', 0) and T[k].get('time') == t.get('t') and T[k].get('when') == t.get('when') and T[k].get('cost') == {R[x]: n for x, n in t.get('cost', {}).items()} and [n for n in T[k].get('need', [])] == [n for n in t.get('need', []) if n not in cut]
+    tech = bool(mt) and all(same(k, t) for k, t in mt.items() if k not in cut) and T['potato']['line'] == mt['potato']['line'] and T['potato']['fx'][0]['p'] == round(mt['potato']['fx'][0]['m'] - 1, 9) and len(T['townwatch']['fx']) == 1
+    TW = MEASURE['tower'].get(next(c for c, e in SHELLS.items() if e.get('look') == 'castle'), {})
+    got = [all(v['join']), all(v['drill']), all(v['save']), v['civ'] and all(all(x) for x in v['civ']), v['foe'] and all(all(x) for x in v['foe']),
+           v['room'] == [m.get('apt'), m.get('apt')], v['quarry'][0] == 'stone' and v['quarry'][1] and v['quarry'][2] == m.get('quarry'), all(v['tw']) and [TW.get('atk'), TW.get('rof'), TW.get('bow') * 10, TW.get('h') * 10] == m.get('castle'),
+           tech, all(v['reach']), v['path'] and all(v['path']), frames <= MEASURE['frameMost'], not errs]
+    ok('t-a1', all(got), [got, {k: v[k] for k in ('join', 'drill', 'save', 'civ', 'foe', 'room', 'quarry', 'tw', 'path')}, frames, errs[:2], err[-400:], [k for k, t in mt.items() if k not in cut and not same(k, t)][:6]])
+PAGED = {'t-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

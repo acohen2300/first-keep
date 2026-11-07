@@ -97,7 +97,7 @@ const price = (c) => { const st = SIDES[ME].store, miss = Object.entries(c || {}
   const f = Math.min(...miss.map(([, m, n]) => 1 - m / n)); return `<small style="color:${f < 0.5 ? mixc(COL.rr, COL.rw, f * 2) : mixc(COL.rw, COL.rg, f * 2 - 1)};opacity:1">Short ${miss.map(([y, m]) => m + y[0]).join(' ')}</small>`; };
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
 const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || 'free'; // E183
-const own = (t) => t && t.side === ME, AW = WD.alarm, EW = WD.end, NEWS = WD.news, TELL = WD.say, WA = WD.army, DIALTECH = { temper: 'engage', form: 'formations', intent: 'command' }, TECHOF = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])); // E404
+const own = (t) => t && t.side === ME, AW = WD.alarm, EW = WD.end, NEWS = WD.news, TELL = WD.say, WA = WD.army, DIALTECH = { temper: 'engage', form: 'formations', intent: 'command' }, TECHOF = FK.TK; // E404
 const MUSTER = { tech: 'Needs Muster', none: 'Nothing missing', at: 'Needs a War Council', kind: 'Needs the building that trains it', army: 'The army is full', room: 'Needs room: build homes' };
 const council = (t) => (own(t) && FK.has(t, 'Squad') ? row(...WA.squads.map((n, i) => vcell('squad', i, null, '', WAR.SQ.sel === i)), vcell('muster')) + row(...classes().map((c) => `<div class="pairs">${vcell('plan', c, '')}${vcell('plan', c, 'up')}</div>`)) : ''); // E405
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
@@ -130,7 +130,7 @@ const VERBS = {
   opt: { label: (k, i) => OPTS[k][i][0], whyNot: (k) => (BUILT[k] ? '' : 'Not built yet'), run: (k, i) => { S.opt[k] = i; } },
   war: { label: () => '', whyNot: () => '', run: () => { const [w, h] = FK.size(); S.war = !S.war; S.mid = 'map'; S.tab = null; S.tool = null; S.aim = S.aim || { k: tileK(w * P.half, h * P.half), t: null }; S.aimT = performance.now(); } },
   mid: { label: (m) => `<span class="t">${SVG[m]}</span>${{ train: 'Train', squad: 'Squad', direct: 'Direct' }[m]}`, whyNot: () => '', run: (m) => { S.mid = S.mid === m ? 'map' : m; } },
-  kind: { label: (c) => `<span class="t">${SVG[FK.kinds(FK.SH[c].class).map((k) => FK.SH[k].look).find((l) => SVG[l])]}</span>${FK.rankName(c, ME)}`, whyNot: (c) => { const b = trainer(c); return !FK.aged(c, ME) ? aging(c) : !b ? `Build a ${B[Object.keys(D.trains).find((x) => FK.trains(x).includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // E186
+  kind: { label: (c) => `<span class="t">${SVG[FK.kinds(FK.SH[c].class).map((k) => FK.SH[k].look).find((l) => SVG[l])]}</span>${FK.rankName(c, ME)}`, whyNot: (c) => { const b = trainer(c); return !FK.aged(c, ME) ? aging(c) : !b ? `Build a ${B[Object.keys(D.trains).find((x) => FK.trains(x, ME).includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // E186
   htab: { label: (t) => t, whyNot: () => '', run: (t) => { S.htab = t; } },
   info: { label: () => SVG.book, whyNot: () => '', run: () => { S.info = !S.info; } },
   vol: { label: (c) => `${FK.HB.mix.names[c]} <small>${SOUND.mix(c)}</small>`, whyNot: () => '', run: (c) => SOUND.step(c) }, // E187
@@ -154,14 +154,14 @@ const VERBS = {
   ambush: { label: () => WO.ambushCell, whyNot: () => '', run: () => WAR.ambushAt(aimK(), toolSet()) },
   choke: { label: () => WO.chokeCell, whyNot: () => '', run: () => { S.tool = S.tool === 'choke' ? null : 'choke'; const [, , , , tell] = WO.choke; if (S.tool) toast(tell); } },
   reinforce: { label: () => WO.reinforceCell, whyNot: () => (Object.values(WAR.MS).some((m) => !m.end && m.st === 'act') ? '' : WO.late), run: () => { const [m, p] = Object.values(WAR.MS).filter((m) => !m.end && m.st === 'act').sort((a, b) => a.odds - b.odds).map((m) => [m, WAR.reinforcePlan(m)]).find(([, p]) => p && p.go.length) || [];
-    if (!m) return toast(WO.late); WAR.join(p.go, m); toast(WO.reinforce.replace('{n}', p.go.length).replace('{m}', m.name).replace('{list}', waveLine(p))); } },
+    if (!m) return toast(WO.late); WAR.reinforce(p.go, m); toast(WO.reinforce.replace('{n}', p.go.length).replace('{m}', m.name).replace('{list}', waveLine(p))); } },
   move: { label: (c) => { const [[, a], [, b]] = WO.direct[c], w = WAR.directWait(c); return `${a}<small>${b}${w ? ` ${w}s` : ''}</small>`; }, whyNot: () => '', run: (c, held) => WAR.direct(c, !!held, S.aim) },
   quick: { label: () => SVG.attack, whyNot: () => (!WAR.sendable().length ? WO.none : ''), run: () => { const q = S.qa, U = WAR.sendable(); S.qa = null; if (WAR.order(U, null, q.k)) ECON.orderCost(ME, U); } },
   qclose: { label: () => SVG.close, whyNot: () => '', run: () => { S.qa = null; } },
   follow: { label: () => 'Follow', whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
   map: { label: () => 'Map', whyNot: () => '', run: () => { FK.show.M = !FK.show.M; FK.dirty(); } },
   recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
-  train: { label: (c) => `${FK.rankName(c, ME)}${price(D.cost[c])}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, D.cost[c]) ? `Needs ${costText(D.cost[c])}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },
+  train: { label: (c, b) => `${FK.rankName(c, ME)}${price(ECON.priceOf(ME, c, b))}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, ECON.priceOf(ME, c, b)) ? `Needs ${costText(ECON.priceOf(ME, c, b))}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },
   untrain: { label: () => '−', whyNot: (b) => (!b.q || !b.q.length ? 'Nothing queued' : ''), run: (b) => ECON.unqueue(b) },
   stop: { label: () => 'Stop', whyNot: (u) => (u.job === 'idle' ? 'Already idle' : ''), run: (u) => { if (u.load) ECON.carry(u); else ECON.idle(u); } },
   gather: { label: () => 'Gather', whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : ''), run: (t) => ECON.gatherAt(FK.sel(), t) },
@@ -219,9 +219,9 @@ const ROWS = { // E199
   load: (t) => `<p>${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}</p>`,
   store: (t) => `<p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p>`,
   flock: (t) => `<p>${t.sheep} sheep</p>`, // E358
-  queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(t.q.map((c, i) => [ECON.nameOf(c), i ? ECON.timeOf(t.side, c) : t.qt]), 1 - t.qt / ECON.timeOf(t.side, t.q[0]), Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
-  train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${FK.trains(t.code).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
-  tech: (t) => (own(t) && t.done >= 1 ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
+  queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(((at) => t.q.map((c, i) => [ECON.nameOf(c), i ? (at += ECON.timeOf(t.side, c)) : at]))(t.qt), 1 - t.qt / ECON.timeOf(t.side, t.q[0]), Math.max(0, t.q.length - SCR.mold.slots + 1))) : ''),
+  train: (t) => (own(t) && t.done >= 1 ? `<div class="row">${FK.trains(t.code, t.side).map((c) => vcell('train', c, key(t))).join('')}${t.q && t.q.length ? vcell('untrain', key(t), null, 'w1') : ''}</div>` : ''),
+  tech: (t) => (own(t) && t.done >= 1 && FK.has(t, 'Seat') ? `<div class="row">${vcell('ageUp', null, null, '', !!read().aging)}</div>` : ''),
   troops: (t) => { const k = key(t), I = !own(t) && FK.has(t, 'Seat') && SIDES[ME].intel[t.side], x = !own(t) ? '' : t.kind === 'unit' ? (ECON.teachTo(t) ? vcell('teach', k) : '') : (FK.has(t, 'Zeal') ? vcell('zeal', k) : '') + (FK.has(t, 'Seat') ? ECON.prisonersOf(ME).map((_, i) => vcell('ransom', i)).join('') : ''); // E477
     return (x ? `<div class="row">${x}</div>` : '') + (t.job === 'school' ? `<p>${TW.teach.left.replace('{n}', Math.ceil(t.schoolT - FK.K.t))}</p>` : '') + (I ? `<p>${TW.sab.intel.replace('{n}', Math.floor(FK.K.t - I.t)).replace('{store}', costText(I.store)).replace('{age}', D.ages[I.age]).replace('{techs}', I.techs).replace('{army}', Object.values(I.army).reduce((a, b) => a + b, null))}</p>` : ''); },
   acts: (t, r) => { const k = key(t), sq = council(t), a = t.kind === 'unit' ? (own(t) ? vcell('follow', null, null, '', FK.cam.follow) + (FK.has(t, 'Gather') ? vcell('stop', k) : vcell('recall')) : isSoldier(r.sel) ? vcell('fight', k) : FK.has(t, 'Prey') ? vcell('hunt', k) : WAR.armed(t) || t.side < 0 ? vcell('here', k) : '')
@@ -249,7 +249,7 @@ const stances = (t) => `<div class="frame f6">${PEOPLE[t].map((n) => `<span clas
 const TOPCELL = { mute: () => vcell('mute'), play: () => vcell('later', 'play'), mail: () => vcell('later', 'mail') };
 const topbar = (r) => `<div class="strip big">${SCR.top.map((c) => (TOPCELL[c] ? TOPCELL[c]() : cell(`<span class="t">${SVG[c]}</span>${fmt(r.store[c])}`))).join('')}</div>`; // E204
 let acc = 0;
-function render(force) { const r = read();
+function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read(); // E693
   const tb = topbar(r); if (tb !== S.lastTop) { topEl.innerHTML = tb; S.lastTop = tb; }
   if (r.result) { S.tab = null; S.ghost = null; const you = r.result.winner === 0; $('card').className = 'on'; $('card').innerHTML = `<h2>${EW.head[+!you]}</h2><p>${r.result.text}</p><div class="row">${vcell('new')}${vcell('copylog')}</div>`; $('panel').className = ''; return; }
   if (S.subject && (S.subject.kind === 'unit' ? units().indexOf(S.subject) < 0 : things().indexOf(S.subject) < 0)) S.subject = null;
@@ -263,8 +263,9 @@ function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
 let lpT = 0; const lpStop = () => clearTimeout(lpT); // E428
-ui.addEventListener('pointerdown', (e) => { lpStop(); S.held = false; const b = e.target.closest('[data-h]'); if (!b) return; const [verb, a, a2] = b.dataset.h.split('|'); lpT = setTimeout(() => { S.held = true; act(verb, argOf(a), argOf(a2)); }, D.touch.hold); });
-for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) ui.addEventListener(ev, lpStop);
+FK.on('rest', () => !!(S.tab && tall(S.tab)) || !!ECON.result()); let lpAt = null; addEventListener('pointerdown', () => { lpStop(); S.held = false; }, true); // E692
+ui.addEventListener('pointerdown', (e) => { lpStop(); S.held = false; lpAt = { x: e.clientX, y: e.clientY }; const b = e.target.closest('[data-h]'); if (!b) return; const [verb, a, a2] = b.dataset.h.split('|'); lpT = setTimeout(() => { S.held = true; act(verb, argOf(a), argOf(a2)); }, D.touch.hold); });
+for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) ui.addEventListener(ev, lpStop); ui.addEventListener('pointermove', (e) => { if (lpAt && Math.hypot(e.clientX - lpAt.x, e.clientY - lpAt.y) > D.touch.move) lpStop(); });
 // E206
 const canvas = document.getElementById('map');
 const tileUnder = (px, py) => { const [cw, ch] = FK.size(), c = FK.cam, vx = c.x + (px - cw / 2) / c.z, vy = c.y + (py - ch / 2) / c.z, [sx, sy] = FK.fromBoard(vx, (vy + D.land * Math.cos(FK.A.rise * Math.PI / 180)) / Math.sin(FK.A.rise * Math.PI / 180)); return [Math.floor(sx / D.tile), Math.floor(sy / D.tile)]; };
@@ -343,7 +344,7 @@ FK.on('drop', (p, cancel) => { S.drag = false; S.line = null; if (cancel) return
 FK.on('say', (msg, m) => say(msg, m && typeof m === 'object' ? m : {}));
 const msnSay = (slot) => { const m = WAR.MS[slot]; return !m || m.end ? '' : m.st === 'act' ? `${Math.round(m.odds * SAY.percent)}%` : m.ord.eta ? clock(m.ord.eta) : ''; };
 const waveLine = (p) => { const [first, more] = WO.wave; return p.waves.map((w, i) => { const [c, other] = new Set(w.list.map((r) => FK.SH[r.u.code].class)); return (i ? more : first).replace('{n}', w.list.length).replace('{who}', other ? WO.soldiers : c.toLowerCase()).replace('{t}', clock(w.t)); }).join(WD.list.and); };
-const etaNow = () => { const F = WAR.free(), k = aimK(), key = [k, F.length, Math.floor(FK.K.t / HUD.settle)].join(); if (!F.length) return null; if (!S.eta || S.eta.key !== key) S.eta = { key, v: WAR.etaOf(F, k, WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(F))), k)) }; return S.eta.v; };
+const etaNow = () => { const F = WAR.free(), k = aimK(), key = [k, F.length, Math.floor(FK.K.t / HUD.settle)].join(); if (!F.length) return null; if (!S.eta || S.eta.key !== key) S.eta = { key, v: WAR.etaOf(F, k, WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(F))), k, F.at(-1))) }; return S.eta.v; };
 FK.on('draw', (ctx, s) => { if (S.line) { const p = S.line, a = boardAt(p.x0, p.y0), b = boardAt(p.x, p.y), T0 = FK.SPRITE.touch; ctx.save(); ctx.strokeStyle = ctx.fillStyle = FK.C.gold; ctx.lineWidth = T0.choke; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(p.x0, p.y0); ctx.lineTo(p.x, p.y); ctx.stroke(); // E432
     ctx.font = FK.mapFont(); ctx.textAlign = 'center'; ctx.fillText(WO.choke.find((w) => w.includes('across')).replace('{n}', Math.max(D.choke.min, Math.round(FK.dist(b, a) / D.tile / D.ranks.gap))), (p.x0 + p.x) * P.half, (p.y0 + p.y) * P.half - T0.up); ctx.restore(); }
   if (!S.war || !S.aim) return; if (S.aim.t && S.aim.t.gone) S.aim.t = null;
@@ -421,13 +422,13 @@ FK.on('save', (X) => { X.menu = { mail, post, newsI, newsT, shown, slipT, muster
 FK.on('load', ({ menu: M }) => { FK.refill(mail, M.mail); FK.refill(post, M.post); ({ newsI, newsT, slipT, mustered, tipNow, shown } = M); Object.assign(S.opt, M.opt); LOG.rows = M.log; S.tab = null; render(true); });
 // E675
 const GW = WD.guidebook, TB = BOOKS.tech, TV = (c) => TB[c].value, SN = (c) => FK.SH[c].name, [AGE0] = D.ages, ageOf = (c) => FK.SH[c].age || D.ages[D.bldAge[c]] || AGE0, secs = (t) => (t ? t + GW.secs : '');
-const homeOf = (c) => Object.keys(D.trains).find((b) => FK.trains(b).includes(FK.SH[c].replaces || c)), whyOf = (c) => WD.why[GW.key[c] || FK.SH[c].look], techWhy = (c) => WD.why['tech:' + TB[c].key] ?? WD.why[TB[c].key]; // E676
+const homesOf = (c) => Object.keys(D.trains).filter((b) => FK.trains(b).includes(FK.SH[c].replaces || c)), homeOf = (c) => { const [h] = homesOf(c); return h; }, whyOf = (c) => WD.why[GW.key[c] || FK.SH[c].look], techWhy = (c) => WD.why['tech:' + TB[c].key] ?? WD.why[TB[c].key]; // E676
 const fill = (s) => s.replace(/\{(\w+):([^}]+)\}/g, (_, k, p) => (k === 'D' ? p.split('.').reduce((o, x) => o[x], D) : k === 'S' ? SN(p) : k === 'J' ? WD[p] : Object.keys(TB).filter((c) => TV(c).fx.some((f) => f.s === p)).map((c) => TB[c].name).join(WD.list.and))); // E677
 function guide() { // E678
   const T = Object.keys(TB).filter((c) => TV(c).at), UN = Object.keys(U).filter((c) => D.cost[c]), aged = (c, i) => D.ages.indexOf(ageOf(c)) === i, names = (L) => L.map((c) => TB[c].name);
   const buildings = Object.keys(B).map((c) => ({ id: c, name: SN(c), menu: Object.keys(SCR.tabs).find((m) => SCR.tabs[m].includes(c)) || GW.off[c], age: ageOf(c), cost: costText(D.cost[c]), secs: secs(D.buildTime[c]), squares: FK.ref(FK.SH[c].size) + GW.by + FK.ref(FK.SH[c].size),
     trains: UN.filter((u) => !FK.SH[u].civ && homeOf(u) === c).map(SN), research: names(T.filter((t) => TV(t).at === c)), why: whyOf(c) }));
-  const units = UN.map((c) => { const s = D.stats[c], h = homeOf(c), e = FK.SH[c]; return { id: c, name: SN(c), at: h ? SN(h) : GW.at, age: ageOf(c), cost: costText(D.cost[c]), secs: secs(D.train[c]), hp: s.hp, dmg: s.atk, rng: s.rng, spd: FK.ref(e.pace), civ: e.civ ? CIVS[e.civ].name : '', replaces: e.replaces ? SN(e.replaces) : '',
+  const units = UN.map((c) => { const s = FK.statRow(c, null), h = homesOf(c), e = FK.SH[c]; return { id: c, name: SN(c), at: h.length ? h.map(SN).join(WD.list.and) : GW.at, age: ageOf(c), cost: costText(D.cost[c]), secs: secs(D.train[c]), hp: s.hp, dmg: s.atk, rng: s.rng, spd: FK.ref(e.pace), civ: e.civ ? CIVS[e.civ].name : '', replaces: e.replaces ? SN(e.replaces) : '',
     beats: Object.entries(s.vs || {}).map(([k, m]) => k + GW.beats.times + m).concat(s.bld && s.bld !== D.bases.bld ? [GW.beats.bld + GW.beats.times + s.bld] : [], s.bonly ? [GW.beats.only] : []),
     tiers: T.filter((t) => (TV(t).rank || {}).k === c).map((t) => `${TV(t).rank.name} (${TB[t].name})`), why: whyOf(c) }; });
   const techs = T.map((c) => { const v = TV(c); return { id: c, name: TB[c].name, at: SN(v.at), age: D.ages[v.age], line: v.line, when: v.when, w: v.w, need: names(ECON.needsOf(c)).join(WD.list.and), cost: costText(v.cost), secs: secs(v.time), why: techWhy(c) }; });
