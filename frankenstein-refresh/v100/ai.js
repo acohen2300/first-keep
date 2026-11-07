@@ -33,7 +33,7 @@ function chokeClaim(side, enemy) { const t = FK.K.t; if (claimT.get(side) > t) r
   WAR.dress(foot.filter((_, i) => i < g.w * AB.files), FK.tileAt(g.x, g.y), 'choke', { t0: t, until: t + AB.hold, cols: Math.min(CK.max, Math.max(CK.min, g.w)), f: g.f }); }
 // E525
 const total = (xs, f) => xs.reduce((n, x) => n + f(x), 0), pos = (x) => Math.max(0, x), up = ECON.up;
-const blds = (side, code) => things().filter((t) => t.kind === 'bld' && t.side === side && (!code || t.code === code)), count = (side, code) => blds(side, code).length, rising = (side, code) => blds(side, code).some((t) => !up(t));
+const blds = (side, code) => FK.blds().filter((t) => t.side === side && (!code || t.code === code)), count = (side, code) => blds(side, code).length, rising = (side, code) => blds(side, code).some((t) => !up(t));
 const ready = (side, code) => blds(side, code).filter(up), lineOf = (t) => of(t.q && t.q.length), trainers = (side, code) => ready(side).filter((t) => FK.trains(t.code, side).includes(code)).sort((a, b) => lineOf(a) - lineOf(b));
 const train = (side, code) => { const [b] = code ? trainers(side, code) : []; return !!b && ECON.queue(b, code); }, queued = (side, ok) => total(blds(side), (t) => (t.q || []).filter((c) => FK.SH[c] && ok(c)).length);
 const mine = (side, ok) => units().filter((u) => u.side === side && ok(u.code)).length + queued(side, ok), inArmy = (side) => mine(side, ECON.soldier), is = (c) => (x) => x === c;

@@ -237,6 +237,8 @@ BOOK("citations", {
  "N236": {"text": "Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's stutter (Mid runs it at 60 fps, its worst frame 17-33 ms)", "opened": true, "kind": "design"},
  "N237": {"text": "A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a whole frame late, a stutter); from memory, to open", "opened": false},
  "N239": {"text": "Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a table names ticks what the table asks", "opened": true, "kind": "design"},
+"N240": {"text":"Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow call, Nov 7 15:44","opened":true,"kind":"design"},
+"N241": {"text":"Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, the Yard removed (test field only), War on the Build slot, the error screen shows its line and restarts to New Game, New game on the pause screen with a confirm, hazards switchable on the start sheet","opened":true,"kind":"design"},
  "N238": {"text": "Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestWake, the safety net on a second fault), Albert's yes for First Keep A2 (Nov 7); opened this session", "opened": true, "kind": "design"},
  "N234": {"text": "Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, SONG), written from v100's books (Albert, Nov 5 11:40, Frankenstein F39)", "opened": true, "kind": "design"}
 });

@@ -4,7 +4,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## By law
 
-- **QA** Sun height → N1, N2 · used by D99
+- **QA** Sun height → N1, N2 · used by D99, D341
 - **QB** True sun, moon and planets → N2, N3 · used by D292, X63
 - **QC** Moon lit fraction → N2 · used by D292, X63
 - **QD** Day's edges → N2
@@ -335,6 +335,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N236** Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's st → D338, D339, X74
 - **N237** (to open) A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a  → QCR, D339
 - **N239** Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a t → X75, X76
+- **N240** Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow cal → D341
+- **N241** Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, → SN5, SN15, J32
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
 - **N234** Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guid → X73, J7, J27, J29, J30
 

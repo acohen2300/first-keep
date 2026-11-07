@@ -310,6 +310,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N236 |  | Design: the A1 speed fix (Albert, Nov 7 06:22): the new-game screen at Mid's speed, no frame over the eye's stutter (Mid runs it at 60 fps,  | opened |
 | N237 |  | A display at 60 Hz shows a frame every 1/60 s = 16.7 ms (the refresh rate; a frame later than that is shown a whole frame late, a stutter);  | to open |
 | N239 |  | Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a table names ticks what the tabl | opened |
+| N240 |  | Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow call, Nov 7 15:44 | opened |
+| N241 |  | Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, the Yard removed (test field  | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
 | N234 |  | Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, | opened |
 
@@ -354,6 +356,19 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E695 |  | at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, as SoRen does; paused, time stands still |  |
 | E696 |  | the screen stays awake while a match runs; let go when paused, at rest or hidden; a browser without the lock plays on |  |
 | E697 |  | the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touch builds it again |  |
+| E698 |  | a draw-level change redraws the canvas at its new sharpness; only a real change of the window's size refits the camera, so the view never ju |  |
+| E699 |  | the ghost carries its own label on the map, as Base and Mid: its name and price where it fits, else why not; the player never has to look do |  |
+| E700 |  | only a touch on or near the ghost moves it; a touch away from it falls through to the camera, so the player can look around while placing (M |  |
+| E701 |  | the top bar's cells by the Screen book: pause and the small map are live controls; a cell that does nothing is not shown (Base's bar had non |  |
+| E702 |  | pause stops the clock and opens the Pause screen; the same cell resumes |  |
+| E703 |  | New game asks twice, so a stray tap cannot end a match; then the Start sheet |  |
+| E704 |  | the two base rows as Base has them; at war the Build slot is War's close, so War is reached and left through one slot |  |
+| E705 |  | a hazard switched on adds its points to the level (the measure book's hazards.pts); the set is the one the match reads |  |
+| E706 |  | the Pause screen is a shell like every page; the Yard (layer toggles) shows only in the test field |  |
+| E707 |  | while a tall sheet (the Start page) is open, messages wait in the post and come out when it closes, so none covers the sheet (Base's land ca |  |
+| E708 |  | a shell's ticks as a Set, built once from the Shells book: has() is asked hundreds of thousands of times a second, and a Set answers in one  |  |
+| E709 |  | the buildings as their own list, a derived index of things rebuilt only when things change (TV, the things version): buildings are a few doz |  |
+| E710 |  | a new building slides into the things list at its depth instead of re-sorting ten thousand things, which was a felt hitch every time anyone  |  |
 | E1 |  | First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each. |  |
 | E2 |  | A Book entry is { key, value, name, cite, law } under its code; the game sees each book as one object by key (D, A, C, W, G), and a shell's  |  |
 | E3 |  | every code in every book |  |
@@ -1254,7 +1269,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D203 | a line of wall gets crew builders at most, who work down it; a builder done takes the next wall piece within wall tiles, else a site nobody raises within site tiles, else goes back to its work (Mid's 60 and 220 units in its 10-unit squares) | {crew: 2, wall: 6, site: 22} | N168 |
 | D204 | a site stands at start of its health and gains rise of it as it is raised (Mid's mkBld and bldTick) | {start: 0.1, rise: 0.9} | N168 |
 | D205 | a building that costs stone rises at share in frost, the air at or under at °C: mortar will not set (Mid's frost weather) | {share: 0.5, at: 0} | N168 |
-| D206 | placing, in tiles unless said: lane tiles round every building and from every find (walls, gates and fields may touch; nothing touches one that trains); the ghost snaps beside one of yours, touching or a lane apart (gaps), within near, or in line with one within guide (the guide drawn pad past both), to the nearest spot within tol (least, or zoom ÷ the zoom), start from the screen's middle; a find stands half a tile in; on a phone the ghost waits lift px above the finger; within edge px of the screen the map scrolls scroll px a second; a wall corner is caught within hit px, and a drag nearly flat or upright, under 1 in flat, is made so; after a building the next spot is its size and next for its material away (timber leaves a gap for fire); the tint and the ghost's alpha; a corner's knob, the lines' widths and dashes in px; a tile's corners in order (Mid's) | {lane: 2, gaps: [0, 2], near: 4, half: 0.5, guide: 26, pad: 1.2, tol: {least: 1.4, zoom: 2.6}, start: 20, lift: 64, edge: 48, scroll: 320, h | N168 |
+| D206 | placing, in tiles unless said: lane tiles round every building and from every find (walls, gates and fields may touch; nothing touches one that trains); grab: a touch within this share of the footprint (or lift px) grabs the ghost, farther away it looks around (Mid's nearGhost); the ghost snaps beside one of yours, touching or a lane apart (gaps), within near, or in line with one within guide (the guide drawn pad past both), to the nearest spot within tol (least, or zoom ÷ the zoom), start from the screen's middle; a find stands half a tile in; on a phone the ghost waits lift px above the finger; within edge px of the screen the map scrolls scroll px a second; a wall corner is caught within hit px, and a drag nearly flat or upright, under 1 in flat, is made so; after a building the next spot is its size and next for its material away (timber leaves a gap for fire); the tint and the ghost's alpha; a corner's knob, the lines' widths and dashes in px; a tile's corners in order (Mid's) | {lane: 2, gaps: [0, 2], near: 4, half: 0.5, guide: 26, pad: 1.2, tol: {least: 1.4, zoom: 2.6}, start: 20, lift: 64, grab: 0.7, edge: 48, scr | N168 |
 | D207 | while walls are laid: a foe's walk out from the Town Center reaching reach tiles is a way in, shown, else Sealed; looked again every seconds (Mid's SEAL) | {reach: 38, every: 0.3} | N168 |
 | D208 | the computer's wall ring: ring tiles out from its Town Center, an arc of ± steps of step rad facing the middle, its gates the two squares nearest the middle and laid first; from age, with stone, up to pieces a round while it keeps that much stone (Mid's WALL_R, 260 units in its 10-unit squares, and wallPlan; the balanced computer walls) | {ring: 26, steps: 66, step: 0.019, gates: 2, age: 1, stone: 60, keep: 40, pieces: 3} | N168 |
 | D209 | what fits a tapped spot, in tiles and scores: a drop-off for finds within near × r with none within dropR; more of what stands within r (a home: a home; a field: a mill, then a field; an army building: the one you lack; a wall: a gate; the Town Center: a home, keep); a narrow way, its disc of area tiles between choke solid: a wall, or a gate beside your wall; a home when room is short (Mid's SUGGEST) | {r: 14, near: 0.85, dropR: 11, drop: 3, kin: 3.5, keep: 1, area: 4, choke: {lo: 0.35, hi: 0.75}, chokeW: 4, room: 2, short: 1.5} | N168 |
@@ -1388,6 +1403,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D334 | the buttons always on the play screen, at most (Mid's UI_BUDGET): a new control replaces one | 33 | N230 |
 | D340 | the draw rate at rest (SoRen's tick: 50 ms a frame live, 150 ms idle, 250 ms dark): paused, behind a full-screen page or card, or with nothing moving, the world steps and draws idle frames a second; hidden, dark | {idle: 15, dark: 4} | N238 |
 | D335 | the match log: a row a minute (Mid's matchLog), for Claude to read; the tap counts' place on the phone (Mid's TAPS) | {row: 60, taps: fk.taps} | N230 |
+| D341 | the day's fraction at which the sun stands highest, so a match opens in morning light (Mid's CLIMATE.noon; at 0 the sun would be at midnight) | 0.28 | N240 |
 
 ## rules
 
@@ -1476,12 +1492,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN2 | the Build tabs: six, in Base's order, up to nine buildings each, three to a row (each cell two slots wide) | {Home: [BTC1, BR1, BR2, BCR2, BP4, BP6, BP7], Land: [BCL1, BI1, BCL2, BI3, BCT2, BI2, BCL3, BCL4, BI5], War: [BM1, BM2, BM3, BM4, BI9, BP10, | N134 |
 | SN3 | buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the Net is the Natives' (it waits with them) | [BS1, BTC5, BTC6, BTC7, BTC8, BW4, BF2] | N135; N172; N198 |
 | SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [queue, Spawn], [train, Spawn], [tech, Research], [troops, | N136; N170; N194 |
-| SN5 | the top ribbon: the five stores, sound, play, mail | [food, wood, stone, gold, iron, mute, play, mail] | N137 |
+| SN5 | the top ribbon: the five stores, sound, pause, the small map (Albert, Nov 7: no status strip, iron stays, Map beside mute and pause; Mail returns with its door) | [food, wood, stone, gold, iron, mute, pause, map] | N137; N241 |
 | SN6 | readings with no row: the second top row was cut, each waits for its new home | [season and time of day, the clock to the bell, people and room, idle villagers, records, rank, army] | N138 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |
 | SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | N140 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | N141 |
 | SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | N142; N143 |
+| SN15 | the Pause screen: the game's settings while it waits (Albert, Nov 7) | {ticks: [], rows: title, Fast, New game, the Yard in the test field, resume; the three volumes} | N241 |
 | SN14 | words on the map (Mid's LABEL, labelK, mapFont, tag): px at the opening zoom, never under floor; a label's pill (padding, edge, rise, height, inset) | {px: 12, floor: 9, zoom: 1.3, pad: [10, 4, 13, 19, 5]} | N208 |
 
 ## shells
@@ -2035,4 +2052,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J29 | the Guide's and History's fixed words (Mid's guideModel, HIST_NOTE, HIST_ASK, yearOf, guideMd): where a unit no building trains is trained, a building off the Build menu and where it comes from, a shell whose history line is not under its look (key), the eras History dates by name (a year, BC below none), the Markdown's headings | {at: the Town Center, start: where you start, secs:  s, by: ×, beats: {times:  ×, bld: buildings, only: buildings only}, off: {BS1: stands o | N234; N161 |
 | J30 | the song line, said by the Guide and the Sound page (Mid's SONG) | There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed | N234 |
 | J31 | a Build cell's second line when the store cannot pay: the word, its colour how near (the shortfall is in the tap's Needs) | Short | N132 |
+| J32 | the Pause screen's words: its title, the pause mark on the top bar (SoRen's), New game and its confirm (Albert, Nov 7: New game on the pause screen, with a confirm) | {title: Paused, mark: ❙❙, newGame: New game, sure: Sure? Tap again} | N241 |
 

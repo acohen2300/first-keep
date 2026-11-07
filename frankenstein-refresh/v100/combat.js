@@ -283,7 +283,7 @@ function convert(u, dt) { const t = u.cv, full = !!t && (armed(t) ? ECON.armyFul
   u.path = null; u.cvT = (u.cvT || null) + dt; if (u.cvT < CV.secs * FK.stat(u.code, u.side, 'convert')) return true; const was = t.side;
   Object.assign(t, { side: u.side, job: 'idle', target: null, focus: null, bn: null, hb: null, path: null, goal: null, was: null, ord: null }); t.hpMax = hpMax(t); t.hp = Math.min(t.hp, t.hpMax);
   Object.assign(u, { cvCd: K.t + CV.cd, cvT: null, job: 'idle', cv: null }); const name = FK.SH[t.code].name.toLowerCase(); if (u.side === ME) { rebattalion(); say(TW.convert.won, { name }); } else if (was === ME) say(TW.convert.lost, { name }); return true; }
-function heal(dt) { const H = [...things().filter((t) => t.kind === 'bld' && FK.has(t, 'Heal') && up(t)), ...units().filter((u) => FK.has(u, 'Heal') && !u.inside && alive(u))]; if (!H.length) return; // E470
+function heal(dt) { const H = [...FK.blds().filter((t) => FK.has(t, 'Heal') && up(t)), ...units().filter((u) => FK.has(u, 'Heal') && !u.inside && alive(u))]; if (!H.length) return; // E470
   for (const u of units()) { if (!(u.hp < u.hpMax) || !troop(u)) continue; let best = null; for (const h of H) { const R = D.heal[h.code]; if (h.side === u.side && R.heal > best && gap(u, h) < R.r) best = R.heal; } if (best) u.hp = FK.relax(u.hp, u.hpMax, u.hpMax / (best * FK.stat(u.code, u.side, 'heal')), dt); } }
 const watches = (b, u) => b.side !== u.side && SIDES[b.side] && FK.has(b, 'Shoot') && up(b) && atWar(b.side, u.side) && gap(u, b) < TOWER + FK.stat(b.code, b.side, 'spysight'); // E471
 const guarded = (b) => FK.bldsNear(b.bx, b.by, SA.far * T, (d) => d.side === b.side && FK.has(d, 'Shoot') && up(d) && gap(b, d) < TOWER + FK.stat(d.code, d.side, 'spysight'));

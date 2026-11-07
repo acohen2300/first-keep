@@ -3143,3 +3143,44 @@ MODIFIED (1):
 LOCKED (2077 of 2078): byte for byte as sealed, 1,347,515 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2078 items sealed · 1954 book entries · 91 laws · 239 citations, 47 still to open · 7 known
+
+## F1 · Base's flow into v100's shells: a match opens in morning light, the camera never jumps on a draw-level change, the ghost carries its label and only a touch on it moves it, the plague cap holds (G1's one finished item); then the menu fixes (Map to the top bar, the Yard row out, War on Build, the error screen's line and restart to New Game, New game on pause), dead buttons, locked cells say why, tab taps sound · 2026-11-07 16:39
+Albert, Nov 7 15:44: make it so; 15:46: do it all yourself. Measure: gameplay Base, features Mid, structure v100
+Opened: code:index.html, code:econ.js, code:menu.js, code:sound.js, book:measure, book:screen, book:words, book:colours, book:comments, book:citations, book:rules, book:sound, code:ai.js, code:combat.js
+MODIFIED (33):
+- book:citations:N240 · added
+- book:citations:N241 · added
+- book:comments:E698 · added
+- book:comments:E699 · added
+- book:comments:E700 · added
+- book:comments:E701 · added
+- book:comments:E702 · added
+- book:comments:E703 · added
+- book:comments:E704 · added
+- book:comments:E705 · added
+- book:comments:E706 · added
+- book:comments:E707 · added
+- book:comments:E708 · added
+- book:comments:E709 · added
+- book:comments:E710 · added
+- book:measure:D206 · 1,328 → 1,468 bytes
+- book:measure:D341 · added
+- book:screen:SN15 · added
+- book:screen:SN5 · 181 → 299 bytes
+- book:words:J28 · 1,341 → 1,350 bytes
+- book:words:J32 · added
+- code:ai.js · 26,971 → 26,952 bytes
+- code:combat.js · 59,036 → 59,017 bytes
+- code:econ.js · 105,311 → 105,170 bytes
+- code:index.html#b-the-buildings · 1,391 → 1,468 bytes
+- code:index.html#floor-3-non-movables · 7,864 → 8,100 bytes
+- code:index.html#floor-5-movables · 15,094 → 15,100 bytes
+- code:index.html#floor-6-climate · 24,629 → 24,632 bytes
+- code:index.html#frames · 1,035 → 1,112 bytes
+- code:index.html#the-door · 13,873 → 13,981 bytes
+- code:index.html#the-view · 946 → 1,009 bytes
+- code:index.html#touch · 7,472 → 7,511 bytes
+- code:menu.js · 80,099 → 81,672 bytes
+LOCKED (2063 of 2096): byte for byte as sealed, 1,002,607 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2096 items sealed · 1972 book entries · 91 laws · 241 citations, 47 still to open · 7 known

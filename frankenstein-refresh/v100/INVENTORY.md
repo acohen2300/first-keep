@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,142 | 491,283 | 491,421 |
-| Books | 1954 | 0 | 552,907 | 553,579 |
+| Game code | 29 | 3,146 | 493,285 | 493,424 |
+| Books | 1972 | 0 | 556,497 | 557,173 |
 | Laws | 91 | 0 | 18,646 | 19,146 |
 | Tools | 4 | 1,759 | 284,794 | 285,032 |
 
@@ -14,33 +14,33 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
 | index.html#page | 30 | 1,663 | 1,663 | 10 |
-| index.html#frames | 13 | 1,035 | 1,035 | 3 |
+| index.html#frames | 13 | 1,112 | 1,112 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,816 | 1,820 | 38 |
 | index.html#floor-2-terrain | 82 | 8,512 | 8,516 | 130 |
-| index.html#floor-3-non-movables | 60 | 7,860 | 7,864 | 75 |
+| index.html#floor-3-non-movables | 61 | 8,096 | 8,100 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
-| index.html#the-view | 9 | 942 | 946 | 14 |
-| index.html#the-door | 94 | 13,869 | 13,873 | 69 |
+| index.html#the-view | 9 | 1,005 | 1,009 | 14 |
+| index.html#the-door | 94 | 13,977 | 13,981 | 69 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
-| index.html#b-the-buildings | 15 | 1,387 | 1,391 | 20 |
-| index.html#floor-5-movables | 127 | 15,090 | 15,094 | 93 |
+| index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
+| index.html#floor-5-movables | 127 | 15,096 | 15,100 | 93 |
 | index.html#the-body-s-laws | 31 | 2,564 | 2,568 | 34 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
-| index.html#floor-6-climate | 154 | 24,617 | 24,629 | 237 |
+| index.html#floor-6-climate | 154 | 24,620 | 24,632 | 236 |
 | index.html#floor-7-display | 44 | 7,337 | 7,341 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 21,806 | 21,810 | 0 |
 | index.html#the-woods-cache | 51 | 4,759 | 4,763 | 71 |
-| index.html#touch | 50 | 7,468 | 7,472 | 54 |
-| menu.js | 456 | 80,057 | 80,099 | 578 |
-| econ.js | 576 | 105,311 | 105,311 | 72 |
-| combat.js | 354 | 59,036 | 59,036 | 84 |
-| ai.js | 169 | 26,971 | 26,971 | 25 |
+| index.html#touch | 50 | 7,507 | 7,511 | 54 |
+| menu.js | 459 | 81,629 | 81,672 | 578 |
+| econ.js | 576 | 105,170 | 105,170 | 72 |
+| combat.js | 354 | 59,017 | 59,017 | 84 |
+| ai.js | 169 | 26,952 | 26,952 | 25 |
 | sound.js | 57 | 5,938 | 5,938 | 66 |
 
 ## The books
@@ -49,20 +49,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,092 |
-| citations | 239 | 48,252 |
+| citations | 241 | 48,788 |
 | colours | 21 | 4,542 |
-| comments | 689 | 116,234 |
+| comments | 702 | 118,393 |
 | ground | 6 | 1,524 |
 | mass | 24 | 3,740 |
-| measure | 311 | 127,149 |
+| measure | 312 | 127,516 |
 | rules | 74 | 28,016 |
-| screen | 11 | 3,264 |
+| screen | 12 | 3,616 |
 | shells | 109 | 23,178 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,387 |
 | sprites | 65 | 25,607 |
 | tech | 259 | 75,753 |
-| words | 31 | 87,576 |
+| words | 32 | 87,913 |
 
 ## The shells
 
@@ -151,4 +151,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 
-2078 items sealed · 1954 book entries · 91 laws · 239 citations, 47 still to open · 7 known
+2096 items sealed · 1972 book entries · 91 laws · 241 citations, 47 still to open · 7 known

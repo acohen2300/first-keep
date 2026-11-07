@@ -12,7 +12,7 @@ const tall = (page) => !!(SCR[page] && SCR[page].ticks.includes('Tall')); // E17
 const OPTS = { // E176
   diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open', 'open'], ['Siege', 'siege'], ['Silk Road', 'road'], ['Last Keep', 'last']],
   world: [['Real'], ['Fantasy']], tension: [['Winner'], ['Diplomacy']], daily: [['Off', false], ['On', true]],
-  civ: [['Roman'], ['Han'], ['Persian'], ['Mongol'], ['Maurya'], ['Mali']], hazard: [['Hardest'], ['Famine'], ['Weather'], ['Drought'], ['Outlaws'], ['Plague']] };
+  civ: [['Roman'], ['Han'], ['Persian'], ['Mongol'], ['Maurya'], ['Mali']], hazard: [['Hardest', 'hard'], ['Famine', 'starve'], ['Weather', 'winter'], ['Drought', 'drought'], ['Outlaws', 'horde'], ['Plague', 'plague']] };
 const BUILT = { len: 1, daily: 1, civ: true, scen: true }; // E177
 const ICON = { food: '🍖', wood: '🪵', gold: '🪙', stone: '🪨', iron: '⛓' };
 const ORDER = ['food', 'wood', 'stone', 'gold', 'iron'], NAME = { food: 'Food', wood: 'Wood', stone: 'Stone', gold: 'Gold', iron: 'Iron' }; // E178
@@ -81,10 +81,10 @@ const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id=
 const topEl = document.createElement('div'); topEl.className = 'topbar'; document.body.appendChild(topEl);
 const toastEl = document.createElement('div'); toastEl.id = 'toast'; document.body.appendChild(toastEl);
 const $ = (id) => document.getElementById(id);
-const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Home', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
+const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Land', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
 const toast = (msg, secs = D.toast) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = secs; };
-const WD = fromBook('words'), TW = WD.troops, blessed = () => WAR.armyOf(ME).filter((u) => WAR.SQ.sel == null || u.bn === WAR.SQ.sel), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
+const WD = fromBook('words'), TW = WD.troops, TP_ = WD.pause, blessed = () => WAR.armyOf(ME).filter((u) => WAR.SQ.sel == null || u.bn === WAR.SQ.sel), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
 const fmt = (n) => (n >= SAY.whole ? Math.round(n / SAY.thousand) + WD.thousand : n >= SAY.thousand ? Math.floor(n / SAY.tenth) / (SAY.thousand / SAY.tenth) + WD.thousand : String(Math.floor(n)));
 const plural = (n) => { for (const [p, f, e] of WD.plural) { const re = new RegExp(p, f); if (re.test(n)) return n.replace(re, e); } }; // E273
 const some = (k, n) => (k === 1 ? n : plural(n));
@@ -104,7 +104,7 @@ const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
 const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null; };
 const trainer = (c) => ECON.lineFor(ME, c), P = D.place, line = (c) => FK.SH[c].ticks.includes('Line'), walled = (c) => line(c) || FK.SH[c].ticks.includes('Gate'); // E332
-const count = (c) => things().filter((t) => t.kind === 'bld' && t.side === ME && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
+const count = (c) => FK.blds().filter((t) => t.side === ME && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
 const summary = () => `${OPTS.len[S.opt.len][0]} · Daily ${OPTS.daily[S.opt.daily][0].toLowerCase()}`;
 const aging = (c) => `${plural(U[c][0])} need the ${FK.SH[c].age} age`; // E373
 const isFind = (t) => t && t.kind !== 'unit' && t.kind !== 'bld' && ECON.yieldOf(t);
@@ -138,12 +138,13 @@ const VERBS = {
   alarm: { label: (k) => `<span class="t">${SVG[AW.cells[k].icon]}</span>${AW.cells[k].name}`, whyNot: () => (FK.seatOf(ME) ? '' : AW.noSeat), run: (k) => ECON.alarm(k) }, // E451
   work: { label: () => `<span class="t">${SVG[AW.cells.work.icon]}</span>${AW.cells.work.name}`, whyNot: () => '', run: () => ECON.allClear() },
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // E189
+  hazard: { label: (id) => `${OPTS.hazard.find(([, k]) => k === id)[0]}<small>${D.hazards.pts[id]}</small>`, whyNot: () => '', run: (id) => { FK.HZ.has(id) ? FK.HZ.delete(id) : FK.HZ.add(id); } }, // E705
   start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1], mine = civOf(S.opt.civ); ECON.deal([mine, ...PEOPLES().filter((k) => k !== mine).map((k) => [FK.rng(), k]).sort(([a], [b]) => a - b).map(([, k]) => k)]); ECON.setBell(o('len') || Infinity); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
   job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(ME).length ? 'No villagers' : n < 0 && !ECON.jobs(ME)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(ME, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
   yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(ME)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[ME].rally = SIDES[ME].rally === y ? null : y; } }, // E191
   ageUp: { label: () => { const r = read(); return !r.next ? 'Last age' : `${r.next} age${r.aging ? `<small>rising, ${Math.ceil(r.aging)}s</small>` : price(r.ageCost)}`; }, whyNot: () => { const c = ECON.ageCost(ME); return !c ? 'Last age' : SIDES[ME].aging ? 'Already rising' : !ECON.canPay(ME, c) ? `Needs ${costText(c)}` : ''; }, run: () => ECON.ageUp(ME) },
-  pick: { label: (c) => `${B[c][0]} ${count(c)}${picked(c) ? `<small>${ghostSay(S.ghost)}</small>` : price(D.cost[c])}`, // E192
+  pick: { label: (c) => { const w = picked(c) ? '' : ECON.capWhy(ME, c); return `${B[c][0]} ${count(c)}${picked(c) ? `<small>${ghostSay(S.ghost)}</small>` : w ? `<small>${w}</small>` : price(D.cost[c])}`; }, // E192
     whyNot: (c) => (picked(c) ? VERBS.build.whyNot() : ECON.capWhy(ME, c) || (!ECON.canPay(ME, D.cost[c] || {}) ? `Needs ${costText(D.cost[c])}` : '')), run: (c) => { if (picked(c)) return VERBS.build.run(); S.tab = null; S.ghost = { code: c, i: -99, j: -99, ok: false, pts: [], cells: [] }; if (!line(c)) { const [w, h] = FK.size(); ghostTo(w * P.half, h * P.half, P.start); } } },
   build: { label: () => 'Build', whyNot: () => { const g = S.ghost; return !g ? 'Pick a building' : line(g.code) ? (!g.cells.length ? 'Tap the corners' : g.bad === g.cells.length ? 'Something is in the way' : '') : g.ok ? '' : g.why || 'Slide to place'; }, run: () => place(S.ghost) },
   group: { label: (g) => g, whyNot: () => '', run: (g) => { S.group = g; S.ghost = null; FK.dirty(); } },
@@ -160,6 +161,8 @@ const VERBS = {
   qclose: { label: () => SVG.close, whyNot: () => '', run: () => { S.qa = null; } },
   follow: { label: () => 'Follow', whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
   map: { label: () => 'Map', whyNot: () => '', run: () => { FK.show.M = !FK.show.M; FK.dirty(); } },
+  pause: { label: () => (FK.paused() ? SVG.play : TP_.mark), whyNot: () => '', run: () => { FK.pause(); S.tab = FK.paused() ? 'Pause' : null; } }, // E702
+  newgame: { label: () => (S.sure ? TP_.sure : TP_.newGame).replace(' ', '<small>') + '</small>', whyNot: () => '', run: () => { if (!S.sure) { S.sure = true; return; } S.sure = false; FK.pause(false); S.prev = null; S.tab = 'Start'; } }, // E703
   recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
   train: { label: (c, b) => `${FK.rankName(c, ME)}${price(ECON.priceOf(ME, c, b))}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, ECON.priceOf(ME, c, b)) ? `Needs ${costText(ECON.priceOf(ME, c, b))}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },
   untrain: { label: () => '−', whyNot: (b) => (!b.q || !b.q.length ? 'Nothing queued' : ''), run: (b) => ECON.unqueue(b) },
@@ -197,7 +200,7 @@ const queue6 = (q, done, more) => { const n = SCR.mold.slots, shown = more ? q.s
 const SCREENS = {
   Start: () => [head('A new game', !!S.prev), row(part('Difficulty', 3, 'diff', 3)), row(part('Length', 2, 'len', 4)), row(part('Scenario', 2, 'scen', 4)),
     row(part('World', 1, 'world', 2)), row(part('Tension', 1, 'tension', 2), part('Daily', 1, 'daily', 2)), row(part('', 0, 'civ', 6)),
-    `<p class="blurb"><b>${OPTS.civ[S.opt.civ][0]}</b><br>${civLine(civOf(S.opt.civ))}</p>`, row(`<div class="cells seg" style="grid-column:span 6;--n:6">${OPTS.hazard.map(([h]) => vcell('later', h, null, 'two')).join('')}</div>`),
+    `<p class="blurb"><b>${OPTS.civ[S.opt.civ][0]}</b><br>${civLine(civOf(S.opt.civ))}</p>`, row(`<div class="cells seg" style="grid-column:span 6;--n:6">${OPTS.hazard.map(([, id]) => vcell('hazard', id, null, 'two', FK.HZ.has(id))).join('')}</div>`),
     row(span(6, vcell('start', null, null, 'go')))],
   Build: () => { const g = GROUPS[S.group];
     return [head('Build'), `<div class="row6 tabs">${Object.keys(GROUPS).map((x) => vcell('group', x, null, '', S.group === x)).join('')}</div>`,
@@ -209,6 +212,7 @@ const SCREENS = {
     if (S.htab !== 'Town') return [title, tabs, stances(S.htab)];
     return [title, tabs, row(...queue6(h.queue || [], h.done, h.more)), frame([h.k ? vcell('train', born(), h.k, 'two') : '<i></i>', vcell('later', 'Scout', null, 'two'), '<i></i>',
       vcell('ageUp', null, null, 'two', !!r.aging), vcell('later', 'Tech', null, 'two'), vcell('later', 'Tech', null, 'two'), vcell('later', 'Tech', null, 'two'), vcell('later', 'All tech', null, 'two'), '<i></i>'])]; },
+  Pause: () => [row(span(2, cell(TP_.title, 'title')), vcell('fast', null, null, '', show.fast), vcell('newgame', null, null, '', S.sure), FK.TEST ? tab('Layers', 'Yard', 'yard') : '<i></i>', vcell('pause', null, null, '', true)), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E706
   Layers: () => [row(span(2, cell('Yard', 'title')), vcell('fast', null, null, '', show.fast), vcell('new'), vcell('later', 'book'), vcell('close')), ...[0, 2, 4, 6].map((i) => row(...LAYERS.slice(i, i + 2).map(([c, name]) => `<span class="lab" title="${name}">${c}</span><div class="cells seg" style="grid-column:span 2;--n:2">${vcell('show', c, null, '', show[c])}${vcell('lock', c, null, '', S.lock[c])}</div>`))), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E198
 };
 const page = () => (S.tab && SCREENS[S.tab] ? SCREENS[S.tab]().join('') : '');
@@ -232,10 +236,8 @@ function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S
   return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
-const base = (r) => S.war ? row(tab('Layers', 'Yard', 'yard'), gap(3), vcell('map', null, null, '', FK.show.M), vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`)) + warBase()
-  : row(tab('Layers', 'Yard', 'yard'), gap(3), vcell('map', null, null, '', FK.show.M), vcell('war', null, null, 'ic war').replace('</button>', `<span class="t">${SVG.war}</span>War</button>`))
-  + row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y)))
-  + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
+const base = (r) => (S.war ? warBase() : '') + row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
+  + row(S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
 const MID = { map: () => held(vcell('rally', null, null, 'two'), 'ambush') + vcell('choke', null, null, 'two', S.tool === 'choke') + vcell('reinforce', null, null, 'two') + vcell('later', 'Map', null, 'two'), train: () => classes().map((k) => vcell('kind', kindOf(k), null, 'ic')).join(''),
   squad: () => WA.squads.map((n, i) => held(vcell('squad', i, null, 'two', WAR.SQ.sel === i), 'callHome', i)).join('') + vcell('setup', null, null, 'two'), setup: () => Object.keys(WAR.DIAL).map((k) => vcell('dial', k, null, 'two')).join('') + vcell('squads', null, null, 'two'), direct: () => classes().map((c) => held(vcell('move', c, null, 'two'), 'move', c, 'h')).join('') };
@@ -246,7 +248,7 @@ const warBase = () => `<div class="warbase">${vcell('work', null, null, 'ic')}${
 const sword = svg('<path d="M14 4l6-1-1 6-9 9-3-3zM7 15l-3 3 2 2 3-3"/>').replace('currentColor', 'var(--rr)'), scales = svg('<path d="M12 4v16M7 20h10M5 7h14M5 7l-3 6h6zM19 7l-3 6h6z"/>'), hands = svg('<path d="M3 11l4-4 4 2 3-2 4 4 3 0M7 13l3 3c1 1 2 1 3 0l4-4"/>').replace('currentColor', 'var(--rg)');
 const PEOPLE = { Relations: ['Raiders', 'Rivals', 'Fortress'], Misfits: ['Natives', 'Outlaws', 'Bandits', 'Robbers'] };
 const stances = (t) => `<div class="frame f6">${PEOPLE[t].map((n) => `<span class="lab two-l" style="grid-column:span ${t === 'Misfits' ? 1 : 3}">${n}<br><span style="color:var(--rr)">Foe</span></span>${t === 'Misfits' ? span(2, vcell('later', 'Bribe', null, 'two')) : ''}<div class="cells seg dim" style="grid-column:span 2;--n:3">${cell(sword, 'dim on')}${cell(scales, 'dim')}${cell(hands, 'dim')}</div>${vcell('later', 'check', null, '')}`).join('')}<p class="blurb" style="grid-column:span 6">${t === 'Misfits' ? 'Pick a bribe or a stance, then its ✓' : 'Pick a stance, then its ✓'} · not built yet</p></div>`;
-const TOPCELL = { mute: () => vcell('mute'), play: () => vcell('later', 'play'), mail: () => vcell('later', 'mail') };
+const TOPCELL = { mute: () => vcell('mute'), pause: () => vcell('pause', null, null, '', FK.paused()), map: () => vcell('map', null, null, '', FK.show.M) }; // E701
 const topbar = (r) => `<div class="strip big">${SCR.top.map((c) => (TOPCELL[c] ? TOPCELL[c]() : cell(`<span class="t">${SVG[c]}</span>${fmt(r.store[c])}`))).join('')}</div>`; // E204
 let acc = 0;
 function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read(); // E693
@@ -259,7 +261,7 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
 }
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|');
-  if (verb === 'tab') { S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; render(true); return; } act(verb, argOf(a), argOf(a2)); }
+  if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; render(true); return; } act(verb, argOf(a), argOf(a2)); }
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
 let lpT = 0; const lpStop = () => clearTimeout(lpT); // E428
@@ -286,7 +288,7 @@ function place(g) { const sel = FK.sel(), [first] = Object.keys(D.cost[g.code] |
   if (at) { [g.i, g.j] = at; g.ok = true; g.why = ''; } else S.ghost = null; FK.dirty(); }
 let drag = null, edge = null;
 for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const g = S.ghost; if (!g) return; // E337
-  if (ev === 'pointerdown') drag = line(g.code) ? wallHit(g, e.clientX, e.clientY) : { lift: P.lift * (e.pointerType !== 'mouse') }; if (!drag) return;
+  if (ev === 'pointerdown') { const lift = P.lift * (e.pointerType !== 'mouse'); if (line(g.code)) drag = wallHit(g, e.clientX, e.clientY); else { const [, n] = B[g.code], [gx, gy] = g.i > -50 ? FK.toScreen(...FK.toView(...FK.toBoard((g.i + n * P.half) * D.tile, (g.j + n * P.half) * D.tile), D.land)) : [NaN, NaN], r = Math.max(P.lift, n * D.tile * FK.cam.z * P.grab); drag = !(g.i > -50) || Math.min(Math.hypot(e.clientX - gx, e.clientY - gy), Math.hypot(e.clientX - gx, e.clientY - lift - gy)) < r ? { lift } : null; } } if (!drag) return; // E700
   if (ev === 'pointerup' || ev === 'pointercancel') { drag = edge = null; render(true); } else if (line(g.code)) { if (ev === 'pointermove') wallDrag(drag, e.clientX, e.clientY); } else { edge = { x: e.clientX, y: e.clientY }; ghostTo(edge.x, edge.y - drag.lift); }
   e.stopImmediatePropagation(); }, true);
 const tints = new WeakMap(), tinted = (c, col) => { const T = tints.get(c) || {}; if (!T[col]) { const t = Object.assign(document.createElement('canvas'), { width: c.width, height: c.height }), x = t.getContext('2d'); Object.assign(t, { ax: c.ax, ay: c.ay, q: c.q }); x.drawImage(c, 0, 0); x.globalCompositeOperation = 'source-atop'; x.globalAlpha = P.tint; x.fillStyle = col; x.fillRect(0, 0, t.width, t.height); T[col] = t; tints.set(c, T); } return T[col]; }; // E338
@@ -300,12 +302,12 @@ FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g) return; const [, n] = B[g
   else if (g.i > -50) { const ci = g.i + n * P.half, cj = g.j + n * P.half, seg = (a, z) => { ctx.moveTo(...at(...a)); ctx.lineTo(...at(...z)); }; ctx.strokeStyle = COL.rb; ctx.lineWidth = P.width.guide; ctx.setLineDash(P.dash.guide); ctx.beginPath();
     for (const b of things()) if (b.kind === 'bld' && b.side === ME && !ECON.wallish(b)) { const mi = b.i + b.n * P.half, mj = b.j + b.n * P.half, pad = P.pad + (n + b.n) * P.half; if (Math.abs(mi - ci) >= P.guide || Math.abs(mj - cj) >= P.guide) continue;
       if (mi === ci) seg([ci, Math.min(mj, cj) - pad], [ci, Math.max(mj, cj) + pad]); if (mj === cj) seg([Math.min(mi, ci) - pad, cj], [Math.max(mi, ci) + pad, cj]); }
-    ctx.stroke(); ctx.globalAlpha = P.ghost; FK.blit(tinted(FK.bldSprite(g.code, SIDES[ME].col, s, ...FK.levelOf({ code: g.code, side: ME })), g.ok ? COL.rg : COL.rr), ...at(ci, cj), s); }
+    ctx.stroke(); const sp = tinted(FK.bldSprite(g.code, SIDES[ME].col, s, ...FK.levelOf({ code: g.code, side: ME })), g.ok ? COL.rg : COL.rr), [gx, gy] = at(ci, cj); FK.tag(ctx, g.ok ? `${ECON.nameOf(g.code)} · ${costText(D.cost[g.code] || {})}` : g.why, gx, gy - sp.ay * s - P.lift * P.half); ctx.globalAlpha = P.ghost; FK.blit(sp, gx, gy, s); } // E699
   ctx.restore(); });
 // E207
 function suggest(k) { const G = D.suggest, [bx, by] = FK.tileMid(k), [ki, kj] = ECON.at(k), R = G.r * D.tile, sc = {}, far = (t) => Math.hypot(t.bx - bx, t.by - by), add = (c, v) => { if (c && D.cost[c] && !ECON.capWhy(ME, c)) sc[c] = (sc[c] || 0) + v; }; // E343
   const bought = FK.bought, camp = (y) => bought('Drop-off').find((c) => FK.SH[c].drop.includes(y)), [house] = bought('House'), [wall] = bought('Line'), [gate] = bought('Gate'), [field] = bought('Field');
-  const mine = things().filter((t) => t.kind === 'bld' && t.side === ME && far(t) < R), near = (y) => mine.some((t) => !FK.has(t, 'Seat') && (FK.SH[t.code].drop || []).includes(y));
+  const mine = FK.blds().filter((t) => t.side === ME && far(t) < R), near = (y) => mine.some((t) => !FK.has(t, 'Seat') && (FK.SH[t.code].drop || []).includes(y));
   new Set(things().filter((t) => t.kind !== 'bld' && t.amount > 0 && far(t) < R * G.near).filter((t) => { const d = FK.dropFor({ bx: t.bx, by: t.by, side: ME }, ECON.yieldOf(t)); return !d || FK.dist(d, t) > G.dropR * D.tile; }).map((t) => camp(ECON.yieldOf(t)))).forEach((c) => add(c, G.drop));
   for (const b of mine) add(FK.has(b, 'House') ? house : FK.has(b, 'Field') ? (near('food') ? field : camp('food')) : FK.has(b, 'Spawn') ? bought('Spawn').find((c) => !count(c)) || b.code : FK.has(b, 'Line') ? gate : null, FK.has(b, 'Seat') ? G.keep : G.kin);
   const disc = []; for (let j = kj - G.area; j <= kj + G.area; j++) for (let i = ki - G.area; i <= ki + G.area; i++) if (Math.hypot(i - ki, j - kj) <= G.area) disc.push(j * N + i);
@@ -363,20 +365,21 @@ FK.on('tick', (dt) => { const real = dt / (show.fast ? D.fast : 1); if (edge && 
 // E635
 const MS = D.mail, TL = D.tell, MWD = WD.mail, PWD = WD.peace, CIVS = WD.civs, ML = D.milestones, mail = [], post = [], hush = (x) => x.replace(/[\d,.]+/g, '#'), [BEAT] = D.peaceBeat, seen = (at) => FK.inSight(at, ME), [, , ALLY] = fromBook('sides').stances; let newsT = -Infinity, newsI = null;
 const dirOf = (a, b) => { const n = MWD.dirs.length; return MWD.dirs[(Math.round((Math.atan2(b.by - a.by, b.bx - a.bx) / (Math.PI + Math.PI)) * n) + n) % n]; }; // E636
-function reach(text, m) { const at = m.at, h = FK.seatOf(ME); if (!at || m.told || seen(at)) return {}; const within = (L, r) => L.some((t) => !t.gone && FK.dist(t, at) < r * D.tile), blds = (side) => FK.things().filter((t) => t.kind === 'bld' && t.side === side), mine = blds(ME); // E637
+function reach(text, m) { const at = m.at, h = FK.seatOf(ME); if (!at || m.told || seen(at)) return {}; const within = (L, r) => L.some((t) => !t.gone && FK.dist(t, at) < r * D.tile), blds = (side) => FK.blds().filter((t) => t.side === side), mine = blds(ME); // E637
   if (m.cls === MWD.urgent && within([...mine, ...FK.units().filter((u) => u.side === ME)], TL.hear * TL.gun ** (SIDES[ME].age >= TL.gunAge))) return { text: MWD.fight.replace('{dir}', dirOf(h || at, at)) };
   const ally = D.players.some((q) => q !== ME && WAR.stance(ME, q) === ALLY && within(blds(q), TL.near)), need = within(mine, TL.near) ? TL.levels.near : within(mine, TL.far) ? TL.levels.far : ally ? TL.levels.ally : TL.levels.all, lvl = FK.stat('', ME, 'news');
   if (lvl < need || !h) return null; const L = FK.wayLen(FK.tileAt(at.bx, at.by), h); return { delay: (L < Infinity ? L : FK.dist(h, at)) / D.upm / D.speed[lvl >= TL.ridesAt ? TL.ride : TL.foot] }; }
-function say(text, m = {}) { const N = reach(text, m); if (!N) return; if (N.delay > BEAT) return void post.push({ t: FK.K.t + N.delay, text, m: { ...m, told: true, why: MWD.post } }); if (N.text) { text = N.text; m = { ...m, at: null }; } // E638
+function say(text, m = {}) { if (tall(S.tab) && !m.told) return void post.push({ t: FK.K.t, text, m: { ...m, told: true } }); // E707
+  const N = reach(text, m); if (!N) return; if (N.delay > BEAT) return void post.push({ t: FK.K.t + N.delay, text, m: { ...m, told: true, why: MWD.post } }); if (N.text) { text = N.text; m = { ...m, at: null }; } // E638
   const grp = m.grp || 'reply', key = hush(text), same = mail.find((x) => x.grp === grp && x.key === key && FK.K.t - x.t < MS.merge), quiet = MWD.quiet.includes(m.cls);
   if (same) Object.assign(same, { t: FK.K.t, text }).times.push(FK.K.t); else { mail.unshift({ text, grp, key, cls: m.cls || '', why: m.why || '', at: m.at ? { bx: m.at.bx, by: m.at.by } : null, times: [FK.K.t], t: FK.K.t }); mail.length = Math.min(mail.length, MS.keep); }
   if (!quiet) toast(same ? `${text} ×${same.times.length}` : text, MS.secs); }
-function postTick() { const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(null, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
+function postTick() { if (tall(S.tab)) return; const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(null, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
 function newsTick() { if (FK.K.t - newsT < TL.every || FK.K.t < TL.after) return; newsT = FK.K.t; const L = WD.world[SIDES[ME].age] || WD.world.at(-1); say(L[++newsI % L.length], { grp: 'chronicle', cls: 'news' }); } // E640
 // E641
 const PEOPLES = () => Object.keys(CIVS).filter((k) => CIVS[k].name), civOf = (i) => PEOPLES().find((k) => CIVS[k].name === OPTS.civ[i].find(String)), civLine = (k) => { const u = Object.keys(FK.SH).find((c) => FK.SH[c].civ === k); return !u ? '' : CIVS.blurb.replace('{unit}', FK.SH[u].name).replace('{base}', FK.SH[FK.SH[u].replaces].name.toLowerCase()).replace('{wonder}', CIVS[k].wonder).replace('{bonus}', WD.why['bonus:' + k] || ''); };
 // E642
-const MSW = WD.milestones, TIP = WD.tips, LEARN = 'fk.learned', learned = {}, mine = (tick) => FK.things().filter((t) => t.kind === 'bld' && t.side === ME && FK.has(t, tick) && t.done >= true), knows = (k) => SIDES[ME].techs.has(TECHOF[k]), army = () => WAR.armyOf(ME), marching = () => army().filter((u) => u.ord); let shown = new Set(), slipT = -Infinity, mustered = false, tipNow = '';
+const MSW = WD.milestones, TIP = WD.tips, LEARN = 'fk.learned', learned = {}, mine = (tick) => FK.blds().filter((t) => t.side === ME && FK.has(t, tick) && t.done >= true), knows = (k) => SIDES[ME].techs.has(TECHOF[k]), army = () => WAR.armyOf(ME), marching = () => army().filter((u) => u.ord); let shown = new Set(), slipT = -Infinity, mustered = false, tipNow = '';
 try { Object.assign(learned, JSON.parse(localStorage.getItem(LEARN) || '{}')); } catch (e) {}
 const L = (k) => (learned[k] || []).length >= ML.learned, learn = (k) => { if (L(k)) return; learned[k] = [...(learned[k] || []), Math.round(FK.K.t)]; try { localStorage.setItem(LEARN, JSON.stringify(learned)); } catch (e) {} }; // E643
 function learnAct(verb, a, b) { if (verb === 'train') learn('train:' + a); else if (verb === 'job' && b > null) { learn('job'); learn('job:' + a); } else if (verb === 'build' && S.ghost) learn('build:' + S.ghost.code); else if (verb === 'ageUp') learn('age'); } // E644

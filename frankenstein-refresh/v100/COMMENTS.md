@@ -15,6 +15,19 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E695 | index.html#the-door | at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, as SoRen does; paused, time stands still |
 | E696 | index.html#the-door | the screen stays awake while a match runs; let go when paused, at rest or hidden; a browser without the lock plays on |
 | E697 | sound.js | the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touch builds it again |
+| E698 | index.html#the-view | a draw-level change redraws the canvas at its new sharpness; only a real change of the window's size refits the camera, so the view never jumps out to the whole map mid-match (the Nov 7 flow study) |
+| E699 | menu.js | the ghost carries its own label on the map, as Base and Mid: its name and price where it fits, else why not; the player never has to look down at the card to know |
+| E700 | menu.js | only a touch on or near the ghost moves it; a touch away from it falls through to the camera, so the player can look around while placing (Mid's nearGhost, 26-input.js); before the ghost is set down, the first touch places it |
+| E701 | menu.js | the top bar's cells by the Screen book: pause and the small map are live controls; a cell that does nothing is not shown (Base's bar had none) |
+| E702 | menu.js | pause stops the clock and opens the Pause screen; the same cell resumes |
+| E703 | menu.js | New game asks twice, so a stray tap cannot end a match; then the Start sheet |
+| E704 | menu.js | the two base rows as Base has them; at war the Build slot is War's close, so War is reached and left through one slot |
+| E705 | menu.js | a hazard switched on adds its points to the level (the measure book's hazards.pts); the set is the one the match reads |
+| E706 | menu.js | the Pause screen is a shell like every page; the Yard (layer toggles) shows only in the test field |
+| E707 | menu.js | while a tall sheet (the Start page) is open, messages wait in the post and come out when it closes, so none covers the sheet (Base's land card came after Start) |
+| E708 | index.html#frames | a shell's ticks as a Set, built once from the Shells book: has() is asked hundreds of thousands of times a second, and a Set answers in one step where a list walks |
+| E709 | index.html#floor-3-non-movables | the buildings as their own list, a derived index of things rebuilt only when things change (TV, the things version): buildings are a few dozen among ten thousand things, and most scans want only them |
+| E710 | index.html#b-the-buildings | a new building slides into the things list at its depth instead of re-sorting ten thousand things, which was a felt hitch every time anyone built |
 | E1 | index.html#frames | First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each. |
 | E2 | index.html#frames | A Book entry is { key, value, name, cite, law } under its code; the game sees each book as one object by key (D, A, C, W, G), and a shell's slot points at a code (D53, D86.walk). |
 | E3 | index.html#frames | every code in every book |

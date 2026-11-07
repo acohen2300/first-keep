@@ -39,7 +39,7 @@ const ref = (p) => { if (p == null) return null; const [c, k] = p.split('.'); co
 // E5
 const SH = BOOKS.shells, SHELLS = Object.keys(SH);
 const ticked = (cap) => SHELLS.filter((c) => SH[c].ticks.includes(cap));
-const has = (t, cap) => { const c = t && (t.code || (KIND[t.kind] && KIND[t.kind].code)); return !!(c && SH[c] && SH[c].ticks.includes(cap)); };
+const TICKS = Object.fromEntries(SHELLS.map((c) => [c, new Set(SH[c].ticks)])), has = (t, cap) => { const c = t && (t.code || (KIND[t.kind] && KIND[t.kind].code)); return !!(c && TICKS[c] && TICKS[c].has(cap)); }; // E708
 
 // ── The frames (E6)
 const RAD = Math.PI / 180, N = D.site / D.tile, MID = D.site / 2, B0 = (D.site - D.board) / 2, B1 = B0 + D.board;
@@ -188,14 +188,15 @@ function makeTerrain(roll) {
 const KIND = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 100) KIND[e.find] = { code: c, look: e.look, yield: e.yield || null, amount: e.amount ? ref(e.amount) : 0, r: e.room ? ref(e.room) : 0, open: e.style === 'Open' }; } // E41
 // E42
 const Z1 = D.pocket.store, piles = (kind, x) => Math.max(ONE, Math.ceil((x * (Z1[KIND[kind].yield] || null)) / KIND[kind].amount)); let land = null;
-const OCC = new Uint8Array(N * N), FN = D.finds, rowOf = (t) => FN.rows[(KIND[t.kind] || {}).code]; let things = []; // E43
+const OCC = new Uint8Array(N * N), FN = D.finds, rowOf = (t) => FN.rows[(KIND[t.kind] || {}).code]; let things = [], TV = null; // E43
+const BLDS = { v: NaN, list: [] }, blds = () => { if (BLDS.v !== TV || BLDS.n !== things.length) { BLDS.v = TV; BLDS.n = things.length; BLDS.list = things.filter((t) => t.kind === 'bld'); } return BLDS.list; }; // E709
 const flatAt = (k) => k >= 0 && H[k] >= D.land && CH[k * 4] === CH[k * 4 + 1] && CH[k * 4] === CH[k * 4 + 2] && CH[k * 4] === CH[k * 4 + 3];
 const free = (k) => flatAt(k) && !OCC[k] && !FOR[k];
 const clear = (bx, by, r) => { let ok = true; stamp(bx, by, r, (k) => { if (!free(k)) ok = false; }); return ok; };
 const nearest = (bx, by, r) => { let best = null; stamp(bx, by, r, (k, d) => { if (free(k) && (!best || d < best[0])) best = [d, k]; }); return best ? best[1] : -1; }; // E44
 function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3)) { // E45
   const i = k % N, j = (k - i) / N, [bx, by] = toBoard((i + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter, (j + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter), [vx, vy] = toView(bx, by, H[k]);
-  things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); WALKV++; OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
+  TV++; things.push({ kind, k, bx, by, vx, vy, amount: KIND[kind].amount, size, v }); WALKV++; OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
 }
 const reachOf = (n) => Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile;
 function cluster(kind, bx, by, n, roll) { // E46
@@ -307,7 +308,7 @@ let cw, ch, dpr, zmin, zmax = 6, queued = false;
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
 function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
-function resize() { dpr = Math.min(2, devicePixelRatio || 1) * DRW.half ** !!show.half; cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; fit(); dirty(); }
+function resize() { const [w0, h0] = [cw, ch]; dpr = Math.min(2, devicePixelRatio || 1) * DRW.half ** !!show.half; cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; if (cw !== w0 || ch !== h0) fit(); dirty(); } // E698
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
 // ── The door (E65)
 const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], begin: [], save: [], load: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [], rest: [] }; // E66
@@ -336,11 +337,11 @@ let last = 0, frameDt = 0; const TASKS = []; on('start', () => { TASKS.length = 
 const task = (key, gen) => { if (!TASKS.some((t) => t.key === key)) TASKS.push({ key, gen }); }, finish = (gen) => { for (const _ of gen); }; // E684
 function work() { for (let n = D.work.slices; n-- && TASKS.length; ) { const t = TASKS.shift(); if (!t.gen.next().done) TASKS.push(t); } } // E685
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
-let paused = false; const resting = () => paused || !!fire('rest'); // E695
+let paused = false; const resting = () => paused || !!fire('rest'), pause = (on = !paused) => { paused = on; dirty(); }; // E695
 function loop(now) { if (now - last >= 1000 / (resting() ? D.rest.idle : D.fps)) { const dt = paused ? null : Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : 1); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); climate(dt); step(dt); fire('tick', dt); work(); look(dt); followCam(dt); draw(); shed(performance.now() - w0); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
 // E655
 const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\b/.test(location.search), seenErr = new Set(), BASE0 = {}; let fightT = null, failT = -Infinity;
-function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE && !paused) { try { const t = pack(); if (t != null) localStorage.setItem(SV.key + SV.bak, t); } catch (x) {} paused = true; fire('say', WS.fault); fire('event', 'fault', null); } } // E656
+function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE && !paused) { try { const t = pack(); if (t != null) localStorage.setItem(SV.key + SV.bak, t); } catch (x) {} paused = true; fire('say', WS.fault, { line: m.split('\n').shift() }); fire('event', 'fault', null); MENU.S.tab = 'Pause'; } } // E656
 addEventListener('error', (e) => fault(e.error || e.message)); addEventListener('unhandledrejection', (e) => fault(e.reason));
 const ARR = () => ({ H, OCC, FOR, MARSH, RUTS }), refill = (a, b) => { if (a instanceof Map || a instanceof Set) { a.clear(); for (const x of b) a instanceof Map ? a.set(...x) : a.add(x); } else if (Array.isArray(a)) a.splice(null, a.length, ...b); else { for (const k in a) delete a[k]; Object.assign(a, b); } };
 function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n) => [t, n])), base = new Map(BASE0.things.map((t, n) => [t, n])), S = { seed, dice: play.at(), things: [], units, K, SIDES, known, HZ, arr: {} }; // E657
@@ -914,9 +915,9 @@ function build(code, i, j, col = C.blue) {
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (!free(y * N + x) || H[y * N + x] !== H[j * N + i]) return null;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) OCC[y * N + x] = B[code][2] ? 3 : 2; WALKV++;
   const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, side: SIDES.findIndex((q) => q.col === col), size: 1, done: 1 };
-  if (has(t, 'Gate')) GATES.set(j * N + i, t.side); things.push(t); things.sort((a, b) => a.vy - b.vy); return t;
+  if (has(t, 'Gate')) GATES.set(j * N + i, t.side); { const at = things.findIndex((x) => x.vy > t.vy); things.splice(at < null ? things.length : at, null, t); } TV++; return t; // E710
 }
-function unbuild(t) { WALKV++; GATES.delete(t.j * N + t.i); for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; things.splice(things.indexOf(t), 1); fire('gone', t); }
+function unbuild(t) { WALKV++; GATES.delete(t.j * N + t.i); for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; things.splice(things.indexOf(t), 1); TV++; fire('gone', t); }
 function makeBuildings() { // E81
   for (let c = 0; c < 4; c++) { const seat = ticked('Seat')[0], [sx, sy] = fromBoard(...corner(c, ...D.tc)), n = B[seat][1]; build(seat, Math.round(sx / D.tile - n / 2), Math.round(sy / D.tile - n / 2), SIDES[c].col); }
 }
@@ -999,7 +1000,7 @@ function spotFor(u, c) { // E301
   return best;
 }
 function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.y))) return false; u.path.pop(); u.path.push([s.x, s.y]); u.spot = s; return true; } // E302
-function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; WALKV++; things.splice(things.indexOf(t), 1); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
+function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; WALKV++; things.splice(things.indexOf(t), 1); TV++; if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
 function stride(u, [tx, ty], dt, near = 0) { // E100
   if (u.stuck > K.t) return false; if (SIDES[u.side]) RUTS[rutAt(u.k)] += dt; const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy); u.ux = d && dx / d; const g = footing(u, tileAt(tx, ty)), beat = Math.floor(u.t / SLIP.every); // E363
   if (!g.ice) u.wary = false; else if (beat !== u.tread) { u.tread = beat; const on = rng() < g.ice; if (!u.wary && g.need > (on ? g.on : g.ground)) { u.stuck = K.t + SLIP.secs; u.wary = on; if (u.side === ME && !(K.told > K.t - SLIP.tell)) { K.told = K.t; fire('event', 'slip', u); } return false; } } // E362
@@ -1118,7 +1119,7 @@ const K = { t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow:
 const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
 const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
 // E123
-function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - 0.5) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
+function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - D.noon) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
   K.moonAlt = alt(dec * Math.cos(f), Hh + f); K.moonLit = (1 - Math.cos(f)) / 2; return alt(dec, Hh); } // E551
 const MO = D.moon, [DARK0, DARK1] = MO.dark, moonPhase = () => (K.t / D.day / MO.month) % 1, nightOf = () => clamp(-K.alt / MO.twilight, 0, 1);
 const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // E124
@@ -1516,7 +1517,7 @@ const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.
 function start(sd, S = null) { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
 const boot = () => { const h = Number(location.hash.slice(ONE)), got = TEST ? null : readSave(), S = got && (!h || got.seed === h) ? got : null; if (S) try { start(null, S); return fire('say', WS.back); } catch (e) { fault(e); aside(); } start(TEST ? D.testField.seed : null); }; // E662
 addEventListener('hashchange', () => start()); addEventListener('resize', resize);
-window.FK = { statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), has, ticked, seatOf: (side) => things.find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, HZ, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, HZ, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, Z1, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim: (dt) => { climate(dt); step(dt); fire('tick', dt); work(); look(dt); }, task, finish, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

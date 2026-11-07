@@ -565,3 +565,9 @@ async def ai(b):   # the computer's army building, on a page of its own on the s
 ## For Albert's yes (A1+A2, Nov 7)
 - Smoke at a 10-minute match: 57 fps with an occasional 50-100 ms frame (once per 10 s). No single cause in the profile (computers' thinking 7%, an economy tick 7%, drawing 5%); look overnight.
 - Smoke test allows one frame over 60 ms in 10 s of a match (setup screen allows none); tighten once the mid-match hitch is found.
+
+## F1 (Nov 7), for Albert's yes
+- Mail's top-bar cell is out until Mail's door is built (it did nothing); the bar is the Screen book's SN5.
+- The Yard (layer toggles) shows only in the test field (?test), from the Pause screen.
+- Reload still costs speed: the same match runs about 1.6× slower after a reload than before (was 2.8×), from object shapes the save rebuilds; look overnight.
+- Show active sightlines when the player needs them: UI design, mockup first (Albert, Nov 7 14:47, item 23).

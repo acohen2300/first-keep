@@ -32,15 +32,15 @@ const outOf = (side, y) => flowOf(side, y, SIDES[side].orate, SIDES[side].spent1
 const netOf = (side, y) => flowOf(side, y, SIDES[side].rate, SIDES[side].flow) - outOf(side, y);
 const velOf = (side, y) => { const net = netOf(side, y); return net < -F.half && SIDES[side].store[y] < -net * F.short ? -1 : Math.tanh(net / F.ref); };
 FK.on('tick', () => { if (FK.every(D.minute)) for (const s of SIDES) Object.assign(s, { rate: s.flow, flow: {}, orate: s.spent1, spent1: {}, rateBy: s.flowBy, flowBy: {}, orateBy: s.spentBy, spentBy: {} }); }); // E271
-const popOf = (side, ok = (c) => FK.SH[c]) => units().filter((u) => u.side === side && ok(u.code)).length + things().filter((t) => t.kind === 'bld' && t.side === side).reduce((n, t) => n + (t.q || []).flatMap((c) => (c.plan ? Object.entries(c.plan).flatMap(([k, v]) => Array(v).fill(k)) : [c])).filter(ok).length, 0);
+const popOf = (side, ok = (c) => FK.SH[c]) => units().filter((u) => u.side === side && ok(u.code)).length + FK.blds().filter((t) => t.side === side).reduce((n, t) => n + (t.q || []).flatMap((c) => (c.plan ? Object.entries(c.plan).flatMap(([k, v]) => Array(v).fill(k)) : [c])).filter(ok).length, 0);
 const soldier = (c) => FK.SH[c] && FK.SH[c].class, armyRoom = (side) => D.armyMax + ~~SIDES[side].capA, armyFull = (side) => popOf(side, soldier) >= armyRoom(side); // E371
-const popCap = (side) => Math.min(D.popMax, things().filter((t) => t.kind === 'bld' && t.side === side && up(t)).reduce((n, t) => n + (FK.stat(t.code, side, 'room') || 0), 0));
+const popCap = (side) => Math.min(D.popMax, FK.blds().filter((t) => t.side === side && up(t)).reduce((n, t) => n + (FK.stat(t.code, side, 'room') || 0), 0));
 const villagersOf = (side) => units().filter((u) => u.side === side && FK.has(u, 'Gather'));
 // E217
 const P = D.place, [ME] = D.players, at = (k) => [k % N, (k - (k % N)) / N], is = (c, tick) => FK.has({ code: c }, tick), wallish = (t) => FK.has(t, 'Line') || FK.has(t, 'Gate'), wallAt = (k) => things().find((t) => t.kind === 'bld' && FK.has(t, 'Line') && t.j * N + t.i === k);
-const many = (side, c) => things().filter((t) => t.kind === 'bld' && t.side === side && t.code === c && t !== FK.seatOf(side)).length;
+const many = (side, c) => FK.blds().filter((t) => t.side === side && t.code === c && t !== FK.seatOf(side)).length;
 function capWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1); // E313
-  if (D.bldAge[c] > age) return 'A later age allows it'; if (D.bldTech[c] && !SIDES[side].techs.has(TK[D.bldTech[c]])) return `Research ${T[TK[D.bldTech[c]]].name} first`; if (D.bldNeeds[c] && !things().some((t) => t.side === side && t.code === D.bldNeeds[c] && up(t))) return `Needs an ${FK.SH[D.bldNeeds[c]].name} standing`; if (cp.length && !n) return 'A later age allows it'; return !cp.length || many(side, c) < n ? '' : `At the limit of ${n}` + (cp[age + 1] > n ? '. A new age allows more' : ''); }
+  if (D.bldAge[c] > age) return `${D.ages[D.bldAge[c]]} age`; if (D.bldTech[c] && !SIDES[side].techs.has(TK[D.bldTech[c]])) return `Research ${T[TK[D.bldTech[c]]].name} first`; if (D.bldNeeds[c] && !things().some((t) => t.side === side && t.code === D.bldNeeds[c] && up(t))) return `Needs an ${FK.SH[D.bldNeeds[c]].name} standing`; if (cp.length && !n) return 'A later age allows it'; return !cp.length || many(side, c) < n ? '' : `At the limit of ${n}` + (cp[age + 1] > n ? '. A new age allows more' : ''); }
 function placeWhy(side, c, i, j, capped) { const [, n] = B[c], crop = is(c, 'Field'); let why = capped ? '' : capWhy(side, c); // E314
   if (i < 0 || j < 0 || i + n > N || j + n > N) return 'Too close to the edge'; if (why) return why; if (is(c, 'Post') && !stops().some((f) => onStop({ i, j, n }, f) && !postOn(f))) return MW.stop; if (is(c, 'Shore') && !FK.byLake(...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile), D.fish.shore)) return SAY.shore;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) { const k = y * N + x; if (is(c, 'Gate') && (wallAt(k) || {}).side === side) continue; if (OCC[k] || FK.FOR[k]) return 'Something is in the way'; if (!FK.free(k) || H[k] !== H[j * N + i]) return 'It needs flat, open ground'; }
@@ -95,7 +95,7 @@ const prevOf = (c) => { const L = lineOf(c); return L[L.indexOf(c) - 1] || null;
 const needsOf = (c) => [...new Set([prevOf(c), ...(T[c].value.need || []).map((k) => TK[k] || k)].filter(Boolean))];
 const nextStep = (side, c) => lineOf(c).find((x) => !SIDES[side].techs.has(x)) || null;
 // E293
-const lines = (side, ok) => things().filter((t) => t.kind === 'bld' && t.side === side && up(t) && ok(t)).reduce((a, b) => (!a || (b.q || []).length < (a.q || []).length ? b : a), null); // E327
+const lines = (side, ok) => FK.blds().filter((t) => t.side === side && up(t) && ok(t)).reduce((a, b) => (!a || (b.q || []).length < (a.q || []).length ? b : a), null); // E327
 const labOf = (side, c) => lines(side, (t) => t.code === T[c].value.at), lineFor = (side, c) => lines(side, (t) => FK.trains(t.code, side).includes(c) && (!t.camp || canPay(side, priceOf(side, c, t)))) || lines(side, (t) => FK.trains(t.code, side).includes(c));
 function researchWhy(side, c) { const s = SIDES[side], b = labOf(side, c);
   return s.techs.has(c) ? 'known' : T[c].value.civ && T[c].value.civ !== s.civ ? 'civ' : T[c].value.age > s.age ? 'age' : needsOf(c).some((n) => !s.techs.has(n)) ? 'need' : things().some((t) => t.side === side && (t.q || []).includes(c)) ? 'busy' : !b ? 'at' : !room(b) ? 'full' : canPay(side, priceOf(side, c)) ? '' : 'cost'; }
@@ -163,7 +163,7 @@ function assign(side, y, n) { const vs = villagersOf(side);
   const t = bestFind(u, y); if (!t) return false; gatherAt(u, t); return true; }
 // E348
 const SAY = fromBook('words').say, eats = (u) => (FK.stat(u.code, u.side, 'eat') * D.upkeep) / D.day, hungerOf = (side) => (bell - ((SIDES[side] || {}).famine ?? bell) >= D.hunger.days * D.day ? D.hunger.work : 1);
-const docked = (side, t) => !FK.has(t, 'Catch') || things().some((b) => b.side === side && FK.has(b, 'Shore') && up(b) && Math.abs(b.bx - t.bx) < D.fish.near && Math.abs(b.by - t.by) < D.fish.near);
+const docked = (side, t) => !FK.has(t, 'Catch') || FK.blds().some((b) => b.side === side && FK.has(b, 'Shore') && up(b) && Math.abs(b.bx - t.bx) < D.fish.near && Math.abs(b.by - t.by) < D.fish.near);
 const inReach = (side) => findsOf('food').some((t) => (t.kind !== 'bld' || t.side === side) && docked(side, t)) || units().some((u) => FK.has(u, 'Prey'));
 const fromFind = (u) => FK.has(u, 'Gather') && u.target && !u.target.gone && (jobOf(u) === 'food' || FK.has(u.target, 'Prey')) && !FK.has(u.target, 'Flock'); // E349
 function upkeep(dt) { for (const side of D.players) { const s = SIDES[side]; let need = 0;
@@ -183,7 +183,7 @@ function seasonTurn() { const spring = !FK.season(), F = D.flock; // E352
     if (spring) { if (t.wk) earn(t.side, 'wool', t.sheep * F.fleece, 'gather'); t.sheep = Math.min(F.max, Math.round(t.sheep + (F.lambs * t.sheep * (F.max - t.sheep)) / F.max)); const cull = t.wk && t.sheep > F.hold && t.sheep - F.hold; if (cull) { t.sheep -= cull; earn(t.side, 'food', cull * F.mutton, 'gather'); if (t.side === ME) FK.fire('event', 'cull', t, cull); } }
     if (t.sheep && units().some((u) => F.takers.includes(u.code) && dist(u, t) < F.wolf)) { const n = Math.min(t.sheep, 1 + Math.floor(FK.rng() * F.take)); t.sheep -= n; if (t.side === ME) FK.fire('event', 'wolves', t, n); } }
   if (!spring) return; const r = FK.rng(); harvest = D.harvest.find((h) => r < h.upTo); if (harvest !== D.harvest.at(-1)) FK.fire('event', 'harvest', null, D.harvest.indexOf(harvest));
-  if (units().some((u) => u.route && SIDES[u.side]) && chance(HE.plague[+FK.hz('plague')], ONE)) { plague = FK.K.t + HE.lasts * D.season; tell(HW.sick.roads); }
+  if (units().some((u) => u.route && SIDES[u.side]) && chance(HE.plague[+FK.hz('plague')], ONE)) { plague = FK.K.t + HE.lasts * D.season; for (const s of SIDES) s.plagueDead = null; tell(HW.sick.roads); }
   if (things().some((t) => t.side === ME && FK.has(t, 'Flock'))) FK.fire('event', 'spring', null); }
 // E353
 const replantCost = (t) => costBy(t, (n) => Math.round(n * D.treeFarm.replant));
@@ -255,7 +255,7 @@ function alarm(kind) { const h = FK.seatOf(ME); if (!h) return false; emg = emg 
     left.forEach((u, i) => walkTo(u, h.bx - dx * AL.behind * T0 + ((i % AL.cols) * AL.gap - AL.shift) * T0, h.by - dy * AL.behind * T0 + Math.floor(i / AL.cols) * AL.gap * T0)); }
   tell(AW.started, { name: AW.cells[kind].name }); return true; }
 function allClear() { if (!emg) return; for (const [u, w] of emg) { if (u.gone) continue; out(u); u.den = null; if (w.t && w.y === 'build' && alive(w.t)) buildAt(u, w.t); else if (w.t && alive(w.t)) gatherAt(u, w.t); else if (w.y && w.y !== 'build') { const f = bestFind(u, w.y); if (f) gatherAt(u, f); else idle(u); } else idle(u); } emg = null; tell(AW.back); }
-function watch() { const h = FK.seatOf(ME), mine = things().filter((t) => t.kind === 'bld' && t.side === ME), seen = (u) => u.side !== ME && SIDES[u.side] && WAR.armed(u) && !u.inside && WAR.atWar(ME, u.side) && FK.inSight(u); FK.near = null; if (!h || result) return; // E445
+function watch() { const h = FK.seatOf(ME), mine = FK.blds().filter((t) => t.side === ME), seen = (u) => u.side !== ME && SIDES[u.side] && WAR.armed(u) && !u.inside && WAR.atWar(ME, u.side) && FK.inSight(u); FK.near = null; if (!h || result) return; // E445
   let best = null, bd = AL.far * T0; for (const u of units()) if (seen(u) && (u.job === 'march' || (u.target && u.target.side === ME))) for (const b of mine) if (dist(u, b) < bd) [best, bd] = [u, dist(u, b)];
   const [near] = units().filter((u) => seen(u) && (u === best || dist(u, h) < AL.far * T0)).sort((a, b) => dist(a, h) - dist(b, h)); if (near) FK.near = { u: near, n: units().filter((v) => v.side === near.side && seen(v) && dist(v, near) < AL.radar * T0).length, eta: best && Math.ceil(bd / D.upm / FK.pace(best)) };
   if (near && dist(near, h) < AL.home * T0 && bell - warnT > AL.again) { warnT = bell; tell(AW.home); } }
@@ -265,7 +265,7 @@ function sites() { if (emg) return; for (const t of things()) if (t.kind === 'bl
   const [v] = villagersOf(t.side).filter((v) => (v.job === 'idle' || v.job === 'wait') && !v.inside && !v.den && !v.emg && R.has(v.k)).sort((a, b) => dist(a, t) - dist(b, t)); if (v) buildAt(v, t); } }
 // E447
 function fall(side, by) { fell.add(side); const s = SIDES[side]; if (SIDES[by] && by !== side) { const got = { ...s.store }; for (const t of things()) if (t.kind === 'bld' && t.side === side) for (const [y, n] of Object.entries(D.cost[t.code] || {})) add(got, y, Math.floor(n * D.plunder)); for (const y in got) { earn(by, y, got[y], 'loot'); spend(side, y, s.store[y], 'loot'); } }
-  for (const u of units().filter((u) => u.side === side)) WAR.die(u); for (const t of things().filter((t) => t.kind === 'bld' && t.side === side)) FK.unbuild(t);
+  for (const u of units().filter((u) => u.side === side)) WAR.die(u); for (const t of FK.blds().filter((t) => t.side === side)) FK.unbuild(t);
   const left = D.players.filter((p) => !fell.has(p)), n = Math.floor((D.armyMax * D.fallen.share) / left.length); for (const p of left) SIDES[p].capA = ~~SIDES[p].capA + n; if (side !== ME) { tell(EW.fallen, { side: EW.sides[side] }); if (left.includes(ME)) tell(EW.shared, { n }); } }
 function judge() { if (result) return; const t = MENU.clock(bell), rivals = D.players.filter((p) => p !== ME); if (fell.has(ME)) return finish(false, EW.fell, { t }); if (rivals.every((p) => fell.has(p))) return finish(true, EW.rivals, { t }); // E448
   const [w] = things().filter((q) => FK.has(q, 'Wonder') && up(q) && q.held != null).sort((a, b) => a.held - b.held); if (w && bell >= w.held) return finish(w.side === ME, EW.wonder[+(w.side !== ME)], { m: D.wonderHold / MINUTE, side: EW.sides[w.side] });
@@ -279,7 +279,7 @@ function score(side) { const s = { people: 0, army: 0, tech: (SIDES[side].ledger
   for (const t of things()) if (t.kind === 'bld' && t.side === side && up(t)) s.bld += sumCost(D.cost[t.code]) / D.score.bld;
   for (const k in s) s[k] = Math.round(s[k]); s.total = s.people + s.army + s.tech + s.bld + s.wealth; return s; }
 // E458
-const TE = D.teach, PR = D.prison, ZE = D.zeal, TW = fromBook('words').troops, ageOf = (c) => D.ages.indexOf(FK.SH[c].age), bldsOf = (side, tick) => things().filter((t) => t.kind === 'bld' && t.side === side && FK.has(t, tick) && up(t));
+const TE = D.teach, PR = D.prison, ZE = D.zeal, TW = fromBook('words').troops, ageOf = (c) => D.ages.indexOf(FK.SH[c].age), bldsOf = (side, tick) => FK.blds().filter((t) => t.side === side && FK.has(t, tick) && up(t));
 const teachTo = (u) => { const k = FK.SH[u.code].teach; return k && FK.SH[k] && ageOf(k) > ageOf(u.code) ? k : null; }, teachGap = (u) => ageOf(teachTo(u)) - ageOf(u.code);
 function teachCost(side, u) { const A = priceOf(side, u.code), B = priceOf(side, teachTo(u)), c = {}; for (const y in B) if (B[y] > ~~A[y]) c[y] = B[y] - ~~A[y]; add(c, 'gold', TE.tuition * teachGap(u)); return c; } // E459
 const teachSecs = (side, u) => D.train[teachTo(u)] * TE.mul * teachGap(u) * FK.stat(u.code, side, 'lesson'), schooling = (side) => units().filter((v) => v.side === side && v.job === 'school').length;
@@ -326,7 +326,7 @@ const held = (side, r) => stops().filter((f) => f.route === r && f.owner === sid
 const farF = (d) => Math.min(TR.far, (TR.per * D.tile + d) / (TR.per * D.tile)), priceAt = (side, k, p, from) => baseOf(k) * TR.want ** (p.want === k) * goingPrice(k, side) * farF(dist(from, p)) * FK.stat('', side, 'trade');
 function cargo(side, p, from) { const st = SIDES[side].store, out = {}; let n = TR.load; for (const k of wares(p).sort((a, b) => priceAt(side, b, p, from) - priceAt(side, a, p, from))) { const q = Math.min(n, Math.floor(raw(k) ? st[k] - TR.keep : st[k])); if (q >= TR.least) { out[k] = q; n -= q; } } return out; }
 const payOf = (side, goods, p, from) => sumCost(Object.fromEntries(Object.entries(goods).map(([k, q]) => [k, q * priceAt(side, k, p, from)]))), estPay = (side, p, from) => Math.round(payOf(side, cargo(side, p, from), p, from));
-const near1 = (u, ok) => things().filter((t) => t.kind === 'bld' && up(t) && ok(t)).reduce((a, b) => (!a || dist(b, u) < dist(a, u) ? b : a), null), homeOf = (u) => near1(u, (t) => t.side === u.side && FK.has(t, 'Trade'));
+const near1 = (u, ok) => FK.blds().filter((t) => up(t) && ok(t)).reduce((a, b) => (!a || dist(b, u) < dist(a, u) ? b : a), null), homeOf = (u) => near1(u, (t) => t.side === u.side && FK.has(t, 'Trade'));
 const targets = (side) => stops().filter((f) => !(f.owner != null && f.owner !== side && WAR.atWar(side, f.owner) && postOn(f))), setRoute = (c, p, rep, spice) => Object.assign(c, { route: { to: p, rep: !!rep, spice: !!spice }, leg: 'load', dest: null, cargo: null });
 function bestTarget(side, c) { const h = homeOf(c); if (!h) return null; const [best = null] = targets(side).sort((a, b) => estPay(side, b, h) - estPay(side, a, h)); return best; }
 const allyMarket = (side, from) => things().filter((b) => b.kind === 'bld' && up(b) && (FK.has(b, 'Trade') || FK.has(b, 'Seat')) && SIDES[b.side] && b.side !== side && !fell.has(b.side) && WAR.stance(side, b.side) === 'ally').reduce((a, b) => (!a || dist(b, from) > dist(a, from) ? b : a), null);
@@ -471,7 +471,7 @@ const HE = D.health, [HBEAT] = D.beats.health; let plague = -Infinity;
 const town = (side, k) => units().filter((u) => u.side === side && !u.inside && !u.gone && u.hp > null && (dist(u, k) < HE.near * D.tile || !!depotFor(u)));
 const sickRisk = (side) => HE.risk * HE.seasons[FK.season()] * FK.stat('', side, 'sick') * FK.stat('', side, 'chill') ** (FK.season() === HE.winter);
 function outbreak(side, share, pl) { const k = FK.seatOf(side); if (!k || fell.has(side)) return; const P = town(side, k).filter((u) => !(u.sick > FK.K.t)), n = Math.max(ONE, Math.round(P.length * share * FK.stat('', side, 'plague') ** !!pl));
-  for (let i = n; i-- && P.length; ) { const [u] = P.splice(Math.floor(FK.rng() * P.length), ONE); Object.assign(u, { sick: FK.K.t + HE.sickFor, plague: !!pl }); } if (pl) SIDES[side].plagueDead = null; if (side === ME) tell(pl ? HW.sick.plague : HW.sick.ill, { n }); }
+  for (let i = n; i-- && P.length; ) { const [u] = P.splice(Math.floor(FK.rng() * P.length), ONE); Object.assign(u, { sick: FK.K.t + HE.sickFor, plague: !!pl }); } if (side === ME) tell(pl ? HW.sick.plague : HW.sick.ill, { n }); }
 function health() { const now = FK.K.t, H = [...things().filter((b) => b.kind === 'bld' && FK.has(b, 'Heal') && up(b) && alive(b)), ...units().filter((u) => FK.has(u, 'Heal') && !u.gone && u.hp > null)]; // E597
   for (const side of D.players) { const s = SIDES[side]; if (fell.has(side)) continue; s.sickT = (s.sickT ?? HE.every) - HBEAT; if (s.sickT <= null) { s.sickT = HE.every; if (chance(sickRisk(side), ONE)) outbreak(side, null, false); } }
   for (const side of D.players) { const k = FK.seatOf(side); if (fell.has(side) || !k) continue; const S = []; let I = null, pl = false; for (const u of town(side, k)) if (u.sick > now) { I++; pl = pl || u.plague; } else S.push(u); if (!I || !S.length) continue;

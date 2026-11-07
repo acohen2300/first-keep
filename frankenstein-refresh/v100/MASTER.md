@@ -13,6 +13,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E3** every code in every book
 - **E4** a slot's pointer, read
 - **E5** S the shells (books/shells.js): a row names its layer, ticks its capabilities (SC) and poi
+- **E708** a shell's ticks as a Set, built once from the Shells book: has() is asked hundreds of thou
 
 ## index.html#the-frames
 
@@ -72,6 +73,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
 - **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · QBJ (N168, N228) · D62 (N168, N228) · D63 (N228) · D65 (N228, N231)
 - **E43** what stands on each tile, and the shells themselves
+- **E709** the buildings as their own list, a derived index of things rebuilt only when things change
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
@@ -112,6 +114,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E63** The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are dr
 - **E64** one flag a layer code (the panel, floor 8) and Fast
+- **E698** a draw-level change redraws the canvas at its new sharpness; only a real change of the win
 
 ## index.html#the-door
 
@@ -172,6 +175,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E78** B the buildings (layer 110; shells without Walk): the size in tiles (D8–D11; a wall piece  · D8 (N112) · D11 (N112) · D12 (N112)
 - **E79** the buildings (layer 110), from their shells: name, size in tiles, Open, the picture, what
 - **E80** a building stands on n × n flat free tiles from (i, j); Closed takes them (OCC 2), Open le
+- **E710** a new building slides into the things list at its depth instead of re-sorting ten thousand
 - **E81** The Town Center: Who every corner · What one · Where Z2 on the road at D84, the same in al · D84 (N112)
 
 ## index.html#floor-5-movables
@@ -410,10 +414,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E188** sound on or off
 - **E451** the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends
 - **E189** a cell for what is drawn but not yet built: Albert's reminder
+- **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the se
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E191** tap a yield: new villagers go there (the ring)
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
+- **E702** pause stops the clock and opens the Pause screen; the same cell resumes
+- **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
@@ -421,16 +428,19 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
+- **E706** the Pause screen is a shell like every page; the Yard (layer toggles) shows only in the te
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
 - **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
 - **E358** a pasture's card counts its sheep
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
+- **E704** the two base rows as Base has them; at war the Build slot is War's close, so War is reache
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
-- **E204** the five stores, sound, play, mail (SN5) · SN5 (N137)
+- **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
+- **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
 - **E428** a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) · D246 (N190)
@@ -441,9 +451,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E335** a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it look
 - **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near
 - **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map
+- **E700** only a touch on or near the ghost moves it; a touch away from it falls through to the came
 - **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
 - **E339** while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the T
 - **E340** the ghost: a wall's tiles green or red with its corners, the first ringed green; a buildin
+- **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
 - **E341** a tap on open ground while the Build page is open: what fits there is picked and its ghost
@@ -457,6 +469,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E635** the mail (Mid's say and tell, D323): a line shows a while unless it is quiet, the same lin · D323 (N223) · QCH (N223)
 - **E636** which way a place lies from your Town Center, of eight
 - **E637** how a line reaches you (QCH): in sight now; a fight in earshot by its way only; else by a  · QCH (N223)
+- **E707** while a tall sheet (the Start page) is open, messages wait in the post and come out when i
 - **E638** a line said: by messenger later, heard as a fight, or now; merged with its repeat, kept, s
 - **E639** the messengers arrive
 - **E640** the world's news: a line of your age every while, none at first
