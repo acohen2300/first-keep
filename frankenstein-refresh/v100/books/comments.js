@@ -175,7 +175,7 @@ BOOK("comments", {
  "E140": {"text": "over everything: what falls, the strikes, the flash, the night, the white of low visibility and the fog"},
  "E141": {"text": "SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three strokes from a soft glow to a bright core; its foot lights the ground round it"},
  "E142": {"text": "the channel wanders but leans home to its foot"},
- "E143": {"text": "the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of it"},
+ "E143": {"text": "the light: the sun's by the ramp, the horizon's warmth within 8° of it; rain no longer washes the whole picture grey nor darkens the wet ground (Mid tints only the sky band; Albert, Nov 7 20:11: gloomy, dismal), the weather's visibility (E381) and the night remain"},
  "E144": {"text": "KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze"},
  "E145": {"text": "Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made · Why ground that is always mud (KI2), slow to cross, never built on · How count D114, lakes picked by the dice"},
  "E146": {"text": "Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no fog of war; the land is always drawn). Every tick of D117 each side's eyes, its units and finished buildings, look at every other side's unit and building: seen when within the eye's range (QAL) and the line clears (QAM); the computers by the same rule (QAN)"},

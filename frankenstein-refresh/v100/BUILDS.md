@@ -3393,3 +3393,14 @@ MODIFIED (5):
 LOCKED (2115 of 2119): byte for byte as sealed, 1,365,064 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2119 items sealed · 1993 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## F2b · brighter: no rain gloom wash nor wet-ground darkening (Mid tints only the sky band), the match opens an hour after sunrise on the equinox (D341) · 2026-11-07 20:17
+Albert, Nov 7 20:11-20:14: gloomy; sunrise better, start in spring, March 21
+Opened: code:index.html, book:measure, book:comments, tool:test.py
+MODIFIED (3):
+- book:comments:E143 · 106 → 277 bytes
+- book:measure:D341 · 216 → 339 bytes
+- code:index.html#floor-6-climate · 24,910 → 24,674 bytes
+LOCKED (2116 of 2119): byte for byte as sealed, 1,350,313 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2119 items sealed · 1993 book entries · 93 laws · 249 citations, 7 still to open · 7 known

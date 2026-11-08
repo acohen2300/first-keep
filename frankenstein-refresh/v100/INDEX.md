@@ -528,7 +528,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E140 |  | over everything: what falls, the strikes, the flash, the night, the white of low visibility and the fog |  |
 | E141 |  | SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three strokes from a soft glow to a bright core; its foot  |  |
 | E142 |  | the channel wanders but leans home to its foot |  |
-| E143 |  | the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of it |  |
+| E143 |  | the light: the sun's by the ramp, the horizon's warmth within 8° of it; rain no longer washes the whole picture grey nor darkens the wet gro |  |
 | E144 |  | KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze |  |
 | E145 |  | Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made |  |
 | E146 |  | Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no fog of war; the land is always drawn). Every tick |  |
@@ -1420,7 +1420,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D334 | the buttons always on the play screen, at most (Mid's UI_BUDGET): a new control replaces one | 33 | N230 |
 | D340 | the draw rate at rest (SoRen's tick: 50 ms a frame live, 150 ms idle, 250 ms dark): paused, behind a full-screen page or card, or with nothing moving, the world steps and draws idle frames a second; hidden, dark | {idle: 15, dark: 4} | N238 |
 | D335 | the match log: a row a minute (Mid's matchLog), for Claude to read; the tap counts' place on the phone (Mid's TAPS) | {row: 60, taps: fk.taps} | N230 |
-| D341 | the day's fraction at which the sun stands highest, so a match opens in morning light (Mid's CLIMATE.noon; at 0 the sun would be at midnight) | 0.28 | N240 |
+| D341 | the day's fraction at which the sun stands highest: a match opens an hour after sunrise on the spring equinox (the year begins at declination 0, March 21; sunrise at hour angle −90°, so noon = 75° ÷ 360°; Mid's 0.28 opened in twilight, Albert, Nov 7 20:14) | 0.2083 | N240 |
 | D345 | the forest as Mid laid it (10-world-forest makeForest): trees on a step lattice jittered ± jitter, where an organic field runs high (four sine waves of these wavenumbers, phases from the dice, plus grow per unit beyond far from the Town Center: thicker away from home), the top trees a corner; none within edge of the land's edge or home of the Town Center (Mid's HOME.clear), on a trade lane, in the middle, or within path of three winding paths (bends bends, wandering ± wander) from home to each neighbour's middle line and to the middle (Albert, Nov 7 19:40: the perfect arcs were the problem) | {step: 26, jitter: 6, trees: 375, edge: 40, home: 220, path: 34, bends: 3, wander: 70, field: {k: [0.011, 0.013, 0.007, 0.009], far: 450, gr | N249 |
 | D343 | the simulation's fixed step, hz a second (Mid's DT), and the most steps one frame catches up (Mid's CATCHUP): a frame between two steps draws each figure the fraction of the way (Mid's DRAW.alpha, Build 63), so a slow phone keeps the same world and smooth walking | {hz: 30, catchup: 6} | N112 |
 | D344 | the match speeds, under the pause (Base's ×1 ×2 ×3, SoRen's spdPop) | [1, 2, 3] | N241 |

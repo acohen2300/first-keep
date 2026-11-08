@@ -290,7 +290,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E141** SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three st
 - **E142** the channel wanders but leans home to its foot
 - **E579** a falling star streaks down onto its spot
-- **E143** the light: the sun's by the ramp, clouds take a quarter, the horizon's warmth within 8° of
+- **E143** the light: the sun's by the ramp, the horizon's warmth within 8° of it; rain no longer was · E381
 - **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10, N210, N245)
 - **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10, N210, N245)
 - **E552** the sky told ahead, the sky's news, the flood and the ruts (D293–D295); the ground's marks · D293 (N7, N203) · D295 (N203)

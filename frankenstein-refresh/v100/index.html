@@ -1162,7 +1162,6 @@ const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active 
 function drawSkin() { // E139
   const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / G.snow.full);
   if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
-  if (K.wet > 0.05) { ctx.save(); ctx.globalCompositeOperation = 'multiply'; ctx.globalAlpha = 0.45 * K.wet; ctx.drawImage(maskDark, gx, gy, w, h); ctx.restore(); }
   if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
   if (K.flood > K.t) { ctx.globalAlpha = FLD.show; ctx.drawImage(maskFlood, gx, gy, w, h); ctx.globalAlpha = 1; } marks();
   if (K.sand) { const [x, y] = toScreen(...toView(K.sand.bx, K.sand.by, Math.max(null, H[tileAt(K.sand.bx, K.sand.by)]))); ctx.fillStyle = C.wild.sand; ctx.beginPath(); oval(ctx, x, y, K.sand.r * cam.z, K.sand.r * cam.z * TILT); ctx.fill(); } // E578
@@ -1183,8 +1182,7 @@ function drawSky(dt) { // E140
   if (evOn('meteor')) { const e = K.ev.cur, [dx, dy, tail, lw, r] = ER.meteor.streak, f = Math.min(ONE, (K.t - e.t0) / (e.until - e.t0)), [x1, y1] = toScreen(...toView(...e.at, null)), x = x1 - dx * (ONE - f), y = y1 - dy * (ONE - f); // E579
     ctx.strokeStyle = ctx.fillStyle = C.wild.streak; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x - dx * tail, y - dy * tail); ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r, null, A.round * RAD); ctx.fill(); }
   wash(SKYC.flash, Math.min(0.75, K.flash));
-  const gloom = 0.25 * Math.max(K.rain, K.snowing), night = (1 - K.light) * 0.7 * (DARK0 - DARK1 * K.moonLit), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
-  wash(SKYC.gloom, gloom);
+  const night = (1 - K.light) * 0.7 * (DARK0 - DARK1 * K.moonLit), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); wash(SKYC.veil, veil); // E381
   wash(SKYC.glow, dusk); wash(SKYC.blue, night); wash(SKYC.fog, K.fog * 0.8); if (K.sky === 'frost') wash(SKYC.rime, BD.frost); skyBand(); // E144
 }

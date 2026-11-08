@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,154 | 497,326 | 497,466 |
-| Books | 1993 | 0 | 569,094 | 569,791 |
+| Game code | 29 | 3,152 | 497,090 | 497,230 |
+| Books | 1993 | 0 | 569,382 | 570,085 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,762 | 287,755 | 287,996 |
 
@@ -32,7 +32,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 127 | 15,106 | 15,110 | 92 |
 | index.html#the-body-s-laws | 31 | 2,584 | 2,588 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
-| index.html#floor-6-climate | 154 | 24,898 | 24,910 | 235 |
+| index.html#floor-6-climate | 152 | 24,662 | 24,674 | 232 |
 | index.html#floor-7-display | 44 | 7,335 | 7,339 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 22,019 | 22,023 | 0 |
 | index.html#the-woods-cache | 51 | 4,771 | 4,775 | 71 |
@@ -51,10 +51,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,092 |
 | citations | 249 | 53,901 |
 | colours | 21 | 4,542 |
-| comments | 711 | 121,281 |
+| comments | 711 | 121,452 |
 | ground | 6 | 1,748 |
 | mass | 24 | 3,739 |
-| measure | 316 | 131,848 |
+| measure | 316 | 131,971 |
 | rules | 74 | 28,133 |
 | screen | 12 | 3,692 |
 | shells | 109 | 23,178 |
