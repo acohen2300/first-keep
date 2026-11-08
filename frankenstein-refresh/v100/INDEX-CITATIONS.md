@@ -345,7 +345,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
-- **N261** (to open) Human proportion: an adult stands about 7.5 to 8 heads tall, the legs (floor to hip) about half the height (Vi → PF1
+- **N261** (to open) Human proportion: an adult stands about 7.5 to 8 heads tall, the legs (floor to hip) about half the height (Vi → PF2, P1b, PF1
 - **N260** Design: Albert, Nov 8 11:30-11:41 (B16): the land not blocky (coast, beach, cliff); from Gemini's art patch, s → C23, D348
 - **N259** (to open) Heights in nature: European high forest stands about 20–25 m, woodland edge and coppice 10–15 m; bramble, hawt → W25, W26, W27
 - **N258** Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushe → W25, D70, D85, D348

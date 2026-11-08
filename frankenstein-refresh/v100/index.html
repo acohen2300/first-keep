@@ -314,7 +314,7 @@ function groundChunk(cx, cy, q, make) { const key = cx + '@' + cy + '@' + q; let
   for (const [x, y] of [[x0, y0], [x0 + S, y0], [x0, y0 + S], [x0 + S, y0 + S]]) for (const h of hs) { const [sx, sy] = fromBoard(x - ox, (y - oy + h * UP) / TILT); ij.push([Math.floor(sx / T), Math.floor(sy / T)]); }
   const lo = (n) => clamp(Math.min(...ij.map((p) => p[n])) - GC.margin, ZERO, N - ONE), hi = (n) => clamp(Math.max(...ij.map((p) => p[n])) + GC.margin, ZERO, N - ONE);
   paintGround(g, q, lo(ZERO), hi(ZERO), lo(ONE), hi(ONE), false); mottle(g, x0, y0, S, S, q); GCH.set(key, c); fitCache(GCH, GC.ground); return c; }
-function drawGround(gx, gy) { const z = cam.z, q = STEP ** Math.round(Math.log(z * dpr) / Math.log(STEP)); if (q <= GC.sharp) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); return; } // E751
+function drawGround(gx, gy) { if (!ground) return; const z = cam.z, q = STEP ** Math.round(Math.log(z * dpr) / Math.log(STEP)); if (q <= GC.sharp) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); return; } // E751
   const S = GC.chunk, at = (v) => Math.floor(v / z / S), last = (w) => Math.ceil(w / S) - ONE, seen = [];
   for (let cy = Math.max(ZERO, at(-gy)); cy <= Math.min(last(gh), at(ch - gy)); cy++) for (let cx = Math.max(ZERO, at(-gx)); cx <= Math.min(last(gw), at(cw - gx)); cx++) seen.push([cx, cy, groundChunk(cx, cy, q)]);
   const miss = seen.find(([, , c]) => !c); if (miss) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); miss[2] = groundChunk(miss[0], miss[1], q, true); dirty(); } // E752
@@ -329,7 +329,7 @@ function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; 
 // ── The view (E63)
 const canvas = document.getElementById('map'), ctx = canvas.getContext('2d');
 const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), G: false, Z: false, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // E64
-let cw, ch, dpr, zmin, zmax = 6, queued = false;
+let cw, ch, dpr, zmin, zmax = D.open.most / (W.person.height * D.upm), queued = false;
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
 function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
@@ -432,10 +432,9 @@ function drawZones() { // E70
 }
 // ── The brushes (E71)
 let g = null;
-const P_ = (pts, f, s, w) => { g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); g.closePath(); if (f) { g.fillStyle = f; g.fill(); } if (s) { g.strokeStyle = s;
-g.lineWidth = w || 0.5; g.stroke(); } };
-const E_ = (x, y, rx, ry, f, s, w, rot) => { g.beginPath(); g.ellipse(x, y, rx, ry, rot || 0, 0, 7); if (f) { g.fillStyle = f; g.fill(); } if (s) { g.strokeStyle = s; g.lineWidth = w || 0.5;
-g.stroke(); } };
+let RIM = false; const CUT = SPRITE.cut, ink = (f, s, w) => (RIM && s === INK ? [typeof f === 'string' && f.length === CUT.rim.hex ? shade(f, CUT.rim.k) : CUT.rim.ink, (w || CUT.rim.base) * CUT.rim.w] : [s, w || CUT.rim.base]); // E763
+const P_ = (pts, f, s, w) => { g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); g.closePath(); if (f) { g.fillStyle = f; g.fill(); } if (s) { [g.strokeStyle, g.lineWidth] = ink(f, s, w); g.stroke(); } };
+const E_ = (x, y, rx, ry, f, s, w, rot) => { g.beginPath(); g.ellipse(x, y, rx, ry, rot || 0, 0, 7); if (f) { g.fillStyle = f; g.fill(); } if (s) { [g.strokeStyle, g.lineWidth] = ink(f, s, w); g.stroke(); } };
 const L_ = (x1, y1, x2, y2, c, w) => { g.strokeStyle = c; g.lineWidth = w; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); };
 const LG = (x0, y0, x1, y1, stops) => { const q = g.createLinearGradient(x0, y0, x1, y1); stops.forEach((c, i) => q.addColorStop(i / (stops.length - 1), c)); return q; };
 function wheel(x, y, r) { E_(x, y, r, r, null, '#3a2814', 1); g.strokeStyle = '#5a3a1c'; g.lineWidth = 0.5; for (let i = 0; i < 6; i++) { const a = (i * Math.PI) / 3; g.beginPath(); g.moveTo(x, y);
@@ -804,27 +803,27 @@ const bronzeG = (x0, y0, x1, y1) => LG(x0, y0, x1, y1, ['#f0c477', '#c08a3a', '#
 let KIT = 0; // E366
 const BODY = SPRITE.body; // E762
 function person(o, fr) { if (KIT) { o = { ...o }; const tr = o.trim || o.tunic; for (const st of SPRITE.kit.slice(0, KIT)) for (const [k, m] of Object.entries(st)) o[k] = paintOf(m, tr)[o[k] || ''] || o[k]; } const tunic = o.tunic, trim = o.trim || tunic, sk = o.skin || SKIN, hip = o.seated ? -13 : BODY.hip, sh = hip - BODY.torso; g.save(); g.scale(BODY.slim, ONE); const sw = fr === 1 ? 3 : fr === 2 ? -3 : 0, atk = fr === 3;
+const long = o.body === 'robe' || o.body === 'dress', hem = hip + CUT.hem, [hx, fy] = CUT.face, hy = sh + fy, A = { s: [ZERO, sh], h: [ZERO, hip], e: [ZERO, hem], g: [ZERO, ZERO], f: [hx, hy] }, at = ([x, a, y]) => [A[a][ZERO] + x, A[a][ONE] + y]; // E764
+const cut = (k, f) => { const [m, ...q] = CUT[k]; g.beginPath(); g.moveTo(...at(m)); for (const [c, p] of q) g.quadraticCurveTo(...at(c), ...at(p)); g.closePath(); g.fillStyle = f; g.fill(); [g.strokeStyle, g.lineWidth] = ink(null, INK); g.stroke(); };
+const sleeve = (to, c) => { const [x0, y0] = at(CUT.arm.from), [x1, y1] = to, b = [(x0 + x1) / (ONE + ONE) + CUT.arm.bow, (y0 + y1) / (ONE + ONE)]; g.lineCap = 'round'; for (const [w, k] of [[CUT.arm.w + CUT.arm.rim, ink(c, INK)[ZERO]], [CUT.arm.w, c]]) { g.strokeStyle = k; g.lineWidth = w; g.beginPath(); g.moveTo(x0, y0); g.quadraticCurveTo(...b, x1, y1); g.stroke(); } E_(x1, y1, CUT.hand, CUT.hand, sk, INK); };
 const leg = (x0, dx, c) => { if (o.seated) { P_( [ [x0 - 1.4, hip], [x0 + 1.4, hip], [x0 + 4.4, hip + 1.6], [x0 + 3, hip + 3], ], c, INK, 0.4, ); P_( [ [x0 + 3, hip + 1.5], [x0 + 4.6, hip + 1.5],
 [x0 + 4.2, hip + 7], [x0 + 2.8, hip + 7], ], c, INK, 0.4, ); E_(x0 + 3.9, hip + 7.4, 1.4, 0.8, o.boots || '#2c2118'); return; } P_( [ [x0 - 1.3, hip], [x0 + 1.3, hip], [x0 + dx * 0.6 + 1.1, hip + 5],
 [x0 + dx - 0.2 + 1, -0.6], [x0 + dx - 1.4, -0.6], [x0 + dx * 0.6 - 1.2, hip + 5], ], c, INK, 0.4, ); P_( [ [x0 + dx - 1.6, -1.8], [x0 + dx + 1.4, -1.8], [x0 + dx + 2.8, 0], [x0 + dx - 1.6, 0], ],
-o.boots || '#2c2118', ); }; leg(-0.6, -sw, shade(o.legs || '#5a4a38', 0.75)); const hand = atk ? [6.2, sh + 2.6] : [3.6, sh + 4]; if (o.weapon && o.weapon !== 'none') { P_( [ [-0.4, sh + 0.4],
-[1.4, sh], [hand[0] + 0.8, hand[1] - 0.6], [hand[0] - 0.6, hand[1] + 0.8], ], shade(tunic, 0.7), INK, 0.4, ); weapon(o.weapon, hand, atk, sh); E_(hand[0], hand[1], 0.9, 0.9, sk); } if (o.cape) P_( [
+o.boots || '#2c2118', INK, 0.4, ); }; leg(-0.6, -sw, shade(o.legs || '#5a4a38', 0.75)); const hand = atk ? [6.2, sh + 2.6] : [3.6, sh + 4]; if (o.weapon && o.weapon !== 'none') { sleeve(hand, shade(tunic, CUT.far)); weapon(o.weapon, hand, atk, sh); E_(...hand, CUT.hand, CUT.hand, sk, INK); } if (o.cape) P_( [
 [-3.6, sh + 0.6], [-1, sh], [-2, hip + 3], [-5.2, hip + 4], ], o.cape, INK, 0.4, ); leg(0.6, sw, o.legs || '#5a4a38'); if (o.lean) { g.save(); g.translate(0, hip); g.rotate(o.lean);
-g.translate(0, -hip); } const bodyCol = o.body === 'mail' ? '#9aa2a8' : o.body === 'plate' ? steel(-4, 0, 4, 0) : o.body === 'scale' ? bronzeG(-4, 0, 4, 0)
-: LG(-4, 0, 4, 0, [shade(tunic, 1.15), tunic, shade(tunic, 0.72)]); const hem = o.body === 'robe' ? -0.6 : hip + 3.2; P_( [ [-3.4, hip], [3.4, hip], [3.9, hem], [-3.9, hem], ],
-o.body === 'robe' ? LG(-4, 0, 4, 0, [shade(tunic, 1.1), tunic, shade(tunic, 0.7)]) : shade(tunic, 0.85), INK, 0.45, ); P_( [ [-3.4, hip + 0.4], [3.6, hip + 0.4], [4, sh + 0.8], [-3.6, sh + 0.8], ],
-bodyCol, INK, 0.5, ); if (o.body === 'mail') { g.fillStyle = 'rgba(40,46,52,.55)'; for (let y = sh + 1.6; y < hip; y += 1.2)
+g.translate(0, -hip); } const bodyCol = o.body === 'mail' ? '#9aa2a8' : o.body === 'plate' ? steel(-4, 0, 4, 0) : o.body === 'scale' ? bronzeG(-4, 0, 4, 0) : o.body === 'segm' ? steel(-4, 0, 4, 0) : null;
+cut(long ? 'robe' : 'tunic', LG(-4, sh, 4, hem, [shade(tunic, 1.15), tunic, shade(tunic, CUT.far)])); if (!bodyCol && !long) for (const x of CUT.folds) L_(x, hip + CUT.fold[ZERO], x + CUT.fold[ONE], hem - CUT.fold[ZERO], shade(tunic, CUT.far), CUT.fold.at(-1));
+if (o.apron) cut('apron', LG(ZERO, hip, ZERO, ZERO, [shade(o.apron, CUT.apronLit[ZERO]), o.apron, shade(o.apron, CUT.apronLit[ONE])])); if (bodyCol) cut('armour', bodyCol); if (o.body === 'mail') { g.fillStyle = 'rgba(40,46,52,.55)'; for (let y = sh + 1.6; y < hip; y += 1.2)
 for (let x = -3; x < 3.5; x += 1.2) g.fillRect(x + ((y * 3) % 1.2), y, 0.45, 0.45); } if (o.body === 'scale') { g.strokeStyle = 'rgba(60,36,10,.6)'; g.lineWidth = 0.35;
-for (let y = sh + 1.6; y < hip; y += 1.3) for (let x = -3; x < 3.5; x += 1.4) { g.beginPath(); g.arc(x, y, 0.7, 0, Math.PI); g.stroke(); } } if (o.body === 'segm') { P_( [ [-3.4, hip + 0.4],
-[3.6, hip + 0.4], [4, sh + 0.8], [-3.6, sh + 0.8], ], steel(-4, 0, 4, 0), INK, 0.5, ); for (let y = sh + 2; y < hip; y += 1.4) L_(-3.5, y, 3.8, y - 0.1, '#5d6670', 0.45); }
-if (o.body === 'plate' || o.body === 'segm' || o.body === 'mail' || o.body === 'scale') P_( [ [-3.2, hip - 2.6], [3.4, hip - 2.6], [3.6, hip + 2.2], [-3.4, hip + 2.2], ],
-LG(0, hip - 3, 0, hip + 2, [shade(trim, 1.15), trim]), INK, 0.4, ); if (o.sash) L_(-3, sh + 1.2, 3.4, hip - 0.6, o.sash, 1.3); if (KIT) { E_(0.6, sh + 1.4, 2.5, 1.5, KIT >= 3 ? steel(-2, sh, 3, sh + 3) : KIT === 2 ? '#9aa2a8' : LEATHER, INK, 0.4); if (KIT >= 3) L_(-1.6, sh + 0.7, 2.8, sh + 0.9, 'rgba(255,255,255,.7)', 0.4); } L_(-3.5, hip - 0.4, 3.8, hip - 0.5, '#3b2a14', 1); if (o.cross) { P_( [
-[-0.6, sh + 1.5], [0.6, sh + 1.5], [0.6, hip - 1.2], [-0.6, hip - 1.2], ], o.cross, ); P_( [ [-2.5, sh + 3.4], [2.7, sh + 3.4], [2.7, sh + 4.5], [-2.5, sh + 4.5], ], o.cross, ); } const hx = 0.5,
-hy = sh - 2.9; P_( [ [-0.6, sh + 0.6], [1.4, sh + 0.6], [1.2, sh - 1], [-0.4, sh - 1], ], shade(sk, 0.85), ); g.save(); g.translate(hx, sh); g.scale(BODY.head / BODY.slim, BODY.head); g.translate(-hx, -sh);
-E_(hx, hy, 2.6, 2.7, LG(hx - 2, hy - 2, hx + 2, hy + 2, [shade(sk, 1.08), sk, shade(sk, 0.82)]), shade(sk, 0.5), 0.4); if (o.beard) P_( [ [hx - 0.4, hy + 1], [hx + 2.4, hy + 0.8],
-[hx + 1.2, hy + 3.4], [hx - 0.6, hy + 2.6], ], o.beard, ); E_(hx + 1.4, hy - 0.4, 0.42, 0.42, '#1a1a1a'); helm(o.head, hx, hy, o); g.restore(); if (o.shield) shield(o.shield, o, sh, hip, atk);
-else if (o.weapon2) { P_( [ [0.2, sh + 0.6], [1.8, sh + 0.2], [3.4, sh + 4.6], [2.2, sh + 5], ], shade(tunic, 0.95), INK, 0.4, ); weapon(o.weapon2, [3, sh + 4.8], atk, sh);
-E_(3, sh + 4.8, 0.9, 0.9, sk); } else { P_( [ [0.2, sh + 0.6], [1.8, sh + 0.2], [2.2, sh + 6.4], [0.8, sh + 6.6], ], shade(tunic, 0.95), INK, 0.4, ); E_(1.6, sh + 6.9, 0.9, 0.9, sk); }
+for (let y = sh + 1.6; y < hip; y += 1.3) for (let x = -3; x < 3.5; x += 1.4) { g.beginPath(); g.arc(x, y, 0.7, 0, Math.PI); g.stroke(); } } if (o.body === 'segm') for (let y = sh + 2; y < hip; y += 1.4) L_(-3.5, y, 3.8, y - 0.1, '#5d6670', 0.45);
+if (bodyCol) P_( [ [-3.2, hip - 2.6], [3.4, hip - 2.6], [3.6, hip + 2.2], [-3.4, hip + 2.2], ],
+LG(0, hip - 3, 0, hip + 2, [shade(trim, 1.15), trim]), INK, 0.4, ); if (o.sash) L_(-3, sh + 1.2, 3.4, hip - 0.6, o.sash, CUT.sash); if (KIT) { E_(0.6, sh + 1.4, 2.5, 1.5, KIT >= 3 ? steel(-2, sh, 3, sh + 3) : KIT === 2 ? '#9aa2a8' : LEATHER, INK, 0.4); if (KIT >= 3) L_(-1.6, sh + 0.7, 2.8, sh + 0.9, 'rgba(255,255,255,.7)', 0.4); } if (o.girdle) L_(...at(CUT.girdle[ZERO]), ...at(CUT.girdle[ONE]), o.girdle, CUT.sash); else L_(-3.5, hip - 0.4, 3.8, hip - 0.5, '#3b2a14', 1); if (o.cross) { P_( [
+[-0.6, sh + 1.5], [0.6, sh + 1.5], [0.6, hip - 1.2], [-0.6, hip - 1.2], ], o.cross, ); P_( [ [-2.5, sh + 3.4], [2.7, sh + 3.4], [2.7, sh + 4.5], [-2.5, sh + 4.5], ], o.cross, ); }
+P_( [ [-0.6, sh + 0.6], [1.4, sh + 0.6], [1.2, sh - 1], [-0.4, sh - 1], ], shade(sk, 0.85), ); g.save(); g.translate(hx, sh); g.scale(BODY.head / BODY.slim, BODY.head); g.translate(-hx, -sh);
+E_(hx, hy, 2.6, 2.7, LG(hx - 2, hy - 2, hx + 2, hy + 2, [shade(sk, 1.08), sk, shade(sk, 0.82)]), INK, 0.4); const hair = o.hair || CUT.hairCol, [brow, nose] = CUT.lines; if (o.head === 'bare') cut('hair', LG(ZERO, hy - 3, ZERO, hy, [shade(hair, 1.15), hair])); if (o.beard) P_( [ [hx - 0.4, hy + 1], [hx + 2.4, hy + 0.8],
+[hx + 1.2, hy + 3.4], [hx - 0.6, hy + 2.6], ], o.beard, INK, 0.3, ); E_(hx + 1.4, hy - 0.4, 0.42, 0.42, '#1a1a1a'); L_(...at(brow[ZERO]), ...at(brow[ONE]), shade(hair, CUT.far), brow.at(-1)); L_(...at(nose[ZERO]), ...at(nose[ONE]), shade(sk, CUT.nose), nose.at(-1));
+if (o.head === 'coif') cut('coif', LG(hx - 2, hy - 2, hx + 2, hy + 2, CUT.coifCol)); else helm(o.head, hx, hy, o); g.restore(); if (o.shield) shield(o.shield, o, sh, hip, atk);
+else if (o.weapon2) { const h2 = at(CUT.arm.two); sleeve(h2, shade(tunic, CUT.near)); weapon(o.weapon2, h2, atk, sh); E_(...h2, CUT.hand, CUT.hand, sk, INK); } else sleeve(at(CUT.arm.rest), shade(tunic, CUT.near));
 if (o.lean) g.restore(); g.restore(); }
 function helm(kind, x, y, o) { switch (kind) { case 'hood': P_( [ [x - 3, y + 1.6], [x - 2.8, y - 2.4], [x, y - 3.4], [x + 2.6, y - 2], [x + 2.2, y - 0.6], [x - 1, y - 1], [x - 1.4, y + 2], ],
 o.hoodCol || shade(o.tunic, 0.8), INK, 0.4, ); break; case 'cap': P_( [ [x - 2.8, y - 0.6], [x - 2.2, y - 2.8], [x + 0.2, y - 3.5], [x + 2.6, y - 2.2], [x + 3.2, y - 1.2], ],
@@ -1001,7 +1000,7 @@ const reached = (side, b, bx, by) => { const R = reach(side); let hit = false; s
 const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k - i) / N + 0.5) * D.tile); };
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
 function spawn(code, side, k, roll) { // E92
-  const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + between(roll, [-D.jitter, D.jitter]), by: by + between(roll, [-D.jitter, D.jitter]), k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0 };
+  const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + between(roll, [-D.jitter, D.jitter]), by: by + between(roll, [-D.jitter, D.jitter]), k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, face: 1, t: roll() * 10, wait: 0, alt: units.length % CUT.alt };
   place(u); units.push(u); file(UG, D.grid.unit, u); fire('spawn', u); return u;
 }
 const place = (u) => { u.k = tileAt(u.bx, u.by); [u.vx, u.vy] = toView(u.bx, u.by, Math.max(0, H[u.k])); };
@@ -1109,10 +1108,10 @@ function swayOf(u) { // E115
 }
 // E116
 const figure = (look, col, lv, fr, s, kit) => { const [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
-  return sprite(look + col + lv + kit + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => { KIT = kit; try { LOOKS[look](col, lv, fr); if (lv && SPRITE[look].elite) sketch(SPRITE.pennant.parts, col, fr); } finally { KIT = 0; } }); };
+  return sprite(look + col + lv + kit + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => { KIT = kit; RIM = true; try { LOOKS[look](col, lv, fr); if (lv && SPRITE[look].elite) sketch(SPRITE.pennant.parts, col, fr); } finally { KIT = 0; RIM = false; } }); };
 const moving = (u) => !!u.path || u.mps > null; // E753
 function unitSprite(u, s) { const fr = moving(u) ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
-  return figure(U[u.code][1], u.side >= 0 ? SIDES[u.side].col : C.white, rankOf(u.code, u.side), fr, s, kitOf(u.side, u.code)); }
+  const lk = U[u.code][1]; return figure((u.alt && SPRITE[lk].alt) || lk, u.side >= 0 ? SIDES[u.side].col : C.white, rankOf(u.code, u.side), fr, s, kitOf(u.side, u.code)); }
 // ── The things, drawn each frame back to fro (E117)
 const SPR = new Map(), STEP = Math.SQRT2, ARTH = {}; // E754
 const artHigh = (c) => { const { data } = c.getContext('2d').getImageData(ZERO, ZERO, c.width, c.height), px = data.length / (c.width * c.height); let top = c.height, bot = -ONE; for (let y = c.height; y--; ) for (let x = c.width; x--; ) if (data[(y * c.width + x) * px + px - ONE]) { top = Math.min(top, y); bot = Math.max(bot, y); break; } return (bot - top + ONE) / c.q; }; // E755

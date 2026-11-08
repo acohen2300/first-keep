@@ -111,7 +111,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E759** the shore and the strata as contours: between four tiles' middles the lowest band is laid,
 - **E749** the ground's chunk cache and the height range its windows are found from
 - **E750** a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, 
-- **E751** the ground: the one picture while it is not stretched past sharp, else the chunks in view 
+- **E751** the ground: nothing before the land is made (a frame drawn before the first map threw a dr
 - **E752** a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, 
 - **E547** the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so 
 - **E548** bare earth worn by feet round a finished building (not a field, a wall or a trap)
@@ -157,6 +157,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#the-brushes
 
 - **E71** The brushes (preview 49, 18-figures.js): a polygon, an ellipse, a line, two gradients; g i
+- **E763** a figure's lines in its own darker shade, never black: while a figure is painted (RIM), a  · PF2 (N261)
 
 ## index.html#the-building-art
 
@@ -177,6 +178,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E75** The figures (preview 49, 18-figures.js): people and beasts drawn from data, feet at (0, 0)
 - **E366** the armour kit a side has learned (Mid's KIT): 0 to 3 steps of the Sprites book's kit, eac
 - **E762** a person in true proportion: long legs, a torso, a small head, a slim build, from the Spri
+- **E764** the person's cut: anchors at the shoulder, hip, hem, ground and face; the tunic, robe, arm
 - **E76** the brushes: one drawing routine a shape; a look in books/sprites.js names its brush and t
 - **E367** one drawing list for every figure that is not a person or a beast (the engines, the chario
 - **E368** a look by its rank: level 0 the look itself, level n the nth of its rank list, past the li

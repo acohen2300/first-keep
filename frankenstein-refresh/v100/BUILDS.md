@@ -3795,3 +3795,29 @@ MODIFIED (13):
 LOCKED (2174 of 2187): byte for byte as sealed, 1,326,778 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2187 items sealed · 2061 book entries · 93 laws · 261 citations, 12 still to open · 7 known
+
+## B18: the scale read off the hall (a person the door's height; a tile 1.25 m), the camera by a person's height, every figure in the lady's cut, and lady villagers; the frame drawn before the land no longer throws (the intermittent drawImage error) · 2026-11-08 13:16
+Albert, Nov 8 13:08: person same height as the door; leave the house; yes all the same (the unit art and the lady in this build)
+Opened: book:comments, book:mass, book:measure, book:sprites, code:index.html, code:menu.js
+MODIFIED (18):
+- book:comments:E751 · 119 → 240 bytes
+- book:comments:E763 · added
+- book:comments:E764 · added
+- book:mass:W25 · 280 → 345 bytes
+- book:mass:W27 · 130 → 184 bytes
+- book:measure:D165 · 366 → 400 bytes
+- book:measure:D70 · 535 → 610 bytes
+- book:measure:D85 · 316 → 446 bytes
+- book:sprites:P1 · 232 → 294 bytes
+- book:sprites:P1b · added
+- book:sprites:PF2 · added
+- code:index.html#drawn-once-in-the-view-frame · 10,560 → 10,581 bytes
+- code:index.html#floor-5-movables · 15,502 → 15,531 bytes
+- code:index.html#the-body-s-laws · 2,718 → 2,787 bytes
+- code:index.html#the-brushes · 1,101 → 1,341 bytes
+- code:index.html#the-figures · 23,518 → 24,575 bytes
+- code:index.html#the-view · 1,036 → 1,074 bytes
+- code:menu.js · 89,659 → 89,664 bytes
+LOCKED (2173 of 2191): byte for byte as sealed, 1,268,727 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2191 items sealed · 2065 book entries · 93 laws · 261 citations, 12 still to open · 7 known

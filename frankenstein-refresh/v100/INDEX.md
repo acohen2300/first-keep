@@ -399,7 +399,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E748 |  | the ground painted for a window of tiles at a scale, into the whole picture once or into a chunk; the grass blades' tile drawn at that scale |  |
 | E749 |  | the ground's chunk cache and the height range its windows are found from |  |
 | E750 |  | a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, from the tiles under it (a tile's height can lift  |  |
-| E751 |  | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |  |
+| E751 |  | the ground: nothing before the land is made (a frame drawn before the first map threw a drawImage error, the intermittent one), then the one |  |
 | E752 |  | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |  |
 | E753 |  | a figure that moved this step walks; it swings its tool only standing at its work |  |
 | E754 |  | a drawing's size in the world comes from its body's real height in the Mass book: the art is measured once and drawn so it stands that tall |  |
@@ -410,6 +410,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E759 |  | the shore and the strata as contours: between four tiles' middles the lowest band is laid, then each higher band above its level, so the coa |  |
 | E760 |  | a stone wall laid course by course, each stone with its own faint tint |  |
 | E761 |  | damp moss rising from a wall's foot, fading upward |  |
+| E763 |  | a figure's lines in its own darker shade, never black: while a figure is painted (RIM), a stroke asked in ink takes the fill's shade, or a s |  |
+| E764 |  | the person's cut: anchors at the shoulder, hip, hem, ground and face; the tunic, robe, armour, apron, hair and coif drawn as curves from the |  |
 | E762 |  | a person in true proportion: long legs, a torso, a small head, a slim build, from the Sprites book; the head and its helm drawn smaller abou |  |
 | E741 |  | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |  |
 | E742 |  | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |  |
@@ -1148,9 +1150,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | W11 | scale armour | {kg: 12} | N85 |
 | W13 | a lance: a thrust when standing; moving, the whole rider and horse strike (QBT) | {kg: 4, blow: {kg: 4, mps: 6}} | N85 |
 | W14 | a wagon's or caravan's load | {kg: 100} | N97 |
-| W25 | a tree of the woods by a village: woodland edge and coppiced wood stand 10–15 m (a high forest oak 20–25 m); its crown hides what stands behind it (sight) and the drawing stands this tall | {height: 15} | N258; N259 |
+| W25 | a tree of the woods by a village: woodland edge and coppiced wood stand 10–15 m (a high forest oak 20–25 m); its crown hides what stands behind it (sight) and the drawing stands this tall; the low end, coppiced wood by the village (Nov 8 13:08; was 15) | {height: 10} | N258; N259 |
 | W26 | a berry bush (bramble, hawthorn, elder: 1–3 m) | {height: 1.5} | N259 |
-| W27 | a rock outcrop where stone, gold or iron is dug | {height: 2} | N259 |
+| W27 | a rock outcrop where stone, gold or iron is dug: a field boulder, waist high (Nov 8 13:08; was 2 m) | {height: 1.2} | N259 |
 | W12 | timber | {density: 600} | N87 |
 | W15 | stone | {density: 2400} | N87 |
 | W16 | iron | {density: 7870} | N87 |
@@ -1229,7 +1231,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D65 | Z3 the transition: the woods thicken from none at its inner edge to Z4's share at its outer edge (an ecotone), so it is more open than Z4; its finds laid by the Randomizer, the same in every corner, as Mid's wild finds, [piles, a pile's amount at RICH 2.5]: two bush patches of 7 x 180, groves of 20 and 14 x 120, a pair each of gold, stone and iron x 350, each pile then x FIND_SIZE and the land's amt (QCS) (Albert, Nov 6 16:01–16:03; Nov 7 14:47 copy Mid) | {trees: [0, 0.4], finds: {bush: [14, 450], tree: [34, 300], gold: [2, 875], stone: [2, 875], iron: [2, 875]}} | N228; N231; N242 |
 | D66 | Z4 the wilds: the woods' share of the land they may grow on, about the woods D49's threshold gave (a quarter of all Z4's land, the roads, the middle and the slopes counted) | {trees: [0.4, 0.4]} | N112; N228 |
 | D67 | villagers counted | 6 | N112 |
-| D70 | Z1's spots in the corner's frame; iron added with Mid's fifth home find (Nov 7); at the real scale drawn in to 0.55 of Mid's distance from the Town Center (D20), the layout kept: berries and the home grove about 33 m off, gold and stone 40 m, iron 31 m, a walk of 20–30 s, as a village sits beside its fields and wood (Albert, Nov 8 10:04: move things closer) | {bush: [284, 223], tree: [223, 284], gold: [256, 212], stone: [212, 256], iron: [250, 250]} | N112; N258 |
+| D70 | Z1's spots in the corner's frame; iron added with Mid's fifth home find (Nov 7); at the real scale drawn in to 0.55 of Mid's distance from the Town Center (D84), the layout kept, then held in metres when the tile became 1.25 m (Nov 8 13:08: ×2.4 in units): berries and the home grove about 33 m off, gold and stone 40 m, iron 31 m, a walk of 20–30 s, as a village sits beside its fields and wood (Albert, Nov 8 10:04: move things closer) | {bush: [227, 80], tree: [80, 227], gold: [159, 54], stone: [54, 159], iron: [145, 145]} | N112; N258 |
 | D73 | Z4's gold piles | [4, 6] | N112 |
 | D74 | stone piles | [3, 5] | N112 |
 | D75 | iron piles | [3, 5] | N112 |
@@ -1242,7 +1244,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D82 | a thing's stand wanders in its tile by | 3 | N112 |
 | D83 | under this many pixels a tile things are dots and the grid is off | 5 | N112 |
 | D84 | the Town Center's spot in the corner's frame, Z2 on the road: Base's 325 from the land's edge (MID − CORNER, decision 5a; Albert, Nov 7 19:35: a bit closer to the corner) | [325, 325] | N112 |
-| D85 | units a metre: a tile (10 units) is 3 m, so a house (2 tiles) is 6 m, the Town Center 18 m and the land 650 m across (Albert, Nov 8 08:57: real scale, set by the buildings, not by the figure; it was 11.7, a tile 0.85 m and a house 1.7 m) | 3.333 | N112; N258 |
+| D85 | units a metre, read off the Town Center as drawn: its door's point (12 drawing units) is a person's height, 1.8 m, so its wall is 3.3 m, one storey, a hall (Albert, Nov 8 13:08: a person the height of the door; the hall one floor). A tile (10 units) is 1.25 m, the Town Center 7.5 m, a house 2.5 m, the land about 270 m across; was 3.333 (a tile 3 m) and before that 11.7 | 8 | N112; N258 |
 | D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the small camp wagon 14 (cart), the boar 30, the bison 70, the scout 27 (F17b); the bandit 26, the robber 32, the vagabond 20, the wayfarer 22 and the wagon train 16 (F31); the Mongol horse archer 40 (steppe) and the Mali horseman 38 (F36, Mid's civ units); a post rider 49 (post: Mid's TELL.ride, F35) | {walk: 1.52, ride: 2.28, horse: 1.9, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933, sc | N71; N72; N73; N79; N170; N176; N198; N223; N225 |
 | D87 | a load | 10 | N112 |
 | D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
@@ -1306,7 +1308,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D162 | the glass redraws every | 0.25 | N114 |
 | D163 | a reason stays | 2.5 | N114 |
 | D164 | what is drawn once and kept, at the phone's own pixels: the ground in chunk-unit squares (pad overlapped so no seam shows, margin tiles painted past each edge) once a ground pixel would be stretched past sharp screen pixels, else the one whole picture; sprites, woods and ground chunks each kept to a budget of pixels, the oldest dropped first (an iPhone page is closed when its canvases pass a few hundred MB: Albert, Nov 8 08:04, the map fuzzy on the phone) | {chunk: 128, pad: 1, margin: 2, sharp: 1.2, sprites: 16000000, woods: 8000000, ground: 8000000} | N114; N254; N255 |
-| D165 | the game opens on the Town Center at this share of the screen's width: Base's ZOOM_START 1.3 on a 50-wide Town Center across 390 (Albert, Nov 7 19:35: a little more zoomed out; Nov 8 11:41: closer at the real scale, the Town Center a third of the width so a villager stands about 12 px) | 0.3 | N115 |
+| D165 | the camera by a person's height on the glass: the game opens with a villager px tall, and comes no closer than most px; the screen's size of the people comes from the person, not from a building (Albert, Nov 8 13:08; was the Town Center at 0.3 of the width, a villager 12 px, and a closest zoom typed as 6) | {px: 40, most: 60} | N115 |
 | D166 | the screen jolt: pixels a m/s the struck one is sent, at most, for, and from what speed | {px: 1, max: 3, s: 0.08, from: 1.5} | N116 |
 | D167 | blood lost at the shock classes' edges: II, III, IV (health lost read as blood lost) | [0.15, 0.3, 0.4] | N77; N78 |
 | D168 | gravity, m/s² | 9.81 | N117 |
@@ -1771,7 +1773,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
-| P1 | the vil figure | {brush: worker, o: {tunic: #8a6a44, trim: $side, sash: $side, head: bare, legs: #5a4a38, beard: #6b4a2c}, box: [30, 30]} | N150 |
+| P1 | the vil figure; every other villager born is drawn as its alt | {brush: worker, o: {tunic: #8a6a44, trim: $side, sash: $side, head: bare, legs: #5a4a38, beard: #6b4a2c}, box: [30, 30], alt: lady} | N150 |
 | P2 | the spear figure; the Hoplite and the Pikeman by rank | {brush: person, o: {tunic: $side, head: bare, shield: round, weapon: spear, legs: #6b5a40, beard: #4a3420}, box: [52, 34], rank: [{brush: pe | N150; N176 |
 | P3 | the archer figure; the Longbowman by rank | {brush: person, o: {tunic: $side, head: hood, weapon: bow, legs: #5a4a38}, box: [26, 30], rank: [{brush: person, o: {tunic: $side, head: cap | N150; N176 |
 | P4 | the cata figure, on its barded horse; the Knight by rank | {brush: draw, parts: [[horse, {coat: #5a3a24, barding: scale}], [at, -0.6, -1, 0, [[person, {tunic: $side, body: scale, head: conical, helmC | N150; N176 |
@@ -1803,6 +1805,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PB12 | research on its building (Mid's UP): 1 when a step of its own is learned sets it on a stone footing (foot tall, its side in shade); 2, half its steps or more, adds corner stones (w, h, every gap, clear of the eaves by edge) and a gilded ridge | {half: 0.5, top: 2, foot: 3, shade: -0.45, line: 0.4, stone: [3.4, 3, 6, 2], lift: 0.15, rim: 0.3, ridge: #e6c75a, ridgeW: 1.6} | N151; N160 |
 | PB13 | the keep at its level (Gunpowder): an angled stone bastion with a gun on it, from the keep's front corner | {at: [-27, -1], face: [[-9, -1], [0, 6], [9, -1], [9, -10], [0, -4], [-9, -10]], top: [[-9, -10], [0, -16], [9, -10], [0, -4]], shade: [0.08 | N151; N160 |
+| PF2 | the person's cut, one style for every figure (Albert, Nov 8 12:19: all the units as the lady's mock): each line edged in a darker shade of its own colour (rim: k of the fill, w of the old width; ink for a gradient), never black; the tunic, robe, armour and apron as curves from the shoulder (s), hip (h), hem (e), ground (g) or face (f), [across, from, down]; sleeves w wide with a rim, bowed out; the hair (hairCol, unless the look names its own) under a bare head, the brow and nose; hem below the hip; folds; the far sleeve far and the near near of the tunic; alt: every alt-th villager born is drawn as its look's alt | {rim: {k: 0.45, w: 0.6, base: 0.5, hex: 7, ink: rgba(26,20,14,.6)}, alt: 2, hem: 4.2, far: 0.72, near: 0.95, nose: 0.75, hand: 0.8, sash: 0. | N261 |
+| P1b | the villager, a woman: a kirtle to the ground, an apron, a coif, her side's colour at the girdle (Albert, Nov 8 12:00: lady villagers; medieval women gathered, harvested, herded and carried) | {brush: worker, o: {tunic: #7d5f48, trim: $side, girdle: $side, head: coif, body: dress, apron: #d6ccb4, legs: #5a4a38}, box: [30, 30]} | N261 |
 | PF1 | a person drawn in true proportion, about 7.5 heads tall (Vitruvius; Loomis): the legs half the height (hip), the torso (hip to shoulder), the head drawn at head of the old toy head and the body slim of its old width (Albert, Nov 8 11:35: serious, not cartoonish) | {hip: -11, torso: 6.6, head: 0.55, slim: 0.8} | N261 |
 | PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out; the trees' leaves by the season (autumn's two, winter's snow), the carcass, the fish's ripple and a trade stop's ring (its stall waits for the finds' art) (Mid's nodeSprite, drawNode); the bear den and the fallen star as blobs (offset, radius, the colour's name in C18); the robbers', drifters' and mercenaries' camps wear the campfire (F31) | {left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2, fish: 1, meat: 1}, dot: {tree: #3c6c32, bush: #3f6b33, gold: gold, stone: rock | N152; N164; N170; N195; N205 |
 | P20 | the boar figure | {brush: quad, o: {col: #4a3a2e, len: 13, h: 7, legH: 3.4, legW: 1, head: 2.8, headY: 0.55, tusk: true, bristle: true, tail: 0.6}, box: [24,  | N150; N170 |

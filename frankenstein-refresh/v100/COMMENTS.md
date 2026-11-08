@@ -37,7 +37,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E748 | index.html#drawn-once-in-the-view-frame | the ground painted for a window of tiles at a scale, into the whole picture once or into a chunk; the grass blades' tile drawn at that scale so they stay sharp |
 | E749 | index.html#drawn-once-in-the-view-frame | the ground's chunk cache and the height range its windows are found from |
 | E750 | index.html#drawn-once-in-the-view-frame | a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, from the tiles under it (a tile's height can lift it into the square from below) |
-| E751 | index.html#drawn-once-in-the-view-frame | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |
+| E751 | index.html#drawn-once-in-the-view-frame | the ground: nothing before the land is made (a frame drawn before the first map threw a drawImage error, the intermittent one), then the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |
 | E752 | index.html#drawn-once-in-the-view-frame | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |
 | E753 | index.html#the-body-s-laws | a figure that moved this step walks; it swings its tool only standing at its work |
 | E754 | index.html#the-things-drawn-each-frame-back-to-fr | a drawing's size in the world comes from its body's real height in the Mass book: the art is measured once and drawn so it stands that tall |
@@ -48,6 +48,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E759 | index.html#drawn-once-in-the-view-frame | the shore and the strata as contours: between four tiles' middles the lowest band is laid, then each higher band above its level, so the coast and the sand, dirt and grass edges cut across the tiles instead of stepping; foam on the water's edge; a cliff or a wood keeps its tiles |
 | E760 | index.html#the-building-art | a stone wall laid course by course, each stone with its own faint tint |
 | E761 | index.html#the-building-art | damp moss rising from a wall's foot, fading upward |
+| E763 | index.html#the-brushes | a figure's lines in its own darker shade, never black: while a figure is painted (RIM), a stroke asked in ink takes the fill's shade, or a soft ink under a gradient, and a thinner line (the Sprites book's cut, PF2) |
+| E764 | index.html#the-figures | the person's cut: anchors at the shoulder, hip, hem, ground and face; the tunic, robe, armour, apron, hair and coif drawn as curves from them; sleeves as bowed strokes with a rim, ending in a hand |
 | E762 | index.html#the-figures | a person in true proportion: long legs, a torso, a small head, a slim build, from the Sprites book; the head and its helm drawn smaller about the neck |
 | E741 | index.html#floor-6-climate | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |
 | E742 | index.html#floor-6-climate | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |
