@@ -54,7 +54,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QAI** Nerve → N76, N188 · used by SC6, D142, D231, X57
 - **QAJ** Arrow flight → N39, N40 · used by A5, SC7, W10, D143, D245, X57
 - **QAL** Sight → N41, N215, N216, N217, N218, N220, N247, N248 · used by SC7, D117, D312, X66
-- **QAM** Line of sight → N42, N219 · used by D117, D312, D326, X66, X70
+- **QAM** Line of sight → N42, N219 · used by D117, D312, X66, X70
 - **QAN** Many eyes → N43, N44, N220 · used by D117, X66
 - **QAO** Flee → N45 · used by SC6, D231, D254
 - **QAP** Cold and wet → N46
@@ -211,7 +211,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230, D343, PM1
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230, D343
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D163, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -318,14 +318,14 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N216** Wikipedia, Daylight, illuminance table: brightest sunlight 120,000 lux, sunrise or sunset on a clear day 400,  → QAL, D117
 - **N217** AMS Glossary of Meteorology, 'civil twilight' and 'nautical twilight': End of civil ~3.5-2 lux; end of nautica → QAL, D117
 - **N218** Shlaer (1937) J. Gen. Physiol. 21(2):165-188; Sloan, L. L. (1968) Photopic acuity-luminance function with spec → QAL, D117
-- **N219** Tirmenstein, D. A. (1991), Quercus alba, in the Fire Effects Information System, USDA Forest Service, Rocky Mo → QAM, D326, X70
+- **N219** Tirmenstein, D. A. (1991), Quercus alba, in the Fire Effects Information System, USDA Forest Service, Rocky Mo → QAM, X70
 - **N220** Design: Albert, Nov 6 14:44–15:06: fog grounded in atmospheric science (CALVIS, the dew point); no fog of war  → QAL, QAN, D117, X66, X68
-- **N221** Rogers, R. (1990), Quercus alba L., white oak, in Burns & Honkala, Silvics of North America vol. 2, Agricultur → D326, X70
+- **N221** Rogers, R. (1990), Quercus alba L., white oak, in Burns & Honkala, Silvics of North America vol. 2, Agricultur → X70
 - **N222** Design: Mid's peace and the crowns (39-games.js PEACE, CARE, bestOf, truceAll, truceFor, ageOpen, nextAge, chr → SC46, D303, D322, D327, X69, O223, O224, O225, O226, J7, J21, J27
 - **N223** Design: Mid's mail, news and messengers (32-frame.js MSG, GROUPS, QUIET, urgentCls, ccOf, hiddenG, news, DIR8, → QCH, D86, D239, D323, D324, D327, X69, O227, O228, O229, O230, O231, J7, J22, J23, J27
 - **N224** Design: Mid's milestones and tips (32-frame.js MS_TEST, msFill, milestoneTick, goldTight, NEEDS, advise; 26-in → D325, D328, X69, J24, J25
 - **N225** Design: Mid's civilisations (04-rules-tech.js CIVS, CIVK, the six unique units, the Hall rows and the six elit → SC03, D86, D123, D124, D138, D239, X70, UM17, UM18, UM19, UM20, UM21, UM22, P46, P47, P48, O232, O233, O234, O235, O236, O237, O238, O239, O240, O241, O242, O243, O244, O245, O246, O247, O248, O249, O250, O251, O252, O253, O254, O255, O256, O257, O258, O259, J7, J26
-- **N226** Design: Albert, Nov 6 17:23: the civilisations as Mid had them, if they come clean and within our rules; the G → D326, X69, X70, O254, O255, O256, O257, O258, O259
+- **N226** Design: Albert, Nov 6 17:23: the civilisations as Mid had them, if they come clean and within our rules; the G → X69, X70, O254, O255, O256, O257, O258, O259
 - **N227** Age of Empires forums, 'Creating custom OP civs with Advanced Genie Editor' (guide to the game's .dat file): M → O254, O255, O256, O257, O258, O259
 - **N228** Design: Albert, Nov 6 16:01–16:07: you start in the corner drawn at the bottom left of the screen, whatever th → QCP, A6, D63, D64, D65, D66, X71
 - **N229** Design: Mid's map character, new game and scenarios (06-rules-tuning.js LAND, SCENARIOS, UI_BUDGET; 07-text.js → QCQ, D329, D330, D333, X71, J28
@@ -345,7 +345,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
-- **N258** Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushe → D70, D85, PM1
+- **N259** (to open) Heights in nature: European high forest stands about 20–25 m, woodland edge and coppice 10–15 m; bramble, hawt → W25, W26, W27
+- **N258** Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushe → W25, D70, D85
 - **N256** Design: Albert, Nov 8 08:52-08:57 (B12): the tap ring slow; axes swung while walking; more trees, closer to th → D62, D319, D345
 - **N257** (to open) Response times: 0.1 s feels instant (Miller 1968; Nielsen, Usability Engineering 1993); touch feedback animati → D319
 - **N254** Design: Albert, Nov 8 08:02-08:04 (B10): the map fuzzy on the phone; draw it at the phone's own pixels, the gr → D164

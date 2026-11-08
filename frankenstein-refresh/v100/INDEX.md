@@ -18,7 +18,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | Code | Name | Value | Cited |
 |---|---|---|---|
 | SC0 | what every shell has: a name, its ticks, its citation | {by: every book of shells, law: [], needs: [name, ticks, cite], may: [layer]} | N92 |
-| SC01 | the mold of a find (layer 100) | {by: shells (finds), law: [], needs: [find, look], may: [room, sound, style]} | N92 |
+| SC01 | the mold of a find (layer 100); a body (Mass book) gives it its real height | {by: shells (finds), law: [], needs: [find, look], may: [room, sound, style, body]} | N92 |
 | SC02 | the mold of a building (layer 110) | {by: shells (buildings), law: [], needs: [size, style, look, material], may: []} | N92 |
 | SC03 | the mold of a walker (layer 120); one of a side eats its Upkeep (D211). The Unit shell: a soldier kind fills its class (Foot, Archers, Riders, Engines: the building D133 names for it), the age it opens in (D130) and the kind it learns into (teach, Mid's TEACH_TO); a civilisation's own kind names its civ and the common kind it replaces (Mid's civ, replaces) | {by: shells (units, moveables), law: [], needs: [look, pace, body], may: [upkeep, class, age, teach, civ, replaces]} | N92; N170; N176; N225 |
 | SC04 | the mold of a page (the Screen book) | {by: books/screen.js, law: [], needs: [], may: [rows]} | N93 |
@@ -318,6 +318,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N245 |  | Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water content M = 0.072 R^0.88 g/m³ f | to open |
 | N246 |  | The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the finite-source form E = I ÷ (d² + s | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
+| N259 |  | Heights in nature: European high forest stands about 20–25 m, woodland edge and coppice 10–15 m; bramble, hawthorn and elder 1–3 m; from mem | to open |
 | N258 |  | Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushes and rocks drawn at their rea | opened |
 | N256 |  | Design: Albert, Nov 8 08:52-08:57 (B12): the tap ring slow; axes swung while walking; more trees, closer to the Town Center, 10-15% more eve | opened |
 | N257 |  | Response times: 0.1 s feels instant (Miller 1968; Nielsen, Usability Engineering 1993); touch feedback animations about 200-300 ms (Material | to open |
@@ -398,7 +399,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E751 |  | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |  |
 | E752 |  | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |  |
 | E753 |  | a figure that moved this step walks; it swings its tool only standing at its work |  |
-| E754 |  | a drawing's size in the world: units a metre over the art's own pixels a metre, so a person, a bush or a rock stands at its real size beside |  |
+| E754 |  | a drawing's size in the world comes from its body's real height in the Mass book: the art is measured once and drawn so it stands that tall |  |
+| E755 |  | how tall a drawing is: from its first to its last painted row |  |
+| E756 |  | the figures' scale: a villager's body height over its drawing's, one for every figure (riders, animals and engines are drawn at the same art |  |
+| E757 |  | a find's scale: its body's height (tree, bush, outcrop) over its own drawing's; a find with no body is drawn as the figures are |  |
 | E741 |  | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |  |
 | E742 |  | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |  |
 | E743 |  | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not the |  |
@@ -1136,6 +1140,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | W11 | scale armour | {kg: 12} | N85 |
 | W13 | a lance: a thrust when standing; moving, the whole rider and horse strike (QBT) | {kg: 4, blow: {kg: 4, mps: 6}} | N85 |
 | W14 | a wagon's or caravan's load | {kg: 100} | N97 |
+| W25 | a tree of the woods by a village: woodland edge and coppiced wood stand 10–15 m (a high forest oak 20–25 m); its crown hides what stands behind it (sight) and the drawing stands this tall | {height: 15} | N258; N259 |
+| W26 | a berry bush (bramble, hawthorn, elder: 1–3 m) | {height: 1.5} | N259 |
+| W27 | a rock outcrop where stone, gold or iron is dug | {height: 2} | N259 |
 | W12 | timber | {density: 600} | N87 |
 | W15 | stone | {density: 2400} | N87 |
 | W16 | iron | {density: 7870} | N87 |
@@ -1291,7 +1298,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D162 | the glass redraws every | 0.25 | N114 |
 | D163 | a reason stays | 2.5 | N114 |
 | D164 | what is drawn once and kept, at the phone's own pixels: the ground in chunk-unit squares (pad overlapped so no seam shows, margin tiles painted past each edge) once a ground pixel would be stretched past sharp screen pixels, else the one whole picture; sprites, woods and ground chunks each kept to a budget of pixels, the oldest dropped first (an iPhone page is closed when its canvases pass a few hundred MB: Albert, Nov 8 08:04, the map fuzzy on the phone) | {chunk: 128, pad: 1, margin: 2, sharp: 1.2, sprites: 16000000, woods: 8000000, ground: 8000000} | N114; N254; N255 |
-| D165 | the game opens on the Town Center at this share of the screen's width: Base's ZOOM_START 1.3 on a 50-wide Town Center across 390 (Albert, Nov 7 19:35: a little more zoomed out) | 0.167 | N115 |
+| D165 | the game opens on the Town Center at this share of the screen's width: Base's ZOOM_START 1.3 on a 50-wide Town Center across 390 (Albert, Nov 7 19:35: a little more zoomed out; Nov 8 11:41: closer at the real scale, the Town Center a third of the width so a villager stands about 12 px) | 0.3 | N115 |
 | D166 | the screen jolt: pixels a m/s the struck one is sent, at most, for, and from what speed | {px: 1, max: 3, s: 0.08, from: 1.5} | N116 |
 | D167 | blood lost at the shock classes' edges: II, III, IV (health lost read as blood lost) | [0.15, 0.3, 0.4] | N77; N78 |
 | D168 | gravity, m/s² | 9.81 | N117 |
@@ -1449,7 +1456,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D323 | the mail (Mid's MSG): a line shows secs s; the same line within merge s is a count on the first; keep lines are kept, page a page | {secs: 4, merge: 30, keep: 30, page: 6} | N223 |
 | D324 | how news reaches you (Mid's TELL ÷ D12, NEWS_EVERY): a place in sight is told now; a fight within hear tiles of your people is heard (× gun from the gunAge on), its way only; else a messenger brings it from your Town Center at D86's foot pace, or ride's from the Post line's level ridesAt, if the Post reaches: your near lands (within near tiles of a building of yours) at level 1, your far lands (far) at 2, an ally's lands (near of its buildings) at 3, the whole board at 4; the world's news every s, none in the first after s; levels, the Post level each reach needs | {near: 32, far: 90, hear: 38, gun: 2, gunAge: 4, foot: scout, ride: post, ridesAt: 2, every: 150, after: 60, levels: {near: 1, far: 2, ally: | N223 |
 | D325 | the milestones and tips (Mid's MS_TEST, goldTight, NEEDS, advise, L): looked at on D328's beat, one a look; mud and snow past their share, a slip within slip s; gold short under gold while another store is past full; tips: fewer villagers than villagers, wood with none on it or under wood[1] with fewer than wood[2] on it (from wood[0] villagers), idle after idle s, a barracks after barracks s, spearmen under spear[0] before spear[1] s, the next age at age villagers, a food deficit after deficit[0] s within deficit[1] minutes of stores; a hint done learned times is not shown again | {mud: 0.5, snow: 0.5, slip: 20, gold: 50, full: 300, villagers: 6, wood: [3, 80, 2], idle: 20, barracks: 75, spear: [3, 600], age: 10, defic | N224 |
-| D326 | a standing tree's height in metres by its kind (the woods tree, a temperate broadleaf: white oak, Quercus alba), the middle of the 18 to 24 m it commonly reaches (the Forest Service's FEIS; Silvics of North America gives 24 to 30 m on good forest sites and 13 to 19 m at age 50); mature only, as the woods stand grown and no sourced height-by-age curve was opened; line of sight reads it | {R1: {h: 21}} | N219; N221; N226 |
 | D327 | the peace beat: every second, phase 2 frames (Mid's tick % 30 === 2: peaceTick, postTick, newsTick) | [1, 2] | N222; N223 |
 | D328 | the lesson beat: every 3 s, phase 7 frames (Mid's tick % 90 === 7: milestoneTick) | [3, 7] | N224 |
 | D329 | the land's character (Mid's LAND): one of rows rolled a game on a dice of its own (seed: the game's seed XOR this, so the roll moves no other draw), the same in every corner; amt what each store's finds are worth past the pocket, extra its specialty laid once more in Z3, one pocket's worth | {seed: 1013904223, rows: {fertile: {amt: {food: 1.4, wood: 1, stone: 0.8, gold: 1, iron: 1}, extra: bush}, timber: {amt: {food: 1, wood: 1.3 | N229 |
@@ -1788,8 +1794,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PB12 | research on its building (Mid's UP): 1 when a step of its own is learned sets it on a stone footing (foot tall, its side in shade); 2, half its steps or more, adds corner stones (w, h, every gap, clear of the eaves by edge) and a gilded ridge | {half: 0.5, top: 2, foot: 3, shade: -0.45, line: 0.4, stone: [3.4, 3, 6, 2], lift: 0.15, rim: 0.3, ridge: #e6c75a, ridgeW: 1.6} | N151; N160 |
 | PB13 | the keep at its level (Gunpowder): an angled stone bastion with a gun on it, from the keep's front corner | {at: [-27, -1], face: [[-9, -1], [0, 6], [9, -1], [9, -10], [0, -4], [-9, -10]], top: [[-9, -10], [0, -16], [9, -10], [0, -4]], shade: [0.08 | N151; N160 |
-| PM1 | art pixels a metre, by what was drawn: the figures, bushes, rocks and finds at 11.7 (a person 20 px for 1.7 m), a tree at 3.333 (its 51 px for a 15 m tree); the grass blades as the figures (a blade a hand high); each is drawn at units a metre over its own, so all stand at their real size | {figure: 11.7, tree: 3.333} | N112; N258 |
-| PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out; the trees' leaves by the season (autumn's two, winter's snow), the carcass, the fish's ripple and a trade stop's ring (its stall waits for the finds' art) (Mid's nodeSprite, drawNode); the bear den and the fallen star as blobs (offset, radius, the colour's name in C18); the robbers', drifters' and mercenaries' camps wear the campfire (F31) | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2, fish: 1, meat: 1}, dot: {tree: # | N152; N164; N170; N195; N205 |
+| PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out; the trees' leaves by the season (autumn's two, winter's snow), the carcass, the fish's ripple and a trade stop's ring (its stall waits for the finds' art) (Mid's nodeSprite, drawNode); the bear den and the fallen star as blobs (offset, radius, the colour's name in C18); the robbers', drifters' and mercenaries' camps wear the campfire (F31) | {left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2, fish: 1, meat: 1}, dot: {tree: #3c6c32, bush: #3f6b33, gold: gold, stone: rock | N152; N164; N170; N195; N205 |
 | P20 | the boar figure | {brush: quad, o: {col: #4a3a2e, len: 13, h: 7, legH: 3.4, legW: 1, head: 2.8, headY: 0.55, tusk: true, bristle: true, tail: 0.6}, box: [24,  | N150; N170 |
 | P21 | the bison figure: the hump, a shaggy mane and a short horn | {brush: quad, o: {col: #3e2a1c, len: 20, h: 10, legH: 6, legW: 1.4, head: 3.4, headY: 0.4, hump: true, bristle: true, tail: 0.8, horn: {col: | N150; N170 |
 | PB14 | the farm building picture; its level is the season: the crop's colours spring to winter | {level: {season: true}} | N151; N170 |

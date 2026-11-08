@@ -40,7 +40,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E751 | index.html#drawn-once-in-the-view-frame | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |
 | E752 | index.html#drawn-once-in-the-view-frame | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |
 | E753 | index.html#the-body-s-laws | a figure that moved this step walks; it swings its tool only standing at its work |
-| E754 | index.html#the-things-drawn-each-frame-back-to-fr | a drawing's size in the world: units a metre over the art's own pixels a metre, so a person, a bush or a rock stands at its real size beside the buildings |
+| E754 | index.html#the-things-drawn-each-frame-back-to-fr | a drawing's size in the world comes from its body's real height in the Mass book: the art is measured once and drawn so it stands that tall |
+| E755 | index.html#the-things-drawn-each-frame-back-to-fr | how tall a drawing is: from its first to its last painted row |
+| E756 | index.html#the-things-drawn-each-frame-back-to-fr | the figures' scale: a villager's body height over its drawing's, one for every figure (riders, animals and engines are drawn at the same art scale) |
+| E757 | index.html#the-things-drawn-each-frame-back-to-fr | a find's scale: its body's height (tree, bush, outcrop) over its own drawing's; a find with no body is drawn as the figures are |
 | E741 | index.html#floor-6-climate | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |
 | E742 | index.html#floor-6-climate | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |
 | E743 | index.html#floor-6-climate | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not there |

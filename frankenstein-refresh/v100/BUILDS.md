@@ -3743,3 +3743,34 @@ MODIFIED (1):
 LOCKED (2171 of 2172): byte for byte as sealed, 1,407,853 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2172 items sealed · 2046 book entries · 93 laws · 258 citations, 10 still to open · 7 known
+
+## B15 · each thing drawn at its body's real height (Mass book), its drawing measured once: one scale (units a metre), one height a group; the size knobs gone (PM1, the node scales, the trees' own height row); the game opens closer · 2026-11-08 11:50
+Albert, Nov 8 10:13 (one scale, a number a group) and 11:30/11:41 (do it all)
+Opened: code:index.html#the-things-drawn-each-frame-back-to-fr, code:index.html#the-view-s-eyes-lights-and-stage, code:index.html#the-woods-cache, code:index.html#touch, code:index.html#floor-7-display, code:index.html#drawn-once-in-the-view-frame, book:measure, book:sprites, book:mass, book:shells, book:citations, book:comments, book:capabilities
+MODIFIED (23):
+- book:capabilities:SC01 · 197 → 250 bytes
+- book:citations:N259 · added
+- book:comments:E754 · 166 → 151 bytes
+- book:comments:E755 · added
+- book:comments:E756 · added
+- book:comments:E757 · added
+- book:mass:W25 · added
+- book:mass:W26 · added
+- book:mass:W27 · added
+- book:measure:D165 · 258 → 366 bytes
+- book:measure:D326 · removed
+- book:shells:R1 · 151 → 167 bytes
+- book:shells:R2 · 172 → 191 bytes
+- book:shells:R3 · 177 → 196 bytes
+- book:shells:R4 · 172 → 191 bytes
+- book:shells:R5 · 151 → 167 bytes
+- book:sprites:PM1 · removed
+- book:sprites:PN1 · 1,514 → 1,460 bytes
+- code:index.html#drawn-once-in-the-view-frame · 8,480 → 8,482 bytes
+- code:index.html#floor-7-display · 7,434 → 7,448 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 5,331 → 5,950 bytes
+- code:index.html#the-woods-cache · 4,852 → 4,858 bytes
+- code:index.html#touch · 7,499 → 7,503 bytes
+LOCKED (2156 of 2177): byte for byte as sealed, 1,370,945 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2177 items sealed · 2051 book entries · 93 laws · 259 citations, 11 still to open · 7 known
