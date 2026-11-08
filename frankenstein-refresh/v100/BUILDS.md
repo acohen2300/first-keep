@@ -3571,3 +3571,16 @@ MODIFIED (3):
 LOCKED (2134 of 2137): byte for byte as sealed, 1,215,161 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2137 items sealed · 2011 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B5 · as Base: a job is locked until its yield's first age (E734); t-gather within 2.25% (Albert 22:02) · 2026-11-07 22:05
+
+Opened: code:menu.js, code:econ.js, book:words, book:comments, tool:test.py
+MODIFIED (5):
+- book:comments:E734 · added
+- book:words:J33 · 339 → 379 bytes
+- code:econ.js · 105,384 → 105,901 bytes
+- code:menu.js · 87,273 → 87,441 bytes
+- tool:test.py · 258,524 → 258,677 bytes
+LOCKED (2133 of 2138): byte for byte as sealed, 936,361 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2138 items sealed · 2012 book entries · 93 laws · 249 citations, 7 still to open · 7 known

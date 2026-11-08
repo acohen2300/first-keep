@@ -536,6 +536,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E271** each minute (D188) the minute's in and out become the last minute's · D188 (N132)
 - **E371** the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid · D226 (N176)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
+- **E734** a yield's first age is the earliest age of anything that costs it (units, buildings, resea
 - **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198)
 - **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · E686
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
