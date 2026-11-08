@@ -53,6 +53,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E25** every tile whose middle lies within r of a board point: fn(k, d, dx, dy)
 - **E768** the board point of each tile's middle stepped across the square, not turned afresh for eve
 - **E26** a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land · D27 (N112) · QAZ (N60) · D28 (N112) · QBG (N67) · D32 (N112) · D16 (N112)
+- **E775** a pond's bank: a short fall to the water on every side, the water filled near the brim (no
 - **E27** a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok · QAZ (N60)
 - **E28** a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32 · D32 (N112)
 - **E29** a smooth hill: its steepest slope is 0.77 h / r, under the angle of repose at these number
@@ -100,6 +101,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#drawn-once-in-the-view-frame
 
 - **E56** Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward 
+- **E780** the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake · D27 (N112) · D350 (N17, N173)
 - **E57** the masks at a quarter scale: the land in white and in shadow, the inland water
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
@@ -109,7 +111,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
+- **E779** the contours painted band by band over the whole piece of land, lowest first, so a band la
 - **E759** the shore and the strata as contours: between four tiles' middles the lowest band is laid,
+- **E782** each water cell adds its shallow part to every step's ice path and its land part to the la
+- **E776** water cells traced like the land: each depth band of the water drawn along its contour, so
 - **E749** the ground's chunk cache and the height range its windows are found from
 - **E750** a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, 
 - **E751** the ground: nothing before the land is made (a frame drawn before the first map threw a dr
@@ -175,6 +180,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E74** The node art (the same file): six trees, three bushes, stone, gold and iron; r is a dice f
 
+## index.html#the-trees
+
+- **E773** the trees as a cast: twelve kinds from the Sprites book (PT1), each a few variants by its  · PT1 (N261)
+- **E777** a tree's leaf stage: the year's place in seasons, each tree a little later or earlier by i
+- **E774** which kind a tree is: weighed by where it stands (wet low ground, the plain, the hills), o
+- **E778** every leaf a tree could hold is placed first, each with its own draw; the ones under the s
+
 ## index.html#the-figures
 
 - **E75** The figures (preview 49, 18-figures.js): people and beasts drawn from data, feet at (0, 0)
@@ -201,7 +213,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225)
 - **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170, N195, N205)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
-- **E87** inland water bearing ice (QQ): walked as if flat · QQ (N17)
+- **E87** inland water bearing ice (QQ): walked as if flat; ice bears where its depth step is behind · QQ (N17)
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
 - **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185, N198) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
 - **E360** the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh alwa · QN (N13) · QR (N179, N178, N174, N18) · D225 (N17, N173) · G9 (N179, N19, N173) · G8 (N107, N18, N178) · G10 (N174, N179, N173)
@@ -297,7 +309,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E130** QP settle: wet in D104, dry in D105 · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
 - **E132** QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground g · QQ (N17) · D109 (N112) · D225 (N17, N173)
-- **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173)
+- **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173) · D350 (N17, N173)
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
 - **E576** a bolt where it falls: drawn, the ground scorched, the thunder told
@@ -305,6 +317,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E137** a far flash: its thunder from beyond the screen
 - **E138** the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling · QJ (N9)
 - **E139** on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply)
+- **E781** the ice drawn: the mask of the deepest step frozen so far, over the water
 - **E578** quicksand on the ground while it lasts
 - **E140** over everything: what falls, the strikes, the flash, the night, the white of low visibilit
 - **E719** rain and snow are drawn on the glass, as Mid's: the biggest drop crosses the screen at gla

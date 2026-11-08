@@ -3860,3 +3860,39 @@ MODIFIED (31):
 LOCKED (2172 of 2203): byte for byte as sealed, 1,047,448 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2203 items sealed · 2077 book entries · 93 laws · 261 citations, 12 still to open · 7 known
+
+## B20: the trees as a cast (twelve kinds in variants, nine leaf stages a year, each tree its own leaves and timing, bare limbs and snow), smooth shores and water depth by contour painted band by band, ponds filled to a short sand bank with no dirt ring, and lakes freezing from the shallows in by depth (Stefan) · 2026-11-08 14:16
+Albert, Nov 8 13:57: go build it all; 14:08: lakes fill, bypass the dirt; leaves grow in spring and fall in the fall, a transition, by the randomizer
+Opened: book:colours, book:comments, book:measure, book:sprites, code:index.html
+MODIFIED (28):
+- book:colours:C23 · 462 → 499 bytes
+- book:comments:E364 · 168 → 259 bytes
+- book:comments:E773 · added
+- book:comments:E774 · added
+- book:comments:E775 · added
+- book:comments:E776 · added
+- book:comments:E777 · added
+- book:comments:E778 · added
+- book:comments:E779 · added
+- book:comments:E780 · added
+- book:comments:E781 · added
+- book:comments:E782 · added
+- book:comments:E87 · 60 → 130 bytes
+- book:measure:D15 · 86 → 251 bytes
+- book:measure:D32 · 86 → 278 bytes
+- book:measure:D348 · 920 → 1,235 bytes
+- book:measure:D350 · added
+- book:sprites:PN1 · 1,460 → 1,390 bytes
+- book:sprites:PT1 · added
+- code:index.html#drawn-once-in-the-view-frame · 11,070 → 12,837 bytes
+- code:index.html#floor-2-terrain · 9,232 → 9,159 bytes
+- code:index.html#floor-3-non-movables · 8,880 → 8,877 bytes
+- code:index.html#floor-5-movables · 15,588 → 15,603 bytes
+- code:index.html#floor-6-climate · 27,779 → 27,924 bytes
+- code:index.html#the-node-art · 4,089 → 2,715 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 5,950 → 5,953 bytes
+- code:index.html#the-trees · added
+- code:index.html#the-woods-cache · 4,880 → 4,936 bytes
+LOCKED (2188 of 2216): byte for byte as sealed, 1,334,756 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2216 items sealed · 2089 book entries · 93 laws · 261 citations, 12 still to open · 7 known

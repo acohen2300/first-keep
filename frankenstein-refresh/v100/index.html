@@ -124,8 +124,8 @@ const between = (roll, [lo, hi]) => lo + roll() * (hi - lo), count = (roll, [lo,
 // E26
 function lake(bx, by, r, rim, deep) {
   stamp(bx, by, r * (1 + D.shore) + D.bank, (k, d, dx, dy) => {
-    const out = rim(Math.atan2(dy, dx)), edge = r * (1 + D.shore * out), cliff = clamp((-out - 0.2) / 0.3, 0, 1), run = D.bank + (D.cliff - D.bank) * cliff;
-    const h = d < edge ? -deep * (1 - (d / edge) ** 2) : (D.land * (d - edge)) / run;
+    const out = rim(Math.atan2(dy, dx)), edge = r * (1 + D.shore * out);
+    const h = d < edge ? -deep * (1 - (d / edge) ** 2) : (D.land * (d - edge)) / D.bank; // E775
     H[k] = Math.min(H[k], h);
   });
 }
@@ -225,7 +225,7 @@ function makeThings(roll) {
   const TR = D.trade; TR.routes.forEach(([ax, ay], r) => TR.stops.forEach((d, i) => { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('stop', k, roll); const t = things.at(-1); Object.assign(t, { route: r, want: TR.wares[(r + i) % TR.wares.length], owner: null }); clearing('stop', [t.bx, t.by]); } })); // E492
   openWays(fixed);
   // E49
-  for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, Math.floor(roll() * 6), TREEAMT.get(k)); TREEAMT.clear();
+  for (let k = 0; k < N * N; k++) if (FOR[k]) put('tree', k, roll, 0.85 + roll() * 0.3, treeKindAt(k, roll), TREEAMT.get(k)); TREEAMT.clear();
   for (const t of things) if (t.kind in D.Z3.finds && !fixed.has(t.k)) t.amount = Math.round(t.amount * (LD.amt[KIND[t.kind].yield] ?? ONE)); // E654
   const fr = dice(seed ^ FN.seed); for (const [kind, n] of Object.entries(FN.lay)) for (let m = count(fr, n); m--; ) { const s = spot(KIND[kind].r, fr, kind); if (s) { put(kind, s.at(-1), fr); clearing(kind, s); } } // E564
   for (const [ax, ay] of TR.routes) for (const d of [FN.camp, -FN.camp]) { const k = nearest(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile); if (~k) { put('camp', k, fr); clearing('camp', [things.at(-1).bx, things.at(-1).by]); } }
@@ -252,7 +252,7 @@ const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), 
 const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // E55
 
 // ── Drawn once in the view frame (E56)
-let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskLake = document.createElement('canvas'), maskFlood = document.createElement('canvas');
+let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskFlood = document.createElement('canvas'), ICE = D.ice, ICEM = Array.from({ length: ICE.steps }, () => document.createElement('canvas')), iceLv = (k) => Math.floor(ICE.steps * Math.min(ONE, -H[k] / D.lakeDeep)); // E780
 function renderGround() {
   const pts = []; for (const [x, y] of [[0, 0], [D.site, 0], [0, D.site], [D.site, D.site]]) for (const h of [0, D.land]) pts.push(V(x, y, h));
   const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
@@ -260,7 +260,7 @@ function renderGround() {
   ground = document.createElement('canvas'); ground.width = gw; ground.height = gh;
   let g = ground.getContext('2d'), blades = null; GCH.clear(); [CHLO, CHHI] = CH.reduce(([a, b], v) => [Math.min(a, v), Math.max(b, v)], [Infinity, -Infinity]);
   g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
-  for (const m of [maskLand, maskDark, maskLake, maskFlood]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? C.sky.wet : m === maskFlood ? C.water : '#fff'; } // E57
+  for (const m of [maskLand, maskDark, maskFlood, ...ICEM]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? C.sky.wet : m === maskFlood ? C.water : m === maskLand ? '#fff' : C.ground.ice; } // E57
   scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); for (const t of things) if (t.kind === 'bld') wear(t); // E546
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // E58
@@ -269,11 +269,11 @@ function renderGround() {
     for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } for (const [col, n, rad] of C.ground.specks) for (let i = n; i--; ) { q.fillStyle = col; q.beginPath(); q.arc(r() * bladeTile.width / s, r() * bladeTile.width / s, rad, -Math.PI, Math.PI); q.fill(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale((D.upm * LAY.blade) / s)); return p; };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
-  const LIT = 0.03, LAY = D.lay; // E60
+  const LIT = 0.03, LAY = D.lay; let MASKS = false, ICEP = null; // E60
   const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
     return lit(base, clamp(LIT * leanOf(k), -LAY.lean, LAY.lean)); }; // E758
   function leanOf(k) { const c = k * 4; return (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; }
-  paintGround = (into, s, i0, iN, j0, j1, masks) => { g = into; blades = bladesAt(s); // E748
+  paintGround = (into, s, i0, iN, j0, j1, masks) => { g = into; MASKS = masks; if (masks) { ICEP = ICEM.map(() => new Path2D()); ICEP.land = new Path2D(); } blades = bladesAt(s); // E748
   for (let j = j0; j <= j1; j++) {
     for (let i = i0; i <= iN; ) { // E61
       const col = colour(i, j), h0 = CH[(j * N + i) * 4]; let i1 = i;
@@ -281,7 +281,7 @@ function renderGround() {
       const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
       const a = P(i * T, j * T, CH[k]), b = P((i1 + 1) * T, j * T, CH[k1 + 1]), c = P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), d = P(i * T, (j + 1) * T, CH[k + 2]); quad(a, b, c, d, col);
       if (col === C.grass || col === FLOOR) { g.globalAlpha = D.blades; quad(a, b, c, d, blades); g.globalAlpha = 1; }
-      const h = H[j * N + i]; if (masks) for (const m of h > 0 ? (BANK[j * N + i] <= FLD.rise ? [maskLand, maskDark, maskFlood] : [maskLand, maskDark]) : DEP[j * N + i] >= D.edge ? [maskLake] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.fill(); }
+      const h = H[j * N + i]; if (masks) for (const m of h > 0 ? (BANK[j * N + i] <= FLD.rise ? [maskLand, maskDark, maskFlood] : [maskLand, maskDark]) : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.closePath(); q.fill(); q.strokeStyle = q.fillStyle; q.lineWidth = LAY.mask; q.stroke(); }
       i = i1 + 1;
     }
     for (let i = i0; i <= iN; i++) { // E62
@@ -290,14 +290,17 @@ function renderGround() {
       face((i + 1) * T, j * T, (i + 1) * T, (j + 1) * T, CH[k + 1], CH[k + 3], ch(i + 1, j, 0), ch(i + 1, j, 2));
     }
   }
-  for (let j = Math.max(ZERO, j0 - ONE); j < Math.min(N - ONE, j1 + ONE); j++) for (let i = Math.max(ZERO, i0 - ONE); i < Math.min(N - ONE, iN + ONE); i++) contour(i, j); };
+  for (let p = ZERO; p < STRATA.length; p++) for (let j = Math.max(ZERO, j0 - ONE); j < Math.min(N - ONE, j1 + ONE); j++) for (let i = Math.max(ZERO, i0 - ONE); i < Math.min(N - ONE, iN + ONE); i++) contour(i, j, p); if (masks) ICEM.forEach((m, l) => { const q = m.getContext('2d'); q.fill(ICEP[l]); q.globalCompositeOperation = 'destination-out'; q.fill(ICEP.land); q.globalCompositeOperation = 'source-over'; }); }; // E779
   paintGround(g, ONE, ZERO, N - ONE, ZERO, N - ONE, true); mottle(g);
-  function contour(i, j) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], ks = cell.map(([x, y]) => y * N + x), v = ks.map((k) => H[k]), up = v.map((h) => Math.max(null, h)), bs = v.map(stratum), lo = Math.min(...bs), hi = Math.max(...bs); // E759
-    if (lo === hi || ks.some((k) => FOR[k]) || Math.max(...up) - Math.min(...up) > REPOSE * LAY.steep) return;
+  function contour(i, j, pass) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], ks = cell.map(([x, y]) => y * N + x), v = ks.map((k) => H[k]), up = v.map((h) => Math.max(null, h)), bs = v.map(stratum), lo = Math.min(...bs), hi = Math.max(...bs); // E759
+    if ((lo === hi && hi && Math.max(...up) === Math.min(...up)) || ks.some((k) => FOR[k]) || Math.max(...up) - Math.min(...up) > REPOSE * LAY.steep) return;
     const lean = clamp((LIT * ks.reduce((a, k) => a + leanOf(k), null)) / ks.length, -LAY.lean, LAY.lean), at = ({ x, y, h }) => P(x * T, y * T, Math.max(null, h)), pts = cell.map(([x, y], n) => ({ x: x + DRW.half, y: y + DRW.half, h: v[n] }));
-    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; g.fillStyle = b ? lit(ks.some((k) => MARSH[k]) ? REED : TOP[b], lean) : WATER[ZERO]; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); if (TOP[b] === C.grass) { g.globalAlpha = D.blades; g.fillStyle = blades; g.fill(); g.globalAlpha = ONE; } };
+    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; g.fillStyle = b ? lit(ks.some((k) => MARSH[k]) ? REED : TOP[b], lean) : WATER[ZERO]; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.strokeStyle = g.fillStyle; g.lineWidth = LAY.seam; g.stroke(); if (TOP[b] === C.grass) { g.globalAlpha = D.blades; g.fillStyle = blades; g.fill(); g.globalAlpha = ONE; } };
     const above = (poly, L) => poly.flatMap((p, n) => { const q = poly[(n + ONE) % poly.length], out = p.h > L ? [p] : []; if ((p.h > L) !== (q.h > L)) { const t = (L - p.h) / (q.h - p.h); out.push({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t, h: L }); } return out; });
-    fill(pts, lo); for (let b = lo + ONE; b <= hi; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L); fill(poly, b); const edge = poly.filter((p) => p.h === L); if (!L && edge.length > ONE) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } }
+    const paint = (poly, f) => { if (poly.length < cell.length - ONE) return; g.fillStyle = g.strokeStyle = f; g.lineWidth = LAY.seam; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.stroke(); };
+    if (MASKS && !pass && !lo && ks.every((k) => DEP[k] >= D.edge)) { const add = (P2, poly) => { if (poly.length < cell.length - ONE) return; poly.forEach((p, n) => (n ? P2.lineTo : P2.moveTo).call(P2, ...at(p))); P2.closePath(); }; ICEP.forEach((P2, l) => add(P2, above(pts, (-D.lakeDeep * (l + ONE)) / ICE.steps))); add(ICEP.land, above(pts, ZERO)); } // E782
+    if (!hi) { if (pass) return; const wb = v.map(waterBand), a = Math.min(...wb), z = Math.max(...wb), sink = pts.map((p) => ({ ...p, h: -p.h })); if (a === z) return; paint(pts, WATER[a]); for (let w = a + ONE; w <= z; w++) paint(above(sink, D.wade + (w - ONE) * ((D.sea - D.wade) / (BANDS - ONE))).map((p) => ({ ...p, h: -p.h })), WATER[w]); return; } // E776
+    if (pass < lo || pass > hi) return; if (pass === lo) return fill(pts, lo); for (let b = pass; b === pass; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L); fill(poly, b); const edge = poly.filter((p) => p.h === L); if (!L && edge.length > ONE && Math.min(...v) < ZERO) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } }
   function face(x1, y1, x2, y2, topL, topR, botL, botR) {
     if (topL <= botL && topR <= botR) return;
     for (const [lo, hi, s] of STRATA) {
@@ -776,16 +779,8 @@ g.strokeStyle = stroke; g.lineWidth = lw; g.stroke(); } };
 const NS_blob = (cx, cy, rx, ry, n, jit, r) =>
 Array.from({ length: n }, (_, i) => { const a = (i / n) * 6.283, k = 1 - jit + r() * jit * 2; return [cx + Math.cos(a) * rx * k, cy + Math.sin(a) * ry * k]; });
 const NS_INK = 'rgba(14,20,12,.34)';
-function nodeArt(kind, v, r) { const n = { kind }, L = SPRITE.nodes.leaves[season()], M = SPRITE.nodes[kind]; g.lineJoin = 'round'; if (M && M.e) { g.beginPath(); g.ellipse(...M.e); if (M.ring) { g.strokeStyle = M.ring; g.lineWidth = M.w; g.stroke(); return; } g.fillStyle = M.body; g.fill(); g.fillStyle = M.bone; g.fillRect(...M.r); return; } g.scale( n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25,
-n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25, ); if (n.kind === 'tree') { const TC = ['#2f5a2a', '#3c6c32', '#2a5428', '#3a6a38', '#2f6048', '#4a7430'][v], col = L[v] || TC; NS_poly( [
-[-2.4, 0], [2.4, 0], [1.3, -8], [0.7, -14], [-0.7, -14], [-1.4, -8], ], '#4d3823', NS_INK, 0.3, ); if (v === 3 || v === 4) { const T = v === 4 ? 6 : 5, dy = v === 4 ? 4.6 : 4.8,
-w0 = v === 4 ? 10 : 12.5; for (let i = 0; i < T; i++) { const y = -4 - i * dy, w = w0 - i * (w0 / T) * 0.86, pts = [[-w, y + 2.4]];
-for (let k = 1; k < 7; k++) pts.push([-w + (2 * w * k) / 7, y + 2.6 + (k % 2 ? 0.1 : 1.7) * (0.6 + r())]); pts.push([w, y + 2.4], [w * 0.4, y - 1.5], [0, y - 6], [-w * 0.4, y - 1.5]);
-NS_poly(pts, NS_c(col, 0.78 + i * 0.07), NS_INK, 0.35); NS_poly( [ [0, y - 6], [w * 0.4, y - 1.5], [w * 0.1, y + 0.4], [-w * 0.15, y - 1], ], NS_c(col, 1.32), ); } } else {
-NS_poly(NS_blob(0, -16, 11, 8.8, 24, 0.15, r), NS_c(col, 0.68), NS_INK, 0.35); const L = [ [-5, -13.5, 5.4, 4.3], [4.6, -14, 5.2, 4.1], [0, -20, 5.8, 4.5], [-5.4, -19, 3.8, 3.1], [5.6, -19.4, 4, 3.2],
-]; L.forEach(([x, y, rx, ry], i) => { NS_poly(NS_blob(x, y, rx, ry, 13, 0.22, r), NS_c(col, 1 + i * 0.06), 'rgba(14,20,12,.3)', 0.25);
-NS_poly(NS_blob(x - rx * 0.25, y - ry * 0.35, rx * 0.5, ry * 0.4, 8, 0.2, r), NS_c(col, 1.45)); }); } if (L.snow) { NS_poly(NS_blob(-2, -22, 5, 1.6, 8, 0.2, r), '#e8eef0');
-NS_poly(NS_blob(3.4, -17.6, 3, 1.1, 8, 0.2, r), '#e8eef0'); } } else if (n.kind === 'bush') { [ [-4, -3.5, 4.8, 3.4, 0.8], [4, -3.5, 4.6, 3.2, 0.85], [0, -6, 5, 3.6, 1],
+function nodeArt(kind, v, r) { const n = { kind }, M = SPRITE.nodes[kind]; g.lineJoin = 'round'; if (M && M.e) { g.beginPath(); g.ellipse(...M.e); if (M.ring) { g.strokeStyle = M.ring; g.lineWidth = M.w; g.stroke(); return; } g.fillStyle = M.body; g.fill(); g.fillStyle = M.bone; g.fillRect(...M.r); return; } g.scale( n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25,
+n.kind === 'tree' ? 0.88 : n.kind === 'bush' ? 1.45 : 1.25, ); if (n.kind === 'tree') return treeArt(v); if (n.kind === 'bush') { [ [-4, -3.5, 4.8, 3.4, 0.8], [4, -3.5, 4.6, 3.2, 0.85], [0, -6, 5, 3.6, 1],
 ].forEach(([x, y, rx, ry, f]) => { NS_poly(NS_blob(x, y, rx, ry, 10, 0.2, r), NS_c('#3f6b33', f), NS_INK, 0.3);
 NS_poly(NS_blob(x - rx * 0.25, y - ry * 0.35, rx * 0.5, ry * 0.4, 8, 0.2, r), NS_c('#3f6b33', f * 1.4)); }); for (const [a, b] of [ [-3, -6], [3, -4], [0, -3], [-5, -3], [5, -6.5], [1, -8], ]) {
 g.fillStyle = C.red; g.beginPath(); g.arc(a, b, 1.15, 0, 7); g.fill(); g.fillStyle = 'rgba(255,255,255,.55)'; g.beginPath(); g.arc(a - 0.3, b - 0.4, 0.38, 0, 7); g.fill(); } } else {
@@ -795,6 +790,49 @@ NS_poly([P[1], P[2], P[3], P[4], [3, -6.5], [-3, -5]], top, 'rgba(0,0,0,.25)', 0
 g.strokeStyle = 'rgba(10,12,14,.5)'; g.lineWidth = 0.4; g.beginPath(); g.moveTo(-2, -5); g.lineTo(-1, -1); g.moveTo(4, -6); g.lineTo(5, -9); g.stroke(); if (gold || iron) for (const [x, y] of [
 [-1, -7], [3, -5], [-5, -4], ]) { g.fillStyle = gold ? '#fff6c8' : '#d5e2ee'; NS_poly([ [x, y - 1.1], [x + 0.9, y], [x, y + 1.1], [x - 0.9, y], ]); g.fill(); } } }
 
+// ── The trees: twelve kinds from the Sprites book, each in a few variants, drawn once a leaf stage and kept (E773)
+const TREE = SPRITE.trees, TD = TREE.dab, TW = TREE.twig, HALF = TREE.half;
+const leafStage = (v) => { const f = (K.t / D.season + NS_rng(TREE.seed + v)() * TREE.lag) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), ZERO); }; // E777
+const treeLook = (v) => leafStage(v) + (K.snow > G.snow.covers ? TREE.snowKey : '');
+const kindOf = (v) => TREE.kinds[Math.floor(v / TREE.variants) % TREE.kinds.length];
+function treeKindAt(k, roll) { const h = H[k], where = h > D.land ? 'hill' : h < TREE.wet ? 'wet' : 'plain', W8 = TREE.kinds.map((s) => s.where[where] || ZERO), sum = W8.reduce((a, b) => a + b), x = roll() * sum; // E774
+  let acc = ZERO; for (let i = ZERO; i < W8.length; i++) { acc += W8[i]; if (x < acc) return i * TREE.variants + Math.floor(((x - acc + W8[i]) / W8[i]) * TREE.variants); } return ZERO; }
+function treeArt(v) { const S = kindOf(v), st = TREE.stages[leafStage(v)], snow = K.snow > G.snow.covers, r = NS_rng(TREE.seed + v * TREE.step), paint = (c) => (c in S ? S[c] : c);
+  const col = S.ever ? (st.ever ? blend(S.leaf, st.ever[ZERO], st.ever[ONE]) : S.leaf) : st.leaf && (st.leaf[ONE] ? blend(paint(st.leaf[ZERO]), paint(st.leaf[ONE]), st.leaf.at(-ONE)) : paint(st.leaf[ZERO])), keep = S.ever ? ONE : st.keep;
+  const line = (x0, y0, x1, y1, c, w) => { g.strokeStyle = c; g.lineWidth = w; g.lineCap = 'round'; g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); };
+  const trunk = ([dx, h, lean], w) => { const [a, b, c2, d2] = TREE.trunk, q = LG(dx - w, ZERO, dx + w, ZERO, [shade(S.bark, TD.lit[ONE] + ONE), S.bark, shade(S.bark, TD.dark)]);
+    g.beginPath(); g.moveTo(dx - w * a, ZERO); g.quadraticCurveTo(dx - w * b, -h * d2, dx - w * c2 + lean * HALF, -h * HALF); g.lineTo(dx - w * HALF + lean, -h); g.lineTo(dx + w * HALF + lean, -h); g.lineTo(dx + w * c2 + lean * HALF, -h * HALF); g.quadraticCurveTo(dx + w * b, -h * d2, dx + w * a, ZERO); g.closePath(); g.fillStyle = q; g.fill();
+    if (S.marks) { g.fillStyle = S.marks; for (let i = TREE.marks; i--; ) { const y = -ONE - r() * (h - ONE - ONE); g.fillRect(dx - w * HALF + r() * w * HALF + lean * (-y / h), y, w * (HALF + r() * HALF), TREE.mark); } } };
+  const twigs = (x0, y0, ends, c, w0, full) => { const seg = []; const grow = (x, y, a, len, w, d) => { const x1 = x + Math.cos(a) * len, y1 = y + Math.sin(a) * len; seg.push([x, y, x1, y1, w, d]); if (d >= (full ? TW.depth : ZERO)) return; const n = d < ONE + ONE ? ONE + ONE : ONE + ONE + (r() < TW.third);
+      for (let i = ZERO; i < n; i++) grow(x1, y1, a + (i - (n - ONE) * HALF) * (S.spread ?? ONE) * (TW.spread[ZERO] + r() * TW.spread[ONE]) + (r() - HALF) * TW.jit, len * (TW.len[ZERO] + r() * TW.len[ONE]), w * TW.len[ZERO], d + ONE); };
+    for (const [x, y] of ends) grow(x0, y0, Math.atan2(y - y0, x - x0), Math.hypot(x - x0, y - y0) * (full ? TW.first : ONE), w0, ZERO);
+    for (const [a, b, x1, y1, w, d] of seg) line(a, b, x1, y1, c, Math.max(TW.least, w));
+    if (snow && full) for (const [a, b, x1, y1, w, d] of seg) if (d <= ONE + ONE && Math.abs(x1 - a) > HALF) line(a, b - w * TW.snow, x1, y1 - w * TW.snow, C.ground.snow, Math.max(TW.least * (ONE + ONE), w * TW.snow)); };
+  const env = (e) => { if (e.type === 'ellipse' || e.type === 'lumpy') { const [cx, cy] = e.c, [rx, ry] = e.r, L = e.type === 'lumpy' ? Array.from({ length: TREE.lumps }, () => [cx + (r() - HALF) * rx * e.lump[ZERO], cy + (r() - HALF) * ry * e.lump[ONE], rx * (e.lump[2] + r() * e.lump[3]), ry * (e.lump[2] + r() * e.lump[3])]) : [[cx, cy, rx, ry]], m = e.type === 'lumpy' ? e.lump[ZERO] : ONE;
+      return { x0: cx - rx * m, x1: cx + rx * m, y0: cy - ry * m, y1: cy + ry * m, in: (x, y) => L.some(([a, b, p, q]) => ((x - a) / p) ** 2 + ((y - b) / q) ** 2 <= ONE) }; }
+    const { base, top, w, p = ONE, taper = ZERO } = e, span = base - top; if (e.type === 'spindle') return { x0: -w, x1: w, y0: top, y1: base, in: (x, y) => Math.abs(x) < w * Math.sin(Math.min(ONE, (base - y) / span) * Math.PI) ** p * (ONE - taper * (base - y) / span) };
+    if (e.type === 'dome') return { x0: -w, x1: w, y0: top, y1: base, in: (x, y) => y < base && Math.abs(x) < w * Math.sqrt(Math.max(ZERO, (y - top) / span)) };
+    return { x0: e.x[ZERO], x1: e.x[ONE], y0: top, y1: base, in: (x, y) => Math.abs(x - e.mid) < w - (y - top) * e.lean && y < base - Math.abs(Math.sin(x * e.wave)) * e.ripple && Math.abs(x - e.mid) > e.hole }; };
+  const leaves = (e, c, kp, size, n, droop, fruit) => { const E = env(e), all = []; for (let i = n * TREE.tries; i-- && all.length < n; ) { const x = E.x0 + r() * (E.x1 - E.x0), y = E.y0 + r() * (E.y1 - E.y0); if (E.in(x, y)) all.push([x, y, r()]); } const pts = all.filter((p) => p[2] < kp); // E778
+    pts.sort((a, b) => a[ONE] - b[ONE] || a[ZERO] - b[ZERO]); const cx = (E.x0 + E.x1) * HALF, cy = (E.y0 + E.y1) * HALF, rx = (E.x1 - E.x0) * HALF, ry = (E.y1 - E.y0) * HALF, [l0, l1, lmin, deep, jit] = TD.lit;
+    for (const [x, y] of pts) { const nx = (x - cx) / rx, ny = (y - cy) / ry, l = nx * TREE.sun[ZERO] + ny * TREE.sun[ONE], lit = l0 + l1 * clamp(l, lmin, ONE) - (ONE - Math.min(ONE, Math.hypot(nx, ny))) * deep + (r() - HALF) * jit, s = size * (TD.size[ZERO] + r() * TD.size[ONE]), rot = droop ? Math.PI * HALF + (r() - HALF) * TD.sway : r() * Math.PI;
+      g.fillStyle = shade(c, lit); g.beginPath(); g.ellipse(x, y, s, s * (droop ? TD.droop : TD.aspect), rot, ZERO, Math.PI + Math.PI); g.fill(); if (lit > TD.hi[ZERO] && r() < TD.hi[ONE]) { g.fillStyle = shade(c, lit * TD.hi[2]); g.beginPath(); g.ellipse(x - TD.nudge, y - TD.nudge, s * HALF, s * TD.droop, rot, ZERO, Math.PI + Math.PI); g.fill(); } }
+    if (fruit) for (let i = TREE.fruit.n; i--; ) { const x = E.x0 + r() * (E.x1 - E.x0), y = E.y0 + r() * (E.y1 - E.y0); if (E.in(x, y)) { g.fillStyle = fruit; g.beginPath(); g.arc(x, y, TREE.fruit.r, ZERO, Math.PI + Math.PI); g.fill(); } } };
+  const tiers = (T) => { const [hy, ky] = TREE.tier.rise, L = LG(-T.w, ZERO, T.w, ZERO, [shade(col, TD.lit[ONE] + ONE), col, shade(col, TD.dark)]); for (let i = ZERO; i < T.n; i++) { const t = i / (T.n - ONE), y = T.base + (T.top - T.base) * t * TREE.tier.reach, w = (T.w * (ONE - t * TREE.tier.narrow) + TREE.tier.tip) * (TREE.tier.vary[ZERO] + r() * TREE.tier.vary[ONE]), dr = T.droop * (ONE - t * HALF) - (T.up || ZERO);
+      g.beginPath(); g.moveTo(-w, y + dr); g.quadraticCurveTo(-w * HALF, y - hy, ZERO, y - ky); g.quadraticCurveTo(w * HALF, y - hy, w, y + dr); const m = Math.max(TREE.tier.teeth, Math.round(w * TREE.tier.per)); for (let k = m; k >= -m; k--) { const f = Math.abs(k) / m; g.lineTo((k / m) * w, y + dr * f * f + TREE.tier.fringe[ZERO] + (k % (ONE + ONE) ? TREE.tier.fringe[ONE] : ZERO) * (HALF + r() * HALF)); } g.closePath();
+      g.fillStyle = L; g.fill(); g.fillStyle = LG(ZERO, y - ONE, ZERO, y + dr + TREE.tier.fringe[ONE] + HALF, [C.ground.clear, TREE.tier.under]); g.fill();
+      if (snow) { g.fillStyle = C.ground.snow; g.beginPath(); g.moveTo(-w * TREE.tier.cap[ZERO], y + dr * TREE.tier.cap[ONE]); g.quadraticCurveTo(-w * TREE.tier.cap[2], y - hy, ZERO, y - ky); g.quadraticCurveTo(w * TREE.tier.cap[2], y - hy, w * TREE.tier.cap[3], y + dr * TREE.tier.cap[ONE]); g.quadraticCurveTo(ZERO, y, -w * TREE.tier.cap[ZERO], y + dr * TREE.tier.cap[ONE]); g.fill(); } }
+    g.fillStyle = L; g.beginPath(); g.moveTo(-TREE.tier.tip, T.top + ky); g.lineTo(ZERO, T.top - TREE.tier.tip); g.lineTo(TREE.tier.tip, T.top + ky); g.closePath(); g.fill(); };
+  if (st.fallen && !S.ever && !snow) for (let i = st.fallen; i--; ) { const a = r() * Math.PI * (ONE + ONE), d = TREE.litter[ZERO] + r() * TREE.litter[ONE]; g.fillStyle = shade(paint('fallen'), TD.size[ZERO] + r() * HALF); g.beginPath(); g.ellipse(Math.cos(a) * d, Math.sin(a) * d * TREE.litter[2], TREE.litter[3], TREE.litter[3] * TD.aspect, r() * Math.PI, ZERO, Math.PI + Math.PI); g.fill(); }
+  for (const t of S.trunks || [[ZERO, S.h, S.lean || ZERO]]) trunk(t, S.w);
+  if (S.limbs && (S.ever || !col || keep < ONE || S.limbs.always)) twigs(...S.limbs.from, S.limbs.to, S.limbs.col || S.bark, S.limbs.w, !S.ever && !col);
+  if (S.weep && !col) for (let i = TREE.whips; i--; ) { const x = (i - TREE.whips * HALF) * TREE.whip; g.strokeStyle = shade(S.bark, TD.lit[ONE] + ONE); g.lineWidth = TW.least * HALF; g.beginPath(); g.moveTo(x * HALF, S.weep.top); g.quadraticCurveTo(x, S.weep.top + ONE + ONE, x, S.weep.base + r() * (ONE + ONE)); g.stroke(); }
+  if (S.tiers) tiers(S.tiers);
+  if (col && S.crown) leaves(S.crown, col, keep, S.crown.leaf, S.crown.n, false, S.fruit && st.fruit && blend(S.fruit, paint(st.fruit), HALF));
+  if (col && S.weep) leaves(S.weep, shade(col, TD.aspect + HALF), keep, S.weep.leaf, S.weep.n, true);
+  if (S.pads) for (const [x, y, rx, ry] of S.pads) { leaves({ type: 'ellipse', c: [x, y], r: [rx, ry] }, col, ONE, S.pads.leaf || TREE.padLeaf, TREE.padN); if (snow) { g.fillStyle = C.ground.snow; g.beginPath(); g.ellipse(x - HALF * HALF, y - ry * HALF, rx * TREE.tier.cap[ZERO], ry * HALF, ZERO, ZERO, Math.PI + Math.PI); g.fill(); } }
+  if (snow && S.ever && S.crown) for (let i = TREE.flecks; i--; ) { const E = env(S.crown), x = E.x0 + r() * (E.x1 - E.x0), y = E.y0 + r() * (E.y1 - E.y0); if (E.in(x, y)) { g.fillStyle = C.ground.snow; g.beginPath(); g.ellipse(x, y, TREE.litter[3] * (ONE + ONE), TREE.litter[3] * HALF, ZERO, ZERO, Math.PI + Math.PI); g.fill(); } }
+}
 // ── The figures (E75)
 const INK = '#141210',
 SKIN = '#e0b48e',
@@ -961,7 +999,7 @@ let units = [], pick = [];
 const WORK = SPRITE.nodes.tool; // E85
 const YIELD = (t) => KIND[t.kind].yield;
 // E86
-const iced = (k) => K.ice && H[k] <= 0 && DEP[k] >= D.edge; // E87
+const iced = (k) => H[k] <= 0 && DEP[k] >= D.edge && iceLv(k) < K.iceOn; // E87
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
 const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3 || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
@@ -996,7 +1034,7 @@ function findPath(from, goal, near, most = D.tries.way, who = null) { // E90
 }
 const DANGER = {}, REACH = new Map(); let WALKV = 0; // E452
 function reach(side) { const h = things.find((t) => t.side === side && has(t, 'Seat')), who = units.find((u) => u.side === side) || null; // E453
-  const key = [WALKV, K.ice, K.flood > K.t, h && h.i, stat('', side, 'flood'), ...[...GATES.values()].map((s) => fire('shut', s, who))].join(), r = REACH.get(side); if (r && r.key === key) return r.set;
+  const key = [WALKV, K.iceOn, K.flood > K.t, h && h.i, stat('', side, 'flood'), ...[...GATES.values()].map((s) => fire('shut', s, who))].join(), r = REACH.get(side); if (r && r.key === key) return r.set;
   const seen = new Uint8Array(N * N), Q = []; if (h) stamp(h.bx, h.by, h.n * D.tile, (k) => { if (!seen[k] && walkable(k, who)) { seen[k] = true; Q.push(k); } });
   for (const k of Q) around(k, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who);
   const set = { has: (k) => !!seen[k] }; REACH.set(side, { key, set }); return set; }
@@ -1130,7 +1168,7 @@ function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
 const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // E119
 const [LEFT, GROW] = SPRITE.nodes.left;
-const nodeSprite = (kind, v, s) => sprite(kind + v + season(), 46, 58, 17, 54, 17, 54, 0, s, () => { nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
+const nodeSprite = (kind, v, s) => sprite(kind + v + treeLook(v), 46, 58, 17, 54, 17, 54, 0, s, () => { nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
 let FLAGS = null, FLY = null;
 function bldSprite(code, col, s, lv, up, fly, civ) { const [, n, , art] = B[code], w = n * D.tile, top = BLDTOP[art] || 40, pad = 12, k = w * ART_T * ART_S, W = w + pad * 2 + 10 + 2 * k, H = (w * ART_T) / 2 + top + pad * 2 + SKEW * W;
   const c = sprite(code + col + lv + up + !!fly + civ, W, H, W / 2, top + pad, W / 2 + k / 2, top + pad + (SKEW * k) / 2, SKEW, s, () => { FLAGS = fly ? [] : null; RES = up; ART[art](col, 0, lv, civ); RES = null; FLY = FLAGS; FLAGS = null; }); if (FLY) { c.flags = FLY; FLY = null; } return c; }
@@ -1155,7 +1193,7 @@ function trapArt(x, y, s, t) { const A = TRAPS[t.done < D.camp.built ? 'site' : 
   ctx.beginPath(); for (const [px, py] of at) for (const [a, b, c, d] of A.lines || []) { ctx.moveTo(x + (~~px + a) * s, y + (~~py + b) * s); ctx.lineTo(x + (~~px + c) * s, y + (~~py + d) * s); } ctx.stroke(); ctx.restore(); }
 const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // E121
 // ── Floor 6, climate (E122)
-const K = { ev: {}, t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: false, fog: 0, dew: null, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
+const K = { ev: {}, t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: null, iceOn: null, fog: 0, dew: null, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
 const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
 const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
 // E123
@@ -1183,7 +1221,7 @@ function climate(dt) {
   const raining = K.rain > 0.1; K.wet = relax(K.wet, +raining, raining ? D.wetUp : D.dryOut, dt); // E130
   if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (raining ? 2 : 1) * dt); // E131
   if (K.temp < 0) { K.fds += -K.temp * dt; if (K.wet > D.groundIce.wet) K.gfd = Math.min(D.groundIce.fdd, K.gfd - K.temp * dt); } // E132
-  else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = K.fds >= D.bears; // E364
+  else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = clamp(Math.floor((ICE.steps * K.fds) / ICE.freeze), ZERO, ICE.steps); K.iceOn = clamp(Math.floor((ICE.steps * (K.fds - D.bears)) / ICE.freeze), ZERO, ICE.steps); // E364
   if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { const sh = D.strike.share; K.strikeT = -((D.strike.summer * Math.max(...sh)) / sh[season()]) * Math.log(1 - rng()); strike(); } } // E135
   K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.vis < FW.wmo ? ' ≈' : '');
@@ -1198,7 +1236,7 @@ const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active 
 function drawSkin() { // E139
   const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / G.snow.full);
   if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
-  if (K.ice) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = 0.6; ctx.drawImage(maskLake, gx, gy, w, h); ctx.restore(); }
+  if (K.ice) { ctx.save(); ctx.globalAlpha = ICE.a; ctx.drawImage(ICEM[K.ice - ONE], gx, gy, w, h); ctx.restore(); } // E781
   if (K.flood > K.t) { ctx.globalAlpha = FLD.show; ctx.drawImage(maskFlood, gx, gy, w, h); ctx.globalAlpha = 1; } marks();
   if (K.sand) { const [x, y] = toScreen(...toView(K.sand.bx, K.sand.by, Math.max(null, H[tileAt(K.sand.bx, K.sand.by)]))); ctx.fillStyle = C.wild.sand; ctx.beginPath(); oval(ctx, x, y, K.sand.r * cam.z, K.sand.r * cam.z * TILT); ctx.fill(); } // E578
 }
@@ -1300,7 +1338,7 @@ function trample() { const R = ER.stampede, r = R.r * D.tile; for (const b of K.
 // E558
 const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, WASH = [], wash = (col, a) => { if (a >= BD.least) WASH.push([rgb(col), Math.min(ONE, a)]); }, flushWash = () => { if (!WASH.length) return; let a = ZERO, c = [ZERO, ZERO, ZERO]; for (const [col, ai] of WASH) { c = c.map((v, i) => col[i] * ai + v * (ONE - ai)); a = ai + a * (ONE - ai); } ctx.fillStyle = css(c.map((v) => v / a), a); ctx.fillRect(ZERO, ZERO, cw, ch); WASH.length = ZERO; }, rgb = (h) => h.match(/\w\w/g).map((x) => parseInt(x, 16)), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
 function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWidth = RP.line; ctx.strokeStyle = C.marks.ripple; ctx.beginPath();
-  if (!K.ice) for (const L of lakes) { const lx = L.x, ly = L.y * TILT; if (Math.abs(lx - cam.x) > w + L.r || Math.abs(ly - cam.y) > hh + L.r) continue; // E559
+  if (K.ice < ICE.steps) for (const L of lakes) { const lx = L.x, ly = L.y * TILT; if (Math.abs(lx - cam.x) > w + L.r || Math.abs(ly - cam.y) > hh + L.r) continue; // E559
     for (let i = 0; i < RP.n; i++) { const a = i * RP.turn + K.t * RP.spin, r = L.r * (RP.from + RP.span * ((i * RP.step + K.t * RP.drift) % 1)), [x, y] = toScreen(L.x + Math.cos(a) * r, (L.y + Math.sin(a) * r) * TILT); ctx.moveTo(x - RP.w * z, y); ctx.quadraticCurveTo(x, y - RP.lift * z, x + RP.w * z, y); } }
   ctx.stroke(); if (K.sky !== 'rain' || z < RR.zoom) return; const C0 = RR.cell, [r0, r1, rmax] = RR.r, gy0 = Math.floor((cam.y - hh) / TILT / C0), gy1 = Math.ceil((cam.y + hh + D.land * UP) / TILT / C0); // E560
   ctx.lineWidth = RR.line; ctx.strokeStyle = C.marks.ring; ctx.beginPath();
@@ -1496,7 +1534,7 @@ function wake(t) { // E156
 const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = (c - ci) / NC, pts = []; for (const [x, y] of [[ci, cj], [ci + 1, cj], [ci, cj + 1], [ci + 1, cj + 1]]) pts.push(V(x * CS * D.tile, y * CS * D.tile, D.land));
   return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // E157
 function woodsChunk(c, q) { // E158
-  const key = c + '@' + q + '@' + season(); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
+  const key = c + '@' + q + '@' + Math.floor(K.t / D.season * TREE.stages.length) + treeLook(ZERO); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
   const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
   for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, (q * t.size * artOf(t.kind)) / dpr), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size * artOf(t.kind), g2);
   w = { cv, q }; WOODS.set(key, w); fitCache(WOODS, GC.woods); return w;

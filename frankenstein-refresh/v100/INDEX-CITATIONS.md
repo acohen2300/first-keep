@@ -19,7 +19,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
 - **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268, D271, D279, D283, D294, X63
-- **QQ** Ice growth → N17 · used by D109, D225, X54
+- **QQ** Ice growth → N17 · used by D350, D109, D225, X54
 - **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
 - **QS** Ruts → N20 · used by D294, X63
 - **QT** Fire vs wetness → N21 · used by SC45, D308, D310, X65
@@ -116,7 +116,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N14** Hock (2003), degree-day melt → QO
 - **N15** US Army Corps of Engineers (1956), Snow Hydrology → QO, QCA
 - **N16** First-order lag (standard); Cukjati, Reberšek & Miklavčič (2001) → QP, QCI, QCJ, QCK, SC27, D231, D237, D249
-- **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D225
+- **N17** Stefan (1891) → QQ, QR, QCA, QCB, QBP, D350, D225
 - **N18** Bowden & Hughes (1939), friction on ice and snow → QR, QCA, QCB, QCL, QAG, QAI, QBO, QBT, G5, G6, G7, G8
 - **N19** Hanson et al. (1999), slip and the grip a step needs → QCB, QCE, QCF, QCD, QCG, G9
 - **N20** Wronski, E. B. & Humphreys, N. (1994) A method for evaluating the cumulative impact of ground-based logging sy → QS, QCD, QCM, QCN, QCO, D294
@@ -272,7 +272,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, UM17, UM18, UM19, UM20, UM21, UM22, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** Keys et al. (1950) The Biology of Human Starvation, Univ. of Minnesota Press; via Hargrove, Heinz & Heinz (200 → QBP, D212
 - **N172** Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the  → SN3
-- **N173** Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceM → G5, G6, G7, G9, G10, W24, D224, D225, X54, O80, O81, O82, O83, O84, O85, O86, O87, J8
+- **N173** Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceM → G5, G6, G7, G9, G10, W24, D350, D224, D225, X54, O80, O81, O82, O83, O84, O85, O86, O87, J8
 - **N174** Scheibe, R. R. (2002) An Overview of Studded and Studless Tire Traction and Safety, WA-RD 551.1, Washington St → QR, G10
 - **N175** Hsu, J., Shaw, R., Novak, A., Li, Y., Ormerod, M., Newton, R., Dutta, T. & Fernie, G. (2016) Slip resistance o → unused
 - **N176** Design: Mid's soldiers (02-rules-units.js UNIT, spear to treb; 04-rules-tech.js the barracks, range, stable, s → QCA, SC03, SC13, D86, D123, D124, D128, D133, D138, D226, D227, D228, X55, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, UM17, UM18, UM19, UM20, UM21, UM22, P2, P3, P4, P5, P6, P10, P22, P23, P24, P25, P26, P27, P28, P29, P30, P31, P32, P33, P34, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, J7
@@ -345,7 +345,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
-- **N261** (to open) Human proportion: an adult stands about 7.5 to 8 heads tall, the legs (floor to hip) about half the height (Vi → PF2, P1b, PF1
+- **N261** (to open) Human proportion: an adult stands about 7.5 to 8 heads tall, the legs (floor to hip) about half the height (Vi → PF2, P1b, PT1, PF1
 - **N260** Design: Albert, Nov 8 11:30-11:41 (B16): the land not blocky (coast, beach, cliff); from Gemini's art patch, s → C23, D348
 - **N259** (to open) Heights in nature: European high forest stands about 20–25 m, woodland edge and coppice 10–15 m; bramble, hawt → W25, W26, W27
 - **N258** Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushe → W25, D70, D85, D348
