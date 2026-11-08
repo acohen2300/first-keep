@@ -380,6 +380,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E711 |  | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; |  |
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
+| E733 |  | the bars for what is picked, as Base's selection bar (the Nov 7 re-read, items 32 and 34): villagers get the yields, Build and Follow; soldi |  |
 | E732 |  | the Mail door on the top bar with its unread count opens the Mail card: the messages newest first, each with its group, a tap on one with a  |  |
 | E731 |  | the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map is drawn on the canvas inside the box the menu mea |  |
 | E730 |  | the Build card as Base's: opening it reads the middle of the view and opens the tab of what fits there, marked blue with Fits here; a second |  |
@@ -2089,6 +2090,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J31 | a Build cell's second line when the store cannot pay: the word, its colour how near (the shortfall is in the tap's Needs) | Short | N132 |
 | J35 | the Welcome back card (Base's: the saved game opens paused, Resume or New game) and the pause's line (Base's pauseT) | {title: Welcome back, resume: Resume, paused: Paused · tap to carry on} | N241 |
 | J34 | the place bar's words, Base's (26-input placeT; Albert's screenshot Nov 7 20:38) | {start: Press where the {name} goes · drag empty ground to look around, lineStart: Tap where the {line} starts, ok: {Name}: tap Build, or dr | N241 |
-| J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked} | N241 |
+| J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked, charge: Charge, fallBack: Fall back, hold: Hold, recall: Recall, hunt: Hunt, hunt3: Hunt ×3, hunters: 3, cut: Cut, cutN | N241 |
 | J32 | the Pause screen's words: its title, the pause mark on the top bar (SoRen's), New game and its confirm (Albert, Nov 7: New game on the pause screen, with a confirm) | {title: Paused, mark: ❙❙, newGame: New game, sure: Sure? Tap again} | N241 |
 

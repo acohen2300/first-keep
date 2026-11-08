@@ -3548,3 +3548,15 @@ MODIFIED (8):
 LOCKED (2128 of 2136): byte for byte as sealed, 1,268,587 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2136 items sealed · 2010 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B4 · as Base: the picked soldiers' bar (Charge, Fall back, Hold, Recall, Follow) and the animal's (Hunt, Hunt ×3) (E733, J33) · 2026-11-07 21:28
+
+Opened: code:menu.js, code:combat.js, book:words, book:comments
+MODIFIED (4):
+- book:comments:E733 · added
+- book:words:J33 · 170 → 339 bytes
+- code:combat.js · 59,014 → 59,025 bytes
+- code:menu.js · 86,185 → 87,257 bytes
+LOCKED (2133 of 2137): byte for byte as sealed, 1,240,853 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2137 items sealed · 2011 book entries · 93 laws · 249 citations, 7 still to open · 7 known

@@ -163,6 +163,10 @@ const VERBS = {
   qclose: { label: () => SVG.close, whyNot: () => '', run: () => { S.qa = null; } },
   sendTo: { label: (y) => `<span class="t">${SVG[y]}</span>`, whyNot: (y) => (FK.picked().filter(isVil).some((u) => ECON.bestFind(u, y)) ? '' : `No ${y} within reach`), run: (y) => { for (const u of FK.picked().filter(isVil)) { const t = ECON.bestFind(u, y); if (t) ECON.gatherAt(u, t); } } },
   cancel: { label: () => WD.place.cancel, whyNot: () => '', run: () => VERBS.close.run() },
+  chargeP: { label: () => WD.bar.charge, whyNot: () => WAR.chargeWhy(FK.picked().filter(isSoldier)), run: () => WAR.charge(FK.picked().filter(isSoldier)) },
+  fallBackP: { label: () => WD.bar.fallBack, whyNot: () => '', run: () => WAR.fallBack(FK.picked().filter(isSoldier)) },
+  holdP: { label: () => WD.bar.hold, whyNot: () => '', run: () => { for (const u of FK.picked().filter(isSoldier)) Object.assign(u, { path: null, goal: u.k, job: 'hold', target: null, ord: null }); } },
+  hunt3: { label: () => WD.bar.hunt3, whyNot: (t) => VERBS.hunt.whyNot(t), run: (t) => { for (let i = WD.bar.hunters; i--; ) ECON.hunt(ME, t); } },
   unpick: { label: () => SVG.close, whyNot: () => '', run: () => { FK.select(null); S.more = false; FK.dirty(); } },
   follow: { label: () => `<span class="t">${SVG.direct}</span>`, whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
   mail: { label: () => { const n = mail.filter((m) => m.t > S.mailT).length; return `<span class="t">${SVG.mail}${n ? `<b class="badge">${n}</b>` : ''}</span>`; }, whyNot: () => '', run: () => { S.tab = S.tab === 'Mail' ? null : 'Mail'; S.mailT = FK.K.t; } },
@@ -244,7 +248,10 @@ function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S
   return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
-const rank = (card) => { if (S.tab || card || S.ghost) return ''; const V = FK.picked().filter((u) => own(u) && isVil(u)); if (V.length && !S.war) { const cells = [...ORDER.map((y) => vcell('sendTo', y, null, 'ic')), tab('Build', `<span class="t">${SVG.build}</span>`, 'build'), vcell('follow', null, null, 'ic', FK.cam.follow)]; return `<div class="bar">${row(span(ORDER.length, cell(WD.bar.picked.replace('{n}', V.length), 'title')), vcell('unpick'))}<div class="cells" style="--n:${cells.length}">${cells.join('')}</div></div>`; } return row(...ORDER.map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
+const rank = (card) => { if (S.tab || card || S.ghost) return ''; const P = FK.picked(), V = P.filter((u) => own(u) && isVil(u)), A = P.filter(isSoldier), W = P.filter((u) => u.kind === 'unit' && !own(u) && !SIDES[u.side]); const bar = (n, cells) => `<div class="bar">${row(span(ORDER.length, cell(WD.bar.picked.replace('{n}', n), 'title')), vcell('unpick'))}<div class="cells" style="--n:${cells.length}">${cells.join('')}</div></div>`;
+  if (V.length && !S.war) return bar(V.length, [...ORDER.map((y) => vcell('sendTo', y, null, 'ic')), tab('Build', `<span class="t">${SVG.build}</span>`, 'build'), vcell('follow', null, null, 'ic', FK.cam.follow)]);
+  if (A.length && !S.war) return bar(A.length, [vcell('chargeP'), vcell('fallBackP'), vcell('holdP'), vcell('recall'), vcell('follow', null, null, 'ic', FK.cam.follow)]); // E733
+  if (W.length) return bar(W.length, [vcell('hunt', W.at(null)), vcell('hunt3', W.at(null)), vcell('follow', null, null, 'ic', FK.cam.follow)]); return row(...ORDER.map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
 const base = (r) => S.war ? warBase() : row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
   + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
