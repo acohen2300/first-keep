@@ -3345,3 +3345,38 @@ MODIFIED (1):
 LOCKED (2108 of 2109): byte for byte as sealed, 1,110,332 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2109 items sealed · 1983 book entries · 93 laws · 247 citations, 7 still to open · 7 known
+
+## F2a · Albert's evening calls (Nov 7 19:35–19:51): the loop as Mid's fixed step with the frame drawn between steps (D343, E715), the speeds ×1 ×2 ×3 under the pause (D344), the War button back on its own rank (E704), hazards a setting copied at the match's start (E705), the guide lines the screen's (E716), the zone lines off, the Start sheet as Base's (one-slot Start, two-line blurb), the Town Center at Base's spot and Base's opening zoom (D84, D165), moonlit snow by albedo (D117, N248, E717); rain and snow on the glass as Mid's (E719) · 2026-11-07 20:06
+Albert, Nov 7 19:35–19:51 in chat: each item named; speed first
+Opened: code:index.html, code:menu.js, code:econ.js, book:measure, book:comments, book:citations, book:words, book:screen, law:QAL, tool:test.py
+MODIFIED (27):
+- book:citations:N248 · added
+- book:comments:E704 · 129 → 325 bytes
+- book:comments:E705 · 130 → 273 bytes
+- book:comments:E715 · added
+- book:comments:E716 · added
+- book:comments:E717 · added
+- book:comments:E718 · added
+- book:comments:E719 · added
+- book:measure:D117 · 1,204 → 1,481 bytes
+- book:measure:D165 · 149 → 258 bytes
+- book:measure:D229 · 2,276 → 2,435 bytes
+- book:measure:D343 · added
+- book:measure:D344 · added
+- book:measure:D84 · 135 → 247 bytes
+- book:screen:SN15 · 237 → 313 bytes
+- book:words:J26 · 1,093 → 1,120 bytes
+- code:econ.js · 105,176 → 105,228 bytes
+- code:index.html#floor-6-climate · 24,851 → 24,910 bytes
+- code:index.html#floor-7-display · 7,341 → 7,339 bytes
+- code:index.html#the-door · 14,012 → 14,460 bytes
+- code:index.html#the-view · 1,009 → 1,036 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 21,912 → 22,023 bytes
+- code:index.html#the-woods-cache · 4,776 → 4,775 bytes
+- code:index.html#touch · 7,511 → 7,438 bytes
+- code:menu.js · 81,724 → 82,970 bytes
+- law:QAL · 683 → 778 bytes
+- tool:test.py · 257,986 → 258,097 bytes
+LOCKED (2090 of 2117): byte for byte as sealed, 835,984 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2117 items sealed · 1991 book entries · 93 laws · 248 citations, 7 still to open · 7 known

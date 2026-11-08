@@ -1157,7 +1157,7 @@ def law(o, h):   # QAL from the books alone (D117 sight, D229 visibility), in Py
     S = MEASURE['sight']; K = {'alt': 50, 'moonAlt': -10, 'moonLit': 0, 'wetHour': False, 'vis': float('inf'), **o}; sun = S['sun']
     i = min(len(sun) - 1, max(1, sum(1 for r in sun if r[0] < K['alt']))); (a0, l0), (a1, l1) = sun[i - 1], sun[i]; f = min(1, (K['alt'] - a0) / (a1 - a0))
     full, quarter = S['moon']; E = (0 if K['alt'] < a0 else l0 * (l1 / l0) ** f) + full * K['moonLit'] ** math.log2(full / quarter) * max(0, math.sin(math.radians(K['moonAlt']))) + S['star']
-    E *= S['overcast'] / S['star'] if K['wetHour'] else 1; a = max(0, min(1, math.log(E / S['floor']) / math.log(S['ref'] / S['floor']))); upm = MEASURE['upm']   # S1/R3: sight falls with the log of the light (Sloan 1968), from the eye's absolute threshold (N247) to the day reference
+    E *= S['overcast'] / S['star'] if K['wetHour'] else 1; E *= 1 + min(1, K.get('snow', 0) / GROUND['snow']['full']) * (S['albedo']['snow'] / S['albedo']['grass'] - 1); a = max(0, min(1, math.log(E / S['floor']) / math.log(S['ref'] / S['floor']))); upm = MEASURE['upm']   # S1/R3: sight falls with the log of the light (Sloan 1968), from the eye's absolute threshold (N247) to the day reference
     return min(math.sqrt(S['earth'] * h) * upm, S['day'] * upm * a, K['vis'] * upm)
 async def sight(b):
     pg, errs = await fresh(b); v = await pg.evaluate(SIGHTJS); pg2, errs2 = await fresh(b); mn = await pg2.evaluate(MINIJS); await pg.close(); await pg2.close(); v = v or {}

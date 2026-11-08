@@ -133,6 +133,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E685** a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, no · D339 (N236, N237) · QCR (N237)
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
 - **E695** at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, · D340 (N238)
+- **E715** the loop as Mid's (41-boot frame): the world steps at a fixed rate (D343) however the fram · D343 (N112)
 - **E655** The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save
 - **E656** each kind of error logged once; a second kind holds the save (the last good one stands) an
 - **E657** the save: the seed (the map is laid again from it), the lists, the climate, the sides, wha
@@ -283,6 +284,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E139** on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply)
 - **E578** quicksand on the ground while it lasts
 - **E140** over everything: what falls, the strikes, the flash, the night, the white of low visibilit
+- **E719** rain and snow are drawn on the glass, as Mid's: the biggest drop crosses the screen at gla
 - **E379** rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's sp
 - **E380** snow: flakes falling slow to fast by size, carried by the wind and swaying
 - **E141** SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three st
@@ -316,12 +318,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## index.html#floor-7-display
 
-- **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N220, N247) · QAL (N41, N215, N216, N217, N218, N220, N247) · QAM (N42, N219) · QAN (N43, N44, N220)
-- **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N220, N247)
+- **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N220, N247, N248) · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219) · QAN (N43, N44, N220)
+- **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N220, N247, N248)
 - **E689** the tops are made again when a building is added, removed or raised further: a site counts
 - **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
-- **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247) · QAM (N42, N219)
+- **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219)
 - **E150** QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown aw · QAT (N53) · D120 (N112)
 - **E151** left at sunrise, up at noon, right at sunset
 - **E152** under the buildings and units: a building's footprint thrown by its height, a unit's foot 
@@ -335,8 +337,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#the-view-s-eyes-lights-and-stage
 
 - **E598** the view's eyes, lights and stage: the light and each eye's range (real math, Albert Nov 6
-- **E599** the light on the ground (D117): the sun's by its height, the moon's by its phase and heigh · D117 (N41, N215, N216, N217, N218, N220, N247)
-- **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220, N247) · QK (N10, N210, N245)
+- **E599** the light on the ground (D117): the sun's by its height, the moon's by its phase and heigh · D117 (N41, N215, N216, N217, N218, N220, N247, N248)
+- **E717** the eye sees the ground's light, not the sky's: the lux × the albedo of what covers the gr · D117 (N41, N215, N216, N217, N218, N220, N247, N248) · N248
+- **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QK (N10, N210, N245)
 - **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
@@ -398,6 +401,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E179** the base's icons: one 24-unit box each, line icons in the cell's colour, finds in their ow
 - **E180** the resources in their colours (COLORS.md)
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
+- **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
@@ -417,7 +421,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E188** sound on or off
 - **E451** the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends
 - **E189** a cell for what is drawn but not yet built: Albert's reminder
-- **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the se
+- **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the St
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E191** tap a yield: new villagers go there (the ring)
 - **E192** tap picks, slide places the ghost, tap again builds
@@ -438,7 +442,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
-- **E704** the two base rows as Base has them; at war the Build slot is War's close, so War is reache
+- **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
@@ -458,6 +462,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
 - **E339** while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the T
 - **E340** the ghost: a wall's tiles green or red with its corners, the first ringed green; a buildin
+- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn, and pulls, only where the
 - **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
@@ -503,6 +508,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## econ.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn, and pulls, only where the
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
 - **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t

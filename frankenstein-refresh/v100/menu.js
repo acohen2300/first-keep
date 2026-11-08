@@ -54,7 +54,7 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 .cell.on { border-color: var(--g1); box-shadow: inset 0 0 0 1px var(--g1); color: var(--g1); } .cell.blue { border-color: var(--rb); box-shadow: inset 0 0 0 1px var(--rb); }
 .cell.dim { background: var(--b1); color: var(--wdim); } .cell.dim small, .cell.dim .c { color: var(--wdim); } i.e, .row6 > i, .frame > i { background: var(--b1); border: 1px solid var(--b2); border-radius: 6px; height: var(--slot); box-sizing: border-box; pointer-events: none; } .row6 > i.gap { background: none; border: 0; }
 .cell.title { align-items: flex-start; padding-left: 14px; font: 400 18px var(--display); font-variant: small-caps; letter-spacing: .03em; color: var(--g1); } .bar { position: absolute; left: 12px; right: 12px; height: 3px; border-radius: 2px; }
-.cell.go { height: calc(2 * var(--slot) + var(--gap)); background: linear-gradient(var(--f1), var(--f2)); color: var(--ink); border-color: var(--f1); font-size: 18px; } .cell.go small { color: var(--ink); }
+.cell.go { background: linear-gradient(var(--f1), var(--f2)); color: var(--ink); border-color: var(--f1); font-size: 18px; } .cell.go small { color: var(--ink); }
 /* the grid: six slots a rank; a box is one decision, its choices one bar split by thin lines (§3) */
 .row6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: var(--gap); align-items: center; } .lab { padding-left: 6px; color: var(--wdim); line-height: 1.2; }
 .cells { display: grid; grid-template-columns: repeat(var(--n), 1fr); } .cells.seg { background: var(--b2); border: 1px solid var(--b3); border-radius: 9px; overflow: hidden; } .cells.seg .cell { background: none; border: 0; border-radius: 0; padding: 0 1px; } .cells.seg .cell + .cell { border-left: 1px solid var(--b3); } .cells.seg .cell.on { border-radius: 6px; box-shadow: inset 0 0 0 2px var(--g1); }
@@ -66,7 +66,7 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 .info { flex: 1; overflow-y: auto; border: 1px solid var(--b3); border-radius: 9px; padding: 8px 12px; line-height: 1.45; font-weight: 500; } .info p { margin: 0 0 8px; } .info b { font-weight: 600; }
 /* the card: solid over the map, above the base (Base); one height, but a Tall page keeps its own (Albert, Nov 5) */
 #panel { box-sizing: border-box; display: none; flex-direction: column; gap: var(--gap); } #panel.on { display: flex; background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; padding: var(--gap); }
-#base { display: flex; flex-direction: column; gap: var(--gap); } .pairs { display: flex; gap: var(--gap); } .pairs .cell { flex: 1; padding: 0; } #base .pairs .cell { font-size: 18px; }
+#base { display: flex; flex-direction: column; gap: var(--gap); } #rank:empty { display: none; } #rank i { visibility: hidden; } #spd { position: fixed; right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--slot) + var(--gap) + var(--gap)); width: calc((var(--slot) + var(--gap)) * var(--n)); } #spd:not(.on) { display: none; } .pairs { display: flex; gap: var(--gap); } .pairs .cell { flex: 1; padding: 0; } #base .pairs .cell { font-size: 18px; }
 /* war: steel, the war tiles a faint red; the middle box one block, thin dividers, a white edge (§8 the battle station) */
 .warbase { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: var(--slot) var(--slot); gap: var(--gap); } .cell.red { background: color-mix(in srgb, var(--rr) 22%, var(--s2)); border-color: color-mix(in srgb, var(--rr) 30%, var(--s3)); } .cell.warx { background: var(--s1); border-color: var(--rr); box-shadow: inset 0 0 0 1px var(--rr); }
 .mid { grid-column: 3 / 5; grid-row: 1 / 3; display: grid; grid-template-columns: 1fr 1fr; background: var(--s1); border: 2px solid var(--rw); border-radius: 9px; overflow: hidden; } .mid .cell { height: auto; border: 0; border-radius: 0; background: none; } .mid .cell:nth-child(odd) { border-right: 1px solid var(--s3); } .mid .cell:nth-child(-n+2) { border-bottom: 1px solid var(--s3); } .mid .cell.whole { grid-column: 1 / 3; grid-row: 1 / 3; border: 0; }
@@ -77,11 +77,12 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 #qa { position: fixed; display: none; gap: var(--gap); } #qa.on { display: flex; } #qa .cell { width: var(--slot); }
 #toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 2 * var(--slot) + 3 * var(--gap)); transform: translateX(-50%); background: var(--b1); border: 1px solid var(--g1); color: var(--g1); border-radius: 9px; padding: 6px 12px; font: 600 14px var(--ui); opacity: 0; transition: opacity .3s; pointer-events: none; max-width: 80vw; z-index: 4; }`;
 document.head.appendChild(css);
-const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id="card"></div><div id="panel"></div><div id="base"></div>'; document.body.appendChild(ui);
+const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id="card"></div><div id="panel"></div><div id="rank"></div><div id="base"></div>'; document.body.appendChild(ui);
 const topEl = document.createElement('div'); topEl.className = 'topbar'; document.body.appendChild(topEl);
 const toastEl = document.createElement('div'); toastEl.id = 'toast'; document.body.appendChild(toastEl);
+const spdEl = document.createElement('div'); spdEl.id = 'spd'; spdEl.className = 'cells seg'; spdEl.style.setProperty('--n', D.speeds.length); document.body.appendChild(spdEl); // E718
 const $ = (id) => document.getElementById(id);
-const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hazard: -1 }, group: 'Land', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
+const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hz: new Set() }, group: 'Land', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
 const toast = (msg, secs = D.toast) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = secs; };
 const WD = fromBook('words'), TW = WD.troops, TP_ = WD.pause, blessed = () => WAR.armyOf(ME).filter((u) => WAR.SQ.sel == null || u.bn === WAR.SQ.sel), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
@@ -117,6 +118,7 @@ const VERBS = {
   show: { label: (c) => 'Show', whyNot: () => '', run: (c) => { show[c] = !show[c]; FK.dirty(); } },
   lock: { label: () => 'Lock', whyNot: () => '', run: (c) => { S.lock[c] = !S.lock[c]; try { localStorage.setItem('fk.lock', JSON.stringify(S.lock)); } catch (e) {} } },
   fast: { label: () => 'Fast', whyNot: () => '', run: () => { show.fast = !show.fast; } },
+  speed: { label: (n) => `×${n}`, whyNot: () => '', run: (n) => { show.speed = Number(n); if (FK.paused()) FK.pause(false); S.tab = null; } }, /* Base's spd (E718) */
   new: { label: () => 'New', whyNot: () => '', run: () => { S.prev = S.tab; S.tab = 'Start'; } },
   copylog: { label: () => WT.copy, whyNot: () => '', run: () => copyLog() },
   close: { label: () => SVG.close, whyNot: () => '', run: () => { S.tab = null; S.subject = null; S.ghost = null; FK.dirty(); } },
@@ -128,7 +130,7 @@ const VERBS = {
   plan: { label: (c, up) => (up ? `${(WAR.SQ.plan[WAR.SQ.sel] || {})[c] || ''}<small>${c}</small>` : '−'), whyNot: () => (WAR.SQ.sel == null ? 'Pick a squad' : ''), run: (c, up) => WAR.plan(WAR.SQ.sel, c, !!up) },
   muster: { label: () => `${WA.muster}${WAR.SQ.sel == null ? '' : price(ECON.musterCost(ME, WAR.lack(WAR.SQ.sel)).cost)}`, whyNot: () => { if (WAR.SQ.sel == null) return 'Pick a squad'; const g = WAR.lack(WAR.SQ.sel), w = ECON.musterWhy(ME, g); return w === 'cost' ? `Needs ${costText(ECON.musterCost(ME, g).cost)}` : MUSTER[w] || ''; }, run: () => ECON.muster(ME, WAR.lack(WAR.SQ.sel), WAR.SQ.sel) },
   opt: { label: (k, i) => OPTS[k][i][0], whyNot: (k) => (BUILT[k] ? '' : 'Not built yet'), run: (k, i) => { S.opt[k] = i; } },
-  war: { label: () => '', whyNot: () => '', run: () => { const [w, h] = FK.size(); S.war = !S.war; S.mid = 'map'; S.tab = null; S.tool = null; S.aim = S.aim || { k: tileK(w * P.half, h * P.half), t: null }; S.aimT = performance.now(); } },
+  war: { label: () => (S.war ? '' : `<span class="t">${SVG.war}</span>${WD.mail.groups.war}`), whyNot: () => '', run: () => { const [w, h] = FK.size(); S.war = !S.war; S.mid = 'map'; S.tab = null; S.tool = null; S.aim = S.aim || { k: tileK(w * P.half, h * P.half), t: null }; S.aimT = performance.now(); } },
   mid: { label: (m) => `<span class="t">${SVG[m]}</span>${{ train: 'Train', squad: 'Squad', direct: 'Direct' }[m]}`, whyNot: () => '', run: (m) => { S.mid = S.mid === m ? 'map' : m; } },
   kind: { label: (c) => `<span class="t">${SVG[FK.kinds(FK.SH[c].class).map((k) => FK.SH[k].look).find((l) => SVG[l])]}</span>${FK.rankName(c, ME)}`, whyNot: (c) => { const b = trainer(c); return !FK.aged(c, ME) ? aging(c) : !b ? `Build a ${B[Object.keys(D.trains).find((x) => FK.trains(x, ME).includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // E186
   htab: { label: (t) => t, whyNot: () => '', run: (t) => { S.htab = t; } },
@@ -138,7 +140,7 @@ const VERBS = {
   alarm: { label: (k) => `<span class="t">${SVG[AW.cells[k].icon]}</span>${AW.cells[k].name}`, whyNot: () => (FK.seatOf(ME) ? '' : AW.noSeat), run: (k) => ECON.alarm(k) }, // E451
   work: { label: () => `<span class="t">${SVG[AW.cells.work.icon]}</span>${AW.cells.work.name}`, whyNot: () => '', run: () => ECON.allClear() },
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // E189
-  hazard: { label: (id) => `${OPTS.hazard.find(([, k]) => k === id)[0]}<small>${D.hazards.pts[id]}</small>`, whyNot: () => '', run: (id) => { FK.HZ.has(id) ? FK.HZ.delete(id) : FK.HZ.add(id); } }, // E705
+  hazard: { label: (id) => `${OPTS.hazard.find(([, k]) => k === id)[0]}<small>${D.hazards.pts[id]}</small>`, whyNot: () => '', run: (id) => { S.opt.hz.has(id) ? S.opt.hz.delete(id) : S.opt.hz.add(id); } }, // E705
   start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1], mine = civOf(S.opt.civ); ECON.deal([mine, ...PEOPLES().filter((k) => k !== mine).map((k) => [FK.rng(), k]).sort(([a], [b]) => a - b).map(([, k]) => k)]); ECON.setBell(o('len') || Infinity); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
   job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(ME).length ? 'No villagers' : n < 0 && !ECON.jobs(ME)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(ME, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
@@ -200,8 +202,8 @@ const queue6 = (q, done, more) => { const n = SCR.mold.slots, shown = more ? q.s
 const SCREENS = {
   Start: () => [head('A new game', !!S.prev), row(part('Difficulty', 3, 'diff', 3)), row(part('Length', 2, 'len', 4)), row(part('Scenario', 2, 'scen', 4)),
     row(part('World', 1, 'world', 2)), row(part('Tension', 1, 'tension', 2), part('Daily', 1, 'daily', 2)), row(part('', 0, 'civ', 6)),
-    `<p class="blurb"><b>${OPTS.civ[S.opt.civ][0]}</b><br>${civLine(civOf(S.opt.civ))}</p>`, row(`<div class="cells seg" style="grid-column:span 6;--n:6">${OPTS.hazard.map(([, id]) => vcell('hazard', id, null, 'two', FK.HZ.has(id))).join('')}</div>`),
-    row(span(6, vcell('start', null, null, 'go')))],
+    `<p class="blurb"><b>${civLine(civOf(S.opt.civ))}`.replace(',', '</b>,') + '</p>', row(`<div class="cells seg" style="grid-column:span 6;--n:6">${OPTS.hazard.map(([, id]) => vcell('hazard', id, null, 'two', S.opt.hz.has(id))).join('')}</div>`),
+    row(span(6, vcell('start', null, null, 'go')))], // E718
   Build: () => { const g = GROUPS[S.group];
     return [head('Build'), `<div class="row6 tabs">${Object.keys(GROUPS).map((x) => vcell('group', x, null, '', S.group === x)).join('')}</div>`,
       `<div class="frame">${g.map((c) => (D.cost[c] ? vcell('pick', c, null, `two ${picked(c) ? 'blue' : ''}`) : vcell('later', B[c][0], null, 'two'))).join('')}</div>`]; },
@@ -212,7 +214,7 @@ const SCREENS = {
     if (S.htab !== 'Town') return [title, tabs, stances(S.htab)];
     return [title, tabs, row(...queue6(h.queue || [], h.done, h.more)), frame([h.k ? vcell('train', born(), h.k, 'two') : '<i></i>', vcell('later', 'Scout', null, 'two'), '<i></i>',
       vcell('ageUp', null, null, 'two', !!r.aging), vcell('later', 'Tech', null, 'two'), vcell('later', 'Tech', null, 'two'), vcell('later', 'Tech', null, 'two'), vcell('later', 'All tech', null, 'two'), '<i></i>'])]; },
-  Pause: () => [row(span(2, cell(TP_.title, 'title')), vcell('fast', null, null, '', show.fast), vcell('newgame', null, null, '', S.sure), FK.TEST ? tab('Layers', 'Yard', 'yard') : '<i></i>', vcell('pause', null, null, '', true)), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E706
+  Pause: () => [row(span(2, cell(TP_.title, 'title')), vcell('newgame', null, null, '', S.sure), FK.TEST ? vcell('fast', null, null, '', show.fast) : '<i></i>', FK.TEST ? tab('Layers', 'Yard', 'yard') : '<i></i>', vcell('pause', null, null, '', true)), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E706
   Layers: () => [row(span(2, cell('Yard', 'title')), vcell('fast', null, null, '', show.fast), vcell('new'), vcell('later', 'book'), vcell('close')), ...[0, 2, 4, 6].map((i) => row(...LAYERS.slice(i, i + 2).map(([c, name]) => `<span class="lab" title="${name}">${c}</span><div class="cells seg" style="grid-column:span 2;--n:2">${vcell('show', c, null, '', show[c])}${vcell('lock', c, null, '', S.lock[c])}</div>`))), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E198
 };
 const page = () => (S.tab && SCREENS[S.tab] ? SCREENS[S.tab]().join('') : '');
@@ -236,8 +238,8 @@ function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S
   return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
-const base = (r) => (S.war ? warBase() : '') + row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
-  + row(S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
+const rank = (card) => (S.tab || card || S.ghost ? '' : row(...ORDER.map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red'))), base = (r) => S.war ? warBase() : row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
+  + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
 const MID = { map: () => held(vcell('rally', null, null, 'two'), 'ambush') + vcell('choke', null, null, 'two', S.tool === 'choke') + vcell('reinforce', null, null, 'two') + vcell('later', 'Map', null, 'two'), train: () => classes().map((k) => vcell('kind', kindOf(k), null, 'ic')).join(''),
   squad: () => WA.squads.map((n, i) => held(vcell('squad', i, null, 'two', WAR.SQ.sel === i), 'callHome', i)).join('') + vcell('setup', null, null, 'two'), setup: () => Object.keys(WAR.DIAL).map((k) => vcell('dial', k, null, 'two')).join('') + vcell('squads', null, null, 'two'), direct: () => classes().map((c) => held(vcell('move', c, null, 'two'), 'move', c, 'h')).join('') };
@@ -255,13 +257,14 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
   const tb = topbar(r); if (tb !== S.lastTop) { topEl.innerHTML = tb; S.lastTop = tb; }
   if (r.result) { S.tab = null; S.ghost = null; const you = r.result.winner === 0; $('card').className = 'on'; $('card').innerHTML = `<h2>${EW.head[+!you]}</h2><p>${r.result.text}</p><div class="row">${vcell('new')}${vcell('copylog')}</div>`; $('panel').className = ''; return; }
   if (S.subject && (S.subject.kind === 'unit' ? units().indexOf(S.subject) < 0 : things().indexOf(S.subject) < 0)) S.subject = null;
-  const html = page(r), card = cardText(r), sig = html + card + S.tab + base(r); if (!force && sig === S.last) return; S.last = sig;
+  const html = page(r), card = cardText(r), sig = html + card + S.tab + rank(card) + base(r); if (!force && sig === S.last) return; S.last = sig;
   $('panel').innerHTML = html; $('panel').style.height = tall(S.tab) || !PANEL ? '' : PANEL + 'px'; $('panel').className = S.tab ? 'on' : ''; $('card').innerHTML = card; $('card').className = card && !S.tab ? 'on' : ''; // E205
-  $('base').innerHTML = base(r); qaEl.className = S.qa ? 'on' : ''; if (S.qa) { const m = SCR.mold, [w] = FK.size(); qaEl.innerHTML = vcell('quick', null, null, 'ic red') + vcell('qclose', null, null, 'ic'); qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, S.qa.px - m.slot * P.half)) + 'px'; qaEl.style.top = S.qa.py - m.slot * P.half + 'px'; }
+  $('base').innerHTML = base(r); $('rank').innerHTML = rank(card); spdEl.className = `cells seg ${FK.paused() && !r.result ? 'on' : ''}`; spdEl.innerHTML = D.speeds.map((n) => vcell('speed', n, null, '', show.speed === n)).join(''); qaEl.className = S.qa ? 'on' : ''; if (S.qa) { const m = SCR.mold, [w] = FK.size(); qaEl.innerHTML = vcell('quick', null, null, 'ic red') + vcell('qclose', null, null, 'ic'); qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, S.qa.px - m.slot * P.half)) + 'px'; qaEl.style.top = S.qa.py - m.slot * P.half + 'px'; }
 }
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
   if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; render(true); return; } act(verb, argOf(a), argOf(a2)); }
+FK.on('begin', () => { FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); }); // E705
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
 let lpT = 0; const lpStop = () => clearTimeout(lpT); // E428
@@ -300,8 +303,8 @@ FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g) return; const [, n] = B[g
   if (line(g.code)) { ctx.globalAlpha = P.tint; for (const k of g.cells) { const [i, j] = ij(k); ctx.fillStyle = fits(g, k) ? COL.rg : COL.rr; ctx.beginPath(); P.quad.forEach(([a, b], q) => ctx[q ? 'lineTo' : 'moveTo'](...at(i + a, j + b, FK.H[k]))); ctx.fill(); }
     ctx.globalAlpha = P.ghost; ctx.lineWidth = P.width.knob; ctx.setLineDash([]); g.pts.forEach((k, q) => { ctx.fillStyle = COL.rw; ctx.strokeStyle = q ? COL.ink : COL.rg; ctx.beginPath(); ctx.arc(...onMap(k), P.knob, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }); }
   else if (g.i > -50) { const ci = g.i + n * P.half, cj = g.j + n * P.half, seg = (a, z) => { ctx.moveTo(...at(...a)); ctx.lineTo(...at(...z)); }; ctx.strokeStyle = COL.rb; ctx.lineWidth = P.width.guide; ctx.setLineDash(P.dash.guide); ctx.beginPath();
-    for (const b of things()) if (b.kind === 'bld' && b.side === ME && !ECON.wallish(b)) { const mi = b.i + b.n * P.half, mj = b.j + b.n * P.half, pad = P.pad + (n + b.n) * P.half; if (Math.abs(mi - ci) >= P.guide || Math.abs(mj - cj) >= P.guide) continue;
-      if (mi === ci) seg([ci, Math.min(mj, cj) - pad], [ci, Math.max(mj, cj) + pad]); if (mj === cj) seg([Math.min(mi, ci) - pad, cj], [Math.max(mi, ci) + pad, cj]); }
+    for (const b of things()) if (b.kind === 'bld' && b.side === ME && !ECON.wallish(b)) { const mi = b.i + b.n * P.half, mj = b.j + b.n * P.half, pad = P.pad + (n + b.n) * P.half; if (Math.abs(mi - ci) >= P.guide || Math.abs(mj - cj) >= P.guide || (mi === ci && mj === cj)) continue; const q = pad * Math.SQRT1_2, di = Math.sign(ci - mi), dj = Math.sign(cj - mj); // E716
+      if (mi - mj === ci - cj || mi + mj === ci + cj) seg([mi - di * q, mj - dj * q], [ci + di * q, cj + dj * q]); }
     ctx.stroke(); const sp = tinted(FK.bldSprite(g.code, SIDES[ME].col, s, ...FK.levelOf({ code: g.code, side: ME })), g.ok ? COL.rg : COL.rr), [gx, gy] = at(ci, cj); FK.tag(ctx, g.ok ? `${ECON.nameOf(g.code)} · ${costText(D.cost[g.code] || {})}` : g.why, gx, gy - sp.ay * s - P.lift * P.half); ctx.globalAlpha = P.ghost; FK.blit(sp, gx, gy, s); } // E699
   ctx.restore(); });
 // E207
@@ -377,7 +380,7 @@ function say(text, m = {}) { if (S.tab === 'Start' && !m.told) return void post.
 function postTick() { if (S.tab === 'Start') return; const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(null, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
 function newsTick() { if (FK.K.t - newsT < TL.every || FK.K.t < TL.after) return; newsT = FK.K.t; const L = WD.world[SIDES[ME].age] || WD.world.at(-1); say(L[++newsI % L.length], { grp: 'chronicle', cls: 'news' }); } // E640
 // E641
-const PEOPLES = () => Object.keys(CIVS).filter((k) => CIVS[k].name), civOf = (i) => PEOPLES().find((k) => CIVS[k].name === OPTS.civ[i].find(String)), civLine = (k) => { const u = Object.keys(FK.SH).find((c) => FK.SH[c].civ === k); return !u ? '' : CIVS.blurb.replace('{unit}', FK.SH[u].name).replace('{base}', FK.SH[FK.SH[u].replaces].name.toLowerCase()).replace('{wonder}', CIVS[k].wonder).replace('{bonus}', WD.why['bonus:' + k] || ''); };
+const PEOPLES = () => Object.keys(CIVS).filter((k) => CIVS[k].name), civOf = (i) => PEOPLES().find((k) => CIVS[k].name === OPTS.civ[i].find(String)), civLine = (k) => { const u = Object.keys(FK.SH).find((c) => FK.SH[c].civ === k); return !u ? '' : CIVS.blurb.replace('{unit}', FK.SH[u].name).replace('{base}', FK.SH[FK.SH[u].replaces].name.toLowerCase()).replace('{wonder}', CIVS[k].wonder).replace('{hall}', CIVS[k].hall); }; /* Base's two lines; the history stays in the Guide (E718) */
 // E642
 const MSW = WD.milestones, TIP = WD.tips, LEARN = 'fk.learned', learned = {}, mine = (tick) => FK.blds().filter((t) => t.side === ME && FK.has(t, tick) && t.done >= true), knows = (k) => SIDES[ME].techs.has(TECHOF[k]), army = () => WAR.armyOf(ME), marching = () => army().filter((u) => u.ord); let shown = new Set(), slipT = -Infinity, mustered = false, tipNow = '';
 try { Object.assign(learned, JSON.parse(localStorage.getItem(LEARN) || '{}')); } catch (e) {}

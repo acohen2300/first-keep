@@ -11,6 +11,6 @@ BOOK("screen", {
  "SN11": {"key":"Build","value":{"ticks":[],"rows":"title, the six tabs, the tab's grid"},"name":"the Build page","cite":["N140"],"law":[]},
  "SN12": {"key":"Hall","value":{"ticks":["Tall"],"rows":"title, three tabs, the queue, train, tech"},"name":"the Town Center page","cite":["N141"],"law":[]},
  "SN13": {"key":"Layers","value":{"ticks":["Tall"],"rows":"title, the layers, Fast and New, the three volumes"},"name":"the Yard","cite":["N142","N143"],"law":[]},
-"SN15": {"key":"Pause","value":{"ticks":[],"rows":"title, Fast, New game, the Yard in the test field, resume; the three volumes"},"name":"the Pause screen: the game's settings while it waits (Albert, Nov 7)","cite":["N241"],"law":[]},
+"SN15": {"key":"Pause","value":{"ticks":[],"rows":"title, New game, Fast and the Yard in the test field only, resume; the three volumes; the speeds ×1 ×2 ×3 (D344) drop under the pause button, as Base"},"name":"the Pause screen: the game's settings while it waits (Albert, Nov 7)","cite":["N241"],"law":[]},
  "SN14": {"key": "label", "value": {"px": 12, "floor": 9, "zoom": 1.3, "pad": [10, 4, 13, 19, 5]}, "name": "words on the map (Mid's LABEL, labelK, mapFont, tag): px at the opening zoom, never under floor; a label's pill (padding, edge, rise, height, inset)", "cite": ["N208"], "law": []}
 });
