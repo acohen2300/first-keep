@@ -314,7 +314,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E129** rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity
 - **E133** fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or s · QK (N10, N210, N245) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
 - **E376** QCL the weather of the moment: rates, wind and visibility from the strengths, fog's water  · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214)
-- **E130** QP settle: wet in D104, dry in D105 · QP (N16) · D104 (N112) · D105 (N112)
+- **E130** QP settle: wet in D104, dry in D105; melting snow soaks the ground as rain does (Mid: what · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
 - **E132** QQ: lake ice grows with the freezing degree-seconds (D350, by Stefan's law); ice on the gr · QQ (N17) · D350 (N17, N173, N262, N263) · D225 (N17, N173)
 - **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173) · D350 (N17, N173, N262, N263)
@@ -416,8 +416,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E620** the small map: the ground, the fog, buildings you know (a seat is a star), units you see, 
 - **E731** the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map 
 - **E747** the mirage's dots on the small map, in the colour of what is coming
-- **E621** the grass mottled, greens then earth, kept to the land (Mid's makeBg)
-- **E798** each blot of the ground's mottle fades from its colour at the middle to nothing at the edg
+
+## index.html#the-meadow
+
+- **E799** the meadow: a layer of the ground, one colour a tile from the season, the weather and the 
+- **E804** a tile's wetness by its wetness index and its snow by its drift: one home each for the ste
+- **E805** a step's wear on the grass: the pressure of everything that walks there (body, mount, kit 
+- **E800** made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each
+- **E801** each tile's colour: the season's grass under its six layers and its flowers' tint, worn to
+- **E802** the meadow drawn: a sweep starts when the season, the weather or the paths have moved a st
+- **E803** the flowers and pebbles close up: each cluster's offspring from its own seed, as many open
 
 ## index.html#the-woods-cache
 

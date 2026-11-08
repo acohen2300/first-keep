@@ -80,7 +80,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E795 | menu.js | ice cracking under yours: the warning said and a clear-off button beside it until all of yours are off the ice |
 | E796 | combat.js | one who falls through the ice is lost, as any death, and leaves no body on the ice (under) |
 | E797 | index.html#floor-6-climate | a frozen lake under snow: white as the land, with wind-scoured streaks of ice and a rim line at the shore, so it still reads as a lake; made once per ice step and snow step |
-| E798 | index.html#the-view-s-eyes-lights-and-stage | each blot of the ground's mottle fades from its colour at the middle to nothing at the edge, as grass varies, never a hard-edged disc (Albert, Nov 8 15:34: the grass looked art deco) |
 | E763 | index.html#the-brushes | a figure's lines in its own darker shade, never black: while a figure is painted (RIM), a stroke asked in ink takes the fill's shade, or a soft ink under a gradient, and a thinner line (the Sprites book's cut, PF2) |
 | E764 | index.html#the-figures | the person's cut: anchors at the shoulder, hip, hem, ground and face; the tunic, robe, armour, apron, hair and coif drawn as curves from them; sleeves as bowed strokes with a rim, ending in a hand |
 | E762 | index.html#the-figures | a person in true proportion: long legs, a torso, a small head, a slim build, from the Sprites book; the head and its helm drawn smaller about the neck |
@@ -244,7 +243,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E127 | index.html#floor-6-climate | the season's mean, eased into the next |
 | E128 | index.html#floor-6-climate | what falls |
 | E129 | index.html#floor-6-climate | rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity |
-| E130 | index.html#floor-6-climate | QP settle: wet in D104, dry in D105 |
+| E130 | index.html#floor-6-climate | QP settle: wet in D104, dry in D105; melting snow soaks the ground as rain does (Mid: what melts goes into the ground's water; nothing vanishes) |
 | E131 | index.html#floor-6-climate | QO degree-day melt, rain on snow twice as fast |
 | E132 | index.html#floor-6-climate | QQ: lake ice grows with the freezing degree-seconds (D350, by Stefan's law); ice on the ground grows the same way while the ground is wet, full at D225 |
 | E133 | index.html#floor-6-climate | fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or snow saturates it; past the fog's water the rest settles as dew and lowers the dew point (Magnus inverted) |
@@ -727,7 +726,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E618 | index.html#the-view-s-eyes-lights-and-stage | a chimney's plume: rising ∝ x^(2/3) (QAV, Briggs) and widening ∝ x^0.9, leaning downwind (Mid's smoke) |
 | E619 | index.html#the-view-s-eyes-lights-and-stage | a figure in motion: the woodcutter's lean into its tree (the view's own memory), the step's rise and fall, a lunge into a blow and a shooter's kick, the recoil, a hurt soldier's stagger; then its marks: nerve, rout, march, idle z and focus F (Mid's LEAN, drawUnit, idleMark) |
 | E620 | index.html#the-view-s-eyes-lights-and-stage | the small map: the ground, the fog, buildings you know (a seat is a star), units you see, an army coming flashing red, and the screen's box; tap to glide there, drag to sweep (Mid's drawMini, miniIncoming, miniAt) |
-| E621 | index.html#the-view-s-eyes-lights-and-stage | the grass mottled, greens then earth, kept to the land (Mid's makeBg) |
 | E622 | index.html#the-building-art | a banner on a building that flies live leaves its place to the view (Mid's FLAGS) |
 | E623 | index.html#floor-7-display | the shadows of the trees, bushes and rocks in sight, not the deep woods, cast like everything else (QAT, Mid's shadowPath); the draw budget sheds them first |
 | E624 | index.html#floor-7-display | is a thing in a side's sight: its own, the land's and the wild's always; another side's only when that side's eyes saw it at the last look, or the eye asking sees it now (range and line, QAL and QAM); the one check for the screen, the fight and the computers |
@@ -792,3 +790,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E685 | index.html#the-door | a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, not timed, so the game does not depend on the machine); a job not done goes to the back and resumes next frame |
 | E686 | ai.js | a site the computer cannot pay for, or may not build, is not searched for: plan() would refuse it after the search (the same answer, without the rings); the search then asks each tile only about the ground (its limit asked once, here) |
 | E680 | menu.js | the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a bar in a cell made a slash |
+| E799 | index.html#the-meadow | the meadow: a layer of the ground, one colour a tile from the season, the weather and the feet, painted into a picture of the land that a frame draws whole (the woods and buildings are shells; the grass is the land's own layer) |
+| E800 | index.html#the-meadow | made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each tile's flow by the steepest of the eight ways, the area that drains through it and its wetness index ln(a ÷ tan β) (TOPMODEL); the snow's lognormal drift by the relief; the six layers' weights; the clusters of flowers and pebbles; and for each texel of the picture the tile under it, found by walking the height until the view and the land agree (a cliff face, where they never do, is left to the ground below) |
+| E801 | index.html#the-meadow | each tile's colour: the season's grass under its six layers and its flowers' tint, worn to a path by the ruts, darkened when wet, mud where bare and wet, frozen in a frost, puddles where the wetness passes the brim (ruts hold water), hoarfrost, then snow by its drift, slush when it thaws; kept with its colour times its cover so a texel between two tiles blends without a fringe |
+| E802 | index.html#the-meadow | the meadow drawn: a sweep starts when the season, the weather or the paths have moved a step, runs a few rows a frame (no frame pays for all), and the picture is drawn whole each frame, more see-through close up so the blades show |
+| E803 | index.html#the-meadow | the flowers and pebbles close up: each cluster's offspring from its own seed, as many open as its season allows, none under snow or on a trodden path; one path a colour, filled in layers |
+| E804 | index.html#the-meadow | a tile's wetness by its wetness index and its snow by its drift: one home each for the step, the footing and the picture |
+| E805 | index.html#the-meadow | a step's wear on the grass: the pressure of everything that walks there (body, mount, kit and the load carried) over its prints, past the soil's precompression stress (lower when wet), by the log of the ratio, in person-steps: a light step wears nothing, a laden villager a little more than an empty one, a knight or a ram several times |

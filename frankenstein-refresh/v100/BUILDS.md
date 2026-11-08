@@ -3969,3 +3969,45 @@ MODIFIED (4):
 LOCKED (2235 of 2239): byte for byte as sealed, 1,444,408 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2239 items sealed · 2112 book entries · 93 laws · 263 citations, 12 still to open · 7 known
+
+## B24 + B25: the meadow layer: season, wear to paths, mud, frost, puddles by the wetness index, snow by drift, flowers and pebbles · 2026-11-08 16:36
+Albert, Nov 8 16:14: Do 24 and 25. Go; 16:31: wear by the real tread of a foot, shoe, hoof or wheel and the mass, carried load too
+Opened: book:measure, book:colours, book:comments, book:citations, code:index.html, book:ground
+MODIFIED (34):
+- book:citations:N264 · added
+- book:citations:N265 · added
+- book:citations:N266 · added
+- book:citations:N267 · added
+- book:citations:N268 · added
+- book:citations:N269 · added
+- book:citations:N270 · added
+- book:citations:N271 · added
+- book:citations:N272 · added
+- book:colours:C22 · removed
+- book:colours:C23 · 537 → 379 bytes
+- book:colours:C25 · added
+- book:comments:E130 · 47 → 156 bytes
+- book:comments:E621 · removed
+- book:comments:E798 · removed
+- book:comments:E799 · added
+- book:comments:E800 · added
+- book:comments:E801 · added
+- book:comments:E802 · added
+- book:comments:E803 · added
+- book:comments:E804 · added
+- book:comments:E805 · added
+- book:ground:G11 · added
+- book:ground:G12 · added
+- book:measure:D294 · 596 → 698 bytes
+- book:measure:D320 · 2,266 → 2,133 bytes
+- book:measure:D353 · added
+- code:index.html#drawn-once-in-the-view-frame · 13,509 → 13,074 bytes
+- code:index.html#floor-5-movables · 18,619 → 18,635 bytes
+- code:index.html#floor-6-climate · 29,986 → 29,825 bytes
+- code:index.html#the-body-s-laws · 2,787 → 2,793 bytes
+- code:index.html#the-door · 14,444 → 14,464 bytes
+- code:index.html#the-meadow · added
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,793 → 22,791 bytes
+LOCKED (2226 of 2257): byte for byte as sealed, 1,355,145 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2257 items sealed · 2129 book entries · 93 laws · 272 citations, 12 still to open · 7 known
