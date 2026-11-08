@@ -78,7 +78,7 @@ function makeCoast(roll) {
 
 // ── The ground (E17)
 const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4), FOR = new Uint8Array(N * N); // E18
-let coast, seed, lakes = []; const MARSH = new Uint8Array(N * N); // E19
+let coast, seed, lakes = []; const MARSH = new Uint8Array(N * N), BRIM = new Uint8Array(N * N), LAKER = new Float32Array(N * N); // E19
 function depthAt(bx, by) { // E20
   const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
   const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board);
@@ -86,7 +86,7 @@ function depthAt(bx, by) { // E20
   return [Math.min(dx, dy) - wander, e];
 }
 function makeGround(sd) {
-  seed = sd; const roll = dice(sd); coast = makeCoast(roll);
+  seed = sd; const roll = dice(sd); coast = makeCoast(roll); BRIM.fill(ZERO); LAKER.fill(ZERO);
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
     const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), [depth, e] = depthAt(bx, by), run = D.beach + (D.cliff - D.beach) * e;
     DEP[j * N + i] = depth;
@@ -122,11 +122,11 @@ function stamp(bx, by, r, fn) { // E25
 }
 const between = (roll, [lo, hi]) => lo + roll() * (hi - lo), count = (roll, [lo, hi]) => Math.floor(between(roll, [lo, hi + 1]));
 // E26
-function lake(bx, by, r, rim, deep) {
+function lake(bx, by, r, rim, deep, brim) {
   stamp(bx, by, r * (1 + D.shore) + D.bank, (k, d, dx, dy) => {
     const out = rim(Math.atan2(dy, dx)), edge = r * (1 + D.shore * out);
     const h = d < edge ? -deep * (1 - (d / edge) ** 2) : (D.land * (d - edge)) / D.bank; // E775
-    H[k] = Math.min(H[k], h);
+    H[k] = Math.min(H[k], h); if (d < edge) LAKER[k] = Math.max(LAKER[k], r / D.upm); else if (brim) BRIM[k] = ONE; // E783
   });
 }
 // E27
@@ -141,13 +141,13 @@ const dome = (bx, by, r, hgt) => stamp(bx, by, r, (k, d) => { H[k] = Math.max(H[
 function makeTerrain(roll) {
   // E30
   const pondRim = fractal(roll, 8, 1.3);
-  for (let c = 0; c < 4; c++) lake(...corner(c, ...D.pond), D.pondR, pondRim, D.lakeDeep);
+  for (let c = 0; c < 4; c++) lake(...corner(c, ...D.pond), D.pondR, pondRim, D.lakeDeep, roll() < D.brim);
   // E31
   lakes = []; const c = 1.06, amin = Math.PI * D.lakeR[0] ** 2, amax = Math.PI * D.lakeR[1] ** 2;
   for (let n = count(roll, D.lakes), tries = 0; lakes.length < n && tries < 200; tries++) {
     const r = Math.sqrt(Math.min(amax, amin * roll() ** (-1 / c)) / Math.PI), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), room = r * (1 + D.shore) + D.bank;
     if (!inZ4(bx, by, room) || lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + room + 2 * D.beach)) continue;
-    lakes.push({ x: bx, y: by, r }); lake(bx, by, r, fractal(roll, 8, 1.3), D.lakeDeep);
+    lakes.push({ x: bx, y: by, r }); lake(bx, by, r, fractal(roll, 8, 1.3), D.lakeDeep, roll() < D.brim);
   }
   // E32
   const mouths = (bx, by) => { let best = null; for (const [sx, sy, ex, ey] of [[B0, B0 + 900, B0, B1 - 900], [B1, B0 + 900, B1, B1 - 900], [B0 + 900, B0, B1 - 900, B0], [B0 + 900, B1, B1 - 900, B1]]) { const t = clamp(((bx - sx) * (ex - sx) + (by - sy) * (ey - sy)) / ((ex - sx) ** 2 + (ey - sy) ** 2), 0, 1), px = sx + (ex - sx) * t, py = sy + (ey - sy) * t, d = Math.hypot(px - bx, py - by); if (!best || d < best[2]) best = [px, py, d]; } return best; };
@@ -252,7 +252,7 @@ const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), 
 const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // E55
 
 // ── Drawn once in the view frame (E56)
-let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskFlood = document.createElement('canvas'), ICE = D.ice, ICEM = Array.from({ length: ICE.steps }, () => document.createElement('canvas')), iceLv = (k) => Math.floor(ICE.steps * Math.min(ONE, -H[k] / D.lakeDeep)); // E780
+let ground, gw, gh, ox, oy; const maskLand = document.createElement('canvas'), maskDark = document.createElement('canvas'), maskFlood = document.createElement('canvas'), ICE = D.ice, ICEM = Array.from({ length: ICE.steps }, () => document.createElement('canvas')), HOLES = new Map(), CRACK = new Map(), fddDays = () => K.fds / D.day, onsetOf = (k) => ICE.onset.metre * (-H[k] / D.upm) * (ONE + (ICE.onset.fetch * LAKER[k]) / ICE.onset.per); // E780
 function renderGround() {
   const pts = []; for (const [x, y] of [[0, 0], [D.site, 0], [0, D.site], [D.site, D.site]]) for (const h of [0, D.land]) pts.push(V(x, y, h));
   const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
@@ -270,7 +270,7 @@ function renderGround() {
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
   const LIT = 0.03, LAY = D.lay; let MASKS = false, ICEP = null; // E60
-  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
+  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s === ONE && BRIM[k] ? STRATA.length - ONE : s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
     return lit(base, clamp(LIT * leanOf(k), -LAY.lean, LAY.lean)); }; // E758
   function leanOf(k) { const c = k * 4; return (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; }
   paintGround = (into, s, i0, iN, j0, j1, masks) => { g = into; MASKS = masks; if (masks) { ICEP = ICEM.map(() => new Path2D()); ICEP.land = new Path2D(); } blades = bladesAt(s); // E748
@@ -295,10 +295,10 @@ function renderGround() {
   function contour(i, j, pass) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], ks = cell.map(([x, y]) => y * N + x), v = ks.map((k) => H[k]), up = v.map((h) => Math.max(null, h)), bs = v.map(stratum), lo = Math.min(...bs), hi = Math.max(...bs); // E759
     if ((lo === hi && hi && Math.max(...up) === Math.min(...up)) || ks.some((k) => FOR[k]) || Math.max(...up) - Math.min(...up) > REPOSE * LAY.steep) return;
     const lean = clamp((LIT * ks.reduce((a, k) => a + leanOf(k), null)) / ks.length, -LAY.lean, LAY.lean), at = ({ x, y, h }) => P(x * T, y * T, Math.max(null, h)), pts = cell.map(([x, y], n) => ({ x: x + DRW.half, y: y + DRW.half, h: v[n] }));
-    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; g.fillStyle = b ? lit(ks.some((k) => MARSH[k]) ? REED : TOP[b], lean) : WATER[ZERO]; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.strokeStyle = g.fillStyle; g.lineWidth = LAY.seam; g.stroke(); if (TOP[b] === C.grass) { g.globalAlpha = D.blades; g.fillStyle = blades; g.fill(); g.globalAlpha = ONE; } };
+    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; const top = TOP[b === ONE && ks.some((k) => BRIM[k]) ? STRATA.length - ONE : b]; g.fillStyle = b ? lit(ks.some((k) => MARSH[k]) ? REED : top, lean) : WATER[ZERO]; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.strokeStyle = g.fillStyle; g.lineWidth = LAY.seam; g.stroke(); if (top === C.grass) { g.globalAlpha = D.blades; g.fillStyle = blades; g.fill(); g.globalAlpha = ONE; } };
     const above = (poly, L) => poly.flatMap((p, n) => { const q = poly[(n + ONE) % poly.length], out = p.h > L ? [p] : []; if ((p.h > L) !== (q.h > L)) { const t = (L - p.h) / (q.h - p.h); out.push({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t, h: L }); } return out; });
     const paint = (poly, f) => { if (poly.length < cell.length - ONE) return; g.fillStyle = g.strokeStyle = f; g.lineWidth = LAY.seam; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.stroke(); };
-    if (MASKS && !pass && !lo && ks.every((k) => DEP[k] >= D.edge)) { const add = (P2, poly) => { if (poly.length < cell.length - ONE) return; poly.forEach((p, n) => (n ? P2.lineTo : P2.moveTo).call(P2, ...at(p))); P2.closePath(); }; ICEP.forEach((P2, l) => add(P2, above(pts, (-D.lakeDeep * (l + ONE)) / ICE.steps))); add(ICEP.land, above(pts, ZERO)); } // E782
+    if (MASKS && !pass && !lo && ks.every((k) => DEP[k] >= D.edge)) { const add = (P2, poly) => { if (poly.length < cell.length - ONE) return; poly.forEach((p, n) => (n ? P2.lineTo : P2.moveTo).call(P2, ...at(p))); P2.closePath(); }; const chill = pts.map((p, n) => ({ ...p, h: -onsetOf(ks[n]) })); ICEP.forEach((P2, l) => add(P2, above(chill, (-ICE.span * (l + ONE)) / ICE.steps))); add(ICEP.land, above(pts, ZERO)); } // E782
     if (!hi) { if (pass) return; const wb = v.map(waterBand), a = Math.min(...wb), z = Math.max(...wb), sink = pts.map((p) => ({ ...p, h: -p.h })); if (a === z) return; paint(pts, WATER[a]); for (let w = a + ONE; w <= z; w++) paint(above(sink, D.wade + (w - ONE) * ((D.sea - D.wade) / (BANDS - ONE))).map((p) => ({ ...p, h: -p.h })), WATER[w]); return; } // E776
     if (pass < lo || pass > hi) return; if (pass === lo) return fill(pts, lo); for (let b = pass; b === pass; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L); fill(poly, b); const edge = poly.filter((p) => p.h === L); if (!L && edge.length > ONE && Math.min(...v) < ZERO) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } }
   function face(x1, y1, x2, y2, topL, topR, botL, botR) {
@@ -343,7 +343,7 @@ function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 
 function resize() { const [w0, h0] = [cw, ch]; dpr = Math.min(2, devicePixelRatio || 1) * DRW.half ** !!show.half; cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; if (cw !== w0 || ch !== h0) fit(); dirty(); } // E698
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
 // ── The door (E65)
-const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], begin: [], save: [], load: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [], rest: [] }; // E66
+const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], begin: [], save: [], load: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [], rest: [], cracking: [], fell: [], drown: [] }; // E66
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 // E277
 const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
@@ -999,10 +999,24 @@ let units = [], pick = [];
 const WORK = SPRITE.nodes.tool; // E85
 const YIELD = (t) => KIND[t.kind].yield;
 // E86
-const iced = (k) => H[k] <= 0 && DEP[k] >= D.edge && iceLv(k) < K.iceOn; // E87
+const thick = (k) => (K.snow > G.snow.covers ? ICE.alpha.snow : ICE.alpha.bare) * Math.sqrt(Math.max(ZERO, fddDays() - Math.max(onsetOf(k), HOLES.get(k) ?? -Infinity))), holds = (k) => ICE.load.fail * thick(k) ** (ONE + ONE); // E784
+const iced = (k) => H[k] <= 0 && DEP[k] >= D.edge && holds(k) >= W.person.kg; // E87
+const CROSS = D.crossing, onIce = (u) => !u.inside && H[u.k] <= -D.wade / (ONE + ONE) && DEP[u.k] >= D.edge, year = () => Math.floor(K.t / (D.season * SPRITE.trees.year)); // E786
+const iceOf = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < ZERO || K.iceMem.year === year()) ? K.iceMem.mode : CROSS.modes[ZERO]);
+const holdBack = (u, w) => { if (w.length || u.side !== ME || !iced(w) || onIce(u)) return false; const R = CROSS.rules[iceOf(u)]; if (R.ask) return true; let n = ZERO, near = false; // E787
+  for (const v of units) if (v !== u && v.side === u.side && onIce(v)) { n++; if (R.gap && Math.hypot(v.bx - tileMid(w)[ZERO], v.by - tileMid(w)[ONE]) <= R.gap * D.tile) near = true; } return near || (R.most && n >= R.most); };
+const iceReport = (U) => { let cm = Infinity; for (const u of U) for (const k of u.path || []) if (!k.length && H[k] <= ZERO && iced(k)) cm = Math.min(cm, thick(k)); return cm < Infinity ? { cm, kg: ICE.load.safe * cm * cm } : null; }; // E788
+function clearIce(side) { for (const u of units) if (u.side === side && onIce(u)) { let best = -ONE, bd = Infinity; stamp(u.bx, u.by, CROSS.reach * D.tile, (k, d) => { if (H[k] > ZERO && walkable(k, u) && d < bd) [best, bd] = [k, d]; }); u.ice = CROSS.modes[ZERO]; if (~best) go(u, best); } } // E789
+on('tick', () => { if (!every([ICE.beat, ZERO])) return; const load = new Map(); for (const u of units) if (onIce(u)) load.set(u.k, (load.get(u.k) || ZERO) + massOf(u.code)); // E790
+  for (const [k, kg] of load) { const h = thick(k), safe = ICE.load.safe * h * h, fail = ICE.load.fail * h * h, at = { vx: toView(...tileMid(k), ZERO)[ZERO], vy: toView(...tileMid(k), ZERO)[ONE] }; if (kg <= safe) continue;
+    if (!CRACK.has(k)) { CRACK.set(k, K.t); fire('event', 'crack', at); fire('cracking', k, units.some((u) => u.k === k && u.side === ME)); continue; }
+    if (K.t - CRACK.get(k) >= ICE.warn && (kg >= fail || rng() < ((kg - safe) / (fail - safe)) ** (ONE + ONE))) { CRACK.delete(k); HOLES.set(k, fddDays()); fire('event', 'splash', at); let n = ZERO;
+      for (const u of [...units]) if (onIce(u) || u.k === k) { const d = Math.hypot(u.bx - tileMid(k)[ZERO], u.by - tileMid(k)[ONE]) / D.tile; if (u.k === k || (d <= ICE.near && rng() < ICE.fall)) { n += u.side === ME; u.under = true; fire('drown', u); } } if (n) fire('fell', n); } }
+  for (const [k, t] of CRACK) if (!load.has(k) && K.t - t > ICE.warn + ICE.warn) CRACK.delete(k); });
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
-const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || iced(k)) && (OCC[k] === 0 || OCC[k] === 3 || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
+const onIceOk = (k, who) => !who || (who.side === ME ? iceOf(who) !== 'around' : ICE.load.safe * thick(k) ** (ONE + ONE) >= massOf(who.code) * CROSS.ai); // E785
+const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || (iced(k) && onIceOk(k, who))) && (OCC[k] === 0 || OCC[k] === 3 || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
 const stepOk = (a, b, who) => walkable(b, who) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
 const [ME] = D.players, PACE = D.pace, PAN = D.pace.pandolf, NEED = G.step, SLIP = G.slip; // E88
 function footing(u, to = u.k) { // E360
@@ -1020,7 +1034,7 @@ function pace(u, g = footing(u)) { // E361
 function around(k, f, who) { const i = k % N, j = (k - i) / N; for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy, q = y * N + x; if (x < 0 || y < 0 || x >= N || y >= N || !stepOk(k, q, who)) continue; if (dx && dy && !(walkable(j * N + x, who) && walkable(y * N + i, who))) continue; f(q, dx && dy); } } // E91
 const PF = { g: new Float32Array(N * N), came: new Int32Array(N * N), gen: new Int32Array(N * N), done: new Int32Array(N * N), hk: [], hf: [], n: null }; // E721
 function findPath(from, goal, near, most = D.tries.way, who = null) { // E90
-  const AV = who && has(who, 'Gather') && !(DANGER[who.side] || [])[near] && DANGER[who.side], gen = ++PF.n, G = PF.g, CAME = PF.came, GEN = PF.gen, DONE = PF.done, HK = PF.hk, HF = PF.hf, ni = near % N, nj = (near - ni) / N;
+  const EDGE = who && who.side === ME ? CROSS.rules[iceOf(who)].edge : null, AV = who && has(who, 'Gather') && !(DANGER[who.side] || [])[near] && DANGER[who.side], gen = ++PF.n, G = PF.g, CAME = PF.came, GEN = PF.gen, DONE = PF.done, HK = PF.hk, HF = PF.hf, ni = near % N, nj = (near - ni) / N;
   const hx = (k) => { const i = k % N, dx = Math.abs(i - ni), dy = Math.abs((k - i) / N - nj); return Math.max(dx, dy) + (Math.SQRT2 - ONE) * Math.min(dx, dy); };
   const push = (k, f) => { HK.push(k); HF.push(f); let i = HK.length - ONE; while (i > ZERO) { const p = (i - ONE) >> ONE; if (HF[p] <= HF[i]) break; [HK[p], HK[i], HF[p], HF[i]] = [HK[i], HK[p], HF[i], HF[p]]; i = p; } };
   const pop = () => { const top = HK[ZERO], lk = HK.pop(), lf = HF.pop(); if (HK.length) { HK[ZERO] = lk; HF[ZERO] = lf; let i = ZERO; for (;;) { const l = i + i + ONE, r = l + ONE; let m = i; if (l < HK.length && HF[l] < HF[m]) m = l; if (r < HK.length && HF[r] < HF[m]) m = r; if (m === i) break; [HK[m], HK[i], HF[m], HF[i]] = [HK[i], HK[m], HF[i], HF[m]]; i = m; } } return top; };
@@ -1028,7 +1042,7 @@ function findPath(from, goal, near, most = D.tries.way, who = null) { // E90
   for (let n = ZERO; HK.length && n < most; n++) {
     const k = pop(); if (DONE[k] === gen) continue; DONE[k] = gen;
     if (goal(k)) { const path = [k]; for (let q = CAME[k]; q >= ZERO; q = CAME[q]) path.push(q); return path.reverse(); }
-    around(k, (q, diag) => { if (DONE[q] === gen) return; const g = G[k] + (diag ? Math.SQRT2 : ONE) + D.danger.cost * !!(AV && AV[q]); if (GEN[q] === gen && g >= G[q]) return; GEN[q] = gen; G[q] = g; CAME[q] = k; push(q, g + hx(q)); }, who);
+    around(k, (q, diag) => { if (DONE[q] === gen) return; const g = G[k] + (diag ? Math.SQRT2 : ONE) + D.danger.cost * !!(AV && AV[q]) + (EDGE && H[q] <= ZERO ? (EDGE * -H[q]) / D.upm : ZERO); if (GEN[q] === gen && g >= G[q]) return; GEN[q] = gen; G[q] = g; CAME[q] = k; push(q, g + hx(q)); }, who);
   }
   return null;
 }
@@ -1086,7 +1100,7 @@ function step(dt) { // E99
   for (const u of units) {
     u.lvx = u.vx; u.lvy = u.vy; u.t += dt; u.mps = 0; const shoved = u.shoved; u.shoved = false;
     if (u.slide) slide(u, dt);
-    if (u.path) { const w = u.path[u.at], end = u.at + 1 === u.path.length; if (stride(u, w.length ? w : tileMid(w), dt, shoved ? SP : end && ARRIVE) && ++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } continue; } // E303
+    if (u.path) { const w = u.path[u.at], end = u.at + 1 === u.path.length; if (holdBack(u, w)) continue; if (stride(u, w.length ? w : tileMid(w), dt, shoved ? SP : end && ARRIVE) && ++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } continue; } // E303
     if (u.spot && !shoved && (u.job === 'gather' || u.job === 'wait' || u.job === 'idle') && Math.hypot(u.spot.x - u.bx, u.spot.y - u.by) > ARRIVE) { stride(u, [u.spot.x, u.spot.y], dt); continue; } // E312
     if (has(u, 'Wander') && u.job === 'idle') { // E102
       if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - rng()); const k = tileAt(u.bx + rnd(-D.reach, D.reach), u.by + rnd(-D.reach, D.reach)); if (walkable(k, u)) go(u, k); } else u.wait -= dt; }
@@ -1221,7 +1235,7 @@ function climate(dt) {
   const raining = K.rain > 0.1; K.wet = relax(K.wet, +raining, raining ? D.wetUp : D.dryOut, dt); // E130
   if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (raining ? 2 : 1) * dt); // E131
   if (K.temp < 0) { K.fds += -K.temp * dt; if (K.wet > D.groundIce.wet) K.gfd = Math.min(D.groundIce.fdd, K.gfd - K.temp * dt); } // E132
-  else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = clamp(Math.floor((ICE.steps * K.fds) / ICE.freeze), ZERO, ICE.steps); K.iceOn = clamp(Math.floor((ICE.steps * (K.fds - D.bears)) / ICE.freeze), ZERO, ICE.steps); // E364
+  else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = clamp(Math.floor((ICE.steps * fddDays()) / ICE.span), ZERO, ICE.steps); K.iceOn = Math.floor(fddDays() / ICE.key) + HOLES.size; if (!K.fds) HOLES.clear(); // E364
   if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { const sh = D.strike.share; K.strikeT = -((D.strike.summer * Math.max(...sh)) / sh[season()]) * Math.log(1 - rng()); strike(); } } // E135
   K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + String(Math.floor(dayPhase() * 24)).padStart(2, '0') + ':' + String(Math.floor((dayPhase() * 24 * 60) % 60)).padStart(2, '0') + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.vis < FW.wmo ? ' ≈' : '');
@@ -1233,10 +1247,17 @@ function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glanc
   else { K.flash = Math.max(K.flash, SF.sheet[0] + SF.sheet[1] * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
 // E138
 const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active = (strength) => Math.round(WX.pool * strength);
+const SNOWICE = { key: null, cv: document.createElement('canvas') }; // E797
+function snowIce(snow) { const key = K.ice + '|' + Math.round(snow * ICE.snowSteps); if (SNOWICE.key === key) return SNOWICE.cv; SNOWICE.key = key; const m = ICEM[K.ice - ONE], c = SNOWICE.cv, W2 = (c.width = m.width), H2 = (c.height = m.height), q = c.getContext('2d');
+  const tint = (col, dy) => { const t = document.createElement('canvas'); t.width = W2; t.height = H2; const tq = t.getContext('2d'); tq.drawImage(m, ZERO, dy); tq.globalCompositeOperation = 'source-in'; tq.fillStyle = col; tq.fillRect(ZERO, ZERO, W2, H2); return t; };
+  q.drawImage(tint(C.ground.rim, ICE.rim), ZERO, ZERO); q.drawImage(tint(C.ground.snow, ZERO), ZERO, ZERO); q.globalCompositeOperation = 'source-atop'; q.fillStyle = C.ground.ice; q.globalAlpha = ICE.scour; const r = NS_rng(seed), [sw, shh] = ICE.streak;
+  for (let i = ICE.streaks; i--; ) { q.beginPath(); q.ellipse(r() * W2, r() * H2, sw * (TREE.half + r()), shh, Math.sign(K.wind || ONE) * ICE.lean, ZERO, Math.PI + Math.PI); q.fill(); } return c; }
 function drawSkin() { // E139
   const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / G.snow.full);
   if (snow > 0.01) { ctx.save(); ctx.globalCompositeOperation = 'screen'; ctx.globalAlpha = snow; ctx.drawImage(maskLand, gx, gy, w, h); ctx.restore(); }
-  if (K.ice) { ctx.save(); ctx.globalAlpha = ICE.a; ctx.drawImage(ICEM[K.ice - ONE], gx, gy, w, h); ctx.restore(); } // E781
+  if (K.ice) { ctx.save(); ctx.globalAlpha = ICE.a; ctx.drawImage(ICEM[K.ice - ONE], gx, gy, w, h); if (snow > ICE.dust) { ctx.globalAlpha = snow; ctx.drawImage(snowIce(snow), gx, gy, w, h); } ctx.restore(); } // E781
+  if (K.ice) { const z = cam.z, T = D.tile; ctx.save(); for (const k of HOLES.keys()) { const [x, y] = toScreen(...toView(...tileMid(k), ZERO)); ctx.fillStyle = WATER[ONE]; ctx.strokeStyle = C.ground.crack; ctx.lineWidth = ICE.line; ctx.beginPath(); oval(ctx, x, y, ICE.hole * T * z, ICE.hole * T * z * TILT); ctx.fill(); ctx.stroke(); } // E791
+    ctx.strokeStyle = C.ground.crack; ctx.lineWidth = ICE.line; for (const [k, t] of CRACK) { const [x, y] = toScreen(...toView(...tileMid(k), ZERO)), r = NS_rng(k), grow = Math.min(ONE, (K.t - t) / ICE.warn) * ICE.hole * T * z; ctx.beginPath(); for (let i = ICE.rays; i--; ) { let a = r() * Math.PI * (ONE + ONE), px = x, py = y; ctx.moveTo(px, py); for (let s = ICE.rays; s--; ) { a += (r() - TREE.half) * ICE.zig; px += (Math.cos(a) * grow) / ICE.rays; py += (Math.sin(a) * grow * TILT) / ICE.rays; ctx.lineTo(px, py); } } ctx.stroke(); } ctx.restore(); }
   if (K.flood > K.t) { ctx.globalAlpha = FLD.show; ctx.drawImage(maskFlood, gx, gy, w, h); ctx.globalAlpha = 1; } marks();
   if (K.sand) { const [x, y] = toScreen(...toView(K.sand.bx, K.sand.by, Math.max(null, H[tileAt(K.sand.bx, K.sand.by)]))); ctx.fillStyle = C.wild.sand; ctx.beginPath(); oval(ctx, x, y, K.sand.r * cam.z, K.sand.r * cam.z * TILT); ctx.fill(); } // E578
 }
@@ -1386,7 +1407,7 @@ function drawShadows(s) { // E152
 // E454
 let FALL = []; const FD = D.fallen, RD = D.radar, GL = D.glow, ETA = fromBook('words').alarm.eta, pos = (v) => v > -v; let glow = null, RADAR = null;
 on('start', () => { FALL = []; glow = RADAR = null; });
-on('gone', (u) => { if (u.kind === 'unit' && FALL.length < FD.most && !FD.not.includes(SH[u.code].class) && (u.side === ME || inSight(u))) FALL.push({ u, t: K.t }); });
+on('gone', (u) => { if (u.kind === 'unit' && !u.under && FALL.length < FD.most && !FD.not.includes(SH[u.code].class) && (u.side === ME || inSight(u))) FALL.push({ u, t: K.t }); });
 on('event', (e, t, a) => { if (e === 'struck' && t.side === ME) glow = { t: K.t, col: a && SIDES[a.side] ? C.red : C.flame }; });
 on('draw', (c, s) => { FALL = FALL.filter((f) => K.t - f.t <= FD.secs); for (const f of FALL) { const a = K.t - f.t, u = f.u, [x, y] = toScreen(...vAt(u)), [, look] = U[u.code]; // E455
   c.save(); c.globalAlpha = Math.min(FD.fade, FD.secs - a) / FD.fade; c.translate(x, y); c.rotate((Math.min(FD.drop, a) / FD.drop) * Math.PI * FD.turn * -u.face); c.scale(u.face, u.face * u.face);
@@ -1610,7 +1631,7 @@ const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.
 function start(sd, S = null) { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
 const boot = () => { const h = Number(location.hash.slice(ONE)), got = TEST ? null : readSave(), S = got && (!h || got.seed === h) ? got : null; if (S) try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); return; } catch (e) { fault(e); aside(); } start(TEST ? D.testField.seed : null); }; // E662
 addEventListener('hashchange', () => start()); addEventListener('resize', resize);
-window.FK = { evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

@@ -19,7 +19,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QN** Walking cost → N13 · used by D106, D224, X54, X56
 - **QO** Melt → N14, N15 · used by D108
 - **QP** Settle → N16 · used by SC27, SC32, D104, D231, D237, D249, D268, D271, D279, D283, D294, X63
-- **QQ** Ice growth → N17 · used by D350, D109, D225, X54
+- **QQ** Ice growth → N17 · used by D350, D225, X54
 - **QR** Slip → N179, N178, N174, N18 · used by G5, G6, G7, G8, G9, G10, X54, X56
 - **QS** Ruts → N20 · used by D294, X63
 - **QT** Fire vs wetness → N21 · used by SC45, D308, D310, X65
@@ -211,7 +211,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D109, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230, D343
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D352, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230, D343
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D163, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -244,7 +244,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N142** Design: v100 floor 8, Nov 5 → SN13
 - **N143** Design: Albert, Nov 5 10:28 (Tall for the volume row: keep for now) → SN13
 - **N144** Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) → R1, R5, R2, R3, R4, MG1, MG2, MG3, MG4, BTC1, BTC2, BTC5, BTC6, BTC7, BTC8, BR1, BR2, BCR1, BCR2, BCL1, BCL2, BCL3, BCL4, BCT1, BCT2, BP1, BP2, BP3, BP4, BP5, BP6, BP7, BP8, BP9, BP10, BI1, BI2, BI3, BI4, BI5, BI6, BI7, BI8, BI9, BM1, BM2, BM3, BM4, BW1, BW2, BW3, BW4, BF5, BF1, BF2, BF3, BF4, BS1, BS2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, US5, UT1, UT2, UT4, MH1, MH3, MH4, MH5, MH6, MW3, MW4, MW6, UM17, UM18, UM19, UM20, UM21, UM22
-- **N145** Art: Base → C24, HU1, HU19, HU20, HU2, HU3, HU4, HU5, HU6, HU7, HU8, HU9, HU10, HU11, HU12, HU13, HU14, HW1, HW2, HW3, HW4, HC1, HC2, HC4, HC5, HC6, HA1, HA2, HA3, HX2, HX3, HX4, HX6
+- **N145** Art: Base → C24, HU1, HU19, HU20, HU21, HU22, HU2, HU3, HU4, HU5, HU6, HU7, HU8, HU9, HU10, HU11, HU12, HU13, HU14, HW1, HW2, HW3, HW4, HC1, HC2, HC4, HC5, HC6, HA1, HA2, HA3, HX2, HX3, HX4, HX6
 - **N146** Art: Mid (35-sound.js), Nov 5 → HU15, HU16, HU17, HU18, HW5, HC7, HC8, HA4, HA6, HA7, HX2, HX9
 - **N147** Art: Base (the juice pass, Nov 3) → HC3
 - **N148** Design: Apple's ambient audio session for games, carried from Mid (35-sound.js) → HX8
@@ -361,6 +361,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N248** Albedo of natural surfaces: fresh snow 0.80–0.90, grass 0.25, bare soil 0.17 (NSIDC, Thermodynamics: Albedo; W → QAL, D117
 - **N247** Hecht, Shlaer & Pirenne (1942), Energy, quanta and vision, J. Gen. Physiol. 25: the eye's absolute threshold,  → QAL, D117
 - **N234** Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guid → X73, J7, J27, J29, J30
+- **N262** Stefan's law of ice growth, h = α√(freezing degree-days), α about 2.7 cm/(°C·day)^½ for snow-free lake ice and → D350
+- **N263** Gold, L. W. (1971), Use of ice covers for transportation, Canadian Geotechnical Journal 8: the bearing capacit → D350, D351, SN17, J38
 
 ## Named exceptions
 

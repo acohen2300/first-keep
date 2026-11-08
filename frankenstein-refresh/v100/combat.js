@@ -57,6 +57,7 @@ function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.ta
   if (u && t.staked && FK.SH[a.code].mount) stake(a, t); if (u && SIDES[a.side] && !SIDES[t.side]) ECON.struck(a.side, groupOf(t)); // E518
   if (u) { FK.impact(a, t); if (ranged(a)) shot(a, t, W[FK.SH[a.code].body].height); if (!SIDES[t.side]) { t.aggro = a; if (t.job !== 'fight' && stat(t).atk) fight(t, a); } if (t.kind === 'bld') ECON.shot(a, t, d); }
   if (!alive(t)) { if (armed(a)) a.mor = Math.min(MO.full, a.mor + MO.kill); die(t, a); } }
+FK.on('drown', (u) => die(u)); // E796
 function die(t, by) { t[t.kind === 'bld' ? 'by' : 'killer'] = by && by.side; if (t.kind === 'bld') { if (by && SIDES[by.side] && by.side !== t.side) { for (const [y, n] of Object.entries(D.cost[t.code] || {})) ECON.earn(by.side, y, Math.floor(n * D.plunder), 'loot'); if (by.side === ME) FK.fire('event', 'plunder', t); } FK.fire('event', 'fell', t); FK.unbuild(t); return; } // E356
   if (armed(t)) { const near = []; FK.unitsNear(t, MO.lossR * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && gap(t, v) < MO.lossR) near.push(v); }); for (const v of near) v.mor -= 1 / (D.breakAt * (near.length + 1)); } // E388
   t.gone = true; const us = units(), c = FK.has(t, 'Prey') && FK.lay('meat', t.bx, t.by, D.meat[t.code]); if (us.includes(t)) us.splice(us.indexOf(t), 1); FK.fire('gone', t); for (const u of us) if (u.target === t) { u.target = null; if (c && FK.has(u, 'Gather')) ECON.gatherAt(u, c); } }

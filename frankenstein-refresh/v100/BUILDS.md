@@ -3896,3 +3896,51 @@ MODIFIED (28):
 LOCKED (2188 of 2216): byte for byte as sealed, 1,334,756 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2216 items sealed · 2089 book entries · 93 laws · 261 citations, 12 still to open · 7 known
+
+## B21: ice by the real rules (onset by depth and lake size, Stefan's growth, Gold's bearing load, cracks heard and seen before it breaks, holes, the fallen lost), how to cross asked with six ways and remember this winter or this game, clear off, frozen lakes under snow, brim ponds of grass, banks back to walkable · 2026-11-08 14:36
+Albert, Nov 8 14:15-14:21: cross if frozen with a warning, real math, cracking signs before they fall, strategies (one at a time, single file, thin out, normal, stick to edges), remember my choice, an emergency clear; snow hides lakes; lakes full to grass in some cases; build it all in one shot
+Opened: book:citations, book:colours, book:comments, book:measure, book:screen, book:sound, book:words, code:combat.js, code:index.html, code:menu.js
+MODIFIED (40):
+- book:citations:N262 · added
+- book:citations:N263 · added
+- book:colours:C23 · 499 → 537 bytes
+- book:comments:E132 · 157 → 163 bytes
+- book:comments:E783 · added
+- book:comments:E784 · added
+- book:comments:E785 · added
+- book:comments:E786 · added
+- book:comments:E787 · added
+- book:comments:E788 · added
+- book:comments:E789 · added
+- book:comments:E790 · added
+- book:comments:E791 · added
+- book:comments:E792 · added
+- book:comments:E793 · added
+- book:comments:E794 · added
+- book:comments:E795 · added
+- book:comments:E796 · added
+- book:comments:E797 · added
+- book:measure:D109 · removed
+- book:measure:D32 · 278 → 393 bytes
+- book:measure:D350 · 594 → 2,238 bytes
+- book:measure:D351 · added
+- book:measure:D352 · added
+- book:screen:SN17 · added
+- book:sound:HE1 · 564 → 602 bytes
+- book:sound:HU21 · added
+- book:sound:HU22 · added
+- book:sound:HX6 · 220 → 247 bytes
+- book:words:J38 · added
+- code:combat.js · 59,025 → 59,064 bytes
+- code:index.html#drawn-once-in-the-view-frame · 12,837 → 13,124 bytes
+- code:index.html#floor-2-terrain · 9,159 → 9,293 bytes
+- code:index.html#floor-5-movables · 15,603 → 18,619 bytes
+- code:index.html#floor-6-climate · 27,924 → 29,986 bytes
+- code:index.html#floor-7-display · 7,426 → 7,438 bytes
+- code:index.html#the-door · 14,409 → 14,444 bytes
+- code:index.html#the-ground · 1,820 → 1,918 bytes
+- code:index.html#touch · 7,503 → 7,551 bytes
+- code:menu.js · 89,943 → 92,201 bytes
+LOCKED (2199 of 2238): byte for byte as sealed, 1,197,032 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2238 items sealed · 2111 book entries · 93 laws · 263 citations, 12 still to open · 7 known

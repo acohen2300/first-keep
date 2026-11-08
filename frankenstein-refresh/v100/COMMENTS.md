@@ -65,6 +65,21 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E780 | index.html#drawn-once-in-the-view-frame | the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake's depth (D27) of D350's steps |
 | E781 | index.html#floor-6-climate | the ice drawn: the mask of the deepest step frozen so far, over the water |
 | E782 | index.html#drawn-once-in-the-view-frame | each water cell adds its shallow part to every step's ice path and its land part to the land path; one fill each, so no seam shows |
+| E783 | index.html#floor-2-terrain | a pond's water marks the lake's radius on each of its tiles (for how late it freezes); a brim pond marks its bank, drawn as grass to the water |
+| E784 | index.html#floor-5-movables | the ice's thickness on a tile by Stefan's law from the degree-days past that tile's onset (or past the day a hole broke it), thinner growth under snow; what it holds at failure by Gold's formula |
+| E785 | index.html#floor-5-movables | who may step on ice: yours unless told to go around; the computer and the wild only where the ice holds several of them at the safe load |
+| E786 | index.html#floor-5-movables | your crossing for a unit: its own, else the one you chose to remember for this winter or this game, else normal |
+| E787 | index.html#floor-5-movables | stepping from land onto the ice keeps the crossing: wait for an answer; one at a time waits while others of yours are on the ice; file and thin out wait while one of yours is on the ice within the gap |
+| E788 | index.html#floor-5-movables | the thinnest ice on the way of the units asked about, and what it holds safely |
+| E789 | index.html#floor-5-movables | clear off: everyone of yours on the ice goes to the nearest land |
+| E790 | index.html#floor-5-movables | each beat the ice under every loaded tile of deep water is weighed (a thaw leaves them on ice too thin to hold anyone): over the safe load it cracks (heard and seen), and after the warning it breaks at a chance growing with the square of the overload, at once past failing; the tile's people fall through, those near at a chance |
+| E791 | index.html#floor-6-climate | the holes and the cracks drawn over the ice: a hole open water ringed with broken edge, a crack's rays growing over the warning |
+| E792 | menu.js | the ice card's answers: a way to cross for the units asked about, remembered for this winter or this game if picked; go around orders them again off the ice; clear off |
+| E793 | menu.js | the ice card: what the thinnest ice on the way holds, the six ways, remember |
+| E794 | menu.js | an order whose way crosses ice asks how to cross, unless a remembered answer stands; they wait at the shore meanwhile |
+| E795 | menu.js | ice cracking under yours: the warning said and a clear-off button beside it until all of yours are off the ice |
+| E796 | combat.js | one who falls through the ice is lost, as any death, and leaves no body on the ice (under) |
+| E797 | index.html#floor-6-climate | a frozen lake under snow: white as the land, with wind-scoured streaks of ice and a rim line at the shore, so it still reads as a lake; made once per ice step and snow step |
 | E763 | index.html#the-brushes | a figure's lines in its own darker shade, never black: while a figure is painted (RIM), a stroke asked in ink takes the fill's shade, or a soft ink under a gradient, and a thinner line (the Sprites book's cut, PF2) |
 | E764 | index.html#the-figures | the person's cut: anchors at the shoulder, hip, hem, ground and face; the tunic, robe, armour, apron, hair and coif drawn as curves from them; sleeves as bowed strokes with a rim, ending in a hand |
 | E762 | index.html#the-figures | a person in true proportion: long legs, a torso, a small head, a slim build, from the Sprites book; the head and its helm drawn smaller about the neck |
@@ -230,7 +245,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E129 | index.html#floor-6-climate | rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity |
 | E130 | index.html#floor-6-climate | QP settle: wet in D104, dry in D105 |
 | E131 | index.html#floor-6-climate | QO degree-day melt, rain on snow twice as fast |
-| E132 | index.html#floor-6-climate | QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground grows the same way while the ground is wet, full at D225 |
+| E132 | index.html#floor-6-climate | QQ: lake ice grows with the freezing degree-seconds (D350, by Stefan's law); ice on the ground grows the same way while the ground is wet, full at D225 |
 | E133 | index.html#floor-6-climate | fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or snow saturates it; past the fog's water the rest settles as dew and lowers the dew point (Magnus inverted) |
 | E135 | index.html#floor-6-climate | QL, QM: strikes on Poisson waits in a storm |
 | E136 | index.html#floor-6-climate | a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits |

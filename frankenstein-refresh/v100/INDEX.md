@@ -334,6 +334,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N248 |  | Albedo of natural surfaces: fresh snow 0.80–0.90, grass 0.25, bare soil 0.17 (NSIDC, Thermodynamics: Albedo; Wikipedia, Albedo, table of sam | opened |
 | N247 |  | Hecht, Shlaer & Pirenne (1942), Energy, quanta and vision, J. Gen. Physiol. 25: the eye's absolute threshold, a few quanta at the retina, ab | opened |
 | N234 |  | Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, | opened |
+| N262 |  | Stefan's law of ice growth, h = α√(freezing degree-days), α about 2.7 cm/(°C·day)^½ for snow-free lake ice and about 1.4 under snow (Lebedev | opened |
+| N263 |  | Gold, L. W. (1971), Use of ice covers for transportation, Canadian Geotechnical Journal 8: the bearing capacity of floating ice P = A h², A  | opened |
 
 ## colours
 
@@ -359,7 +361,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C19 | The lights and theatrics (Mid's drawLight, flame, celebrate, drawFlash): a lit window, a flame's white heart, the flash, a ripple for a finished building and for a new age | {window: #ffc86e, heart: #fff5d9d9, flash: #fff6dc, done: #ffd35e, big: #fff3c4, shadow: #000000} | N208 |
 | C20 | Building and figure dressing (Mid's drawBld, smoke, flagsOn, PILE, pileArt, drawUnit, idleMark): stakes, posts, the site's bar, smoke, the outline, the marks' gold and their shade, the rout badge, the nerve bar, the piles | {stake: #d8c79c, post: #b8955a, bar: #e6b947, smoke: #d7d7d2, line: #100c08bf, mark: #ffd35e, shade: #000000b3, rout: #d8432f, white: #fffff | N208 |
 | C21 | The small map and the map's labels (Mid's drawMini, miniIncoming, tag): an outline, the view box, the incoming army's ring and its low beat, the whiteout, a find, a label's pill | {line: #00000099, view: #ffffff, inc: #ff3b2f, incLo: #ffd0c8, white: #ebf0f5eb, find: #f2cf55, pill: #121715eb} | N208 |
-| C23 | the ground's small things: the foam on the water's edge; pebbles, buttercups and clover among the grass [colour, a tile's count, radius]; a stone's own tint in a wall, and the damp moss at a wall's foot | {snow: #eef3f6, ice: #dce9f2, foam: #eef6ffa0, specks: [[#a8a090, 30, 0.35], [#e6d27a, 8, 0.3], [#d9a0c8, 6, 0.3]], stone: [#fff5dc18, #140f | N260 |
+| C23 | the ground's small things: the foam on the water's edge; pebbles, buttercups and clover among the grass [colour, a tile's count, radius]; a stone's own tint in a wall, and the damp moss at a wall's foot | {snow: #eef3f6, ice: #dce9f2, crack: #4a6a86, rim: #9fb2c2, foam: #eef6ffa0, specks: [[#a8a090, 30, 0.35], [#e6d27a, 8, 0.3], [#d9a0c8, 6, 0 | N260 |
 | C24 | the ring at a unit's feet, full and bright (Albert, Nov 8 13:38): green picked (tapped, boxed or in a picked group), blue working, yellow idle; a foe's ring its side's colour, the wild white | {pick: #21e05a, work: #2f8cff, idle: #ffd21f, wild: #ffffff} | N145 |
 | C22 | The grass's mottling (Mid's makeBg): the greens' blots, then the earth's | [[#587c3838, #344e2638, #68803c29], [#7a643e29, #8c764c1f]] | N208 |
 
@@ -428,6 +430,21 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E780 |  | the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake's depth (D27) of D350's steps |  |
 | E781 |  | the ice drawn: the mask of the deepest step frozen so far, over the water |  |
 | E782 |  | each water cell adds its shallow part to every step's ice path and its land part to the land path; one fill each, so no seam shows |  |
+| E783 |  | a pond's water marks the lake's radius on each of its tiles (for how late it freezes); a brim pond marks its bank, drawn as grass to the wat |  |
+| E784 |  | the ice's thickness on a tile by Stefan's law from the degree-days past that tile's onset (or past the day a hole broke it), thinner growth  |  |
+| E785 |  | who may step on ice: yours unless told to go around; the computer and the wild only where the ice holds several of them at the safe load |  |
+| E786 |  | your crossing for a unit: its own, else the one you chose to remember for this winter or this game, else normal |  |
+| E787 |  | stepping from land onto the ice keeps the crossing: wait for an answer; one at a time waits while others of yours are on the ice; file and t |  |
+| E788 |  | the thinnest ice on the way of the units asked about, and what it holds safely |  |
+| E789 |  | clear off: everyone of yours on the ice goes to the nearest land |  |
+| E790 |  | each beat the ice under every loaded tile of deep water is weighed (a thaw leaves them on ice too thin to hold anyone): over the safe load i |  |
+| E791 |  | the holes and the cracks drawn over the ice: a hole open water ringed with broken edge, a crack's rays growing over the warning |  |
+| E792 |  | the ice card's answers: a way to cross for the units asked about, remembered for this winter or this game if picked; go around orders them a |  |
+| E793 |  | the ice card: what the thinnest ice on the way holds, the six ways, remember |  |
+| E794 |  | an order whose way crosses ice asks how to cross, unless a remembered answer stands; they wait at the shore meanwhile |  |
+| E795 |  | ice cracking under yours: the warning said and a clear-off button beside it until all of yours are off the ice |  |
+| E796 |  | one who falls through the ice is lost, as any death, and leaves no body on the ice (under) |  |
+| E797 |  | a frozen lake under snow: white as the land, with wind-scoured streaks of ice and a rim line at the shore, so it still reads as a lake; made |  |
 | E763 |  | a figure's lines in its own darker shade, never black: while a figure is painted (RIM), a stroke asked in ink takes the fill's shade, or a s |  |
 | E764 |  | the person's cut: anchors at the shoulder, hip, hem, ground and face; the tunic, robe, armour, apron, hair and coif drawn as curves from the |  |
 | E762 |  | a person in true proportion: long legs, a torso, a small head, a slim build, from the Sprites book; the head and its helm drawn smaller abou |  |
@@ -593,7 +610,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E129 |  | rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity |  |
 | E130 |  | QP settle: wet in D104, dry in D105 |  |
 | E131 |  | QO degree-day melt, rain on snow twice as fast |  |
-| E132 |  | QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground grows the same way while the ground is wet, full at |  |
+| E132 |  | QQ: lake ice grows with the freezing degree-seconds (D350, by Stefan's law); ice on the ground grows the same way while the ground is wet, f |  |
 | E133 |  | fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or snow saturates it; past the fog's water the rest se |  |
 | E135 |  | QL, QM: strikes on Poisson waits in a storm |  |
 | E136 |  | a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the  |  |
@@ -1215,7 +1232,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D29 | a river's depth | 8 | N112 |
 | D30 | a river's half-width as a share of its lake's radius | 0.25 | N112 |
 | D31 | a river's wander | 80 | N112 |
-| D32 | a bank falls over, in units: a pond or a river is filled near the brim, a short bank of sand straight to the grass (Albert, Nov 8 14:08: lakes fill, they do not sit that low; was 40, a wide sand and dirt bowl) | 12 | N112 |
+| D32 | a bank falls over, in units: no steeper than people can walk down to the water (the angle of repose, A3, a tile's fall at most REPOSE), so the shore stays open to fishers and to the ice; the dirt ring is gone (D15) and some ponds are filled to the grass (D352) (Nov 8 14:21: 12 left every bank a wall nobody could step down) | 40 | N112 |
 | D33 | a ford's length | 40 | N112 |
 | D34 | a stream's half-width | 6 | N112 |
 | D35 | a stream's depth | 2 | N112 |
@@ -1276,7 +1293,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D96 | drawn frames in one stride (two steps) | 4 | N113 |
 | D97 | a work beat | 0.4 | N112 |
 | D349 | the pace meter (Albert, Nov 8 13:38: measure on the phone itself): its line at px from the top left, its font, averaged over tau s, its shadow blur px | {at: [12, 92], font: 600 13px system-ui, tau: 0.5, blur: 3} | N208 |
-| D350 | a lake freezes from the shallows in (Albert, Nov 8 13:43: the water freezes by real math): the heat a column of water must lose before its top freezes grows with its depth, so water of depth d freezes after freeze × d ÷ the lake's depth (D27) freezing °C·s, in steps bands; the ice there bears a walker bears (D109) °C·s later (its thickness grows as the root of the freezing degrees, Stefan, QQ); the sea, deeper than any lake, stays open; the ice drawn at a over the water | {steps: 6, freeze: 400, a: 0.9} | N17; N173 |
+| D350 | ice on the water, by the real rules (Albert, Nov 8 14:15: the math, the weight, how ice grows and how long it takes, the size of the lake). Freezing degree-days are the freezing °C·s over a day (D20). The water first freezes once it has lost its stored heat: onset.metre °C·days for each metre of depth, times (1 + onset.fetch × the lake's radius ÷ onset.per m), as deep water stores more heat and a wide lake is kept stirred by the wind; then the ice thickens by Stefan's law, h = alpha × √(degree-days past the onset) cm, alpha bare 2.7 for clear lake ice, snow 1.4 under snow, which insulates it. Gold's formula gives the load a sheet bears, P = A h² kg (h in cm): A load.safe 3.5 is the safe working load, load.fail about three times that breaks it. Every beat s the load on each tile of ice is weighed (a unit's mass from the Mass book): over the safe load the ice cracks (heard and seen, warn s), and if still over it then breaks at a chance growing as the square of the overload, at once past the failing load; whoever is on the tile goes through, and anyone within near tiles at fall; the hole, hole tiles wide, skins over again from that day. Ice bears a walker for a route where it holds a person at failure. Drawn: steps bands of the ice's onset over span °C·days, at a, the cracks in rays of rays segments turning zig, line px; the walking key changes each key degree-day. Under snow (over dust) a frozen lake turns white as the land does, yet still reads as a lake, as it does in nature: the snow on it lies flat and bright, the wind scours streaks of grey-blue ice bare (streaks of streak px, leaning with the wind, at scour), and the shore shows as a rim line where the ice meets the bank (rim px below the edge); remade only at snowSteps of snow | {steps: 6, span: 12, a: 0.9, alpha: {bare: 2.7, snow: 1.4}, onset: {metre: 3, fetch: 0.5, per: 100}, load: {safe: 3.5, fail: 10.5}, beat: 0. | N17; N173; N262; N263 |
+| D351 | how your people cross ice, your choice (Albert, Nov 8 14:21: one at a time, single file, thin out, normal, stick to edges; remember this winter or this game): an order whose way runs over ice asks first and waits at the shore (ask); normal steps on as it comes; file keeps gap tiles to the one ahead on the ice; thin out keeps gap tiles; one at a time lets most on the ice at once; stick to edges weighs each tile of ice by edge × its depth in metres, so the way keeps to the shallows, which froze first and are thickest; go around keeps off the ice. The computer and the wild step on only where the ice holds ai of them at the safe load. Clear off sends everyone on the ice to the nearest land within reach tiles; its button stays show s after the last of yours is off | {modes: [normal, file, thin, one, edge, around], rules: {normal: {}, file: {gap: 1}, thin: {gap: 3}, one: {most: 1}, edge: {edge: 4}, around | N263 |
+| D352 | the share of ponds filled to the brim: grass runs to the water with no sand (Albert, Nov 8 14:16: lakes full to grass in some cases), as a pond in a meadow | 0.35 | N112 |
 | D98 | frames a second, the screen's own rate on most phones (Albert, Nov 8 13:38: snappy; was 30); the draw budget (D321) drops to its fps when a phone cannot keep up | 60 | N112 |
 | D99 | the latitude | 45 | N112 |
 | D100 | the seasons' mean air, spring to winter | [10, 22, 12, -6] | N112 |
@@ -1288,7 +1307,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D106 | walking costs of mud and snow | {mud: 0.8, snow: 0.6} | N112 |
 | D107 | snow a second when it snows | 0.03 | N112 |
 | D108 | melt a °C·s | 0.004 | N112 |
-| D109 | ice bears a walker at this many freezing °C·s | 200 | N112 |
 | D112 | between flashes | 0.34 | N112 |
 | D113 | the startle of a strike is Mid's (25-view-weather): a bolt on the screen whites the picture bolt[0] + bolt[1] × its nearness within near m, a sheet flash sheet[0] + sheet[1] × the dice, and the ground shakes shake s (Albert, Nov 7 20:47: a war game, I want to be startled); between strikes in a summer storm, seconds; the year's cloud-to-ground flashes by season (spring, summer, autumn, winter) over the United States, NLDN 2005–2014: 64% in June–August (Holle & Cummins), the other three read from their Fig. 2; a season's storms strike at the summer rate × its share ÷ the largest share, so lightning comes all year and is rare in winter (QCT) | {summer: 6, share: [0.2, 0.64, 0.13, 0.03], flash: {bolt: [0.6, 0.4], sheet: [0.25, 0.3], near: 900}, shake: 1} | N112; N243 |
 | D114 | marshy lakes | [1, 2] | N112 |
@@ -1602,6 +1620,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | N140 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | N141 |
 | SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | N142; N143 |
+| SN17 | the ice card: an order over ice asks how to cross (the game keeps running; they wait at the shore) | {ticks: [], rows: title; how thick the ice on the way is and what it holds; the six ways to cross; remember this winter or this game} | N263 |
 | SN16 | the Mail card, as Base (the Nov 7 re-read, item 13) | {ticks: [Tall], rows: title, the messages newest first, each with its group; a tap on one with a place goes there} | N241 |
 | SN15 | the Welcome back card, as Base: a saved game opens paused behind it; the pause itself has no page (the speeds, New game and the volumes drop under the pause button; Paused · tap to carry on; Albert, Nov 7 20:48: all Base) | {ticks: [Tall], rows: title Welcome back, Resume, New game} | N241 |
 | SN14 | words on the map (Mid's LABEL, labelK, mapFont, tag): px at the opening zoom, never under floor; a label's pill (padding, edge, rise, height, inset) | {px: 12, floor: 9, zoom: 1.3, pad: [10, 4, 13, 19, 5]} | N208 |
@@ -1743,6 +1762,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | HU1 | a tap on the glass | [0.03, [tone, 700, 0.05, triangle, 0.16]] | N145 |
 | HU19 | an order given: a short rising two-note go, sure and quick (Albert, Nov 8 13:38: a sound for every tap, and it makes sense) | [0.12, [tone, 520, 0.05, triangle, 0.13], [tone, 780, 0.07, triangle, 0.13, 0, 0.06]] | N145 |
 | HU20 | a card opened (a double tap): a light rising chime | [0.1, [tone, 880, 0.04, sine, 0.1], [tone, 1320, 0.06, sine, 0.08, 0, 0.04]] | N145 |
+| HU21 | ice cracking under weight: sharp snaps and a low groan, the warning before it gives | [0.35, [hiss, 0.06, 0.5, 3500, 0.9, 1500], [hiss, 0.05, 0.4, 2500, 0.9, 800, 0.12], [hiss, 0.07, 0.45, 3000, 0.9, 1000, 0.3], [tone, 95, 0.2 | N145 |
+| HU22 | ice gives way: a heavy splash | [0.5, [hiss, 0.6, 0.5, 900, 0.6, 200], [tone, 120, 0.3, sine, 0.2, 60]] | N145 |
 | HU2 | a dim cell: it only says why | [0.2, [tone, 180, 0.12, square, 0.1], [tone, 140, 0.14, square, 0.1, 0, 0.09]] | N145 |
 | HU3 | a site placed | [0.1, [hiss, 0.08, 0.3, 500, 1], [tone, 120, 0.1, sine, 0.3, 70]] | N145 |
 | HU4 | a building raised: two wooden knocks | [0.2, [knock, wood, 220, 0.4], [knock, wood, 330, 0.3, 0.12, 0.5]] | N145 |
@@ -1779,13 +1800,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | HA4 | the wind, as hard as it blows: heard when it blows past HX4's wind share of its most, a chance a second its share × gust (Mid's AMB.wind and ambience; the wind is measured, not a feature) | [4, [hiss, 2.4, 0.08, 500, 0.6, 280]] | N146; N203 |
 | HA6 | a stampede: a rolling drum of hooves | [1, [tone, 70, 0.08, sine, 0.3, 40], [hiss, 0.05, 0.18, 400, 1, 200], [tone, 70, 0.08, sine, 0.3, 40, 0.13], [hiss, 0.05, 0.18, 400, 1, 200, | N146 |
 | HA7 | the ground shakes | [1.5, [tone, 38, 1.6, sine, 0.4, 28], [hiss, 1.4, 0.3, 120, 0.6, 60]] | N146 |
-| HE1 | which event plays which sound (a find's own sound and a unit's voice sit on its shell) | {tap: tap, err: err, place: place, order: order, open: open, built: done, research: done, hitRanged: arrow, builtWar: doneWar, trained: read | N97 |
+| HE1 | which event plays which sound (a find's own sound and a unit's voice sit on its shell) | {tap: tap, err: err, place: place, order: order, open: open, crack: crack, splash: splash, built: done, research: done, hitRanged: arrow, bu | N97 |
 | HX1 | the ear: the lens's field of view, the air's loss in dB a km, the quietest heard, the speed of sound in m/s | {fov: 60, alphaKm: 5, floor: 0.03, c: 340} | N58 |
 | HX2 | which sounds are ambience and which alerts (the rest are effects) | {amb: [bird, cricket, thunder, wind, hooves, rumble], alert: [age, win, lose, done, doneWar, ready, readySol, coin, horn, tribute, zeal, jin | N145; N146 |
 | HX3 | voices at once; how many each kind leaves free | {max: 14, keep: {alert: 0, fx: 2, amb: 5}} | N145 |
 | HX4 | songs a second a singer in view (a Poisson rate), and the most singers counted; the wind heard past wind of its most, a chance a second its share × gust (Mid's 0.35, and ÷ 4) | {bird: 0.025, cricket: 0.04, singers: 12, wind: 0.35, gust: 0.25} | N12; N145; N203 |
 | HX5 | the air's top: Hz with no snow, Hz under full snow; how much rain masks a quiet sound | {open: 16000, snow: 2500, rainMask: 0.5} | N88; N97 |
-| HX6 | which events are also felt, milliseconds of buzz | {place: 8, order: 6, built: 25, builtWar: 25, impact: 25, fell: 40, strike: 40, err: 8} | N145 |
+| HX6 | which events are also felt, milliseconds of buzz | {place: 8, order: 6, crack: 30, splash: 45, built: 25, builtWar: 25, impact: 25, fell: 40, strike: 40, err: 8} | N145 |
 | HX7 | how far a sound carries before it fades to the quietest heard, metres: thunder about 10 miles | {thunder: 16093} | N89 |
 | HX8 | the phone's audio session: ambient obeys the Ring/Silent switch and plays under the player's own music | ambient | N148 |
 | HX9 | the limiter: a battle's many blows never clip a phone speaker (dB, dB, ratio, seconds, seconds) | {threshold: -3, knee: 10, ratio: 4, attack: 0.005, release: 0.25} | N146 |
@@ -2133,6 +2154,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 
 | Code | Name | Value | Cited |
 |---|---|---|---|
+| J38 | the ice crossing's words: the card that asks how to cross, what the ice holds by Gold's formula, the six ways, remember, clear off, the crack and the fall | {title: Cross on ice?, lead: It’s risky. The thinnest ice on the way is about {cm} cm: it holds about {kg} kg on one spot, enough for {n} at | N263 |
 | J37 | the pace meter's line (the Yard's P layer): frames a second, and the milliseconds a frame spends on the world's logic and on drawing, as this phone measures them | {fps} fps · logic {sim} ms · draw {draw} ms | N208 |
 | J1 | the ledger's word for each reason a store goes in or out (Mid's LEDGER_WORD; the Throne's tithe waits on the Throne, the vassals' tax is parked) | {gather: gathered, orders: marching orders, camps: camp supply, finds: finds, trade: trade, tribute: tribute, ransom: ransoms, market: the M | N132 |
 | J2 | a ledger line with nothing on it | nothing yet | N132 |

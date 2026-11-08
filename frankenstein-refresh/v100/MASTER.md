@@ -54,6 +54,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E768** the board point of each tile's middle stepped across the square, not turned afresh for eve
 - **E26** a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land · D27 (N112) · QAZ (N60) · D28 (N112) · QBG (N67) · D32 (N112) · D16 (N112)
 - **E775** a pond's bank: a short fall to the water on every side, the water filled near the brim (no
+- **E783** a pond's water marks the lake's radius on each of its tiles (for how late it freezes); a b
 - **E27** a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok · QAZ (N60)
 - **E28** a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32 · D32 (N112)
 - **E29** a smooth hill: its steepest slope is 0.77 h / r, under the angle of repose at these number
@@ -101,7 +102,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#drawn-once-in-the-view-frame
 
 - **E56** Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward 
-- **E780** the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake · D27 (N112) · D350 (N17, N173)
+- **E780** the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake · D27 (N112) · D350 (N17, N173, N262, N263)
 - **E57** the masks at a quarter scale: the land in white and in shadow, the inland water
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
@@ -213,8 +214,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E84** the units and moveables (layer 120), from their shells: name, look, pace (a D86 key) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225)
 - **E85** the tool a villager works a find with (WORKTOOL): axe, hands, pick, from the Sprites book  · PN1 (N152, N164, N170, N195, N205)
 - **E86** walking (L5, top rules): land or a ford is walked; a thing, a closed building or a step pa
+- **E784** the ice's thickness on a tile by Stefan's law from the degree-days past that tile's onset 
 - **E87** inland water bearing ice (QQ): walked as if flat; ice bears where its depth step is behind · QQ (N17)
+- **E786** your crossing for a unit: its own, else the one you chose to remember for this winter or t
+- **E787** stepping from land onto the ice keeps the crossing: wait for an answer; one at a time wait
+- **E788** the thinnest ice on the way of the units asked about, and what it holds safely
+- **E789** clear off: everyone of yours on the ice goes to the nearest land
+- **E790** each beat the ice under every loaded tile of deep water is weighed (a thaw leaves them on 
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
+- **E785** who may step on ice: yours unless told to go around; the computer and the wild only where 
 - **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185, N198) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
 - **E360** the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh alwa · QN (N13) · QR (N179, N178, N174, N18) · D225 (N17, N173) · G9 (N179, N19, N173) · G8 (N107, N18, N178) · G10 (N174, N179, N173)
 - **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185, N198) · QR (N179, N178, N174, N18)
@@ -308,16 +316,18 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E376** QCL the weather of the moment: rates, wind and visibility from the strengths, fog's water  · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214)
 - **E130** QP settle: wet in D104, dry in D105 · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
-- **E132** QQ: lake ice grows with the freezing degree-seconds and bears at D109; ice on the ground g · QQ (N17) · D109 (N112) · D225 (N17, N173)
-- **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173) · D350 (N17, N173)
+- **E132** QQ: lake ice grows with the freezing degree-seconds (D350, by Stefan's law); ice on the gr · QQ (N17) · D350 (N17, N173, N262, N263) · D225 (N17, N173)
+- **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173) · D350 (N17, N173, N262, N263)
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
 - **E576** a bolt where it falls: drawn, the ground scorched, the thunder told
 - **E728** a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the grou · D113 (N112, N243)
 - **E137** a far flash: its thunder from beyond the screen
 - **E138** the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling · QJ (N9)
+- **E797** a frozen lake under snow: white as the land, with wind-scoured streaks of ice and a rim li
 - **E139** on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply)
 - **E781** the ice drawn: the mask of the deepest step frozen so far, over the water
+- **E791** the holes and the cracks drawn over the ice: a hole open water ringed with broken edge, a 
 - **E578** quicksand on the ground while it lasts
 - **E140** over everything: what falls, the strikes, the flash, the night, the white of low visibilit
 - **E719** rain and snow are drawn on the glass, as Mid's: the biggest drop crosses the screen at gla
@@ -479,6 +489,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
+- **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
@@ -488,6 +499,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
+- **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
 - **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
@@ -529,6 +541,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
+- **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
+- **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
 - **E431** the finger's holds and drags on the map: the choke drawn, the crosshair dragged, yours pic
@@ -733,6 +747,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188)
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
 - **E518** A blow on a shooter's stake, or on one of a wild group (its regard falls).
+- **E796** one who falls through the ice is lost, as any death, and leaves no body on the ice (under)
 - **E356** a building that falls pays its destroyer D233 of its price (Mid's plunderBld); game falls  · D233 (N188)
 - **E388** QAI a loss drains each soldier of its side within D231's lossR by 1 ÷ (D142 × n) (Mid's di · QAI (N76, N188) · D231 (N188, N76, N16) · D142 (N76)
 - **E232** QAF and QAG the foe (Mid's unitPower, groupPower, canBeat, foeValue): one its group can be · QAF (N35) · QAG (N36, N37, N188)
