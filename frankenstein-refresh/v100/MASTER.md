@@ -460,6 +460,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
 - **E335** a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it look
+- **E726** the place bar says what Base's said (J34): where to press, then the name with 'tap Build,  · J34 (N241)
 - **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near
 - **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map
 - **E700** only a touch on or near the ghost moves it; a touch away from it falls through to the came

@@ -3458,3 +3458,14 @@ MODIFIED (3):
 LOCKED (2123 of 2126): byte for byte as sealed, 1,294,571 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2126 items sealed · 2000 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## U2 · the place bar's words and Cancel as Base's (J34, E726) · 2026-11-07 20:43
+
+Opened: code:menu.js, book:words, book:comments
+MODIFIED (3):
+- book:comments:E726 · added
+- book:words:J34 · added
+- code:menu.js · 84,103 → 84,353 bytes
+LOCKED (2125 of 2128): byte for byte as sealed, 1,295,184 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2128 items sealed · 2002 book entries · 93 laws · 249 citations, 7 still to open · 7 known

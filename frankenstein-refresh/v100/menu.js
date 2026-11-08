@@ -162,6 +162,7 @@ const VERBS = {
   quick: { label: () => SVG.attack, whyNot: () => (!WAR.sendable().length ? WO.none : ''), run: () => { const q = S.qa, U = WAR.sendable(); S.qa = null; if (WAR.order(U, null, q.k)) ECON.orderCost(ME, U); } },
   qclose: { label: () => SVG.close, whyNot: () => '', run: () => { S.qa = null; } },
   sendTo: { label: (y) => `<span class="t">${SVG[y]}</span>`, whyNot: (y) => (FK.picked().filter(isVil).some((u) => ECON.bestFind(u, y)) ? '' : `No ${y} within reach`), run: (y) => { for (const u of FK.picked().filter(isVil)) { const t = ECON.bestFind(u, y); if (t) ECON.gatherAt(u, t); } } },
+  cancel: { label: () => WD.place.cancel, whyNot: () => '', run: () => VERBS.close.run() },
   unpick: { label: () => SVG.close, whyNot: () => '', run: () => { FK.select(null); S.more = false; FK.dirty(); } },
   follow: { label: () => `<span class="t">${SVG.direct}</span>`, whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
   map: { label: () => 'Map', whyNot: () => '', run: () => { FK.show.M = !FK.show.M; FK.dirty(); } },
@@ -236,7 +237,7 @@ const ROWS = { // E199
       : t.kind === 'bld' ? (own(t) ? (t.max ? vcell('replant', k) : ECON.cutOut(ME, t).length ? vcell('replantAll', k) : '') + vcell('raise', k) + vcell('scrap', k) : (isSoldier(r.sel) ? vcell('fight', k) : '') + vcell('here', k)) : vcell('gather', k) + vcell('send', k);
     return sq + (a ? `<div class="row">${a}</div>` : ''); },
 };
-function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S.ghost)}</p><div class="row">${vcell('build')}${vcell('close')}</div>`; if (!t) return ''; // E669
+function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S.ghost)}</p><div class="row">${vcell('build')}${vcell('cancel')}</div>`; if (!t) return ''; // E669
   return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
@@ -286,7 +287,7 @@ function wallHit(g, x, y) { const at = g.pts.map(onMap), i = at.findIndex(([a, b
   for (const [c, d] of at) { if (q) { const [a, b] = q, L = Math.hypot(c - a, d - b), along = ((x - a) * (c - a) + (y - b) * (d - b)) / L; if (along > -P.hit && along < L + P.hit && Math.abs((x - a) * (d - b) - (y - b) * (c - a)) / L < P.hit) return { k0: tileK(x, y), pts0: g.pts.slice() }; } q = [c, d]; }
   return null; }
 function wallDrag(d, x, y) { const g = S.ghost, k = tileK(x, y), [i0, j0] = ij(d.k0 ?? k), [di, dj] = ij(k).map((v, n) => v - [i0, j0][n]); if (d.i != null) g.pts[d.i] = wallSnap(g.pts[d.i - 1] ?? g.pts[d.i + 1], k); else g.pts = d.pts0.map((q) => { const [i, j] = ij(q); return inN(j + dj) * N + inN(i + di); }); wallSet(g); }
-const ghostSay = (g) => (line(g.code) ? (g.cells.length ? `${g.cells.length} × ${costText(D.cost[g.code])}${g.bad ? ` · ${g.bad} blocked` : ''}` : 'Tap the corners') : g.i < -50 ? 'Slide to place' : g.ok ? 'Fits here' : g.why);
+const PW = WD.place, ghostSay = (g) => { const name = ECON.nameOf(g.code); if (line(g.code)) return g.cells.length ? PW.pieces.replace('{n}', g.cells.length) + (g.bad ? PW.blocked.replace('{n}', g.bad) : '') : PW.lineStart.replace('{line}', name.toLowerCase()); return g.i < -50 ? PW.start.replace('{name}', name.toLowerCase()) : g.ok ? PW.ok.replace('{Name}', name) : g.why; }; // E726
 function place(g) { const sel = FK.sel(), [first] = Object.keys(D.cost[g.code] || {}); // E336
   if (line(g.code)) { const r = ECON.lay(ME, g.code, g.cells); toast(r.built ? `${r.built} ${some(r.built, ECON.nameOf(g.code).toLowerCase())} going up${r.blocked ? `; ${r.blocked} blocked` : ''}${r.broke ? `; out of ${first}` : ''}` : r.broke ? `Not enough: ${costText(D.cost[g.code])} a piece` : 'Something is in the way'); g.pts = []; wallSet(g); return; }
   const t = ECON.plan(ME, g.code, g.i, g.j); if (!t) return toast(g.why || 'Not here'); ECON.autoBuilder(ME, t, isVil(sel) ? sel : null);
