@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 30 | 3,298 | 536,708 | 536,851 |
-| Books | 2111 | 0 | 612,883 | 613,666 |
+| Game code | 30 | 3,298 | 536,938 | 537,081 |
+| Books | 2112 | 0 | 613,194 | 613,977 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,770 | 289,689 | 289,930 |
 
@@ -21,7 +21,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
 | index.html#floor-2-terrain | 84 | 9,289 | 9,293 | 115 |
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
-| index.html#drawn-once-in-the-view-frame | 82 | 13,120 | 13,124 | 120 |
+| index.html#drawn-once-in-the-view-frame | 82 | 13,081 | 13,085 | 120 |
 | index.html#the-view | 9 | 1,080 | 1,084 | 13 |
 | index.html#the-door | 95 | 14,440 | 14,444 | 67 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
@@ -35,7 +35,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,949 | 5,953 | 90 |
 | index.html#floor-6-climate | 171 | 29,974 | 29,986 | 227 |
 | index.html#floor-7-display | 44 | 7,434 | 7,438 | 55 |
-| index.html#the-view-s-eyes-lights-and-stage | 121 | 23,520 | 23,524 | 0 |
+| index.html#the-view-s-eyes-lights-and-stage | 121 | 23,789 | 23,793 | 0 |
 | index.html#the-woods-cache | 51 | 4,932 | 4,936 | 66 |
 | index.html#touch | 50 | 7,547 | 7,551 | 54 |
 | menu.js | 492 | 92,158 | 92,201 | 568 |
@@ -52,10 +52,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,145 |
 | citations | 263 | 57,440 |
 | colours | 23 | 5,486 |
-| comments | 787 | 135,602 |
+| comments | 788 | 135,806 |
 | ground | 6 | 1,748 |
 | mass | 27 | 4,397 |
-| measure | 321 | 141,471 |
+| measure | 321 | 141,588 |
 | rules | 75 | 28,346 |
 | screen | 14 | 4,294 |
 | shells | 110 | 23,426 |
@@ -153,4 +153,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2238 items sealed · 2111 book entries · 93 laws · 263 citations, 12 still to open · 7 known
+2239 items sealed · 2112 book entries · 93 laws · 263 citations, 12 still to open · 7 known

@@ -3944,3 +3944,16 @@ MODIFIED (40):
 LOCKED (2199 of 2238): byte for byte as sealed, 1,197,032 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2238 items sealed · 2111 book entries · 93 laws · 263 citations, 12 still to open · 7 known
+
+## B22: the ground's mottle soft-edged (no hard discs), a slope's light gentler and the single-band cells left to the tiles (no lattice) · 2026-11-08 15:37
+Albert, Nov 8 15:34: the grass looks like art deco; a grid pattern shows
+Opened: book:comments, book:measure, code:index.html
+MODIFIED (5):
+- book:comments:E798 · added
+- book:measure:D320 · 2,225 → 2,250 bytes
+- book:measure:D348 · 1,235 → 1,327 bytes
+- code:index.html#drawn-once-in-the-view-frame · 13,124 → 13,085 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,524 → 23,793 bytes
+LOCKED (2234 of 2239): byte for byte as sealed, 1,420,631 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2239 items sealed · 2112 book entries · 93 laws · 263 citations, 12 still to open · 7 known

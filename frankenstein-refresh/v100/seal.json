@@ -5539,6 +5539,11 @@
 "bytes": 184,
 "numbers": 0
 },
+"book:comments:E798": {
+"sha": "df97354a093b6ad0f701dbbbb4f9ee3c3bcd193a839b835c19eef369680924c3",
+"bytes": 194,
+"numbers": 0
+},
 "book:comments:E8": {
 "sha": "12c078bd034d189feff64376a951e1ba579d39824efff503c7c8f993b5ef4589",
 "bytes": 207,
@@ -6940,8 +6945,8 @@
 "numbers": 0
 },
 "book:measure:D320": {
-"sha": "f359c215db959512207cd5677b53c9780f0f61f7b96ba261352f3f3dc781db8b",
-"bytes": 2225,
+"sha": "b3cc27398d9c584522c5024fd247e6dd7a1821d531c983a71d5c59a155ab9984",
+"bytes": 2250,
 "numbers": 0
 },
 "book:measure:D321": {
@@ -7085,8 +7090,8 @@
 "numbers": 0
 },
 "book:measure:D348": {
-"sha": "8b9e09598f3f7409bd4115b5ef8593e813fedb7a4be7e5f646699c4ceba45760",
-"bytes": 1235,
+"sha": "5d853deef7d9f0172485ba497f19a12980cfa076c1b5f19f9e4bfed5ff54f000",
+"bytes": 1327,
 "numbers": 0
 },
 "book:measure:D349": {
@@ -10575,8 +10580,8 @@
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
-"sha": "cacdcfb2fbcc4dd9586a858921d9dce6c400c94ffac4bbca495d8b37f5373589",
-"bytes": 13124,
+"sha": "e19fd49fc50ed03acc8a9041575fe6b0704787cbba2d4a3667ff3fd3441f7f88",
+"bytes": 13085,
 "numbers": 120
 },
 "code:index.html#floor-2-terrain": {
@@ -10680,8 +10685,8 @@
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
-"sha": "1d1c7c64e7d9bc8377ac20c20697f1a2e655e17bc028dd39288ffa4fc775e583",
-"bytes": 23524,
+"sha": "0b04af15f47eb36b4dc375a15360757188d03f1a2cf34009f16a2659e48d071c",
+"bytes": 23793,
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {

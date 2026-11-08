@@ -417,6 +417,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E731** the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map 
 - **E747** the mirage's dots on the small map, in the colour of what is coming
 - **E621** the grass mottled, greens then earth, kept to the land (Mid's makeBg)
+- **E798** each blot of the ground's mottle fades from its colour at the middle to nothing at the edg
 
 ## index.html#the-woods-cache
 

@@ -80,6 +80,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E795 | menu.js | ice cracking under yours: the warning said and a clear-off button beside it until all of yours are off the ice |
 | E796 | combat.js | one who falls through the ice is lost, as any death, and leaves no body on the ice (under) |
 | E797 | index.html#floor-6-climate | a frozen lake under snow: white as the land, with wind-scoured streaks of ice and a rim line at the shore, so it still reads as a lake; made once per ice step and snow step |
+| E798 | index.html#the-view-s-eyes-lights-and-stage | each blot of the ground's mottle fades from its colour at the middle to nothing at the edge, as grass varies, never a hard-edged disc (Albert, Nov 8 15:34: the grass looked art deco) |
 | E763 | index.html#the-brushes | a figure's lines in its own darker shade, never black: while a figure is painted (RIM), a stroke asked in ink takes the fill's shade, or a soft ink under a gradient, and a thinner line (the Sprites book's cut, PF2) |
 | E764 | index.html#the-figures | the person's cut: anchors at the shoulder, hip, hem, ground and face; the tunic, robe, armour, apron, hair and coif drawn as curves from them; sleeves as bowed strokes with a rim, ending in a hand |
 | E762 | index.html#the-figures | a person in true proportion: long legs, a torso, a small head, a slim build, from the Sprites book; the head and its helm drawn smaller about the neck |
