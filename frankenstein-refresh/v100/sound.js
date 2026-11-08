@@ -9,7 +9,7 @@ const last = {}, chan = (n) => (HB.chan.amb.includes(n) ? 'amb' : HB.chan.alert.
 function wake() { // E253
   if (AC) { if (AC.state !== 'running') AC.resume().catch(() => {}); return; }
   try { if (navigator.audioSession) navigator.audioSession.type = HB.session; } catch (e) {} // E254
-  try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; }
+  try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; } if (AC.state !== 'running') AC.resume().catch(() => {}); // E723
   const lim = AC.createDynamicsCompressor(); for (const [k, v] of Object.entries(HB.limiter)) lim[k].value = v; lim.connect(AC.destination); // E255
   air = AC.createBiquadFilter(); air.type = 'lowpass'; air.frequency.value = HB.muffle.open; air.connect(lim);
   master = AC.createGain(); master.gain.value = 0.5; master.connect(air);

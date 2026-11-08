@@ -161,6 +161,7 @@ const VERBS = {
   move: { label: (c) => { const [[, a], [, b]] = WO.direct[c], w = WAR.directWait(c); return `${a}<small>${b}${w ? ` ${w}s` : ''}</small>`; }, whyNot: () => '', run: (c, held) => WAR.direct(c, !!held, S.aim) },
   quick: { label: () => SVG.attack, whyNot: () => (!WAR.sendable().length ? WO.none : ''), run: () => { const q = S.qa, U = WAR.sendable(); S.qa = null; if (WAR.order(U, null, q.k)) ECON.orderCost(ME, U); } },
   qclose: { label: () => SVG.close, whyNot: () => '', run: () => { S.qa = null; } },
+  unpick: { label: () => SVG.close, whyNot: () => '', run: () => { FK.select(null); S.more = false; FK.dirty(); } },
   follow: { label: () => 'Follow', whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
   map: { label: () => 'Map', whyNot: () => '', run: () => { FK.show.M = !FK.show.M; FK.dirty(); } },
   pause: { label: () => (FK.paused() ? SVG.play : TP_.mark), whyNot: () => '', run: () => { FK.pause(); S.tab = FK.paused() ? 'Pause' : null; } }, // E702
@@ -238,7 +239,8 @@ function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S
   return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
-const rank = (card) => (S.tab || card || S.ghost ? '' : row(...ORDER.map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red'))), base = (r) => S.war ? warBase() : row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
+const rank = (card) => { if (S.tab || card || S.ghost) return ''; const V = FK.picked().filter((u) => own(u) && isVil(u)); if (V.length && !S.war) return row(span(ORDER.length - D.speeds.length, tab('Build', 'Build', 'build')), vcell('follow', null, null, '', FK.cam.follow), vcell('stop', V.at(null)), '<i></i>', vcell('unpick')); return row(...ORDER.map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
+const base = (r) => S.war ? warBase() : row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
   + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
 const MID = { map: () => held(vcell('rally', null, null, 'two'), 'ambush') + vcell('choke', null, null, 'two', S.tool === 'choke') + vcell('reinforce', null, null, 'two') + vcell('later', 'Map', null, 'two'), train: () => classes().map((k) => vcell('kind', kindOf(k), null, 'ic')).join(''),

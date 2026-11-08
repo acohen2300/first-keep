@@ -3432,3 +3432,18 @@ MODIFIED (3):
 LOCKED (2119 of 2122): byte for byte as sealed, 1,345,962 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2122 items sealed · 1996 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## U1 · a picked villager's bar (Build, Follow, Stop, let go) as Base's selection bar (E724); the finger finds a figure within half of Apple's 44-pt target (D230 hit 22); the sound engine woken as it is made (E723); the finger's target above the foot, not below (E725) · 2026-11-07 20:35
+Albert, Nov 7 20:30: tap a villager: a sound first, then something that says build; not the sword
+Opened: code:menu.js, code:sound.js, book:measure, book:comments, code:index.html
+MODIFIED (7):
+- book:comments:E723 · added
+- book:comments:E724 · added
+- book:comments:E725 · added
+- book:measure:D246 · 717 → 865 bytes
+- code:index.html#touch · 7,438 → 7,446 bytes
+- code:menu.js · 82,970 → 83,386 bytes
+- code:sound.js · 5,938 → 6,003 bytes
+LOCKED (2118 of 2125): byte for byte as sealed, 1,279,901 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2125 items sealed · 1999 book entries · 93 laws · 249 citations, 7 still to open · 7 known

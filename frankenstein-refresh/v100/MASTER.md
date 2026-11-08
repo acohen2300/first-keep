@@ -381,6 +381,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E163** the camera rule: the board never leaves the screen's middle; a board smaller than the scre
 - **E425** the finger's gesture: where it went down and is, when, and what a module made of it (a lin · D246 (N190)
 - **E164** what is under the finger: the tile at the land's height and the nearest unit it may see (y · D246 (N190)
+- **E725** the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turn
 - **E426** the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)
 - **E165** The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a see · QBF (N65)
 - **E662** The opening: the game opens where you left it, unless the address names another seed; ?tes
@@ -444,6 +445,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
+- **E724** a picked villager's bar on the rank, as Base's selection bar: Build (the Build card, the p
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
@@ -792,6 +794,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E252** each channel's volume steps, the one in use first (HX10) · HX10 (N149)
 - **E253** a phone opens its audio only on a touch
 - **E254** the Ring/Silent switch silences the game; the player's music plays on (HX8) · HX8 (N148)
+- **E723** the sound engine is woken the moment it is made: a phone makes it asleep until a gesture r
 - **E255** a battle's many blows never clip a phone speaker
 - **E697** the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touc
 - **E256** QAY: each mode dies with time constant tau ÷ Hz, to 80 dB down · QAY (N59)
