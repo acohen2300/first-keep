@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,177 | 505,098 | 505,237 |
-| Books | 2015 | 0 | 576,168 | 576,895 |
+| Game code | 29 | 3,178 | 505,246 | 505,385 |
+| Books | 2018 | 0 | 576,787 | 577,514 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
-| Tools | 4 | 1,765 | 288,451 | 288,692 |
+| Tools | 4 | 1,770 | 289,689 | 289,930 |
 
 ## The trades (code)
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 63 | 8,876 | 8,880 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 1,032 | 1,036 | 14 |
-| index.html#the-door | 95 | 14,401 | 14,405 | 68 |
+| index.html#the-door | 95 | 14,305 | 14,309 | 68 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
@@ -32,15 +32,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 130 | 15,482 | 15,486 | 78 |
 | index.html#the-body-s-laws | 31 | 2,655 | 2,659 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
-| index.html#floor-6-climate | 153 | 25,284 | 25,296 | 228 |
+| index.html#floor-6-climate | 153 | 25,351 | 25,363 | 228 |
 | index.html#floor-7-display | 44 | 7,335 | 7,339 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 117 | 22,154 | 22,158 | 0 |
 | index.html#the-woods-cache | 51 | 4,771 | 4,775 | 71 |
-| index.html#touch | 50 | 7,483 | 7,487 | 54 |
-| menu.js | 480 | 88,818 | 88,861 | 574 |
+| index.html#touch | 50 | 7,475 | 7,479 | 54 |
+| menu.js | 480 | 88,984 | 89,027 | 571 |
 | econ.js | 578 | 105,991 | 105,991 | 72 |
-| combat.js | 354 | 59,061 | 59,061 | 84 |
-| ai.js | 170 | 27,312 | 27,312 | 25 |
+| combat.js | 354 | 59,062 | 59,062 | 84 |
+| ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 57 | 6,050 | 6,050 | 66 |
 
 ## The books
@@ -49,20 +49,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,092 |
-| citations | 249 | 53,901 |
+| citations | 250 | 54,215 |
 | colours | 21 | 4,542 |
 | comments | 728 | 126,064 |
 | ground | 6 | 1,748 |
 | mass | 24 | 3,739 |
-| measure | 317 | 132,759 |
-| rules | 74 | 28,133 |
+| measure | 318 | 132,864 |
+| rules | 75 | 28,346 |
 | screen | 13 | 3,996 |
-| shells | 109 | 23,178 |
+| shells | 109 | 23,182 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,427 |
 | sprites | 65 | 25,607 |
-| tech | 259 | 75,753 |
-| words | 35 | 89,212 |
+| tech | 259 | 75,765 |
+| words | 35 | 89,215 |
 
 ## The shells
 
@@ -150,5 +150,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X75 | rawstats | code | G1: code reading the raw stats table (D.stats[…]) outside stat's own home: ask FK.stat |
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
+| X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2141 items sealed · 2015 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+2144 items sealed · 2018 book entries · 93 laws · 250 citations, 7 still to open · 7 known

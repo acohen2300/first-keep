@@ -18,7 +18,7 @@ BOOK("shells", {
  "BTC6": {"name": "Training tent", "layer": 110, "size": "D8", "style": "Closed", "look": "traintent", "material": "timber", "ticks": ["Spawn", "Health", "Burn"], "cite": ["N144", "N198", "N206"]},
  "BTC7": {"name": "Mess tent", "layer": 110, "size": "D8", "style": "Closed", "look": "messtent", "material": "timber", "ticks": ["Shelter", "Health", "Burn"], "cite": ["N144", "N198", "N206"]},
  "BTC8": {"name": "Camp tower", "layer": 110, "size": "D8", "style": "Closed", "look": "camptower", "material": "timber", "ticks": ["Shoot", "Health", "Burn"], "cite": ["N144", "N198", "N206"]},
- "BR1": {"name": "Home", "layer": 110, "size": "D8", "style": "Closed", "look": "house", "material": "timber", "ticks": ["House", "Health", "Burn", "Research"], "cite": ["N144", "N206"]},
+ "BR1": {"name": "Dwelling", "layer": 110, "size": "D8", "style": "Closed", "look": "house", "material": "timber", "ticks": ["House", "Health", "Burn", "Research"], "cite": ["N144", "N206"]},
  "BR2": {"name": "Apartment", "layer": 110, "size": "D9", "style": "Closed", "look": "apartment", "material": "timber", "ticks": ["House", "Health"], "cite": ["N144", "N235"]},
  "BCR1": {"name": "Market", "layer": 110, "size": "D9", "style": "Open", "look": "market", "material": "timber", "ticks": ["Trade", "Spawn", "Burn", "Health", "Research"], "cite": ["N144", "N195", "N206"]},
  "BCR2": {"name": "Tavern", "layer": 110, "size": "D8", "style": "Closed", "look": "tavern", "material": "timber", "ticks": ["Burn", "Care", "Health"], "cite": ["N144", "N206"]},

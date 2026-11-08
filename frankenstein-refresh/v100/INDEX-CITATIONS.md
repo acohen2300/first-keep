@@ -345,6 +345,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
+- **N250** Design: Albert's calls, Nov 8 07:26 (B7): Dwelling for the house; Difficulty on the Start card, read at the ma → D341, D347, X77
 - **N249** Design: Mid's forest (mid/src/10-world-forest.js, FOREST, TREE, makeForest: lattice 26, ± 6, 375 trees a corne → D345
 - **N248** Albedo of natural surfaces: fresh snow 0.80–0.90, grass 0.25, bare soil 0.17 (NSIDC, Thermodynamics: Albedo; W → QAL, D117
 - **N247** Hecht, Shlaer & Pirenne (1942), Energy, quanta and vision, J. Gen. Physiol. 25: the eye's absolute threshold,  → QAL, D117

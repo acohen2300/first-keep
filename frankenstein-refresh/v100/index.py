@@ -164,6 +164,11 @@ def parses(key, name, js):
     rule(key, r.returncode == 0, f'{name} does not parse: {(r.stderr.strip().splitlines() or [""])[-1][:100]}')
 for f in CODE: parses('parse', f, script(f))
 parses('joined', 'the whole game, joined', '\n'.join(text(p) for p in sorted(glob.glob('books/*.js'))) + '\n' + '\n'.join(script(f) for f in CODE))
+KEYS = "const ts = require('typescript'), fs = require('fs'); for (const f of process.argv.slice(1)) { const sf = ts.createSourceFile(f, fs.readFileSync(f, 'utf8'), 99, true, 1); (function walk(n) { if (ts.isObjectLiteralExpression(n)) { const seen = new Set(); for (const p of n.properties) { if (!p.name || ts.isComputedPropertyName(p.name) || ts.isGetAccessor(p) || ts.isSetAccessor(p)) continue; const k = p.name.text; if (seen.has(k)) console.log(f.split('/').pop().replace('__', '/') + ':' + (sf.getLineAndCharacterOfPosition(p.getStart()).line + 1) + ' ' + k); seen.add(k); } } ts.forEachChild(n, walk); })(sf); }"
+with tempfile.TemporaryDirectory() as d:   # X77: the later of two equal keys silently wins (B6's two home verbs)
+    for f in CODE + sorted(glob.glob('books/*.js')): open(os.path.join(d, f.replace('/', '__')), 'w').write(script(f) if f in CODE else text(f))
+    r = subprocess.run(['node', '-e', KEYS, *glob.glob(os.path.join(d, '*'))], capture_output=True, text=True, env={**os.environ, 'NODE_PATH': subprocess.run(['npm', 'root', '-g'], capture_output=True, text=True).stdout.strip()})
+rule('unique', not r.returncode and not r.stdout.strip(), f"the same key twice: {r.stdout.strip() or r.stderr.strip()[:200]}")
 # ── 3. The seal
 report = []; ran.add('permit')   # the permit's check runs on every change below, and on none when nothing changed
 for k in changed:

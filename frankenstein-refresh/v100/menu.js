@@ -13,7 +13,7 @@ const OPTS = { // E176
   diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open', 'open'], ['Siege', 'siege'], ['Silk Road', 'road'], ['Last Keep', 'last']],
   world: [['Real'], ['Fantasy']], tension: [['Winner'], ['Diplomacy']], daily: [['Off', false], ['On', true]],
   civ: [['Roman'], ['Han'], ['Persian'], ['Mongol'], ['Maurya'], ['Mali']], hazard: [['Hardest', 'hard'], ['Famine', 'starve'], ['Weather', 'winter'], ['Drought', 'drought'], ['Outlaws', 'horde'], ['Plague', 'plague']] };
-const BUILT = { len: 1, daily: 1, civ: true, scen: true }; // E177
+const BUILT = { diff: true, len: true, daily: true, civ: true, scen: true }; // E177
 const ICON = { food: '🍖', wood: '🪵', gold: '🪙', stone: '🪨', iron: '⛓' };
 const ORDER = ['food', 'wood', 'stone', 'gold', 'iron'], NAME = { food: 'Food', wood: 'Wood', stone: 'Stone', gold: 'Gold', iron: 'Iron' }; // E178
 // E179
@@ -75,7 +75,7 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 .strip { display: grid; grid-template-columns: repeat(8, 1fr); background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; } .strip .cell { background: none; border: 0; border-radius: 0; height: 30px; } .strip .cell + .cell { border-left: 1px solid var(--b2); } .strip.big .cell { height: var(--slot); } .strip:not(.big) .cell { flex-direction: row; gap: 4px; }
 #card { background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; padding: 8px 10px; display: none; flex-direction: column; gap: var(--gap); } #card.on { display: flex; } #card h2 { font: 400 18px var(--display); color: var(--g1); margin: 0; } #card p { margin: 0; color: var(--wdim); } .row { display: flex; gap: var(--gap); } .row .cell { flex: 1; } .cell.w1 { flex: 0 0 var(--slot); }
 #qa { position: fixed; display: none; gap: var(--gap); } #qa.on { display: flex; } #qa .cell { width: var(--slot); }
-#toast { position: fixed; left: var(--gap); top: calc(env(safe-area-inset-top, 0px) + 2 * var(--slot) + 3 * var(--gap)); background: var(--b1); border: 1px solid var(--g1); color: var(--g1); border-radius: 9px; padding: 6px 12px; font: 600 14px var(--ui); opacity: 0; transition: opacity .3s; max-width: 45vw; z-index: 4; }`;
+#toast { position: fixed; left: var(--gap); top: calc(env(safe-area-inset-top, 0px) + 2 * var(--slot) + 3 * var(--gap)); background: var(--b1); border: 1px solid var(--g1); color: var(--g1); border-radius: 9px; padding: 6px 12px; font: 600 14px var(--ui); opacity: 0; transition: opacity .3s; max-width: 45vw; z-index: 4; pointer-events: none; } #toast.on { opacity: 1; pointer-events: auto; }`;
 document.head.appendChild(css);
 const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id="card"></div><div id="panel"></div><div id="rank"></div><div id="base"></div>'; document.body.appendChild(ui);
 const topEl = document.createElement('div'); topEl.className = 'topbar'; document.body.appendChild(topEl);
@@ -84,7 +84,7 @@ const spdEl = document.createElement('div'); spdEl.id = 'spd'; spdEl.className =
 const $ = (id) => document.getElementById(id);
 const S = { tab: 'Start', mailT: -Infinity, prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hz: new Set() }, group: 'Land', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
-const toast = (msg, secs = D.toast, at = null) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = secs; S.toastAt = at; }; toastEl.addEventListener('click', () => { if (S.toastAt) { FK.cam.follow = false; FK.camGo(...FK.toView(S.toastAt.bx, S.toastAt.by, D.land)); } toastEl.style.opacity = ZERO; S.toastT = ZERO; }); // E737
+const toast = (msg, secs = D.toast, at = null) => { toastEl.textContent = msg; toastEl.className = 'on'; S.toastT = secs; S.toastAt = at; }; toastEl.addEventListener('click', () => { if (S.toastAt) { FK.cam.follow = false; FK.camGo(...FK.toView(S.toastAt.bx, S.toastAt.by, D.land)); } toastEl.className = ''; S.toastT = ZERO; }); // E737
 const WD = fromBook('words'), TW = WD.troops, TP_ = WD.pause, blessed = () => WAR.armyOf(ME).filter((u) => WAR.SQ.sel == null || u.bn === WAR.SQ.sel), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
 const fmt = (n) => (n >= SAY.whole ? Math.round(n / SAY.thousand) + WD.thousand : n >= SAY.thousand ? Math.floor(n / SAY.tenth) / (SAY.thousand / SAY.tenth) + WD.thousand : String(Math.floor(n)));
 const plural = (n) => { for (const [p, f, e] of WD.plural) { const re = new RegExp(p, f); if (re.test(n)) return n.replace(re, e); } }; // E273
@@ -99,7 +99,7 @@ const price = (c) => { const st = SIDES[ME].store, miss = Object.entries(c || {}
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
 const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || 'free'; // E183
 const own = (t) => t && t.side === ME, AW = WD.alarm, EW = WD.end, NEWS = WD.news, TELL = WD.say, WA = WD.army, DIALTECH = { temper: 'engage', form: 'formations', intent: 'command' }, TECHOF = FK.TK; // E404
-const MUSTER = { tech: 'Needs Muster', none: 'Nothing missing', at: 'Needs a War Council', kind: 'Needs the building that trains it', army: 'The army is full', room: 'Needs room: build homes' };
+const MUSTER = { tech: 'Needs Muster', none: 'Nothing missing', at: 'Needs a War Council', kind: 'Needs the building that trains it', army: 'The army is full', room: 'Needs room: build dwellings' };
 const council = (t) => (own(t) && FK.has(t, 'Squad') ? row(...WA.squads.map((n, i) => vcell('squad', i, null, '', WAR.SQ.sel === i)), vcell('muster')) + row(...classes().map((c) => `<div class="pairs">${vcell('plan', c, '')}${vcell('plan', c, 'up')}</div>`)) : ''); // E405
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u);
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
@@ -151,7 +151,7 @@ const VERBS = {
   build: { label: () => 'Build', whyNot: () => { const g = S.ghost; return !g ? 'Pick a building' : line(g.code) ? (!g.cells.length ? 'Tap the corners' : g.bad === g.cells.length ? 'Something is in the way' : '') : g.ok ? '' : g.why || 'Slide to place'; }, run: () => place(S.ghost) },
   group: { label: (g) => g, whyNot: () => '', run: (g) => { S.group = g; S.ghost = null; FK.dirty(); } },
   attack: { label: () => `<span class="t">${SVG.attack}</span>Attack<small>${msnSay(WA.all)}</small>`, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => { WAR.go(S.aim); S.firedT = performance.now(); } }, // E427
-  home: { label: () => WO.homeCell, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.everyHome() },
+  allHome: { label: () => WO.homeCell, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.everyHome() },
   callHome: { label: () => WO.homeCell, whyNot: (i) => (WAR.MS[i] && !WAR.MS[i].end ? '' : WO.notOut), run: (i) => WAR.callHome(i) },
   rally: { label: () => `${WO.rallyCell}<small>${WO.ambushCell}</small>`, whyNot: () => '', run: () => { SIDES[ME].flag = aimK(); toast(WO.rally); } },
   ambush: { label: () => WO.ambushCell, whyNot: () => '', run: () => WAR.ambushAt(aimK(), toolSet()) },
@@ -176,7 +176,7 @@ const VERBS = {
   resume: { label: () => WD.back.resume, whyNot: () => '', run: () => { S.tab = null; FK.pause(false); } },
   newgame: { label: () => (S.sure ? TP_.sure : TP_.newGame).replace(' ', '<small>') + '</small>', whyNot: () => '', run: () => { if (!S.sure) { S.sure = true; return; } S.sure = false; S.prev = null; S.tab = 'Start'; FK.pause(true); } }, // E703
   recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
-  train: { label: (c, b) => `${FK.rankName(c, ME)}${price(ECON.priceOf(ME, c, b))}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, ECON.priceOf(ME, c, b)) ? `Needs ${costText(ECON.priceOf(ME, c, b))}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },
+  train: { label: (c, b) => `${FK.rankName(c, ME)}${price(ECON.priceOf(ME, c, b))}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, ECON.priceOf(ME, c, b)) ? `Needs ${costText(ECON.priceOf(ME, c, b))}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a dwelling' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },
   untrain: { label: () => '−', whyNot: (b) => (!b.q || !b.q.length ? 'Nothing queued' : ''), run: (b) => ECON.unqueue(b) },
   stop: { label: () => 'Stop', whyNot: (u) => (u.job === 'idle' ? 'Already idle' : ''), run: (u) => { if (u.load) ECON.carry(u); else ECON.idle(u); } },
   gather: { label: () => 'Gather', whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : ''), run: (t) => ECON.gatherAt(FK.sel(), t) },
@@ -253,7 +253,7 @@ const offScreen = () => { const h = FK.seatOf(ME); if (!h) return false; const [
 const rank = (card) => { if (S.tab || card || S.ghost) return ''; const P = FK.picked(), V = P.filter((u) => own(u) && isVil(u)), A = P.filter(isSoldier), W = P.filter((u) => u.kind === 'unit' && !own(u) && !SIDES[u.side]); const bar = (n, cells) => `<div class="bar">${row(span(ORDER.length, cell(WD.bar.picked.replace('{n}', n), 'title')), vcell('unpick'))}<div class="cells" style="--n:${cells.length}">${cells.join('')}</div></div>`;
   if (V.length && !S.war) return bar(V.length, [...ORDER.map((y) => vcell('sendTo', y, null, 'ic')), tab('Build', `<span class="t">${SVG.build}</span>`, 'build'), vcell('follow', null, null, 'ic', FK.cam.follow)]);
   if (A.length && !S.war) return bar(A.length, [vcell('chargeP'), vcell('fallBackP'), vcell('holdP'), vcell('recall'), vcell('follow', null, null, 'ic', FK.cam.follow)]); // E733
-  if (W.length) return bar(W.length, [vcell('hunt', W.at(null)), vcell('hunt3', W.at(null)), vcell('follow', null, null, 'ic', FK.cam.follow)]); return row(offScreen() ? vcell('home', null, null, 'ic') : '<i></i>', ...ORDER.slice([ORDER].length).map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
+  if (W.length) return bar(W.length, [vcell('hunt', key(W[ZERO])), vcell('hunt3', key(W[ZERO])), vcell('follow', null, null, 'ic', FK.cam.follow)]); return row(offScreen() ? vcell('home', null, null, 'ic') : '<i></i>', ...ORDER.slice([ORDER].length).map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
 const base = (r) => S.war ? warBase() : row(vcell('people', null, null, `ic ${ECON.jobs(ME).idle ? 'blue' : ''}`), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
   + row(tab('Build', 'Build', 'build').replace('</button>', `${siteBar()}</button>`), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
@@ -261,7 +261,7 @@ const MID = { map: () => '', train: () => classes().map((k) => vcell('kind', kin
   squad: () => WA.squads.map((n, i) => held(vcell('squad', i, null, 'two', WAR.SQ.sel === i), 'callHome', i)).join('') + vcell('setup', null, null, 'two'), setup: () => Object.keys(WAR.DIAL).map((k) => vcell('dial', k, null, 'two')).join('') + vcell('squads', null, null, 'two'), direct: () => classes().map((c) => held(vcell('move', c, null, 'two'), 'move', c, 'h')).join('') + held(vcell('rally', null, null, 'two'), 'ambush') + vcell('choke', null, null, 'two', S.tool === 'choke') + vcell('reinforce', null, null, 'two') }; // E731
 const siteBar = () => { const sites = FK.blds().filter((t) => t.side === ME && t.done < [t].length); if (!sites.length) return ''; const f = sites.reduce((s, t) => s + t.done, ZERO) / sites.length; return `<i class="prog" style="--f:${f.toFixed(D.speeds.length)}"></i>`; }; // E735
 const warBase = () => `<div class="warbase">${vcell('work', null, null, 'ic')}${vcell('alarm', 'square', null, 'ic')}<div class="mid ${S.mid}">${MID[S.mid]()}</div>${vcell('mid', 'train', null, 'ic red', S.mid === 'train')}${vcell('mid', 'squad', null, 'ic red', S.mid === 'squad')}`
-  + `${vcell('alarm', 'hands', null, 'ic')}${vcell('alarm', 'shelter', null, 'ic')}${vcell('mid', 'direct', null, 'ic red', S.mid === 'direct')}${held(vcell('attack', null, null, 'ic red'), 'home')}</div>`;
+  + `${vcell('alarm', 'hands', null, 'ic')}${vcell('alarm', 'shelter', null, 'ic')}${vcell('mid', 'direct', null, 'ic red', S.mid === 'direct')}${held(vcell('attack', null, null, 'ic red'), 'allHome')}</div>`;
 // E202
 // E203
 const sword = svg('<path d="M14 4l6-1-1 6-9 9-3-3zM7 15l-3 3 2 2 3-3"/>').replace('currentColor', 'var(--rr)'), scales = svg('<path d="M12 4v16M7 20h10M5 7h14M5 7l-3 6h6zM19 7l-3 6h6z"/>'), hands = svg('<path d="M3 11l4-4 4 2 3-2 4 4 3 0M7 13l3 3c1 1 2 1 3 0l4-4"/>').replace('currentColor', 'var(--rg)');
@@ -281,7 +281,7 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
   if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; else { const [w, h] = FK.size(); hintAt(tileK(w * P.half, h * P.half)); } render(true); return; } act(verb, argOf(a), argOf(a2)); } // E730
-FK.on('begin', () => { FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); if (!FK.HZ.size) for (const [, id] of OPTS.hazard) if (FK.rng() < D.hazards.lot) FK.HZ.add(id); }); // E705
+FK.on('begin', () => { S.game = { ...S.opt }; FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); if (!FK.HZ.size) for (const [, id] of OPTS.hazard) if (FK.rng() < D.hazards.lot) FK.HZ.add(id); }); // E705
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
 let lpT = 0; const lpStop = () => clearTimeout(lpT); // E428
@@ -382,7 +382,7 @@ FK.on('draw', (ctx, s) => { if (S.line) { const p = S.line, a = boardAt(p.x0, p.
   const [bx, by] = FK.tileMid(aimK()); ctx.font = FK.mapFont(); ctx.textAlign = 'center'; ctx.fillText(eta ? `${clock(eta)} · ${coord(bx, by)}` : coord(bx, by), x, y - R - RT.label); ctx.restore(); });
 FK.on('event', (e, t, n) => { if (e === 'short') toast('Not enough to pay for repairs'); const w = NEWS[e]; if (w) toast((Array.isArray(w) ? w[n] : w).replace('{n}', n).replace('{m}', n * D.flock.mutton).replace('{at}', t && coord(t.bx, t.by))); }); // E359
 FK.on('tick', (dt) => { const real = dt / (show.fast ? D.fast : 1); if (edge && drag && S.ghost) { const [w, h] = FK.size(), vx = (edge.x > w - P.edge) - (edge.x < P.edge), vy = (edge.y > h - P.edge) - (edge.y < P.edge), f = (P.scroll * real) / FK.cam.z; if (vx || vy) { FK.cam.x += vx * f; FK.cam.y += vy * f; FK.keepOn(); ghostTo(edge.x, edge.y - drag.lift); } } // E342
-  acc += real; if (S.toastT > 0) { S.toastT -= real; if (S.toastT <= 0) toastEl.style.opacity = 0; } if (acc >= D.beatUi) { acc = 0; render(); } });
+  acc += real; if (S.toastT > 0) { S.toastT -= real; if (S.toastT <= 0) toastEl.className = ''; } if (acc >= D.beatUi) { acc = 0; render(); } });
 // E635
 const MS = D.mail, TL = D.tell, MWD = WD.mail, PWD = WD.peace, CIVS = WD.civs, ML = D.milestones, mail = [], post = [], hush = (x) => x.replace(/[\d,.]+/g, '#'), [BEAT] = D.peaceBeat, seen = (at) => FK.inSight(at, ME), [, , ALLY] = fromBook('sides').stances; let newsT = -Infinity, newsI = null;
 const dirOf = (a, b) => { const n = MWD.dirs.length; return MWD.dirs[(Math.round((Math.atan2(b.by - a.by, b.bx - a.bx) / (Math.PI + Math.PI)) * n) + n) % n]; }; // E636
@@ -442,8 +442,8 @@ const logText = () => JSON.stringify({ version: D.version, seed: FK.seed(), land
 function copyLog() { const t = logText(), ok = () => say(WT.copied), fall = () => { const a = Object.assign(document.createElement('textarea'), { value: t }); document.body.append(a); a.select(); const done = document.execCommand && document.execCommand('copy'); a.remove(); done ? ok() : say(WT.copyFail); }; // E672
   try { navigator.clipboard.writeText(t).then(ok, fall); } catch (e) { fall(); } }
 FK.on('start', () => { LOG.rows = []; });
-FK.on('save', (X) => { X.menu = { mail, post, newsI, newsT, shown, slipT, mustered, tipNow, opt: S.opt, log: LOG.rows }; }); // E673
-FK.on('load', ({ menu: M }) => { FK.refill(mail, M.mail); FK.refill(post, M.post); ({ newsI, newsT, slipT, mustered, tipNow, shown } = M); Object.assign(S.opt, M.opt); LOG.rows = M.log; S.tab = null; render(true); });
+FK.on('save', (X) => { X.menu = { mail, post, newsI, newsT, shown, slipT, mustered, tipNow, opt: S.opt, game: S.game, log: LOG.rows }; }); // E673
+FK.on('load', ({ menu: M }) => { FK.refill(mail, M.mail); FK.refill(post, M.post); ({ newsI, newsT, slipT, mustered, tipNow, shown } = M); Object.assign(S.opt, M.opt); S.game = M.game || { ...S.opt }; LOG.rows = M.log; S.tab = null; render(true); });
 // E675
 const GW = WD.guidebook, TB = BOOKS.tech, TV = (c) => TB[c].value, SN = (c) => FK.SH[c].name, [AGE0] = D.ages, ageOf = (c) => FK.SH[c].age || D.ages[D.bldAge[c]] || AGE0, secs = (t) => (t ? t + GW.secs : '');
 const homesOf = (c) => Object.keys(D.trains).filter((b) => FK.trains(b).includes(FK.SH[c].replaces || c)), homeOf = (c) => { const [h] = homesOf(c); return h; }, whyOf = (c) => WD.why[GW.key[c] || FK.SH[c].look], techWhy = (c) => WD.why['tech:' + TB[c].key] ?? WD.why[TB[c].key]; // E676

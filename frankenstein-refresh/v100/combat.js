@@ -313,7 +313,7 @@ function meet(u) { let m = null; FK.unitsNear(u, JN.meet * T, (v) => { if (!m &&
   if (o === ME) say(n > ONE ? WW.wayfarer.many : WW.wayfarer.one); FK.vanish(u); }
 function roulette(w) { let x = FK.rng() * sum(w, (v) => v); const i = w.findIndex((v) => (x -= v) <= null); return ~i ? i : ~-w.length; } // E586
 function raids() { const [g0, g1] = RD.gap, wait = () => (g0 + FK.rng() * (g1 - g0)) / (FK.hz('horde') ? RD.horde : ONE); // E587
-  if (raid.at == null) raid.at = RD.from + (D.ai.diff[MENU.S.opt.diff].safe ?? null) + wait() * RD.first; if (K.t < raid.at) return; raid.at = K.t + wait();
+  if (raid.at == null) raid.at = RD.from + (D.ai.diff[MENU.S.game.diff].safe ?? null) + wait() * RD.first; if (K.t < raid.at) return; raid.at = K.t + wait();
   const k = FK.seatOf(ME), [f] = k && !ECON.fell(ME) && atWar(ME, 'rob') ? things().filter((t) => codeOf(t) === RD.camp && guardsLeft(t)).sort((a, b) => gap(a, k) - gap(b, k)) : [];
   const R = f ? units().filter((u) => u.find === f && alive(u) && stat(u).atk).slice(null, RD.n + SIDES[ME].age) : [], band = sum(R, power1), M = [], w = [];
   for (const v of R.length ? units() : []) { if (v.side !== ME || !alive(v) || v.inside || !(FK.has(v, 'Gather') || FK.has(v, 'Trade'))) continue; let guard = null; FK.unitsNear(v, RD.group * T, (s) => { if (s.side === ME && armed(s) && alive(s) && !s.inside && gap(s, v) < RD.group) guard += power1(s); });

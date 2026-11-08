@@ -3600,3 +3600,27 @@ MODIFIED (8):
 LOCKED (2133 of 2141): byte for byte as sealed, 1,193,133 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2141 items sealed · 2015 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B7 · the B6 audit's fixes (Hunt, the toast's taps, one home verb), a gate rule against a key twice, the backup save kept on a fault, Difficulty on and read at the start only, Dwelling, sunrise on March 21 with 3 dry days · 2026-11-08 07:46
+Albert, Nov 8 07:26 and 07:31: yes yes B7
+Opened: code:menu.js, code:ai.js, code:combat.js, code:index.html#the-door, code:index.html#floor-6-climate, code:index.html#touch, book:measure, book:shells, book:tech, book:words, book:citations, book:rules, tool:index.py
+MODIFIED (16):
+- book:citations:N250 · added
+- book:measure:D341 · 339 → 303 bytes
+- book:measure:D347 · added
+- book:rules:X77 · added
+- book:shells:BR1 · 178 → 182 bytes
+- book:tech:O45 · 246 → 250 bytes
+- book:tech:O46 · 329 → 333 bytes
+- book:tech:O47 · 277 → 281 bytes
+- book:words:J25 · 919 → 922 bytes
+- code:ai.js · 27,312 → 27,330 bytes
+- code:combat.js · 59,061 → 59,062 bytes
+- code:index.html#floor-6-climate · 25,296 → 25,363 bytes
+- code:index.html#the-door · 14,405 → 14,309 bytes
+- code:index.html#touch · 7,487 → 7,479 bytes
+- code:menu.js · 88,861 → 89,027 bytes
+- tool:index.py · 26,386 → 27,624 bytes
+LOCKED (2128 of 2144): byte for byte as sealed, 1,140,020 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2144 items sealed · 2018 book entries · 93 laws · 250 citations, 7 still to open · 7 known

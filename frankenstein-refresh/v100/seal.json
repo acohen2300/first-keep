@@ -1124,6 +1124,11 @@
 "bytes": 51,
 "numbers": 0
 },
+"book:citations:N250": {
+"sha": "def075eb03cb297c4256a00715ced07f319eec81e13bf5a39b2a30b765769a5e",
+"bytes": 303,
+"numbers": 0
+},
 "book:citations:N26": {
 "sha": "4ee1d8c2df664f38cf10fb3ed6b2ecc0c205b707999a783f151407773a11e4d6",
 "bytes": 45,
@@ -6670,8 +6675,8 @@
 "numbers": 0
 },
 "book:measure:D341": {
-"sha": "6d422d1a38fe27cc85ae93fbce12963e387dbd4fa574260e18b1834279094ee5",
-"bytes": 339,
+"sha": "dfe768bbfa29dbd9d5fef5b166e7eacd3ac11584d49e6b0a6f2b9fba3cfba219",
+"bytes": 303,
 "numbers": 0
 },
 "book:measure:D342": {
@@ -6697,6 +6702,11 @@
 "book:measure:D346": {
 "sha": "da284aa0b09e55163babae5ec9f8d8ec3466d033cb44d66fe996bc5fcfd6b6bc",
 "bytes": 263,
+"numbers": 0
+},
+"book:measure:D347": {
+"sha": "a5e4e8ce0fca53bb87f452cb3cfbee16f0f6b2204633a116a9fc99d31faa5f3f",
+"bytes": 130,
 "numbers": 0
 },
 "book:measure:D35": {
@@ -7369,6 +7379,11 @@
 "bytes": 227,
 "numbers": 0
 },
+"book:rules:X77": {
+"sha": "ac586d936c244c5fe0fe9539e56f482c2d01d3ad7fe5746bb4efcd17dc4e62e5",
+"bytes": 203,
+"numbers": 0
+},
 "book:rules:X8": {
 "sha": "191cd923e4aca13ef7fa92597036531dc7500ace1698669df35557735298b548",
 "bytes": 141,
@@ -7625,8 +7640,8 @@
 "numbers": 0
 },
 "book:shells:BR1": {
-"sha": "35552998cdfd57b7146f3c61e76941499a931f88891a8f7fedc2780fb81e7d72",
-"bytes": 178,
+"sha": "f5f22d7aa88c115449fd21afe43588fd5ab9c6163e7324fbe96aa5b6bdbca61e",
+"bytes": 182,
 "numbers": 0
 },
 "book:shells:BR2": {
@@ -9600,18 +9615,18 @@
 "numbers": 0
 },
 "book:tech:O45": {
-"sha": "f7ca5cc98f82687544040cd0742618322c99437bcf3ee57fdb9bb74fe5353645",
-"bytes": 246,
+"sha": "f3b008a9fa9bec2c93a1dd1be99fb191537b1827d0aaab7a145844a0cf3efa7a",
+"bytes": 250,
 "numbers": 0
 },
 "book:tech:O46": {
-"sha": "ec5019ec45a0be1cc1937236c9d43a3720cdd0b55ab3ee2faac90efa71637ade",
-"bytes": 329,
+"sha": "a59166da6cbd233ad957cef90bfb31b5862d0e55db3ea8b7fb04434ffc821109",
+"bytes": 333,
 "numbers": 0
 },
 "book:tech:O47": {
-"sha": "81ef77629d540132bddde00b57d953fc6fa0d73e22b6a72cfffbb5dfbcbbf4ff",
-"bytes": 277,
+"sha": "1ec693732e19b71937437e41f4f0074c7657b6c6d5fcdc7ff6d0a997f31860f6",
+"bytes": 281,
 "numbers": 0
 },
 "book:tech:O48": {
@@ -9985,8 +10000,8 @@
 "numbers": 0
 },
 "book:words:J25": {
-"sha": "a1f4158cc9b249e1f57ae558b039640aa6e93bfcb0c4f14882dc7e455480784b",
-"bytes": 919,
+"sha": "8ab7b6d299864ee9a5276ba23090ecff7082ee0bd9e8f87b748a5af6c8ac013e",
+"bytes": 922,
 "numbers": 0
 },
 "book:words:J26": {
@@ -10075,13 +10090,13 @@
 "numbers": 0
 },
 "code:ai.js": {
-"sha": "0273bcad3820b817d1b33e05dee4471a48159a333faa11016a6baeb20680b7fc",
-"bytes": 27312,
+"sha": "1305b513de3ab4ee67929fa2b270636731dce60c7ed60eb98df8220fb0f339b9",
+"bytes": 27330,
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "56861c9df402df1a6356329b80e5ee2a18d4f3ad7f1b20a897cfcea09c9c0ea9",
-"bytes": 59061,
+"sha": "dd4f0035bab0a1b737435ffb96a3c5a56454a4a328dbc57db6d38fb2cd30fdf2",
+"bytes": 59062,
 "numbers": 84
 },
 "code:econ.js": {
@@ -10115,8 +10130,8 @@
 "numbers": 78
 },
 "code:index.html#floor-6-climate": {
-"sha": "e222e2b1f43b86889a6b5da01afaf1834da64c28bc43bbf1cdc67592b2595eaa",
-"bytes": 25296,
+"sha": "da4271a85a6535c396a63a9bca884383dbb14163fadf08a7080c8af6553114fe",
+"bytes": 25363,
 "numbers": 228
 },
 "code:index.html#floor-7-display": {
@@ -10160,8 +10175,8 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "efdab6eeb2b9915539ba54ede1ef5fd43f0d8bdb6b0c5e8f31a1d4838644d56c",
-"bytes": 14405,
+"sha": "52c599953de5e92bcdacfb71f2f6904860893c032c71de8de12a2cef8cf01322",
+"bytes": 14309,
 "numbers": 68
 },
 "code:index.html#the-figures": {
@@ -10205,14 +10220,14 @@
 "numbers": 71
 },
 "code:index.html#touch": {
-"sha": "0055114fd01dcb915549fb4f7122a029d48624053e9675c8a2571cff81e8f505",
-"bytes": 7487,
+"sha": "70dc60dacb840845ca65f75031e0ce56ad09ad0205571801c1119af800d01279",
+"bytes": 7479,
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "a3bbfd74fd32b2e1be8b6123c2d9aeae176655406694e4912e2c45fb624b1e1b",
-"bytes": 88861,
-"numbers": 574
+"sha": "0c6ec47cc397ec2c78fe5365969d6e8562a6bc60c42ea350c171d6af87ab10a8",
+"bytes": 89027,
+"numbers": 571
 },
 "code:sound.js": {
 "sha": "09b79298e416ba977a502349178f95bcc08a9e59715132adc2cc225d5450e2cf",
@@ -10685,8 +10700,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "59bf8e0f5c8d28e4a22c245772479ca317ed7d33b7e876db1d5f7712865259af",
-"bytes": 26386,
+"sha": "f6261e08316dca0a665e38fd2ae9f5ea5724eeac8a78668d21c5f907afb33197",
+"bytes": 27624,
 "numbers": 0
 },
 "tool:pages.yml": {

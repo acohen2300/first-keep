@@ -318,6 +318,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N245 |  | Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water content M = 0.072 R^0.88 g/m³ f | to open |
 | N246 |  | The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the finite-source form E = I ÷ (d² + s | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
+| N250 |  | Design: Albert's calls, Nov 8 07:26 (B7): Dwelling for the house; Difficulty on the Start card, read at the match's start only; a match open | opened |
 | N249 |  | Design: Mid's forest (mid/src/10-world-forest.js, FOREST, TREE, makeForest: lattice 26, ± 6, 375 trees a corner, paths 34 wide, edge 40, the | opened |
 | N248 |  | Albedo of natural surfaces: fresh snow 0.80–0.90, grass 0.25, bare soil 0.17 (NSIDC, Thermodynamics: Albedo; Wikipedia, Albedo, table of sam | opened |
 | N247 |  | Hecht, Shlaer & Pirenne (1942), Energy, quanta and vision, J. Gen. Physiol. 25: the eye's absolute threshold, a few quanta at the retina, ab | opened |
@@ -1437,7 +1438,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D334 | the buttons always on the play screen, at most (Mid's UI_BUDGET): a new control replaces one | 33 | N230 |
 | D340 | the draw rate at rest (SoRen's tick: 50 ms a frame live, 150 ms idle, 250 ms dark): paused, behind a full-screen page or card, or with nothing moving, the world steps and draws idle frames a second; hidden, dark | {idle: 15, dark: 4} | N238 |
 | D335 | the match log: a row a minute (Mid's matchLog), for Claude to read; the tap counts' place on the phone (Mid's TAPS) | {row: 60, taps: fk.taps} | N230 |
-| D341 | the day's fraction at which the sun stands highest: a match opens an hour after sunrise on the spring equinox (the year begins at declination 0, March 21; sunrise at hour angle −90°, so noon = 75° ÷ 360°; Mid's 0.28 opened in twilight, Albert, Nov 7 20:14) | 0.2083 | N240 |
+| D341 | the day's fraction at which the sun stands highest: a match opens at sunrise on the spring equinox (the year begins at declination 0, March 21; sunrise at hour angle −90°, so noon = 90° ÷ 360°; Albert, Nov 8 07:26) | 0.25 | N240; N250 |
+| D347 | days without rain at the start of a match (Albert, Nov 8 07:26) | 3 | N250 |
 | D346 | the counting numbers the code may name: zero and one (the number sweep's first row, Nov 7: ONE was borrowed from the hazards' score base D309 and used 103 times as a plain 1) | {zero: 0, one: 1} | N102 |
 | D345 | the forest as Mid laid it (10-world-forest makeForest): trees on a step lattice jittered ± jitter, where an organic field runs high (four sine waves of these wavenumbers, phases from the dice, plus grow per unit beyond far from the Town Center: thicker away from home), the top trees a corner; none within edge of the land's edge or home of the Town Center (Mid's HOME.clear), on a trade lane, in the middle, or within path of three winding paths (bends bends, wandering ± wander) from home to each neighbour's middle line and to the middle (Albert, Nov 7 19:40: the perfect arcs were the problem) | {step: 26, jitter: 6, trees: 375, edge: 40, home: 220, path: 34, bends: 3, wander: 70, field: {k: [0.011, 0.013, 0.007, 0.009], far: 450, gr | N249 |
 | D343 | the simulation's fixed step, hz a second (Mid's DT), and the most steps one frame catches up (Mid's CATCHUP): a frame between two steps draws each figure the fraction of the way (Mid's DRAW.alpha, Build 63), so a slow phone keeps the same world and smooth walking | {hz: 30, catchup: 6} | N112 |
@@ -1522,6 +1524,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X75 | G1: code reading the raw stats table (D.stats[…]) outside stat's own home: ask FK.stat | {stage: code} | N239 |
 | X76 | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) | {stage: books} | N239 |
 | X74 | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 | {stage: page} | N235; N236 |
+| X77 | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) | {stage: code} | N250 |
 
 ## screen
 
@@ -1563,7 +1566,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BTC6 | Training tent | [Spawn, Health, Burn] | N144; N198; N206 |
 | BTC7 | Mess tent | [Shelter, Health, Burn] | N144; N198; N206 |
 | BTC8 | Camp tower | [Shoot, Health, Burn] | N144; N198; N206 |
-| BR1 | Home | [House, Health, Burn, Research] | N144; N206 |
+| BR1 | Dwelling | [House, Health, Burn, Research] | N144; N206 |
 | BR2 | Apartment | [House, Health] | N144; N235 |
 | BCR1 | Market | [Trade, Spawn, Burn, Health, Research] | N144; N195; N206 |
 | BCR2 | Tavern | [Burn, Care, Health] | N144; N206 |
@@ -1841,9 +1844,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O42 | Midwives | {at: BTC1, line: Household, age: 1, cost: {food: 150, gold: 50}, time: 30, fx: [{s: twin, k: UV, a: 1}], when: 1550 BC, w: 4} | N160; N161 |
 | O43 | Census | {at: BTC1, line: Household, age: 2, cost: {food: 170, gold: 110}, time: 38, fx: [{s: train, k: UV, c: 0.2}], need: [writing], when: 500 BC,  | N160; N161 |
 | O44 | Town charter | {at: BTC1, line: Household, age: 3, cost: {food: 290, gold: 190}, time: 56, fx: [{s: room, k: BR1, a: 1}], when: 1100s, w: 6} | N160; N161 |
-| O45 | Hearth and pot | {at: BR1, line: Home, age: 0, cost: {wood: 40, food: 30}, time: 20, fx: [{s: eat, c: 0.1}], when: about 8000 BC, w: 4} | N160; N161 |
-| O46 | Ice house | {at: BR1, line: Home, age: 2, cost: {stone: 120, wood: 80}, time: 32, fx: [{s: rate, k: MW1, p: 0.15}, {s: rate, k: R6, p: 0.15}, {s: spoil, | N160; N161; N170 |
-| O47 | Chimney and fireplace | {at: BR1, line: Home, age: 3, cost: {stone: 180, wood: 120}, time: 40, fx: [{s: warm, a: 0.05}, {s: chill, c: 0.5}], when: 1100s, w: 5} | N160; N161 |
+| O45 | Hearth and pot | {at: BR1, line: Dwelling, age: 0, cost: {wood: 40, food: 30}, time: 20, fx: [{s: eat, c: 0.1}], when: about 8000 BC, w: 4} | N160; N161 |
+| O46 | Ice house | {at: BR1, line: Dwelling, age: 2, cost: {stone: 120, wood: 80}, time: 32, fx: [{s: rate, k: MW1, p: 0.15}, {s: rate, k: R6, p: 0.15}, {s: sp | N160; N161; N170 |
+| O47 | Chimney and fireplace | {at: BR1, line: Dwelling, age: 3, cost: {stone: 180, wood: 120}, time: 40, fx: [{s: warm, a: 0.05}, {s: chill, c: 0.5}], when: 1100s, w: 5} | N160; N161 |
 | O48 | Calendar | {at: BTC1, line: Watch, age: 2, cost: {food: 180, gold: 120}, time: 41, fx: [{s: rate, k: BCL1, p: 0.05}, {s: time, k: O, c: 0.05}], need: [ | N160; N161 |
 | O49 | Town watch | {at: BTC1, line: Watch, age: 3, cost: {food: 90, gold: 60}, time: 26, fx: [{s: rng, k: BTC1, a: 1.5}], when: 1200s, w: 4} | N160; N161 |
 | O50 | Civic pride | {at: BTC1, line: Watch, age: 3, cost: {food: 240, gold: 160}, time: 48, fx: [{s: shelter, p: 1}], when: 1300s, w: 4} | N160; N161 |
@@ -2085,7 +2088,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J22 | the mail (Mid's GROUPS, QUIET, urgentCls, DIR8, tell): the groups a line goes to; the quiet kinds wait in the mail unshown; a warning is urgent; a fight out of sight but in earshot is told by its way only, of eight; a messenger's line says so | {title: Mail, empty: Nothing yet., groups: {war: War, home: Home, land: Land, trade: Trade, realm: Realm, chronicle: Chronicle, lesson: Less | N223 |
 | J23 | the world's news by age (Mid's NEWS): one line every D324 every, the next of the age you are in | [[Someone has tamed a horse. Opinions are divided., Jericho builds a wall. Neighbours unimpressed., Çatalhöyük: no streets. Walk across the  | N223; N161 |
 | J24 | the fourteen milestones, each a line and its why, said once a game the first time it is true (Mid's MS_TEXT; their fixes pointed at Mid's cards, which come with the cards); {room}, {pct} and {spd} filled in | {house: [Your first house: {room} more may live here., Only homes hold people; soldiers and workers alike. A town grows by its roofs.], fiel | N224 |
-| J25 | the tips: what the town needs next, in order, each until you have done it three times (Mid's advise; a ! line is a warning and always shows) | {full: You are full: Build → House., more: More villagers, more of everything., wood: Wood is low. Tap + under Wood., idle: {n} villagers id | N224 |
+| J25 | the tips: what the town needs next, in order, each until you have done it three times (Mid's advise; a ! line is a warning and always shows) | {full: You are full: Build → Dwelling., more: More villagers, more of everything., wood: Wood is low. Tap + under Wood., idle: {n} villagers | N224 |
 | J26 | the six peoples (Mid's CIVS names, wonders and halls; TITLE_SHORT, short card titles for long names); the Start card's line for the people you pick | {roman: {name: Roman, wonder: Colosseum, hall: Forum}, han: {name: Han, wonder: Weiyang Palace, hall: Taixue}, persian: {name: Persian, wond | N225 |
 | J27 | the Guide's rules, in Mid's order (Mid's TRIGGERS: when, then why); {D:key.path} reads the Measurements book, {S:code} a shell's name, {J:key} a words entry, {fx:stat} the research that raises it; the Games' line waits with the Throne | {You order a unit and the town is full: [Train says No room, and nothing is paid. Room opens when a {S:BR1} or a {S:BTC1} is finished, or wh | N222; N223; N234 |
 | J28 | the start: the lands' names (Mid's LAND), the scenarios' names and lines (Mid's SCEN_TEXT, without what v100 has not built: the walls, the horde, the truce, the Games), the safety net's and the save's lines (Mid's fault, saveGame, copyLog, testField) | {lands: {fertile: Fertile land, timber: Timberland, stony: Stony hills, golden: Gold country}, land: {land}. Gather, grow, explore., lot: Ha | N229; N230 |
