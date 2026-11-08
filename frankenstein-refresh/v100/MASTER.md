@@ -196,6 +196,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E375** aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c th
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E91** the tiles one step from a tile, by the eight ways of D198, that a walker may step to (walk · D198 (N74)
+- **E721** the path search keeps its working memory between searches (typed arrays stamped by a searc
 - **E90** most: the tiles it may open before giving up
 - **E452** the danger map's home on the walking grid (econ draws it) and each side's reach, cached by
 - **E453** the tiles a side's people can walk to: one flood fill over the walking grid (a queue, a ty · E91
@@ -300,6 +301,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E556** each land tile's distance to the inland water, once a map: the shore that pools and the la
 - **E557** the flood harms a finished building whose middle stands within its rise, unless its side h
 - **E567** the Challenge's hazards and the events: a hazard counts only off Easy; the level played mu
+- **E722** zero and one are named from the count row (D346), no longer borrowed from the hazards' bas · D346 (N102)
 - **E568** where an event comes in: a spot on one of the land's edges, its far side through the middl
 - **E569** an event comes only in its season, or in the rain; never the same twice running
 - **E570** a Poisson wait with a floor: least plus −(mean − least) ln U (QM) · QM (N12)
@@ -462,7 +464,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
 - **E339** while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the T
 - **E340** the ghost: a wall's tiles green or red with its corners, the first ringed green; a buildin
-- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn, and pulls, only where the
+- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn only where the ghost stand
 - **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
@@ -508,7 +510,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## econ.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
-- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn, and pulls, only where the
+- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn only where the ghost stand
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
 - **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t

@@ -5015,8 +5015,8 @@
 "numbers": 0
 },
 "book:comments:E716": {
-"sha": "277d14bdaa4133624baea247a3d7dbda3dd8e5c476916b9f2ce9228a26bdca3a",
-"bytes": 307,
+"sha": "9eb15e3db694dd01dc59d52e85ae93e789306309ff746760e10408da827d8401",
+"bytes": 345,
 "numbers": 0
 },
 "book:comments:E717": {
@@ -5042,6 +5042,16 @@
 "book:comments:E720": {
 "sha": "71ee8f1418444ed9ce2b5bf30806097e4e7a22bf504b505fc336b9973f89fe60",
 "bytes": 265,
+"numbers": 0
+},
+"book:comments:E721": {
+"sha": "500b6651e6c2242c382f8a91873d177d4a7f298b3f4aa9dfd87a8fa496dc4e26",
+"bytes": 248,
+"numbers": 0
+},
+"book:comments:E722": {
+"sha": "c53517a621d62fc90b4aca01a3c18b9e57184e87bcc0057d85509b34edd2dd28",
+"bytes": 103,
 "numbers": 0
 },
 "book:comments:E73": {
@@ -6607,6 +6617,11 @@
 "book:measure:D345": {
 "sha": "66ad3c07d771a0179cc59ed2a10aaf8b87cf371ede1a0c6c6ef08bfe9569959f",
 "bytes": 843,
+"numbers": 0
+},
+"book:measure:D346": {
+"sha": "da284aa0b09e55163babae5ec9f8d8ec3466d033cb44d66fe996bc5fcfd6b6bc",
+"bytes": 263,
 "numbers": 0
 },
 "book:measure:D35": {
@@ -9970,13 +9985,13 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "0da704d282afd908c3bd1b98f7315cd099904056564a0cc035ec85f17e585fad",
-"bytes": 59017,
+"sha": "b3cf9a145d5819bf7ea196092ca4940191eb9906f327461529ccbb718b589b21",
+"bytes": 59014,
 "numbers": 84
 },
 "code:econ.js": {
-"sha": "9a595751e019442d86a8c4deed16e1c7f55310a40f51229497aebbffb991d293",
-"bytes": 105228,
+"sha": "d5ca9b89d74b365b96e5ed0cd3c76777d0a644e12479da653d362e9bb54a2b59",
+"bytes": 105161,
 "numbers": 72
 },
 "code:index.html#b-the-buildings": {
@@ -10000,13 +10015,13 @@
 "numbers": 75
 },
 "code:index.html#floor-5-movables": {
-"sha": "c540610e2977b39f45bc1362289a9b02a77e61c6f3a4c463f2f0d8e620969a7b",
-"bytes": 15110,
-"numbers": 92
+"sha": "5217d2370440d2044b157916d9a829d4953236726a41dd0b2fb34496597251e6",
+"bytes": 15458,
+"numbers": 78
 },
 "code:index.html#floor-6-climate": {
-"sha": "598bb4eff7ec063b76193f3d65b334b5856c33291a80866f6b26a2e2a8e0ac17",
-"bytes": 24674,
+"sha": "8d877b11100169662cc1656e901d4cb5a835fd6c84f4e27ee1328e733e0db515",
+"bytes": 24706,
 "numbers": 232
 },
 "code:index.html#floor-7-display": {
@@ -10590,8 +10605,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "b800ee73c3a363a2e939a3edc769141d4824e5c8287458ee482bc1992daf9780",
-"bytes": 258097,
+"sha": "a37271a0ebd31288da9bb8c7d95001f98d3b8b8526899567debc70d9b98ae76d",
+"bytes": 258524,
 "numbers": 0
 }
 }

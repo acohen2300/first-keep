@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,152 | 497,090 | 497,230 |
-| Books | 1993 | 0 | 569,382 | 570,085 |
+| Game code | 29 | 3,155 | 497,400 | 497,540 |
+| Books | 1996 | 0 | 570,034 | 570,737 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
-| Tools | 4 | 1,762 | 287,755 | 287,996 |
+| Tools | 4 | 1,763 | 288,182 | 288,423 |
 
 ## The trades (code)
 
@@ -29,17 +29,17 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 127 | 15,106 | 15,110 | 92 |
+| index.html#floor-5-movables | 130 | 15,454 | 15,458 | 78 |
 | index.html#the-body-s-laws | 31 | 2,584 | 2,588 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
-| index.html#floor-6-climate | 152 | 24,662 | 24,674 | 232 |
+| index.html#floor-6-climate | 152 | 24,694 | 24,706 | 232 |
 | index.html#floor-7-display | 44 | 7,335 | 7,339 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 22,019 | 22,023 | 0 |
 | index.html#the-woods-cache | 51 | 4,771 | 4,775 | 71 |
 | index.html#touch | 50 | 7,434 | 7,438 | 54 |
 | menu.js | 462 | 82,926 | 82,970 | 576 |
-| econ.js | 576 | 105,228 | 105,228 | 72 |
-| combat.js | 354 | 59,017 | 59,017 | 84 |
+| econ.js | 576 | 105,161 | 105,161 | 72 |
+| combat.js | 354 | 59,014 | 59,014 | 84 |
 | ai.js | 170 | 27,312 | 27,312 | 25 |
 | sound.js | 57 | 5,938 | 5,938 | 66 |
 
@@ -51,10 +51,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,092 |
 | citations | 249 | 53,901 |
 | colours | 21 | 4,542 |
-| comments | 711 | 121,452 |
+| comments | 713 | 121,861 |
 | ground | 6 | 1,748 |
 | mass | 24 | 3,739 |
-| measure | 316 | 131,971 |
+| measure | 317 | 132,245 |
 | rules | 74 | 28,133 |
 | screen | 12 | 3,692 |
 | shells | 109 | 23,178 |
@@ -151,4 +151,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 
-2119 items sealed · 1993 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+2122 items sealed · 1996 book entries · 93 laws · 249 citations, 7 still to open · 7 known

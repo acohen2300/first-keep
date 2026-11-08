@@ -3404,3 +3404,20 @@ MODIFIED (3):
 LOCKED (2116 of 2119): byte for byte as sealed, 1,350,313 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2119 items sealed · 1993 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## S2 · speed: the path search on reusable typed arrays (E721); zero and one named (D346, E722) · 2026-11-07 20:26
+Albert, Nov 7 19:46-19:50: why so slow; speed first
+Opened: code:index.html, code:econ.js, code:combat.js, book:measure, book:comments, tool:test.py
+MODIFIED (9):
+- book:comments:E716 · 307 → 345 bytes
+- book:comments:E721 · added
+- book:comments:E722 · added
+- book:measure:D346 · added
+- code:combat.js · 59,017 → 59,014 bytes
+- code:econ.js · 105,228 → 105,161 bytes
+- code:index.html#floor-5-movables · 15,110 → 15,458 bytes
+- code:index.html#floor-6-climate · 24,674 → 24,706 bytes
+- tool:test.py · 258,097 → 258,524 bytes
+LOCKED (2113 of 2122): byte for byte as sealed, 913,170 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2122 items sealed · 1996 book entries · 93 laws · 249 citations, 7 still to open · 7 known

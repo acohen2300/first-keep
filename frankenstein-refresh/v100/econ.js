@@ -56,7 +56,7 @@ function snap(side, c, i, j, tol) { const [, n] = B[c]; let best = [i, j], bd = 
   const take = (x, y) => { const d = Math.hypot(x - i, y - j); if (d < bd && canPlace(c, x, y, side)) [best, bd] = [[x, y], d]; };
   for (const b of things()) if (b.kind === 'bld' && b.side === side && !wallish(b)) { const h = (b.n - n) * P.half, ci = b.i + h, cj = b.j + h, R = (b.n + n) * P.half + tol + P.near;
     if (Math.abs(ci - i) <= R && Math.abs(cj - j) <= R) for (const g of P.gaps) { for (const x of [b.i - n - g, b.i + b.n + g]) for (const y of [Math.round(cj), b.j, b.j + b.n - n, j]) take(x, y); for (const y of [b.j - n - g, b.j + b.n + g]) for (const x of [Math.round(ci), b.i, b.i + b.n - n, i]) take(x, y); }
-    if (Number.isInteger(h) && Math.abs(ci - i) < P.guide && Math.abs(cj - j) < P.guide) { for (const d of around) { take(ci, j + d); take(i + d, cj); take(i + d, i + d - (ci - cj)); take(i + d, ci + cj - (i + d)); } } } // E716
+    if (Number.isInteger(h) && Math.abs(ci - i) < P.guide && Math.abs(cj - j) < P.guide) { for (const d of around) { take(ci, j + d); take(i + d, cj); } } } // E716
   return best; }
 function plan(side, code, i, j) { const cost = D.cost[code] || {}; if (!canPay(side, cost) || placeWhy(side, code, i, j)) return null; if (is(code, 'Gate') && wallAt(j * N + i)) FK.unbuild(wallAt(j * N + i)); const t = site(side, code, i, j); if (t) pay(side, cost, 'buildings'); return t; }
 function site(side, code, i, j) { const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; t.done = t.crew = 0; if (is(code, 'Supply')) t.supply = D.camp.start; if (FK.SH[code].amount) t.amount = t.max = FK.ref(FK.SH[code].amount); if (is(code, 'Flock')) t.sheep = D.flock.start; if (is(code, 'Soil')) t.fert = D.soil.full; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
@@ -440,7 +440,7 @@ function judgeEnvoy(to, from, u) { const A = RW.answer, ask = u.ask; if (WAR.sta
 function sendHelp(f, pt, told) { const mine = WAR.armyOf(f).filter((u) => u.job === 'idle' || u.job === 'hold'), keep = Math.ceil(mine.length * RL.help.keep), go = mine.filter((_, i) => i >= keep); if (!go.length || !pt) return false;
   for (const u of go) { WAR.march(u, FK.tileAt(pt.bx, pt.by)); u.helpT = FK.K.t; } if (told) tell(RW.help, { side: nameOf2(f), n: go.length }); return true; }
 // E590
-const FD = D.finds, WW = fromBook('words').wild, ONE = D.hazards.base, rowOf = FK.rowOf, list = (c) => Object.entries(c).map(([y, n]) => n + ' ' + y).join(fromBook('words').list.and);
+const FD = D.finds, WW = fromBook('words').wild, ONE = D.count.one, rowOf = FK.rowOf, list = (c) => Object.entries(c).map(([y, n]) => n + ' ' + y).join(fromBook('words').list.and);
 function finds() { for (const t of things()) { const F = rowOf(t); if (!F || !F.got || t.taken || t.gone || WAR.guardsLeft(t)) continue; let m = null;
     FK.unitsNear(t, FD.take * D.tile, (v) => { if (!m && SIDES[v.side] && !v.gone && v.hp > null && !v.inside && !FK.has(v, 'Envoy') && !FK.has(v, 'Trade') && dist(v, t) < FD.take * D.tile) m = v; }); if (!m) continue;
     const o = m.side, s = SIDES[o], got = {}; for (const y in F.got) got[y] = Math.round(F.got[y]); t.taken = o; for (const y in got) earn(o, y, got[y], 'finds', false); let extra = '';

@@ -296,7 +296,7 @@ function sabotage(u, b) { const how = SA.how[b.code], W = TW.sab, name = FK.SH[b
   if (how === 'burn') { b.hp -= b.hpMax * SA.burn; if (!alive(b)) die(b, null); else ECON.ignite(b, 'sabotage'); } else { b.stall = K.t + SA.stall; const c = (b.q || []).shift(); if (c && D.ages.includes(c)) SIDES[b.side].aging = null; const [nx] = b.q || []; if (nx) b.qt = ECON.timeOf(b.side, nx); }
   if (b.side === ME) say(W[how], { at: MENU.coord(b.bx, b.by), name, n: SA.stall }); else if (u.side === ME) say(how === 'burn' ? W.didBurn : W.didStall, { name: name.toLowerCase() }); die(u, null); }
 // E582
-const FD = D.finds, RD = D.raids, JN = D.wayfarer, WW = fromBook('words').wild, ONE = D.hazards.base, raid = {}, [L0, L1] = FD.leash, codeOf = (t) => (FK.KIND[t.kind] || {}).code, rowOf = FK.rowOf;
+const FD = D.finds, RD = D.raids, JN = D.wayfarer, WW = fromBook('words').wild, ONE = D.count.one, raid = {}, [L0, L1] = FD.leash, codeOf = (t) => (FK.KIND[t.kind] || {}).code, rowOf = FK.rowOf;
 const guardsLeft = (t) => units().some((v) => v.find === t && !SIDES[v.side] && alive(v) && FK.has(v, 'Fight')), besideK = (t) => { let b = null; FK.stamp(t.bx, t.by, FD.take * T, (k, d) => { if (FK.walkable(k) && (!b || d < b.d)) b = { d, k }; }); return b && b.k; };
 function wild(u, look) { if (u.back && K.t > u.back) Object.assign(u, { back: null, horde: false, home: u.camp, aggro: null }); // E583
   if (FK.has(u, 'Join')) { if (look) meet(u); return true; } const h = u.home;

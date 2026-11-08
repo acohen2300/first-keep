@@ -952,14 +952,17 @@ function pace(u, g = footing(u)) { // E361
 }
 // E89
 function around(k, f, who) { const i = k % N, j = (k - i) / N; for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy, q = y * N + x; if (x < 0 || y < 0 || x >= N || y >= N || !stepOk(k, q, who)) continue; if (dx && dy && !(walkable(j * N + x, who) && walkable(y * N + i, who))) continue; f(q, dx && dy); } } // E91
+const PF = { g: new Float32Array(N * N), came: new Int32Array(N * N), gen: new Int32Array(N * N), done: new Int32Array(N * N), hk: [], hf: [], n: null }; // E721
 function findPath(from, goal, near, most = D.tries.way, who = null) { // E90
-  const AV = who && has(who, 'Gather') && !(DANGER[who.side] || [])[near] && DANGER[who.side], open = [{ f: 0, k: from }], gs = new Map([[from, null]]), came = new Map(), done = new Set(), hx = (k) => { const dx = Math.abs((k % N) - (near % N)), dy = Math.abs(Math.floor(k / N) - Math.floor(near / N)); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
-  const push = (k, f) => { open.push({ f, k }); let i = open.length - 1; while (i > 0) { const p = (i - 1) >> 1; if (open[p].f <= open[i].f) break; [open[p], open[i]] = [open[i], open[p]]; i = p; } };
-  const pop = () => { const top = open[0], last = open.pop(); if (open.length) { open[0] = last; let i = 0; for (;;) { const l = 2 * i + 1, r = l + 1; let m = i; if (l < open.length && open[l].f < open[m].f) m = l; if (r < open.length && open[r].f < open[m].f) m = r; if (m === i) break; [open[m], open[i]] = [open[i], open[m]]; i = m; } } return top.k; };
-  for (let n = 0; open.length && n < most; n++) {
-    const k = pop(); if (done.has(k)) continue; done.add(k);
-    if (goal(k)) { const path = [k]; let q = k; while (came.has(q)) { q = came.get(q); path.push(q); } return path.reverse(); }
-    around(k, (q, diag) => { if (done.has(q)) return; const g = gs.get(k) + (diag ? Math.SQRT2 : 1) + D.danger.cost * !!(AV && AV[q]); if (g >= (gs.get(q) ?? 1e9)) return; gs.set(q, g); came.set(q, k); push(q, g + hx(q)); }, who);
+  const AV = who && has(who, 'Gather') && !(DANGER[who.side] || [])[near] && DANGER[who.side], gen = ++PF.n, G = PF.g, CAME = PF.came, GEN = PF.gen, DONE = PF.done, HK = PF.hk, HF = PF.hf, ni = near % N, nj = (near - ni) / N;
+  const hx = (k) => { const i = k % N, dx = Math.abs(i - ni), dy = Math.abs((k - i) / N - nj); return Math.max(dx, dy) + (Math.SQRT2 - ONE) * Math.min(dx, dy); };
+  const push = (k, f) => { HK.push(k); HF.push(f); let i = HK.length - ONE; while (i > ZERO) { const p = (i - ONE) >> ONE; if (HF[p] <= HF[i]) break; [HK[p], HK[i], HF[p], HF[i]] = [HK[i], HK[p], HF[i], HF[p]]; i = p; } };
+  const pop = () => { const top = HK[ZERO], lk = HK.pop(), lf = HF.pop(); if (HK.length) { HK[ZERO] = lk; HF[ZERO] = lf; let i = ZERO; for (;;) { const l = i + i + ONE, r = l + ONE; let m = i; if (l < HK.length && HF[l] < HF[m]) m = l; if (r < HK.length && HF[r] < HF[m]) m = r; if (m === i) break; [HK[m], HK[i], HF[m], HF[i]] = [HK[i], HK[m], HF[i], HF[m]]; i = m; } } return top; };
+  HK.length = HF.length = ZERO; GEN[from] = gen; G[from] = ZERO; CAME[from] = -ONE; push(from, ZERO);
+  for (let n = ZERO; HK.length && n < most; n++) {
+    const k = pop(); if (DONE[k] === gen) continue; DONE[k] = gen;
+    if (goal(k)) { const path = [k]; for (let q = CAME[k]; q >= ZERO; q = CAME[q]) path.push(q); return path.reverse(); }
+    around(k, (q, diag) => { if (DONE[q] === gen) return; const g = G[k] + (diag ? Math.SQRT2 : ONE) + D.danger.cost * !!(AV && AV[q]); if (GEN[q] === gen && g >= G[q]) return; GEN[q] = gen; G[q] = g; CAME[q] = k; push(q, g + hx(q)); }, who);
   }
   return null;
 }
@@ -1205,7 +1208,7 @@ function flooding() { const W = SKYW.water, [secs] = FLD.beat; for (const b of [
     if (b.side === ME && every(FLD.say)) fire('say', W.replace('{b}', SH[b.code].name.toLowerCase()).replace('{at}', MENU.coord(b.bx, b.by))); if (b.hp <= 0) WAR.die(b); } }
 const flood = (secs = FLD.secs) => { K.flood = K.t + secs; };
 // E567
-const EV = D.events, ER = EV.rows, [, NEAR] = EV.wild, HZD = D.hazards, HZ = new Set(), WL = fromBook('words').wild, J = D.wayfarer, ONE = HZD.base;
+const EV = D.events, ER = EV.rows, [, NEAR] = EV.wild, HZD = D.hazards, HZ = new Set(), WL = fromBook('words').wild, J = D.wayfarer, ONE = D.count.one, ZERO = D.count.zero; // E722
 const hz = (id) => HZ.has(id) && !!MENU.S.opt.diff, level = () => [...HZ].reduce((n, k) => n + HZD.pts[k], null), levelMul = () => ONE + (MENU.S.opt.diff ? level() / HZD.per : null);
 const evOn = (k) => !!K.ev.cur && K.ev.cur.kind === k, raining = () => K.sky === 'rain', far = ([x, y]) => [MID + MID - x, MID + MID - y], near1 = ([x, y], r) => { let b = null; stamp(x, y, r * D.tile, (k, d) => { if (walkable(k) && (!b || d < b.d)) b = { d, k }; }); return b ? b.k : -1; }; // E568
 function edgeSpot() { const [e, off] = EV.edge, lo = B0 + e * D.tile, hi = B1 - e * D.tile, S = [(v) => [v, lo], (v) => [hi, v], (v) => [v, hi], (v) => [lo, v]], f = S[Math.floor(rng() * S.length)]; return f(between(rng, [B0 + off * D.tile, B1 - off * D.tile])); }

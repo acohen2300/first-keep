@@ -285,12 +285,13 @@ async def research(b):
            f"{first[0]} age" in x['start'][0] and f"{first[1]}s to rise" in x['start'][1] and 'Classical age' in x['bronze'][0],
            x['gun'][:3] == ['Last age', mid.get('gun', [0])[0], 1] and x['gun'][3] and x['gun'][4], abs(x['z1'] - (PK['home']['bush'][1] * PK['home']['bush'][0] * PK['rich'] * PK['homeRich'] * PK['findSize']['bush'] + mid.get('z1food', 0) + PK['back']['vils'] * MEASURE['cost']['UV']['food'])) < 1e-9, not errs]   # G1: the pocket's food is Mid's (QCS): the home bushes × rich × homeRich × the find's size, plus the price of age and six villagers (was QBJ's buys and margin)
     ok('t-research', all(got), [got, v['out'], mid.get('out'), x, errs[:2], err[-400:]])
-GATHER = """(() => { FK.reset(); const D = FK.D, h = FK.seatOf(0), vil = D.trains[h.code][0], dt = 0.1, upm = D.upm, SP = FK.SP / upm;
+GATHER = """(() => { FK.reset(); FK.SIDES[0].store.food = 1e6; /* the replica knows no hunger: the store never runs dry (F2b: the day opens at sunrise, so the run's hours and their upkeep moved) */ const D = FK.D, h = FK.seatOf(0), vil = D.trains[h.code][0], dt = 0.1, upm = D.upm, SP = FK.SP / upm;
   const ring = []; for (let y = h.j - 1; y <= h.j + h.n; y++) for (let x = h.i - 1; x <= h.i + h.n; x++) if (FK.walkable(y * FK.N + x)) ring.push(y * FK.N + x);
   while (ECON.villagersOf(0).length < 10) FK.spawn(vil, 0, ring[ECON.villagersOf(0).length * 3], FK.rng);
   const vs = ECON.villagersOf(0), bushes = FK.things().filter((t) => t.kind === 'bush'), bush = bushes.slice().sort((a, b) => Math.hypot(a.bx - h.bx, a.by - h.by) - Math.hypot(b.bx - h.bx, b.by - h.by))[0];
   const mill = Object.keys(FK.SH).find((c) => (FK.SH[c].drop || []).join() === 'food'); let m = null;
   for (let d = 3; d < 20 && !m; d++) for (let a = 0; a < 16 && !m; a++) { const k = FK.tileAt(bush.bx + Math.cos(a * Math.PI / 8) * d * D.tile, bush.by + Math.sin(a * Math.PI / 8) * d * D.tile), i = k % FK.N, j = (k - i) / FK.N; if (k >= 0) m = FK.build(mill, i - 1, j - 1, FK.SIDES[0].col); }   // laid as the map lays a building (flat, free ground), not by the player's placing rule (F15: two squares from finds)
+  for (const t of FK.things().filter((t) => t.kind === 'tree' && Math.hypot(t.bx - bush.bx, t.by - bush.by) < 25 * D.tile)) FK.take(t, t.amount);   // F2: Mid's forest can stand between the hall and the patch; the replica walks open ground, so the page does too
   for (const t of bushes) t.amount *= 10; const amt = new Map(bushes.map((t) => [t, t.amount]));
   for (const u of vs) ECON.gatherAt(u, bush);
   const load = vs.map(() => 0), work = vs.map(() => []), came = vs.map(() => null); let first = null, food = 0;

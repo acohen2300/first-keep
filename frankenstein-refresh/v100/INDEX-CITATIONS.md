@@ -201,7 +201,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N99** Design: v100 floor 3, Nov 4 → SC17
 - **N100** Design: dictionary SC → SC18
 - **N101** Design: Albert, Nov 5 07:35 → SC20
-- **N102** Design: v100 floor 1, Nov 4 → C1, C2, C3, C4
+- **N102** Design: v100 floor 1, Nov 4 → C1, C2, C3, C4, D346
 - **N103** Design: v100, Nov 4 → C5, C6, C7, C8, C10
 - **N104** N81 (car tyre on dry grass, 0.35: the nearest measured pair) → G5
 - **N105** Design, Nov 5: no measured value found; set between grass and snow → G6
