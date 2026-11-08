@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 30 | 3,298 | 536,938 | 537,081 |
-| Books | 2112 | 0 | 613,194 | 613,977 |
+| Game code | 30 | 3,298 | 537,362 | 537,505 |
+| Books | 2112 | 0 | 613,831 | 614,614 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,770 | 289,689 | 289,930 |
 
@@ -21,7 +21,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
 | index.html#floor-2-terrain | 84 | 9,289 | 9,293 | 115 |
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
-| index.html#drawn-once-in-the-view-frame | 82 | 13,081 | 13,085 | 120 |
+| index.html#drawn-once-in-the-view-frame | 82 | 13,505 | 13,509 | 106 |
 | index.html#the-view | 9 | 1,080 | 1,084 | 13 |
 | index.html#the-door | 95 | 14,440 | 14,444 | 67 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
@@ -51,11 +51,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,145 |
 | citations | 263 | 57,440 |
-| colours | 23 | 5,486 |
+| colours | 23 | 5,613 |
 | comments | 788 | 135,806 |
 | ground | 6 | 1,748 |
 | mass | 27 | 4,397 |
-| measure | 321 | 141,588 |
+| measure | 321 | 142,098 |
 | rules | 75 | 28,346 |
 | screen | 14 | 4,294 |
 | shells | 110 | 23,426 |

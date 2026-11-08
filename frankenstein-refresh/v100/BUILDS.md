@@ -3957,3 +3957,15 @@ MODIFIED (5):
 LOCKED (2234 of 2239): byte for byte as sealed, 1,420,631 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2239 items sealed · 2112 book entries · 93 laws · 263 citations, 12 still to open · 7 known
+
+## B23: the grass randomized: a wider pattern of tufts and loose blades in five shades, and stronger soft patches of dry and lush grass · 2026-11-08 15:40
+Albert, Nov 8 15:38: hit it with the randomizer
+Opened: book:colours, book:measure, code:index.html
+MODIFIED (4):
+- book:colours:C22 · 210 → 337 bytes
+- book:measure:D320 · 2,250 → 2,266 bytes
+- book:measure:D348 · 1,327 → 1,821 bytes
+- code:index.html#drawn-once-in-the-view-frame · 13,085 → 13,509 bytes
+LOCKED (2235 of 2239): byte for byte as sealed, 1,444,408 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2239 items sealed · 2112 book entries · 93 laws · 263 citations, 12 still to open · 7 known
