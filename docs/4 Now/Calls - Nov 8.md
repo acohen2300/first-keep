@@ -1,0 +1,13 @@
+# Albert's calls, Nov 8 evening (drive mode)
+- Quick start: first age; Mill, Lumber, two houses, a Mine at the home gold; a richer home pocket for every side; a gear opens the Start sheet with saved quick-start defaults.
+- Race mode: the player sets a target (an age, a sum, a population); first to it wins; the computers need a race mind. Best in multiplayer later.
+- Simple mode: sunny days and clear nights; no wind, lightning, mud, snow, ice or puddles; lakes never freeze; seasons still colour trees and grass. One switch holds the weather clear.
+- Conversion past the cap: up to 5 over; converts wait idle (they eat) until a house is built; a toast says so. No sickness.
+- Familiarity (replaces D-085's road rule): an outsider penalty on others' ground (speed and fight), not a defender bonus; natives know the whole map; ambush only from cover; scouting earns familiarity for a time, fading (Ebbinghaus); the defender may spot the scout; scout stealth from the spy's stealth; spies earn it too; research "Guerrilla warfare" (defend from cover) and "Local guides" (lift the penalty).
+- Misfits: natives light, fast, weak, ambushers; outlaws wanted (bounty and pardon by the tribute code), commit crimes (arson by the spies' sabotage, theft by the robbers' code, kidnap by prisoners and ransom); robbers armed, middling, not tough, want goods; vagabonds drift, join if fed and housed, else steal a little and carry sickness.
+- Tribute: gold always, plus each misfit's own good, priced by the threat; wears off (regard decays; Danegeld); pardoned outlaws relapse at a real rate (US BJS: about two in three rearrested within 3 years); one contract card for all (reuse the gift card).
+- Computers: held to sight (scouts, spies). The live-test crutches (Mill and Farm, robbers sparing them, all-seeing) come off one at a time, a computer-vs-computer run after each.
+- Robbers: rob whoever pays best for least risk (load against guards, any side); repeat victimisation (Farrell & Pease 1993; Johnson & Bowers 2004) raises a robbed town's risk, fading; regard still spares a side that pays tribute.
+- Cloaks (Wool, Oiled): in cold or wet weather they raise morale, cut sickness and cut the extra food. Research compounds, never to zero.
+- NEW: an army eats more in cold or wet weather (US Army AR 40-25: daily calories raised in the cold); cloaks cut the extra. Look up more (WWI, WWII) on consumption and survival in the weather.
+- Research cuts compound (decided before; stands).
