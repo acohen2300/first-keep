@@ -64,14 +64,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E36** Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry l · D39 (N112) · D40 (N112) · D41 (N112) · QBE (N64) · D23 (N112)
 - **E37** Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads  · D42 (N112) · D45 (N112) · D44 (N112)
 - **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
-- **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N249) · N249 · D50 (N112)
+- **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N256, N249) · N249 · D50 (N112)
 - **E39** the wood's edge keeps one tile from any slope or water
 
 ## index.html#floor-3-non-movables
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N242) · D63 (N228, N242) · D65 (N228, N231, N242)
+- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N256, N242) · D63 (N228, N242) · D65 (N228, N231, N242)
 - **E711** the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and  · QCS (N242)
 - **E43** what stands on each tile, and the shells themselves
 - **E709** the buildings as their own list, a derived index of things rebuilt only when things change
@@ -250,6 +250,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E114** the mean speed over the step, so the slide ends where v² ÷ 2μg says
 - **E115** QBS: none while the body holds (classes I, II); grows over class III to the tipping angle; · QBS (N77, N78, N80)
 - **E116** a unit's picture: its look at its frame, its rank and its side's armour kit, facing right,
+- **E753** a figure that moved this step walks; it swings its tool only standing at its work
 
 ## index.html#the-things-drawn-each-frame-back-to-fr
 

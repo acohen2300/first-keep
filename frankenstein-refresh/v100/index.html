@@ -1099,7 +1099,8 @@ function swayOf(u) { // E115
 // E116
 const figure = (look, col, lv, fr, s, kit) => { const [bw, bh] = LOOKBOX[look] || [26, 30], pad = 3;
   return sprite(look + col + lv + kit + fr, bw + 2 * pad, bh + 2 * pad, bw / 2 + pad, bh + pad - 1, bw / 2 + pad, bh + pad - 1, 0, s, () => { KIT = kit; try { LOOKS[look](col, lv, fr); if (lv && SPRITE[look].elite) sketch(SPRITE.pennant.parts, col, fr); } finally { KIT = 0; } }); };
-function unitSprite(u, s) { const fr = u.path ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
+const moving = (u) => !!u.path || u.mps > null; // E753
+function unitSprite(u, s) { const fr = moving(u) ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
   return figure(U[u.code][1], u.side >= 0 ? SIDES[u.side].col : C.white, rankOf(u.code, u.side), fr, s, kitOf(u.side, u.code)); }
 // ── The things, drawn each frame back to fro (E117)
 const SPR = new Map(), STEP = Math.SQRT2;
@@ -1388,7 +1389,7 @@ function drawLights(z) { const nt = nightOf(), m = LGT.k * Math.sqrt(FLM.blaze.p
     else glowAt(ctx, x, y, kind, z); } }
 // E612
 const RIPS = [], [PA, PS] = STG.pop, [GS, GA] = STG.glow, SITE = new Set(), DONE = new WeakMap(), BORN = new WeakMap(), GLOW = new WeakMap(), LEAN = new WeakMap(), HIT = new WeakMap(); let celT = -Infinity, whiteT = -Infinity;
-const popC = (a) => (a >= ONE || a < null ? ONE : ONE + PA * Math.sin(a * Math.PI) * (ONE - a)), ripple = (vx, vy, col) => RIPS.push({ vx, vy, col, t: K.t });
+const popC = (a) => (a >= ONE || a < null ? ONE : ONE + PA * Math.sin(a * Math.PI) * (ONE - a)), ripple = (vx, vy, col) => RIPS.push({ vx, vy, col, t: performance.now() / STG.ms });
 function celebrate(size, vx, vy, hit) { if (K.t - celT < STG.calm && size < STG.big) return; celT = K.t; ripple(vx, vy, size === ONE ? CLT.done : CLT.big); const [ws, wall] = STG.wave;
   if (hit) { const L = units.filter(hit).sort((a, b) => a.vx - b.vx), st = Math.min(ws, wall / Math.max(ONE, L.length)); L.forEach((u, i) => GLOW.set(u, K.t + i * st)); }
   if (size >= STG.big) whiteT = K.t; }
@@ -1398,7 +1399,7 @@ on('tick', () => { for (const t of things) if (t.kind === 'bld') { if (t.done < 
 on('event', (e, t, a) => { const h = FK.seatOf(ME); if (e === 'struck' && a) HIT.set(a, K.t); else if ((e === 'age' || e === 'win') && h) celebrate(STG.big, h.vx, h.vy); });
 function learnt(side, id) { const h = FK.seatOf(ME), R = BOOKS.tech[id].value.rank; if (side === ME && h && R) celebrate(STG.big - ONE, h.vx, h.vy, (u) => u.side === ME && u.code === R.k); }
 on('tap', (k, u, px, py) => { ripple(cam.x + (px - cw * DRW.half) / cam.z, cam.y + (py - ch * DRW.half) / cam.z, CLT.big); });
-on('draw', (c, z) => { const [life, r0, gr, lw] = STG.rip; c.save(); c.lineWidth = lw; for (const r of RIPS.slice()) { const a = (K.t - r.t) / life; if (a >= ONE) { RIPS.splice(RIPS.indexOf(r), ONE); continue; } const [x, y] = toScreen(r.vx, r.vy), rr = (r0 + a * gr) * z; c.strokeStyle = r.col; c.globalAlpha = ONE - a; c.beginPath(); oval(c, x, y, rr, rr * TILT); c.stroke(); } c.restore(); });
+on('draw', (c, z) => { const [life, r0, gr, lw] = STG.rip; c.save(); c.lineWidth = lw; for (const r of RIPS.slice()) { const a = (performance.now() / STG.ms - r.t) / life; if (a >= ONE) { RIPS.splice(RIPS.indexOf(r), ONE); continue; } const [x, y] = toScreen(r.vx, r.vy), rr = (r0 + (ONE - (ONE - a) ** STG.ease) * gr) * z; dirty(); c.strokeStyle = r.col; c.globalAlpha = ONE - a; c.beginPath(); oval(c, x, y, rr, rr * TILT); c.stroke(); } c.restore(); });
 on('over', (c) => { const [life, al] = STG.flash, a = K.t - whiteT; if (a >= null && a < life) { c.save(); c.globalAlpha = al * (ONE - a / life); c.fillStyle = CLT.flash; c.fillRect(null, null, cw, ch); c.restore(); } drawMini(c); });
 // E613
 const labelK = () => Math.max(LBL.floor / LBL.px, cam.z / LBL.zoom); let FONT = null;
@@ -1429,9 +1430,9 @@ function pileAt(t, x, y, s) { const P = PDR.pile[SH[t.code].look], F = DRS.pile;
       else if (shape === 'sack') { const [rx, ry, up] = PDR.sack; g.ellipse(px, py - up, rx, ry, null, -Math.PI, Math.PI); g.fill(); g.stroke(); } else { const [hw, hh] = PDR.block; g.rect(px - hw, py - hh, hw + hw, hh + hh); g.fill(); g.stroke(); } } })), x, y, s); }
 function smoke(x, y, seed, z) { if (still()) return; const F = DRS.smoke, [l0, l1] = F.lean, [rise, ex] = F.rise, [r0, r1, rx] = F.r, side = Math.sign(K.wind) || ONE, lean = l0 + Math.abs(W1()) * l1; // E618
   for (let i = F.n; i--; ) { const ph = (K.t * F.rate + i / F.n + seed * F.seed) % ONE; ctx.fillStyle = CDR.smoke; ctx.globalAlpha = F.a * (ONE - ph); ctx.beginPath(); ctx.arc(x + side * ph * lean * z, y - rise * ph ** ex * z, (r0 + r1 * ph ** rx) * z, -Math.PI, Math.PI); ctx.fill(); } ctx.globalAlpha = ONE; }
-function drawUnit(u, x, y, s) { const L = DRS.lean, Bd = DRS.body, M = DRS.mark, tg = u.target, on = !!(tg && tg.k != null && treeAt(tg.k) && u.tool != null && !u.path), lean = clamp((LEAN.get(u) || null) + (on ? L.step : -L.step), null, ONE); LEAN.set(u, lean); // E619
+function drawUnit(u, x, y, s) { const L = DRS.lean, Bd = DRS.body, M = DRS.mark, tg = u.target, on = !!(tg && tg.k != null && treeAt(tg.k) && u.tool != null && !moving(u)), lean = clamp((LEAN.get(u) || null) + (on ? L.step : -L.step), null, ONE); LEAN.set(u, lean); // E619
   let lx = null, ly = null; if (lean && tg) { const d = Math.hypot(tg.bx - u.bx, tg.by - u.by) || ONE, f = (Math.min(L.most, Math.max(null, d - L.keep)) * lean) / d, [tx, ty] = toScreen(tg.vx, tg.vy); lx = (tx - x) * f; ly = (ty - y) * f; }
-  const mv = !!u.path && !still(), pace = u.walked / gait(u.code).stride, armed = !!ECON.soldier(u.code), low = armed && u.hp < u.hpMax * Bd.stagger && !still(), [sw, sa] = Bd.sway, [ls, lp, ks, kp] = Bd.lunge, [rs, rp] = Bd.recoil;
+  const mv = moving(u) && !still(), pace = u.walked / gait(u.code).stride, armed = !!ECON.soldier(u.code), low = armed && u.hp < u.hpMax * Bd.stagger && !still(), [sw, sa] = Bd.sway, [ls, lp, ks, kp] = Bd.lunge, [rs, rp] = Bd.recoil;
   const ha = K.t - (HIT.get(u) ?? -Infinity), hu = K.t - (u.hurtT ?? -Infinity), near = stat(u.code, u.side, 'rng') <= Bd.melee, bob = (mv ? Math.abs(Math.sin(pace * Math.PI)) * Bd.bob * s : null) + (low ? Math.sin(K.t * sw + u.k) * sa * s : null);
   const lunge = still() || ha > ls ? null : near ? Math.sin((ha / ls) * Math.PI) * lp * s : ha < ks ? -kp * s * (ONE - ha / ks) : null, recoil = still() || !(hu <= rs) ? null : -rp * s * (ONE - hu / rs), bx = x + lx + u.face * (lunge + recoil), by = y + ly - bob;
   const th = swayOf(u), sp = unitSprite(u, s), pop = popC((K.t - (BORN.get(u) ?? -Infinity)) / STG.born), ga = K.t - (GLOW.get(u) ?? -Infinity), [, gl, gal] = STG.wave.slice(ONE);

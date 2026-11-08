@@ -3701,3 +3701,19 @@ MODIFIED (2):
 LOCKED (2164 of 2166): byte for byte as sealed, 1,402,315 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2166 items sealed · 2040 book entries · 93 laws · 255 citations, 9 still to open · 7 known
+
+## B12 · the tap ring snappy (real time, a quarter second, easing out); walking frames whenever a figure moves, the tool only at work; the woods 130 from the Town Center and 15% more trees · 2026-11-08 08:59
+Albert, Nov 8 08:57: build 1-3; 10-15% more trees
+Opened: code:index.html#the-things-drawn-each-frame-back-to-fr, code:index.html#the-view-s-eyes-lights-and-stage, book:measure, book:citations, book:comments, code:index.html#the-body-s-laws
+MODIFIED (8):
+- book:citations:N256 · added
+- book:citations:N257 · added
+- book:comments:E753 · added
+- book:measure:D319 · 591 → 919 bytes
+- book:measure:D345 · 843 → 985 bytes
+- book:measure:D62 · 719 → 794 bytes
+- code:index.html#the-body-s-laws · 2,659 → 2,718 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,706 → 22,793 bytes
+LOCKED (2161 of 2169): byte for byte as sealed, 1,378,062 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2169 items sealed · 2043 book entries · 93 laws · 257 citations, 10 still to open · 7 known

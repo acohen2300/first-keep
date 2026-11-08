@@ -1154,6 +1154,16 @@
 "bytes": 221,
 "numbers": 0
 },
+"book:citations:N256": {
+"sha": "74c514951da5754c3edfd2f0b9d2f2e8ac3946b28ea548b75983b7966da2ded0",
+"bytes": 193,
+"numbers": 0
+},
+"book:citations:N257": {
+"sha": "66e2cb4a102fdc29606e6181623924ed89c3913c93d222520cdb89a55faa5236",
+"bytes": 216,
+"numbers": 0
+},
 "book:citations:N26": {
 "sha": "4ee1d8c2df664f38cf10fb3ed6b2ecc0c205b707999a783f151407773a11e4d6",
 "bytes": 45,
@@ -5249,6 +5259,11 @@
 "bytes": 125,
 "numbers": 0
 },
+"book:comments:E753": {
+"sha": "fab36285513542cc64ff641d5e45d7388db23b78963e174988615adb17b7595e",
+"bytes": 93,
+"numbers": 0
+},
 "book:comments:E76": {
 "sha": "0dbe431dee42808b619c31aaa7c172cdd9032cacc8d72eddfcd289dc9592d54e",
 "bytes": 203,
@@ -6650,8 +6665,8 @@
 "numbers": 0
 },
 "book:measure:D319": {
-"sha": "93aeed82a4547b57e37bb2a2be2ea961c307fbf59b8e9bc5bc2b3e7ff4741f8f",
-"bytes": 591,
+"sha": "a74295bf962e2e61f98bd6008b9519379c4ae6c09864bdeb0c650d32171a6512",
+"bytes": 919,
 "numbers": 0
 },
 "book:measure:D32": {
@@ -6795,8 +6810,8 @@
 "numbers": 0
 },
 "book:measure:D345": {
-"sha": "66ad3c07d771a0179cc59ed2a10aaf8b87cf371ede1a0c6c6ef08bfe9569959f",
-"bytes": 843,
+"sha": "1923913dd06a094547371a3ba85dce02b4e9eb42d7c20c63275ced14993077cb",
+"bytes": 985,
 "numbers": 0
 },
 "book:measure:D346": {
@@ -6935,8 +6950,8 @@
 "numbers": 0
 },
 "book:measure:D62": {
-"sha": "26f14057524bfb3ca09b8098634da279c33a413b85394ccb1460da4d5edf9369",
-"bytes": 719,
+"sha": "7f4b38ef7ef945cafadcd8062bb7b0a0fd47b77585e789f9982ff386702eb352",
+"bytes": 794,
 "numbers": 0
 },
 "book:measure:D63": {
@@ -10265,8 +10280,8 @@
 "numbers": 25
 },
 "code:index.html#the-body-s-laws": {
-"sha": "a8d58e5215cde4f104f4e8083b9d95812ae85c9688ae924810ab78da626ad4d0",
-"bytes": 2659,
+"sha": "f7bcead7d06e1fc7fcd2f2636ce7222a6e6cdf7dd74aca8cc197fa1b2270c16b",
+"bytes": 2718,
 "numbers": 32
 },
 "code:index.html#the-brushes": {
@@ -10320,8 +10335,8 @@
 "numbers": 14
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
-"sha": "ed4ca2f54ac25d1a3f0e20e85e162d7b254422fdc1d8cc47db8b098769786aa4",
-"bytes": 22706,
+"sha": "856eed900155f5ce4f98608f320fbfea93d80ebb2d005af1088e12bbb7b7e2c2",
+"bytes": 22793,
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
