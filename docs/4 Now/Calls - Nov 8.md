@@ -21,3 +21,7 @@
 - Building health by age material: timber, then stone, then brick (cheap and real).
 - Changes from Mid, batch 2, all yes: spoilage cuts compound (a quarter remains); a cold snowstorm is a blizzard in any winter; riders take a horse's grip; ranks add for boosts, cuts compound; units' health and damage stay Mid's until play.
 - NEW: every research shows what it helps (health, speed, gathering, sickness, grip...) and by how much, read from its own effects (O book fx), a tint or icon a stat; a tap opens the Guide for the why and its history.
+- Standing lean: real over made up, sourced and cited; the math, science, physics and chemistry decide.
+- Changes from Mid, batch 3: yes (tower reach with drag, soldiers walk to their own places, boosts add, Shelter and Squad ticks); the squads menu is its own subject, to talk through.
+- Squads subject: start from the War Director (Mid, Nov 2-3: Shield wall puts the foot forward in a line, Loose! volleys at once, Archers fall back to an arc at 80% of the shortest bow; Mid 28-army-quick.js, 06-rules-tuning DIRECT; in v100 D248 direct and combat.js) — made war visceral, tactile and strategic.
+- NEW: one line where the eyes always go: every tap explains itself there (what, why); it glows when it has something; a tap on it pauses and opens the full text, with links on to the Guide. Train the player to look there. (Not the cut status strip: one line of help, not stats.)
