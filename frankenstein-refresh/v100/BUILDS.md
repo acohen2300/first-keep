@@ -3821,3 +3821,42 @@ MODIFIED (18):
 LOCKED (2173 of 2191): byte for byte as sealed, 1,268,727 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2191 items sealed · 2065 book entries · 93 laws · 261 citations, 12 still to open · 7 known
+
+## B19: speed (60 frames a second, the draw budget in seconds and its first step to 30, buildings asked from their list, number grid keys, the stamp stepped, needs kept, the danger map reused, the ground painted a ring ahead, a pace meter), the rings (green picked, blue working, yellow idle), grass at real size, and a sound for every tap; the sky band no longer asks for a top bar that a full card has hidden · 2026-11-08 13:47
+Albert, Nov 8 13:34 and 13:38: do them all except the tree shadows; yellow idle, blue working, green selected; a sound for every tap that makes sense; snappy
+Opened: book:colours, book:comments, book:measure, book:sound, book:words, code:combat.js, code:econ.js, code:index.html, code:menu.js
+MODIFIED (31):
+- book:colours:C24 · added
+- book:comments:E729 · 388 → 470 bytes
+- book:comments:E766 · added
+- book:comments:E767 · added
+- book:comments:E768 · added
+- book:comments:E769 · added
+- book:comments:E770 · added
+- book:comments:E771 · added
+- book:comments:E772 · added
+- book:measure:D320 · 2,212 → 2,225 bytes
+- book:measure:D321 · 454 → 669 bytes
+- book:measure:D348 · 700 → 920 bytes
+- book:measure:D349 · added
+- book:measure:D98 · 83 → 228 bytes
+- book:sound:HE1 · 530 → 564 bytes
+- book:sound:HU19 · added
+- book:sound:HU20 · added
+- book:sound:HX6 · 208 → 220 bytes
+- book:words:J37 · added
+- code:combat.js · 59,065 → 59,025 bytes
+- code:econ.js · 106,202 → 106,289 bytes
+- code:index.html#drawn-once-in-the-view-frame · 10,581 → 11,070 bytes
+- code:index.html#floor-2-terrain · 9,098 → 9,232 bytes
+- code:index.html#floor-5-movables · 15,531 → 15,588 bytes
+- code:index.html#floor-6-climate · 27,770 → 27,779 bytes
+- code:index.html#floor-7-display · 7,448 → 7,426 bytes
+- code:index.html#the-door · 14,274 → 14,409 bytes
+- code:index.html#the-view · 1,074 → 1,084 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,793 → 23,524 bytes
+- code:index.html#the-woods-cache · 4,858 → 4,880 bytes
+- code:menu.js · 89,664 → 89,943 bytes
+LOCKED (2172 of 2203): byte for byte as sealed, 1,047,448 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2203 items sealed · 2077 book entries · 93 laws · 261 citations, 12 still to open · 7 known

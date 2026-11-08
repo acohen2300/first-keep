@@ -244,7 +244,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N142** Design: v100 floor 8, Nov 5 → SN13
 - **N143** Design: Albert, Nov 5 10:28 (Tall for the volume row: keep for now) → SN13
 - **N144** Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) → R1, R5, R2, R3, R4, MG1, MG2, MG3, MG4, BTC1, BTC2, BTC5, BTC6, BTC7, BTC8, BR1, BR2, BCR1, BCR2, BCL1, BCL2, BCL3, BCL4, BCT1, BCT2, BP1, BP2, BP3, BP4, BP5, BP6, BP7, BP8, BP9, BP10, BI1, BI2, BI3, BI4, BI5, BI6, BI7, BI8, BI9, BM1, BM2, BM3, BM4, BW1, BW2, BW3, BW4, BF5, BF1, BF2, BF3, BF4, BS1, BS2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, US5, UT1, UT2, UT4, MH1, MH3, MH4, MH5, MH6, MW3, MW4, MW6, UM17, UM18, UM19, UM20, UM21, UM22
-- **N145** Art: Base → HU1, HU2, HU3, HU4, HU5, HU6, HU7, HU8, HU9, HU10, HU11, HU12, HU13, HU14, HW1, HW2, HW3, HW4, HC1, HC2, HC4, HC5, HC6, HA1, HA2, HA3, HX2, HX3, HX4, HX6
+- **N145** Art: Base → C24, HU1, HU19, HU20, HU2, HU3, HU4, HU5, HU6, HU7, HU8, HU9, HU10, HU11, HU12, HU13, HU14, HW1, HW2, HW3, HW4, HC1, HC2, HC4, HC5, HC6, HA1, HA2, HA3, HX2, HX3, HX4, HX6
 - **N146** Art: Mid (35-sound.js), Nov 5 → HU15, HU16, HU17, HU18, HW5, HC7, HC8, HA4, HA6, HA7, HX2, HX9
 - **N147** Art: Base (the juice pass, Nov 3) → HC3
 - **N148** Design: Apple's ambient audio session for games, carried from Mid (35-sound.js) → HX8
@@ -307,7 +307,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N205** Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_L → SC18, SC42, SC43, SC44, C18, D305, D306, D307, D308, D309, X64, MG1, MG2, MG4, MH1, MH3, MH4, MH5, MG7, MG8, MG9, MG10, MG11, MH7, PN1, J19
 - **N206** Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sick → SC45, C18, D310, D311, X65, BTC5, BTC6, BTC7, BTC8, BR1, BCR1, BCR2, BCT2, BI1, BI2, BI5, BI8, BM1, BM2, BM3, BW2, BW4, BF5, O208, O209, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J20
 - **N207** Alsan, M. & Goldin, C. (2019) Watersheds in Child Mortality, J. Political Economy 127(2):586-638, doi:10.1086/ → O219, O220
-- **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, C22, D312, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN14, P45
+- **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, C22, D349, D312, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN14, P45, J37
 - **N209** Helland, T. (2012) How to Convert Temperature (K) to RGB: Algorithm and Sample Code, tannerhelland.com: All co → D318
 - **N210** NOAA/NCEP operational code CALVIS (rap.v5.1.20, rap_wrfpost.fd/CALVIS.f, nco.ncep.noaa.gov): vis = −ln(0.02)/β → QK, QCL, D229, X68
 - **N211** ITU-R P.840 liquid water content of fog, 0.05 g/m³ (AGI STK help, Rain Models / cloud and fog table, help.agi. → QCL, D229

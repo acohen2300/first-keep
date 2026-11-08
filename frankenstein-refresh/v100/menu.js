@@ -4,7 +4,7 @@
 window.MENU = (() => {
 const { D, B, U, SIDES, N, show } = FK, { zero: ZERO, one: ONE } = FK.D.count, things = FK.things, units = FK.units, [ME] = D.players;
 // E170
-const LAYERS = [['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
+const LAYERS = [['P', 'Pace'], ['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
 const SCR = fromBook('screen'), GROUPS = SCR.tabs; // E172
 const seatCode = () => FK.ticked('Seat')[0], born = () => FK.trains(seatCode())[0]; // E173
 const classes = () => Object.values(D.trains).flat().filter((k) => !FK.SH[k]), kindOf = (cls) => FK.kinds(cls).find((c) => FK.aged(c, ME)) || FK.kinds(cls)[0]; // E174
@@ -227,7 +227,7 @@ const SCREENS = {
       vcell('ageUp', null, null, 'two', !!r.aging), ...lines(hall()).map((c) => (c ? vcell('research', c, null, 'two') : '<i></i>')), vcell('later', 'All tech', null, 'two'), '<i></i>'])]; },
   Mail: () => [head(WD.mail.title), `<div class="frame list">${mail.map((m, i) => vcell('goto', i, null, 'two left')).join('') || `<p class="blurb">${WD.mail.empty}</p>`}</div>`], // E732
   Back: () => [row(span(SCR.mold.slots, cell(WD.back.title, 'title'))), row(span(D.speeds.length, vcell('resume')), span(D.speeds.length, vcell('newgame', null, null, '', S.sure)))], // E706
-  Layers: () => [row(span(2, cell('Yard', 'title')), vcell('fast', null, null, '', show.fast), vcell('new'), vcell('later', 'book'), vcell('close')), ...[0, 2, 4, 6].map((i) => row(...LAYERS.slice(i, i + 2).map(([c, name]) => `<span class="lab" title="${name}">${c}</span><div class="cells seg" style="grid-column:span 2;--n:2">${vcell('show', c, null, '', show[c])}${vcell('lock', c, null, '', S.lock[c])}</div>`))), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E198
+  Layers: () => [row(span(2, cell('Yard', 'title')), vcell('fast', null, null, '', show.fast), vcell('new'), vcell('later', 'book'), vcell('close')), ...LAYERS.map((_, i) => i).filter((i) => !(i % 2)).map((i) => row(...LAYERS.slice(i, i + 2).map(([c, name]) => `<span class="lab" title="${name}">${c}</span><div class="cells seg" style="grid-column:span 2;--n:2">${vcell('show', c, null, '', show[c])}${vcell('lock', c, null, '', S.lock[c])}</div>`))), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E198
 };
 const page = () => (S.tab && SCREENS[S.tab] ? SCREENS[S.tab]().join('') : '');
 const codeOf = (t) => t.code || FK.KIND[t.kind].code, nameOf = (t) => FK.rankName(codeOf(t), t.side);
@@ -337,21 +337,22 @@ function suggest(k) { const G = D.suggest, [bx, by] = FK.tileMid(k), [ki, kj] = 
   if (ECON.popCap(ME) - ECON.popOf(ME) <= G.room) add(house, G.short);
   const [best] = Object.keys(sc).sort((a, b) => sc[b] - sc[a]); return best || null; }
 const under = (k) => things().find((t) => t.kind === 'bld' ? k % N >= t.i && k % N < t.i + t.n && Math.floor(k / N) >= t.j && Math.floor(k / N) < t.j + t.n : t.k === k && !t.deep);
-FK.on('tap', (k, u, px, py) => {
-  if (S.ghost) { if (!line(S.ghost.code)) { ghostTo(px, py); render(true); } else if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); } return true; }
-  if (S.qa) { S.qa = null; render(true); return true; }
-  if (S.war) { aimSpot(k, u); S.aimT = performance.now(); FK.fire('event', 'tap', null); return true; }
-  if (FK.paused() && !S.tab && !S.ghost) { FK.pause(false); return true; } // E706
-  if (S.tab === 'Build' && !u && onB(k) && !under(k)) { hintAt(k); render(true); return true; } // E341
+FK.on('tap', (k, u, px, py) => { FK.fire('event', ...heard(k, u, px, py)); return true; }); // E772
+function heard(k, u, px, py) {
+  if (S.ghost) { if (!line(S.ghost.code)) { ghostTo(px, py); render(true); return ['tap']; } if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); return ['place']; } return ['err']; }
+  if (S.qa) { S.qa = null; render(true); return ['tap']; }
+  if (S.war) { aimSpot(k, u); S.aimT = performance.now(); return ['tap']; }
+  if (FK.paused() && !S.tab && !S.ghost) { FK.pause(false); return ['tap']; } // E706
+  if (S.tab === 'Build' && !u && onB(k) && !under(k)) { hintAt(k); render(true); return ['tap']; } // E341
   const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
-  if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); } return true; }
-  if (u && own(u)) { pickToggle(u); return true; }
-  const P = FK.picked().filter(own); if (P.length) { if (t || onB(k)) { const sol = P.filter(isSoldier); if (WAR.order(P, t, k)) ECON.orderCost(ME, sol); } S.more = false; if (!P.some(isSoldier)) FK.select(null); render(true); return true; }
-  if (!t) { const O = ordAt(px, py); if (O) FK.select(units().filter((v) => v.ord === O)); else if (onB(k)) S.qa = { k, px, py }; S.subject = null; render(true); return true; }
-  if (t.kind === 'bld' && own(t) && !ECON.replantWhy(ME, t)) { ECON.replant(ME, t); return true; }
-  if (t.kind === 'unit') FK.select(t); else { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; } render(true); return true;
-});
-function pickToggle(u, hold) { const P = FK.picked(); FK.select(S.more && !hold ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : [u]); S.more = S.more || !!hold; S.subject = null; FK.fire('event', 'pick', u); render(true); }
+  if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); return ['open', t]; } return ['tap']; }
+  if (u && own(u)) { pickToggle(u); return ['pick', u]; }
+  const P = FK.picked().filter(own); if (P.length) { const sent = !!t || onB(k); if (sent) { const sol = P.filter(isSoldier); if (WAR.order(P, t, k)) ECON.orderCost(ME, sol); } S.more = false; if (!P.some(isSoldier)) FK.select(null); render(true); return [sent ? 'order' : 'tap', t]; }
+  if (!t) { const O = ordAt(px, py); if (O) FK.select(units().filter((v) => v.ord === O)); else if (onB(k)) S.qa = { k, px, py }; S.subject = null; render(true); return ['tap']; }
+  if (t.kind === 'bld' && own(t) && !ECON.replantWhy(ME, t)) { ECON.replant(ME, t); return ['place', t]; }
+  if (t.kind === 'unit') FK.select(t); else { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; } render(true); return [t.kind === 'unit' ? 'pick' : 'tap', t];
+}
+function pickToggle(u, hold) { const P = FK.picked(); FK.select(S.more && !hold ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : [u]); S.more = S.more || !!hold; S.subject = null; render(true); }
 const ordAt = (px, py) => { let best = null, bd = TO.ord; for (const O of WAR.ORD) { const d = O.n ? Math.hypot(...onMap(O.k).map((v, n) => v - [px, py][n])) : Infinity; if (d < bd) [best, bd] = [O, d]; } return best; };
 const boardAt = (px, py) => { const [bx, by] = FK.tileMid(tileK(px, py)); return { bx, by }; }, aimK = () => (!S.aim ? null : S.aim.t ? FK.tileAt(S.aim.t.bx, S.aim.t.by) : S.aim.k), toolSet = () => { const P = FK.picked().filter(isSoldier); return P.length ? P : WAR.sendable(); };
 const onB = (k) => k !== -1; // E433
@@ -361,7 +362,7 @@ function aimColor() { const t = S.aim.t, C = FK.C; if (t && t.side === ME) retur
 function boxPick(p) { const [x0, x1] = [p.x0, p.x].sort((a, b) => a - b), [y0, y1] = [p.y0, p.y].sort((a, b) => a - b), mine = units().filter((u) => (isSoldier(u) || isVil(u)) && !u.gone && ((x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1)(...FK.toScreen(u.vx, u.vy)));
   if (!mine.length) return toast(WO.boxNone); FK.select(mine); S.more = true; S.subject = null; render(true); }
 FK.on('press', (p) => { if (S.qa) { S.qa = null; p.eat = true; render(true); } if (S.tool === 'choke' && !S.ghost) { p.mode = 'line'; S.line = p; } }); // E431
-FK.on('hold', (p, k, u) => { if (S.ghost) return; if (aimNear(p.x0, p.y0)) { p.mode = 'ret'; S.drag = true; } else if (u && own(u) && !S.war) { pickToggle(u, true); p.mode = 'done'; } });
+FK.on('hold', (p, k, u) => { if (S.ghost) return; if (aimNear(p.x0, p.y0)) { p.mode = 'ret'; S.drag = true; } else if (u && own(u) && !S.war) { pickToggle(u, true); FK.fire('event', 'pick', u); p.mode = 'done'; } });
 FK.on('drag', (p) => { if (p.mode === 'ret') aimSpot(...FK.hitAt(p.x, p.y)); });
 FK.on('drop', (p, cancel) => { S.drag = false; S.line = null; if (cancel) return; if (p.mode === 'line') { S.tool = null; WAR.chokeAt(boardAt(p.x0, p.y0), boardAt(p.x, p.y), toolSet()); }
   else if (p.mode === 'box') { if (Math.max(Math.abs(p.x - p.x0), Math.abs(p.y - p.y0)) < TO.box) FK.tap(p.x, p.y); else boxPick(p); } render(true); });

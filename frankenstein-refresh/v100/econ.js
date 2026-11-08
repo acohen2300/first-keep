@@ -94,7 +94,7 @@ const rise = (side) => { const s = SIDES[side]; s.aging = 0; s.age++; if (side =
 // E292
 const lineOf = (c) => Object.keys(T).filter((x) => T[x].value.at === T[c].value.at && T[x].value.line === T[c].value.line);
 const prevOf = (c) => { const L = lineOf(c); return L[L.indexOf(c) - 1] || null; };
-const needsOf = (c) => [...new Set([prevOf(c), ...(T[c].value.need || []).map((k) => TK[k] || k)].filter(Boolean))];
+const NEEDS = new Map(), needsOf = (c) => NEEDS.get(c) || NEEDS.set(c, [...new Set([prevOf(c), ...(T[c].value.need || []).map((k) => TK[k] || k)].filter(Boolean))]).get(c); // E769
 const nextStep = (side, c) => lineOf(c).find((x) => !SIDES[side].techs.has(x)) || null;
 // E293
 const lines = (side, ok) => FK.blds().filter((t) => t.side === side && up(t) && ok(t)).reduce((a, b) => (!a || (b.q || []).length < (a.q || []).length ? b : a), null); // E327
@@ -176,12 +176,12 @@ function upkeep(dt) { for (const side of D.players) { const s = SIDES[side]; let
 const orderCost = (side, S) => { const f = Math.min(Math.round((sumCost(S.map((u) => FK.ref(FK.SH[u.code].upkeep))) * D.upkeep * D.order) / D.day), Math.floor(SIDES[side].store.food)); spend(side, 'food', f, 'orders'); return f; }; // E350
 // E351
 function nature(dt) {
-  for (const t of things()) if (FK.has(t, 'Soil') && up(t)) t.fert = Math.min(D.soil.full, Math.max(FK.stat(t.code, t.side, 'soil'), t.fert + (bell - t.workT < D.soil.worked ? -D.soil.loss / D.year : D.soil.rest / D.season) * dt));
+  for (const t of FK.blds()) if (FK.has(t, 'Soil') && up(t)) t.fert = Math.min(D.soil.full, Math.max(FK.stat(t.code, t.side, 'soil'), t.fert + (bell - t.workT < D.soil.worked ? -D.soil.loss / D.year : D.soil.rest / D.season) * dt));
   const n = Math.floor(FK.K.t / D.season); if (n !== turned) { turned = n; seasonTurn(); } upkeep(dt); }
 function seasonTurn() { const spring = !FK.season(), F = D.flock; // E352
   for (const side of D.players) { const s = SIDES[side], lost = Math.floor(-s.store.food * Math.expm1((Math.log1p(-D.spoil.year) * D.season * FK.stat('', side, 'spoil')) / D.year / D.spoil.year)); spend(side, 'food', lost, 'spoiled'); if (side === ME && lost >= D.spoil.say) FK.fire('event', 'spoiled', null, lost); }
   if (spring) for (const t of things()) if (FK.has(t, 'Catch') && t.amount < t.max) t.amount += (D.fish.r * t.amount * (t.max - t.amount)) / t.max;
-  for (const t of things()) if (FK.has(t, 'Flock') && up(t)) {
+  for (const t of FK.blds()) if (FK.has(t, 'Flock') && up(t)) {
     if (spring) { if (t.wk) earn(t.side, 'wool', t.sheep * F.fleece, 'gather'); t.sheep = Math.min(F.max, Math.round(t.sheep + (F.lambs * t.sheep * (F.max - t.sheep)) / F.max)); const cull = t.wk && t.sheep > F.hold && t.sheep - F.hold; if (cull) { t.sheep -= cull; earn(t.side, 'food', cull * F.mutton, 'gather'); if (t.side === ME) FK.fire('event', 'cull', t, cull); } }
     if (t.sheep && units().some((u) => F.takers.includes(u.code) && dist(u, t) < F.wolf)) { const n = Math.min(t.sheep, 1 + Math.floor(FK.rng() * F.take)); t.sheep -= n; if (t.side === ME) FK.fire('event', 'wolves', t, n); } }
   if (!spring) return; const r = FK.rng(); harvest = D.harvest.find((h) => r < h.upTo); if (harvest !== D.harvest.at(-1)) FK.fire('event', 'harvest', null, D.harvest.indexOf(harvest));
@@ -196,7 +196,7 @@ function hunt(side, a, v) { const free = (q) => q.job === 'idle' || q.job === 'w
 const stroke = (u, t, ev) => { u.face = t.bx < u.bx ? -1 : 1; const beat = Math.floor(u.t / D.beat); if (beat !== u.beat && beat % 2 === 0) FK.fire('event', ev, t, u); u.beat = beat; }; // E224
 FK.on('tick', (dt) => {
   if (result) return; bell += dt;
-  for (const t of things()) if (t.kind === 'bld' && t.q && t.q.length && up(t) && !(t.stall > FK.K.t)) { t.qt -= dt; const code = t.q[0]; if (D.ages.includes(code)) SIDES[t.side].aging = t.qt; if (t.qt <= 0) { const u = FK.SH[code] ? spawnBy(t, code) : null; if (FK.SH[code] && !u) continue; t.q.shift(); if (T[code]) learn(t.side, code); else if (code.plan) mustered(t, code); else if (!u) rise(t.side); if (u && t.side === ME) FK.fire('event', FK.has(u, 'Gather') ? 'trained' : 'trainedSol', u); const r = SIDES[t.side].rally; if (u && FK.has(u, 'Gather') && r) { const f = bestFind(u, r); if (f) gatherAt(u, f); } if (t.q.length) t.qt = timeOf(t.side, t.q[0]); } }
+  for (const t of FK.blds()) if (t.q && t.q.length && up(t) && !(t.stall > FK.K.t)) { t.qt -= dt; const code = t.q[0]; if (D.ages.includes(code)) SIDES[t.side].aging = t.qt; if (t.qt <= 0) { const u = FK.SH[code] ? spawnBy(t, code) : null; if (FK.SH[code] && !u) continue; t.q.shift(); if (T[code]) learn(t.side, code); else if (code.plan) mustered(t, code); else if (!u) rise(t.side); if (u && t.side === ME) FK.fire('event', FK.has(u, 'Gather') ? 'trained' : 'trainedSol', u); const r = SIDES[t.side].rally; if (u && FK.has(u, 'Gather') && r) { const f = bestFind(u, r); if (f) gatherAt(u, f); } if (t.q.length) t.qt = timeOf(t.side, t.q[0]); } }
   nature(dt);
   for (const t of things()) t.wk = t.crew = 0; for (const u of units()) if (jobOf(u) && jobOf(u) !== 'build') u.target.wk++; else if (u.job === 'build' && u.target) u.target.crew++;
   for (const u of units()) { if (u.inside && (u.inside.gone || u.job !== 'inside') && out(u) && FK.has(u, 'Gather') && u.job === 'idle') resume(u); if (u.job === 'shelter' && !u.path) enter(u); if (!FK.has(u, 'Gather') || u.path || u.inside || u.den) continue; const t = u.target;
@@ -224,7 +224,7 @@ const DG = D.danger, FL = D.flee, AL = D.alarm, AW = fromBook('words').alarm, EW
 const tell = (w, o = {}, m) => FK.fire('say', w.replace(/\{(\w+)\}/g, (_, x) => o[x] ?? ''), m);
 const threat = (v) => !v.gone && !v.inside && FK.has(v, 'Fight') && !FK.has(v, 'Gather') && !FK.has(v, 'Prey') && !WAR.stat(v).bonly && (!!soldier(v.code) || !SIDES[v.side]), foeOf = (side, v) => threat(v) && WAR.isFoe(side, v); // E437
 const unsafe = (t, side) => t.kind !== 'bld' && (FK.DANGER[side] || [])[FK.tileAt(t.bx, t.by)] >= DG.unsafe, tower = (side, t) => D.tower[t.code] && up(t) && SIDES[t.side] && WAR.atWar(side, t.side);
-function dangerMap() { for (const s of D.players) { const M = (FK.DANGER[s] = new Uint8Array(N * N)), put = (p, r, lv) => FK.stamp(p.bx, p.by, r * T0, (k) => { if (M[k] < lv) M[k] = lv; }); // E438
+function dangerMap() { for (const s of D.players) { const M = (FK.DANGER[s] = FK.DANGER[s]?.length === N * N ? FK.DANGER[s].fill(null) : new Uint8Array(N * N)), put = (p, r, lv) => FK.stamp(p.bx, p.by, r * T0, (k) => { if (M[k] < lv) M[k] = lv; }); // E438
   for (const v of units()) if (foeOf(s, v)) put(v, DG.near, DG.foe); for (const t of things()) if (tower(s, t)) put(t, WAR.reachOf(t) + DG.reach, DG.foe);
   scares[s] = scares[s].filter((q) => q.t > bell); for (const q of scares[s]) put(q, DG.mem, DG.scare); } }
 function dangerWhy(t, side) { const v = units().find((q) => foeOf(side, q) && dist(q, t) <= (DG.near + DG.pad) * T0), b = !v && things().find((q) => tower(side, q) && dist(q, t) <= (WAR.reachOf(q) + DG.reach + DG.pad) * T0); // E439
@@ -262,7 +262,7 @@ function watch() { const h = FK.seatOf(ME), mine = FK.blds().filter((t) => t.sid
   const [near] = units().filter((u) => seen(u) && (u === best || dist(u, h) < AL.far * T0)).sort((a, b) => dist(a, h) - dist(b, h)); if (near) FK.near = { u: near, n: units().filter((v) => v.side === near.side && seen(v) && dist(v, near) < AL.radar * T0).length, eta: best && Math.ceil(bd / D.upm / FK.pace(best)) };
   if (near && dist(near, h) < AL.home * T0 && bell - warnT > AL.again) { warnT = bell; tell(AW.home); } }
 // E446
-function sites() { if (emg) return; for (const t of things()) if (t.kind === 'bld' && SIDES[t.side] && !up(t) && !units().some((v) => v.target === t && jobOf(v) === 'build')) { const R = FK.reach(t.side);
+function sites() { if (emg) return; for (const t of FK.blds()) if (SIDES[t.side] && !up(t) && !units().some((v) => v.target === t && jobOf(v) === 'build')) { const R = FK.reach(t.side);
   if (!FK.reached(t.side, t, t.bx, t.by)) { if (t.side === ME && !t.told) tell(SAY.site, { b: FK.SH[t.code].name }); t.told = true; continue; } t.told = false; if (wallish(t) && wallsBusy(t.side)) continue;
   const [v] = villagersOf(t.side).filter((v) => (v.job === 'idle' || v.job === 'wait') && !v.inside && !v.den && !v.emg && R.has(v.k)).sort((a, b) => dist(a, t) - dist(b, t)); if (v) buildAt(v, t); } }
 // E447

@@ -51,6 +51,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E23** a spot in a corner's own frame (u along one edge, v along the other), the frame turned wit
 - **E24** the four roads: corner to middle
 - **E25** every tile whose middle lies within r of a board point: fn(k, d, dx, dy)
+- **E768** the board point of each tile's middle stepped across the square, not turned afresh for eve
 - **E26** a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land · D27 (N112) · QAZ (N60) · D28 (N112) · QBG (N67) · D32 (N112) · D16 (N112)
 - **E27** a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok · QAZ (N60)
 - **E28** a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32 · D32 (N112)
@@ -113,6 +114,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E750** a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, 
 - **E751** the ground: nothing before the land is made (a frame drawn before the first map threw a dr
 - **E752** a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, 
+- **E771** while nothing is missing and the draw budget is whole, one ground chunk a frame is painted
 - **E547** the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so 
 - **E548** bare earth worn by feet round a finished building (not a field, a wall or a trap)
 - **E549** the dark where someone fell, wider for a big body, a blade's cut for a soldier
@@ -237,6 +239,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
 - **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
+- **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te
 - **E104** every unit within r of from (a square), never itself
 - **E105** the buildings within r of (x, y) by their squares, a little beyond on the edges; refiled w
 - **E106** the rules' dice and the looks', from the map's seed but not its stream
@@ -370,6 +373,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QK (N10, N210, N245)
 - **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
+- **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
 - **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
@@ -399,6 +403,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E157** each chunk's box in the view frame, with room above for the trees' height
 - **E158** the chunk's deep trees on one canvas
 - **E159** a hit moves to the back: the oldest goes first
+- **E766** the ring at a unit's feet, full and bright: green picked, blue working, yellow idle (yours · C24 (N145)
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
 - **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170, N195, N205)
 - **E161** L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tile · D7 (N112)
@@ -508,6 +513,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
+- **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
 - **E433** a tile on the board (the floor gives -1 off it)
@@ -579,6 +585,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
 - **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
+- **E769** a research's needs worked out once and kept: the Tech book does not change in play
 - **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
 - **E327** of the buildings that can take an order, the one with the shortest line (Mid's shortest)
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept

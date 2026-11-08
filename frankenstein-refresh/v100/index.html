@@ -117,7 +117,8 @@ function stamp(bx, by, r, fn) { // E25
   const box = [[bx - r, by - r], [bx + r, by - r], [bx - r, by + r], [bx + r, by + r]].map(([x, y]) => fromBoard(x, y));
   const i0 = Math.max(0, Math.floor(Math.min(...box.map((p) => p[0])) / D.tile)), i1 = Math.min(N - 1, Math.ceil(Math.max(...box.map((p) => p[0])) / D.tile));
   const j0 = Math.max(0, Math.floor(Math.min(...box.map((p) => p[1])) / D.tile)), j1 = Math.min(N - 1, Math.ceil(Math.max(...box.map((p) => p[1])) / D.tile));
-  for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) { const [tx, ty] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), dx = tx - bx, dy = ty - by, d = Math.hypot(dx, dy); if (d <= r) fn(j * N + i, d, dx, dy); }
+  const h = D.tile * 0.5, [ax, ay] = toBoard(h, h), [ix, iy] = toBoard(h + D.tile, h), [jx, jy] = toBoard(h, h + D.tile); // E768
+  for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) { const dx = ax + i * (ix - ax) + j * (jx - ax) - bx, dy = ay + i * (iy - ay) + j * (jy - ay) - by, d = Math.hypot(dx, dy); if (d <= r) fn(j * N + i, d, dx, dy); }
 }
 const between = (roll, [lo, hi]) => lo + roll() * (hi - lo), count = (roll, [lo, hi]) => Math.floor(between(roll, [lo, hi + 1]));
 // E26
@@ -265,7 +266,7 @@ function renderGround() {
   // E58
   const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 1, b[1]); g.lineTo(c[0] + 1, c[1] + 1); g.lineTo(d[0], d[1] + 1); g.closePath(); g.fill(); };
   const BL = new Map(), bladesAt = (s) => BL.get(s) || BL.set(s, bladeAt(s)).get(s), bladeAt = (s) => { const bladeTile = document.createElement('canvas'); bladeTile.width = bladeTile.height = Math.ceil(64 * s); const q = bladeTile.getContext('2d'), r = NS_rng(7); q.scale(s, s); q.lineCap = 'round'; q.lineWidth = 1; // E59
-    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } for (const [col, n, rad] of C.ground.specks) for (let i = n; i--; ) { q.fillStyle = col; q.beginPath(); q.arc(r() * bladeTile.width / s, r() * bladeTile.width / s, rad, -Math.PI, Math.PI); q.fill(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale(FIG() / s)); return p; };
+    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } for (const [col, n, rad] of C.ground.specks) for (let i = n; i--; ) { q.fillStyle = col; q.beginPath(); q.arc(r() * bladeTile.width / s, r() * bladeTile.width / s, rad, -Math.PI, Math.PI); q.fill(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale((D.upm * LAY.blade) / s)); return p; };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
   const LIT = 0.03, LAY = D.lay; // E60
@@ -318,6 +319,9 @@ function drawGround(gx, gy) { if (!ground) return; const z = cam.z, q = STEP ** 
   const S = GC.chunk, at = (v) => Math.floor(v / z / S), last = (w) => Math.ceil(w / S) - ONE, seen = [];
   for (let cy = Math.max(ZERO, at(-gy)); cy <= Math.min(last(gh), at(ch - gy)); cy++) for (let cx = Math.max(ZERO, at(-gx)); cx <= Math.min(last(gw), at(cw - gx)); cx++) seen.push([cx, cy, groundChunk(cx, cy, q)]);
   const miss = seen.find(([, , c]) => !c); if (miss) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); miss[2] = groundChunk(miss[0], miss[1], q, true); dirty(); } // E752
+  else if (!DRAW.lvl && used(GCH) + ((S + GC.pad) * q) ** (ONE + ONE) <= GC.ground) for (let cy = Math.max(ZERO, at(-gy) - ONE); cy <= Math.min(last(gh), at(ch - gy) + ONE); cy++) for (let cx = Math.max(ZERO, at(-gx) - ONE); cx <= Math.min(last(gw), at(cw - gx) + ONE); cx++) if (!groundChunk(cx, cy, q)) { groundChunk(cx, cy, q, true); return drawChunks(seen, gx, gy, z); } // E771
+  drawChunks(seen, gx, gy, z); }
+function drawChunks(seen, gx, gy, z) { const S = GC.chunk;
   for (const [cx, cy, c] of seen) if (c) ctx.drawImage(c, gx + cx * S * z, gy + cy * S * z, (S + GC.pad) * z, (S + GC.pad) * z); }
 const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null; // E547
 const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
@@ -328,7 +332,7 @@ function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; 
   for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); scarX.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }
 // ── The view (E63)
 const canvas = document.getElementById('map'), ctx = canvas.getContext('2d');
-const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), G: false, Z: false, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // E64
+const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), P: false, G: false, Z: false, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // E64
 let cw, ch, dpr, zmin, zmax = D.open.most / (W.person.height * D.upm), queued = false;
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
@@ -364,7 +368,7 @@ function work() { for (let n = D.work.slices; n-- && TASKS.length; ) { const t =
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
 let paused = false; const resting = () => paused || !!fire('rest'), pause = (on = !paused) => { paused = on; dirty(); }; // E695
 const sim = (dt) => { climate(dt); step(dt); fire('tick', dt); work(); look(dt); }, vAt = (u) => (u.lvx == null ? [u.vx, u.vy] : [u.lvx + (u.vx - u.lvx) * DRAW.alpha, u.lvy + (u.vy - u.lvy) * DRAW.alpha]); // E715
-function loop(now) { if (now - last >= 1000 / (resting() ? D.rest.idle : D.fps)) { const dt = paused ? null : Math.min(0.1, (now - last) / 1000 || 0) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } followCam(dt); draw(); shed(performance.now() - w0); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
+function loop(now) { const wall = (now - last) / 1000; if (wall >= DRW.slack / (resting() ? D.rest.idle : DRAW.lvl >= DRW.lv.fps ? DRW.fps : D.fps)) { const dt = paused ? null : Math.min(0.1, wall || 0) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } const w1 = performance.now(); followCam(dt); draw(); const w2 = performance.now(); shed(w2 - w0, wall); meter(wall, w1 - w0, w2 - w1); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
 // E655
 const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\b/.test(location.search), seenErr = new Set(), BASE0 = {}; let fightT = null, failT = -Infinity;
 function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE && !paused) { paused = true; fire('say', WS.fault.replace('{line}', m.split('\n').shift())); fire('event', 'fault', null); MENU.S.tab = 'Pause'; } } // E656
@@ -1059,8 +1063,9 @@ function collide() { // E304
 }
 const shove = (u, x, y) => walkable(tileAt(u.bx + x, u.by + y), u) && ((u.bx += x), (u.by += y), place(u), (u.shoved = true));
 // E103
-const file = (g, size, t) => { const c = Math.floor(t.bx / size) + ',' + Math.floor(t.by / size); (g.get(c) || g.set(c, []).get(c)).push(t); }, grid = (list, size) => { const g = new Map(); for (const t of list) file(g, size, t); return g; };
-function near(g, size, x, y, r, fn) { for (let cy = Math.floor((y - r) / size); cy <= Math.floor((y + r) / size); cy++) for (let cx = Math.floor((x - r) / size); cx <= Math.floor((x + r) / size); cx++) for (const t of g.get(cx + ',' + cy) || []) if (!t.gone && fn(t)) return true; return false; }
+const cellKey = (cx, cy) => cy * N * D.tile + cx, file = (g, size, t) => { const c = cellKey(Math.floor(t.bx / size), Math.floor(t.by / size)); // E767
+ (g.get(c) || g.set(c, []).get(c)).push(t); }, grid = (list, size) => { const g = new Map(); for (const t of list) file(g, size, t); return g; };
+function near(g, size, x, y, r, fn) { for (let cy = Math.floor((y - r) / size); cy <= Math.floor((y + r) / size); cy++) for (let cx = Math.floor((x - r) / size); cx <= Math.floor((x + r) / size); cx++) for (const t of g.get(cellKey(cx, cy)) || []) if (!t.gone && fn(t)) return true; return false; }
 let UG = new Map(), SG = new Map(), SGn; const regrid = () => { UG = grid(units, D.grid.unit); SG = grid(things.filter((t) => t.kind === 'bld'), D.grid.bld); SGn = things.length; };
 const unitsNear = (from, r, fn) => { near(UG, D.grid.unit, from.bx, from.by, r, (v) => { if (v !== from && Math.abs(v.bx - from.bx) < r && Math.abs(v.by - from.by) < r) fn(v); }); }; // E104
 const bldsNear = (x, y, r, fn) => { if (SGn !== things.length) regrid(); return near(SG, D.grid.bld, x, y, r, fn); }; // E105
@@ -1302,7 +1307,7 @@ function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWid
   for (let gy = gy0; gy <= gy1; gy++) for (let gx = Math.floor((cam.x - w) / C0); gx <= Math.ceil((cam.x + w) / C0); gx++) { const r = NS_rng(Math.abs(gy * RC * RU.cell + gx)), ph = (K.t * RR.rate + r()) % 1, bx = (gx + r()) * C0, by = (gy + r()) * C0; if (r() > K.rain / RR.show) continue;
     const s = Math.min(rmax, (r0 + ph * r1) * z), [x, y] = toScreen(...toView(bx, by, Math.max(0, H[tileAt(bx, by)]))); ctx.moveTo(x + s, y); oval(ctx, x, y, s, s * TILT); }
   ctx.stroke(); }
-let TOPB = null; const topOf = () => TOPB ?? (TOPB = document.querySelector('.topbar').getBoundingClientRect().bottom); addEventListener('resize', () => { TOPB = null; }); // E729
+let TOPB = null; const topOf = () => TOPB ?? (TOPB = document.querySelector('.topbar')?.getBoundingClientRect().bottom ?? ZERO); addEventListener('resize', () => { TOPB = null; }); // E729
 function skyBand() { const nt = nightOf(), top = topOf(), [hf, hmax] = BD.h, h = Math.round(Math.min(ch * hf, hmax)), [cast, rainy] = BD.cast; // E561
   const base = mixC(mixC(rgb(SKYC.day), rgb(SKYC.dusk), BD.dusk * nt * (1 - nt)), rgb(SKYC.night), nt), kind = K.storm && K.wetHour ? 'storm' : K.sky, col = SKYC[kind] ? mixC(base, rgb(SKYC[kind]), kind === 'rain' ? rainy : cast) : base;
   const gr = ctx.createLinearGradient(0, top, 0, top + h); gr.addColorStop(0, css(col, BD.base)); gr.addColorStop(1, css(col, 0)); ctx.fillStyle = css(col, BD.base); ctx.fillRect(0, 0, cw, top); ctx.fillStyle = gr; ctx.fillRect(0, top, cw, h);
@@ -1329,7 +1334,7 @@ const inSight = (t, side = ME, eye) => !t || !SIDES[t.side] || !SIDES[side] || t
 function shadowVec(h) { const sun = clamp(K.alt / 10, 0, 1) * 0.35 * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, 2) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
 function drawShadows(s) { // E152
   const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = C.sky.shadow;
-  for (const t of things) if (t.kind === 'bld') { const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue;
+  for (const t of blds()) { const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue;
     const n = t.n * D.tile, pts = [[t.i * D.tile, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile + n], [t.i * D.tile, t.j * D.tile + n]].map(([sx, sy]) => S(sx, sy, H[t.j * N + t.i]));
     const sh = pts.map(([px, py]) => [px + dx * h * s, py + dy * h * s]); ctx.beginPath(); // E153
     for (const q of [pts, sh, [pts[0], pts[1], sh[1], sh[0]], [pts[1], pts[2], sh[2], sh[1]], [pts[2], pts[3], sh[3], sh[2]], [pts[3], pts[0], sh[0], sh[3]]]) q.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
@@ -1366,11 +1371,14 @@ on('hide', (t) => !inSight(t)); // E603
 // E604
 let lessMotion = false; try { lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 const DRAW = { lvl: null, ema: null, slow: null, fast: null, alpha: ONE }, still = () => lessMotion || DRAW.lvl >= DRW.lv.motion;
-function shed(work) { DRAW.ema += (work - DRAW.ema) * DRW.ema; const was = DRAW.lvl; // E605
-  if (DRAW.ema > DRW.slow && DRAW.lvl < DRW.top) { DRAW.fast = null; if (++DRAW.slow > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
-  else if (DRAW.ema < DRW.fast && DRAW.lvl > null) { DRAW.slow = null; if (++DRAW.fast > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
+const MTR = D.meter, MW = fromBook('words').meter, MET = { fps: null, sim: null, draw: null }; // E770
+function meter(wall, sim, drawn) { if (!(wall > null)) return; const k = Math.min(ONE, wall / MTR.tau); MET.fps += (ONE / wall - MET.fps) * k; MET.sim += (sim - MET.sim) * k; MET.draw += (drawn - MET.draw) * k; if (!show.P) return;
+  ctx.save(); ctx.setTransform(dpr, ZERO, ZERO, dpr, ZERO, ZERO); ctx.font = MTR.font; ctx.fillStyle = C.white; ctx.shadowColor = INK; ctx.shadowBlur = MTR.blur; ctx.fillText(MW.replace('{fps}', Math.round(MET.fps)).replace('{sim}', MET.sim.toFixed(ONE)).replace('{draw}', MET.draw.toFixed(ONE)), ...MTR.at); ctx.restore(); }
+function shed(work, secs) { DRAW.ema += (work - DRAW.ema) * Math.min(ONE, secs / DRW.tau); const was = DRAW.lvl; // E605
+  if (DRAW.ema > DRW.slow && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
+  else if (DRAW.ema < DRW.fast && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
   if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } }
-const area = (v) => (v.cv || v).width * (v.cv || v).height; function fitCache(M, most) { let px = null; for (const v of M.values()) px += area(v); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; } } // E606
+const area = (v) => (v.cv || v).width * (v.cv || v).height, used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; } } // E606
 // E607
 const spring = (x, v, to, w, dt) => { const e = Math.exp(-w * dt), d = x - to, t = (v + w * d) * dt; return [to + (d + t) * e, (v - w * t) * e]; };
 function camStop() { cam.tx = cam.ty = undefined; cam.vx = cam.vy = null; }
@@ -1408,7 +1416,7 @@ function celebrate(size, vx, vy, hit) { if (K.t - celT < STG.calm && size < STG.
   if (size >= STG.big) whiteT = K.t; }
 on('start', () => { RIPS.length = null; SITE.clear(); celT = whiteT = -Infinity; cam.follow = false; camStop(); });
 on('spawn', (u) => { BORN.set(u, K.t); });
-on('tick', () => { for (const t of things) if (t.kind === 'bld') { if (t.done < ONE) SITE.add(t); else if (SITE.delete(t)) { DONE.set(t, K.t); if (t.side === ME) celebrate(has(t, 'Wonder') ? STG.big : ONE, t.vx, t.vy); } } });
+on('tick', () => { for (const t of blds()) { if (t.done < ONE) SITE.add(t); else if (SITE.delete(t)) { DONE.set(t, K.t); if (t.side === ME) celebrate(has(t, 'Wonder') ? STG.big : ONE, t.vx, t.vy); } } });
 on('event', (e, t, a) => { const h = FK.seatOf(ME); if (e === 'struck' && a) HIT.set(a, K.t); else if ((e === 'age' || e === 'win') && h) celebrate(STG.big, h.vx, h.vy); });
 function learnt(side, id) { const h = FK.seatOf(ME), R = BOOKS.tech[id].value.rank; if (side === ME && h && R) celebrate(STG.big - ONE, h.vx, h.vy, (u) => u.side === ME && u.code === R.k); }
 on('tap', (k, u, px, py) => { ripple(cam.x + (px - cw * DRW.half) / cam.z, cam.y + (py - ch * DRW.half) / cam.z, CLT.big); });
@@ -1499,7 +1507,7 @@ function drawWoods(s) { const q = STEP ** Math.round(Math.log(s * dpr) / Math.lo
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u) || u.veil))) return; const [x, y] = toScreen(...vAt(u)); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
-    if (!dots) { const on = pick.includes(u); ctx.strokeStyle = on ? C.gold : u.side >= 0 ? SIDES[u.side].col : C.white; ctx.globalAlpha = on ? 1 : 0.5; ctx.lineWidth = on ? 1.5 : 1; ctx.beginPath(); ctx.ellipse(x, y, 7 * s * FIG(), 3.5 * s * FIG(), 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
+    if (!dots) { const R = C.foot; ctx.strokeStyle = pick.includes(u) ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : u.job === 'idle' && !moving(u) ? R.idle : R.work; ctx.lineWidth = DRS.foot; ctx.beginPath(); ctx.ellipse(x, y, 7 * s * FIG(), 3.5 * s * FIG(), 0, 0, 7); ctx.stroke(); } // E766
     if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else drawUnit(u, x, y, s * FIG()); }; // E160
   if (!dots) { drawWoods(s); drawShadows(s); }
   for (const t of things) {
