@@ -4,7 +4,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,155 | 497,400 | 497,540 |
+| Game code | 29 | 3,155 | 497,372 | 497,512 |
 | Books | 1996 | 0 | 570,034 | 570,737 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,763 | 288,182 | 288,423 |
@@ -14,7 +14,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
 | index.html#page | 30 | 1,663 | 1,663 | 10 |
-| index.html#frames | 13 | 1,112 | 1,112 | 3 |
+| index.html#frames | 13 | 1,111 | 1,111 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
@@ -23,13 +23,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 63 | 8,876 | 8,880 | 75 |
 | index.html#drawn-once-in-the-view-frame | 56 | 6,054 | 6,058 | 123 |
 | index.html#the-view | 9 | 1,032 | 1,036 | 14 |
-| index.html#the-door | 95 | 14,456 | 14,460 | 68 |
+| index.html#the-door | 95 | 14,401 | 14,405 | 68 |
 | index.html#the-brushes | 10 | 1,097 | 1,101 | 26 |
 | index.html#the-building-art | 324 | 50,846 | 50,850 | 4095 |
 | index.html#the-node-art | 26 | 4,085 | 4,089 | 244 |
 | index.html#the-figures | 143 | 23,309 | 23,313 | 1543 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 130 | 15,454 | 15,458 | 78 |
+| index.html#floor-5-movables | 130 | 15,482 | 15,486 | 78 |
 | index.html#the-body-s-laws | 31 | 2,584 | 2,588 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
 | index.html#floor-6-climate | 152 | 24,694 | 24,706 | 232 |

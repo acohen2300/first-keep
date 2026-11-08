@@ -3421,3 +3421,14 @@ MODIFIED (9):
 LOCKED (2113 of 2122): byte for byte as sealed, 913,170 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2122 items sealed · 1996 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## S2b · the figures' last step noted inside the step itself (one pass fewer); has() reads the ticks set straight · 2026-11-07 20:28
+
+Opened: code:index.html
+MODIFIED (3):
+- code:index.html#floor-5-movables · 15,458 → 15,486 bytes
+- code:index.html#frames · 1,112 → 1,111 bytes
+- code:index.html#the-door · 14,460 → 14,405 bytes
+LOCKED (2119 of 2122): byte for byte as sealed, 1,345,962 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2122 items sealed · 1996 book entries · 93 laws · 249 citations, 7 still to open · 7 known
