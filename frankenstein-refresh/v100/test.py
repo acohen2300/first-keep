@@ -321,7 +321,8 @@ async def gather(b):
     mid = mid or {}; same = lambda a, b: len(a) == len(b) and all(abs(x - y) <= 1e-9 * max(1, abs(y)) for x, y in zip(a, b))
     got = [v['mill'] and v['ten'] == 10 and bool(f), all(c[1] and c[0] <= v['SP'] + 1e-9 for c in v['came']), f.get('spots', 0) >= v['SP'] - v['arrive'] - 1e-9 and f.get('bodies', 0) >= v['SP'] - v['arrive'] - 1e-9,
            v['cap'] == mid.get('cap') and all(c[0] <= c[1] for c in f.get('crowd', [[1, 0]])), same(f.get('R', []), mid.get('R', [0])) and same(f.get('share', []), mid.get('share', [0])) and v['rate'] == mid.get('rate'),
-           v['food'] > 0 and v['taken'] >= v['food'] - 1e-6 and abs(v['food'] - mid.get('food', 0)) <= 0.02 * mid.get('food', 1), not errs]
+           v['food'] > 0 and v['taken'] >= v['food'] - 1e-6 and abs(v['food'] - mid.get('food', 0)) <= 0.025 * mid.get('food', 1), not errs]
+    # the food within 2.5% of the replica's model (Albert, Nov 7 22:00: the 2.2% gap with the Town Center at Base's spot is trip alignment, accepted)
     ok('t-gather', all(got), [got, v['came'], {k: f.get(k) for k in ('R', 'share', 'spots', 'bodies', 'crowd')}, {k: mid.get(k) for k in ('cap', 'R', 'share', 'food')}, v['food'], errs[:2], err[-400:]])
 REC = """return box(sound + `;var REC = []; tone = (f, dur, type, vol, f2, at) => REC.push(['tone', f, dur, type, vol, f2 || 0, at || 0, panV]);
 hiss = (dur, vol, fq, q, f2, at) => REC.push(['hiss', dur, vol, fq, q || 1, f2 || 0, at || 0]); knock = (mat, f, vol, at = 0, snap = 1) => REC.push(['knock', mat, f, vol, at, snap]);
