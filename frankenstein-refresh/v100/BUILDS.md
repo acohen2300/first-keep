@@ -3624,3 +3624,20 @@ MODIFIED (16):
 LOCKED (2128 of 2144): byte for byte as sealed, 1,140,020 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2144 items sealed · 2018 book entries · 93 laws · 250 citations, 7 still to open · 7 known
+
+## B8 · research on every building card and the Hall (as Base); the rival civs dealt from the new match's dice; the path cache kept out of saves · 2026-11-08 07:54
+Albert, Nov 8 07:51: go go B8
+Opened: code:menu.js, code:econ.js, code:combat.js, book:words, book:screen, book:citations, book:comments
+MODIFIED (9):
+- book:citations:N251 · added
+- book:comments:E738 · added
+- book:comments:E739 · added
+- book:comments:E740 · added
+- book:screen:SN4 · 462 → 459 bytes
+- book:words:J36 · added
+- code:combat.js · 59,062 → 59,046 bytes
+- code:econ.js · 105,991 → 106,153 bytes
+- code:menu.js · 89,027 → 89,659 bytes
+LOCKED (2140 of 2149): byte for byte as sealed, 1,138,579 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2149 items sealed · 2023 book entries · 93 laws · 251 citations, 7 still to open · 7 known

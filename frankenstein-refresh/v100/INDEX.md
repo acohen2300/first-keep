@@ -318,6 +318,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N245 |  | Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water content M = 0.072 R^0.88 g/m³ f | to open |
 | N246 |  | The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the finite-source form E = I ÷ (d² + s | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
+| N251 |  | Design: Albert, Nov 8 07:51 (B8): research on every building card and the Hall's three tech slots, as Base's techBtn (base/index.html 23926) | opened |
 | N250 |  | Design: Albert's calls, Nov 8 07:26 (B7): Dwelling for the house; Difficulty on the Start card, read at the match's start only; a match open | opened |
 | N249 |  | Design: Mid's forest (mid/src/10-world-forest.js, FOREST, TREE, makeForest: lattice 26, ± 6, 375 trees a corner, paths 34 wide, edge 40, the | opened |
 | N248 |  | Albedo of natural surfaces: fresh snow 0.80–0.90, grass 0.25, bare soil 0.17 (NSIDC, Thermodynamics: Albedo; Wikipedia, Albedo, table of sam | opened |
@@ -381,6 +382,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E711 |  | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; |  |
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
+| E738 |  | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |  |
+| E739 |  | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost |  |
+| E740 |  | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |  |
 | E737 |  | a message is a door, as Base's: a tap on it goes to its place and closes it (the Nov 7 re-read, item 14) |  |
 | E736 |  | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |  |
 | E735 |  | the hammer carries a bar for the sites going up (the mean of their progress), and People is ringed blue while anyone stands idle (Base, item |  |
@@ -1533,7 +1537,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN1 | the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6 | {slots: 6, slot: 44, gap: 6} | N133 |
 | SN2 | the Build tabs: six, in Base's order, up to nine buildings each, three to a row (each cell two slots wide) | {Home: [BTC1, BR1, BR2, BCR2, BP4, BP6, BP7], Land: [BCL1, BI1, BCL2, BI3, BCT2, BI2, BCL3, BCL4, BI5], War: [BM1, BM2, BM3, BM4, BI9, BP10, | N134 |
 | SN3 | buildings not on the Build menu: the Throne is the map's; the camp tents come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the Net is the Natives' (it waits with them) | [BS1, BTC5, BTC6, BTC7, BTC8, BW4, BF2] | N135; N172; N198 |
-| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [queue, Spawn], [train, Spawn], [tech, Research], [troops, | N136; N170; N194 |
+| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [queue, null], [train, Spawn], [tech, Research], [troops,  | N136; N170; N194 |
 | SN5 | the top ribbon: the five stores, sound, pause, the Mail door with its unread count (Base; Albert, Nov 7 20:48: all Base — the small map lives in the war station's middle, not here) | [food, wood, stone, gold, iron, mute, pause, mail] | N137; N241 |
 | SN6 | readings with no row: the second top row was cut, each waits for its new home | [season and time of day, the clock to the bell, people and room, idle villagers, records, rank, army] | N138 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |
@@ -2095,6 +2099,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J29 | the Guide's and History's fixed words (Mid's guideModel, HIST_NOTE, HIST_ASK, yearOf, guideMd): where a unit no building trains is trained, a building off the Build menu and where it comes from, a shell whose history line is not under its look (key), the eras History dates by name (a year, BC below none), the Markdown's headings | {at: the Town Center, start: where you start, secs:  s, by: ×, beats: {times:  ×, bld: buildings, only: buildings only}, off: {BS1: stands o | N234; N161 |
 | J30 | the song line, said by the Guide and the Sound page (Mid's SONG) | There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed | N234 |
 | J31 | a Build cell's second line when the store cannot pay: the word, its colour how near (the shortfall is in the tap's Needs) | Short | N132 |
+| J36 | why a research cannot start now (B8, as Base's research buttons) | {age: Needs the {age} age, need: Needs {name} first, busy: Being researched, at: Needs its building standing, full: That line is full, cost: | N251 |
 | J35 | the Welcome back card (Base's: the saved game opens paused, Resume or New game) and the pause's line (Base's pauseT) | {title: Welcome back, resume: Resume, paused: Paused · tap to carry on} | N241 |
 | J34 | the place bar's words, Base's (26-input placeT; Albert's screenshot Nov 7 20:38) | {start: Press where the {name} goes · drag empty ground to look around, lineStart: Tap where the {line} starts, ok: {Name}: tap Build, or dr | N241 |
 | J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked, charge: Charge, fallBack: Fall back, hold: Hold, recall: Recall, hunt: Hunt, hunt3: Hunt ×3, hunters: 3, home: Home, op | N241 |

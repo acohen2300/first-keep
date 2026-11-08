@@ -433,6 +433,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the St
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E191** tap a yield: new villagers go there (the ring)
+- **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why (its age
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
@@ -449,6 +450,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
 - **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
 - **E358** a pasture's card counts its sheep
+- **E738** a building's research on its card: the next step of each of its lines, as Base's card (the
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
@@ -515,6 +517,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E672** copied to the clipboard, or through a hidden box where the clipboard is refused
 - **E673** the menu's part of the save: the mail, the news, the options, the match log
 - **E675** The Guide, written from the books (Mid's guideModel): every building, unit, research step,
+- **E740** a building's lines, each as its next step to learn (none when the line is done); another p
 - **E676** a unit is trained at the first building that trains it (or the kind it replaces), as Mid g
 - **E677** a rule's numbers and names are filled from the books: {D:path} a measurement, {S:code} a s
 - **E678** Mid's guideModel, field for field, on v100's tables (a building's menu is its Build tab, e

@@ -347,8 +347,8 @@ function spring(b, v, kind, E) { const horse = FK.SH[v.code].mount ? 'horse' : '
   v.hp -= v.hpMax * E.hurt[horse]; v.hurtT = K.t; if ((E.stuck || {})[horse]) v.stuck = K.t + E.stuck[horse]; if (!alive(v)) die(v); }
 function stake(a, t) { if (K.t - (a.stakeT ?? -Infinity) <= SK.again) return; a.stakeT = K.t; a.hp -= a.hpMax * SK.dmg; Object.assign(a, { hurtT: K.t, chg: null }); const [dx, dy] = dir(a.bx - t.bx, a.by - t.by), x = a.bx + dx * SK.shove * T, y = a.by + dy * SK.shove * T; // E521
   if (FK.walkable(FK.tileAt(x, y))) { Object.assign(a, { bx: x, by: y, path: null }); FK.place(a); } if (t.side === ME) say(CT.stake); if (!alive(a)) die(a, t); }
-FK.on('save', (X) => { X.war = { waves, homeT, routSaid, ordT, ORD, MS, AT, rel, reachs, SQ, raid }; }); // E667
-FK.on('load', ({ war: W }) => { ({ homeT, routSaid, ordT } = W); const keep = { waves, ORD, MS, AT, rel, reachs, SQ, raid }; for (const k in keep) FK.refill(keep[k], W[k]); });
+FK.on('save', (X) => { X.war = { waves, homeT, routSaid, ordT, ORD, MS, AT, rel, SQ, raid }; }); // E667
+FK.on('load', ({ war: W }) => { ({ homeT, routSaid, ordT } = W); const keep = { waves, ORD, MS, AT, rel, SQ, raid }; for (const k in keep) FK.refill(keep[k], W[k]); });
 const take = (t) => { for (const u of units()) if (u.target === t) u.target = null; FK.vanish(t); }; // E691
 return { chargeWhy, take, wild, meet, raids, loot, scout, roulette, guardsLeft, besideK, traps, shown, spring, guard, guardsOf, order, send, go, callHome, everyHome, reinforcePlan, reinforce, direct, directWait, chokeAt, ambushAt, foesNear, status, free, freeWhy, sendable, centreOf, routeK, etaOf, mixOf, chance, homeAll, charge, fallBack, ORD, MS, attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, power1, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat, vs, fromWhere, reachOf, fly, speedFor, dress, drillOn, rebattalion, plan, squad, lack, cycle, dialOf, temperOf, shapeOf, formOf, kiteOf, SQ, DIAL, SHAPES, bestFoe, canBeat, worth, formHome, wear, dmgOf, knows };
 })();

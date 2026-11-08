@@ -108,14 +108,14 @@ const jobOf = (u) => (u.target && (u.job === 'gather' || u.job === 'carry' || (u
 const jobs = (side) => { const n = Object.fromEntries([...YIELDS, 'build', 'idle'].map((k) => [k, 0])); for (const u of villagersOf(side)) { const j = jobOf(u); if (j) n[j]++; else if (u.job === 'idle' || u.job === 'wait') n.idle++; } return n; };
 const findsOf = (y) => things().filter((t) => yieldOf(t) === y && alive(t) && (t.kind !== 'bld' || (SIDES[t.side] && !(t.amount <= 0))));
 // E306
-const FO = D.forage, SR = D.search, capOf = (t) => FO.cap[t.kind] ?? FK.ring(t).m;
+const WAY = new WeakMap(), FO = D.forage, SR = D.search, capOf = (t) => FO.cap[t.kind] ?? FK.ring(t).m;
 const others = (u, t) => Math.max(0, ~~t.wk - (u.target === t)), full = (u, t) => others(u, t) >= capOf(t);
 const span = (t) => (t.kind === 'bld' ? (t.n + 2) * D.tile * Math.SQRT1_2 : FK.ring(t).r + D.tile);
 function forage(u, t, b, low) { // E307
   const s = !low && t.kind !== 'bld' && FK.spotFor(u, t); if (s === null) return 0;
   const c = FK.stat(u.code, u.side, 'carry'), v = FK.stat(u.code, u.side, 'spd') * D.upm, life = c * FO.life, g = rateOf(t, u.side) / (1 + others(u, t) / (FO.hold[t.kind] ?? FO.hold.other));
   const A = t.amount == null || (u.target === t && FO.cap[t.kind]) ? life : Math.min(Math.max(1, t.amount), life);
-  const d = !b ? 0 : low ? Math.max(0, dist(t, b) - span(t) - span(b)) : t.way && t.way.b === b ? t.way.d : (t.way = { b, d: FK.wayLen(FK.tileAt(...(s ? [s.x, s.y] : [t.bx, t.by])), b, u) }).d;
+  const d = !b ? 0 : low ? Math.max(0, dist(t, b) - span(t) - span(b)) : WAY.get(t)?.b === b ? WAY.get(t).d : WAY.set(t, { b, d: FK.wayLen(FK.tileAt(...(s ? [s.x, s.y] : [t.bx, t.by])), b, u) }).get(t).d;
   return c / (c / g + (2 * d) / v + (dist(u, t) * c) / (A * v));
 }
 const forageNow = (u) => jobOf(u) && jobOf(u) !== 'build' && alive(u.target) && forage(u, u.target, FK.dropFor(u, u.carry));
@@ -552,7 +552,7 @@ function crowns() { const L = D.players, out = {}, pts = Object.fromEntries(L.ma
   out.overall = L.map((side) => ({ side, v: pts[side], tie: score(side).total })).sort((a, b) => b.v - a.v || b.tie - a.tie); return out; }
 function enlightened(side) { const last = Object.keys(T).filter((c) => T[c].value.age === D.age.hidden && !T[c].value.civ); if (result || !last.every((c) => SIDES[side].techs.has(c))) return; const o = { side: EW.sides[side], age: D.ages[D.age.hidden] }; note(PW.chron.done, o); finish(true, PW.done, o); } // E631
 function setCiv(side, civ) { SIDES[side].civ = civ; const g = Object.keys(T).find((c) => T[c].value.given && T[c].value.civ === civ); if (g) learn(side, g); } // E632
-FK.on('start', () => { truceT = null; opened = stood = false; chron.length = null; if (deal) D.players.forEach((side, i) => setCiv(side, deal[i])); deal = null; });
+FK.on('start', () => { truceT = null; opened = stood = false; chron.length = null; if (deal) { const [mine, ...rest] = deal, order = [mine, ...rest.map((k) => [FK.rng(), k]).sort(([a], [b]) => a - b).map(([, k]) => k)]; D.players.forEach((side, i) => setCiv(side, order[i])); } deal = null; });
 FK.on('tick', () => { if (!result && FK.every(D.peaceBeat)) peaceTick(); });
 FK.on('gone', (t) => { const by = t.killer ?? t.by; if (SIDES[by] && SIDES[t.side] && by !== t.side) SIDES[by].war += sumCost(D.cost[t.code]); }); // E633
 FK.on('event', (e, t, a) => { const foe = e === 'struck' ? a && a.side : t && t.by; if ((e === 'struck' || e === 'fell') && t.side === ME && SIDES[foe] && WAR.atWar(ME, foe)) tell(e === 'fell' ? MW2.lost : MW2.raid, { b: FK.SH[t.code].name.toLowerCase(), at: MENU.coord(t.bx, t.by) }, { at: e === 'struck' ? a : t, cls: MW2.urgent, grp: 'war' }); }); // E634

@@ -1129,6 +1129,11 @@
 "bytes": 303,
 "numbers": 0
 },
+"book:citations:N251": {
+"sha": "b72b9dd4f66cc1300e711f23c6f5b239f5655e9dc8e5a792c47250b1b7f4a021",
+"bytes": 263,
+"numbers": 0
+},
 "book:citations:N26": {
 "sha": "4ee1d8c2df664f38cf10fb3ed6b2ecc0c205b707999a783f151407773a11e4d6",
 "bytes": 45,
@@ -5139,9 +5144,24 @@
 "bytes": 116,
 "numbers": 0
 },
+"book:comments:E738": {
+"sha": "eab8d624317fe8e68811482ef15f2392f196e45f78564808993b6d339e8c6fd1",
+"bytes": 132,
+"numbers": 0
+},
+"book:comments:E739": {
+"sha": "de7776ced1a8f20bdc6ed21042e8cebce4f0935fce11d4d52f979500fb446433",
+"bytes": 153,
+"numbers": 0
+},
 "book:comments:E74": {
 "sha": "2009d0d54f3659e9514f84ff5d07c00afbd11e003b2527de2ef4770706c156ce",
 "bytes": 119,
+"numbers": 0
+},
+"book:comments:E740": {
+"sha": "376a4ef026f1f3625cfa9d4233781d6340036136af4c1737f223c3edf457130f",
+"bytes": 128,
 "numbers": 0
 },
 "book:comments:E75": {
@@ -7445,8 +7465,8 @@
 "numbers": 0
 },
 "book:screen:SN4": {
-"sha": "eb6803a44c68f21ea423c1c34962236708bc62accbdd008d5ada009697fe2c4b",
-"bytes": 462,
+"sha": "dcda455a61ff24d04d3417c00437d2e97c27e42ac322bade5ec8a941c3d7516e",
+"bytes": 459,
 "numbers": 0
 },
 "book:screen:SN5": {
@@ -10059,6 +10079,11 @@
 "bytes": 267,
 "numbers": 0
 },
+"book:words:J36": {
+"sha": "b2e7227d5f6015a49a30004b3a744c5a11f35498fbd5224c92a4199d00a81190",
+"bytes": 313,
+"numbers": 0
+},
 "book:words:J4": {
 "sha": "2d45ea4e73e2da1257df4805fa5e5415a45576fe54c1738ac66fbaadc0ec2735",
 "bytes": 98,
@@ -10095,13 +10120,13 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "dd4f0035bab0a1b737435ffb96a3c5a56454a4a328dbc57db6d38fb2cd30fdf2",
-"bytes": 59062,
+"sha": "2997def2e2960b8f9d556e246556ec35da2fd6ddffd5dc544f8e5e6f84a217f1",
+"bytes": 59046,
 "numbers": 84
 },
 "code:econ.js": {
-"sha": "f8115f87f82393fb65772efc2468c65e2c774b7822bc3ce6efca2f71d27b6269",
-"bytes": 105991,
+"sha": "fd0ecbb1a185717ef6b22797427f0032be48b23a03ec6d9f831f5a5a1eac07ba",
+"bytes": 106153,
 "numbers": 72
 },
 "code:index.html#b-the-buildings": {
@@ -10225,8 +10250,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "0c6ec47cc397ec2c78fe5365969d6e8562a6bc60c42ea350c171d6af87ab10a8",
-"bytes": 89027,
+"sha": "a9f10361b5356516fbe54316d5c519ce67b045e42ba94d8739a954c35b40ee9d",
+"bytes": 89659,
 "numbers": 571
 },
 "code:sound.js": {

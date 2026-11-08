@@ -31,6 +31,9 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E711 | index.html#floor-3-non-movables | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; Z1 lays Mid's pile counts, each pile carrying its share, and Z3's finds scale from the same totals |
 | E712 | ai.js | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person; placed by the same site rules the computers always use, so the lanes and the gap from finds hold |
 | E713 | index.html#floor-6-climate | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze terms come from one source |
+| E738 | menu.js | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |
+| E739 | menu.js | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost) |
+| E740 | menu.js | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |
 | E737 | menu.js | a message is a door, as Base's: a tap on it goes to its place and closes it (the Nov 7 re-read, item 14) |
 | E736 | menu.js | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |
 | E735 | menu.js | the hammer carries a bar for the sites going up (the mean of their progress), and People is ringed blue while anyone stands idle (Base, items 19 and 20); with no hazard ticked each is drawn by lot at D309 lot odds, Base's HZ_ODDS, and the first message says the level (item 5) |
