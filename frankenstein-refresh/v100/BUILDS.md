@@ -3380,3 +3380,16 @@ MODIFIED (27):
 LOCKED (2090 of 2117): byte for byte as sealed, 835,984 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2117 items sealed · 1991 book entries · 93 laws · 248 citations, 7 still to open · 7 known
+
+## F2 · the forest as Mid's (D345, E720): the perfect arcs gone · 2026-11-07 20:11
+Albert, Nov 7 19:40: the tree line arcs are the problem; see Mid
+Opened: code:index.html, book:measure, book:comments, book:citations, tool:test.py, book:rules
+MODIFIED (5):
+- book:citations:N249 · added
+- book:comments:E651 · removed
+- book:comments:E720 · added
+- book:measure:D345 · added
+- code:index.html#floor-2-terrain · 8,516 → 9,098 bytes
+LOCKED (2115 of 2119): byte for byte as sealed, 1,365,064 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2119 items sealed · 1993 book entries · 93 laws · 249 citations, 7 still to open · 7 known

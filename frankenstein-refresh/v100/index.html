@@ -174,13 +174,14 @@ function makeTerrain(roll) {
     if (!inZ4(bx, by, D.creviceW) || !inZ4(ex, ey, D.creviceW) || !landAt(bx, by) || !landAt(ex, ey)) continue; made++;
     const pts = wanderLine(roll, [bx, by], [ex, ey], D.riverWander / 3, (x, y) => inZ4(x, y, D.creviceW) && landAt(x, y)); if (pts) for (const [x, y] of pts) stamp(x, y, D.creviceW, (k) => { H[k] = Math.min(H[k], D.creviceFloor); }); }
   // E38
-  const woods = fractal2(roll, 6, 1.3, D.forestScale), ZN = Object.keys(D).filter((z) => /^Z\d$/.test(z)).sort().map((z) => D[z]), may = [];
-  const share = (cd) => { const z = D.zone.filter((e) => cd >= e).length, lo = D.zone[z - ONE] ?? null, hi = D.zone[z] ?? lo, [d0, d1] = ZN[z].trees; return d0 + (d1 - d0) * (hi > lo ? clamp((cd - lo) / (hi - lo), null, ONE) : null); }; // E651
-  for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) { const k = j * N + i; if (H[k] !== D.land) continue;
-    const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), cd = cornerDist(bx, by);
-    if (laneDist(bx, by) < D.lane || Math.hypot(bx - MID, by - MID) < D.middle || DEP[k] < D.edge + D.tile) continue;
-    if (cd >= D.wall[0] && cd <= D.wall[1]) FOR[k] = ONE; else may.push([woods(bx, by), k, share(cd)]); }
-  may.sort((a, b) => a[0] - b[0]).forEach(([, k, d], n) => { if (n / may.length >= ONE - d) FOR[k] = ONE; });
+  const FR = D.forest, [tcu, tcv] = D.tc, jit = (w) => (roll() - D.place.half) * (w + w), ph = FR.field.k.map(() => roll() * A.round * RAD), far = (u, v) => Math.hypot(u - tcu, v - tcv); // E720
+  const field = (u, v) => FR.field.k.reduce((s, kk, i) => s + Math.sin([u, v, u + v, u - v][i] * kk + ph[i]), Math.max(null, far(u, v) - FR.field.far) * FR.field.grow);
+  const wind = ([ax, ay], [bx, by]) => { const pts = [[ax, ay]], nx = ay - by, ny = bx - ax, l = Math.hypot(nx, ny) || ONE; for (let i = ONE; i < FR.bends + ONE; i++) { const t = i / (FR.bends + ONE), w = jit(FR.wander); pts.push([ax + (bx - ax) * t + (nx / l) * w, ay + (by - ay) * t + (ny / l) * w]); } pts.push([bx, by]); return pts; };
+  RING.forEach((_, c) => { const home = [tcu, tcv], paths = [wind(home, [MID, tcv]), wind(home, [tcu, MID]), wind(home, [MID, MID])], T = [];
+    const onPath = (u, v) => paths.some((pts) => pts.some((p, i) => i && segDist(u, v, ...pts[i - ONE], ...p) < FR.path));
+    for (let v = D.edge + FR.edge; v < MID; v += FR.step) for (let u = D.edge + FR.edge; u < MID; u += FR.step) { const tu = u + jit(FR.jitter), tv = v + jit(FR.jitter), [bx, by] = corner(c, tu, tv), k = tileAt(bx, by);
+      if (k < null || H[k] !== D.land || laneDist(bx, by) < D.lane || Math.hypot(bx - MID, by - MID) < D.middle || DEP[k] < D.edge + D.tile || far(tu, tv) < FR.home || onPath(tu, tv)) continue; T.push([field(tu, tv), k]); }
+    T.sort(([a], [b]) => b - a); for (const [, k] of T.slice(null, FR.trees)) FOR[k] = ONE; });
   for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) { const k = j * N + i; if (FOR[k] && [k - 1, k + 1, k - N, k + N].some((q) => H[q] !== D.land)) FOR[k] = 2; } // E39
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
 }

@@ -64,7 +64,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E36** Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry l · D39 (N112) · D40 (N112) · D41 (N112) · QBE (N64) · D23 (N112)
 - **E37** Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads  · D42 (N112) · D45 (N112) · D44 (N112)
 - **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
-- **E651** a tile's tree share: its zone's row (D63–D66), straight from the inner edge's share to the · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231)
+- **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N249) · N249 · D50 (N112)
 - **E39** the wood's edge keeps one tile from any slope or water
 
 ## index.html#floor-3-non-movables

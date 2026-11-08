@@ -594,3 +594,9 @@ One home: 4. ONE is borrowed from the hazards' score base (D309) and used 103 ti
 Fixed tonight: the snow and wet thresholds (one row, G7 full/covers).
 Debts: 5 dead names (YIELD, bodyOf, piles, ICON, PWD), 22 unread book rows (D90–D93, D338, 13 sound rows, 2 screen, P41, J30), duplicate rows D90=D91 and D92=D93.
 Test fixes tonight (R3): t-wait (a paid unit appears further out), t-a1 (the windmill's corrected date), t-guide (every trainer named), t-land (the pocket as Mid's, Z3's table), t-sight (the log law, the eye height stat), and every paged test starts with the Start sheet closed, as a player who pressed Start., t-physics (the blizzard's edge by both NWS gates), t-kinds (sight compared to Mid's in m; the eye height is its own stat), t-orders (was the blind night)., t-walls (the Build card names the age, M1), t-orders (the ambush's foe steps out on the open side). Full run after R3: 46/46.
+
+## F2 (Nov 7 evening), for Albert's look
+- The forest is Mid's (D345): 375 trees a corner on a 26 lattice by the field. The wall band (D50) and the zones' tree shares (Z1–Z4 `trees`) are no longer read: delete in the number sweep.
+- Trees draw smaller than Mid's (Mid's TREE.wide 1.4 × a bush): part of the scaling pass (item 15), waiting.
+- Weather: a game hour is 5 s (day 120 s), rain comes within the first minute in most games (chain 0.12/0.65, Mid's rule by season 0.15–0.3): Albert asked why it is never sunny at the start; decide a drier opening hour or Mid's seasonal chain.
+- The lakes' blocky shores (tile steps) stand out at every zoom: the coast review (item 14).

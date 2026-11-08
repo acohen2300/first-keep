@@ -318,6 +318,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N245 |  | Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water content M = 0.072 R^0.88 g/m³ f | to open |
 | N246 |  | The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the finite-source form E = I ÷ (d² + s | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
+| N249 |  | Design: Mid's forest (mid/src/10-world-forest.js, FOREST, TREE, makeForest: lattice 26, ± 6, 375 trees a corner, paths 34 wide, edge 40, the | opened |
 | N248 |  | Albedo of natural surfaces: fresh snow 0.80–0.90, grass 0.25, bare soil 0.17 (NSIDC, Thermodynamics: Albedo; Wikipedia, Albedo, table of sam | opened |
 | N247 |  | Hecht, Shlaer & Pirenne (1942), Energy, quanta and vision, J. Gen. Physiol. 25: the eye's absolute threshold, a few quanta at the retina, ab | opened |
 | N234 |  | Design: Mid's Guide and History (31-guide.js guideModel, HIST_NOTE, HIST_ASK, yearOf, histRows, histText, guideMd; 07-text.js WHY, TRIGGERS, | opened |
@@ -379,6 +380,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E711 |  | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; |  |
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
+| E720 |  | the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker away from home, the best trees kept, three winding  |  |
 | E719 |  | rain and snow are drawn on the glass, as Mid's: the biggest drop crosses the screen at glass px/s whatever the zoom, the rest by their real  |  |
 | E718 |  | the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (the unit and its wonder; the history stays in the G |  |
 | E717 |  | the eye sees the ground's light, not the sky's: the lux × the albedo of what covers the ground, snow four times grass (D117 albedo, N248), b |  |
@@ -1027,7 +1029,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E648 |  | every lesson beat: a new tip is said, then the first milestone newly true, one a beat |  |
 | E649 |  | a computer chases its crown (Mid's chaseCrown): the wellbeing chaser builds each place of care it lacks; every side takes the hidden age whe |  |
 | E650 |  | The corners: the board's four, clockwise a quarter turn apart from the screen's top left; yours, the first, sits A6 round (the bottom left,  |  |
-| E651 |  | a tile's tree share: its zone's row (D63–D66), straight from the inner edge's share to the outer edge's (QCP) |  |
 | E652 |  | The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by woods gets the fewest trees cleared between it and i |  |
 | E653 |  | Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's specialty once more at one pocket's, at a rolled spot i |  |
 | E654 |  | The land's character (D329, Mid's LAND): past the pocket every find is worth its store's share |  |
@@ -1420,6 +1421,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D340 | the draw rate at rest (SoRen's tick: 50 ms a frame live, 150 ms idle, 250 ms dark): paused, behind a full-screen page or card, or with nothing moving, the world steps and draws idle frames a second; hidden, dark | {idle: 15, dark: 4} | N238 |
 | D335 | the match log: a row a minute (Mid's matchLog), for Claude to read; the tap counts' place on the phone (Mid's TAPS) | {row: 60, taps: fk.taps} | N230 |
 | D341 | the day's fraction at which the sun stands highest, so a match opens in morning light (Mid's CLIMATE.noon; at 0 the sun would be at midnight) | 0.28 | N240 |
+| D345 | the forest as Mid laid it (10-world-forest makeForest): trees on a step lattice jittered ± jitter, where an organic field runs high (four sine waves of these wavenumbers, phases from the dice, plus grow per unit beyond far from the Town Center: thicker away from home), the top trees a corner; none within edge of the land's edge or home of the Town Center (Mid's HOME.clear), on a trade lane, in the middle, or within path of three winding paths (bends bends, wandering ± wander) from home to each neighbour's middle line and to the middle (Albert, Nov 7 19:40: the perfect arcs were the problem) | {step: 26, jitter: 6, trees: 375, edge: 40, home: 220, path: 34, bends: 3, wander: 70, field: {k: [0.011, 0.013, 0.007, 0.009], far: 450, gr | N249 |
 | D343 | the simulation's fixed step, hz a second (Mid's DT), and the most steps one frame catches up (Mid's CATCHUP): a frame between two steps draws each figure the fraction of the way (Mid's DRAW.alpha, Build 63), so a slow phone keeps the same world and smooth walking | {hz: 30, catchup: 6} | N112 |
 | D344 | the match speeds, under the pause (Base's ×1 ×2 ×3, SoRen's spdPop) | [1, 2, 3] | N241 |
 | D342 | each computer begins with these standing beside its Town Center, free and finished: Mid's HANDICAP (a mill and a farm), placed by the AI's own site rules within ai.ring.start of the seat; Go's handicap stones for a player that plays worse than a person (Albert, Nov 7 14:47: give them a mill and a farm; reverses Nov 5's kill) | [BI1, BCL1] | N244 |
