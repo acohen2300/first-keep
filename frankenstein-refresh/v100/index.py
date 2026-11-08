@@ -18,6 +18,7 @@ def items():   # every sealed thing, id → text: a book entry, a law, a section
     for p in parts[1:]: out['code:index.html#' + re.sub(r'\W+', '-', p[5:p.find('\n')][:40].split(':')[0].split('(')[0]).strip('-').lower()] = p
     out.update({'code:' + f: text(f) for f in CODE[1:]}); out.update({'tool:' + f.split('/')[-1]: text(f) for f in TOOLS if text(f) is not None})
     return out
+NCODE = re.compile(r'N\d+')   # a citation code (outside the f-string: Python before 3.12 forbids a backslash inside one)
 NUM = lambda t: len(re.findall(r'(?<![\w.#$-])\d+\.?\d*(?![\w%])', t)) + 3 * len(re.findall(r'#[0-9a-fA-F]{6}\b', t))   # typed numbers; a colour counts three
 SHELL = re.compile(r"['\"](?:" + '|'.join(sorted(BOOKS['shells'], key=len, reverse=True)) + r")['\"]|\b[A-Z]{1,2}\.(?:" + '|'.join(BOOKS['shells']) + r")\b")   # a shell named in code
 BYNAME = re.compile(r"\b(?:kind|type|code)\s*[!=]==?\s*['\"]\w+['\"]")   # a thing asked what it is by a typed name
@@ -179,7 +180,7 @@ uses = {}
 for b, es in BOOKS.items():
     for c, e in es.items():
         for r in e.get('law', []) + re.findall(r'N\d+', ' '.join(e.get('cite', []))): uses.setdefault(r, []).append(c)
-xc = ['# First Keep v100 · 3. Index and Citations (the cross-check)', '', 'Written by `index.py`, never by hand. Every law and every entry matched to its citations, and every citation to what uses it.', '', '## By law', ''] + [f'- **{q}** {l[len(q) + 1:].split(":")[0]} → {", ".join(re.findall(r"N\d+", l.split(" · ")[-1])) or "design"}' + (f' · used by {", ".join(uses[q])}' if q in uses else '') for q, l in LAWS.items()]
+xc = ['# First Keep v100 · 3. Index and Citations (the cross-check)', '', 'Written by `index.py`, never by hand. Every law and every entry matched to its citations, and every citation to what uses it.', '', '## By law', ''] + [f'- **{q}** {l[len(q) + 1:].split(":")[0]} → {", ".join(NCODE.findall(l.split(" · ")[-1])) or "design"}' + (f' · used by {", ".join(uses[q])}' if q in uses else '') for q, l in LAWS.items()]
 xc += ['', '## By citation', ''] + [f'- **{n}** {"" if e["opened"] else "(to open) "}{e["text"][:110]} → {", ".join([q for q, l in LAWS.items() if n in l] + uses.get(n, [])) or "unused"}' for n, e in N.items()]
 xc += ['', '## Named exceptions', '', f'- Tall: {", ".join(e["key"] for e in BOOKS["screen"].values() if "Tall" in (e["value"].get("ticks", []) if isinstance(e["value"], dict) else []))}', f'- Off the Build menu: {", ".join(SN["offmenu"])}']
 xc += ['', '## Sounds waiting for a feature', ''] + [f'- **{e["key"]}** ({c}) waits for {e["waits"]}' for c, e in BOOKS['sound'].items() if e.get('waits')]

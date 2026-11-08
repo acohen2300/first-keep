@@ -349,7 +349,7 @@ FK.on('tap', (k, u, px, py) => {
 });
 function pickToggle(u, hold) { const P = FK.picked(); FK.select(S.more && !hold ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : [u]); S.more = S.more || !!hold; S.subject = null; FK.fire('event', 'pick', u); render(true); }
 const ordAt = (px, py) => { let best = null, bd = TO.ord; for (const O of WAR.ORD) { const d = O.n ? Math.hypot(...onMap(O.k).map((v, n) => v - [px, py][n])) : Infinity; if (d < bd) [best, bd] = [O, d]; } return best; };
-const boardAt = (px, py) => { const [bx, by] = FK.tileMid(tileK(px, py)); return { bx, by }; }, aimK = () => (S.aim.t ? FK.tileAt(S.aim.t.bx, S.aim.t.by) : S.aim.k), toolSet = () => { const P = FK.picked().filter(isSoldier); return P.length ? P : WAR.sendable(); };
+const boardAt = (px, py) => { const [bx, by] = FK.tileMid(tileK(px, py)); return { bx, by }; }, aimK = () => (!S.aim ? null : S.aim.t ? FK.tileAt(S.aim.t.bx, S.aim.t.by) : S.aim.k), toolSet = () => { const P = FK.picked().filter(isSoldier); return P.length ? P : WAR.sendable(); };
 const onB = (k) => k !== -1; // E433
 function aimSpot(k, u) { const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null); S.aim = { k: onB(k) ? k : S.aim.k, t: t && !own(t) && (t.kind === 'unit' || t.kind === 'bld' || isFind(t)) ? t : null }; } // E430
 const aimNear = (px, py) => S.war && S.aim && Math.hypot(...aimAt().map((v, n) => v - [px, py][n])) < HUD.aim, aimAt = () => (S.aim.t ? FK.toScreen(S.aim.t.vx, S.aim.t.vy) : onMap(S.aim.k));

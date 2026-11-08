@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,173 | 502,851 | 502,990 |
+| Game code | 29 | 3,173 | 502,903 | 503,042 |
 | Books | 2011 | 0 | 575,281 | 576,008 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
-| Tools | 4 | 1,763 | 288,182 | 288,423 |
+| Tools | 4 | 1,764 | 288,298 | 288,539 |
 
 ## The trades (code)
 
@@ -37,9 +37,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 117 | 22,154 | 22,158 | 0 |
 | index.html#the-woods-cache | 51 | 4,771 | 4,775 | 71 |
 | index.html#touch | 50 | 7,483 | 7,487 | 54 |
-| menu.js | 477 | 87,214 | 87,257 | 574 |
+| menu.js | 477 | 87,230 | 87,273 | 574 |
 | econ.js | 577 | 105,384 | 105,384 | 72 |
-| combat.js | 354 | 59,025 | 59,025 | 84 |
+| combat.js | 354 | 59,061 | 59,061 | 84 |
 | ai.js | 170 | 27,312 | 27,312 | 25 |
 | sound.js | 57 | 6,050 | 6,050 | 66 |
 

@@ -3560,3 +3560,14 @@ MODIFIED (4):
 LOCKED (2133 of 2137): byte for byte as sealed, 1,240,853 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2137 items sealed · 2011 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B4b · Gemini's Nov 7 evening audit, checked: index.py's citation pattern compiled outside the f-string (Python before 3.12); aimK and reinforce guarded against an empty aim or squad (both unreachable in play, kept as belts) · 2026-11-07 21:29
+Albert, Nov 7 21:27: Gemini's audit
+Opened: tool:index.py, code:menu.js, code:combat.js
+MODIFIED (3):
+- code:combat.js · 59,025 → 59,061 bytes
+- code:menu.js · 87,257 → 87,273 bytes
+- tool:index.py · 26,270 → 26,386 bytes
+LOCKED (2134 of 2137): byte for byte as sealed, 1,215,161 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2137 items sealed · 2011 book entries · 93 laws · 249 citations, 7 still to open · 7 known

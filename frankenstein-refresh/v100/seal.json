@@ -10060,8 +10060,8 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "886f1683e65648c123030961954b31a82726791bb38d83a3f67e1330fa5cca84",
-"bytes": 59025,
+"sha": "56861c9df402df1a6356329b80e5ee2a18d4f3ad7f1b20a897cfcea09c9c0ea9",
+"bytes": 59061,
 "numbers": 84
 },
 "code:econ.js": {
@@ -10190,8 +10190,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "10799dfda690315e1560639486bcdb1d9a22c168562c029af5bb24989be32822",
-"bytes": 87257,
+"sha": "b693358feae8914a36dc8b3959f274c855e6c0eb077655652f89d6a0d3f67fa1",
+"bytes": 87273,
 "numbers": 574
 },
 "code:sound.js": {
@@ -10665,8 +10665,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "f69e28500b5448e43237830e8b4f96ac71a10531d68f848f3c101facec5141ae",
-"bytes": 26270,
+"sha": "59bf8e0f5c8d28e4a22c245772479ca317ed7d33b7e876db1d5f7712865259af",
+"bytes": 26386,
 "numbers": 0
 },
 "tool:pages.yml": {

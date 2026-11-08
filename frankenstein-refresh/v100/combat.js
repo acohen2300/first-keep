@@ -183,7 +183,7 @@ function reinforcePlan(m) { const S = mUnits(m); if (!S.length) return null; con
   for (const r of cand) { if (r.t > live || (pow / foe) * mu >= HU.even) break; list.push(r); pow += power1(r.u); }
   for (const r of list) { const w = waves.at(-1); if (w && (r.t - w.t < HU.gap || waves.length === HU.waves)) w.list.push(r); else waves.push({ t: r.t, list: [r] }); }
   return { c, go: list.map((r) => r.u), waves }; }
-function reinforce(S, m) { const O = order(S, null, kOf(centreOf(mUnits(m)))); if (!O) return; ORD.delete(O); for (const u of S) u.ord = m.ord; }
+function reinforce(S, m) { const U = mUnits(m); if (!U.length) return; const O = order(S, null, kOf(centreOf(U))); if (!O) return; ORD.delete(O); for (const u of S) u.ord = m.ord; }
 // E418
 const ofKind = (cls) => sendable().filter((u) => clsOf(u.code) === cls), aimK = (aim) => (aim.t ? kOf(aim.t) : aim.k), wait = (k) => Math.ceil(Math.max(K.t, AT[k] ?? K.t) - K.t);
 const chargeWhy = (S) => (!S.some((u) => !stat(u).bonly) ? WO.why.charge : AT['charge' + ME] > K.t ? WO.why.winded.replace('{n}', wait('charge' + ME)) : '');
