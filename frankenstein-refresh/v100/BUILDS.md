@@ -3447,3 +3447,14 @@ MODIFIED (7):
 LOCKED (2118 of 2125): byte for byte as sealed, 1,279,901 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2125 items sealed · 1999 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## U1b · the picked villagers' bar exactly Base's: n picked · ✕, the five yields, the hammer, the crosshair (E724, J33) · 2026-11-07 20:40
+
+Opened: code:menu.js, book:words, book:comments
+MODIFIED (3):
+- book:comments:E724 · 314 → 443 bytes
+- book:words:J33 · added
+- code:menu.js · 83,386 → 84,103 bytes
+LOCKED (2123 of 2126): byte for byte as sealed, 1,294,571 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2126 items sealed · 2000 book entries · 93 laws · 249 citations, 7 still to open · 7 known

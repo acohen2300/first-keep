@@ -445,7 +445,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
-- **E724** a picked villager's bar on the rank, as Base's selection bar: Build (the Build card, the p
+- **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
