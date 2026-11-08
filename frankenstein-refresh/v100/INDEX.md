@@ -380,7 +380,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E711 |  | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; |  |
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
-| E727 |  | a blow that flies faster than its thrower walks is a missile: its hit is the arrow's sound, as Base's (the Nov 7 sound audit); research done |  |
+| E728 |  | a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the ground shakes (the jolt, D113 shake), the thunder foll |  |
+| E727 |  | a blow from beyond melee reach (D.flanking.melee, the combat book's own line) is a missile: its hit is the arrow's sound, as Base's (the Nov |  |
 | E726 |  | the place bar says what Base's said (J34): where to press, then the name with 'tap Build, or drag it to move', the pieces of a line; Build a |  |
 | E725 |  | the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turned, so the target sat below the feet and a tap on  |  |
 | E724 |  | a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, Nov 7 20:38): 'n picked' and the cross that lets th |  |
@@ -1217,7 +1218,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D108 | melt a °C·s | 0.004 | N112 |
 | D109 | ice bears a walker at this many freezing °C·s | 200 | N112 |
 | D112 | between flashes | 0.34 | N112 |
-| D113 | between strikes in a summer storm, seconds; the year's cloud-to-ground flashes by season (spring, summer, autumn, winter) over the United States, NLDN 2005–2014: 64% in June–August (Holle & Cummins), the other three read from their Fig. 2; a season's storms strike at the summer rate × its share ÷ the largest share, so lightning comes all year and is rare in winter (QCT) | {summer: 6, share: [0.2, 0.64, 0.13, 0.03]} | N112; N243 |
+| D113 | the startle of a strike is Mid's (25-view-weather): a bolt on the screen whites the picture bolt[0] + bolt[1] × its nearness within near m, a sheet flash sheet[0] + sheet[1] × the dice, and the ground shakes shake s (Albert, Nov 7 20:47: a war game, I want to be startled); between strikes in a summer storm, seconds; the year's cloud-to-ground flashes by season (spring, summer, autumn, winter) over the United States, NLDN 2005–2014: 64% in June–August (Holle & Cummins), the other three read from their Fig. 2; a season's storms strike at the summer rate × its share ÷ the largest share, so lightning comes all year and is rare in winter (QCT) | {summer: 6, share: [0.2, 0.64, 0.13, 0.03], flash: {bolt: [0.6, 0.4], sheet: [0.25, 0.3], near: 900}, shake: 1} | N112; N243 |
 | D114 | marshy lakes | [1, 2] | N112 |
 | D115 | a marsh's width | 40 | N112 |
 | D116 | Fast, for testing | 8 | N112 |

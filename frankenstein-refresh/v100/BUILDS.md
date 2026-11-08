@@ -3484,3 +3484,15 @@ MODIFIED (7):
 LOCKED (2122 of 2129): byte for byte as sealed, 1,265,609 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2129 items sealed · 2003 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## W1 · the strike's startle as Mid's: the white flash to full, the shake, the sheet (D113 flash/shake, E728); E727's wording · 2026-11-07 20:50
+Albert, Nov 7 20:47: lightning a lot better than SoRen's, I want to be startled like in one of the last versions
+Opened: code:index.html, book:measure, book:comments
+MODIFIED (4):
+- book:comments:E727 · 177 → 207 bytes
+- book:comments:E728 · added
+- book:measure:D113 · 507 → 861 bytes
+- code:index.html#floor-6-climate · 24,706 → 24,910 bytes
+LOCKED (2126 of 2130): byte for byte as sealed, 1,355,326 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2130 items sealed · 2004 book entries · 93 laws · 249 citations, 7 still to open · 7 known

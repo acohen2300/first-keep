@@ -1158,8 +1158,8 @@ function climate(dt) {
 // E136
 const bolt = (vx, vy) => { K.bolts.push({ vx, vy, t: K.t, seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); fire('event', 'strike', { vx, vy }); }; // E576
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
-  if (close > 0.4) { bolt(cam.x + (glance() - 0.5) * (cw / cam.z), cam.y + (glance() - 0.5) * (ch / cam.z)); K.flash = Math.max(K.flash, 0.5 + 0.3 * close); }
-  else { K.flash = Math.max(K.flash, 0.2 + 0.3 * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
+  const SF = D.strike.flash; if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); bolt(vx, vy); K.flash = Math.max(K.flash, SF.bolt[0] + SF.bolt[1] * (ONE - Math.min(ONE, Math.hypot(vx - cam.x, vy - cam.y) / D.upm / SF.near))); jolt = { t: D.strike.shake, px: D.jolt.max }; } // E728
+  else { K.flash = Math.max(K.flash, SF.sheet[0] + SF.sheet[1] * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
 // E138
 const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active = (strength) => Math.round(WX.pool * strength);
 function drawSkin() { // E139
@@ -1184,7 +1184,7 @@ function drawSky(dt) { // E140
     ctx.restore(); }
   if (evOn('meteor')) { const e = K.ev.cur, [dx, dy, tail, lw, r] = ER.meteor.streak, f = Math.min(ONE, (K.t - e.t0) / (e.until - e.t0)), [x1, y1] = toScreen(...toView(...e.at, null)), x = x1 - dx * (ONE - f), y = y1 - dy * (ONE - f); // E579
     ctx.strokeStyle = ctx.fillStyle = C.wild.streak; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x - dx * tail, y - dy * tail); ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r, null, A.round * RAD); ctx.fill(); }
-  wash(SKYC.flash, Math.min(0.75, K.flash));
+  wash(SKYC.flash, Math.min(ONE, K.flash));
   const night = (1 - K.light) * 0.7 * (DARK0 - DARK1 * K.moonLit), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); wash(SKYC.veil, veil); // E381
   wash(SKYC.glow, dusk); wash(SKYC.blue, night); wash(SKYC.fog, K.fog * 0.8); if (K.sky === 'frost') wash(SKYC.rime, BD.frost); skyBand(); // E144

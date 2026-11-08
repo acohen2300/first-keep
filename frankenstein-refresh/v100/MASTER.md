@@ -240,7 +240,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E111** The body's laws (Book 1): mass from what a shell is made of (W), the blow that sends a bod · QBT (N81, N82, N83, N18) · QBS (N77, N78, N80)
 - **E112** QBT: the whole striker when it moves, else its weapon; the struck one is sent off at v = m · QBT (N81, N82, N83, N18)
-- **E727** a blow that flies faster than its thrower walks is a missile: its hit is the arrow's sound
+- **E727** a blow from beyond melee reach (D.flanking.melee, the combat book's own line) is a missile
 - **E113** QBT: friction slows it by μ g a second until it rests; anything it cannot stand on stops i · QBT (N81, N82, N83, N18)
 - **E114** the mean speed over the step, so the slide ends where v² ÷ 2μg says
 - **E115** QBS: none while the body holds (classes I, II); grows over class III to the tipping angle; · QBS (N77, N78, N80)
@@ -281,6 +281,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
 - **E576** a bolt where it falls: drawn, the ground scorched, the thunder told
+- **E728** a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the grou · D113 (N112, N243)
 - **E137** a far flash: its thunder from beyond the screen
 - **E138** the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling · QJ (N9)
 - **E139** on the ground, under everything: snow whitens the land (screen), wet darkens it (multiply)
