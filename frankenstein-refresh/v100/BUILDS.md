@@ -3532,3 +3532,19 @@ MODIFIED (5):
 LOCKED (2128 of 2133): byte for byte as sealed, 1,192,736 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2133 items sealed · 2007 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B3 · as Base: the small map in the war station's middle (E731); the Mail door with its unread count and the Mail card (SN5, SN16, E732) · 2026-11-07 21:25
+Albert, Nov 7 21:21: yes, continue (all Base)
+Opened: code:menu.js, code:index.html, book:screen, book:words, book:comments
+MODIFIED (8):
+- book:comments:E731 · added
+- book:comments:E732 · added
+- book:screen:SN16 · added
+- book:screen:SN5 · 299 → 322 bytes
+- book:words:J22 · 785 → 827 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,023 → 22,158 bytes
+- code:index.html#touch · 7,478 → 7,487 bytes
+- code:menu.js · 84,939 → 86,185 bytes
+LOCKED (2128 of 2136): byte for byte as sealed, 1,268,587 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2136 items sealed · 2010 book entries · 93 laws · 249 citations, 7 still to open · 7 known
