@@ -100,7 +100,7 @@ const labOf = (side, c) => lines(side, (t) => t.code === T[c].value.at), lineFor
 function researchWhy(side, c) { const s = SIDES[side], b = labOf(side, c);
   return s.techs.has(c) ? 'known' : T[c].value.civ && T[c].value.civ !== s.civ ? 'civ' : T[c].value.age > s.age ? 'age' : needsOf(c).some((n) => !s.techs.has(n)) ? 'need' : things().some((t) => t.side === side && (t.q || []).includes(c)) ? 'busy' : !b ? 'at' : !room(b) ? 'full' : canPay(side, priceOf(side, c)) ? '' : 'cost'; }
 function research(side, c) { if (researchWhy(side, c)) return false; const b = labOf(side, c); pay(side, priceOf(side, c), 'research'); order(b, c); return true; }
-const learn = (side, c) => { SIDES[side].techs.add(c); FK.learn(side, c); if (T[c].value.age === D.age.hidden) enlightened(side); };
+const learn = (side, c) => { SIDES[side].techs.add(c); FK.learn(side, c); if (side === ME) FK.fire('event', 'research', null); if (T[c].value.age === D.age.hidden) enlightened(side); };
 // E220
 const jobOf = (u) => (u.target && (u.job === 'gather' || u.job === 'carry' || (u.job === 'walk' && (u.then === 'gather' || u.then === 'carry'))) ? u.carry || yieldOf(u.target) : u.job === 'build' || (u.job === 'walk' && u.then === 'build') ? 'build' : null);
 const jobs = (side) => { const n = Object.fromEntries([...YIELDS, 'build', 'idle'].map((k) => [k, 0])); for (const u of villagersOf(side)) { const j = jobOf(u); if (j) n[j]++; else if (u.job === 'idle' || u.job === 'wait') n.idle++; } return n; };

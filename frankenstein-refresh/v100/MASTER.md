@@ -240,6 +240,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E111** The body's laws (Book 1): mass from what a shell is made of (W), the blow that sends a bod · QBT (N81, N82, N83, N18) · QBS (N77, N78, N80)
 - **E112** QBT: the whole striker when it moves, else its weapon; the struck one is sent off at v = m · QBT (N81, N82, N83, N18)
+- **E727** a blow that flies faster than its thrower walks is a missile: its hit is the arrow's sound
 - **E113** QBT: friction slows it by μ g a second until it rests; anything it cannot stand on stops i · QBT (N81, N82, N83, N18)
 - **E114** the mean speed over the step, so the slide ends where v² ÷ 2μg says
 - **E115** QBS: none while the body holds (classes I, II); grows over class III to the tipping angle; · QBS (N77, N78, N80)
@@ -797,7 +798,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E254** the Ring/Silent switch silences the game; the player's music plays on (HX8) · HX8 (N148)
 - **E723** the sound engine is woken the moment it is made: a phone makes it asleep until a gesture r
 - **E255** a battle's many blows never clip a phone speaker
-- **E697** the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touc
+- **E697** the page hidden, the sound engine is suspended and resumed on return (was closed, as SoRen
 - **E256** QAY: each mode dies with time constant tau ÷ Hz, to 80 dB down · QAY (N59)
 - **E257** QAX: the ear sits over the screen's middle at the height a lens of HX1's field of view nee · QAX (N58) · HX1 (N58)
 - **E258** full within the closest zoom's height, then falling as 1 ÷ distance (the inverse-square la

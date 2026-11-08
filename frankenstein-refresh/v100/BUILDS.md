@@ -3469,3 +3469,18 @@ MODIFIED (3):
 LOCKED (2125 of 2128): byte for byte as sealed, 1,295,184 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2128 items sealed · 2002 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## H1 · the sound audit's first fixes: the engine wakes on the finger lifting, is suspended not closed when hidden (E697); build-done buzzes (HX6 keys); research done and a missile's hit are heard (HE1, E727) · 2026-11-07 20:45
+Albert, Nov 7 20:40: a sound audit on Base against v100; do it now
+Opened: code:sound.js, code:econ.js, code:index.html, book:sound, book:comments
+MODIFIED (7):
+- book:comments:E697 · 119 → 269 bytes
+- book:comments:E727 · added
+- book:sound:HE1 · 488 → 530 bytes
+- book:sound:HX6 · 206 → 208 bytes
+- code:econ.js · 105,161 → 105,214 bytes
+- code:index.html#the-body-s-laws · 2,588 → 2,659 bytes
+- code:sound.js · 6,003 → 6,050 bytes
+LOCKED (2122 of 2129): byte for byte as sealed, 1,265,609 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2129 items sealed · 2003 book entries · 93 laws · 249 citations, 7 still to open · 7 known

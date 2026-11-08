@@ -363,7 +363,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E694 |  | a unit's row of numbers with its side's research applied, kept until the research changes: code reads the stats through here, never the raw  |  |
 | E695 |  | at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, as SoRen does; paused, time stands still |  |
 | E696 |  | the screen stays awake while a match runs; let go when paused, at rest or hidden; a browser without the lock plays on |  |
-| E697 |  | the page hidden, the sound engine is closed, not paused (SoRen's sound.off): the next touch builds it again |  |
+| E697 |  | the page hidden, the sound engine is suspended and resumed on return (was closed, as SoRen's sound.off, which left the game silent until the |  |
 | E698 |  | a draw-level change redraws the canvas at its new sharpness; only a real change of the window's size refits the camera, so the view never ju |  |
 | E699 |  | the ghost carries its own label on the map, as Base and Mid: its name and price where it fits, else why not; the player never has to look do |  |
 | E700 |  | only a touch on or near the ghost moves it; a touch away from it falls through to the camera, so the player can look around while placing (M |  |
@@ -380,6 +380,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E711 |  | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; |  |
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
+| E727 |  | a blow that flies faster than its thrower walks is a missile: its hit is the arrow's sound, as Base's (the Nov 7 sound audit); research done |  |
 | E726 |  | the place bar says what Base's said (J34): where to press, then the name with 'tap Build, or drag it to move', the pieces of a line; Build a |  |
 | E725 |  | the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turned, so the target sat below the feet and a tap on  |  |
 | E724 |  | a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, Nov 7 20:38): 'n picked' and the cross that lets th |  |
@@ -1699,13 +1700,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | HA4 | the wind, as hard as it blows: heard when it blows past HX4's wind share of its most, a chance a second its share × gust (Mid's AMB.wind and ambience; the wind is measured, not a feature) | [4, [hiss, 2.4, 0.08, 500, 0.6, 280]] | N146; N203 |
 | HA6 | a stampede: a rolling drum of hooves | [1, [tone, 70, 0.08, sine, 0.3, 40], [hiss, 0.05, 0.18, 400, 1, 200], [tone, 70, 0.08, sine, 0.3, 40, 0.13], [hiss, 0.05, 0.18, 400, 1, 200, | N146 |
 | HA7 | the ground shakes | [1.5, [tone, 38, 1.6, sine, 0.4, 28], [hiss, 1.4, 0.3, 120, 0.6, 60]] | N146 |
-| HE1 | which event plays which sound (a find's own sound and a unit's voice sit on its shell) | {tap: tap, err: err, place: place, built: done, builtWar: doneWar, trained: ready, trainedSol: readySol, age: age, win: win, lose: lose, rai | N97 |
+| HE1 | which event plays which sound (a find's own sound and a unit's voice sit on its shell) | {tap: tap, err: err, place: place, built: done, research: done, hitRanged: arrow, builtWar: doneWar, trained: ready, trainedSol: readySol, a | N97 |
 | HX1 | the ear: the lens's field of view, the air's loss in dB a km, the quietest heard, the speed of sound in m/s | {fov: 60, alphaKm: 5, floor: 0.03, c: 340} | N58 |
 | HX2 | which sounds are ambience and which alerts (the rest are effects) | {amb: [bird, cricket, thunder, wind, hooves, rumble], alert: [age, win, lose, done, doneWar, ready, readySol, coin, horn, tribute, zeal, jin | N145; N146 |
 | HX3 | voices at once; how many each kind leaves free | {max: 14, keep: {alert: 0, fx: 2, amb: 5}} | N145 |
 | HX4 | songs a second a singer in view (a Poisson rate), and the most singers counted; the wind heard past wind of its most, a chance a second its share × gust (Mid's 0.35, and ÷ 4) | {bird: 0.025, cricket: 0.04, singers: 12, wind: 0.35, gust: 0.25} | N12; N145; N203 |
 | HX5 | the air's top: Hz with no snow, Hz under full snow; how much rain masks a quiet sound | {open: 16000, snow: 2500, rainMask: 0.5} | N88; N97 |
-| HX6 | which events are also felt, milliseconds of buzz | {place: 8, done: 25, doneWar: 25, impact: 25, fell: 40, strike: 40, err: 8} | N145 |
+| HX6 | which events are also felt, milliseconds of buzz | {place: 8, built: 25, builtWar: 25, impact: 25, fell: 40, strike: 40, err: 8} | N145 |
 | HX7 | how far a sound carries before it fades to the quietest heard, metres: thunder about 10 miles | {thunder: 16093} | N89 |
 | HX8 | the phone's audio session: ambient obeys the Ring/Silent switch and plays under the player's own music | ambient | N148 |
 | HX9 | the limiter: a battle's many blows never clip a phone speaker (dB, dB, ratio, seconds, seconds) | {threshold: -3, knee: 10, ratio: 4, attack: 0.005, release: 0.25} | N146 |

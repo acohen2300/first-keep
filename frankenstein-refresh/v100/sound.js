@@ -15,7 +15,7 @@ function wake() { // E253
   master = AC.createGain(); master.gain.value = 0.5; master.connect(air);
   NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = FK.glance() * 2 - 1;
 }
-addEventListener('pointerdown', wake, { passive: true }); document.addEventListener('visibilitychange', () => { if (!document.hidden || !AC) return; const c = AC; AC = master = air = NOISE = null; c.close().catch(() => {}); }); // E697
+for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) addEventListener(ev, wake, { passive: true }); document.addEventListener('visibilitychange', () => { if (!AC) return; if (document.hidden) AC.suspend().catch(() => {}); else AC.resume().catch(() => {}); }); // E697
 function out(gn, pan) { if (pan && AC.createStereoPanner) { const p = AC.createStereoPanner(); p.pan.value = pan; gn.connect(p); p.connect(master); } else gn.connect(master); }
 function env(gn, t0, vol, dur) { gn.gain.setValueAtTime(0.0001, t0); gn.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol), t0 + 0.01); gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); }
 function tone(at, pan, f, dur, wave, vol, f2, start = 0, p2 = 0) { const t0 = at + start, o = AC.createOscillator(), gn = AC.createGain(); o.type = wave; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); env(gn, t0, vol, dur); o.connect(gn); out(gn, p2 || pan); o.start(t0); o.stop(t0 + dur + 0.03); voices++; o.onended = () => voices--; }

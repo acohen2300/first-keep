@@ -1067,7 +1067,7 @@ function impact(a, t) { // E112
   const v = (ms * vs) / (ms + massOf(t.code)), dx = t.bx - a.bx, dy = t.by - a.by, dd = Math.hypot(dx, dy) || 1;
   t.slide = { vx: (dx / dd) * v, vy: (dy / dd) * v };
   if (v >= D.jolt.from && inSight(t)) jolt = { t: D.jolt.s, px: Math.min(D.jolt.max, v * D.jolt.px) };
-  fire('event', v >= D.jolt.from ? 'impact' : 'hit', t); return v;
+  fire('event', v >= D.jolt.from ? 'impact' : stat(a.code, a.side, 'rng') > D.flanking.melee ? 'hitRanged' : 'hit', t); return v; // E727
 }
 function slide(u, dt) { // E113
   const sp = Math.hypot(u.slide.vx, u.slide.vy), dec = groundAt(u.k).mu * D.g * dt;
