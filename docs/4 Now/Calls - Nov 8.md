@@ -18,3 +18,6 @@
   - NEW: villagers can fight (an attack button), with rules for their strength and the real math of many against one (Lanchester's laws; v100 already uses the square law).
   - Building health: by material and age (timber less than stone), from real material strength.
   - Potato: keep.
+- Building health by age material: timber, then stone, then brick (cheap and real).
+- Changes from Mid, batch 2, all yes: spoilage cuts compound (a quarter remains); a cold snowstorm is a blizzard in any winter; riders take a horse's grip; ranks add for boosts, cuts compound; units' health and damage stay Mid's until play.
+- NEW: every research shows what it helps (health, speed, gathering, sickness, grip...) and by how much, read from its own effects (O book fx), a tint or icon a stat; a tap opens the Guide for the why and its history.
