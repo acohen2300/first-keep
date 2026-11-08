@@ -1179,6 +1179,16 @@
 "bytes": 45,
 "numbers": 0
 },
+"book:citations:N260": {
+"sha": "6e18217bd2c44b3c5002f737b0d527e9d01d5b21947467e6faa97cf686d85ba4",
+"bytes": 251,
+"numbers": 0
+},
+"book:citations:N261": {
+"sha": "01a44db292020a6f068b6de979f8c51fc6e3648fb1019253d7e86d828b1941b3",
+"bytes": 244,
+"numbers": 0
+},
 "book:citations:N27": {
 "sha": "97043cf6c2fbcbb0188a9a015a0555c6334fea6915e5f5b1e89abfbf59f41dc9",
 "bytes": 43,
@@ -1652,6 +1662,11 @@
 "book:colours:C22": {
 "sha": "42bcaf4dae1f8e739ec49778c7caaadd0ada4fb4a08a46dfa9383081b5c7a75b",
 "bytes": 210,
+"numbers": 0
+},
+"book:colours:C23": {
+"sha": "edfcb0d7b629a420bd00bc606f05da7ce1498ec767d3422e96f3526c7a701a3b",
+"bytes": 462,
 "numbers": 0
 },
 "book:colours:C3": {
@@ -5294,9 +5309,34 @@
 "bytes": 139,
 "numbers": 0
 },
+"book:comments:E758": {
+"sha": "1ef535b8e3786a4a147799cc3a3bdbae4a5145991436ea68940da902177e65c3",
+"bytes": 99,
+"numbers": 0
+},
+"book:comments:E759": {
+"sha": "8f615e68ac7f106d03f0aefd8a78cf69a91bb8621051e61db5092aa6fa7af42f",
+"bytes": 291,
+"numbers": 0
+},
 "book:comments:E76": {
 "sha": "0dbe431dee42808b619c31aaa7c172cdd9032cacc8d72eddfcd289dc9592d54e",
 "bytes": 203,
+"numbers": 0
+},
+"book:comments:E760": {
+"sha": "d35b23ccaca16e0a98e7d283527ce9a7938f4e05ddc64ef625a121abebfd686c",
+"bytes": 82,
+"numbers": 0
+},
+"book:comments:E761": {
+"sha": "40f1112af96d40cb2e12097dbff2370858715f53e2dc5f305bbd8e09d87ed079",
+"bytes": 62,
+"numbers": 0
+},
+"book:comments:E762": {
+"sha": "534bab906b7a4d44f6c9e32d4bc7c1421c4c7e9c284f465b763a7e933110b52b",
+"bytes": 162,
 "numbers": 0
 },
 "book:comments:E77": {
@@ -6862,6 +6902,11 @@
 "book:measure:D347": {
 "sha": "a5e4e8ce0fca53bb87f452cb3cfbee16f0f6b2204633a116a9fc99d31faa5f3f",
 "bytes": 130,
+"numbers": 0
+},
+"book:measure:D348": {
+"sha": "b76127cc3a65a787bdc16e1cdf9eb0c3b526f91127f03b82387d11752ff4d7f5",
+"bytes": 700,
 "numbers": 0
 },
 "book:measure:D35": {
@@ -8774,6 +8819,11 @@
 "bytes": 113,
 "numbers": 0
 },
+"book:sprites:PF1": {
+"sha": "3d4c6d5464550ea5ad01d4ede0765257d75914aa7202c71498573803c534043a",
+"bytes": 382,
+"numbers": 0
+},
 "book:sprites:PN1": {
 "sha": "7516ebe4c0236a2cd8b0796f096a1deb583d5051fcf8bd14927ecff1806dbfb7",
 "bytes": 1460,
@@ -10275,9 +10325,9 @@
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
-"sha": "35b45be772c87bc822fb10c4ae52e0249092393d9087f3b574a0db8e363a01e7",
-"bytes": 8482,
-"numbers": 123
+"sha": "b960f68b81447311cde7f2ad772045d6adc0d99e156039978ba6433b9156979b",
+"bytes": 10560,
+"numbers": 120
 },
 "code:index.html#floor-2-terrain": {
 "sha": "0d2688d3e187eee4839605f84c335b4f55f0df9f98dae9448f1180c185614240",
@@ -10330,9 +10380,9 @@
 "numbers": 26
 },
 "code:index.html#the-building-art": {
-"sha": "b589f634996b1c398f54eaed8d20efa4e631c48fc6013836e9941f3fd6e0895b",
-"bytes": 50850,
-"numbers": 4095
+"sha": "846040fe178ff444e6f7b4a56e534db239198d8d92740dfee2445ae48fbd1dc9",
+"bytes": 51208,
+"numbers": 4094
 },
 "code:index.html#the-coast": {
 "sha": "ebe06e4a24314246944b4f948f29e2b9e2eb334e603e796c389dc400b92cf612",
@@ -10345,9 +10395,9 @@
 "numbers": 68
 },
 "code:index.html#the-figures": {
-"sha": "cb62c68fcb688ab38f943e1b34aedebdbc60c2c6354dccc94a7e7d63dd1ce3ab",
-"bytes": 23313,
-"numbers": 1543
+"sha": "8cdb7c57362149489f7ac3f369145cbc162fa4f51ca91fb45a089472bfbf62fb",
+"bytes": 23518,
+"numbers": 1542
 },
 "code:index.html#the-frames": {
 "sha": "0b98d309aa9a8cf194491dcff5f90f3bcf11b901028d27c483611a63b3ad8b6d",

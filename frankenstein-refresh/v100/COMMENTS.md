@@ -44,6 +44,11 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E755 | index.html#the-things-drawn-each-frame-back-to-fr | how tall a drawing is: from its first to its last painted row |
 | E756 | index.html#the-things-drawn-each-frame-back-to-fr | the figures' scale: a villager's body height over its drawing's, one for every figure (riders, animals and engines are drawn at the same art scale) |
 | E757 | index.html#the-things-drawn-each-frame-back-to-fr | a find's scale: its body's height (tree, bush, outcrop) over its own drawing's; a find with no body is drawn as the figures are |
+| E758 | index.html#drawn-once-in-the-view-frame | a slope takes the light by the buildings' law: warm toward the sun, cool toward the sky |
+| E759 | index.html#drawn-once-in-the-view-frame | the shore and the strata as contours: between four tiles' middles the lowest band is laid, then each higher band above its level, so the coast and the sand, dirt and grass edges cut across the tiles instead of stepping; foam on the water's edge; a cliff or a wood keeps its tiles |
+| E760 | index.html#the-building-art | a stone wall laid course by course, each stone with its own faint tint |
+| E761 | index.html#the-building-art | damp moss rising from a wall's foot, fading upward |
+| E762 | index.html#the-figures | a person in true proportion: long legs, a torso, a small head, a slim build, from the Sprites book; the head and its helm drawn smaller about the neck |
 | E741 | index.html#floor-6-climate | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |
 | E742 | index.html#floor-6-climate | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |
 | E743 | index.html#floor-6-climate | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not there |

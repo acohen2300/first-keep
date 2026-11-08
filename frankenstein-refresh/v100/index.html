@@ -265,12 +265,13 @@ function renderGround() {
   // E58
   const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 1, b[1]); g.lineTo(c[0] + 1, c[1] + 1); g.lineTo(d[0], d[1] + 1); g.closePath(); g.fill(); };
   const BL = new Map(), bladesAt = (s) => BL.get(s) || BL.set(s, bladeAt(s)).get(s), bladeAt = (s) => { const bladeTile = document.createElement('canvas'); bladeTile.width = bladeTile.height = Math.ceil(64 * s); const q = bladeTile.getContext('2d'), r = NS_rng(7); q.scale(s, s); q.lineCap = 'round'; q.lineWidth = 1; // E59
-    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale(FIG() / s)); return p; };
+    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } for (const [col, n, rad] of C.ground.specks) for (let i = n; i--; ) { q.fillStyle = col; q.beginPath(); q.arc(r() * bladeTile.width / s, r() * bladeTile.width / s, rad, -Math.PI, Math.PI); q.fill(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale(FIG() / s)); return p; };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
-  const LIT = 0.03; // E60
+  const LIT = 0.03, LAY = D.lay; // E60
   const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
-    const c = k * 4, lean = (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; return shade(base, clamp(1 + LIT * lean, 0.7, 1.3)); };
+    return lit(base, clamp(LIT * leanOf(k), -LAY.lean, LAY.lean)); }; // E758
+  function leanOf(k) { const c = k * 4; return (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; }
   paintGround = (into, s, i0, iN, j0, j1, masks) => { g = into; blades = bladesAt(s); // E748
   for (let j = j0; j <= j1; j++) {
     for (let i = i0; i <= iN; ) { // E61
@@ -287,14 +288,21 @@ function renderGround() {
       face(i * T, (j + 1) * T, (i + 1) * T, (j + 1) * T, CH[k + 2], CH[k + 3], ch(i, j + 1, 0), ch(i, j + 1, 1));
       face((i + 1) * T, j * T, (i + 1) * T, (j + 1) * T, CH[k + 1], CH[k + 3], ch(i + 1, j, 0), ch(i + 1, j, 2));
     }
-  } };
+  }
+  for (let j = Math.max(ZERO, j0 - ONE); j < Math.min(N - ONE, j1 + ONE); j++) for (let i = Math.max(ZERO, i0 - ONE); i < Math.min(N - ONE, iN + ONE); i++) contour(i, j); };
   paintGround(g, ONE, ZERO, N - ONE, ZERO, N - ONE, true); mottle(g);
+  function contour(i, j) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], ks = cell.map(([x, y]) => y * N + x), v = ks.map((k) => H[k]), up = v.map((h) => Math.max(null, h)), bs = v.map(stratum), lo = Math.min(...bs), hi = Math.max(...bs); // E759
+    if (lo === hi || ks.some((k) => FOR[k]) || Math.max(...up) - Math.min(...up) > REPOSE * LAY.steep) return;
+    const lean = clamp((LIT * ks.reduce((a, k) => a + leanOf(k), null)) / ks.length, -LAY.lean, LAY.lean), at = ({ x, y, h }) => P(x * T, y * T, Math.max(null, h)), pts = cell.map(([x, y], n) => ({ x: x + DRW.half, y: y + DRW.half, h: v[n] }));
+    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; g.fillStyle = b ? lit(ks.some((k) => MARSH[k]) ? REED : TOP[b], lean) : WATER[ZERO]; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); if (TOP[b] === C.grass) { g.globalAlpha = D.blades; g.fillStyle = blades; g.fill(); g.globalAlpha = ONE; } };
+    const above = (poly, L) => poly.flatMap((p, n) => { const q = poly[(n + ONE) % poly.length], out = p.h > L ? [p] : []; if ((p.h > L) !== (q.h > L)) { const t = (L - p.h) / (q.h - p.h); out.push({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t, h: L }); } return out; });
+    fill(pts, lo); for (let b = lo + ONE; b <= hi; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L); fill(poly, b); const edge = poly.filter((p) => p.h === L); if (!L && edge.length > ONE) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } }
   function face(x1, y1, x2, y2, topL, topR, botL, botR) {
     if (topL <= botL && topR <= botR) return;
     for (const [lo, hi, s] of STRATA) {
       const tl = clamp(topL, lo, hi), bl = clamp(botL, lo, hi), tr = clamp(topR, lo, hi), br = clamp(botR, lo, hi);
       if (tl - bl < 0.01 && tr - br < 0.01) continue;
-      quad(P(x1, y1, tl), P(x2, y2, tr), P(x2, y2, br), P(x1, y1, bl), FACE[s]);
+      quad(P(x1, y1, tl), P(x2, y2, tr), P(x2, y2, br), P(x1, y1, bl), lit(TOP[s], LAY.face));
     }
   }
 }
@@ -484,12 +492,14 @@ g.strokeStyle = thatch ? `rgba(90,60,20,${0.2 + 0.1 * u})` : 'rgba(40,20,10,.3)'
 for (let j = 0; j < n; j++) { const sx = xa + ((xb - xa) * j) / n, ex = xa + ((xb - xa) * (j + 1)) / n; g.quadraticCurveTo((sx + ex) / 2, y + (thatch ? 0.9 : 0.5) * (1 - u * 0.4), ex, y); }
 g.stroke(); if (!thatch) L_(xa, y - 0.25, xb, y - 0.25, 'rgba(255,220,180,.16)', 0.25); } if (thatch) { const R = NS_rng(5); for (let i = 0; i < 40; i++) { const t = R(), u = R(),
 x = e0[0] + (e1[0] - e0[0]) * t + (r0[0] - e0[0]) * u, y = e0[1] + (r0[1] - e0[1]) * u; L_(x, y, x + 0.2, y - 1.1 * (1 - u), R() > 0.5 ? 'rgba(255,240,180,.35)' : 'rgba(90,60,20,.3)', 0.22); } } }
+// E760
 function texture(tex, x0, y0, x1, y1, wall) { g.save(); g.beginPath(); g.rect(x0, y0, x1 - x0, y1 - y0); g.clip(); if (tex === 'stone') { g.strokeStyle = 'rgba(40,36,30,.35)'; g.lineWidth = 0.35;
-for (let y = y1, r = 0; y > y0; y -= 2.6, r++) { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); for (let x = x0 + (r % 2) * 2.2; x < x1; x += 4.4) { g.beginPath(); g.moveTo(x, y);
-g.lineTo(x, y - 2.6); g.stroke(); } } } if (tex === 'plank') { g.strokeStyle = 'rgba(40,24,10,.4)'; g.lineWidth = 0.35; for (let x = x0; x < x1; x += 2.2) { g.beginPath(); g.moveTo(x, y0);
+const [sh, sw] = [2.6, 4.4], TINT = C.ground.stone; for (let y = y1, r = 0; y > y0; y -= sh, r++) { g.beginPath(); g.moveTo(x0, y); g.lineTo(x1, y); g.stroke(); for (let x = x0 + (r % 2) * 2.2, n = r; x < x1; x += sw, n++) { g.fillStyle = TINT[n % TINT.length]; g.fillRect(x, y - sh, sw, sh); g.beginPath(); g.moveTo(x, y);
+g.lineTo(x, y - sh); g.stroke(); } } } if (tex === 'plank') { g.strokeStyle = 'rgba(40,24,10,.4)'; g.lineWidth = 0.35; for (let x = x0; x < x1; x += 2.2) { g.beginPath(); g.moveTo(x, y0);
 g.lineTo(x, y1); g.stroke(); } } if (tex === 'timber') { g.strokeStyle = '#4a3420'; g.lineWidth = 0.9; g.beginPath(); g.moveTo(x0, y0 + 0.5); g.lineTo(x1, y0 + 0.5); g.moveTo(x0 + 0.5, y0);
 g.lineTo(x0 + 0.5, y1); g.moveTo(x1 - 0.5, y0); g.lineTo(x1 - 0.5, y1); g.moveTo(x0, (y0 + y1) / 2); g.lineTo(x1, (y0 + y1) / 2); g.moveTo(x0, y1); g.lineTo((x0 + x1) / 2, y0); g.stroke(); }
-if (tex === 'mud') { g.fillStyle = 'rgba(90,60,30,.18)'; for (let i = 0; i < 30; i++) g.fillRect(x0 + ((i * 7.3) % (x1 - x0)), y0 + ((i * 3.7) % (y1 - y0)), 1.2, 0.5); } g.restore(); }
+if (tex === 'mud') { g.fillStyle = 'rgba(90,60,30,.18)'; for (let i = 0; i < 30; i++) g.fillRect(x0 + ((i * 7.3) % (x1 - x0)), y0 + ((i * 3.7) % (y1 - y0)), 1.2, 0.5); }
+if (tex === 'stone' || tex === 'timber' || tex === 'plank') { const top = y1 - (y1 - y0) * D.lay.moss; g.fillStyle = LG(x0, y1, x0, top, [C.ground.moss, C.ground.clear]); g.fillRect(x0, top, x1 - x0, y1 - top); } g.restore(); } // E761
 const ridgeRoof = (x1, ye, ya, d, col) => { const k = d * ART_S; P_( [ [-x1, ye], [-x1 + k, ye - d], [k, ya - d], [0, ya], ], lit(col, 0.13), LINE, 0.5, ); P_( [ [x1, ye], [x1 + k, ye - d],
 [k, ya - d], [0, ya], ], lit(col, -0.32), LINE, 0.5, ); };
 const door = (x, yf, w, h, col = '#3a2614') => { P_( [ [x - w / 2, yf], [x + w / 2, yf], [x + w / 2, yf - h + w / 2], [x, yf - h], [x - w / 2, yf - h + w / 2], ], col, LINE, 0.4, ); };
@@ -792,7 +802,8 @@ LEATHER = '#6b4a2c';
 const steel = (x0, y0, x1, y1) => LG(x0, y0, x1, y1, ['#eef2f5', '#a9b2bb', '#66707a']);
 const bronzeG = (x0, y0, x1, y1) => LG(x0, y0, x1, y1, ['#f0c477', '#c08a3a', '#7d5420']);
 let KIT = 0; // E366
-function person(o, fr) { if (KIT) { o = { ...o }; const tr = o.trim || o.tunic; for (const st of SPRITE.kit.slice(0, KIT)) for (const [k, m] of Object.entries(st)) o[k] = paintOf(m, tr)[o[k] || ''] || o[k]; } const tunic = o.tunic, trim = o.trim || tunic, sk = o.skin || SKIN, hip = o.seated ? -13 : -9, sh = hip - 7.5; const sw = fr === 1 ? 3 : fr === 2 ? -3 : 0, atk = fr === 3;
+const BODY = SPRITE.body; // E762
+function person(o, fr) { if (KIT) { o = { ...o }; const tr = o.trim || o.tunic; for (const st of SPRITE.kit.slice(0, KIT)) for (const [k, m] of Object.entries(st)) o[k] = paintOf(m, tr)[o[k] || ''] || o[k]; } const tunic = o.tunic, trim = o.trim || tunic, sk = o.skin || SKIN, hip = o.seated ? -13 : BODY.hip, sh = hip - BODY.torso; g.save(); g.scale(BODY.slim, ONE); const sw = fr === 1 ? 3 : fr === 2 ? -3 : 0, atk = fr === 3;
 const leg = (x0, dx, c) => { if (o.seated) { P_( [ [x0 - 1.4, hip], [x0 + 1.4, hip], [x0 + 4.4, hip + 1.6], [x0 + 3, hip + 3], ], c, INK, 0.4, ); P_( [ [x0 + 3, hip + 1.5], [x0 + 4.6, hip + 1.5],
 [x0 + 4.2, hip + 7], [x0 + 2.8, hip + 7], ], c, INK, 0.4, ); E_(x0 + 3.9, hip + 7.4, 1.4, 0.8, o.boots || '#2c2118'); return; } P_( [ [x0 - 1.3, hip], [x0 + 1.3, hip], [x0 + dx * 0.6 + 1.1, hip + 5],
 [x0 + dx - 0.2 + 1, -0.6], [x0 + dx - 1.4, -0.6], [x0 + dx * 0.6 - 1.2, hip + 5], ], c, INK, 0.4, ); P_( [ [x0 + dx - 1.6, -1.8], [x0 + dx + 1.4, -1.8], [x0 + dx + 2.8, 0], [x0 + dx - 1.6, 0], ],
@@ -809,12 +820,12 @@ for (let y = sh + 1.6; y < hip; y += 1.3) for (let x = -3; x < 3.5; x += 1.4) { 
 if (o.body === 'plate' || o.body === 'segm' || o.body === 'mail' || o.body === 'scale') P_( [ [-3.2, hip - 2.6], [3.4, hip - 2.6], [3.6, hip + 2.2], [-3.4, hip + 2.2], ],
 LG(0, hip - 3, 0, hip + 2, [shade(trim, 1.15), trim]), INK, 0.4, ); if (o.sash) L_(-3, sh + 1.2, 3.4, hip - 0.6, o.sash, 1.3); if (KIT) { E_(0.6, sh + 1.4, 2.5, 1.5, KIT >= 3 ? steel(-2, sh, 3, sh + 3) : KIT === 2 ? '#9aa2a8' : LEATHER, INK, 0.4); if (KIT >= 3) L_(-1.6, sh + 0.7, 2.8, sh + 0.9, 'rgba(255,255,255,.7)', 0.4); } L_(-3.5, hip - 0.4, 3.8, hip - 0.5, '#3b2a14', 1); if (o.cross) { P_( [
 [-0.6, sh + 1.5], [0.6, sh + 1.5], [0.6, hip - 1.2], [-0.6, hip - 1.2], ], o.cross, ); P_( [ [-2.5, sh + 3.4], [2.7, sh + 3.4], [2.7, sh + 4.5], [-2.5, sh + 4.5], ], o.cross, ); } const hx = 0.5,
-hy = sh - 2.9; P_( [ [-0.6, sh + 0.6], [1.4, sh + 0.6], [1.2, sh - 1], [-0.4, sh - 1], ], shade(sk, 0.85), );
+hy = sh - 2.9; P_( [ [-0.6, sh + 0.6], [1.4, sh + 0.6], [1.2, sh - 1], [-0.4, sh - 1], ], shade(sk, 0.85), ); g.save(); g.translate(hx, sh); g.scale(BODY.head / BODY.slim, BODY.head); g.translate(-hx, -sh);
 E_(hx, hy, 2.6, 2.7, LG(hx - 2, hy - 2, hx + 2, hy + 2, [shade(sk, 1.08), sk, shade(sk, 0.82)]), shade(sk, 0.5), 0.4); if (o.beard) P_( [ [hx - 0.4, hy + 1], [hx + 2.4, hy + 0.8],
-[hx + 1.2, hy + 3.4], [hx - 0.6, hy + 2.6], ], o.beard, ); E_(hx + 1.4, hy - 0.4, 0.42, 0.42, '#1a1a1a'); helm(o.head, hx, hy, o); if (o.shield) shield(o.shield, o, sh, hip, atk);
+[hx + 1.2, hy + 3.4], [hx - 0.6, hy + 2.6], ], o.beard, ); E_(hx + 1.4, hy - 0.4, 0.42, 0.42, '#1a1a1a'); helm(o.head, hx, hy, o); g.restore(); if (o.shield) shield(o.shield, o, sh, hip, atk);
 else if (o.weapon2) { P_( [ [0.2, sh + 0.6], [1.8, sh + 0.2], [3.4, sh + 4.6], [2.2, sh + 5], ], shade(tunic, 0.95), INK, 0.4, ); weapon(o.weapon2, [3, sh + 4.8], atk, sh);
 E_(3, sh + 4.8, 0.9, 0.9, sk); } else { P_( [ [0.2, sh + 0.6], [1.8, sh + 0.2], [2.2, sh + 6.4], [0.8, sh + 6.6], ], shade(tunic, 0.95), INK, 0.4, ); E_(1.6, sh + 6.9, 0.9, 0.9, sk); }
-if (o.lean) g.restore(); }
+if (o.lean) g.restore(); g.restore(); }
 function helm(kind, x, y, o) { switch (kind) { case 'hood': P_( [ [x - 3, y + 1.6], [x - 2.8, y - 2.4], [x, y - 3.4], [x + 2.6, y - 2], [x + 2.2, y - 0.6], [x - 1, y - 1], [x - 1.4, y + 2], ],
 o.hoodCol || shade(o.tunic, 0.8), INK, 0.4, ); break; case 'cap': P_( [ [x - 2.8, y - 0.6], [x - 2.2, y - 2.8], [x + 0.2, y - 3.5], [x + 2.6, y - 2.2], [x + 3.2, y - 1.2], ],
 o.capCol || shade(o.tunic, 0.8), INK, 0.4, ); break; case 'straw': E_(x, y - 1.6, 4.2, 0.9, '#d8c27a', '#7a6430', 0.4); P_( [ [x - 2, y - 1.8], [x - 1.4, y - 3.6], [x + 1.4, y - 3.6],

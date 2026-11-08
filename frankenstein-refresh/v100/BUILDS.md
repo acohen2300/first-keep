@@ -3774,3 +3774,24 @@ MODIFIED (23):
 LOCKED (2156 of 2177): byte for byte as sealed, 1,370,945 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2177 items sealed · 2051 book entries · 93 laws · 259 citations, 11 still to open · 7 known
+
+## B16 · the land not blocky: shore and strata as contours, foam on the water's edge, the ground lit by the buildings' warm/cool law, pebbles and flowers in the grass, stone tint and moss on walls; people in true proportion (7.5 heads) · 2026-11-08 11:58
+Albert, Nov 8 11:35 (the coast looks like Minecraft) and 11:41 (go all)
+Opened: code:index.html#drawn-once-in-the-view-frame, code:index.html#the-building-art, book:measure, book:colours, book:citations, book:comments, book:sprites, code:index.html#the-figures
+MODIFIED (13):
+- book:citations:N260 · added
+- book:citations:N261 · added
+- book:colours:C23 · added
+- book:comments:E758 · added
+- book:comments:E759 · added
+- book:comments:E760 · added
+- book:comments:E761 · added
+- book:comments:E762 · added
+- book:measure:D348 · added
+- book:sprites:PF1 · added
+- code:index.html#drawn-once-in-the-view-frame · 8,482 → 10,560 bytes
+- code:index.html#the-building-art · 50,850 → 51,208 bytes
+- code:index.html#the-figures · 23,313 → 23,518 bytes
+LOCKED (2174 of 2187): byte for byte as sealed, 1,326,778 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2187 items sealed · 2061 book entries · 93 laws · 261 citations, 12 still to open · 7 known

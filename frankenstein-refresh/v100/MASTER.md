@@ -104,9 +104,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
 - **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102)
 - **E60** the light stands high to the left and in front: ground leaning that way is lit, ground lea
+- **E758** a slope takes the light by the buildings' law: warm toward the sun, cool toward the sky
 - **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
+- **E759** the shore and the strata as contours: between four tiles' middles the lowest band is laid,
 - **E749** the ground's chunk cache and the height range its windows are found from
 - **E750** a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, 
 - **E751** the ground: the one picture while it is not stretched past sharp, else the chunks in view 
@@ -161,6 +163,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E72** The building art (preview 49, 19-building-art.js; Nov 3, the last build before the camera  · PB3 (N151, N160) · PB4 (N151, N160) · PB6 (N151, N160) · PB12 (N151, N160)
 - **E294** research shows on its building (Mid's UP, PB12): the steps learned of those its row names, · PB12 (N151, N160) · PB3 (N151, N160) · PB4 (N151, N160) · PB6 (N151, N160)
 - **E295** the keep at its level: the bastion from its points in the Sprites book (PB13) · PB13 (N151, N160)
+- **E760** a stone wall laid course by course, each stone with its own faint tint
+- **E761** damp moss rising from a wall's foot, fading upward
 - **E622** a banner on a building that flies live leaves its place to the view (Mid's FLAGS)
 - **E73** a building picture's height, from its look
 
@@ -172,6 +176,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E75** The figures (preview 49, 18-figures.js): people and beasts drawn from data, feet at (0, 0)
 - **E366** the armour kit a side has learned (Mid's KIT): 0 to 3 steps of the Sprites book's kit, eac
+- **E762** a person in true proportion: long legs, a torso, a small head, a slim build, from the Spri
 - **E76** the brushes: one drawing routine a shape; a look in books/sprites.js names its brush and t
 - **E367** one drawing list for every figure that is not a person or a beast (the engines, the chario
 - **E368** a look by its rank: level 0 the look itself, level n the nth of its rank list, past the li
