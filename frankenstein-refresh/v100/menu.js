@@ -75,12 +75,12 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 .strip { display: grid; grid-template-columns: repeat(8, 1fr); background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; } .strip .cell { background: none; border: 0; border-radius: 0; height: 30px; } .strip .cell + .cell { border-left: 1px solid var(--b2); } .strip.big .cell { height: var(--slot); } .strip:not(.big) .cell { flex-direction: row; gap: 4px; }
 #card { background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; padding: 8px 10px; display: none; flex-direction: column; gap: var(--gap); } #card.on { display: flex; } #card h2 { font: 400 18px var(--display); color: var(--g1); margin: 0; } #card p { margin: 0; color: var(--wdim); } .row { display: flex; gap: var(--gap); } .row .cell { flex: 1; } .cell.w1 { flex: 0 0 var(--slot); }
 #qa { position: fixed; display: none; gap: var(--gap); } #qa.on { display: flex; } #qa .cell { width: var(--slot); }
-#toast { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 2 * var(--slot) + 3 * var(--gap)); transform: translateX(-50%); background: var(--b1); border: 1px solid var(--g1); color: var(--g1); border-radius: 9px; padding: 6px 12px; font: 600 14px var(--ui); opacity: 0; transition: opacity .3s; pointer-events: none; max-width: 80vw; z-index: 4; }`;
+#toast { position: fixed; left: var(--gap); top: calc(env(safe-area-inset-top, 0px) + 2 * var(--slot) + 3 * var(--gap)); background: var(--b1); border: 1px solid var(--g1); color: var(--g1); border-radius: 9px; padding: 6px 12px; font: 600 14px var(--ui); opacity: 0; transition: opacity .3s; pointer-events: none; max-width: 45vw; z-index: 4; }`;
 document.head.appendChild(css);
 const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id="card"></div><div id="panel"></div><div id="rank"></div><div id="base"></div>'; document.body.appendChild(ui);
 const topEl = document.createElement('div'); topEl.className = 'topbar'; document.body.appendChild(topEl);
 const toastEl = document.createElement('div'); toastEl.id = 'toast'; document.body.appendChild(toastEl);
-const spdEl = document.createElement('div'); spdEl.id = 'spd'; spdEl.className = 'cells seg'; spdEl.style.setProperty('--n', D.speeds.length); document.body.appendChild(spdEl); // E718
+const spdEl = document.createElement('div'); spdEl.id = 'spd'; spdEl.className = 'cells seg'; spdEl.style.setProperty('--n', [...D.speeds, 'new'].length); document.body.appendChild(spdEl); // E718
 const $ = (id) => document.getElementById(id);
 const S = { tab: 'Start', prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hz: new Set() }, group: 'Land', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
@@ -119,7 +119,7 @@ const VERBS = {
   lock: { label: () => 'Lock', whyNot: () => '', run: (c) => { S.lock[c] = !S.lock[c]; try { localStorage.setItem('fk.lock', JSON.stringify(S.lock)); } catch (e) {} } },
   fast: { label: () => 'Fast', whyNot: () => '', run: () => { show.fast = !show.fast; } },
   speed: { label: (n) => `×${n}`, whyNot: () => '', run: (n) => { show.speed = Number(n); if (FK.paused()) FK.pause(false); S.tab = null; } }, /* Base's spd (E718) */
-  new: { label: () => 'New', whyNot: () => '', run: () => { S.prev = S.tab; S.tab = 'Start'; } },
+  new: { label: () => 'New', whyNot: () => '', run: () => { S.prev = S.tab; S.tab = 'Start'; FK.pause(true); } },
   copylog: { label: () => WT.copy, whyNot: () => '', run: () => copyLog() },
   close: { label: () => SVG.close, whyNot: () => '', run: () => { S.tab = null; S.subject = null; S.ghost = null; FK.dirty(); } },
   back: { label: () => SVG.back, whyNot: () => '', run: () => { S.tab = S.prev; S.prev = null; } },
@@ -141,7 +141,7 @@ const VERBS = {
   work: { label: () => `<span class="t">${SVG[AW.cells.work.icon]}</span>${AW.cells.work.name}`, whyNot: () => '', run: () => ECON.allClear() },
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // E189
   hazard: { label: (id) => `${OPTS.hazard.find(([, k]) => k === id)[0]}<small>${D.hazards.pts[id]}</small>`, whyNot: () => '', run: (id) => { S.opt.hz.has(id) ? S.opt.hz.delete(id) : S.opt.hz.add(id); } }, // E705
-  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1], mine = civOf(S.opt.civ); ECON.deal([mine, ...PEOPLES().filter((k) => k !== mine).map((k) => [FK.rng(), k]).sort(([a], [b]) => a - b).map(([, k]) => k)]); ECON.setBell(o('len') || Infinity); S.tab = null; if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
+  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1], mine = civOf(S.opt.civ); ECON.deal([mine, ...PEOPLES().filter((k) => k !== mine).map((k) => [FK.rng(), k]).sort(([a], [b]) => a - b).map(([, k]) => k)]); ECON.setBell(o('len') || Infinity); S.tab = null; FK.pause(false); if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
   job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (n > 0 && !ECON.villagersOf(ME).length ? 'No villagers' : n < 0 && !ECON.jobs(ME)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(ME, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
   yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(ME)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[ME].rally = SIDES[ME].rally === y ? null : y; } }, // E191
@@ -166,8 +166,9 @@ const VERBS = {
   unpick: { label: () => SVG.close, whyNot: () => '', run: () => { FK.select(null); S.more = false; FK.dirty(); } },
   follow: { label: () => `<span class="t">${SVG.direct}</span>`, whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
   map: { label: () => 'Map', whyNot: () => '', run: () => { FK.show.M = !FK.show.M; FK.dirty(); } },
-  pause: { label: () => (FK.paused() ? SVG.play : TP_.mark), whyNot: () => '', run: () => { FK.pause(); S.tab = FK.paused() ? 'Pause' : null; } }, // E702
-  newgame: { label: () => (S.sure ? TP_.sure : TP_.newGame).replace(' ', '<small>') + '</small>', whyNot: () => '', run: () => { if (!S.sure) { S.sure = true; return; } S.sure = false; FK.pause(false); S.prev = null; S.tab = 'Start'; } }, // E703
+  pause: { label: () => (FK.paused() ? SVG.play : TP_.mark), whyNot: () => '', run: () => { FK.pause(); } }, // E702
+  resume: { label: () => WD.back.resume, whyNot: () => '', run: () => { S.tab = null; FK.pause(false); } },
+  newgame: { label: () => (S.sure ? TP_.sure : TP_.newGame).replace(' ', '<small>') + '</small>', whyNot: () => '', run: () => { if (!S.sure) { S.sure = true; return; } S.sure = false; S.prev = null; S.tab = 'Start'; FK.pause(true); } }, // E703
   recall: { label: () => 'Recall', whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
   train: { label: (c, b) => `${FK.rankName(c, ME)}${price(ECON.priceOf(ME, c, b))}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, ECON.priceOf(ME, c, b)) ? `Needs ${costText(ECON.priceOf(ME, c, b))}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a home' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },
   untrain: { label: () => '−', whyNot: (b) => (!b.q || !b.q.length ? 'Nothing queued' : ''), run: (b) => ECON.unqueue(b) },
@@ -217,7 +218,7 @@ const SCREENS = {
     if (S.htab !== 'Town') return [title, tabs, stances(S.htab)];
     return [title, tabs, row(...queue6(h.queue || [], h.done, h.more)), frame([h.k ? vcell('train', born(), h.k, 'two') : '<i></i>', vcell('later', 'Scout', null, 'two'), '<i></i>',
       vcell('ageUp', null, null, 'two', !!r.aging), vcell('later', 'Tech', null, 'two'), vcell('later', 'Tech', null, 'two'), vcell('later', 'Tech', null, 'two'), vcell('later', 'All tech', null, 'two'), '<i></i>'])]; },
-  Pause: () => [row(span(2, cell(TP_.title, 'title')), vcell('newgame', null, null, '', S.sure), FK.TEST ? vcell('fast', null, null, '', show.fast) : '<i></i>', FK.TEST ? tab('Layers', 'Yard', 'yard') : '<i></i>', vcell('pause', null, null, '', true)), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E706
+  Back: () => [row(span(SCR.mold.slots, cell(WD.back.title, 'title'))), row(span(D.speeds.length, vcell('resume')), span(D.speeds.length, vcell('newgame', null, null, '', S.sure)))], // E706
   Layers: () => [row(span(2, cell('Yard', 'title')), vcell('fast', null, null, '', show.fast), vcell('new'), vcell('later', 'book'), vcell('close')), ...[0, 2, 4, 6].map((i) => row(...LAYERS.slice(i, i + 2).map(([c, name]) => `<span class="lab" title="${name}">${c}</span><div class="cells seg" style="grid-column:span 2;--n:2">${vcell('show', c, null, '', show[c])}${vcell('lock', c, null, '', S.lock[c])}</div>`))), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E198
 };
 const page = () => (S.tab && SCREENS[S.tab] ? SCREENS[S.tab]().join('') : '');
@@ -263,7 +264,7 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
   if (S.subject && (S.subject.kind === 'unit' ? units().indexOf(S.subject) < 0 : things().indexOf(S.subject) < 0)) S.subject = null;
   const html = page(r), card = cardText(r), sig = html + card + S.tab + rank(card) + base(r); if (!force && sig === S.last) return; S.last = sig;
   $('panel').innerHTML = html; $('panel').style.height = tall(S.tab) || !PANEL ? '' : PANEL + 'px'; $('panel').className = S.tab ? 'on' : ''; $('card').innerHTML = card; $('card').className = card && !S.tab ? 'on' : ''; // E205
-  $('base').innerHTML = base(r); $('rank').innerHTML = rank(card); spdEl.className = `cells seg ${FK.paused() && !r.result ? 'on' : ''}`; spdEl.innerHTML = D.speeds.map((n) => vcell('speed', n, null, '', show.speed === n)).join(''); qaEl.className = S.qa ? 'on' : ''; if (S.qa) { const m = SCR.mold, [w] = FK.size(); qaEl.innerHTML = vcell('quick', null, null, 'ic red') + vcell('qclose', null, null, 'ic'); qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, S.qa.px - m.slot * P.half)) + 'px'; qaEl.style.top = S.qa.py - m.slot * P.half + 'px'; }
+  $('base').innerHTML = base(r); $('rank').innerHTML = rank(card); spdEl.className = `cells seg ${FK.paused() && !r.result && !S.tab ? 'on' : ''}`; spdEl.innerHTML = span([...D.speeds, 'new'].length, cell(WD.back.paused, 'dim')) + D.speeds.map((n) => vcell('speed', n, null, '', show.speed === n)).join('') + vcell('newgame', null, null, 'two', S.sure) + (FK.TEST ? vcell('fast', null, null, '', show.fast) + tab('Layers', 'Yard', 'yard') : '') + Object.keys(FK.HB.mix.names).map((c) => vcell('vol', c, null, 'two')).join(''); qaEl.className = S.qa ? 'on' : ''; if (S.qa) { const m = SCR.mold, [w] = FK.size(); qaEl.innerHTML = vcell('quick', null, null, 'ic red') + vcell('qclose', null, null, 'ic'); qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, S.qa.px - m.slot * P.half)) + 'px'; qaEl.style.top = S.qa.py - m.slot * P.half + 'px'; }
 }
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
@@ -326,6 +327,7 @@ FK.on('tap', (k, u, px, py) => {
   if (S.ghost) { if (!line(S.ghost.code)) { ghostTo(px, py); render(true); } else if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); } return true; }
   if (S.qa) { S.qa = null; render(true); return true; }
   if (S.war) { aimSpot(k, u); S.aimT = performance.now(); FK.fire('event', 'tap', null); return true; }
+  if (FK.paused() && !S.tab && !S.ghost) { FK.pause(false); return true; } // E706
   const hint = S.tab === 'Build' && !u && k >= 0 && !under(k) && suggest(k); // E341
   if (hint) { S.group = Object.keys(GROUPS).find((g) => GROUPS[g].includes(hint)); VERBS.pick.run(hint); if (line(hint)) { S.ghost.pts.push(k); wallSet(S.ghost); } else ghostTo(px, py, P.start); render(true); return true; }
   const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
@@ -417,7 +419,7 @@ FK.on('tick', () => { if (FK.every(D.peaceBeat)) { postTick(); newsTick(); } if 
 // E208
 let PANEL = 0; function sizePanel() { const el = $('panel'), keep = S.tab; PANEL = 0; let h = 0; const keepH = S.htab; for (const t of Object.keys(SCREENS)) if (!tall(t)) for (const g of t === 'Build' ? Object.keys(GROUPS) : [S.group]) { const kg = S.group; S.tab = t; S.group = g; render(true); h = Math.max(h, el.offsetHeight); S.group = kg; } S.htab = keepH; PANEL = h; S.tab = keep; render(true); } // E209
 addEventListener('resize', sizePanel); let sized = false; // E210
-FK.on('start', () => { if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } Object.assign(S, { subject: null, ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, line: null, eta: null, last: '' }); const h = FK.seatOf(ME); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // E211
+FK.on('start', () => { if (S.tab === 'Start' || S.tab === 'Back') FK.pause(true); if (!sized) { sized = true; (document.fonts ? document.fonts.ready : Promise.resolve()).then(sizePanel); } Object.assign(S, { subject: null, ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, line: null, eta: null, last: '' }); const h = FK.seatOf(ME); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = (cw * D.openShare) / (h.n * D.tile); FK.keepOn(); } render(true); }); // E211
 $('ver').textContent = 'v' + D.version; document.title = 'First Keep v' + D.version; // E212
 // E670
 const WT = fromBook('words').start, LOG = { rows: [] }, TAPS = (() => { try { return JSON.parse(localStorage.getItem(D.log.taps)) || {}; } catch (e) { return {}; } })();

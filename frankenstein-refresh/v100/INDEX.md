@@ -372,7 +372,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E703 |  | New game asks twice, so a stray tap cannot end a match; then the Start sheet |  |
 | E704 |  | the two base rows as Base has them; War is Mid's one red button on the rank above the rows, at the right, shown only over the open map, its  |  |
 | E705 |  | a hazard switched on adds its points to the level (the measure book's hazards.pts); the Start sheet's picks are a setting, copied into the m |  |
-| E706 |  | the Pause screen is a shell like every page; the Yard (layer toggles) shows only in the test field |  |
+| E706 |  | as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New game and the volumes under the pause button and says  |  |
 | E707 |  | while a tall sheet (the Start page) is open, messages wait in the post and come out when it closes, so none covers the sheet (Base's land ca |  |
 | E708 |  | a shell's ticks as a Set, built once from the Shells book: has() is asked hundreds of thousands of times a second, and a Set answers in one  |  |
 | E709 |  | the buildings as their own list, a derived index of things rebuilt only when things change (TV, the things version): buildings are a few doz |  |
@@ -1529,7 +1529,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | N140 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | N141 |
 | SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | N142; N143 |
-| SN15 | the Pause screen: the game's settings while it waits (Albert, Nov 7) | {ticks: [], rows: title, New game, Fast and the Yard in the test field only, resume; the three volumes; the speeds ×1 ×2 ×3 (D344) drop unde | N241 |
+| SN15 | the Welcome back card, as Base: a saved game opens paused behind it; the pause itself has no page (the speeds, New game and the volumes drop under the pause button; Paused · tap to carry on; Albert, Nov 7 20:48: all Base) | {ticks: [Tall], rows: title Welcome back, Resume, New game} | N241 |
 | SN14 | words on the map (Mid's LABEL, labelK, mapFont, tag): px at the opening zoom, never under floor; a label's pill (padding, edge, rise, height, inset) | {px: 12, floor: 9, zoom: 1.3, pad: [10, 4, 13, 19, 5]} | N208 |
 
 ## shells
@@ -2083,6 +2083,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J29 | the Guide's and History's fixed words (Mid's guideModel, HIST_NOTE, HIST_ASK, yearOf, guideMd): where a unit no building trains is trained, a building off the Build menu and where it comes from, a shell whose history line is not under its look (key), the eras History dates by name (a year, BC below none), the Markdown's headings | {at: the Town Center, start: where you start, secs:  s, by: ×, beats: {times:  ×, bld: buildings, only: buildings only}, off: {BS1: stands o | N234; N161 |
 | J30 | the song line, said by the Guide and the Sound page (Mid's SONG) | There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed | N234 |
 | J31 | a Build cell's second line when the store cannot pay: the word, its colour how near (the shortfall is in the tap's Needs) | Short | N132 |
+| J35 | the Welcome back card (Base's: the saved game opens paused, Resume or New game) and the pause's line (Base's pauseT) | {title: Welcome back, resume: Resume, paused: Paused · tap to carry on} | N241 |
 | J34 | the place bar's words, Base's (26-input placeT; Albert's screenshot Nov 7 20:38) | {start: Press where the {name} goes · drag empty ground to look around, lineStart: Tap where the {line} starts, ok: {Name}: tap Build, or dr | N241 |
 | J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked} | N241 |
 | J32 | the Pause screen's words: its title, the pause mark on the top bar (SoRen's), New game and its confirm (Albert, Nov 7: New game on the pause screen, with a confirm) | {title: Paused, mark: ❙❙, newGame: New game, sure: Sure? Tap again} | N241 |

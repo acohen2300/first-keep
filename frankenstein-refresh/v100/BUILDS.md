@@ -3506,3 +3506,16 @@ MODIFIED (2):
 LOCKED (2129 of 2131): byte for byte as sealed, 1,356,597 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2131 items sealed · 2005 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B1 · as Base: a saved game opens paused behind Welcome back (Resume, New game); the Start sheet holds the world paused; a pause has no page, the speeds, New game and the volumes drop under the pause button, a tap on the map carries on (SN15, J35, E706) · 2026-11-07 20:57
+Albert, Nov 7 20:48: go for all (Base)
+Opened: code:menu.js, code:index.html, book:words, book:screen, book:comments, tool:test.py
+MODIFIED (5):
+- book:comments:E706 · 110 → 396 bytes
+- book:screen:SN15 · 313 → 356 bytes
+- book:words:J35 · added
+- code:index.html#touch · 7,446 → 7,478 bytes
+- code:menu.js · 84,353 → 84,701 bytes
+LOCKED (2127 of 2132): byte for byte as sealed, 1,290,059 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2132 items sealed · 2006 book entries · 93 laws · 249 citations, 7 still to open · 7 known

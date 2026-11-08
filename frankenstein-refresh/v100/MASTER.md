@@ -441,7 +441,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
-- **E706** the Pause screen is a shell like every page; the Yard (layer toggles) shows only in the te
+- **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
 - **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
 - **E358** a pasture's card counts its sheep

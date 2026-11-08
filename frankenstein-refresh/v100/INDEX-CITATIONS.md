@@ -338,7 +338,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N237** Arithmetic: 1/60 s = 16.67 ms: 1000/60 = 16.67 ms → QCR, D339
 - **N239** Design: the A2 gate rules (lead, Nov 7, from the F39 audit): code reads the stats through FK.stat; a shell a t → X75, X76
 - **N240** Design: Mid's CLIMATE.noon 0.28 (06-rules-tuning.js), morning light at the start, brought by Albert's flow cal → D341
-- **N241** Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, → D344, X36, SN5, SN15, J34, J33, J32
+- **N241** Design: Albert, Nov 7 2026 14:47-15:46: no status strip, iron stays in the top bar, Map beside mute and pause, → D344, X36, SN5, SN15, J35, J34, J33, J32
 - **N242** Design: Mid's pocket, 06-rules-tuning.js BACK and HOME (zone 1: AGES[1].cost + 6 villagers' food and 5 houses' → QCS, D62, D63, D65
 - **N243** Holle, R. L. and K. L. Cummins, Seasonal Lightning Distributions over North America (Vaisala; NLDN 2005–2014): → QCT, D113
 - **N244** Design: Mid's HANDICAP (06-rules-tuning.js: blds mill and farm, r 60–170; laid in 10-world.js by findSpot, fin → D342
@@ -352,7 +352,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 ## Named exceptions
 
-- Tall: Start, Hall, Layers
+- Tall: Start, Hall, Layers, Back
 - Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8, BW4, BF2
 
 ## Sounds waiting for a feature
