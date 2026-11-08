@@ -78,7 +78,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
-- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112) · D65 (N228, N231, N242) · QBF (N65)
+- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112, N258) · D65 (N228, N231, N242) · QBF (N65)
 - **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231, N242)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26

@@ -5,7 +5,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 29 | 3,207 | 512,100 | 512,239 |
-| Books | 2046 | 0 | 584,897 | 585,637 |
+| Books | 2046 | 0 | 585,185 | 585,927 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,770 | 289,689 | 289,930 |
 
@@ -54,7 +54,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | comments | 745 | 128,352 |
 | ground | 6 | 1,748 |
 | mass | 24 | 3,739 |
-| measure | 318 | 135,452 |
+| measure | 318 | 135,742 |
 | rules | 75 | 28,346 |
 | screen | 13 | 3,993 |
 | shells | 110 | 23,337 |

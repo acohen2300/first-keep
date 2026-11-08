@@ -3734,3 +3734,12 @@ MODIFIED (9):
 LOCKED (2163 of 2172): byte for byte as sealed, 1,373,368 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2172 items sealed · 2046 book entries · 93 laws · 258 citations, 10 still to open · 7 known
+
+## B14 · the home finds drawn in to 0.55 of Mid's distance for the real scale · 2026-11-08 11:43
+Albert, Nov 8 10:04 (both: closer finds) and 11:41 (go all)
+Opened: book:measure
+MODIFIED (1):
+- book:measure:D70 · 245 → 535 bytes
+LOCKED (2171 of 2172): byte for byte as sealed, 1,407,853 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2172 items sealed · 2046 book entries · 93 laws · 258 citations, 10 still to open · 7 known

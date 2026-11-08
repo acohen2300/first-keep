@@ -345,7 +345,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
-- **N258** Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushe → D85, PM1
+- **N258** Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushe → D70, D85, PM1
 - **N256** Design: Albert, Nov 8 08:52-08:57 (B12): the tap ring slow; axes swung while walking; more trees, closer to th → D62, D319, D345
 - **N257** (to open) Response times: 0.1 s feels instant (Miller 1968; Nielsen, Usability Engineering 1993); touch feedback animati → D319
 - **N254** Design: Albert, Nov 8 08:02-08:04 (B10): the map fuzzy on the phone; draw it at the phone's own pixels, the gr → D164

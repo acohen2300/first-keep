@@ -1214,7 +1214,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D65 | Z3 the transition: the woods thicken from none at its inner edge to Z4's share at its outer edge (an ecotone), so it is more open than Z4; its finds laid by the Randomizer, the same in every corner, as Mid's wild finds, [piles, a pile's amount at RICH 2.5]: two bush patches of 7 x 180, groves of 20 and 14 x 120, a pair each of gold, stone and iron x 350, each pile then x FIND_SIZE and the land's amt (QCS) (Albert, Nov 6 16:01–16:03; Nov 7 14:47 copy Mid) | {trees: [0, 0.4], finds: {bush: [14, 450], tree: [34, 300], gold: [2, 875], stone: [2, 875], iron: [2, 875]}} | N228; N231; N242 |
 | D66 | Z4 the wilds: the woods' share of the land they may grow on, about the woods D49's threshold gave (a quarter of all Z4's land, the roads, the middle and the slopes counted) | {trees: [0.4, 0.4]} | N112; N228 |
 | D67 | villagers counted | 6 | N112 |
-| D70 | Z1's spots in the corner's frame; iron added with Mid's fifth home find (Nov 7) | {bush: [250, 140], tree: [140, 250], gold: [200, 120], stone: [120, 200], iron: [190, 190]} | N112 |
+| D70 | Z1's spots in the corner's frame; iron added with Mid's fifth home find (Nov 7); at the real scale drawn in to 0.55 of Mid's distance from the Town Center (D20), the layout kept: berries and the home grove about 33 m off, gold and stone 40 m, iron 31 m, a walk of 20–30 s, as a village sits beside its fields and wood (Albert, Nov 8 10:04: move things closer) | {bush: [284, 223], tree: [223, 284], gold: [256, 212], stone: [212, 256], iron: [250, 250]} | N112; N258 |
 | D73 | Z4's gold piles | [4, 6] | N112 |
 | D74 | stone piles | [3, 5] | N112 |
 | D75 | iron piles | [3, 5] | N112 |
