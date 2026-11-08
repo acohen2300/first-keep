@@ -380,6 +380,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E711 |  | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; |  |
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
+| E730 |  | the Build card as Base's: opening it reads the middle of the view and opens the tab of what fits there, marked blue with Fits here; a second |  |
 | E729 |  | the sky's washes (the dusk glow, the night blue, fog, rime, the flash, the visibility veil) are composed into one colour and laid in one pas |  |
 | E728 |  | a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the ground shakes (the jolt, D113 shake), the thunder foll |  |
 | E727 |  | a blow from beyond melee reach (D.flanking.melee, the combat book's own line) is a missile: its hit is the arrow's sound, as Base's (the Nov |  |
@@ -731,7 +732,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E338 |  | the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite and colour (Mid's ghostTint) |  |
 | E339 |  | while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the Town Center (Mid's drawSeal) |  |
 | E340 |  | the ghost: a wall's tiles green or red with its corners, the first ringed green; a building's guides to yours in line and its tinted art, no |  |
-| E341 |  | a tap on open ground while the Build page is open: what fits there is picked and its ghost put there (Mid's suggestAt) |  |
+| E341 |  | a tap on open ground while the Build page is open marks what fits there (Base: the suggestion is shown in blue with Fits here, never picked  |  |
 | E342 |  | dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll) |  |
 | E343 |  | what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a wall in a narrow way (a gate beside your wall), a h |  |
 | E344 |  | fish round every lake: a spot every D218 per of its radius, walked out from the middle to the shore and set inset back into the water, each  |  |

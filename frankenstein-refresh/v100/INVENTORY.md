@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,162 | 499,971 | 500,109 |
-| Books | 2006 | 0 | 573,711 | 574,433 |
+| Game code | 29 | 3,163 | 500,379 | 500,517 |
+| Books | 2007 | 0 | 574,156 | 574,879 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,763 | 288,182 | 288,423 |
 
@@ -37,8 +37,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 22,019 | 22,023 | 0 |
 | index.html#the-woods-cache | 51 | 4,771 | 4,775 | 71 |
 | index.html#touch | 50 | 7,474 | 7,478 | 54 |
-| menu.js | 468 | 84,659 | 84,701 | 575 |
-| econ.js | 576 | 105,214 | 105,214 | 72 |
+| menu.js | 468 | 84,897 | 84,939 | 574 |
+| econ.js | 577 | 105,384 | 105,384 | 72 |
 | combat.js | 354 | 59,014 | 59,014 | 84 |
 | ai.js | 170 | 27,312 | 27,312 | 25 |
 | sound.js | 57 | 6,050 | 6,050 | 66 |
@@ -51,7 +51,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,092 |
 | citations | 249 | 53,901 |
 | colours | 21 | 4,542 |
-| comments | 720 | 124,126 |
+| comments | 721 | 124,557 |
 | ground | 6 | 1,748 |
 | mass | 24 | 3,739 |
 | measure | 317 | 132,747 |
@@ -62,7 +62,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | sound | 51 | 11,427 |
 | sprites | 65 | 25,607 |
 | tech | 259 | 75,753 |
-| words | 35 | 88,880 |
+| words | 35 | 88,905 |
 
 ## The shells
 
@@ -151,4 +151,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 
-2132 items sealed · 2006 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+2133 items sealed · 2007 book entries · 93 laws · 249 citations, 7 still to open · 7 known

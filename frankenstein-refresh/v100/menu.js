@@ -146,8 +146,8 @@ const VERBS = {
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
   yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(ME)[y]}</span>${NAME[y]}`, whyNot: () => '', run: (y) => { SIDES[ME].rally = SIDES[ME].rally === y ? null : y; } }, // E191
   ageUp: { label: () => { const r = read(); return !r.next ? 'Last age' : `${r.next} age${r.aging ? `<small>rising, ${Math.ceil(r.aging)}s</small>` : price(r.ageCost)}`; }, whyNot: () => { const c = ECON.ageCost(ME); return !c ? 'Last age' : SIDES[ME].aging ? 'Already rising' : !ECON.canPay(ME, c) ? `Needs ${costText(c)}` : ''; }, run: () => ECON.ageUp(ME) },
-  pick: { label: (c) => { const w = picked(c) ? '' : ECON.capWhy(ME, c); return `${B[c][0]} ${count(c)}${picked(c) ? `<small>${ghostSay(S.ghost)}</small>` : w ? `<small>${w}</small>` : price(D.cost[c])}`; }, // E192
-    whyNot: (c) => (picked(c) ? VERBS.build.whyNot() : ECON.capWhy(ME, c) || (!ECON.canPay(ME, D.cost[c] || {}) ? `Needs ${costText(D.cost[c])}` : '')), run: (c) => { if (picked(c)) return VERBS.build.run(); S.tab = null; S.ghost = { code: c, i: -99, j: -99, ok: false, pts: [], cells: [] }; if (!line(c)) { const [w, h] = FK.size(); ghostTo(w * P.half, h * P.half, P.start); } } },
+  pick: { label: (c) => { const w = picked(c) ? '' : ECON.capWhy(ME, c), lim = ECON.limitOf(ME, c); return `${B[c][0]} ${w && !lim ? '' : count(c) + (lim ? '/' + lim : '')}${picked(c) ? `<small>${ghostSay(S.ghost)}</small>` : w ? `<small>${w}</small>` : price(D.cost[c]).replace('</small>', (S.hint === c ? WD.place.fits : '') + '</small>')}`; }, // E192
+    whyNot: (c) => (picked(c) ? VERBS.build.whyNot() : ECON.capWhy(ME, c) || (!ECON.canPay(ME, D.cost[c] || {}) ? `Needs ${costText(D.cost[c])}` : '')), run: (c) => { if (picked(c)) { S.ghost = null; S.tab = 'Build'; return; } S.tab = null; S.ghost = { code: c, i: -99, j: -99, ok: false, pts: [], cells: [] }; if (!line(c)) { const [w, h] = FK.size(); ghostTo(w * P.half, h * P.half, P.start); } } },
   build: { label: () => 'Build', whyNot: () => { const g = S.ghost; return !g ? 'Pick a building' : line(g.code) ? (!g.cells.length ? 'Tap the corners' : g.bad === g.cells.length ? 'Something is in the way' : '') : g.ok ? '' : g.why || 'Slide to place'; }, run: () => place(S.ghost) },
   group: { label: (g) => g, whyNot: () => '', run: (g) => { S.group = g; S.ghost = null; FK.dirty(); } },
   attack: { label: () => `<span class="t">${SVG.attack}</span>Attack<small>${msnSay(WA.all)}</small>`, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => { WAR.go(S.aim); S.firedT = performance.now(); } }, // E427
@@ -210,7 +210,7 @@ const SCREENS = {
     row(span(6, vcell('start', null, null, 'go')))], // E718
   Build: () => { const g = GROUPS[S.group];
     return [head('Build'), `<div class="row6 tabs">${Object.keys(GROUPS).map((x) => vcell('group', x, null, '', S.group === x)).join('')}</div>`,
-      `<div class="frame">${g.map((c) => (D.cost[c] ? vcell('pick', c, null, `two ${picked(c) ? 'blue' : ''}`) : vcell('later', B[c][0], null, 'two'))).join('')}</div>`]; },
+      `<div class="frame">${g.map((c) => (D.cost[c] ? vcell('pick', c, null, `two ${picked(c) || S.hint === c ? 'blue' : ''}`) : vcell('later', B[c][0], null, 'two'))).join('')}</div>`]; },
   Hall: () => { const r = read(), h = r.hall || {}; // E197
     const title = row(span(4, cell(`${bar(1, `var(--age${Math.min(4, SIDES[ME].age)})`, 1)}${FK.SH[seatCode()].name}${h.hp != null ? bar(h.life, h.life > 0.5 ? 'var(--rg)' : 'var(--rr)') : ''}`, 'title')), vcell('info', null, null, '', S.info), vcell('close'));
     if (S.info) return [title, `<div class="info"><p>Health ${h.hp != null ? `${Math.ceil(h.hp)}/${h.hpMax}` : '–'} · ${r.age} age · room for ${Math.max(0, r.cap - r.pop)}.</p><p><b>Food:</b> your people eat ${Math.round(r.pop * D.upkeep * 600 / D.day) / 10} a minute.</p><p><b>${r.next ? r.next + ' age' : 'Last age'}:</b> ${r.next ? `${costText(r.ageCost)}, ${D.age.time[ECON.nextAge(ME)]}s to rise` : 'reached'}.</p><p><b>Later:</b> the age's history, tech, the civilization, goods wanted by others.</p></div>`];
@@ -268,7 +268,7 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
 }
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
-  if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; render(true); return; } act(verb, argOf(a), argOf(a2)); }
+  if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; else { const [w, h] = FK.size(); hintAt(tileK(w * P.half, h * P.half)); } render(true); return; } act(verb, argOf(a), argOf(a2)); } // E730
 FK.on('begin', () => { FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); }); // E705
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
@@ -313,6 +313,7 @@ FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g) return; const [, n] = B[g
     ctx.stroke(); const sp = tinted(FK.bldSprite(g.code, SIDES[ME].col, s, ...FK.levelOf({ code: g.code, side: ME })), g.ok ? COL.rg : COL.rr), [gx, gy] = at(ci, cj); FK.tag(ctx, g.ok ? `${ECON.nameOf(g.code)} · ${costText(D.cost[g.code] || {})}` : g.why, gx, gy - sp.ay * s - P.lift * P.half); ctx.globalAlpha = P.ghost; FK.blit(sp, gx, gy, s); } // E699
   ctx.restore(); });
 // E207
+const hintAt = (k) => { S.hint = onB(k) && !under(k) ? suggest(k) || null : null; if (S.hint) S.group = Object.keys(GROUPS).find((g) => GROUPS[g].includes(S.hint)) || S.group; }; // E730
 function suggest(k) { const G = D.suggest, [bx, by] = FK.tileMid(k), [ki, kj] = ECON.at(k), R = G.r * D.tile, sc = {}, far = (t) => Math.hypot(t.bx - bx, t.by - by), add = (c, v) => { if (c && D.cost[c] && !ECON.capWhy(ME, c)) sc[c] = (sc[c] || 0) + v; }; // E343
   const bought = FK.bought, camp = (y) => bought('Drop-off').find((c) => FK.SH[c].drop.includes(y)), [house] = bought('House'), [wall] = bought('Line'), [gate] = bought('Gate'), [field] = bought('Field');
   const mine = FK.blds().filter((t) => t.side === ME && far(t) < R), near = (y) => mine.some((t) => !FK.has(t, 'Seat') && (FK.SH[t.code].drop || []).includes(y));
@@ -328,8 +329,7 @@ FK.on('tap', (k, u, px, py) => {
   if (S.qa) { S.qa = null; render(true); return true; }
   if (S.war) { aimSpot(k, u); S.aimT = performance.now(); FK.fire('event', 'tap', null); return true; }
   if (FK.paused() && !S.tab && !S.ghost) { FK.pause(false); return true; } // E706
-  const hint = S.tab === 'Build' && !u && k >= 0 && !under(k) && suggest(k); // E341
-  if (hint) { S.group = Object.keys(GROUPS).find((g) => GROUPS[g].includes(hint)); VERBS.pick.run(hint); if (line(hint)) { S.ghost.pts.push(k); wallSet(S.ghost); } else ghostTo(px, py, P.start); render(true); return true; }
+  if (S.tab === 'Build' && !u && onB(k) && !under(k)) { hintAt(k); render(true); return true; } // E341
   const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
   if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); } return true; }
   if (u && own(u)) { pickToggle(u); return true; }

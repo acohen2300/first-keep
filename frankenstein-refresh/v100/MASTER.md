@@ -457,6 +457,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
+- **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E428** a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) · D246 (N190)
 - **E692** any touch on any surface clears a hold before it begins; a finger that moves further than  · D246 (N190)
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
@@ -474,7 +475,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
-- **E341** a tap on open ground while the Build page is open: what fits there is picked and its ghost
+- **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
 - **E433** a tile on the board (the floor gives -1 off it)
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
@@ -516,6 +517,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## econ.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn only where the ghost stand
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
 - **E290** the Research book (O) by code and by key

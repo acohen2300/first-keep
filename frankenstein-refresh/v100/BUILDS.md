@@ -3519,3 +3519,16 @@ MODIFIED (5):
 LOCKED (2127 of 2132): byte for byte as sealed, 1,290,059 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2132 items sealed · 2006 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B2 · the Build card as Base's: the right tab with a blue Fits here, built/limit on each row, no auto-pick on a ground tap, tap-again cancels (E730, E341) · 2026-11-07 21:00
+Albert, Nov 7 20:48: go for all (Base); his Build card screenshots 20:39
+Opened: code:menu.js, code:econ.js, book:words, book:comments
+MODIFIED (5):
+- book:comments:E341 · 130 → 204 bytes
+- book:comments:E730 · added
+- book:words:J34 · 476 → 501 bytes
+- code:econ.js · 105,214 → 105,384 bytes
+- code:menu.js · 84,701 → 84,939 bytes
+LOCKED (2128 of 2133): byte for byte as sealed, 1,192,736 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2133 items sealed · 2007 book entries · 93 laws · 249 citations, 7 still to open · 7 known
