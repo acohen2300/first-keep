@@ -11,3 +11,10 @@
 - Cloaks (Wool, Oiled): in cold or wet weather they raise morale, cut sickness and cut the extra food. Research compounds, never to zero.
 - NEW: an army eats more in cold or wet weather (US Army AR 40-25: daily calories raised in the cold); cloaks cut the extra. Look up more (WWI, WWII) on consumption and survival in the weather.
 - Research cuts compound (decided before; stands).
+- Changes from Mid, batch 1:
+  - Dock: as in real life (built from the shore out), sourced and cited; keep the code.
+  - Animals: every animal laid by the randomizer (zones 2 to 4); no dangerous animals in zones 1 and 2 (a colony site); research how near wild animals come to towns by season and town size.
+  - Animals' bodies: real mass, real edible meat as food, real strength; how many villagers or soldiers it takes to kill one (hunting records; bears vs foot and horse).
+  - NEW: villagers can fight (an attack button), with rules for their strength and the real math of many against one (Lanchester's laws; v100 already uses the square law).
+  - Building health: by material and age (timber less than stone), from real material strength.
+  - Potato: keep.
