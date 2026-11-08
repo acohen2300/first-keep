@@ -411,6 +411,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
+- **E737** a message is a door, as Base's: a tap on it goes to its place and closes it (the Nov 7 re-
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
 - **E274** how much slower a full cover of mud or snow makes a march, in percent, from its terrain fa · QN (N13)
@@ -451,10 +452,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
+- **E736** the Home button stands at the rank's left whenever the Town Center is off the screen, and 
 - **E733** the bars for what is picked, as Base's selection bar (the Nov 7 re-read, items 32 and 34):
 - **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
+- **E735** the hammer carries a bar for the sites going up (the mean of their progress), and People i · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 

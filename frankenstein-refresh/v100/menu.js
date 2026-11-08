@@ -2,7 +2,7 @@
 // E168
 // E169
 window.MENU = (() => {
-const { D, B, U, SIDES, N, show } = FK, things = FK.things, units = FK.units, [ME] = D.players;
+const { D, B, U, SIDES, N, show } = FK, { zero: ZERO, one: ONE } = FK.D.count, things = FK.things, units = FK.units, [ME] = D.players;
 // E170
 const LAYERS = [['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
 const SCR = fromBook('screen'), GROUPS = SCR.tabs; // E172
@@ -66,7 +66,7 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 .info { flex: 1; overflow-y: auto; border: 1px solid var(--b3); border-radius: 9px; padding: 8px 12px; line-height: 1.45; font-weight: 500; } .info p { margin: 0 0 8px; } .info b { font-weight: 600; }
 /* the card: solid over the map, above the base (Base); one height, but a Tall page keeps its own (Albert, Nov 5) */
 #panel { box-sizing: border-box; display: none; flex-direction: column; gap: var(--gap); } #panel.on { display: flex; background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; padding: var(--gap); }
-#base { display: flex; flex-direction: column; gap: var(--gap); } #rank:empty { display: none; } #rank i { visibility: hidden; } .badge { position: absolute; top: var(--gap); right: var(--gap); border-radius: var(--gap); background: var(--rr); color: var(--rw); font-weight: bold; font-size: smaller; line-height: normal; padding-inline: var(--gap); } .cell { position: relative; } .cell.left { align-items: flex-start; text-align: left; padding-inline: var(--gap); } .mid.map { background: none; } .frame.list { grid-template-columns: none; } .bar { display: flex; flex-direction: column; gap: var(--gap); background: var(--b1); border: 1px solid var(--rg); border-radius: 9px; padding: var(--gap); } .bar .cells { gap: var(--gap); } #spd { position: fixed; right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--slot) + var(--gap) + var(--gap)); width: calc((var(--slot) + var(--gap)) * var(--n)); } #spd:not(.on) { display: none; } .pairs { display: flex; gap: var(--gap); } .pairs .cell { flex: 1; padding: 0; } #base .pairs .cell { font-size: 18px; }
+#base { display: flex; flex-direction: column; gap: var(--gap); } #rank:empty { display: none; } #rank i { visibility: hidden; } .badge { position: absolute; top: var(--gap); right: var(--gap); border-radius: var(--gap); background: var(--rr); color: var(--rw); font-weight: bold; font-size: smaller; line-height: normal; padding-inline: var(--gap); } .cell { position: relative; } .cell.left { align-items: flex-start; text-align: left; padding-inline: var(--gap); } .mid.map { background: none; } .frame.list { grid-template-columns: none; } .prog { position: absolute; inset-inline: var(--gap); bottom: var(--gap); height: var(--gap); border-radius: var(--gap); background: var(--rg); transform-origin: left; transform: scaleX(var(--f)); } .bar { display: flex; flex-direction: column; gap: var(--gap); background: var(--b1); border: 1px solid var(--rg); border-radius: 9px; padding: var(--gap); } .bar .cells { gap: var(--gap); } #spd { position: fixed; right: var(--gap); top: calc(env(safe-area-inset-top, 0px) + var(--slot) + var(--gap) + var(--gap)); width: calc((var(--slot) + var(--gap)) * var(--n)); } #spd:not(.on) { display: none; } .pairs { display: flex; gap: var(--gap); } .pairs .cell { flex: 1; padding: 0; } #base .pairs .cell { font-size: 18px; }
 /* war: steel, the war tiles a faint red; the middle box one block, thin dividers, a white edge (§8 the battle station) */
 .warbase { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: var(--slot) var(--slot); gap: var(--gap); } .cell.red { background: color-mix(in srgb, var(--rr) 22%, var(--s2)); border-color: color-mix(in srgb, var(--rr) 30%, var(--s3)); } .cell.warx { background: var(--s1); border-color: var(--rr); box-shadow: inset 0 0 0 1px var(--rr); }
 .mid { grid-column: 3 / 5; grid-row: 1 / 3; display: grid; grid-template-columns: 1fr 1fr; background: var(--s1); border: 2px solid var(--rw); border-radius: 9px; overflow: hidden; } .mid .cell { height: auto; border: 0; border-radius: 0; background: none; } .mid .cell:nth-child(odd) { border-right: 1px solid var(--s3); } .mid .cell:nth-child(-n+2) { border-bottom: 1px solid var(--s3); } .mid .cell.whole { grid-column: 1 / 3; grid-row: 1 / 3; border: 0; }
@@ -75,7 +75,7 @@ const css = document.createElement('style'); css.textContent = `:root { ${Object
 .strip { display: grid; grid-template-columns: repeat(8, 1fr); background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; } .strip .cell { background: none; border: 0; border-radius: 0; height: 30px; } .strip .cell + .cell { border-left: 1px solid var(--b2); } .strip.big .cell { height: var(--slot); } .strip:not(.big) .cell { flex-direction: row; gap: 4px; }
 #card { background: var(--b1); border: 1px solid var(--b3); border-radius: 9px; padding: 8px 10px; display: none; flex-direction: column; gap: var(--gap); } #card.on { display: flex; } #card h2 { font: 400 18px var(--display); color: var(--g1); margin: 0; } #card p { margin: 0; color: var(--wdim); } .row { display: flex; gap: var(--gap); } .row .cell { flex: 1; } .cell.w1 { flex: 0 0 var(--slot); }
 #qa { position: fixed; display: none; gap: var(--gap); } #qa.on { display: flex; } #qa .cell { width: var(--slot); }
-#toast { position: fixed; left: var(--gap); top: calc(env(safe-area-inset-top, 0px) + 2 * var(--slot) + 3 * var(--gap)); background: var(--b1); border: 1px solid var(--g1); color: var(--g1); border-radius: 9px; padding: 6px 12px; font: 600 14px var(--ui); opacity: 0; transition: opacity .3s; pointer-events: none; max-width: 45vw; z-index: 4; }`;
+#toast { position: fixed; left: var(--gap); top: calc(env(safe-area-inset-top, 0px) + 2 * var(--slot) + 3 * var(--gap)); background: var(--b1); border: 1px solid var(--g1); color: var(--g1); border-radius: 9px; padding: 6px 12px; font: 600 14px var(--ui); opacity: 0; transition: opacity .3s; max-width: 45vw; z-index: 4; }`;
 document.head.appendChild(css);
 const ui = document.createElement('div'); ui.id = 'ui'; ui.innerHTML = '<div id="card"></div><div id="panel"></div><div id="rank"></div><div id="base"></div>'; document.body.appendChild(ui);
 const topEl = document.createElement('div'); topEl.className = 'topbar'; document.body.appendChild(topEl);
@@ -84,7 +84,7 @@ const spdEl = document.createElement('div'); spdEl.id = 'spd'; spdEl.className =
 const $ = (id) => document.getElementById(id);
 const S = { tab: 'Start', mailT: -Infinity, prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, world: 0, tension: 1, daily: 0, civ: 0, hz: new Set() }, group: 'Land', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0 }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
-const toast = (msg, secs = D.toast) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = secs; };
+const toast = (msg, secs = D.toast, at = null) => { toastEl.textContent = msg; toastEl.style.opacity = 1; S.toastT = secs; S.toastAt = at; }; toastEl.addEventListener('click', () => { if (S.toastAt) { FK.cam.follow = false; FK.camGo(...FK.toView(S.toastAt.bx, S.toastAt.by, D.land)); } toastEl.style.opacity = ZERO; S.toastT = ZERO; }); // E737
 const WD = fromBook('words'), TW = WD.troops, TP_ = WD.pause, blessed = () => WAR.armyOf(ME).filter((u) => WAR.SQ.sel == null || u.bn === WAR.SQ.sel), SAY = D.say, WO = WD.orders, TO = D.touch, HUD = D.hud, RT = FK.SPRITE.reticle; // E272
 const fmt = (n) => (n >= SAY.whole ? Math.round(n / SAY.thousand) + WD.thousand : n >= SAY.thousand ? Math.floor(n / SAY.tenth) / (SAY.thousand / SAY.tenth) + WD.thousand : String(Math.floor(n)));
 const plural = (n) => { for (const [p, f, e] of WD.plural) { const re = new RegExp(p, f); if (re.test(n)) return n.replace(re, e); } }; // E273
@@ -167,6 +167,7 @@ const VERBS = {
   fallBackP: { label: () => WD.bar.fallBack, whyNot: () => '', run: () => WAR.fallBack(FK.picked().filter(isSoldier)) },
   holdP: { label: () => WD.bar.hold, whyNot: () => '', run: () => { for (const u of FK.picked().filter(isSoldier)) Object.assign(u, { path: null, goal: u.k, job: 'hold', target: null, ord: null }); } },
   hunt3: { label: () => WD.bar.hunt3, whyNot: (t) => VERBS.hunt.whyNot(t), run: (t) => { for (let i = WD.bar.hunters; i--; ) ECON.hunt(ME, t); } },
+  home: { label: () => `<span class="t">${SVG.garrison}</span>${WD.bar.home}`, whyNot: () => '', run: () => { const h = FK.seatOf(ME); if (h) { FK.cam.follow = false; FK.camGo(h.vx, h.vy); } } },
   unpick: { label: () => SVG.close, whyNot: () => '', run: () => { FK.select(null); S.more = false; FK.dirty(); } },
   follow: { label: () => `<span class="t">${SVG.direct}</span>`, whyNot: () => '', run: () => { FK.cam.follow = !FK.cam.follow; FK.dirty(); } },
   mail: { label: () => { const n = mail.filter((m) => m.t > S.mailT).length; return `<span class="t">${SVG.mail}${n ? `<b class="badge">${n}</b>` : ''}</span>`; }, whyNot: () => '', run: () => { S.tab = S.tab === 'Mail' ? null : 'Mail'; S.mailT = FK.K.t; } },
@@ -248,15 +249,17 @@ function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S
   return SCR.card.filter(([, tick]) => !tick || FK.has(t, tick)).map(([name]) => ROWS[name](t, r)).join(''); }
 // E200
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
+const offScreen = () => { const h = FK.seatOf(ME); if (!h) return false; const [x, y] = FK.toScreen(h.vx, h.vy), [w, hh] = FK.size(); return x < ZERO || y < ZERO || x > w || y > hh; }; // E736
 const rank = (card) => { if (S.tab || card || S.ghost) return ''; const P = FK.picked(), V = P.filter((u) => own(u) && isVil(u)), A = P.filter(isSoldier), W = P.filter((u) => u.kind === 'unit' && !own(u) && !SIDES[u.side]); const bar = (n, cells) => `<div class="bar">${row(span(ORDER.length, cell(WD.bar.picked.replace('{n}', n), 'title')), vcell('unpick'))}<div class="cells" style="--n:${cells.length}">${cells.join('')}</div></div>`;
   if (V.length && !S.war) return bar(V.length, [...ORDER.map((y) => vcell('sendTo', y, null, 'ic')), tab('Build', `<span class="t">${SVG.build}</span>`, 'build'), vcell('follow', null, null, 'ic', FK.cam.follow)]);
   if (A.length && !S.war) return bar(A.length, [vcell('chargeP'), vcell('fallBackP'), vcell('holdP'), vcell('recall'), vcell('follow', null, null, 'ic', FK.cam.follow)]); // E733
-  if (W.length) return bar(W.length, [vcell('hunt', W.at(null)), vcell('hunt3', W.at(null)), vcell('follow', null, null, 'ic', FK.cam.follow)]); return row(...ORDER.map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
-const base = (r) => S.war ? warBase() : row(vcell('people', null, null, 'ic'), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
-  + row(tab('Build', 'Build', 'build'), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
+  if (W.length) return bar(W.length, [vcell('hunt', W.at(null)), vcell('hunt3', W.at(null)), vcell('follow', null, null, 'ic', FK.cam.follow)]); return row(offScreen() ? vcell('home', null, null, 'ic') : '<i></i>', ...ORDER.slice([ORDER].length).map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
+const base = (r) => S.war ? warBase() : row(vcell('people', null, null, `ic ${ECON.jobs(ME).idle ? 'blue' : ''}`), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
+  + row(tab('Build', 'Build', 'build').replace('</button>', `${siteBar()}</button>`), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
 const MID = { map: () => '', train: () => classes().map((k) => vcell('kind', kindOf(k), null, 'ic')).join(''),
   squad: () => WA.squads.map((n, i) => held(vcell('squad', i, null, 'two', WAR.SQ.sel === i), 'callHome', i)).join('') + vcell('setup', null, null, 'two'), setup: () => Object.keys(WAR.DIAL).map((k) => vcell('dial', k, null, 'two')).join('') + vcell('squads', null, null, 'two'), direct: () => classes().map((c) => held(vcell('move', c, null, 'two'), 'move', c, 'h')).join('') + held(vcell('rally', null, null, 'two'), 'ambush') + vcell('choke', null, null, 'two', S.tool === 'choke') + vcell('reinforce', null, null, 'two') }; // E731
+const siteBar = () => { const sites = FK.blds().filter((t) => t.side === ME && t.done < [t].length); if (!sites.length) return ''; const f = sites.reduce((s, t) => s + t.done, ZERO) / sites.length; return `<i class="prog" style="--f:${f.toFixed(D.speeds.length)}"></i>`; }; // E735
 const warBase = () => `<div class="warbase">${vcell('work', null, null, 'ic')}${vcell('alarm', 'square', null, 'ic')}<div class="mid ${S.mid}">${MID[S.mid]()}</div>${vcell('mid', 'train', null, 'ic red', S.mid === 'train')}${vcell('mid', 'squad', null, 'ic red', S.mid === 'squad')}`
   + `${vcell('alarm', 'hands', null, 'ic')}${vcell('alarm', 'shelter', null, 'ic')}${vcell('mid', 'direct', null, 'ic red', S.mid === 'direct')}${held(vcell('attack', null, null, 'ic red'), 'home')}</div>`;
 // E202
@@ -278,7 +281,7 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
   if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; else { const [w, h] = FK.size(); hintAt(tileK(w * P.half, h * P.half)); } render(true); return; } act(verb, argOf(a), argOf(a2)); } // E730
-FK.on('begin', () => { FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); }); // E705
+FK.on('begin', () => { FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); if (!FK.HZ.size) for (const [, id] of OPTS.hazard) if (FK.rng() < D.hazards.lot) FK.HZ.add(id); }); // E705
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
 let lpT = 0; const lpStop = () => clearTimeout(lpT); // E428
@@ -391,7 +394,7 @@ function say(text, m = {}) { if (S.tab === 'Start' && !m.told) return void post.
   const N = reach(text, m); if (!N) return; if (N.delay > BEAT) return void post.push({ t: FK.K.t + N.delay, text, m: { ...m, told: true, why: MWD.post } }); if (N.text) { text = N.text; m = { ...m, at: null }; } // E638
   const grp = m.grp || 'reply', key = hush(text), same = mail.find((x) => x.grp === grp && x.key === key && FK.K.t - x.t < MS.merge), quiet = MWD.quiet.includes(m.cls);
   if (same) Object.assign(same, { t: FK.K.t, text }).times.push(FK.K.t); else { mail.unshift({ text, grp, key, cls: m.cls || '', why: m.why || '', at: m.at ? { bx: m.at.bx, by: m.at.by } : null, times: [FK.K.t], t: FK.K.t }); mail.length = Math.min(mail.length, MS.keep); }
-  if (!quiet) toast(same ? `${text} ×${same.times.length}` : text, MS.secs); }
+  if (!quiet) toast(same ? `${text} ×${same.times.length}` : text, MS.secs, m.at ? { bx: m.at.bx, by: m.at.by } : null); }
 function postTick() { if (S.tab === 'Start') return; const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(null, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
 function newsTick() { if (FK.K.t - newsT < TL.every || FK.K.t < TL.after) return; newsT = FK.K.t; const L = WD.world[SIDES[ME].age] || WD.world.at(-1); say(L[++newsI % L.length], { grp: 'chronicle', cls: 'news' }); } // E640
 // E641

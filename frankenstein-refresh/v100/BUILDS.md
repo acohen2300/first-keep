@@ -3584,3 +3584,19 @@ MODIFIED (5):
 LOCKED (2133 of 2138): byte for byte as sealed, 936,361 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2138 items sealed · 2012 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## B6 · as Base: hazards by lot when none ticked (D309 lot), People ringed blue while idle, the hammer's progress bar, the Home button when the Town Center is off screen, a tap on a message goes to its place (E735–E737) · 2026-11-07 22:08
+
+Opened: code:menu.js, code:econ.js, book:measure, book:words, book:comments
+MODIFIED (8):
+- book:comments:E735 · added
+- book:comments:E736 · added
+- book:comments:E737 · added
+- book:measure:D309 · 791 → 803 bytes
+- book:words:J28 · 1,350 → 1,390 bytes
+- book:words:J33 · 379 → 395 bytes
+- code:econ.js · 105,901 → 105,991 bytes
+- code:menu.js · 87,441 → 88,861 bytes
+LOCKED (2133 of 2141): byte for byte as sealed, 1,193,133 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2141 items sealed · 2015 book entries · 93 laws · 249 citations, 7 still to open · 7 known
