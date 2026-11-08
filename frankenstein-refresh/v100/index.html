@@ -1187,7 +1187,7 @@ function drawSky(dt) { // E140
   wash(SKYC.flash, Math.min(ONE, K.flash));
   const night = (1 - K.light) * 0.7 * (DARK0 - DARK1 * K.moonLit), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); wash(SKYC.veil, veil); // E381
-  wash(SKYC.glow, dusk); wash(SKYC.blue, night); wash(SKYC.fog, K.fog * 0.8); if (K.sky === 'frost') wash(SKYC.rime, BD.frost); skyBand(); // E144
+  wash(SKYC.glow, dusk); wash(SKYC.blue, night); wash(SKYC.fog, K.fog * 0.8); if (K.sky === 'frost') wash(SKYC.rime, BD.frost); flushWash(); skyBand(); // E144
 }
 // E552
 const FC = D.forecast, SKYW = fromBook('words').sky, FLD = D.flood, RU = D.ruts, RC = Math.ceil(N / RU.cell), RUTS = new Float32Array(RC * RC), BANK = new Uint8Array(N * N), HEAL = Math.exp(-RU.heal[0] / RU.tau);
@@ -1254,7 +1254,7 @@ function arrivals() { if (K.t < K.wayT) return; K.wayT = K.t + J.every; const e 
 function trample() { const R = ER.stampede, r = R.r * D.tile; for (const b of K.ev.cur.units) if (!b.gone) { unitsNear(b, r, (v) => { if (v.herd || !(v.hp > null) || v.inside || dist(v, b) >= r) return; v.hp -= R.trample; v.hurtT = K.t; shove(v, (v.bx - b.bx) * R.shove, (v.by - b.by) * R.shove); if (v.hp <= null) WAR.die(v); }); // E577
   bldsNear(b.bx, b.by, R.field * D.tile, (t) => has(t, 'Soil') && t.done >= ONE && dist(t, b) < R.field * D.tile && !!(t.fert = Math.max(stat(t.code, t.side, 'soil'), t.fert - R.fert))); } }
 // E558
-const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, wash = (col, a) => { if (a < BD.least) return; ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(0, 0, cw, ch); ctx.globalAlpha = 1; }, rgb = (h) => h.match(/\w\w/g).map((x) => parseInt(x, 16)), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
+const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, WASH = [], wash = (col, a) => { if (a >= BD.least) WASH.push([rgb(col), Math.min(ONE, a)]); }, flushWash = () => { if (!WASH.length) return; let a = ZERO, c = [ZERO, ZERO, ZERO]; for (const [col, ai] of WASH) { c = c.map((v, i) => col[i] * ai + v * (ONE - ai)); a = ai + a * (ONE - ai); } ctx.fillStyle = css(c.map((v) => v / a), a); ctx.fillRect(ZERO, ZERO, cw, ch); WASH.length = ZERO; }, rgb = (h) => h.match(/\w\w/g).map((x) => parseInt(x, 16)), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
 function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWidth = RP.line; ctx.strokeStyle = C.marks.ripple; ctx.beginPath();
   if (!K.ice) for (const L of lakes) { const lx = L.x, ly = L.y * TILT; if (Math.abs(lx - cam.x) > w + L.r || Math.abs(ly - cam.y) > hh + L.r) continue; // E559
     for (let i = 0; i < RP.n; i++) { const a = i * RP.turn + K.t * RP.spin, r = L.r * (RP.from + RP.span * ((i * RP.step + K.t * RP.drift) % 1)), [x, y] = toScreen(L.x + Math.cos(a) * r, (L.y + Math.sin(a) * r) * TILT); ctx.moveTo(x - RP.w * z, y); ctx.quadraticCurveTo(x, y - RP.lift * z, x + RP.w * z, y); } }
@@ -1263,7 +1263,8 @@ function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWid
   for (let gy = gy0; gy <= gy1; gy++) for (let gx = Math.floor((cam.x - w) / C0); gx <= Math.ceil((cam.x + w) / C0); gx++) { const r = NS_rng(Math.abs(gy * RC * RU.cell + gx)), ph = (K.t * RR.rate + r()) % 1, bx = (gx + r()) * C0, by = (gy + r()) * C0; if (r() > K.rain / RR.show) continue;
     const s = Math.min(rmax, (r0 + ph * r1) * z), [x, y] = toScreen(...toView(bx, by, Math.max(0, H[tileAt(bx, by)]))); ctx.moveTo(x + s, y); oval(ctx, x, y, s, s * TILT); }
   ctx.stroke(); }
-function skyBand() { const nt = nightOf(), top = document.querySelector('.topbar').getBoundingClientRect().bottom, [hf, hmax] = BD.h, h = Math.round(Math.min(ch * hf, hmax)), [cast, rainy] = BD.cast; // E561
+let TOPB = null; const topOf = () => TOPB ?? (TOPB = document.querySelector('.topbar').getBoundingClientRect().bottom); addEventListener('resize', () => { TOPB = null; }); // E729
+function skyBand() { const nt = nightOf(), top = topOf(), [hf, hmax] = BD.h, h = Math.round(Math.min(ch * hf, hmax)), [cast, rainy] = BD.cast; // E561
   const base = mixC(mixC(rgb(SKYC.day), rgb(SKYC.dusk), BD.dusk * nt * (1 - nt)), rgb(SKYC.night), nt), kind = K.storm && K.wetHour ? 'storm' : K.sky, col = SKYC[kind] ? mixC(base, rgb(SKYC[kind]), kind === 'rain' ? rainy : cast) : base;
   const gr = ctx.createLinearGradient(0, top, 0, top + h); gr.addColorStop(0, css(col, BD.base)); gr.addColorStop(1, css(col, 0)); ctx.fillStyle = css(col, BD.base); ctx.fillRect(0, 0, cw, top); ctx.fillStyle = gr; ctx.fillRect(0, top, cw, h);
   const cover = CL.cover[kind] ?? CL.cover.other, dark = CL.dark[kind] ?? CL.dark.other, [sp, ds] = CL.speed, [xs, xw, xo] = CL.x, [y0, dy] = CL.y, [w0, dw] = CL.w, [t0, dt] = CL.tall, [pf, pu, pw, ph] = CL.puff, [m3, m4, m2] = CL.mod, drift = CL.calm + K.wind / WX.wind.most; // E562

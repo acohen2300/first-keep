@@ -316,6 +316,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E558** marks on the water and the ground, and the sky band (D296–D298, Mid's drawLakeRipples, dra · D296 (N203) · D298 (N203)
 - **E559** ripples drift on the lakes, inside the shore; none on ice
 - **E560** rain rings sit on the ground, fixed to the world, fewer as the rain eases; only close up
+- **E729** the sky's washes (the dusk glow, the night blue, fog, rime, the flash, the visibility veil
 - **E561** the horizon: a band of sky along the top of the glass, coloured by the hour and the weathe
 - **E562** clouds cross the band with the wind
 - **E145** Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the l · D115 (N112) · D114 (N112)

@@ -3496,3 +3496,13 @@ MODIFIED (4):
 LOCKED (2126 of 2130): byte for byte as sealed, 1,355,326 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2130 items sealed · 2004 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+
+## S3 · the sky's six washes in one pass; the top bar measured once, not every frame (E729) · 2026-11-07 20:52
+Albert, Nov 7 20:48: go for all; speed first
+Opened: code:index.html, book:comments
+MODIFIED (2):
+- book:comments:E729 · added
+- code:index.html#floor-6-climate · 24,910 → 25,296 bytes
+LOCKED (2129 of 2131): byte for byte as sealed, 1,356,597 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2131 items sealed · 2005 book entries · 93 laws · 249 citations, 7 still to open · 7 known

@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,159 | 499,205 | 499,343 |
-| Books | 2004 | 0 | 572,741 | 573,449 |
+| Game code | 29 | 3,160 | 499,591 | 499,729 |
+| Books | 2005 | 0 | 573,115 | 573,837 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,763 | 288,182 | 288,423 |
 
@@ -32,7 +32,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 130 | 15,482 | 15,486 | 78 |
 | index.html#the-body-s-laws | 31 | 2,655 | 2,659 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,226 | 5,230 | 92 |
-| index.html#floor-6-climate | 152 | 24,898 | 24,910 | 231 |
+| index.html#floor-6-climate | 153 | 25,284 | 25,296 | 228 |
 | index.html#floor-7-display | 44 | 7,335 | 7,339 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 116 | 22,019 | 22,023 | 0 |
 | index.html#the-woods-cache | 51 | 4,771 | 4,775 | 71 |
@@ -51,7 +51,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,092 |
 | citations | 249 | 53,901 |
 | colours | 21 | 4,542 |
-| comments | 719 | 123,442 |
+| comments | 720 | 123,840 |
 | ground | 6 | 1,748 |
 | mass | 24 | 3,739 |
 | measure | 317 | 132,747 |
@@ -151,4 +151,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 
-2130 items sealed · 2004 book entries · 93 laws · 249 citations, 7 still to open · 7 known
+2131 items sealed · 2005 book entries · 93 laws · 249 citations, 7 still to open · 7 known

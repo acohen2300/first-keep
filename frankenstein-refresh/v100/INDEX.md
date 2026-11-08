@@ -380,6 +380,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E711 |  | the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and houses, the home finds by their piles and amounts; |  |
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
+| E729 |  | the sky's washes (the dusk glow, the night blue, fog, rime, the flash, the visibility veil) are composed into one colour and laid in one pas |  |
 | E728 |  | a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the ground shakes (the jolt, D113 shake), the thunder foll |  |
 | E727 |  | a blow from beyond melee reach (D.flanking.melee, the combat book's own line) is a missile: its hit is the arrow's sound, as Base's (the Nov |  |
 | E726 |  | the place bar says what Base's said (J34): where to press, then the name with 'tap Build, or drag it to move', the pieces of a line; Build a |  |

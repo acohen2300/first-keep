@@ -5084,6 +5084,11 @@
 "bytes": 203,
 "numbers": 0
 },
+"book:comments:E729": {
+"sha": "6ea8db8510a8141a2295b5879d5da85d593c6dbafaf694ef3679b9762fd54de6",
+"bytes": 388,
+"numbers": 0
+},
 "book:comments:E73": {
 "sha": "9a8e09779532294440b7969ba0121d3194befab19c8a7db9ca32783bac5a2326",
 "bytes": 54,
@@ -10060,9 +10065,9 @@
 "numbers": 78
 },
 "code:index.html#floor-6-climate": {
-"sha": "3693f0bc437779f0e0c67aa968a705b2cac6205ff190b6c06935fb4b366c8b86",
-"bytes": 24910,
-"numbers": 231
+"sha": "e222e2b1f43b86889a6b5da01afaf1834da64c28bc43bbf1cdc67592b2595eaa",
+"bytes": 25296,
+"numbers": 228
 },
 "code:index.html#floor-7-display": {
 "sha": "01d3373e71fbe58195178496aa02b2c07f3af359d571e7763bbb207403cc4d3b",
