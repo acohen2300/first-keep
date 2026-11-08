@@ -265,7 +265,7 @@ function renderGround() {
   // E58
   const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 1, b[1]); g.lineTo(c[0] + 1, c[1] + 1); g.lineTo(d[0], d[1] + 1); g.closePath(); g.fill(); };
   const BL = new Map(), bladesAt = (s) => BL.get(s) || BL.set(s, bladeAt(s)).get(s), bladeAt = (s) => { const bladeTile = document.createElement('canvas'); bladeTile.width = bladeTile.height = Math.ceil(64 * s); const q = bladeTile.getContext('2d'), r = NS_rng(7); q.scale(s, s); q.lineCap = 'round'; q.lineWidth = 1; // E59
-    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale(ONE / s)); return p; };
+    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale(FIG / s)); return p; };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
   const LIT = 0.03; // E60
@@ -1103,7 +1103,7 @@ const moving = (u) => !!u.path || u.mps > null; // E753
 function unitSprite(u, s) { const fr = moving(u) ? Math.floor((D.strideFrames * u.walked) / gait(u.code).stride) % D.strideFrames : u.tool != null ? 10 + u.tool * 2 + (Math.floor(u.t / D.beat) % 2) : 0;
   return figure(U[u.code][1], u.side >= 0 ? SIDES[u.side].col : C.white, rankOf(u.code, u.side), fr, s, kitOf(u.side, u.code)); }
 // ── The things, drawn each frame back to fro (E117)
-const SPR = new Map(), STEP = Math.SQRT2;
+const SPR = new Map(), STEP = Math.SQRT2, AM = SPRITE.metres, artOf = (kind) => D.upm / (AM[kind] ?? AM.figure), FIG = artOf('figure'); // E754
 function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
   const q = STEP ** Math.round(Math.log(s * dpr) / Math.log(STEP)), k = key + '@' + q; let c = SPR.get(k); if (c) return c;
   c = document.createElement('canvas'); c.width = Math.ceil(W * q); c.height = Math.ceil(H * q); g = c.getContext('2d'); g.scale(q, q); g.translate(tx, ty); if (skew) g.transform(1, skew, 0, 1, 0, 0); g.lineJoin = 'round'; g.lineCap = 'round'; paint(); g = null;
@@ -1321,10 +1321,10 @@ function drawShadows(s) { // E152
     const sh = pts.map(([px, py]) => [px + dx * h * s, py + dy * h * s]); ctx.beginPath(); // E153
     for (const q of [pts, sh, [pts[0], pts[1], sh[1], sh[0]], [pts[1], pts[2], sh[2], sh[1]], [pts[2], pts[3], sh[3], sh[2]], [pts[3], pts[0], sh[0], sh[3]]]) q.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
     ctx.fill(); }
-  for (const u of units) { if (u.inside || !inSight(u)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18;
-    ctx.beginPath(); ctx.ellipse(x + (dx * h * s) / 2, y + (dy * h * s) / 2, Math.max(4 * s, (Math.hypot(dx, dy) * h * s) / 2), 2.5 * s, Math.atan2(dy, dx), 0, 7); ctx.fill(); }
-  const [tr, or] = DRS.shade.r; if (DRAW.lvl < DRW.lv.shadows) { ctx.beginPath(); for (const t of things) { const h = t.kind !== 'bld' && !t.deep && PDR.nodeH[(KIND[t.kind] || {}).look]; if (!h) continue; const [x, y] = toScreen(t.vx, t.vy), r = (treeAt(t.k) ? tr : or) * s * t.size, L = Math.hypot(dx, dy) * h * s; if (x < -L || x > cw + L || y < -L || y > ch + L) continue; // E623
-    ctx.moveTo(x + r, y); ctx.ellipse(x + dx * h * s * DRS.shade.lean, y + dy * h * s * DRS.shade.lean, L * DRS.shade.lean + r, Math.max(r * DRS.shade.wide, r * TILT), Math.atan2(dy, dx), -Math.PI, Math.PI); } ctx.fill(); }
+  for (const u of units) { if (u.inside || !inSight(u)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18, f = s * FIG;
+    ctx.beginPath(); ctx.ellipse(x + (dx * h * f) / 2, y + (dy * h * f) / 2, Math.max(4 * f, (Math.hypot(dx, dy) * h * f) / 2), 2.5 * f, Math.atan2(dy, dx), 0, 7); ctx.fill(); }
+  const [tr, or] = DRS.shade.r; if (DRAW.lvl < DRW.lv.shadows) { ctx.beginPath(); for (const t of things) { const h = t.kind !== 'bld' && !t.deep && PDR.nodeH[(KIND[t.kind] || {}).look]; if (!h) continue; const [x, y] = toScreen(t.vx, t.vy), r = (treeAt(t.k) ? tr : or) * s * t.size * artOf(t.kind), L = Math.hypot(dx, dy) * h * s * artOf(t.kind); if (x < -L || x > cw + L || y < -L || y > ch + L) continue; // E623
+    ctx.moveTo(x + r, y); ctx.ellipse(x + (L / Math.hypot(dx, dy)) * dx * DRS.shade.lean, y + (L / Math.hypot(dx, dy)) * dy * DRS.shade.lean, L * DRS.shade.lean + r, Math.max(r * DRS.shade.wide, r * TILT), Math.atan2(dy, dx), -Math.PI, Math.PI); } ctx.fill(); }
   ctx.restore();
 }
 // E454
@@ -1334,7 +1334,7 @@ on('gone', (u) => { if (u.kind === 'unit' && FALL.length < FD.most && !FD.not.in
 on('event', (e, t, a) => { if (e === 'struck' && t.side === ME) glow = { t: K.t, col: a && SIDES[a.side] ? C.red : C.flame }; });
 on('draw', (c, s) => { FALL = FALL.filter((f) => K.t - f.t <= FD.secs); for (const f of FALL) { const a = K.t - f.t, u = f.u, [x, y] = toScreen(...vAt(u)), [, look] = U[u.code]; // E455
   c.save(); c.globalAlpha = Math.min(FD.fade, FD.secs - a) / FD.fade; c.translate(x, y); c.rotate((Math.min(FD.drop, a) / FD.drop) * Math.PI * FD.turn * -u.face); c.scale(u.face, u.face * u.face);
-  blit(figure(look, SIDES[u.side] ? SIDES[u.side].col : C.white, rankOf(u.code, u.side), null, s, kitOf(u.side, u.code)), null, null, s, c); c.restore(); } });
+  blit(figure(look, SIDES[u.side] ? SIDES[u.side].col : C.white, rankOf(u.code, u.side), null, s * FIG, kitOf(u.side, u.code)), null, null, s * FIG, c); c.restore(); } });
 on('over', (c) => { const h = RD.half, cx = cw * h, cy = ch * h; if (glow && K.t - glow.t < GL.secs) { const [s0, s1] = GL.stops, g = c.createRadialGradient(cx, cy, Math.min(cw, ch) * GL.inner, cx, cy, Math.max(cw, ch) * GL.outer); // E456
     g.addColorStop(s0, 'transparent'); g.addColorStop(s1, glow.col); c.save(); c.globalAlpha = GL.alpha * (s1 - (K.t - glow.t) / GL.secs); c.fillStyle = g; c.fillRect(s0, s0, cw, ch); c.restore(); }
   RADAR = null; const q = FK.near; if (!q || q.u.gone || q.u.inside) return; const [px, py] = toScreen(q.u.vx, q.u.vy), E = RD.edge; if (px > E && px < cw - E && py > E && py < ch - E) return; // E457
@@ -1477,7 +1477,7 @@ const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = 
 function woodsChunk(c, q) { // E158
   const key = c + '@' + q + '@' + season(); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
   const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
-  for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, (q * t.size) / dpr), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size, g2);
+  for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, (q * t.size * artOf(t.kind)) / dpr), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size * artOf(t.kind), g2);
   w = { cv, q }; WOODS.set(key, w); fitCache(WOODS, GC.woods); return w;
 }
 function drawWoods(s) { const q = STEP ** Math.round(Math.log(s * dpr) / Math.log(STEP));
@@ -1486,8 +1486,8 @@ function drawWoods(s) { const q = STEP ** Math.round(Math.log(s * dpr) / Math.lo
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u) || u.veil))) return; const [x, y] = toScreen(...vAt(u)); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
-    if (!dots) { const on = pick.includes(u); ctx.strokeStyle = on ? C.gold : u.side >= 0 ? SIDES[u.side].col : C.white; ctx.globalAlpha = on ? 1 : 0.5; ctx.lineWidth = on ? 1.5 : 1; ctx.beginPath(); ctx.ellipse(x, y, 7 * s, 3.5 * s, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
-    if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else drawUnit(u, x, y, s); }; // E160
+    if (!dots) { const on = pick.includes(u); ctx.strokeStyle = on ? C.gold : u.side >= 0 ? SIDES[u.side].col : C.white; ctx.globalAlpha = on ? 1 : 0.5; ctx.lineWidth = on ? 1.5 : 1; ctx.beginPath(); ctx.ellipse(x, y, 7 * s * FIG, 3.5 * s * FIG, 0, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; }
+    if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else drawUnit(u, x, y, s * FIG); }; // E160
   if (!dots) { drawWoods(s); drawShadows(s); }
   for (const t of things) {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
@@ -1495,8 +1495,8 @@ function drawThings() {
     const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
     if (t.kind === 'bld') { if (!show.B || fire('hide', t)) continue; if (has(t, 'Trap')) { if (!dots) trapArt(x, y, s, t); continue; } drawBld(t, x, y, s, dots); }
     else if (!show.T) continue;
-    else if (GIFT[KIND[t.kind].look]) { if (!dots) GIFT[KIND[t.kind].look](x, y, s); }
-    else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else { const z = s * t.size * (LEFT + GROW * Math.min(ONE, t.amount / KIND[t.kind].amount)); blit(nodeSprite(t.kind, t.v, z), x, y, z); if (K.burn.has(t)) blaze(x, y, s, ONE, t.size); } // E305
+    else if (GIFT[KIND[t.kind].look]) { if (!dots) GIFT[KIND[t.kind].look](x, y, s * artOf(t.kind)); }
+    else if (dots) rect(x - 1, y - 1, 2, 2, DOT[t.kind]); else { const z = s * artOf(t.kind) * t.size * (LEFT + GROW * Math.min(ONE, t.amount / KIND[t.kind].amount)); blit(nodeSprite(t.kind, t.v, z), x, y, z); if (K.burn.has(t)) blaze(x, y, s, ONE, t.size); } // E305
   }
   while (n < us.length) unit(us[n++]);
 }
@@ -1537,8 +1537,8 @@ canvas.addEventListener('pointermove', (e) => {
 for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const had = ptrs.delete(e.pointerId), P = press; press = null; clearTimeout(holdT); if (!P) return;
   if (P.mode) fire('drop', P, ev !== 'pointerup'); else if (had && ev === 'pointerup' && !P.moved && !P.eat) tap(e.clientX, e.clientY); dirty(); });
 function hitAt(px, py) { // E164
-  const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i, r = Math.max(TO.hit, TO.hitZ * cam.z);
-  let near = null; for (const u of units) if (!u.inside && (u.side === ME || (inSight(u) && !u.hid && !u.veil))) { const [x, y] = toScreen(...vAt(u)), d = Math.hypot(x - px, y - TO.lift * cam.z - py); if (d < r && (!near || d < near[1])) near = [u, d]; } // E725
+  const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i, r = Math.max(TO.hit, TO.hitZ * cam.z * FIG);
+  let near = null; for (const u of units) if (!u.inside && (u.side === ME || (inSight(u) && !u.hid && !u.veil))) { const [x, y] = toScreen(...vAt(u)), d = Math.hypot(x - px, y - TO.lift * cam.z * FIG - py); if (d < r && (!near || d < near[1])) near = [u, d]; } // E725
   return [k, near && near[0]]; }
 const tap = (px, py) => fire('tap', ...hitAt(px, py), px, py);
 on('draw', (c) => { if (!press || press.moved) return; const f = (performance.now() - press.t - TO.show) / (TO.hold - TO.show), [fa, fl] = TM.box; c.save(); c.strokeStyle = c.fillStyle = C.gold; // E426

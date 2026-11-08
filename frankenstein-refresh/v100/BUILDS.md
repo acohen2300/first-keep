@@ -3717,3 +3717,20 @@ MODIFIED (8):
 LOCKED (2161 of 2169): byte for byte as sealed, 1,378,062 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2169 items sealed · 2043 book entries · 93 laws · 257 citations, 10 still to open · 7 known
+
+## B13 · the real scale: a tile is 3 m (a house 6 m, the land 650 m); people, animals, bushes, rocks and finds drawn at their real size; trees as they are · 2026-11-08 10:10
+Albert, Nov 8 08:57 (scale A) and 10:04 (both: closer finds next, the speeds kept)
+Opened: code:index.html#the-things-drawn-each-frame-back-to-fr, code:index.html#the-view-s-eyes-lights-and-stage, code:index.html#the-woods-cache, code:index.html#touch, book:measure, book:sprites, book:citations, book:comments, code:index.html#floor-7-display, code:index.html#drawn-once-in-the-view-frame
+MODIFIED (9):
+- book:citations:N258 · added
+- book:comments:E754 · added
+- book:measure:D85 · 100 → 316 bytes
+- book:sprites:PM1 · added
+- code:index.html#drawn-once-in-the-view-frame · 8,480 → 8,480 bytes
+- code:index.html#floor-7-display · 7,339 → 7,434 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 5,229 → 5,331 bytes
+- code:index.html#the-woods-cache · 4,770 → 4,852 bytes
+- code:index.html#touch · 7,487 → 7,499 bytes
+LOCKED (2163 of 2172): byte for byte as sealed, 1,373,368 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2172 items sealed · 2046 book entries · 93 laws · 258 citations, 10 still to open · 7 known

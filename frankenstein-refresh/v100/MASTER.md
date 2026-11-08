@@ -255,6 +255,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#the-things-drawn-each-frame-back-to-fr
 
 - **E117** The things, drawn each frame back to front, only those on the screen. A picture is painted · D83 (N112)
+- **E754** a drawing's size in the world: units a metre over the art's own pixels a metre, so a perso
 - **E118** W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's st
 - **E119** the node art's own small dice, seeded by the variant, so a tree's leaves fall the same eac
 - **E120** each drawn at its stand (x, y on the screen), s pixels a unit

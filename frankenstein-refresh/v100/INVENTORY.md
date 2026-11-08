@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,207 | 511,809 | 511,948 |
-| Books | 2043 | 0 | 583,866 | 584,603 |
+| Game code | 29 | 3,207 | 512,100 | 512,239 |
+| Books | 2046 | 0 | 584,897 | 585,637 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,770 | 289,689 | 289,930 |
 
@@ -31,12 +31,12 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
 | index.html#floor-5-movables | 130 | 15,498 | 15,502 | 78 |
 | index.html#the-body-s-laws | 32 | 2,714 | 2,718 | 32 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,225 | 5,229 | 91 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 34 | 5,327 | 5,331 | 91 |
 | index.html#floor-6-climate | 164 | 27,758 | 27,770 | 228 |
-| index.html#floor-7-display | 44 | 7,335 | 7,339 | 55 |
+| index.html#floor-7-display | 44 | 7,430 | 7,434 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 118 | 22,789 | 22,793 | 0 |
-| index.html#the-woods-cache | 51 | 4,766 | 4,770 | 71 |
-| index.html#touch | 50 | 7,483 | 7,487 | 54 |
+| index.html#the-woods-cache | 51 | 4,848 | 4,852 | 71 |
+| index.html#touch | 50 | 7,495 | 7,499 | 54 |
 | menu.js | 482 | 89,616 | 89,659 | 571 |
 | econ.js | 578 | 106,202 | 106,202 | 72 |
 | combat.js | 354 | 59,065 | 59,065 | 84 |
@@ -49,18 +49,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,092 |
-| citations | 257 | 55,765 |
+| citations | 258 | 56,032 |
 | colours | 21 | 4,632 |
-| comments | 744 | 128,176 |
+| comments | 745 | 128,352 |
 | ground | 6 | 1,748 |
 | mass | 24 | 3,739 |
-| measure | 318 | 135,236 |
+| measure | 318 | 135,452 |
 | rules | 75 | 28,346 |
 | screen | 13 | 3,993 |
 | shells | 110 | 23,337 |
 | sides | 7 | 1,869 |
 | sound | 51 | 11,427 |
-| sprites | 65 | 25,607 |
+| sprites | 66 | 26,000 |
 | tech | 259 | 75,765 |
 | words | 36 | 90,273 |
 
@@ -152,4 +152,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2169 items sealed · 2043 book entries · 93 laws · 257 citations, 10 still to open · 7 known
+2172 items sealed · 2046 book entries · 93 laws · 258 citations, 10 still to open · 7 known

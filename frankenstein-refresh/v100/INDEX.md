@@ -318,6 +318,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N245 |  | Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water content M = 0.072 R^0.88 g/m³ f | to open |
 | N246 |  | The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the finite-source form E = I ÷ (d² + s | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
+| N258 |  | Design: Albert, Nov 8 08:57 and 10:04 (B13): the real scale, set by the buildings (a house 6 m), people, bushes and rocks drawn at their rea | opened |
 | N256 |  | Design: Albert, Nov 8 08:52-08:57 (B12): the tap ring slow; axes swung while walking; more trees, closer to the Town Center, 10-15% more eve | opened |
 | N257 |  | Response times: 0.1 s feels instant (Miller 1968; Nielsen, Usability Engineering 1993); touch feedback animations about 200-300 ms (Material | to open |
 | N254 |  | Design: Albert, Nov 8 08:02-08:04 (B10): the map fuzzy on the phone; draw it at the phone's own pixels, the ground in chunks as the woods ar | opened |
@@ -397,6 +398,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E751 |  | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |  |
 | E752 |  | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |  |
 | E753 |  | a figure that moved this step walks; it swings its tool only standing at its work |  |
+| E754 |  | a drawing's size in the world: units a metre over the art's own pixels a metre, so a person, a bush or a rock stands at its real size beside |  |
 | E741 |  | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |  |
 | E742 |  | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |  |
 | E743 |  | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not the |  |
@@ -1225,7 +1227,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D82 | a thing's stand wanders in its tile by | 3 | N112 |
 | D83 | under this many pixels a tile things are dots and the grid is off | 5 | N112 |
 | D84 | the Town Center's spot in the corner's frame, Z2 on the road: Base's 325 from the land's edge (MID − CORNER, decision 5a; Albert, Nov 7 19:35: a bit closer to the corner) | [325, 325] | N112 |
-| D85 | units a metre, from the figure | 11.7 | N112 |
+| D85 | units a metre: a tile (10 units) is 3 m, so a house (2 tiles) is 6 m, the Town Center 18 m and the land 650 m across (Albert, Nov 8 08:57: real scale, set by the buildings, not by the figure; it was 11.7, a tile 0.85 m and a house 1.7 m) | 3.333 | N112; N258 |
 | D86 | speeds in metres a second (walk: quick time, 120 steps of 30 in a minute, 3.4 mph); Mid's own by its walker's 24: a rider 36 (ride), an elephant 22, an engine 12 (push), the bombard 10 (drag), the small camp wagon 14 (cart), the boar 30, the bison 70, the scout 27 (F17b); the bandit 26, the robber 32, the vagabond 20, the wayfarer 22 and the wagon train 16 (F31); the Mongol horse archer 40 (steppe) and the Mali horseman 38 (F36, Mid's civ units); a post rider 49 (post: Mid's TELL.ride, F35) | {walk: 1.52, ride: 2.28, horse: 1.9, push: 0.76, drag: 0.6333, deer: 1.5, wolf: 2.5, bear: 1.5, boar: 1.9, bison: 4.43, elephant: 1.3933, sc | N71; N72; N73; N79; N170; N176; N198; N223; N225 |
 | D87 | a load | 10 | N112 |
 | D88 | gathering a second, the old game's own (fish and meat Mid's, for when they come) | {bush: 0.9, tree: 0.75, gold: 0.6, stone: 0.55, iron: 0.5, fish: 0.8, meat: 1.2} | N70; N164 |
@@ -1786,6 +1788,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | PB11 | the siege building picture | {top: 40} | N151 |
 | PB12 | research on its building (Mid's UP): 1 when a step of its own is learned sets it on a stone footing (foot tall, its side in shade); 2, half its steps or more, adds corner stones (w, h, every gap, clear of the eaves by edge) and a gilded ridge | {half: 0.5, top: 2, foot: 3, shade: -0.45, line: 0.4, stone: [3.4, 3, 6, 2], lift: 0.15, rim: 0.3, ridge: #e6c75a, ridgeW: 1.6} | N151; N160 |
 | PB13 | the keep at its level (Gunpowder): an angled stone bastion with a gun on it, from the keep's front corner | {at: [-27, -1], face: [[-9, -1], [0, 6], [9, -1], [9, -10], [0, -4], [-9, -10]], top: [[-9, -10], [0, -16], [9, -10], [0, -4]], shade: [0.08 | N151; N160 |
+| PM1 | art pixels a metre, by what was drawn: the figures, bushes, rocks and finds at 11.7 (a person 20 px for 1.7 m), a tree at 3.333 (its 51 px for a 15 m tree); the grass blades as the figures (a blade a hand high); each is drawn at units a metre over its own, so all stand at their real size | {figure: 11.7, tree: 3.333} | N112; N258 |
 | PN1 | the finds: their scale, drawn smaller as they are used (left[0] + left[1] × the share left, Mid's nodeScale), the tool each is worked with (the figure's work frames: axe, hands, pick), and their dot far out; the trees' leaves by the season (autumn's two, winter's snow), the carcass, the fish's ripple and a trade stop's ring (its stall waits for the finds' art) (Mid's nodeSprite, drawNode); the bear den and the fallen star as blobs (offset, radius, the colour's name in C18); the robbers', drifters' and mercenaries' camps wear the campfire (F31) | {scale: {tree: 0.88, bush: 1.45, other: 1.25}, left: [0.6, 0.4], tool: {tree: 0, bush: 1, bld: 1, other: 2, fish: 1, meat: 1}, dot: {tree: # | N152; N164; N170; N195; N205 |
 | P20 | the boar figure | {brush: quad, o: {col: #4a3a2e, len: 13, h: 7, legH: 3.4, legW: 1, head: 2.8, headY: 0.55, tusk: true, bristle: true, tail: 0.6}, box: [24,  | N150; N170 |
 | P21 | the bison figure: the hump, a shaggy mane and a short horn | {brush: quad, o: {col: #3e2a1c, len: 20, h: 10, legH: 6, legW: 1.4, head: 3.4, headY: 0.4, hump: true, bristle: true, tail: 0.8, horn: {col: | N150; N170 |

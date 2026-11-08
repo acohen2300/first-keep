@@ -40,6 +40,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E751 | index.html#drawn-once-in-the-view-frame | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |
 | E752 | index.html#drawn-once-in-the-view-frame | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |
 | E753 | index.html#the-body-s-laws | a figure that moved this step walks; it swings its tool only standing at its work |
+| E754 | index.html#the-things-drawn-each-frame-back-to-fr | a drawing's size in the world: units a metre over the art's own pixels a metre, so a person, a bush or a rock stands at its real size beside the buildings |
 | E741 | index.html#floor-6-climate | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |
 | E742 | index.html#floor-6-climate | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |
 | E743 | index.html#floor-6-climate | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not there |

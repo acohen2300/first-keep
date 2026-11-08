@@ -1164,6 +1164,11 @@
 "bytes": 216,
 "numbers": 0
 },
+"book:citations:N258": {
+"sha": "fc14840b2589ee157090bc70caf078a50a4520a171e81a06641826d6ea1e749b",
+"bytes": 256,
+"numbers": 0
+},
 "book:citations:N26": {
 "sha": "4ee1d8c2df664f38cf10fb3ed6b2ecc0c205b707999a783f151407773a11e4d6",
 "bytes": 45,
@@ -5264,6 +5269,11 @@
 "bytes": 93,
 "numbers": 0
 },
+"book:comments:E754": {
+"sha": "68cc5f26d880a3ca3cb1db357076809ad27f6c13fdaf1f708fa3225d585e2ba9",
+"bytes": 166,
+"numbers": 0
+},
 "book:comments:E76": {
 "sha": "0dbe431dee42808b619c31aaa7c172cdd9032cacc8d72eddfcd289dc9592d54e",
 "bytes": 203,
@@ -7055,8 +7065,8 @@
 "numbers": 0
 },
 "book:measure:D85": {
-"sha": "01c207394b201452c67c091ee4e1305579b4ef7012c9fcbf0b67dbd4f4e99b1c",
-"bytes": 100,
+"sha": "161f19f3953d959f07f058ed8dd34637f59f7d3943d94b94083a1557e55e7edb",
+"bytes": 316,
 "numbers": 0
 },
 "book:measure:D86": {
@@ -8734,6 +8744,11 @@
 "bytes": 113,
 "numbers": 0
 },
+"book:sprites:PM1": {
+"sha": "1ff3cd7a3a5d73bc22de3d7039fd7f03669e3f2e705bec844fcf03a1ba0fc4b2",
+"bytes": 396,
+"numbers": 0
+},
 "book:sprites:PN1": {
 "sha": "b5ba99117dd7b7ab582e65cdf9f1b0241da13bcce64c0ddcd9d444038566da59",
 "bytes": 1514,
@@ -10235,7 +10250,7 @@
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
-"sha": "43b74a48d59fd241636dd9d5dd19587c13aab64e6ce59e60b4ed7fa3fb9f76d1",
+"sha": "bfa3f647857b6debedbd313971e355873925f0cbe5494fd9c74fb24bb6a51f89",
 "bytes": 8480,
 "numbers": 123
 },
@@ -10260,8 +10275,8 @@
 "numbers": 228
 },
 "code:index.html#floor-7-display": {
-"sha": "01d3373e71fbe58195178496aa02b2c07f3af359d571e7763bbb207403cc4d3b",
-"bytes": 7339,
+"sha": "4bc29214c521f2bf6d463731bfc83adf4bcfb69fd6760fcd8c4df1eee331a299",
+"bytes": 7434,
 "numbers": 55
 },
 "code:index.html#frames": {
@@ -10325,8 +10340,8 @@
 "numbers": 244
 },
 "code:index.html#the-things-drawn-each-frame-back-to-fr": {
-"sha": "e4e82ddf7ac6edf042ed6e85a20e0f28db4fe131bdccf63fe8116c6fed7eb8fe",
-"bytes": 5229,
+"sha": "2d910d7ee7b0daf86ca77255961210c4bc9cfb664d73bc1576eaf2a67b323d63",
+"bytes": 5331,
 "numbers": 91
 },
 "code:index.html#the-view": {
@@ -10340,13 +10355,13 @@
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
-"sha": "ab63c28c0207bb633d2b626bda5ebc94b1fc3ac06b8b042431d54d2c349b615b",
-"bytes": 4770,
+"sha": "c4aa30904ad0750b97cc19b2978f15015586a0f6a4519cc857fb1b86f8094974",
+"bytes": 4852,
 "numbers": 71
 },
 "code:index.html#touch": {
-"sha": "ebbe25438f51e9df6e74c22d9f2f91adb42cec0b635611f93954c92c4d395d8b",
-"bytes": 7487,
+"sha": "1f996f8f2055e415fc209c881038c19d0c6fbc40aa59abf93d6857c1e45e2f3f",
+"bytes": 7499,
 "numbers": 54
 },
 "code:menu.js": {
