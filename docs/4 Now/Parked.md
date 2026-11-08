@@ -627,3 +627,8 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - B9: Base's eclipse (sun up only; daylight × 1e-5 at full, N253 from memory, to open), heat wave (summer + drought hazard), mirage (summer; dots on the small map), circus (performers MH8; cheered villagers gather × 1.1), aurora (night) are back.
 - Not brought, for Albert: the storm band and fog (v100's climate already rolls both: a second way would break one home); the dragon and troll wait for World: Fantasy (#2). The aurora is real, so it is not gated to Fantasy as in Base. Note: the eclipse was cut Nov 4 ("stupid"); #21 "bring all back" brought it back.
 - Still owed from the audit: G5 hill height into ballistic range, G8 unpack clones from BASE0.shot, G9 villagers heal, G12 profile the reach flood fill.
+
+## B10, B11 · Nov 8 (Albert 08:04, 08:13)
+- B10: sprites and woods at device pixels; the ground in chunks at the zoom step when zoomed in (one a frame); caches to pixel budgets (D164). The phone then crashed on a stale cached measure.js beside the new page (?v= busts the page only; GitHub caches 10 min).
+- B11: network-first service worker (sw.js, SoRen's) and a manifest: online every file is fetched fresh, offline the last copies serve (checked: controls on second load, plays offline). The fault message now says the last good save is kept. Left: app icons for the manifest; theme-color (a typed colour in the page head: wants a home in the Colours book).
+- Owed: scars, snow, ice and flood masks at device pixels (same chunk way).

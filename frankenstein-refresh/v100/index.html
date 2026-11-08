@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>First Keep</title>
 <link rel="stylesheet" href="fonts.css">
+<link rel="manifest" href="manifest.webmanifest"><meta name="apple-mobile-web-app-capable" content="yes">
+<script>if (navigator.serviceWorker) navigator.serviceWorker.register('sw.js').catch(() => {});</script>
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; } /* the slot and the gap come from the Screen book (SN1), set by menu.js */
 html, body { margin: 0; height: 100%; background: #214a63; overflow: hidden; -webkit-user-select: none; user-select: none; touch-action: manipulation; font-family: var(--ui); font-weight: 600; font-size: 14px; color: #ece5d3; }

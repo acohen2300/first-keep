@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 29 | 3,204 | 511,452 | 511,591 |
-| Books | 2040 | 0 | 582,828 | 583,555 |
+| Game code | 29 | 3,206 | 511,663 | 511,802 |
+| Books | 2040 | 0 | 582,829 | 583,556 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,770 | 289,689 | 289,930 |
 
@@ -13,7 +13,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 30 | 1,663 | 1,663 | 10 |
+| index.html#page | 32 | 1,874 | 1,874 | 10 |
 | index.html#frames | 13 | 1,111 | 1,111 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
@@ -62,7 +62,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | sound | 51 | 11,427 |
 | sprites | 65 | 25,607 |
 | tech | 259 | 75,765 |
-| words | 36 | 90,272 |
+| words | 36 | 90,273 |
 
 ## The shells
 

@@ -3691,3 +3691,13 @@ MODIFIED (14):
 LOCKED (2152 of 2166): byte for byte as sealed, 1,348,034 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2166 items sealed · 2040 book entries · 93 laws · 255 citations, 9 still to open · 7 known
+
+## B11 · offline and fresh: a network-first service worker and a manifest (SoRen's way); the fault message says the last good save is kept · 2026-11-08 08:16
+Albert, Nov 8 08:13: yes
+Opened: code:index.html#page, book:words
+MODIFIED (2):
+- book:words:J28 · 1,390 → 1,391 bytes
+- code:index.html#page · 1,663 → 1,874 bytes
+LOCKED (2164 of 2166): byte for byte as sealed, 1,402,315 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2166 items sealed · 2040 book entries · 93 laws · 255 citations, 9 still to open · 7 known
