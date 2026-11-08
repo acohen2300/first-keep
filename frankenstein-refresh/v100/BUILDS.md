@@ -3669,3 +3669,25 @@ MODIFIED (20):
 LOCKED (2139 of 2159): byte for byte as sealed, 1,149,621 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2159 items sealed · 2033 book entries · 93 laws · 253 citations, 8 still to open · 7 known
+
+## B10 · the map at the phone's own pixels: sprites and woods drawn at device pixels, the ground in chunks when zoomed in, every cache held to a pixel budget · 2026-11-08 08:09
+Albert, Nov 8 08:04: build it, go
+Opened: code:index.html#drawn-once-in-the-view-frame, code:index.html#the-door, code:index.html#the-things-drawn-each-frame-back-to-fr, code:index.html#the-view-s-eyes-lights-and-stage, code:index.html#the-woods-cache, book:measure, book:citations, book:comments
+MODIFIED (14):
+- book:citations:N254 · added
+- book:citations:N255 · added
+- book:comments:E606 · 129 → 133 bytes
+- book:comments:E748 · added
+- book:comments:E749 · added
+- book:comments:E750 · added
+- book:comments:E751 · added
+- book:comments:E752 · added
+- book:measure:D164 · 97 → 653 bytes
+- code:index.html#drawn-once-in-the-view-frame · 6,058 → 8,480 bytes
+- code:index.html#the-door · 14,309 → 14,274 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 5,230 → 5,229 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,408 → 22,706 bytes
+- code:index.html#the-woods-cache · 4,775 → 4,770 bytes
+LOCKED (2152 of 2166): byte for byte as sealed, 1,348,034 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2166 items sealed · 2040 book entries · 93 laws · 255 citations, 9 still to open · 7 known

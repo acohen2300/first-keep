@@ -34,6 +34,11 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E738 | menu.js | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |
 | E739 | menu.js | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost) |
 | E740 | menu.js | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |
+| E748 | index.html#drawn-once-in-the-view-frame | the ground painted for a window of tiles at a scale, into the whole picture once or into a chunk; the grass blades' tile drawn at that scale so they stay sharp |
+| E749 | index.html#drawn-once-in-the-view-frame | the ground's chunk cache and the height range its windows are found from |
+| E750 | index.html#drawn-once-in-the-view-frame | a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, from the tiles under it (a tile's height can lift it into the square from below) |
+| E751 | index.html#drawn-once-in-the-view-frame | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |
+| E752 | index.html#drawn-once-in-the-view-frame | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |
 | E741 | index.html#floor-6-climate | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |
 | E742 | index.html#floor-6-climate | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |
 | E743 | index.html#floor-6-climate | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not there |
@@ -662,7 +667,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E603 | index.html#the-view-s-eyes-lights-and-stage | another side's building shows only while your people see it |
 | E604 | index.html#the-view-s-eyes-lights-and-stage | the player's Reduce motion, read from the phone; the draw budget's level; still: is motion off, by the setting or by load (Mid's lessMotion, DRAW, still) |
 | E605 | index.html#the-view-s-eyes-lights-and-stage | a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, then half the pixels) and climbs back when fast again (Mid's shed) |
-| E606 | index.html#the-view-s-eyes-lights-and-stage | a cache dropping its oldest picture gives the memory back at once (Mid's trim: iPhone drops pages that hold too much) |
+| E606 | index.html#the-view-s-eyes-lights-and-stage | a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so the phone gets the memory back |
 | E607 | index.html#the-view-s-eyes-lights-and-stage | the camera glides on a critically damped spring (QAW): to a point, Home or the small map's tap; a finger takes over; still means a jump (Mid's spring, camGo, camStop) |
 | E608 | index.html#the-view-s-eyes-lights-and-stage | Follow keeps the picked units in the middle until they are gone or a finger moves the map (Mid's followCam) |
 | E609 | index.html#the-view-s-eyes-lights-and-stage | fire's colour from its temperature (QF, a black body), its life in the rain (an open flame dims, a covered one keeps), its glow fading as 1/r² (QAU) and the flame itself, leaning with the wind (Mid's kelvinRGB, flameLife, glow, flame) |

@@ -318,6 +318,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N245 |  | Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water content M = 0.072 R^0.88 g/m³ f | to open |
 | N246 |  | The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the finite-source form E = I ÷ (d² + s | opened |
 | N238 |  | Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing the engine when hidden, requestW | opened |
+| N254 |  | Design: Albert, Nov 8 08:02-08:04 (B10): the map fuzzy on the phone; draw it at the phone's own pixels, the ground in chunks as the woods ar | opened |
+| N255 |  | WebKit (iOS Safari): total canvas memory is capped (about 384 MB on recent iPhones; one canvas at most 16.7 million pixels); past it canvase | to open |
 | N252 |  | Design: Albert, Nov 8 07:26 (bring all of Base's events back): Base's EVENTS, EV and EV_TEXT (base/index.html 5947-5975, 30202-30520, 6909-6 | opened |
 | N253 |  | Illuminance in a total solar eclipse: about that of deep twilight, roughly 1 lux against about 100,000 lux of full sun (a ratio near 1e-5);  | to open |
 | N251 |  | Design: Albert, Nov 8 07:51 (B8): research on every building card and the Hall's three tech slots, as Base's techBtn (base/index.html 23926) | opened |
@@ -387,6 +389,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E738 |  | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |  |
 | E739 |  | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost |  |
 | E740 |  | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |  |
+| E748 |  | the ground painted for a window of tiles at a scale, into the whole picture once or into a chunk; the grass blades' tile drawn at that scale |  |
+| E749 |  | the ground's chunk cache and the height range its windows are found from |  |
+| E750 |  | a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, from the tiles under it (a tile's height can lift  |  |
+| E751 |  | the ground: the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |  |
+| E752 |  | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |  |
 | E741 |  | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |  |
 | E742 |  | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |  |
 | E743 |  | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not the |  |
@@ -1015,7 +1022,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E603 |  | another side's building shows only while your people see it |  |
 | E604 |  | the player's Reduce motion, read from the phone; the draw budget's level; still: is motion off, by the setting or by load (Mid's lessMotion, |  |
 | E605 |  | a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, then half the pixels) and climbs back when fast ag |  |
-| E606 |  | a cache dropping its oldest picture gives the memory back at once (Mid's trim: iPhone drops pages that hold too much) |  |
+| E606 |  | a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so the phone gets the memory back |  |
 | E607 |  | the camera glides on a critically damped spring (QAW): to a point, Home or the small map's tap; a finger takes over; still means a jump (Mid |  |
 | E608 |  | Follow keeps the picked units in the middle until they are gone or a finger moves the map (Mid's followCam) |  |
 | E609 |  | fire's colour from its temperature (QF, a black body), its life in the rain (an open flame dims, a covered one keeps), its glow fading as 1/ |  |
@@ -1278,7 +1285,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D157 | villagers sent to a site | 2 | N114 |
 | D162 | the glass redraws every | 0.25 | N114 |
 | D163 | a reason stays | 2.5 | N114 |
-| D164 | woods chunks kept drawn | 64 | N114 |
+| D164 | what is drawn once and kept, at the phone's own pixels: the ground in chunk-unit squares (pad overlapped so no seam shows, margin tiles painted past each edge) once a ground pixel would be stretched past sharp screen pixels, else the one whole picture; sprites, woods and ground chunks each kept to a budget of pixels, the oldest dropped first (an iPhone page is closed when its canvases pass a few hundred MB: Albert, Nov 8 08:04, the map fuzzy on the phone) | {chunk: 128, pad: 1, margin: 2, sharp: 1.2, sprites: 16000000, woods: 8000000, ground: 8000000} | N114; N254; N255 |
 | D165 | the game opens on the Town Center at this share of the screen's width: Base's ZOOM_START 1.3 on a 50-wide Town Center across 390 (Albert, Nov 7 19:35: a little more zoomed out) | 0.167 | N115 |
 | D166 | the screen jolt: pixels a m/s the struck one is sent, at most, for, and from what speed | {px: 1, max: 3, s: 0.08, from: 1.5} | N116 |
 | D167 | blood lost at the shock classes' edges: II, III, IV (health lost read as blood lost) | [0.15, 0.3, 0.4] | N77; N78 |

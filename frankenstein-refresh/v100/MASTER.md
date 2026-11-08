@@ -104,8 +104,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
 - **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102)
 - **E60** the light stands high to the left and in front: ground leaning that way is lit, ground lea
+- **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
+- **E749** the ground's chunk cache and the height range its windows are found from
+- **E750** a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, 
+- **E751** the ground: the one picture while it is not stretched past sharp, else the chunks in view 
+- **E752** a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, 
 - **E547** the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so 
 - **E548** bare earth worn by feet round a finished building (not a field, a wall or a trap)
 - **E549** the dark where someone fell, wider for a big body, a blade's cut for a soldier
@@ -354,7 +359,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
-- **E606** a cache dropping its oldest picture gives the memory back at once (Mid's trim: iPhone drop
+- **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
 - **E609** fire's colour from its temperature (QF, a black body), its life in the rain (an open flame · QF (N4, N5, N54) · QAU (N54)

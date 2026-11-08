@@ -345,6 +345,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
 - **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
+- **N254** Design: Albert, Nov 8 08:02-08:04 (B10): the map fuzzy on the phone; draw it at the phone's own pixels, the gr → D164
+- **N255** (to open) WebKit (iOS Safari): total canvas memory is capped (about 384 MB on recent iPhones; one canvas at most 16.7 mi → D164
 - **N252** Design: Albert, Nov 8 07:26 (bring all of Base's events back): Base's EVENTS, EV and EV_TEXT (base/index.html  → D308, MH8
 - **N253** (to open) Illuminance in a total solar eclipse: about that of deep twilight, roughly 1 lux against about 100,000 lux of  → D308
 - **N251** Design: Albert, Nov 8 07:51 (B8): research on every building card and the Hall's three tech slots, as Base's t → J36

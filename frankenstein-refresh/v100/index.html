@@ -255,38 +255,38 @@ function renderGround() {
   const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
   gw = Math.ceil(maxX - minX) + 2; gh = Math.ceil(maxY - minY) + 2; ox = 1 - minX; oy = 1 - minY;
   ground = document.createElement('canvas'); ground.width = gw; ground.height = gh;
-  const g = ground.getContext('2d');
+  let g = ground.getContext('2d'), blades = null; GCH.clear(); [CHLO, CHHI] = CH.reduce(([a, b], v) => [Math.min(a, v), Math.max(b, v)], [Infinity, -Infinity]);
   g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
   for (const m of [maskLand, maskDark, maskLake, maskFlood]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskDark ? C.sky.wet : m === maskFlood ? C.water : '#fff'; } // E57
   scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); for (const t of things) if (t.kind === 'bld') wear(t); // E546
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // E58
   const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 1, b[1]); g.lineTo(c[0] + 1, c[1] + 1); g.lineTo(d[0], d[1] + 1); g.closePath(); g.fill(); };
-  const bladeTile = document.createElement('canvas'); bladeTile.width = bladeTile.height = 64; { const q = bladeTile.getContext('2d'), r = NS_rng(7); q.lineCap = 'round'; q.lineWidth = 1; // E59
-    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } }
-  const blades = g.createPattern(bladeTile, 'repeat');
+  const BL = new Map(), bladesAt = (s) => BL.get(s) || BL.set(s, bladeAt(s)).get(s), bladeAt = (s) => { const bladeTile = document.createElement('canvas'); bladeTile.width = bladeTile.height = Math.ceil(64 * s); const q = bladeTile.getContext('2d'), r = NS_rng(7); q.scale(s, s); q.lineCap = 'round'; q.lineWidth = 1; // E59
+    for (let i = 0; i < 90; i++) { const x = r() * 64, y = r() * 64; q.strokeStyle = r() < 0.5 ? shade(C.grass, 0.55) : shade(C.grass, 1.35); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - 0.5) * 3, y - 3 - r() * 4); q.stroke(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale(ONE / s)); return p; };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
   const LIT = 0.03; // E60
   const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h), base = FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s] : WATER[waterBand(h)]; if (!s || flat(i, j)) return base;
     const c = k * 4, lean = (CH[c] + CH[c + 2] - CH[c + 1] - CH[c + 3]) / 2 + (CH[c + 2] + CH[c + 3] - CH[c] - CH[c + 1]) / 2; return shade(base, clamp(1 + LIT * lean, 0.7, 1.3)); };
-  for (let j = 0; j < N; j++) {
-    for (let i = 0; i < N; ) { // E61
+  paintGround = (into, s, i0, iN, j0, j1, masks) => { g = into; blades = bladesAt(s); // E748
+  for (let j = j0; j <= j1; j++) {
+    for (let i = i0; i <= iN; ) { // E61
       const col = colour(i, j), h0 = CH[(j * N + i) * 4]; let i1 = i;
-      if (flat(i, j)) while (i1 + 1 < N && flat(i1 + 1, j) && colour(i1 + 1, j) === col && CH[(j * N + i1 + 1) * 4] === h0) i1++;
+      if (flat(i, j)) while (i1 + 1 <= iN && flat(i1 + 1, j) && colour(i1 + 1, j) === col && CH[(j * N + i1 + 1) * 4] === h0) i1++;
       const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
       const a = P(i * T, j * T, CH[k]), b = P((i1 + 1) * T, j * T, CH[k1 + 1]), c = P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), d = P(i * T, (j + 1) * T, CH[k + 2]); quad(a, b, c, d, col);
       if (col === C.grass || col === FLOOR) { g.globalAlpha = D.blades; quad(a, b, c, d, blades); g.globalAlpha = 1; }
-      const h = H[j * N + i]; for (const m of h > 0 ? (BANK[j * N + i] <= FLD.rise ? [maskLand, maskDark, maskFlood] : [maskLand, maskDark]) : DEP[j * N + i] >= D.edge ? [maskLake] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.fill(); }
+      const h = H[j * N + i]; if (masks) for (const m of h > 0 ? (BANK[j * N + i] <= FLD.rise ? [maskLand, maskDark, maskFlood] : [maskLand, maskDark]) : DEP[j * N + i] >= D.edge ? [maskLake] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.fill(); }
       i = i1 + 1;
     }
-    for (let i = 0; i < N; i++) { // E62
+    for (let i = i0; i <= iN; i++) { // E62
       const k = (j * N + i) * 4;
       face(i * T, (j + 1) * T, (i + 1) * T, (j + 1) * T, CH[k + 2], CH[k + 3], ch(i, j + 1, 0), ch(i, j + 1, 1));
       face((i + 1) * T, j * T, (i + 1) * T, (j + 1) * T, CH[k + 1], CH[k + 3], ch(i + 1, j, 0), ch(i + 1, j, 2));
     }
-  }
-  mottle(g);
+  } };
+  paintGround(g, ONE, ZERO, N - ONE, ZERO, N - ONE, true); mottle(g);
   function face(x1, y1, x2, y2, topL, topR, botL, botR) {
     if (topL <= botL && topR <= botR) return;
     for (const [lo, hi, s] of STRATA) {
@@ -297,6 +297,18 @@ function renderGround() {
   }
 }
 
+const GC = D.caches, GCH = new Map(); let paintGround = null, CHLO, CHHI; // E749
+function groundChunk(cx, cy, q, make) { const key = cx + '@' + cy + '@' + q; let c = GCH.get(key); if (c) { GCH.delete(key); GCH.set(key, c); return c; } if (!make) return null;
+  const S = GC.chunk + GC.pad, x0 = cx * GC.chunk, y0 = cy * GC.chunk, T = D.tile, ij = [], hs = [CHLO, CHHI]; c = document.createElement('canvas'); c.width = c.height = Math.ceil(S * q); const g = c.getContext('2d'); // E750
+  g.setTransform(q, ZERO, ZERO, q, -x0 * q, -y0 * q); g.fillStyle = deepest; g.fillRect(x0, y0, S, S);
+  for (const [x, y] of [[x0, y0], [x0 + S, y0], [x0, y0 + S], [x0 + S, y0 + S]]) for (const h of hs) { const [sx, sy] = fromBoard(x - ox, (y - oy + h * UP) / TILT); ij.push([Math.floor(sx / T), Math.floor(sy / T)]); }
+  const lo = (n) => clamp(Math.min(...ij.map((p) => p[n])) - GC.margin, ZERO, N - ONE), hi = (n) => clamp(Math.max(...ij.map((p) => p[n])) + GC.margin, ZERO, N - ONE);
+  paintGround(g, q, lo(ZERO), hi(ZERO), lo(ONE), hi(ONE), false); mottle(g, x0, y0, S, S, q); GCH.set(key, c); fitCache(GCH, GC.ground); return c; }
+function drawGround(gx, gy) { const z = cam.z, q = STEP ** Math.round(Math.log(z * dpr) / Math.log(STEP)); if (q <= GC.sharp) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); return; } // E751
+  const S = GC.chunk, at = (v) => Math.floor(v / z / S), last = (w) => Math.ceil(w / S) - ONE, seen = [];
+  for (let cy = Math.max(ZERO, at(-gy)); cy <= Math.min(last(gh), at(ch - gy)); cy++) for (let cx = Math.max(ZERO, at(-gx)); cx <= Math.min(last(gw), at(cw - gx)); cx++) seen.push([cx, cy, groundChunk(cx, cy, q)]);
+  const miss = seen.find(([, , c]) => !c); if (miss) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); miss[2] = groundChunk(miss[0], miss[1], q, true); dirty(); } // E752
+  for (const [cx, cy, c] of seen) if (c) ctx.drawImage(c, gx + cx * S * z, gy + cy * S * z, (S + GC.pad) * z, (S + GC.pad) * z); }
 const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null; // E547
 const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
 function wear(b) { if (!scarX || has(b, 'Field') || has(b, 'Line') || has(b, 'Gate') || has(b, 'Trap')) return; const [dx, dy, rx, ry] = SC.wear, w = b.n * D.tile, [x, y] = onGround(b.bx, b.by); blot(x + w * dx, y + w * dy * TILT, w * rx, w * ry, SCAR.wear); } // E548
@@ -379,7 +391,7 @@ function draw() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
   ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
-  const [gx, gy] = toScreen(-ox, -oy); ctx.drawImage(ground, gx, gy, gw * cam.z, gh * cam.z); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
+  const [gx, gy] = toScreen(-ox, -oy); drawGround(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
   if (show.G && cam.z * D.tile >= D.lod) drawGrid();
   drawThings(); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
@@ -1090,9 +1102,9 @@ function unitSprite(u, s) { const fr = u.path ? Math.floor((D.strideFrames * u.w
 // ── The things, drawn each frame back to fro (E117)
 const SPR = new Map(), STEP = Math.SQRT2;
 function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
-  const q = STEP ** Math.round(Math.log(s) / Math.log(STEP)), k = key + '@' + q; let c = SPR.get(k); if (c) return c;
+  const q = STEP ** Math.round(Math.log(s * dpr) / Math.log(STEP)), k = key + '@' + q; let c = SPR.get(k); if (c) return c;
   c = document.createElement('canvas'); c.width = Math.ceil(W * q); c.height = Math.ceil(H * q); g = c.getContext('2d'); g.scale(q, q); g.translate(tx, ty); if (skew) g.transform(1, skew, 0, 1, 0, 0); g.lineJoin = 'round'; g.lineCap = 'round'; paint(); g = null;
-  c.ax = ax; c.ay = ay; c.q = q; if (SPR.size > 400) dropOld(SPR); SPR.set(k, c); return c;
+  c.ax = ax; c.ay = ay; c.q = q; SPR.set(k, c); fitCache(SPR, GC.sprites); return c;
 }
 const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // E119
@@ -1342,7 +1354,7 @@ function shed(work) { DRAW.ema += (work - DRAW.ema) * DRW.ema; const was = DRAW.
   if (DRAW.ema > DRW.slow && DRAW.lvl < DRW.top) { DRAW.fast = null; if (++DRAW.slow > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
   else if (DRAW.ema < DRW.fast && DRAW.lvl > null) { DRAW.slow = null; if (++DRAW.fast > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
   if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } }
-const dropOld = (M) => { const [k, v] = M.entries().next().value, c = v.cv || v; M.delete(k); c.width = c.height = null; }; // E606
+const area = (v) => (v.cv || v).width * (v.cv || v).height; function fitCache(M, most) { let px = null; for (const v of M.values()) px += area(v); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; } } // E606
 // E607
 const spring = (x, v, to, w, dt) => { const e = Math.exp(-w * dt), d = x - to, t = (v + w * d) * dt; return [to + (d + t) * e, (v - w * t) * e]; };
 function camStop() { cam.tx = cam.ty = undefined; cam.vx = cam.vy = null; }
@@ -1444,9 +1456,9 @@ const inMini = (p) => MINI && p.x0 >= MINI.x0 && p.x0 <= MINI.x0 + MINI.s && p.y
 on('press', (p) => { if (!inMini(p)) return; p.eat = true; p.mode = 'mini'; cam.follow = false; camGo(...miniAt(p.x0, p.y0)); return true; });
 on('drag', (p) => { if (p.mode !== 'mini') return; if (Math.hypot(p.x - p.x0, p.y - p.y0) > MNI.pan) p.pan = true; if (p.pan) { camStop(); [cam.x, cam.y] = miniAt(p.x, p.y); keepOn(); } return true; });
 on('drop', (p) => p.mode === 'mini');
-function mottle(g) { const M = DRS.ground, cv = document.createElement('canvas'); cv.width = gw; cv.height = gh; const q = cv.getContext('2d'), r = NS_rng(M.seed); // E621
+function mottle(g, x0 = ZERO, y0 = ZERO, w = gw, h = gh, s = ONE) { const M = DRS.ground, cv = document.createElement('canvas'); cv.width = Math.ceil(w * s); cv.height = Math.ceil(h * s); const q = cv.getContext('2d'), r = NS_rng(M.seed); q.setTransform(s, ZERO, ZERO, s, -x0 * s, -y0 * s); // E621
   C.mottle.forEach((cols, n) => { const [cnt, r0, r1] = M.blots[n]; for (let i = cnt; i--; ) { const a = r0 + r() * (r1 - r0), b = r0 + r() * (r1 - r0); q.fillStyle = cols[i % cols.length]; q.beginPath(); q.ellipse(r() * gw, r() * gh, a, b * M.squash * TILT, r() * M.turn, -Math.PI, Math.PI); q.fill(); } });
-  q.globalCompositeOperation = 'destination-in'; q.drawImage(maskLand, null, null, gw, gh); g.drawImage(cv, null, null); }
+  q.globalCompositeOperation = 'destination-in'; q.drawImage(maskLand, null, null, gw, gh); g.drawImage(cv, x0, y0, w, h); }
 // ── The woods cache (E154)
 const CS = 32, NC = Math.ceil(N / CS), WOODS = new Map(), DEEP = Array.from({ length: NC * NC }, () => []); // E155
 const chunkOf = (k) => Math.floor((k % N) / CS) + Math.floor(k / N / CS) * NC;
@@ -1462,10 +1474,10 @@ const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = 
 function woodsChunk(c, q) { // E158
   const key = c + '@' + q + '@' + season(); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
   const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
-  for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, q * t.size), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size, g2);
-  w = { cv, q }; if (WOODS.size > D.woodsKeep) dropOld(WOODS); WOODS.set(key, w); return w;
+  for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, (q * t.size) / dpr), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size, g2);
+  w = { cv, q }; WOODS.set(key, w); fitCache(WOODS, GC.woods); return w;
 }
-function drawWoods(s) { const q = STEP ** Math.round(Math.log(s) / Math.log(STEP));
+function drawWoods(s) { const q = STEP ** Math.round(Math.log(s * dpr) / Math.log(STEP));
   for (let c = 0; c < NC * NC; c++) { if (!DEEP[c].length) continue; const [x0, y0, x1, y1] = BOX[c], [x, y] = toScreen(x0, y0), ww = (x1 - x0) * s, hh = (y1 - y0) * s; if (x > cw || y > ch || x + ww < 0 || y + hh < 0) continue; ctx.drawImage(woodsChunk(c, q).cv, x, y, ww, hh); }
 }
 function drawThings() {
