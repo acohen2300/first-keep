@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,355 | 547,973 | 548,120 |
-| Books | 2129 | 0 | 623,685 | 624,496 |
+| Game code | 31 | 3,359 | 550,154 | 550,301 |
+| Books | 2129 | 0 | 624,685 | 625,497 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,770 | 289,689 | 289,930 |
 
@@ -21,7 +21,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
 | index.html#floor-2-terrain | 84 | 9,289 | 9,293 | 115 |
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
-| index.html#drawn-once-in-the-view-frame | 82 | 13,070 | 13,074 | 106 |
+| index.html#drawn-once-in-the-view-frame | 80 | 12,702 | 12,706 | 96 |
 | index.html#the-view | 9 | 1,080 | 1,084 | 13 |
 | index.html#the-door | 95 | 14,460 | 14,464 | 67 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
@@ -36,10 +36,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-6-climate | 170 | 29,813 | 29,825 | 225 |
 | index.html#floor-7-display | 44 | 7,434 | 7,438 | 55 |
 | index.html#the-view-s-eyes-lights-and-stage | 118 | 22,787 | 22,791 | 0 |
-| index.html#the-meadow | 61 | 12,167 | 12,171 | 0 |
-| index.html#the-woods-cache | 51 | 4,932 | 4,936 | 66 |
+| index.html#the-meadow | 69 | 14,369 | 14,373 | 0 |
+| index.html#the-woods-cache | 49 | 5,267 | 5,271 | 47 |
 | index.html#touch | 50 | 7,547 | 7,551 | 54 |
-| menu.js | 492 | 92,158 | 92,201 | 568 |
+| menu.js | 492 | 92,170 | 92,213 | 568 |
 | econ.js | 578 | 106,289 | 106,289 | 72 |
 | combat.js | 355 | 59,064 | 59,064 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
@@ -52,11 +52,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,145 |
 | citations | 272 | 60,639 |
-| colours | 23 | 6,075 |
-| comments | 793 | 137,761 |
+| colours | 23 | 6,116 |
+| comments | 793 | 137,890 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,397 |
-| measure | 322 | 145,344 |
+| measure | 322 | 146,173 |
 | rules | 75 | 28,346 |
 | screen | 14 | 4,294 |
 | shells | 110 | 23,426 |

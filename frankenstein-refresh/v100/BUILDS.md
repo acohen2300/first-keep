@@ -4011,3 +4011,21 @@ MODIFIED (34):
 LOCKED (2226 of 2257): byte for byte as sealed, 1,355,145 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2257 items sealed · 2129 book entries · 93 laws · 272 citations, 12 still to open · 7 known
+
+## B26: the coast's three: the play edge a smooth contour in from the fractal coast, the ground's light smooth in the meadow layer (no tile stairs on sand or slopes), every land edge crisp where the contours run; the Town Center card's header bars no longer take the rank strip's style (two rules shared the name .bar) · 2026-11-08 17:02
+Albert, Nov 8 16:43: the lake maker for the coast edge, straight; 16:45 mock it; 16:53 start with the three; 16:57: the menu header broke
+Opened: book:measure, book:colours, book:comments, code:index.html, code:menu.js
+MODIFIED (10):
+- book:colours:C23 · 379 → 422 bytes
+- book:comments:E161 · 114 → 194 bytes
+- book:comments:E60 · 152 → 184 bytes
+- book:comments:E758 · 99 → 116 bytes
+- book:measure:D348 · 1,821 → 2,021 bytes
+- book:measure:D353 · 3,266 → 3,895 bytes
+- code:index.html#drawn-once-in-the-view-frame · 13,074 → 12,706 bytes
+- code:index.html#the-meadow · 12,171 → 14,373 bytes
+- code:index.html#the-woods-cache · 4,936 → 5,271 bytes
+- code:menu.js · 92,201 → 92,213 bytes
+LOCKED (2247 of 2257): byte for byte as sealed, 1,354,625 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2257 items sealed · 2129 book entries · 93 laws · 272 citations, 12 still to open · 7 known

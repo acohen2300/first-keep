@@ -44,7 +44,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E755 | index.html#the-things-drawn-each-frame-back-to-fr | how tall a drawing is: from its first to its last painted row |
 | E756 | index.html#the-things-drawn-each-frame-back-to-fr | the figures' scale: a villager's body height over its drawing's, one for every figure (riders, animals and engines are drawn at the same art scale) |
 | E757 | index.html#the-things-drawn-each-frame-back-to-fr | a find's scale: its body's height (tree, bush, outcrop) over its own drawing's; a find with no body is drawn as the figures are |
-| E758 | index.html#drawn-once-in-the-view-frame | a slope takes the light by the buildings' law: warm toward the sun, cool toward the sky |
+| E758 | index.html#drawn-once-in-the-view-frame | a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth across the tiles |
 | E759 | index.html#drawn-once-in-the-view-frame | the shore and the strata as contours: between four tiles' middles the lowest band is laid, then each higher band above its level, so the coast and the sand, dirt and grass edges cut across the tiles instead of stepping; foam on the water's edge; a cliff or a wood keeps its tiles |
 | E760 | index.html#the-building-art | a stone wall laid course by course, each stone with its own faint tint |
 | E761 | index.html#the-building-art | damp moss rising from a wall's foot, fading upward |
@@ -173,7 +173,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E57 | index.html#drawn-once-in-the-view-frame | the masks at a quarter scale: the land in white and in shadow, the inland water |
 | E58 | index.html#drawn-once-in-the-view-frame | a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right and down, so the next tile's edge lands on solid paint and no seam shows |
 | E59 | index.html#drawn-once-in-the-view-frame | the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (preview 49's) |
-| E60 | index.html#drawn-once-in-the-view-frame | the light stands high to the left and in front: ground leaning that way is lit, ground leaning away is shaded, 3% a unit of lean over a tile |
+| E60 | index.html#drawn-once-in-the-view-frame | the ground is painted flat; the light stands high to the left and in front and the meadow layer lights it (D353 lit): ground leaning that way warm, ground leaning away cool |
 | E61 | index.html#drawn-once-in-the-view-frame | runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills) |
 | E62 | index.html#drawn-once-in-the-view-frame | faces: the +y edge and the +x edge face the camera (the turn is under 45°) |
 | E63 | index.html#the-view | The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are drawn each frame over the one picture. |
@@ -273,7 +273,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E158 | index.html#the-woods-cache | the chunk's deep trees on one canvas |
 | E159 | index.html#the-woods-cache | a hit moves to the back: the oldest goes first |
 | E160 | index.html#the-woods-cache | a wounded one sways about its feet (QBS) |
-| E161 | index.html#the-woods-cache | L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tiles' own edges |
+| E161 | index.html#the-woods-cache | L6 the play edge: the contour D7 in from the coast, found cell by cell between the tiles' middles (marching squares) so it follows the fractal coast smoothly, never the tiles' stairs |
 | E162 | index.html#touch | Touch: one finger pans, two pinch; a wheel zooms about the pointer; a held finger picks more, drags the crosshair or draws a box (F21). |
 | E163 | index.html#touch | the camera rule: the board never leaves the screen's middle; a board smaller than the screen sits centred |
 | E164 | index.html#touch | what is under the finger: the tile at the land's height and the nearest unit it may see (yours, or one in sight and not hidden), within the larger of D246 hit and hitZ a zoom (Mid's hitAt); the menu answers the tap |

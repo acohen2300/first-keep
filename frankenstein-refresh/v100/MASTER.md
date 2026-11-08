@@ -107,8 +107,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
 - **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102)
-- **E60** the light stands high to the left and in front: ground leaning that way is lit, ground lea
-- **E758** a slope takes the light by the buildings' law: warm toward the sun, cool toward the sky
+- **E60** the ground is painted flat; the light stands high to the left and in front and the meadow  · D353 (N264, N265, N266, N267, N268, N269, N270)
+- **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N264, N265, N266, N267, N268, N269, N270)
 - **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
@@ -438,7 +438,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E766** the ring at a unit's feet, full and bright: green picked, blue working, yellow idle (yours · C24 (N145)
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
 - **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170, N195, N205)
-- **E161** L6 the play edge: the line between tiles D7 in from the coast and the rest, along the tile · D7 (N112)
+- **E161** L6 the play edge: the contour D7 in from the coast, found cell by cell between the tiles'  · D7 (N112)
 
 ## index.html#touch
 
