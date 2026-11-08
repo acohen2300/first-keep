@@ -41,7 +41,7 @@ function lack(i) { const gap = { ...SQ.plan[i] }, less = (c, n) => { gap[clsOf(c
   const out = {}; for (const cls in gap) { const k = FK.civKind(FK.kinds(cls).find((c) => FK.aged(FK.civKind(c, ME), ME)), ME); if (gap[cls] > 0 && k) out[k] = gap[cls]; } return out; }
 // E230
 const wear = (u) => (SIDES[u.side] && (K.rain + K.snowing > 0 || K.temp < 0) ? 1 - D.wear * (1 - Math.min(1, FK.stat(u.code, u.side, 'wear'))) : 1);
-const dmgOf = (u) => FK.stat(u.code, u.side, 'atk') * wear(u) * (rider(u) ? shapeOf(u).dmg : 1) * temper(u).dmg * ECON.hungerOf(u.side) * ZE.mul ** (u.zeal > K.t) * D.health.dmg ** (u.sick > K.t);
+const dmgOf = (u) => FK.stat(u.code, u.side, 'atk') * wear(u) * (rider(u) ? shapeOf(u).dmg : 1) * temper(u).dmg * ECON.hungerOf(u.side) * ZE.mul ** (u.zeal > K.t) * D.health.dmg ** (u.sick > K.t) * FK.evKnob('dmg');
 const vsOf = (u) => Object.assign({}, stat(u).vs, ...FK.ranks(u.code, u.side).map((c) => BOOKS.tech[c].value.rank.vs)), tagsOf = (t) => [clsOf(t.code), ...(stat(t).tags || [])];
 const vs = (a, t) => { const v = vsOf(a); return Math.max(...[t.code, ...tagsOf(t)].map((k) => v[k] || 1)); }; // E282
 function fromWhere(t, a) { // E387

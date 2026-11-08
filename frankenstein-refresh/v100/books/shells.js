@@ -102,6 +102,7 @@ BOOK("shells", {
  "MG9": {"name": "Drifters' camp", "layer": 100, "find": "drifters", "look": "campfire", "ticks": ["Hire"], "cite": ["N205"]},
  "MG10": {"name": "Mercenaries", "layer": 100, "find": "mercs", "look": "campfire", "ticks": ["Hire"], "cite": ["N205"]},
  "MG11": {"name": "Fallen star", "layer": 100, "find": "meteor", "look": "star", "ticks": ["Take"], "cite": ["N205"]},
+ "MH8": {"name": "Performers", "layer": 120, "look": "wayfarer", "pace": "D86.wayfarer", "body": "person", "ticks": ["Walk", "Health"], "cite": ["N252"]},
  "MH7": {"name": "Wagon train", "layer": 120, "look": "caravan", "pace": "D86.wagon", "body": "person", "ticks": ["Walk", "Join", "Health"], "mount": "horse", "cite": ["N205"]},
  "UM17": {"name": "Legionary", "layer": 120, "class": "Foot", "age": "Bronze", "look": "legion", "pace": "D86.walk", "body": "person", "ticks": ["Walk", "Fight", "Health"], "kit": ["sword", "shield"], "voice": "pickMetal", "upkeep": "D211.foot", "cite": ["N144", "N170", "N176", "N225"], "civ": "roman", "replaces": "UM6"},
  "UM18": {"name": "Han crossbowman", "layer": 120, "class": "Archers", "age": "Classical", "look": "crossbow", "pace": "D86.walk", "body": "person", "ticks": ["Walk", "Fight", "Shoot", "Health"], "kit": ["crossbow"], "voice": "pickTwang", "upkeep": "D211.foot", "cite": ["N144", "N170", "N176", "N225"], "civ": "han", "replaces": "UM8"},

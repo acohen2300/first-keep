@@ -34,6 +34,13 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E738 | menu.js | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |
 | E739 | menu.js | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost) |
 | E740 | menu.js | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |
+| E741 | index.html#floor-6-climate | an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's depth: a sine over its seconds |
+| E742 | index.html#floor-6-climate | the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's |
+| E743 | index.html#floor-6-climate | the mirage: an army seen on the small map ahead of your Town Center toward the middle, told with its square; at its end, told it was not there |
+| E744 | index.html#floor-6-climate | the circus crosses the land like the wagon; a villager near a performer is cheered and gathers more for a while |
+| E745 | index.html#floor-6-climate | the aurora: curtains of green and violet over the top of the glass, swaying unless motion is stilled |
+| E746 | index.html#floor-6-climate | an event with its own picture draws it over the map |
+| E747 | index.html#the-view-s-eyes-lights-and-stage | the mirage's dots on the small map, in the colour of what is coming |
 | E737 | menu.js | a message is a door, as Base's: a tap on it goes to its place and closes it (the Nov 7 re-read, item 14) |
 | E736 | menu.js | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |
 | E735 | menu.js | the hammer carries a bar for the sites going up (the mean of their progress), and People is ringed blue while anyone stands idle (Base, items 19 and 20); with no hazard ticked each is drawn by lot at D309 lot odds, Base's HZ_ODDS, and the first message says the level (item 5) |

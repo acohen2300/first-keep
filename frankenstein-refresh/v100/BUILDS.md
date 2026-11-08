@@ -3641,3 +3641,31 @@ MODIFIED (9):
 LOCKED (2140 of 2149): byte for byte as sealed, 1,138,579 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2149 items sealed · 2023 book entries · 93 laws · 251 citations, 7 still to open · 7 known
+
+## B9 · Base's eclipse, heat wave, mirage, circus and aurora back (as Base's EVENTS); the storm band and fog stay with v100's climate; the dragon and troll wait for World: Fantasy · 2026-11-08 08:00
+Albert, Nov 8 07:26 (#21 bring all back) and 07:51 (go go)
+Opened: code:index.html#floor-6-climate, code:index.html#floor-5-movables, code:index.html#the-view-s-eyes-lights-and-stage, code:index.html#touch, code:combat.js, code:econ.js, book:measure, book:colours, book:shells, book:words, book:citations, book:comments
+MODIFIED (20):
+- book:citations:N252 · added
+- book:citations:N253 · added
+- book:colours:C18 · 370 → 470 bytes
+- book:comments:E741 · added
+- book:comments:E742 · added
+- book:comments:E743 · added
+- book:comments:E744 · added
+- book:comments:E745 · added
+- book:comments:E746 · added
+- book:comments:E747 · added
+- book:measure:D138 · 4,981 → 5,059 bytes
+- book:measure:D308 · 2,297 → 3,491 bytes
+- book:shells:MH8 · added
+- book:words:J19 · 1,931 → 2,666 bytes
+- code:combat.js · 59,046 → 59,065 bytes
+- code:econ.js · 106,153 → 106,202 bytes
+- code:index.html#floor-5-movables · 15,486 → 15,502 bytes
+- code:index.html#floor-6-climate · 25,363 → 27,770 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,158 → 22,408 bytes
+- code:index.html#touch · 7,479 → 7,487 bytes
+LOCKED (2139 of 2159): byte for byte as sealed, 1,149,621 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2159 items sealed · 2033 book entries · 93 laws · 253 citations, 8 still to open · 7 known

@@ -306,8 +306,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E722** zero and one are named from the count row (D346), no longer borrowed from the hazards' bas · D346 (N102)
 - **E568** where an event comes in: a spot on one of the land's edges, its far side through the middl
 - **E569** an event comes only in its season, or in the rain; never the same twice running
+- **E741** an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's d
 - **E570** a Poisson wait with a floor: least plus −(mean − least) ln U (QM) · QM (N12)
 - **E571** what each event does when it starts, each second it runs and when it ends (Mid's EV)
+- **E742** the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's
+- **E743** the mirage: an army seen on the small map ahead of your Town Center toward the middle, tol
+- **E744** the circus crosses the land like the wagon; a villager near a performer is cheered and gat
+- **E745** the aurora: curtains of green and violet over the top of the glass, swaying unless motion 
+- **E746** an event with its own picture draws it over the map
 - **E572** a sinkhole's star of cracks, each arm bending as it goes, laid on the ground's memory from
 - **E573** once a second: the event running, else the warning ahead of the next, else its start; the 
 - **E574** the horde under the Outlaws hazard: told two seasons and one ahead, then it comes for the 
@@ -365,6 +371,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E619** a figure in motion: the woodcutter's lean into its tree (the view's own memory), the step'
 - **E620** the small map: the ground, the fog, buildings you know (a seat is a star), units you see, 
 - **E731** the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map 
+- **E747** the mirage's dots on the small map, in the colour of what is coming
 - **E621** the grass mottled, greens then earth, kept to the land (Mid's makeBg)
 
 ## index.html#the-woods-cache
