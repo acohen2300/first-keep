@@ -23,3 +23,4 @@ Rules for the run: one build at a time, each gated (index.py PASS) and published
 - B28 (20:35-20:50): built: no holds on the War bar; five pages of four; Train's double kinds and the Form dial's undefined label fixed. OPEN: the map's hold gesture (box pick) is still a hold.
 - Albert 20:49 on B29: the help bar should be cleaner, less busy and loud. Research: tap to buy with a cancel option, or first tap explains and the second buys (double tap is fine once learned); the bar must do something noticeable or nobody looks up.
 - B30 (20:52-21:00): built: familiarity, Local guides, Guerrilla warfare, the scout's Stealth. Not saved across reloads (logged in E810).
+- 20:52 Albert: stop after B30. B30 is published; stopped here. B29 (the help line, research hints: the quiet bar, first tap tells, second buys) was half-built and is set aside unpublished in the session scratchpad (b29-wip); the repo stands at B30.
