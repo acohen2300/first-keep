@@ -131,7 +131,11 @@ Each a box in gunmetal (S1, #2c3238) on the MR tray; only the outline changes.
 - "Research Buttons - Blue Dim": 1 px, inactive blue #284c7c.
 - "Research Buttons - Blue Active": 1 px, ring blue #2f8cff.
 - "Research Buttons - Blue Double": 2 px, ring blue #2f8cff.
-- "Research Buttons - Green Dim": 1 px, inactive green #3d6b47 (by the inactive rule; not yet shown in a mock).
+- "Research Buttons - Green Dim": 1 px, inactive green #3d6b47 (by the inactive rule; seen and locked 11:32).
 - "Research Buttons - Green Active": 1 px, mint #5fd08a (C6).
 - "Research Buttons - Green Double": 2 px, mint #5fd08a.
-Inactive rule (draft colour sheet, not yet locked): the active colour mixed 55% into the tray brown (#221811).
+### Colour sheet, active and inactive: LOCKED (Albert, 11:32; colour-sheet2)
+- Inactive = the active colour mixed 55% into the tray brown (#221811). Pairs (active → inactive): ring blue #2f8cff → #284c7c; crimson R4 #a3262a → #5c1e1c; gunmetal S1 #2c3238 → #262423; brown box #33241a → #2a1d15; lighter brown #443023 → #312319; gold #e6b947 → #7a6029; white ink #ece5d3 → #7d7468; mint C6 #5fd08a → #3d6b47.
+- The browns step by x = (17, 12, 9): tray #221811, box #33241a, lighter #443023.
+- Outlines: dim and active 1 px, double 2 px.
+- Flag: the dark colours (browns, gunmetal) barely change when inactive; their inactive state needs another cue.
