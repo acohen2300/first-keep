@@ -9,7 +9,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E689 | index.html#floor-7-display | the tops are made again when a building is added, removed or raised further: a site counts at its built share of its height |
 | E690 | index.html#qbf-the-dice | the dice can tell and set where they are, so a save opened rolls on as it would have |
 | E691 | combat.js | a captive is taken alive: gone from the field with no corpse, no killer and no blow to anyone's nerve; who aimed at it looks again |
-| E692 | menu.js | any touch on any surface clears a hold before it begins; a finger that moves further than D246's move from where it went down cancels the hold |
 | E693 | menu.js | the arguments the cells point at are made again with each render, so the table holds only what is on the screen |
 | E694 | index.html#the-door | a unit's row of numbers with its side's research applied, kept until the research changes: code reads the stats through here, never the raw table |
 | E695 | index.html#the-door | at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, as SoRen does; paused, time stands still |
@@ -95,7 +94,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E734 | econ.js | a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job is locked until then and a tap on it says when it opens (the Nov 7 re-read, item 21) |
 | E733 | menu.js | the bars for what is picked, as Base's selection bar (the Nov 7 re-read, items 32 and 34): villagers get the yields, Build and Follow; soldiers Charge, Fall back, Hold, Recall and Follow; a wild animal Hunt, Hunt ×3 and Follow |
 | E732 | menu.js | the Mail door on the top bar with its unread count opens the Mail card: the messages newest first, each with its group, a tap on one with a place goes there (Base, the Nov 7 re-read item 13) |
-| E731 | index.html#the-view-s-eyes-lights-and-stage, menu.js | the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map is drawn on the canvas inside the box the menu measures (miniBox); Rally, Choke and Reinforce moved under Direct |
+| E731 | index.html#the-view-s-eyes-lights-and-stage, menu.js | the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map is drawn on the canvas inside the box the menu measures (miniBox); five pages of four tiles take its place (Train, Squad, Set up, Direct, Field), one tap each, no holds (Albert, Nov 8) |
 | E730 | menu.js, econ.js | the Build card as Base's: opening it reads the middle of the view and opens the tab of what fits there, marked blue with Fits here; a second tap on the Build tab closes it; each row is the name, built/limit (limitOf), the price in green or the lock (its age, research, need) in grey; tapping the picked building again cancels the ghost |
 | E729 | index.html#floor-6-climate | the sky's washes (the dusk glow, the night blue, fog, rime, the flash, the visibility veil) are composed into one colour and laid in one pass, exactly as the six would have painted in turn (each over the last: c = cᵢaᵢ + c(1 − aᵢ), a = aᵢ + a(1 − aᵢ)); the top bar's height is measured once, not read from the layout every frame (SoRen 70-render; the Nov 7 read); with no top bar (a full card open) the sky's band starts at the top of the glass |
 | E728 | index.html#floor-6-climate | a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the ground shakes (the jolt, D113 shake), the thunder follows by the real delay; a sheet flash is the far one |
@@ -305,7 +304,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E191 | menu.js | tap a yield: new villagers go there (the ring) |
 | E192 | menu.js | tap picks, slide places the ghost, tap again builds |
 | E193 | menu.js | the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only says why |
-| E194 | menu.js | a cell's object arguments live here by key, since the DOM holds strings |
+| E194 | menu.js | a cell's object arguments live here by key, since the DOM holds strings (the hold verbs are gone: one tap does everything, Albert, Nov 8) |
 | E195 | menu.js | the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one frame with one lit. Every screen is a list of ribbons |
 | E196 | menu.js | the mold: every screen is rows on one six-column grid (the Formation). A row holds cells and parts; a part is an optional label and a strip of choices, seg puts them in one frame with one lit |
 | E197 | menu.js | Albert's Town Center: the bars in the title, three tabs, the queue, train, tech |
@@ -526,20 +525,19 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E416 | combat.js | Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshair as one order and one mission; every ready squad goes, else the army |
 | E417 | combat.js | who can still reach a fight in time, fastest first, until the fight is even (Mid's reinforcePlan); grouped into waves by arrival |
 | E418 | combat.js | the War Director: the soldiers of a kind that can go, the crosshair's tile, a move's wait in seconds; the charge's reason, the charge, fall back in order |
-| E419 | combat.js | the Director's six moves and the bombard (Mid's DIRECTS): each returns what it says, a reason without its bang when nobody moved |
-| E420 | combat.js | a kind's move, tap or hold (Mid's direct): it says its word, pays its meals (D213) and sounds its event |
-| E421 | combat.js | the choke (Mid's chokeAt): a drag across a gap, the soldiers stand in it as many files as it holds, facing the foe seen, else away from home; a standing order |
+| E419 | combat.js | the Director's three moves (Mid's DIRECTS): each returns what it says, a reason without its bang when nobody moved |
+| E420 | combat.js | a kind's move, one tap (Mid's direct): it says its word, pays its meals (D213), tires the soldiers and sounds its event |
+| E421 | combat.js | the narrow at a tile: the open ground across the facing, a tile at a time each way until a wall, a tree or water; narrower than the widest choke it is a choke, held in as many files as it is wide (D.choke; Mid's chokeAt without the drag) |
 | E422 | combat.js | the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D252 find of the crosshair |
 | E423 | combat.js | an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a foe within reach or a blow springs them all with a charge |
 | E424 | combat.js | your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there, the time left; the rally flag (flagAt); leaves over a hidden soldier (leavesOver) |
 | E425 | index.html#touch | the finger's gesture: where it went down and is, when, and what a module made of it (a line, the crosshair, a box); a hold after D246 hold |
 | E426 | index.html#touch | the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch) |
 | E427 | menu.js | Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke tool; reinforce the mission most in need; a kind's two moves; the quick action's sword and close |
-| E428 | menu.js | a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) |
 | E429 | menu.js | Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens the card; with yours picked a tap is the obvious order; on open ground with nothing picked, the sword and close (Nov 3); a group's ring picks the group; a cut-out plot replants |
 | E430 | menu.js | the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green yours, red a foe or a hostile near, blue an ally, white nature |
-| E431 | menu.js | the finger's holds and drags on the map: the choke drawn, the crosshair dragged, yours picked to keep picking, a box picks yours in it |
-| E432 | menu.js | the choke being drawn and the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, the cross, the time and the square |
+| E431 | menu.js | the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picking, a box picks yours in it |
+| E432 | menu.js | the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, the cross, the time and the square |
 | E433 | menu.js | a tile on the board (the floor gives -1 off it) |
 | E434 | ai.js | the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to half way, each ai.step tiles, the open width across the road, the narrowest of ai.min to ai.max |
 | E435 | ai.js | the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foot, files deep across the narrowest gap on the road to its nearest foe, for ai.hold |

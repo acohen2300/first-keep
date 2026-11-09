@@ -4090,3 +4090,26 @@ MODIFIED (10):
 LOCKED (2255 of 2262): byte for byte as sealed, 1,372,075 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2262 items sealed · 2134 book entries · 93 laws · 276 citations, 16 still to open · 7 known
+
+## B28: no tap-and-hold anywhere: the War bar's middle is five pages of four tiles (Train, Squad, Set up, Direct, Field), one tap each; the Director is Wall, Loose!, Charge, Ambush; the Field is Attack, Rally, Reinforce, Home; the wall takes a narrow's width by the land (the choke drag cut); advance, fall back, wheel, pull back and bombard cut · 2026-11-08 20:44
+Albert, Nov 8 19:12 (no tap-and-hold) and 20:33 (the mock: yes build)
+Opened: book:measure, book:comments, book:words, book:sprites, code:menu.js, code:combat.js
+MODIFIED (15):
+- book:comments:E194 · 83 → 149 bytes
+- book:comments:E419 · 140 → 126 bytes
+- book:comments:E420 · 115 → 131 bytes
+- book:comments:E421 · 170 → 249 bytes
+- book:comments:E428 · removed
+- book:comments:E431 · 146 → 129 bytes
+- book:comments:E432 · 162 → 136 bytes
+- book:comments:E692 · removed
+- book:comments:E731 · 214 → 286 bytes
+- book:measure:D248 · 618 → 737 bytes
+- book:sprites:P42 · 305 → 278 bytes
+- book:words:J10 · 624 → 768 bytes
+- book:words:J11 · 2,203 → 1,761 bytes
+- code:combat.js · 59,031 → 57,923 bytes
+- code:menu.js · 92,213 → 90,393 bytes
+LOCKED (2247 of 2260): byte for byte as sealed, 1,332,412 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2260 items sealed · 2132 book entries · 93 laws · 276 citations, 16 still to open · 7 known

@@ -504,7 +504,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
-- **E194** a cell's object arguments live here by key, since the DOM holds strings
+- **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
@@ -531,8 +531,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
-- **E428** a button held for D246 hold runs its second verb, and its click is swallowed (Mid's lpT) · D246 (N190)
-- **E692** any touch on any surface clears a hold before it begins; a finger that moves further than  · D246 (N190)
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
@@ -555,8 +553,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
-- **E431** the finger's holds and drags on the map: the choke drawn, the crosshair dragged, yours pic
-- **E432** the choke being drawn and the crosshair (Mid's drawReticle): brackets, a sonar ring, turni
+- **E431** the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picki
+- **E432** the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, 
 - **E359** the town is told what food, the seasons and the flock do, in the Words book's news
 - **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
 - **E635** the mail (Mid's say and tell, D323): a line shows a while unless it is quiet, the same lin · D323 (N223) · QCH (N223)
@@ -793,9 +791,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E416** Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshai
 - **E417** who can still reach a fight in time, fastest first, until the fight is even (Mid's reinfor
 - **E418** the War Director: the soldiers of a kind that can go, the crosshair's tile, a move's wait 
-- **E419** the Director's six moves and the bombard (Mid's DIRECTS): each returns what it says, a rea
-- **E420** a kind's move, tap or hold (Mid's direct): it says its word, pays its meals (D213) and sou · D213 (N170)
-- **E421** the choke (Mid's chokeAt): a drag across a gap, the soldiers stand in it as many files as 
+- **E419** the Director's three moves (Mid's DIRECTS): each returns what it says, a reason without it
+- **E420** a kind's move, one tap (Mid's direct): it says its word, pays its meals (D213), tires the  · D213 (N170)
+- **E421** the narrow at a tile: the open ground across the facing, a tile at a time each way until a
 - **E422** the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D2 · D252 (N190)
 - **E423** an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a fo
 - **E424** your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there,

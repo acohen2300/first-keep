@@ -7,7 +7,7 @@ const { D, B, U, SIDES, N, show } = FK, { zero: ZERO, one: ONE } = FK.D.count, t
 const LAYERS = [['P', 'Pace'], ['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
 const SCR = fromBook('screen'), GROUPS = SCR.tabs; // E172
 const seatCode = () => FK.ticked('Seat')[0], born = () => FK.trains(seatCode())[0]; // E173
-const classes = () => Object.values(D.trains).flat().filter((k) => !FK.SH[k]), kindOf = (cls) => FK.kinds(cls).find((c) => FK.aged(c, ME)) || FK.kinds(cls)[0]; // E174
+const classes = () => [...new Set(Object.values(D.trains).flat().filter((k) => !FK.SH[k]))], kindOf = (cls) => FK.kinds(cls).find((c) => FK.aged(c, ME)) || FK.kinds(cls)[0]; // E174
 const tall = (page) => !!(SCR[page] && SCR[page].ticks.includes('Tall')); // E175
 const OPTS = { // E176
   diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open', 'open'], ['Siege', 'siege'], ['Silk Road', 'road'], ['Last Keep', 'last']],
@@ -131,7 +131,7 @@ const VERBS = {
   muster: { label: () => `${WA.muster}${WAR.SQ.sel == null ? '' : price(ECON.musterCost(ME, WAR.lack(WAR.SQ.sel)).cost)}`, whyNot: () => { if (WAR.SQ.sel == null) return 'Pick a squad'; const g = WAR.lack(WAR.SQ.sel), w = ECON.musterWhy(ME, g); return w === 'cost' ? `Needs ${costText(ECON.musterCost(ME, g).cost)}` : MUSTER[w] || ''; }, run: () => ECON.muster(ME, WAR.lack(WAR.SQ.sel), WAR.SQ.sel) },
   opt: { label: (k, i) => OPTS[k][i][0], whyNot: (k) => (BUILT[k] ? '' : 'Not built yet'), run: (k, i) => { S.opt[k] = i; } },
   war: { label: () => (S.war ? '' : `<span class="t">${SVG.war}</span>${WD.mail.groups.war}`), whyNot: () => '', run: () => { const [w, h] = FK.size(); S.war = !S.war; S.mid = 'map'; S.tab = null; S.tool = null; S.aim = S.aim || { k: tileK(w * P.half, h * P.half), t: null }; S.aimT = performance.now(); } },
-  mid: { label: (m) => `<span class="t">${SVG[m]}</span>${{ train: 'Train', squad: 'Squad', direct: 'Direct' }[m]}`, whyNot: () => '', run: (m) => { S.mid = S.mid === m ? 'map' : m; } },
+  mid: { label: (m) => { const [word, icon] = WA.mid[m]; return `<span class="t">${SVG[icon]}</span>${word}`; }, whyNot: () => '', run: (m) => { S.mid = S.mid === m ? 'map' : m; } },
   kind: { label: (c) => `<span class="t">${SVG[FK.kinds(FK.SH[c].class).map((k) => FK.SH[k].look).find((l) => SVG[l])]}</span>${FK.rankName(c, ME)}`, whyNot: (c) => { const b = trainer(c); return !FK.aged(c, ME) ? aging(c) : !b ? `Build a ${B[Object.keys(D.trains).find((x) => FK.trains(x, ME).includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // E186
   htab: { label: (t) => t, whyNot: () => '', run: (t) => { S.htab = t; } },
   info: { label: () => SVG.book, whyNot: () => '', run: () => { S.info = !S.info; } },
@@ -154,12 +154,11 @@ const VERBS = {
   attack: { label: () => `<span class="t">${SVG.attack}</span>Attack<small>${msnSay(WA.all)}</small>`, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => { WAR.go(S.aim); S.firedT = performance.now(); } }, // E427
   allHome: { label: () => WO.homeCell, whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.everyHome() },
   callHome: { label: () => WO.homeCell, whyNot: (i) => (WAR.MS[i] && !WAR.MS[i].end ? '' : WO.notOut), run: (i) => WAR.callHome(i) },
-  rally: { label: () => `${WO.rallyCell}<small>${WO.ambushCell}</small>`, whyNot: () => '', run: () => { SIDES[ME].flag = aimK(); toast(WO.rally); } },
+  rally: { label: () => WO.rallyCell, whyNot: () => '', run: () => { SIDES[ME].flag = aimK(); toast(WO.rally); } },
   ambush: { label: () => WO.ambushCell, whyNot: () => '', run: () => WAR.ambushAt(aimK(), toolSet()) },
-  choke: { label: () => WO.chokeCell, whyNot: () => '', run: () => { S.tool = S.tool === 'choke' ? null : 'choke'; const [, , , , tell] = WO.choke; if (S.tool) toast(tell); } },
   reinforce: { label: () => WO.reinforceCell, whyNot: () => (Object.values(WAR.MS).some((m) => !m.end && m.st === 'act') ? '' : WO.late), run: () => { const [m, p] = Object.values(WAR.MS).filter((m) => !m.end && m.st === 'act').sort((a, b) => a.odds - b.odds).map((m) => [m, WAR.reinforcePlan(m)]).find(([, p]) => p && p.go.length) || [];
     if (!m) return toast(WO.late); WAR.reinforce(p.go, m); toast(WO.reinforce.replace('{n}', p.go.length).replace('{m}', m.name).replace('{list}', waveLine(p))); } },
-  move: { label: (c) => { const [[, a], [, b]] = WO.direct[c], w = WAR.directWait(c); return `${a}<small>${b}${w ? ` ${w}s` : ''}</small>`; }, whyNot: () => '', run: (c, held) => WAR.direct(c, !!held, S.aim) },
+  move: { label: (c) => { const [, a] = WO.direct[c], w = WAR.directWait(c); return `${a}${w ? `<small>${w}s</small>` : ''}`; }, whyNot: () => '', run: (c) => WAR.direct(c, S.aim) },
   quick: { label: () => SVG.attack, whyNot: () => (!WAR.sendable().length ? WO.none : ''), run: () => { const q = S.qa, U = WAR.sendable(); S.qa = null; if (WAR.order(U, null, q.k)) ECON.orderCost(ME, U); } },
   qclose: { label: () => SVG.close, whyNot: () => '', run: () => { S.qa = null; } },
   sendTo: { label: (y) => `<span class="t">${SVG[y]}</span>`, whyNot: (y) => (FK.picked().filter(isVil).some((u) => ECON.bestFind(u, y)) ? '' : `No ${y} within reach`), run: (y) => { for (const u of FK.picked().filter(isVil)) { const t = ECON.bestFind(u, y); if (t) ECON.gatherAt(u, t); } } },
@@ -200,7 +199,7 @@ function act(verb, arg, arg2) { const v = VERBS[verb], why = v.whyNot(arg, arg2)
 // E193
 const cell = (text, cls = '', on = null) => `<button class="cell ${cls}" ${on ? `data-v="${on.join('|')}"` : ''}>${text}</button>`;
 const vcell = (verb, arg, arg2, cls = '', on = false) => { const v = VERBS[verb], a = ARGS[arg] ?? arg, a2 = ARGS[arg2] ?? arg2, why = v.whyNot(a, a2); return cell(v.label(a, a2), `${cls} ${why && !why.startsWith('Needs ') ? 'dim' : ''} ${on ? 'on' : ''}`, [verb, String(arg ?? ''), String(arg2 ?? '')]); };
-const ARGS = {}, held = (html, verb, a = '', a2 = '') => html.replace('<button ', `<button data-h="${verb}|${a}|${a2}" `); // E194
+const ARGS = {}; // E194
 const key = (o) => { const k = o.kind + (o.code || '') + (o.k ?? o.i + '_' + o.j) + (o.side ?? ''); ARGS[k] = o; return k; };
 // E195
 // E196
@@ -264,10 +263,11 @@ const base = (r) => S.war ? warBase() : row(vcell('people', null, null, `ic ${EC
   + row(tab('Build', 'Build', 'build').replace('</button>', `${siteBar()}</button>`), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
 // E201
 const MID = { map: () => '', train: () => classes().map((k) => vcell('kind', kindOf(k), null, 'ic')).join(''),
-  squad: () => WA.squads.map((n, i) => held(vcell('squad', i, null, 'two', WAR.SQ.sel === i), 'callHome', i)).join('') + vcell('setup', null, null, 'two'), setup: () => Object.keys(WAR.DIAL).map((k) => vcell('dial', k, null, 'two')).join('') + vcell('squads', null, null, 'two'), direct: () => classes().map((c) => held(vcell('move', c, null, 'two'), 'move', c, 'h')).join('') + held(vcell('rally', null, null, 'two'), 'ambush') + vcell('choke', null, null, 'two', S.tool === 'choke') + vcell('reinforce', null, null, 'two') }; // E731
+  squad: () => WA.squads.map((n, i) => vcell('squad', i, null, 'ic', WAR.SQ.sel === i)).join('') + vcell('setup', null, null, 'ic'), setup: () => Object.keys(WAR.DIAL).map((k) => vcell('dial', k, null, 'ic')).join('') + vcell('squads', null, null, 'ic'),
+  direct: () => Object.keys(WO.direct).map((c) => vcell('move', c, null, 'ic')).join('') + vcell('ambush', null, null, 'ic'), field: () => vcell('attack', null, null, 'ic') + vcell('rally', null, null, 'ic') + vcell('reinforce', null, null, 'ic') + vcell('allHome', null, null, 'ic') }; // E731
 const siteBar = () => { const sites = FK.blds().filter((t) => t.side === ME && t.done < [t].length); if (!sites.length) return ''; const f = sites.reduce((s, t) => s + t.done, ZERO) / sites.length; return `<i class="prog" style="--f:${f.toFixed(D.speeds.length)}"></i>`; }; // E735
 const warBase = () => `<div class="warbase">${vcell('work', null, null, 'ic')}${vcell('alarm', 'square', null, 'ic')}<div class="mid ${S.mid}">${MID[S.mid]()}</div>${vcell('mid', 'train', null, 'ic red', S.mid === 'train')}${vcell('mid', 'squad', null, 'ic red', S.mid === 'squad')}`
-  + `${vcell('alarm', 'hands', null, 'ic')}${vcell('alarm', 'shelter', null, 'ic')}${vcell('mid', 'direct', null, 'ic red', S.mid === 'direct')}${held(vcell('attack', null, null, 'ic red'), 'allHome')}</div>`;
+  + `${vcell('alarm', 'hands', null, 'ic')}${vcell('alarm', 'shelter', null, 'ic')}${vcell('mid', 'direct', null, 'ic red', S.mid === 'direct')}${vcell('mid', 'field', null, 'ic red', S.mid === 'field')}</div>`;
 // E202
 // E203
 const sword = svg('<path d="M14 4l6-1-1 6-9 9-3-3zM7 15l-3 3 2 2 3-3"/>').replace('currentColor', 'var(--rr)'), scales = svg('<path d="M12 4v16M7 20h10M5 7h14M5 7l-3 6h6zM19 7l-3 6h6z"/>'), hands = svg('<path d="M3 11l4-4 4 2 3-2 4 4 3 0M7 13l3 3c1 1 2 1 3 0l4-4"/>').replace('currentColor', 'var(--rg)');
@@ -285,15 +285,12 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; const r = read();
   $('base').innerHTML = base(r); $('rank').innerHTML = rank(card); { const mb = document.querySelector('.warbase .mid'); FK.miniBox(S.war && S.mid === 'map' && mb ? mb.getBoundingClientRect() : null); } spdEl.className = `cells seg ${FK.paused() && !r.result && !S.tab ? 'on' : ''}`; spdEl.innerHTML = span([...D.speeds, 'new'].length, cell(WD.back.paused, 'dim')) + D.speeds.map((n) => vcell('speed', n, null, '', show.speed === n)).join('') + vcell('newgame', null, null, 'two', S.sure) + (FK.TEST ? vcell('fast', null, null, '', show.fast) + tab('Layers', 'Yard', 'yard') : '') + Object.keys(FK.HB.mix.names).map((c) => vcell('vol', c, null, 'two')).join(''); qaEl.className = S.qa || S.crack ? 'on' : ''; if (S.crack && !S.qa) { const m = SCR.mold, [w] = FK.size(); qaEl.innerHTML = vcell('iceClear', null, null, 'wide red'); qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, S.crack.px - m.slot)) + 'px'; qaEl.style.top = S.crack.py - m.slot - m.slot + 'px'; } if (S.qa) { const m = SCR.mold, [w] = FK.size(); qaEl.innerHTML = vcell('quick', null, null, 'ic red') + vcell('qclose', null, null, 'ic'); qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, S.qa.px - m.slot * P.half)) + 'px'; qaEl.style.top = S.qa.py - m.slot * P.half + 'px'; }
 }
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
-function click(e) { const b = e.target.closest('[data-v]'); if (S.held) { S.held = false; return; } if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
+function click(e) { const b = e.target.closest('[data-v]'); if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
   if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; else { const [w, h] = FK.size(); hintAt(tileK(w * P.half, h * P.half)); } render(true); return; } act(verb, argOf(a), argOf(a2)); } // E730
 FK.on('begin', () => { S.game = { ...S.opt }; FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); if (!FK.HZ.size) for (const [, id] of OPTS.hazard) if (FK.rng() < D.hazards.lot) FK.HZ.add(id); }); // E705
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
-let lpT = 0; const lpStop = () => clearTimeout(lpT); // E428
-FK.on('rest', () => !!(S.tab && tall(S.tab)) || !!ECON.result()); let lpAt = null; addEventListener('pointerdown', () => { lpStop(); S.held = false; }, true); // E692
-ui.addEventListener('pointerdown', (e) => { lpStop(); S.held = false; lpAt = { x: e.clientX, y: e.clientY }; const b = e.target.closest('[data-h]'); if (!b) return; const [verb, a, a2] = b.dataset.h.split('|'); lpT = setTimeout(() => { S.held = true; act(verb, argOf(a), argOf(a2)); }, D.touch.hold); });
-for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) ui.addEventListener(ev, lpStop); ui.addEventListener('pointermove', (e) => { if (lpAt && Math.hypot(e.clientX - lpAt.x, e.clientY - lpAt.y) > D.touch.move) lpStop(); });
+FK.on('rest', () => !!(S.tab && tall(S.tab)) || !!ECON.result());
 // E206
 const canvas = document.getElementById('map');
 const tileUnder = (px, py) => { const [cw, ch] = FK.size(), c = FK.cam, vx = c.x + (px - cw / 2) / c.z, vy = c.y + (py - ch / 2) / c.z, [sx, sy] = FK.fromBoard(vx, (vy + D.land * Math.cos(FK.A.rise * Math.PI / 180)) / Math.sin(FK.A.rise * Math.PI / 180)); return [Math.floor(sx / D.tile), Math.floor(sy / D.tile)]; };
@@ -370,18 +367,15 @@ const aimNear = (px, py) => S.war && S.aim && Math.hypot(...aimAt().map((v, n) =
 function aimColor() { const t = S.aim.t, C = FK.C; if (t && t.side === ME) return C.green; if (t && WAR.isFoe(ME, t)) return C.red; if (t && SIDES[t.side] && WAR.friendly(ME, t.side)) return C.blue; return WAR.foesNear(boardAt(...aimAt()), HUD.danger).length ? C.red : C.white; }
 function boxPick(p) { const [x0, x1] = [p.x0, p.x].sort((a, b) => a - b), [y0, y1] = [p.y0, p.y].sort((a, b) => a - b), mine = units().filter((u) => (isSoldier(u) || isVil(u)) && !u.gone && ((x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1)(...FK.toScreen(u.vx, u.vy)));
   if (!mine.length) return toast(WO.boxNone); FK.select(mine); S.more = true; S.subject = null; render(true); }
-FK.on('press', (p) => { if (S.qa) { S.qa = null; p.eat = true; render(true); } if (S.tool === 'choke' && !S.ghost) { p.mode = 'line'; S.line = p; } }); // E431
+FK.on('press', (p) => { if (S.qa) { S.qa = null; p.eat = true; render(true); } }); // E431
 FK.on('hold', (p, k, u) => { if (S.ghost) return; if (aimNear(p.x0, p.y0)) { p.mode = 'ret'; S.drag = true; } else if (u && own(u) && !S.war) { pickToggle(u, true); FK.fire('event', 'pick', u); p.mode = 'done'; } });
 FK.on('drag', (p) => { if (p.mode === 'ret') aimSpot(...FK.hitAt(p.x, p.y)); });
-FK.on('drop', (p, cancel) => { S.drag = false; S.line = null; if (cancel) return; if (p.mode === 'line') { S.tool = null; WAR.chokeAt(boardAt(p.x0, p.y0), boardAt(p.x, p.y), toolSet()); }
-  else if (p.mode === 'box') { if (Math.max(Math.abs(p.x - p.x0), Math.abs(p.y - p.y0)) < TO.box) FK.tap(p.x, p.y); else boxPick(p); } render(true); });
+FK.on('drop', (p, cancel) => { S.drag = false; if (cancel) return; if (p.mode === 'box') { if (Math.max(Math.abs(p.x - p.x0), Math.abs(p.y - p.y0)) < TO.box) FK.tap(p.x, p.y); else boxPick(p); } render(true); });
 FK.on('say', (msg, m) => say(msg, m && typeof m === 'object' ? m : {}));
 const msnSay = (slot) => { const m = WAR.MS[slot]; return !m || m.end ? '' : m.st === 'act' ? `${Math.round(m.odds * SAY.percent)}%` : m.ord.eta ? clock(m.ord.eta) : ''; };
 const waveLine = (p) => { const [first, more] = WO.wave; return p.waves.map((w, i) => { const [c, other] = new Set(w.list.map((r) => FK.SH[r.u.code].class)); return (i ? more : first).replace('{n}', w.list.length).replace('{who}', other ? WO.soldiers : c.toLowerCase()).replace('{t}', clock(w.t)); }).join(WD.list.and); };
 const etaNow = () => { const F = WAR.free(), k = aimK(), key = [k, F.length, Math.floor(FK.K.t / HUD.settle)].join(); if (!F.length) return null; if (!S.eta || S.eta.key !== key) S.eta = { key, v: WAR.etaOf(F, k, WAR.routeK(FK.tileAt(...Object.values(WAR.centreOf(F))), k, F.at(-1))) }; return S.eta.v; };
-FK.on('draw', (ctx, s) => { if (S.line) { const p = S.line, a = boardAt(p.x0, p.y0), b = boardAt(p.x, p.y), T0 = FK.SPRITE.touch; ctx.save(); ctx.strokeStyle = ctx.fillStyle = FK.C.gold; ctx.lineWidth = T0.choke; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(p.x0, p.y0); ctx.lineTo(p.x, p.y); ctx.stroke(); // E432
-    ctx.font = FK.mapFont(); ctx.textAlign = 'center'; ctx.fillText(WO.choke.find((w) => w.includes('across')).replace('{n}', Math.max(D.choke.min, Math.round(FK.dist(b, a) / D.tile / D.ranks.gap))), (p.x0 + p.x) * P.half, (p.y0 + p.y) * P.half - T0.up); ctx.restore(); }
-  if (!S.war || !S.aim) return; if (S.aim.t && S.aim.t.gone) S.aim.t = null;
+FK.on('draw', (ctx, s) => { if (!S.war || !S.aim) return; if (S.aim.t && S.aim.t.gone) S.aim.t = null; // E432
   const [x, y] = aimAt(), now = performance.now(), [r0, rz, rp] = RT.r, L = now - S.firedT < RT.settle * TO.ms, R0 = Math.max(r0, rz * s + rp), R = L ? R0 * RT.fired : R0, t = (now - S.aimT) / TO.ms, eta = etaNow(), seg = (a, b, c, d) => { ctx.moveTo(a, b); ctx.lineTo(c, d); }, turn = FK.SPRITE.marks.arc;
   ctx.save(); ctx.strokeStyle = ctx.fillStyle = L ? FK.C.green : aimColor(); ctx.lineWidth = RT.line;
   if (S.drag) { const [ga, gp] = RT.glow; ctx.save(); ctx.globalAlpha = ga; ctx.beginPath(); ctx.arc(x, y, R + gp, ...turn); ctx.fill(); ctx.restore(); }
