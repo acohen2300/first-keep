@@ -369,7 +369,7 @@ function work() { for (let n = D.work.slices; n-- && TASKS.length; ) { const t =
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
 let paused = false; const resting = () => paused || !!fire('rest'), pause = (on = !paused) => { paused = on; dirty(); }; // E695
 const sim = (dt) => { climate(dt); step(dt); fire('tick', dt); work(); look(dt); }, vAt = (u) => (u.lvx == null ? [u.vx, u.vy] : [u.lvx + (u.vx - u.lvx) * DRAW.alpha, u.lvy + (u.vy - u.lvy) * DRAW.alpha]); // E715
-function loop(now) { const wall = (now - last) / 1000; if (wall >= DRW.slack / (resting() ? D.rest.idle : DRAW.lvl >= DRW.lv.fps ? DRW.fps : D.fps)) { const dt = paused ? null : Math.min(0.1, wall || 0) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } const w1 = performance.now(); followCam(dt); draw(); const w2 = performance.now(); shed(w2 - w0, wall); meter(wall, w1 - w0, w2 - w1); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
+function loop(now) { const wall = (now - last) / 1000; if (wall >= DRW.slack / rate()) { const dt = paused ? null : Math.min(SIM.cap, wall || ZERO) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } const w1 = performance.now(); followCam(dt); draw(); const w2 = performance.now(); shed(w2 - w1, wall); meter(wall, w1 - w0, w2 - w1); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
 // E655
 const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\b/.test(location.search), seenErr = new Set(), BASE0 = {}; let fightT = null, failT = -Infinity;
 function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE && !paused) { paused = true; fire('say', WS.fault.replace('{line}', m.split('\n').shift())); fire('event', 'fault', null); MENU.S.tab = 'Pause'; } } // E656
@@ -1261,10 +1261,10 @@ function drawSkin() { // E139
   if (K.sand) { const [x, y] = toScreen(...toView(K.sand.bx, K.sand.by, Math.max(null, H[tileAt(K.sand.bx, K.sand.by)]))); ctx.fillStyle = C.wild.sand; ctx.beginPath(); oval(ctx, x, y, K.sand.r * cam.z, K.sand.r * cam.z * TILT); ctx.fill(); } // E578
 }
 function drawSky(dt) { // E140
-  const now = K.t, px = WX.glass / fallV(WX.rain.dMax), lam = WX.rain.n0 * (K.rain * WX.rain.most) ** WX.rain.exp, drift = K.wind * px * dt, wrap = (m, len) => { m.x = (((m.x + drift) % cw) + cw) % cw; if (m.y > ch + len) { m.y = -len; m.x = glance() * cw; } }; // E719
-  ctx.lineCap = 'round'; for (let i = 0, n = still() ? null : active(K.rain); i < n; i++) { const m = DROPS[i], v = fallV(Math.min(WX.rain.dMax, WX.rain.dMin - Math.log(1 - m.q) / lam)), len = 8 + 12 * m.d; m.y += v * px * dt; wrap(m, len); // E379
-    ctx.strokeStyle = `rgba(205,232,250,${(0.2 + 0.4 * m.d).toFixed(2)})`; ctx.lineWidth = 0.8 + 0.8 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x + (K.wind / v) * len, m.y + len); ctx.stroke(); }
-  ctx.fillStyle = 'rgba(245,248,252,.85)'; for (let i = 0, n = still() ? null : active(K.snowing); i < n; i++) { const m = DROPS[i], z = 2 + m.d; m.y += (WX.snow.slow + (WX.snow.fast - WX.snow.slow) * m.d) * px * dt; m.x += Math.sin(now + i) * m.d * px * dt; wrap(m, z); ctx.fillRect(m.x, m.y, z, z); } // E380
+  const now = K.t, px = WX.glass / fallV(WX.rain.dMax), lam = WX.rain.n0 * (K.rain * WX.rain.most) ** WX.rain.exp, go = lessMotion ? ZERO : dt, WD = WX.drops, many = (s) => Math.round(active(s) * (DRAW.lvl >= DRW.lv.motion ? WD.shed : ONE)), drift = K.wind * px * go, wrap = (m, len) => { m.x = (((m.x + drift) % cw) + cw) % cw; if (m.y > ch + len) { m.y = -len; m.x = glance() * cw; } }; // E719
+  const [l0, l1] = WD.len, [a0, a1] = WD.alpha, [w0, w1] = WD.width, [f0, f1] = WD.flake; ctx.lineCap = 'round'; ctx.strokeStyle = C.marks.rain; for (let i = 0, n = many(K.rain); i < n; i++) { const m = DROPS[i], v = fallV(Math.min(WX.rain.dMax, WX.rain.dMin - Math.log(ONE - m.q) / lam)), len = l0 + l1 * m.d; m.y += v * px * go; wrap(m, len); // E379
+    ctx.globalAlpha = a0 + a1 * m.d; ctx.lineWidth = w0 + w1 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x + (K.wind / v) * len, m.y + len); ctx.stroke(); }
+  ctx.fillStyle = C.marks.flake; ctx.globalAlpha = WD.snow; for (let i = 0, n = many(K.snowing); i < n; i++) { const m = DROPS[i], z = f0 + f1 * m.d; m.y += (WX.snow.slow + (WX.snow.fast - WX.snow.slow) * m.d) * px * go; m.x += Math.sin(now + i) * m.d * px * go; wrap(m, z); ctx.fillRect(m.x, m.y, z, z); } ctx.globalAlpha = ONE; // E380
   for (const b of K.bolts) { // E141
     const age = now - b.t, a = clamp(1 - age / 0.45, 0, 1), rr = NS_rng((b.seed * 1e6) | 1), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300); main.push([x, y]);
     while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34 + (x1 - x) * 0.12; main.push([x, y]); } main[main.length - 1] = [x1, y1]; const paths = [main]; // E142
@@ -1429,13 +1429,13 @@ const sightOf = (t) => { const lamp = (t.kind === 'bld' && stat(t.code, t.side, 
 on('hide', (t) => !inSight(t)); // E603
 // E604
 let lessMotion = false; try { lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-const DRAW = { lvl: null, ema: null, slow: null, fast: null, alpha: ONE }, still = () => lessMotion || DRAW.lvl >= DRW.lv.motion;
+const DRAW = { lvl: null, ema: null, slow: null, fast: null, alpha: ONE }, still = () => lessMotion || DRAW.lvl >= DRW.lv.motion, rate = () => (resting() ? D.rest.idle : DRAW.lvl >= DRW.lv.fps ? DRW.fps : D.fps); // E822
 const MTR = D.meter, MW = fromBook('words').meter, MET = { fps: null, sim: null, draw: null }; // E770
 function meter(wall, sim, drawn) { if (!(wall > null)) return; const k = Math.min(ONE, wall / MTR.tau); MET.fps += (ONE / wall - MET.fps) * k; MET.sim += (sim - MET.sim) * k; MET.draw += (drawn - MET.draw) * k; if (!show.P) return;
   ctx.save(); ctx.setTransform(dpr, ZERO, ZERO, dpr, ZERO, ZERO); ctx.font = MTR.font; ctx.fillStyle = C.white; ctx.shadowColor = INK; ctx.shadowBlur = MTR.blur; ctx.fillText(MW.replace('{fps}', Math.round(MET.fps)).replace('{sim}', MET.sim.toFixed(ONE)).replace('{draw}', MET.draw.toFixed(ONE)), ...MTR.at); ctx.restore(); }
-function shed(work, secs) { DRAW.ema += (work - DRAW.ema) * Math.min(ONE, secs / DRW.tau); const was = DRAW.lvl; // E605
-  if (DRAW.ema > DRW.slow && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
-  else if (DRAW.ema < DRW.fast && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
+function shed(work, secs) { const due = DRW.ms / rate(); DRAW.ema += (work - DRAW.ema) * Math.min(ONE, secs / DRW.tau); const was = DRAW.lvl; // E605
+  if (DRAW.ema > DRW.slow * due && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
+  else if (DRAW.ema < DRW.fast * due && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
   if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } }
 const area = (v) => (v.cv || v).width * (v.cv || v).height, used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; } } // E606
 // E607

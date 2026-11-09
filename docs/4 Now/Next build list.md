@@ -80,3 +80,6 @@ Into items 4 and 5: SoRen draws rain and snow drop by drop from a pool, and Redu
 7. A tap on a building (anywhere on its drawn shape) opens the building's card.
 8. Hunting modes, 9. "Mind your own business": later, too big for this build.
 - Later (Albert, 09:03): B32, B33, the Nov 8 triage (B34–B36) and the overnight full test run wait until after this build list.
+
+## Built
+- N1 (Nov 9, Build A): the shed now times drawing only, against shares of the frame's real interval at the rate it runs (D321 slow 0.72, fast 0.42, from SoRen's 12 and 7 of 16.7 ms); one `rate()` for the loop and the shed (E822); rain and snow never off (a shedding phone draws half, Reduce motion holds them still; D229 drops, C17 rain and flake); the pause menu's buttons answer (one tap listener for the whole screen, E821); the site serves v100 as one stitched page (pages.yml stitches at deploy; the source stays split). Smoke 6/6. Still open from these items: read the phone's numbers (`?test`); the pause panel's gear still says "Yard" and its first row "Paused · tap to carry on" does not show.

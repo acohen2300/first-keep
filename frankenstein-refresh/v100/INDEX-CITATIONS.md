@@ -344,7 +344,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N244** Design: Mid's HANDICAP (06-rules-tuning.js: blds mill and farm, r 60–170; laid in 10-world.js by findSpot, fin → D342
 - **N245** (to open) Marshall, J. S. and W. McK. Palmer (1948), The distribution of raindrops with size, J. Meteor. 5: rain water c → QK
 - **N246** The inverse-square law of illuminance, E = I ÷ d² (Lambert, Photometria, 1760; any optics text), with the fini → QCU
-- **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D340
+- **N238** Design: SoRen's phone care (soren-archive/index.html: tick() idle and dark frame rates, sound.off() closing th → D321, D340
 - **N261** (to open) Human proportion: an adult stands about 7.5 to 8 heads tall, the legs (floor to hip) about half the height (Vi → PF2, P1b, PT1, PF1
 - **N260** Design: Albert, Nov 8 11:30-11:41 (B16): the land not blocky (coast, beach, cliff); from Gemini's art patch, s → C23, D348
 - **N259** (to open) Heights in nature: European high forest stands about 20–25 m, woodland edge and coppice 10–15 m; bramble, hawt → W25, W26, W27
@@ -380,6 +380,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N279** (to open) US Army FM 21-18, Foot Marches (1990): 4 km/h on roads against about 2.4 km/h cross-country, 60%; The Dupuy In → D355
 - **N280** (to open) Xenophon, Anabasis (c. 370 BC): the Ten Thousand took guides to cross Kurdistan and Armenia (Books III-IV); th → D355, O260, O261
 - **N281** (to open) US Army FM 21-75, Combat Skills of the Soldier (1984), chapter 3, individual movement: the low crawl and the h → unused
+- **N282** Design: Albert, Nov 9 2026 08:28-09:08 (talk mode; docs/4 Now/Next build list.md items 4, 5 and 8): rain and s → C17, D229, D321
 
 ## Named exceptions
 

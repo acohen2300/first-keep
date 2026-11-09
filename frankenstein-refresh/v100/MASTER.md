@@ -306,14 +306,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
 - **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
-- **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
+- **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214, N282)
 - **E713** visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Pa · QK (N10, N210, N245)
 - **E378** QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · QK (N10, N210, N245)
 - **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D103 (N112, N185) · QI (N8)
 - **E127** the season's mean, eased into the next
 - **E128** what falls
 - **E129** rain and snow come and go over tens of seconds (SoRen), toward the spell's intensity
-- **E133** fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or s · QK (N10, N210, N245) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214)
+- **E133** fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or s · QK (N10, N210, N245) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214, N282)
 - **E376** QCL the weather of the moment: rates, wind and visibility from the strengths, fog's water  · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214)
 - **E130** QP settle: wet in D104, dry in D105; melting snow soaks the ground as rain does (Mid: what · QP (N16) · D104 (N112) · D105 (N112)
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
@@ -399,6 +399,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QK (N10, N210, N245)
 - **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
+- **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
 - **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
@@ -539,6 +540,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
+- **E821** one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wh
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid

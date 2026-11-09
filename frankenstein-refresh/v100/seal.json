@@ -1294,6 +1294,11 @@
 "bytes": 197,
 "numbers": 0
 },
+"book:citations:N282": {
+"sha": "c26a121b211c1a79a958803652a5b7e0223a6910330fcd76fd222f4bf205cce6",
+"bytes": 351,
+"numbers": 0
+},
 "book:citations:N29": {
 "sha": "8a7b10934ae39518148e424e331925750b946be23c50ba1935a43ff55b9b0428",
 "bytes": 348,
@@ -1725,8 +1730,8 @@
 "numbers": 0
 },
 "book:colours:C17": {
-"sha": "168183d62892fafa80743e7b233f34d685b16ac2b3012fbcb4e267e336dce45b",
-"bytes": 190,
+"sha": "f7ff7e0d4a0a953b540b00f10b6b6fc5a297e6c16dcdd0b8424c859d6f612426",
+"bytes": 324,
 "numbers": 0
 },
 "book:colours:C18": {
@@ -4565,8 +4570,8 @@
 "numbers": 0
 },
 "book:comments:E605": {
-"sha": "43b24d9ee5527d2e9fc1679927b13b0ee9d8ec3b69a41823397148d7ca3be21e",
-"bytes": 168,
+"sha": "fed890d9b567a8f174f4d58b1564e87b6f1ff52dbbbbfe5d772c95eb86fd9a82",
+"bytes": 341,
 "numbers": 0
 },
 "book:comments:E606": {
@@ -5180,8 +5185,8 @@
 "numbers": 0
 },
 "book:comments:E719": {
-"sha": "761f758b031d5be904269b6316a73f07c079c6c740507d8404644adf96396c23",
-"bytes": 282,
+"sha": "e72fcbfd145bf4a3bb74ce8f7dc1a0d84afe7eb04f8d2b0b6bb9550bf6569c97",
+"bytes": 408,
 "numbers": 0
 },
 "book:comments:E72": {
@@ -5727,6 +5732,16 @@
 "book:comments:E820": {
 "sha": "b9e8e2d747c81628ecc9b7fb797482e7446e381fb90fd12aa06e4147ca2d6ed2",
 "bytes": 211,
+"numbers": 0
+},
+"book:comments:E821": {
+"sha": "7d4d1f0cc9653c8b7a6dae53c35d9d40b1bbcf25cafd4fa3f52a521d33abadc8",
+"bytes": 193,
+"numbers": 0
+},
+"book:comments:E822": {
+"sha": "f6aa7baa168800ce1a0d389ff25d11f3fc3d41a84ae9077a0572706afd9cc038",
+"bytes": 177,
 "numbers": 0
 },
 "book:comments:E83": {
@@ -6615,8 +6630,8 @@
 "numbers": 0
 },
 "book:measure:D229": {
-"sha": "206f341ec46264b3bc6c8336f695deb86d7740b3f920ce8d888985913ef5bcd3",
-"bytes": 2435,
+"sha": "45096ef8e3453f479e66ca56797c8af13ce0d2be35f0e57e5103e749577b4364",
+"bytes": 2860,
 "numbers": 0
 },
 "book:measure:D23": {
@@ -7125,8 +7140,8 @@
 "numbers": 0
 },
 "book:measure:D321": {
-"sha": "b2e82e7a8bf52e1f31d7f533b81cc9d95fe8a14e89ee13ddd91985d0fbdb25c5",
-"bytes": 669,
+"sha": "ef7fbca63af19ba1e9d23fa505059aaea4acfffebc31f68e7a764f7876b1f98f",
+"bytes": 895,
 "numbers": 0
 },
 "book:measure:D322": {
@@ -7240,8 +7255,8 @@
 "numbers": 0
 },
 "book:measure:D343": {
-"sha": "a520d46da410352c2fbebf479b4dd8f732760918dfdc80fcd5e4648beab1cb50",
-"bytes": 354,
+"sha": "a31aad4e7a7fad4a05f70dcaafd2828fc5d5f85dc1d8bb361d887a1eede9c0c0",
+"bytes": 415,
 "numbers": 0
 },
 "book:measure:D344": {
@@ -10815,9 +10830,9 @@
 "numbers": 78
 },
 "code:index.html#floor-6-climate": {
-"sha": "0e89625fcb74fa6cca82dbd8da18e600458de0cbbccac6035f2fdcce8de924bd",
-"bytes": 29177,
-"numbers": 223
+"sha": "25c61ab6fcd0fe4aa25320464803d7d2e86484d114549088991b06f8571313f4",
+"bytes": 29395,
+"numbers": 208
 },
 "code:index.html#floor-7-display": {
 "sha": "cd5c7d4a8aea0fb264f7b8f43984d7ee329baf7225871b6d05f8922c5dc0a66a",
@@ -10860,9 +10875,9 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "bc0706c313f3cdcaea60e593bd0e1dfde84b81dc6cb4478ac714a0a3feb3af5b",
-"bytes": 14464,
-"numbers": 67
+"sha": "35eeeffc70a1d976790e8727151ec0a83f39be00ef4defce93a5461ed9e88e39",
+"bytes": 14409,
+"numbers": 65
 },
 "code:index.html#the-figures": {
 "sha": "75985dfb8843b547769415a3e083bcd074374a1dea21461e7d04b619cd8d9f23",
@@ -10905,8 +10920,8 @@
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
-"sha": "f9747b73a55e43b2c03e2aec3959eacf3d639f7f75376ca41f73f68e6aa556b8",
-"bytes": 22891,
+"sha": "2a5d1b1c5144069174f9fb497fbfd38b7e79de38a25d16aaba5f9990faa22366",
+"bytes": 23023,
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
@@ -10920,8 +10935,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "af646827f9315649a2e742fd8897d5ffa0c08ce85553ac7e8ce42f6c79546e41",
-"bytes": 93772,
+"sha": "a5070b7e40588b021ec5149a42d966431efb8fa77ce3b2ebb015aaa378530c42",
+"bytes": 93750,
 "numbers": 565
 },
 "code:sound.js": {
@@ -11400,8 +11415,8 @@
 "numbers": 0
 },
 "tool:pages.yml": {
-"sha": "62fb4675f3717433a0b50ffac3d4c4cb7d391e8806d8fdb12af5bc42591bcffd",
-"bytes": 1137,
+"sha": "44f3e6937342e8a5757f91fe45989ccaa14e24920f03ed2b9ca084004c3c4732",
+"bytes": 1972,
 "numbers": 0
 },
 "tool:publish.py": {

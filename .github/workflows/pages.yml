@@ -30,6 +30,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: v100 served as one stitched page, so a phone can never run a new page beside an old book (Albert, Nov 9); the source stays split
+        run: |
+          python3 - <<'PY'
+          import re, pathlib
+          d = pathlib.Path('frankenstein-refresh/v100'); page = (d / 'index.html').read_text(encoding='utf-8')
+          js = lambda m: '<script>' + (d / m.group(1)).read_text(encoding='utf-8').replace('</script', '<\\/script') + '</script>'
+          page = re.sub(r'<script src="([\w/.-]+\.js)"></script>', js, page)
+          page = page.replace('<link rel="stylesheet" href="fonts.css">', '<style>' + (d / 'fonts.css').read_text(encoding='utf-8') + '</style>')
+          assert '<script src=' not in page and 'href="fonts.css"' not in page
+          (d / 'index.html').write_text(page, encoding='utf-8')
+          PY
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

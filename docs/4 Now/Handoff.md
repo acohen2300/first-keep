@@ -4,6 +4,7 @@
 
 ## Where it stands
 - Code: `frankenstein-refresh/v100/` (index.html, combat.js, econ.js, menu.js, books/*.js). Live: https://acohen2300.github.io/first-keep/frankenstein-refresh/v100/
+- Nov 9: N1 (Build A of `Next build list.md`) pushed; the list holds the rest, in order B to E.
 - Last builds, all pushed: B24–B30 (Nov 8 plan), B31a (PDF guide lines back and locked, the stuck-finger tap bug, pop-ups above the finger, map words one size), B31b (the villager's 2×2 square; scroll past the board: sea on the sides and below, sky above).
 - Gate: `python3 index.py` (permit.json: opens, grow; numbers only in books; comments only as one E-code per line). Publish: `python3 publish.py --smoke "<message>"` then commit as Albert with the trailer; push. Two quick pushes collide on Pages: fold docs into the build push.
 

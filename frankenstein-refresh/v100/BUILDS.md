@@ -4197,3 +4197,25 @@ MODIFIED (12):
 LOCKED (2271 of 2283): byte for byte as sealed, 1,289,607 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2283 items sealed · 2155 book entries · 93 laws · 280 citations, 20 still to open · 7 known
+
+## N1 · Build A: shed by the real budget and by drawing only; rain and snow never off; the pause menu's taps; one stitched page · 2026-11-09 09:16
+Albert, Nov 9 09:08: Go for build (Next build list items 4, 5, 8.1, 8.3)
+Opened: book:measure, book:colours, book:comments, book:citations, code:index.html#the-door, code:index.html#floor-6-climate, code:index.html#the-view-s-eyes-lights-and-stage, code:menu.js, tool:pages.yml
+MODIFIED (14):
+- book:citations:N282 · added
+- book:colours:C17 · 190 → 324 bytes
+- book:comments:E605 · 168 → 341 bytes
+- book:comments:E719 · 282 → 408 bytes
+- book:comments:E821 · added
+- book:comments:E822 · added
+- book:measure:D229 · 2,435 → 2,860 bytes
+- book:measure:D321 · 669 → 895 bytes
+- book:measure:D343 · 354 → 415 bytes
+- code:index.html#floor-6-climate · 29,177 → 29,395 bytes
+- code:index.html#the-door · 14,464 → 14,409 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,891 → 23,023 bytes
+- code:menu.js · 93,772 → 93,750 bytes
+- tool:pages.yml · 1,137 → 1,972 bytes
+LOCKED (2272 of 2286): byte for byte as sealed, 1,336,890 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2286 items sealed · 2158 book entries · 93 laws · 281 citations, 20 still to open · 7 known

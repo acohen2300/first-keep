@@ -299,7 +299,7 @@ FK.on('begin', () => { S.game = { ...S.opt }; FK.HZ.clear(); for (const id of S.
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 const popAt = (x, y, foot = y) => { const m = SCR.mold, [w] = FK.size(), up = y - qaEl.offsetHeight - m.slot; qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, x - qaEl.offsetWidth * P.half)) + 'px'; qaEl.style.top = (up < Math.max(topEl.getBoundingClientRect().bottom, toastEl.getBoundingClientRect().bottom) + m.gap ? foot + m.slot : up) + 'px'; }; // E817
 FK.on('over', () => { if (S.sq) popAt(...FK.headOf(S.sq)); }); // E819
-for (const el of [ui, topEl, qaEl]) el.addEventListener('click', click);
+document.addEventListener('click', click); // E821
 FK.on('rest', () => !!(S.tab && tall(S.tab)) || !!ECON.result());
 // E206
 const canvas = document.getElementById('map');
