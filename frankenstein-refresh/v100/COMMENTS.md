@@ -627,7 +627,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E518 | combat.js | A blow on a shooter's stake, or on one of a wild group (its regard falls). |
 | E519 | combat.js | Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies and a side whose scout found them; a foe who steps on one springs it (D280). |
 | E520 | combat.js | A trap sprung: caltrops spike each walker once a while and wear flat; the others go off once; a net takes a prisoner (not an engine); horses take the worst. |
-| E521 | combat.js | The archers' stake (Mid's STAKES, Agincourt): a horse that strikes a staked shooter is hurt, its charge ends, and it is thrown back. |
 | E522 | ai.js | The computer's relations (Mid's aiDiplomacy, allyDuty, peaceAll): its personality's bold and the difficulty's envoy, allyAt and gang (D304), the rest D285: losing, it asks peace; strong and at peace with no war on, it gives notice; with a war on (or on Hard against the leader) it courts an ally; an ally helps a friend's town under attack, never at the cost of its own |
 | E523 | ai.js | Dynamic Diplomacy (Mid's LEAGUE, leagueTick): when one side runs far ahead, the others (not the player, not the leader's vassals) ally and make war on it; it breaks up when the lead falls back. |
 | E524 | index.html#the-things-drawn-each-frame-back-to-fr | A hidden trap is drawn flat on the ground from the Sprites book, in its side's shade or the foe's red; a site as a dashed ring; caltrops show a spike for each tread left (Mid's drawBld for traps). |

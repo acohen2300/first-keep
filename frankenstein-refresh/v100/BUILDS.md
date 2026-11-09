@@ -4072,3 +4072,21 @@ MODIFIED (35):
 LOCKED (2232 of 2265): byte for byte as sealed, 1,228,300 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2265 items sealed · 2137 book entries · 93 laws · 276 citations, 16 still to open · 7 known
+
+## B27b: no laid defences for players (the pit, stakes and caltrops off the Build menu, the Caltrops and Archers' stakes research and the planted stake cut; the traps are the Natives' booby traps); the Depot off the Build menu (it comes with the camp wagon) · 2026-11-08 20:27
+Albert, Nov 8 19:12 and 19:22 (Calls - Nov 8.md)
+Opened: book:measure, book:comments, book:words, book:screen, book:tech, code:combat.js
+MODIFIED (10):
+- book:comments:E521 · removed
+- book:measure:D280 · 1,194 → 1,005 bytes
+- book:measure:D286 · 164 → 200 bytes
+- book:screen:SN2 · 549 → 521 bytes
+- book:screen:SN3 · 342 → 577 bytes
+- book:tech:O203 · removed
+- book:tech:O204 · removed
+- book:words:J16 · 1,473 → 1,438 bytes
+- book:words:J7 · 54,258 → 53,843 bytes
+- code:combat.js · 59,658 → 59,031 bytes
+LOCKED (2255 of 2262): byte for byte as sealed, 1,372,075 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2262 items sealed · 2134 book entries · 93 laws · 276 citations, 16 still to open · 7 known

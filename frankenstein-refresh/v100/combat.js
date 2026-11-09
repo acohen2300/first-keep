@@ -54,7 +54,7 @@ function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) :
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
 function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; t.hp -= d; t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
   if (armed(t) && !beast(a)) { const dot = u ? fromWhere(t, a) : MO.front; t.mor -= ((MO.hit * d * temper(t).nerve) / t.hpMax) * (dot < FL.behind ? MO.rear : dot < FL.cos ? MO.side : MO.front); }
-  if (u && t.staked && FK.SH[a.code].mount) stake(a, t); if (u && SIDES[a.side] && !SIDES[t.side]) ECON.struck(a.side, groupOf(t)); // E518
+  if (u && SIDES[a.side] && !SIDES[t.side]) ECON.struck(a.side, groupOf(t)); // E518
   if (u) { FK.impact(a, t); if (ranged(a)) shot(a, t, W[FK.SH[a.code].body].height); if (!SIDES[t.side]) { t.aggro = a; if (t.job !== 'fight' && stat(t).atk) fight(t, a); } if (t.kind === 'bld') ECON.shot(a, t, d); }
   if (!alive(t)) { if (armed(a)) a.mor = Math.min(MO.full, a.mor + MO.kill); die(t, a); } }
 FK.on('drown', (u) => die(u)); // E796
@@ -112,7 +112,7 @@ function flee(u) { if (K.t > u.routAt + FK.stat(u.code, u.side, 'rout')) { Objec
   if (FK.go(u, FK.tileAt(u.bx + dx * MO.run * T, u.by + dy * MO.run * T))) u.then = 'rout'; }
 function brain(u, dt, look) { // E396
   if (u.job === 'rout') { if (routing(u)) flee(u); else if (!u.path) u.job = 'idle'; return true; }
-  u.staked = ranged(u) && !FK.SH[u.code].mount && K.t - (u.mvT ?? -Infinity) > SK.plant && knows(u.side, SK.tech); nerve(u, dt); if (routing(u)) return true; drillHold(u); if (u.amb && ambushTick(u)) return true;
+  nerve(u, dt); if (routing(u)) return true; drillHold(u); if (u.amb && ambushTick(u)) return true;
   if (u.chg && u.chg < K.t) { u.chg = null; u.tire = CH.slow; } if (u.tire) u.tire = FK.relax(u.tire, D.bases.pace, CH.tired, dt); // E408
   if (u.hp < u.hpMax && !u.target && !u.unfed && FK.bldsNear(u.bx, u.by, D.shelter.r * T, (b) => b.side === u.side && FK.has(b, 'Shelter') && up(b) && gap(u, b) < D.shelter.r)) u.hp = FK.relax(u.hp, u.hpMax, u.hpMax / FK.stat(u.code, u.side, 'garrison'), dt);
   const s = stat(u), sight = FK.stat(u.code, u.side, 'sight'), atHome = u.job === 'idle' || (u.job === 'fight' && u.was == null), d = (v) => edgeDist(u, v); let t = u.target;
@@ -336,7 +336,7 @@ function scout(u, look) { if (u.job === 'idle' && !u.path && !u.target) u.job = 
   const w = u.route[u.wp % u.route.length]; if (gap(u, w) < S.at) u.wp = -~u.wp; else if (due(u.rp)) { u.rp = D.repath; if (FK.go(u, FK.tileAt(w.bx, w.by))) u.then = 'scout'; else u.wp = -~u.wp; } return true; }
 FK.on('start', () => { raid.at = null; raid.hit = {}; });
 // E519
-const TP = D.trap, SK = TP.stake, CT = fromBook('words').camp.trap, shown = (b, side) => !FK.has(b, 'Trap') || b.side === side || friendly(side, b.side) || !!(b.seen || {})[side];
+const TP = D.trap, CT = fromBook('words').camp.trap, shown = (b, side) => !FK.has(b, 'Trap') || b.side === side || friendly(side, b.side) || !!(b.seen || {})[side];
 FK.on('hide', (t) => !shown(t, ME)); FK.on('own', (t) => friendly(ME, t.side));
 function traps() { for (const b of things().slice()) { if (b.kind !== 'bld' || !FK.has(b, 'Trap') || !up(b) || b.gone) continue; const kind = FK.SH[b.code].trap, E = TP.kinds[kind]; b.seen = b.seen || {};
   FK.unitsNear(b, TP.scout * T, (v) => { if (b.gone || !alive(v) || v.inside || !SIDES[v.side] || v.side === b.side || friendly(v.side, b.side) || gap(v, b) > TP.scout) return;
@@ -347,8 +347,6 @@ function spring(b, v, kind, E) { const horse = FK.SH[v.code].mount ? 'horse' : '
   if (v.side === ME) say(CT.hit[kind], { name, lame: E.hits && E.stuck[horse] ? CT.lame : '' }); else if (b.side === ME) say(CT.caught, { what: CT.names[kind], name, side: fromBook('words').end.sides[v.side] });
   if (E.take) { if (FK.has(v, 'Gather') || (armed(v) && !E.take.not.includes(clsOf(v.code)))) ECON.takePrisoner(b.side, v); return; }
   v.hp -= v.hpMax * E.hurt[horse]; v.hurtT = K.t; if ((E.stuck || {})[horse]) v.stuck = K.t + E.stuck[horse]; if (!alive(v)) die(v); }
-function stake(a, t) { if (K.t - (a.stakeT ?? -Infinity) <= SK.again) return; a.stakeT = K.t; a.hp -= a.hpMax * SK.dmg; Object.assign(a, { hurtT: K.t, chg: null }); const [dx, dy] = dir(a.bx - t.bx, a.by - t.by), x = a.bx + dx * SK.shove * T, y = a.by + dy * SK.shove * T; // E521
-  if (FK.walkable(FK.tileAt(x, y))) { Object.assign(a, { bx: x, by: y, path: null }); FK.place(a); } if (t.side === ME) say(CT.stake); if (!alive(a)) die(a, t); }
 FK.on('save', (X) => { X.war = { waves, homeT, routSaid, ordT, ORD, MS, AT, rel, SQ, raid }; }); // E667
 FK.on('load', ({ war: W }) => { ({ homeT, routSaid, ordT } = W); const keep = { waves, ORD, MS, AT, rel, SQ, raid }; for (const k in keep) FK.refill(keep[k], W[k]); });
 const take = (t) => { for (const u of units()) if (u.target === t) u.target = null; FK.vanish(t); }; // E691

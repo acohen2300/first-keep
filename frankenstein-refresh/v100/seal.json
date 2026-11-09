@@ -4094,11 +4094,6 @@
 "bytes": 168,
 "numbers": 0
 },
-"book:comments:E521": {
-"sha": "55f9f2c9c765ebf90d0a86e8506a9f78f88d90903779c89de2462ab32537d2f0",
-"bytes": 144,
-"numbers": 0
-},
 "book:comments:E522": {
 "sha": "3c2074def16d756f4a90baccf781b0ee8fda73a37e20641734959b01502f05f9",
 "bytes": 381,
@@ -6840,8 +6835,8 @@
 "numbers": 0
 },
 "book:measure:D280": {
-"sha": "8ff829d74596179d0b8d57b9213a1808cfe7b5f62d0fdf8eb2d3a42e2399e873",
-"bytes": 1194,
+"sha": "19b098e8475968691e43999e69f8fc287e7f2b7c401b6cbba52ea68d4b8ca262",
+"bytes": 1005,
 "numbers": 0
 },
 "book:measure:D281": {
@@ -6870,8 +6865,8 @@
 "numbers": 0
 },
 "book:measure:D286": {
-"sha": "980b5e8c1290a18bd21a2c6755263b64b4854fe33c4ad60b548fb481d672ed33",
-"bytes": 164,
+"sha": "12020cebc952c9239a03aed32b17f8d63096b72db566e80a57a764a7e1b74988",
+"bytes": 200,
 "numbers": 0
 },
 "book:measure:D287": {
@@ -7970,13 +7965,13 @@
 "numbers": 0
 },
 "book:screen:SN2": {
-"sha": "ea5e63347807ea798ff3ddf2312599446631299d5f2fe3dd4e896d7912c5b6a2",
-"bytes": 549,
+"sha": "286909464d2ba2018c49fea2d1824b969289c1c81b98f6ae3cd99369a35c840d",
+"bytes": 521,
 "numbers": 0
 },
 "book:screen:SN3": {
-"sha": "49eee7ceffefbfdae1630434c5cd55959b30c599f6a464fbcb6bbef3414d61fc",
-"bytes": 342,
+"sha": "163e9eab4aed24bd84359c637d6dd927758101cc52025a8a95a155b036654719",
+"bytes": 577,
 "numbers": 0
 },
 "book:screen:SN4": {
@@ -9779,16 +9774,6 @@
 "bytes": 316,
 "numbers": 0
 },
-"book:tech:O203": {
-"sha": "4a5931da5dc0429c422ebc33df9ff62fb65543910999409f3201605f80ce0979",
-"bytes": 223,
-"numbers": 0
-},
-"book:tech:O204": {
-"sha": "aaaebbeea16f011e342163297fb9597a3b78d358b10cb1cbc783593ef528ee2a",
-"bytes": 231,
-"numbers": 0
-},
 "book:tech:O205": {
 "sha": "dac71e20bb128bb26947e25933f730b36194de698a73da0f362f946db20870b2",
 "bytes": 261,
@@ -10530,8 +10515,8 @@
 "numbers": 0
 },
 "book:words:J16": {
-"sha": "a05c0f33d5aaa155fe0cdd0ac7f91d6f8795d6f6a1c5c9d378c7461287d1c347",
-"bytes": 1473,
+"sha": "e817c4408e56aefb4ff8234d5b27c38894c03bcb10d6ad23d97e5a59e7bb0794",
+"bytes": 1438,
 "numbers": 0
 },
 "book:words:J17": {
@@ -10670,8 +10655,8 @@
 "numbers": 0
 },
 "book:words:J7": {
-"sha": "e9e9bd549270c694ddf831e9b2054744814d2d8eebc52a699fafcb8f1b3ad396",
-"bytes": 54258,
+"sha": "753cd0b5a32406fcd6c8d98b6d70a3031445ef76e2ef122b759e426a5d57b22f",
+"bytes": 53843,
 "numbers": 0
 },
 "book:words:J8": {
@@ -10690,8 +10675,8 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "1fba0e06b56acded92788ae3059d68ea8017c0cf81f1445c4322f91661a730ab",
-"bytes": 59658,
+"sha": "52245a050c1961119553502c54f6387383241f63e7dc7ab8570df2266cb3f6d4",
+"bytes": 59031,
 "numbers": 84
 },
 "code:econ.js": {

@@ -828,7 +828,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E589** a scout left to itself goes for a find whose guards have fallen, else loops the land
 - **E519** Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies  · D280 (N198, N199)
 - **E520** A trap sprung: caltrops spike each walker once a while and wear flat; the others go off on
-- **E521** The archers' stake (Mid's STAKES, Agincourt): a horse that strikes a staked shooter is hur
 - **E667** the war's part of the save: the waves, the orders, the relations, the squads
 - **E691** a captive is taken alive: gone from the field with no corpse, no killer and no blow to any
 
