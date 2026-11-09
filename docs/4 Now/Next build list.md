@@ -119,3 +119,5 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - Job Ribbon Main with one more brown box on top of column 6's crimson box (3 px above): column 6 four tall (brown, crimson, then the two job boxes), column 1 three tall, columns 2–5 two; 185 tall at column 6. What the new box holds: not yet set.
 ### "Job Ribbon Hide - short": LOCKED (Albert, 10:58–11:12; mock jobs-hide2)
 - Job Ribbon Hide without its bottom row (the − / + row, which also held Build), everything shifted down one row: the job boxes (People, Food, Wood, Stone, Gold, Iron) on the bottom; column 1 one brown box above People; column 6 crimson above Iron and brown above that; 138 tall at column 6, 44 in the middle. Open: where Build goes.
+### "Queue" (Albert, 11:12–11:13; mock mr6-gm)
+- MR6 with all six boxes gunmetal (S1, #2c3238, grey outline), on the same dark brown tray.
