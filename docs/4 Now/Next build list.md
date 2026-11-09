@@ -121,3 +121,8 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - Job Ribbon Hide without its bottom row (the − / + row, which also held Build), everything shifted down one row: the job boxes (People, Food, Wood, Stone, Gold, Iron) on the bottom; column 1 one brown box above People; column 6 crimson above Iron and brown above that; 138 tall at column 6, 44 in the middle. Open: where Build goes.
 ### "Queue" (Albert, 11:12–11:13; mock mr6-gm)
 - MR6 with all six boxes gunmetal (S1, #2c3238, grey outline), on the same dark brown tray.
+### "Info Help Ribbon 1": LOCKED (Albert, 11:14–11:21; mocks f1-half, f1-light2, f1-four, f1-blue, f1-gm)
+- MR footer 1 at half height: one full-width box 22 tall on its tray (24, 1 px rim, 5 px from the screen's edges).
+- Fill gunmetal (S1, #2c3238); outline ring blue (#2f8cff, the working villager's ring, Colours C24 "work"); text white (#ece5d3) at 12 · 400, upright (not italic); contrast 10.3:1.
+- Tried and not chosen: glass (Albert: "that didn't work"); the three browns (tray, normal, lighter by the tray-to-box step x = 17, 12, 9); mint C6 (white ink fails, 1.5:1); italic.
+- 22 is half Apple's 44 tap height: if it is tapped, its tap area stays 44 while the bar draws 22.
