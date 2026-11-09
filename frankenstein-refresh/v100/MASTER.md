@@ -477,15 +477,24 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E180** the resources in their colours (COLORS.md)
 - **E819** the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
+- **E826** the help line under the top ribbon carries its words in a span and a white ring (Info Help
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
+- **E827** a message's time on screen: the toast's least time plus its words at adult reading speed (
 - **E737** the help line under the top bar (Albert, Nov 8: one place the eyes always go): every messa
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
 - **E274** how much slower a full cover of mud or snow makes a march, in percent, from its terrain fa · QN (N13)
 - **E275** a place as the map's lettered squares, measured from the board's corner: D190 units a squa · D190 (N132) · A1 (N90)
 - **E276** a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; 
-- **E815** a research's hint from its own effects (the O book's fx, words from J40): what it moves, b · J40 (N160) · C26 (N208)
+- **E815** what a research does, in words from its effects; with no effects, why it is there
+- **E828** the ring's marker inside a box: its colour and its state (dim not chosen, lit chosen, run 
+- **E829** one colour a kind of work (Albert, Nov 9 12:03-12:19): the age-up white; soldiers red; sco
+- **E830** dim is the colour mixed into the tray brown by one share, never picked by hand
+- **E831** the box's outline as one path from 12 o'clock, clockwise, round its corners
+- **E832** each ring drawn once its box has a size, and again only when its size, colour or state cha
+- **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
+- **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
@@ -515,6 +524,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
+- **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E814** the help card: the line's whole text, since the line holds one line

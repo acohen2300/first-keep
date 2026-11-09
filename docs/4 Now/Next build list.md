@@ -204,3 +204,10 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - Info Help Ribbon 1 (SN31): under the top ribbon, coming and going with each message; and the footer of every menu, always there, a tap opens Help (Albert, 12:29).
 - New colours: C28 brown ladder, C29 gunmetal.
 - Open: the Help page shows the message twice (its text and its footer); the pause panel still drops from the top; the meter's font still its own.
+
+## Built N3 (Nov 9, B2 the rings)
+- The ring (SN32, one home for the six button states: SN33–SN37 folded into it): dim, lit, run; pinned at 12, receding clockwise, drawn on each box's own outline.
+- The colour map (C27): white the age-up and the help line; red soldiers and war research; green villagers, economy and health; brown building research; gold caravans; blue scouts, envoys, spies, speed and sight research; dim by one share into the tray brown.
+- Where: the queue (first item runs, the rest lit), the research buttons (dim, lit when armed), the help line under the top ribbon (white, over its reading time: D356, Brysbaert 2019 to open).
+- Cut: the research tints (C26) and the queue's fill.
+- Open: train buttons have no ring yet; long queue names are clipped in the queue slots.

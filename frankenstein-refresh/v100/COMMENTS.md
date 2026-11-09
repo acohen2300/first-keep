@@ -799,7 +799,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E811 | index.html#floor-7-display | a side's familiarity with a tile: one on its own ground (a finished building of its own within D355 home), the Natives' and the wild's everywhere, else the memory fading from the last look |
 | E813 | combat.js | a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a shooting building watches |
 | E814 | menu.js | the help card: the line's whole text, since the line holds one line |
-| E815 | menu.js | a research's hint from its own effects (the O book's fx, words from J40): what it moves, by how much; its tint from the first effect's family (C26) |
+| E815 | menu.js | what a research does, in words from its effects; with no effects, why it is there |
 | E816 | econ.js | where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on no guide, the nearest guide line within tol pulls it on (a light pull, as a PDF editor's), so what is drawn is what it snaps to |
 | E817 | menu.js | the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager's square) stand a slot above the point, centred on it, never under it; where the top bar or the help line leaves no room, a slot below instead |
 | E818 | index.html#touch | the bottom bars' height, told by the menu when it changes (the top bar's is read as topOf); a person's head on the screen, a person's height above the feet (and the feet), for what must sit just above one, or just below when the top has no room |
@@ -809,3 +809,13 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E822 | index.html#the-view-s-eyes-lights-and-stage | the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rate, otherwise the full rate; the loop paces by it and the shed budgets by it |
 | E824 | index.html#the-view-s-eyes-lights-and-stage | glass goes solid as soon as the phone sheds a level: the blur behind menus, cards and the square is the first thing a struggling phone gives back (Albert, Nov 9 08:18) |
 | E825 | menu.js | every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, and a tap opens Help; the same line under the top ribbon comes and goes on its own (Albert, Nov 9 12:29) |
+| E826 | menu.js | the help line under the top ribbon carries its words in a span and a white ring (Info Help Ribbon 1), the ring receding over the time it takes to read |
+| E827 | menu.js | a message's time on screen: the toast's least time plus its words at adult reading speed (Brysbaert 2019; Albert, Nov 9 12:12) |
+| E828 | menu.js | the ring's marker inside a box: its colour and its state (dim not chosen, lit chosen, run at work) |
+| E829 | menu.js | one colour a kind of work (Albert, Nov 9 12:03-12:19): the age-up white; soldiers red; scouts, envoys and spies blue; caravans gold; other people green; a research its family's colour, brown when it strengthens a building |
+| E830 | menu.js | dim is the colour mixed into the tray brown by one share, never picked by hand |
+| E831 | menu.js | the box's outline as one path from 12 o'clock, clockwise, round its corners |
+| E832 | menu.js | each ring drawn once its box has a size, and again only when its size, colour or state changes |
+| E833 | menu.js | how far the work is: a queue's first item by the time left on it; the help line by its time to read |
+| E834 | menu.js | every frame the running rings recede, pinned at 12, clockwise, gone when the work is done |
+| E835 | menu.js | the queue: the first item rings down (run), those waiting behind it full and bright (lit); the green fill is gone |

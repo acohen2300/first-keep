@@ -4262,3 +4262,28 @@ MODIFIED (17):
 LOCKED (2278 of 2293): byte for byte as sealed, 1,386,643 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2293 items sealed · 2165 book entries · 93 laws · 282 citations, 20 still to open · 7 known
+
+## N3 · B2, the rings: the queue and the research buttons ring by the colour map; the help line's white ring over its reading time; the research tints and the queue fill cut · 2026-11-09 12:39
+Albert, Nov 9 12:23: proceed with the builds (Next build list item 12; the queue states 12:19)
+Opened: book:screen, book:colours, book:measure, book:comments, book:citations, code:menu.js
+MODIFIED (17):
+- book:citations:N284 · added
+- book:colours:C26 · removed
+- book:colours:C27 · added
+- book:comments:E815 · 159 → 93 bytes
+- book:comments:E826 · added
+- book:comments:E827 · added
+- book:comments:E828 · added
+- book:comments:E829 · added
+- book:comments:E830 · added
+- book:comments:E831 · added
+- book:comments:E832 · added
+- book:comments:E833 · added
+- book:comments:E834 · added
+- book:comments:E835 · added
+- book:measure:D356 · added
+- book:screen:SN32 · added
+- code:menu.js · 95,180 → 97,775 bytes
+LOCKED (2290 of 2306): byte for byte as sealed, 1,414,444 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2306 items sealed · 2178 book entries · 93 laws · 283 citations, 21 still to open · 7 known

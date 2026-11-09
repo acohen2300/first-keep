@@ -651,3 +651,7 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - The claw-hammer Build icon (menu.js `SVG.build`): the mallet, one home in the Screen book's icons (SN19).
 - Dim ink and the darker fill in the base rows (item 9: one ink, one fill, "for now").
 - 18 px on Start, the Jobs − / + and the setup's choices; the badge's bold "smaller" text: the type rule (SN20).
+
+## Cut in N3 (Nov 9, B2 the rings; item 12 of `Next build list.md`)
+- The research tint bar and its book (Colours C26, B29/E815's tintOf): the ring's colour map (C27) says the same by the ring.
+- The queue's green fill (`queue6`'s gradient): the first item's ring recedes instead.
