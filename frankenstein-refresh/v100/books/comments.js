@@ -105,7 +105,7 @@ BOOK("comments", {
 "E719": {"text": "rain and snow are drawn on the glass, as Mid's: the biggest drop crosses the screen at glass px/s whatever the zoom, the rest by their real ratios (Atlas), none while motion is shed; drawn in the world's metres a far view left them hanging as hairs (Albert, Nov 7 20:01)"},
 "E718": {"text": "the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (the unit and its wonder; the history stays in the Guide), so the sheet fits a phone with the browser's bars (Albert, Nov 7 19:40: ridiculously tall); the speeds ×1 ×2 ×3 drop under the pause button while the match is paused, as Base's spdPop; a speed picked resumes the match"},
 "E717": {"text": "the eye sees the ground's light, not the sky's: the lux × the albedo of what covers the ground, snow four times grass (D117 albedo, N248), by the snow's share of full cover"},
-"E716": {"text": "the guide lines are the screen's (Base, Nov 4): a line is drawn only where the ghost stands upright or level with one of yours on the screen (the board's diagonals, the land being turned a quarter corner); the snap itself stays Mid's snapGhost (t-walls holds it to Mid), so along the board's own rows it snaps without a slanting line"},
+"E716": {"text": "the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along the board's rows (the land turned a little, so they read level and upright) wherever the ghost lines up with one of yours within guide: centre to centre, edge to edge, or flush (D206 align: the ghost's side, then its), so two or three can show at once; counted in half tiles (a middle may sit on a half); drawn pad past both"},
 "E715": {"text": "the loop as Mid's (41-boot frame): the world steps at a fixed rate (D343) however the frames come, catching up at most catchup steps; a frame between two steps draws each figure the fraction of the way, so walking is smooth at any frame rate and a slow phone does half the work it did at 60 steps a second; lvx, lvy are where it stood before the step"},
 "E714": {"text": "the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, instead of two guessed stops"},
 "E1": {"text": "First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each."},
@@ -439,7 +439,7 @@ BOOK("comments", {
  "E334": {"text": "a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid's wallSnap, wallSet)"},
  "E335": {"text": "a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it looks around and a tap adds a corner (Mid's wallHit, wallDrag)"},
  "E336": {"text": "Build: a wall line laid while the stores last, said in one toast; a building sent its nearest free villager (or the one picked), then the ghost waits on the next spot beside it until the limit or the purse says no (Mid's commitPlace)"},
- "E337": {"text": "while placing, the finger moves the ghost (a wall's corner or line), not the map"},
+ "E337": {"text": "while placing, the finger moves the ghost (a wall's corner or line), not the map; the drag holds only its own finger: a second finger, and the first one's lift, stay the map's, so the map never keeps a finger that has left"},
  "E338": {"text": "the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite and colour (Mid's ghostTint)"},
  "E339": {"text": "while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the Town Center (Mid's drawSeal)"},
  "E340": {"text": "the ghost: a wall's tiles green or red with its corners, the first ringed green; a building's guides to yours in line and its tinted art, no footprint box (Mid's drawGhost, drawGuides)"},
@@ -710,7 +710,7 @@ BOOK("comments", {
  "E610": {"text": "a flame's light on the ground: a disc fading to a quarter at half its reach, added to the dark, only when there is dark to light"},
  "E611": {"text": "what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at a lit door, a camp's fire, a caravan's lantern (Mid's drawLight, HEARTH)"},
  "E612": {"text": "theatrics: one pop curve (a finished building and a newborn swell and settle), ripples where you tap, three sizes of celebration (a building, an upgrade rolling through the army, a new age or a wonder) and the pale flash (Mid's popC, celebrate, ripple, ripDraw, drawFlash)"},
- "E613": {"text": "words on the map scale with the zoom down to a floor; a label is a pill (Mid's labelK, mapFont, tag)"},
+ "E613": {"text": "words on the map keep one size whatever the zoom, as the screen's own words; a label is a pill (Mid's mapFont, tag)"},
  "E614": {"text": "the dressing: a site staked out and rising with the work, a finished building's pop and fresh glow, its flags, piles and chimney smoke (Mid's drawBld)"},
  "E615": {"text": "a building site: the stakes round its footprint, the walls rising with the work between two posts, the bar, and z when nobody builds it"},
  "E616": {"text": "a building's flags, drawn live over its picture where its art put them, waving more in a strong wind (Mid's flagsOn)"},
@@ -797,5 +797,7 @@ BOOK("comments", {
  "E811": {"text": "a side's familiarity with a tile: one on its own ground (a finished building of its own within D355 home), the Natives' and the wild's everywhere, else the memory fading from the last look"},
  "E813": {"text": "a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a shooting building watches"},
  "E814": {"text": "the help card: the line's whole text, since the line holds one line"},
- "E815": {"text": "a research's hint from its own effects (the O book's fx, words from J40): what it moves, by how much; its tint from the first effect's family (C26)"}
+ "E815": {"text": "a research's hint from its own effects (the O book's fx, words from J40): what it moves, by how much; its tint from the first effect's family (C26)"},
+ "E816": {"text": "where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on no guide, the nearest guide line within tol pulls it on (a light pull, as a PDF editor's), so what is drawn is what it snaps to"},
+ "E817": {"text": "the small pop-ups on the map (a quick attack on bare ground, the ice's clear) stand two slots above the finger, centred on it, never under it"}
 });

@@ -409,7 +409,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E714** the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, inst · QCU (N246)
 - **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
-- **E613** words on the map scale with the zoom down to a floor; a label is a pill (Mid's labelK, map
+- **E613** words on the map keep one size whatever the zoom, as the screen's own words; a label is a 
 - **E614** the dressing: a site staked out and rising with the work, a finished building's pop and fr
 - **E615** a building site: the stakes round its footprint, the walls rising with the work between tw
 - **E616** a building's flags, drawn live over its picture where its art put them, waving more in a s
@@ -535,18 +535,19 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
+- **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear) stand two sl
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
 - **E335** a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it look
 - **E726** the place bar says what Base's said (J34): where to press, then the name with 'tap Build,  · J34 (N241)
 - **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near
-- **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map
+- **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map; the drag
 - **E700** only a touch on or near the ghost moves it; a touch away from it falls through to the came
 - **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
 - **E339** while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the T
 - **E340** the ghost: a wall's tiles green or red with its corners, the first ringed green; a buildin
-- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn only where the ghost stand
+- **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
 - **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
@@ -597,7 +598,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
-- **E716** the guide lines are the screen's (Base, Nov 4): a line is drawn only where the ghost stand
+- **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
 - **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t
@@ -616,6 +617,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · E686
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
 - **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
+- **E816** where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin

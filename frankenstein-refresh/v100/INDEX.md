@@ -492,7 +492,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E719 |  | rain and snow are drawn on the glass, as Mid's: the biggest drop crosses the screen at glass px/s whatever the zoom, the rest by their real  |  |
 | E718 |  | the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (the unit and its wonder; the history stays in the G |  |
 | E717 |  | the eye sees the ground's light, not the sky's: the lux × the albedo of what covers the ground, snow four times grass (D117 albedo, N248), b |  |
-| E716 |  | the guide lines are the screen's (Base, Nov 4): a line is drawn only where the ghost stands upright or level with one of yours on the screen |  |
+| E716 |  | the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along the board's rows (the land turned a little, so the |  |
 | E715 |  | the loop as Mid's (41-boot frame): the world steps at a fixed rate (D343) however the frames come, catching up at most catchup steps; a fram |  |
 | E714 |  | the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, instead of two guessed stops |  |
 | E1 |  | First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here: one home each. |  |
@@ -826,7 +826,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E334 |  | a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid's wallSnap, wallSet) |  |
 | E335 |  | a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it looks around and a tap adds a corner (Mid's wallHit, w |  |
 | E336 |  | Build: a wall line laid while the stores last, said in one toast; a building sent its nearest free villager (or the one picked), then the gh |  |
-| E337 |  | while placing, the finger moves the ghost (a wall's corner or line), not the map |  |
+| E337 |  | while placing, the finger moves the ghost (a wall's corner or line), not the map; the drag holds only its own finger: a second finger, and t |  |
 | E338 |  | the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite and colour (Mid's ghostTint) |  |
 | E339 |  | while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the Town Center (Mid's drawSeal) |  |
 | E340 |  | the ghost: a wall's tiles green or red with its corners, the first ringed green; a building's guides to yours in line and its tinted art, no |  |
@@ -1097,7 +1097,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E610 |  | a flame's light on the ground: a disc fading to a quarter at half its reach, added to the dark, only when there is dark to light |  |
 | E611 |  | what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at a lit door, a camp's fire, a caravan's lantern (Mi |  |
 | E612 |  | theatrics: one pop curve (a finished building and a newborn swell and settle), ripples where you tap, three sizes of celebration (a building |  |
-| E613 |  | words on the map scale with the zoom down to a floor; a label is a pill (Mid's labelK, mapFont, tag) |  |
+| E613 |  | words on the map keep one size whatever the zoom, as the screen's own words; a label is a pill (Mid's mapFont, tag) |  |
 | E614 |  | the dressing: a site staked out and rising with the work, a finished building's pop and fresh glow, its flags, piles and chimney smoke (Mid' |  |
 | E615 |  | a building site: the stakes round its footprint, the walls rising with the work between two posts, the bar, and z when nobody builds it |  |
 | E616 |  | a building's flags, drawn live over its picture where its art put them, waving more in a strong wind (Mid's flagsOn) |  |
@@ -1185,6 +1185,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E813 |  | a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a s |  |
 | E814 |  | the help card: the line's whole text, since the line holds one line |  |
 | E815 |  | a research's hint from its own effects (the O book's fx, words from J40): what it moves, by how much; its tint from the first effect's famil |  |
+| E816 |  | where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on no guide, the nearest guide line within tol pulls |  |
+| E817 |  | the small pop-ups on the map (a quick attack on bare ground, the ice's clear) stand two slots above the finger, centred on it, never under i |  |
 
 ## ground
 
@@ -1415,7 +1417,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D203 | a line of wall gets crew builders at most, who work down it; a builder done takes the next wall piece within wall tiles, else a site nobody raises within site tiles, else goes back to its work (Mid's 60 and 220 units in its 10-unit squares) | {crew: 2, wall: 6, site: 22} | N168 |
 | D204 | done: the share at which a site stands finished; a site stands at start of its health and gains rise of it as it is raised (Mid's mkBld and bldTick) | {start: 0.1, rise: 0.9, done: 1} | N168 |
 | D205 | a building that costs stone rises at share in frost, the air at or under at °C: mortar will not set (Mid's frost weather) | {share: 0.5, at: 0} | N168 |
-| D206 | placing, in tiles unless said: lane tiles round every building and from every find (walls, gates and fields may touch; nothing touches one that trains); grab: a touch within this share of the footprint (or lift px) grabs the ghost, farther away it looks around (Mid's nearGhost); the ghost snaps beside one of yours, touching or a lane apart (gaps), within near, or in line with one within guide (the guide drawn pad past both), to the nearest spot within tol (least, or zoom ÷ the zoom), start from the screen's middle; a find stands half a tile in; on a phone the ghost waits lift px above the finger; within edge px of the screen the map scrolls scroll px a second; a wall corner is caught within hit px, and a drag nearly flat or upright, under 1 in flat, is made so; after a building the next spot is its size and next for its material away (timber leaves a gap for fire); the tint and the ghost's alpha; a corner's knob, the lines' widths and dashes in px; a tile's corners in order (Mid's) | {lane: 2, gaps: [0, 2], near: 4, half: 0.5, guide: 26, pad: 1.2, tol: {least: 1.4, zoom: 2.6}, start: 20, lift: 64, grab: 0.7, edge: 48, scr | N168 |
+| D206 | placing, in tiles unless said: lane tiles round every building and from every find (walls, gates and fields may touch; nothing touches one that trains); grab: a touch within this share of the footprint (or lift px) grabs the ghost, farther away it looks around (Mid's nearGhost); the ghost snaps beside one of yours, touching or a lane apart (gaps), within near, or in line with one within guide along the board's rows (align: centre to centre, edge to edge, flush, as the ghost's side then its, in footprints; the guide drawn pad past both), to the nearest spot within tol (least, or zoom ÷ the zoom), start from the screen's middle; a find stands half a tile in; on a phone the ghost waits lift px above the finger; within edge px of the screen the map scrolls scroll px a second; a wall corner is caught within hit px, and a drag nearly flat or upright, under 1 in flat, is made so; after a building the next spot is its size and next for its material away (timber leaves a gap for fire); the tint and the ghost's alpha; a corner's knob, the lines' widths and dashes in px; a tile's corners in order (Mid's) | {lane: 2, gaps: [0, 2], near: 4, half: 0.5, guide: 26, align: [[0, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]], pad: 1.2, tol: {least: 1.4, zoom | N168 |
 | D207 | while walls are laid: a foe's walk out from the Town Center reaching reach tiles is a way in, shown, else Sealed; looked again every seconds (Mid's SEAL) | {reach: 38, every: 0.3} | N168 |
 | D208 | the computer's wall ring: ring tiles out from its Town Center, an arc of ± steps of step rad facing the middle, its gates the two squares nearest the middle and laid first; from age, with stone, up to pieces a round while it keeps that much stone (Mid's WALL_R, 260 units in its 10-unit squares, and wallPlan; the balanced computer walls) | {ring: 26, steps: 66, step: 0.019, gates: 2, age: 1, stone: 60, keep: 40, pieces: 3} | N168 |
 | D209 | what fits a tapped spot, in tiles and scores: a drop-off for finds within near × r with none within dropR; more of what stands within r (a home: a home; a field: a mill, then a field; an army building: the one you lack; a wall: a gate; the Town Center: a home, keep); a narrow way, its disc of area tiles between choke solid: a wall, or a gate beside your wall; a home when room is short (Mid's SUGGEST) | {r: 14, near: 0.85, dropR: 11, drop: 3, kin: 3.5, keep: 1, area: 4, choke: {lo: 0.35, hi: 0.75}, chokeW: 4, room: 2, short: 1.5} | N168 |
@@ -1658,7 +1660,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN17 | the ice card: an order over ice asks how to cross (the game keeps running; they wait at the shore) | {ticks: [], rows: title; how thick the ice on the way is and what it holds; the six ways to cross; remember this winter or this game} | N263 |
 | SN16 | the Mail card, as Base (the Nov 7 re-read, item 13) | {ticks: [Tall], rows: title, the messages newest first, each with its group; a tap on one with a place goes there} | N241 |
 | SN15 | the Welcome back card, as Base: a saved game opens paused behind it; the pause itself has no page (the speeds, New game and the volumes drop under the pause button; Paused · tap to carry on; Albert, Nov 7 20:48: all Base) | {ticks: [Tall], rows: title Welcome back, Resume, New game} | N241 |
-| SN14 | words on the map (Mid's LABEL, labelK, mapFont, tag): px at the opening zoom, never under floor; a label's pill (padding, edge, rise, height, inset) | {px: 12, floor: 9, zoom: 1.3, pad: [10, 4, 13, 19, 5]} | N208 |
+| SN14 | words on the map (Mid's LABEL, mapFont, tag): px whatever the zoom, as a screen's words (Albert, Nov 8 21:21: a label must not scale with the zoom; 12 is Mid's, Oct 31); a label's pill (padding, edge, rise, height, inset, the words' nudge down) | {px: 12, pad: [10, 4, 13, 19, 5, 1]} | N208 |
 
 ## shells
 

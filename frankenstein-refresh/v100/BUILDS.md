@@ -4158,3 +4158,22 @@ MODIFIED (9):
 LOCKED (2267 of 2276): byte for byte as sealed, 1,399,298 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2276 items sealed · 2148 book entries · 93 laws · 280 citations, 20 still to open · 7 known
+
+## B31a: Base's PDF guide lines back and locked (centre, edges and flush on the screen's upright and level lines, two or three at once, with a light pull onto them); the ghost's drag keeps only its own finger, so a pinch near the ghost no longer leaves the map deaf to taps; the quick pop-ups stand above the finger; the paused panel's sound row on its own line; words on the map keep one size whatever the zoom · 2026-11-08 21:28
+Albert, Nov 8 21:12-21:21 (yes yes yes; lock those lines; strictly the ECS; the ghost's label must not scale with the zoom)
+Opened: book:comments, book:measure:D206, book:screen:SN14, code:econ.js, code:menu.js, code:index.html#the-view-s-eyes-lights-and-stage, code:index.html#touch
+MODIFIED (11):
+- book:comments:E337 · 92 → 234 bytes
+- book:comments:E613 · 112 → 127 bytes
+- book:comments:E716 · 345 → 426 bytes
+- book:comments:E816 · added
+- book:comments:E817 · added
+- book:measure:D206 · 1,468 → 1,637 bytes
+- book:screen:SN14 · 278 → 352 bytes
+- code:econ.js · 106,410 → 107,505 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,008 → 22,891 bytes
+- code:index.html#touch · 7,580 → 7,572 bytes
+- code:menu.js · 91,884 → 91,785 bytes
+LOCKED (2267 of 2278): byte for byte as sealed, 1,264,247 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2278 items sealed · 2150 book entries · 93 laws · 280 citations, 20 still to open · 7 known

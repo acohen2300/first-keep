@@ -3100,8 +3100,8 @@
 "numbers": 0
 },
 "book:comments:E337": {
-"sha": "7fc09509d64a088897b97ed26f5a36fd3162ab01c2af9c5f5ce77c65bf84106e",
-"bytes": 92,
+"sha": "06ed8bae036c8ad5dda36e83a80a397ace45b1dc8dd4bbac26ff861b3355347b",
+"bytes": 234,
 "numbers": 0
 },
 "book:comments:E338": {
@@ -4610,8 +4610,8 @@
 "numbers": 0
 },
 "book:comments:E613": {
-"sha": "791c7cd83893937b9fb89094a3e262e8c808c1548d872b59b4b0082a8aebc6a9",
-"bytes": 112,
+"sha": "b806ac5edff220da1c673fd4f35d477260bc2b154970801f23c2a75e454f64b8",
+"bytes": 127,
 "numbers": 0
 },
 "book:comments:E614": {
@@ -5165,8 +5165,8 @@
 "numbers": 0
 },
 "book:comments:E716": {
-"sha": "9eb15e3db694dd01dc59d52e85ae93e789306309ff746760e10408da827d8401",
-"bytes": 345,
+"sha": "b84543b449e8213dc553353d9528abd4aaf4990c40e5363e195f2c6467a2c6b3",
+"bytes": 426,
 "numbers": 0
 },
 "book:comments:E717": {
@@ -5697,6 +5697,16 @@
 "book:comments:E815": {
 "sha": "9f768e980c5ba13c099066aefaa69e659c1a0ebaaa2373d6a1978e6cb2d31ffd",
 "bytes": 159,
+"numbers": 0
+},
+"book:comments:E816": {
+"sha": "4ec65ad85e017473f70a7f595995dee80b1e4d60c0b3690f5724a9e482ad2abe",
+"bytes": 230,
+"numbers": 0
+},
+"book:comments:E817": {
+"sha": "939b69bd82ab355c6a5a88c3d5af73b5b8b779a25af85da47f04c608a8497b4f",
+"bytes": 153,
 "numbers": 0
 },
 "book:comments:E82": {
@@ -6465,8 +6475,8 @@
 "numbers": 0
 },
 "book:measure:D206": {
-"sha": "8797cb2004746a41b5b591a4d7cac66e1631d33e3181cadb62a6fe05903c38e7",
-"bytes": 1468,
+"sha": "7311ecddbf9a08b01fb3df7099e8a0e5cf227d9b566b54f408c716fd8773b557",
+"bytes": 1637,
 "numbers": 0
 },
 "book:measure:D207": {
@@ -7990,8 +8000,8 @@
 "numbers": 0
 },
 "book:screen:SN14": {
-"sha": "bdce53ab2341e60131df001f46fa175d4379fe43a7720426059328f4fb17c175",
-"bytes": 278,
+"sha": "7e669bec58e8e28d3e44ff7382148ce9b1be559ff196efc2b18211dfbff70fc8",
+"bytes": 352,
 "numbers": 0
 },
 "book:screen:SN15": {
@@ -10750,8 +10760,8 @@
 "numbers": 84
 },
 "code:econ.js": {
-"sha": "8e44952a0e8654d71f79f4919605776fe4471cd0e88b1c928fca95f1c1b09576",
-"bytes": 106410,
+"sha": "b647b86357e511e268bb96ed051cccacefd6c449ff14e527350adf8ecc29880c",
+"bytes": 107505,
 "numbers": 72
 },
 "code:index.html#b-the-buildings": {
@@ -10870,8 +10880,8 @@
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
-"sha": "6376209b4f9f55f23390eae0a00a954afdebddd8f68405b126d56d325c740f0d",
-"bytes": 23008,
+"sha": "f9747b73a55e43b2c03e2aec3959eacf3d639f7f75376ca41f73f68e6aa556b8",
+"bytes": 22891,
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
@@ -10880,13 +10890,13 @@
 "numbers": 47
 },
 "code:index.html#touch": {
-"sha": "fb4e2220026fb3f2a67fbcdcde33ad908a1bab9f005b8094b0a4deeb5f887c02",
-"bytes": 7580,
+"sha": "9f92e56c3ee37a9ba961dbd2a0adb9bc27e91efa9b7f3b5f9bf011d0f14e269b",
+"bytes": 7572,
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "d1fc49a63fbd3d05528a7ddefd4b832b266ad09fb04a7bf83d5374f50317e564",
-"bytes": 91884,
+"sha": "92d8def357f4cb789fd4bf008005115c47003e7b9b368619ee06c2c86ad563f7",
+"bytes": 91785,
 "numbers": 565
 },
 "code:sound.js": {
