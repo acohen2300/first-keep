@@ -181,16 +181,16 @@ Codes checked unused everywhere in the repo (books, code, docs, Base, Mid). Scre
 
 ## 12. Progress rings and the colour map: LOCKED (Albert, 12:03–12:16; mocks queue-ring*, queue-ring-all)
 The ring: a 2 px outline around a box, pinned at 12 o'clock, receding clockwise, over its 1 px dim track (the colour's inactive pair); gone at 100% (the work is done). Following the box's rounded corners, so one rule for any box size.
-- Replaces the queue's green fill (menu.js `queue6`): the first item rings down; (open: items waiting behind it show a full ring).
+- Replaces the queue's green fill (menu.js `queue6`). Three states, the research buttons' own (SN32–SN37): Dim (1 px, the dim colour) = not chosen; single bright (1 px, bright) = chosen, waiting in the queue; Double bright (2 px) = active, the one ringing down (Albert, 12:19).
 - Replaces the research family tints (Colours C26, B29): the tint book goes, logged in Parked.md when cut.
 - Rule: the colour says what kind of work, the ring how much is left. What is made decides the colour; raising a building is always brown; what happens inside it takes its domain's colour; no building has a colour of its own.
 | Colour | Means |
 |---|---|
-| White | Info: the Info Help bar, toasts, pop-ups; the ring recedes over the time to read the text: a short base + words ÷ (238 / 60) s (adult silent reading, 238 words a minute: Brysbaert 2019, to cite); a tap holds it (WCAG 2.2.1) |
+| White | The age-up (Albert, 12:19). Info: the Info Help bar, toasts, pop-ups; the ring recedes over the time to read the text: a short base + words ÷ (238 / 60) s (adult silent reading, 238 words a minute: Brysbaert 2019, to cite); a tap holds it (WCAG 2.2.1) |
 | Red | War: soldiers trained, war research, war timers (order cooldowns, fire, ransom); arms or trains people |
 | Green | People and economy: villagers trained, economy and health research (axes, picks, sickles, ploughs), a field's or tree farm's life |
 | Brown | Building: any building rising or repaired, building research (masonry, cranes, brick); walls, towers, gates and research that strengthens a structure. The ring in the wood colour (the icon's tan), not the outline brown, so it reads |
-| Gold | Money: mint output, trade runs, tribute, bribes, the bank; and the age-up (Albert: "I don't care about that too much") |
+| Gold | Money: mint output, trade runs, tribute, bribes, the bank |
 | Blue | Knowledge, sight and relations: learning research (writing, medicine, maths, optics), speed research, scouting and familiarity fading, envoys, alliances, contracts |
 Research families mapped: economy → green, health → green, war → red, speed → blue, sight → blue, other → blue.
-Flags: gold already marks "selected" (the gold 2 px inset); one must move. The age-up gives gold a second meaning (coin and milestone).
+Flags: gold already marks "selected" (the gold 2 px inset); one must move. The age-up gives white a second meaning (info and milestone).
