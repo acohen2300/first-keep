@@ -25,3 +25,4 @@ Rules for the run: one build at a time, each gated (index.py PASS) and published
 - B30 (20:52-21:00): built: familiarity, Local guides, Guerrilla warfare, the scout's Stealth. Not saved across reloads (logged in E810).
 - 20:52 Albert: stop after B30. B30 is published; stopped here. B29 (the help line, research hints: the quiet bar, first tap tells, second buys) was half-built and is set aside unpublished in the session scratchpad (b29-wip); the repo stands at B30.
 - B29 (20:54-21:12, Albert: finish 29 then stop): built: the help line (quiet, full width, gold while fresh, a tap opens the Help card), research tints by family, first tap tells and arms, second buys. Owed: a line of help for every verb (today: messages, whys and research), the Guide link from the Help card (no in-game Guide yet).
+- TO TALK LATER (Albert 20:57): move the help into the item's own menu (the card), not only the line under the top bar.
