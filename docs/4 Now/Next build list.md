@@ -59,3 +59,13 @@ Build:
 7. Everything drawn or heard asks the one map: units, buildings, ground wear, smoke, fire, sounds; wear per side's view, not the shared ground.
 8. The Start page's Fog on/off: Albert's call at build time.
 Also: unit drawing types `side !== 0` (a stray number; a latent bug if the player is ever not side 0): read "me".
+
+## 7. SoRen's renderer, for First Keep (Albert, Nov 9, 08:51–08:56)
+Albert: "Everything needs to be smooth. I won't accept less." Any rule must also simplify the code. Rain and snow stay drop by drop (never one sheet).
+From SoRen's live code (`acohen2300/soren`, index.html):
+1. Steps shown smooth: SoRen repaints its sky once a minute, at low resolution, in slices (a few rows a frame, at most 3 ms), on two canvases that cross-fade over 2.4 s (`PSKY`, `updateSky`). For First Keep: the sun, shadows, season, meadow and night tint change in steps, every step cross-faded.
+2. Layers baked once, keyed: each land layer painted into a canvas keyed by world, pixel density and stage, repainted only when the key changes (`ensureLand`). For First Keep: one Bake module for every cached layer (replaces the separate ground, woods, scar and meadow caches).
+3. Stacked layers, the GPU mixes: the sky its own canvas, weather never touches it; glass tiles are the browser's backdrop blur over it. For First Keep: separate canvases for ground, things, weather and the night wash; a pan moves the cached ground instead of repainting it.
+4. Rest pacing: paused, or a card or sheet open, a frame every 66–150 ms; dark, 250 (`tick`). Smooth where it matters, near zero where nothing moves.
+5. Sprites made once: clouds, glows, grain (`makeSprites`).
+Into items 4 and 5: SoRen draws rain and snow drop by drop from a pool, and Reduce Motion holds them still, never removes them (`updateWeather`); First Keep copied the drops but added "off when shedding". SoRen's 12 ms shed trigger fits its 60 frames a second (16.7 ms); First Keep copied 12 ms at 30 frames a second (33 ms).
