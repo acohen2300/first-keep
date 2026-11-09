@@ -475,12 +475,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
-- **E737** a message is a door, as Base's: a tap on it goes to its place and closes it (the Nov 7 re-
+- **E737** the help line under the top bar (Albert, Nov 8: one place the eyes always go): every messa
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
 - **E274** how much slower a full cover of mud or snow makes a march, in percent, from its terrain fa · QN (N13)
 - **E275** a place as the map's lettered squares, measured from the board's corner: D190 units a squa · D190 (N132) · A1 (N90)
 - **E276** a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; 
+- **E815** a research's hint from its own effects (the O book's fx, words from J40): what it moves, b · J40 (N160) · C26 (N208)
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
@@ -511,6 +512,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
+- **E814** the help card: the line's whole text, since the line holds one line
 - **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)

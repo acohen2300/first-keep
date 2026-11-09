@@ -27,7 +27,7 @@ BOOK("comments", {
 "E712": {"text": "the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person; placed by the same site rules the computers always use, so the lanes and the gap from finds hold"},
 "E713": {"text": "visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze terms come from one source"},
 "E738": {"text": "a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first)"},
-"E739": {"text": "research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost)"},
+"E739": {"text": "research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost); the first tap on a step tells what it does on the help line and arms it, the second buys it, any other tap disarms (Albert, Nov 8 20:49)"},
 "E740": {"text": "a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out"},
 "E748": {"text": "the ground painted for a window of tiles at a scale, into the whole picture once or into a chunk; the grass blades' tile drawn at that scale so they stay sharp"},
 "E749": {"text": "the ground's chunk cache and the height range its windows are found from"},
@@ -84,7 +84,7 @@ BOOK("comments", {
 "E745": {"text": "the aurora: curtains of green and violet over the top of the glass, swaying unless motion is stilled"},
 "E746": {"text": "an event with its own picture draws it over the map"},
 "E747": {"text": "the mirage's dots on the small map, in the colour of what is coming"},
-"E737": {"text": "a message is a door, as Base's: a tap on it goes to its place and closes it (the Nov 7 re-read, item 14)"},
+"E737": {"text": "the help line under the top bar (Albert, Nov 8: one place the eyes always go): every message lands there, gold while fresh (D.toast s) then dim, never gone; a tap goes to the message's place when it has one, else opens the Help card with the whole text"},
  "E736": {"text": "the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15)"},
  "E735": {"text": "the hammer carries a bar for the sites going up (the mean of their progress), and People is ringed blue while anyone stands idle (Base, items 19 and 20); with no hazard ticked each is drawn by lot at D309 lot odds, Base's HZ_ODDS, and the first message says the level (item 5)"},
 "E734": {"text": "a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job is locked until then and a tap on it says when it opens (the Nov 7 re-read, item 21)"},
@@ -795,5 +795,7 @@ BOOK("comments", {
  "E809": {"text": "a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure): cold and wet sap morale"},
  "E810": {"text": "familiarity (D355): a cell is known to a side from the last time one of its eyes stood in it; nothing is saved, so a reload forgets the scouted ground and keeps the own ground"},
  "E811": {"text": "a side's familiarity with a tile: one on its own ground (a finished building of its own within D355 home), the Natives' and the wild's everywhere, else the memory fading from the last look"},
- "E813": {"text": "a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a shooting building watches"}
+ "E813": {"text": "a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a shooting building watches"},
+ "E814": {"text": "the help card: the line's whole text, since the line holds one line"},
+ "E815": {"text": "a research's hint from its own effects (the O book's fx, words from J40): what it moves, by how much; its tint from the first effect's family (C26)"}
 });

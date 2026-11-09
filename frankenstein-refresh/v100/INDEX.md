@@ -381,6 +381,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C23 | the ground's small things: the foam on the water's edge; the play edge's dashes; a stone's own tint in a wall, and the damp moss at a wall's foot | {snow: #eef3f6, ice: #dce9f2, crack: #4a6a86, rim: #9fb2c2, edge: #f4ead2, foam: #eef6ffa0, stone: [#fff5dc18, #140f0a1a, #6e5f4b14], moss:  | N260 |
 | C24 | the ring at a unit's feet, full and bright (Albert, Nov 8 13:38): green picked (tapped, boxed or in a picked group), blue working, yellow idle; a foe's ring its side's colour, the wild white | {pick: #21e05a, work: #2f8cff, idle: #ffd21f, wild: #ffffff} | N145 |
 | C25 | the meadow (D353): dormant, summer emerald, fresh spring and olive autumn grass; three tones of dry, lush and straw; wet grass; a worn path, mud, frozen ruts, a puddle with the sky in it, hoarfrost and slush; daisies, buttercups, poppies, cornflowers, knapweed and seed heads [petal, middle], in their seasons; three pebble greys, a pebble's shadow and its light | {dormant: #9a8f60, emerald: #3d7a36, fresh: #8cc63f, olive: #7d7a38, tones: [#8a8a3c, #2f6a2c, #b0a058], wet: #1a2410, path: #8f7a5a, mud: # | N264; N268 |
+| C26 | the tint bar on a research cell by what it helps (Albert, Nov 8 18:57: a tint or icon a stat): economy green, speed blue, health gold, war red, sight purple, else grey | {economy: #3fb950, speed: #4aa3ff, health: #ffd21f, war: #ff5a4a, sight: #c9a0ff, other: #9a8f80} | N208 |
 
 ## comments
 
@@ -470,7 +471,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E745 |  | the aurora: curtains of green and violet over the top of the glass, swaying unless motion is stilled |  |
 | E746 |  | an event with its own picture draws it over the map |  |
 | E747 |  | the mirage's dots on the small map, in the colour of what is coming |  |
-| E737 |  | a message is a door, as Base's: a tap on it goes to its place and closes it (the Nov 7 re-read, item 14) |  |
+| E737 |  | the help line under the top bar (Albert, Nov 8: one place the eyes always go): every message lands there, gold while fresh (D.toast s) then  |  |
 | E736 |  | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |  |
 | E735 |  | the hammer carries a bar for the sites going up (the mean of their progress), and People is ringed blue while anyone stands idle (Base, item |  |
 | E734 |  | a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job  |  |
@@ -1182,6 +1183,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E810 |  | familiarity (D355): a cell is known to a side from the last time one of its eyes stood in it; nothing is saved, so a reload forgets the scou |  |
 | E811 |  | a side's familiarity with a tile: one on its own ground (a finished building of its own within D355 home), the Natives' and the wild's every |  |
 | E813 |  | a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a s |  |
+| E814 |  | the help card: the line's whole text, since the line holds one line |  |
+| E815 |  | a research's hint from its own effects (the O book's fx, words from J40): what it moves, by how much; its tint from the first effect's famil |  |
 
 ## ground
 
@@ -1651,6 +1654,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | N140 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | N141 |
 | SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | N142; N143 |
+| SN18 | the help card: a tap on the help line opens what it said in full (Albert, Nov 8 18:57) | {ticks: [], rows: title; the help line's full text} | N208 |
 | SN17 | the ice card: an order over ice asks how to cross (the game keeps running; they wait at the shore) | {ticks: [], rows: title; how thick the ice on the way is and what it holds; the six ways to cross; remember this winter or this game} | N263 |
 | SN16 | the Mail card, as Base (the Nov 7 re-read, item 13) | {ticks: [Tall], rows: title, the messages newest first, each with its group; a tap on one with a place goes there} | N241 |
 | SN15 | the Welcome back card, as Base: a saved game opens paused behind it; the pause itself has no page (the speeds, New game and the volumes drop under the pause button; Paused · tap to carry on; Albert, Nov 7 20:48: all Base) | {ticks: [Tall], rows: title Welcome back, Resume, New game} | N241 |
@@ -2223,4 +2227,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J34 | the place bar's words, Base's (26-input placeT; Albert's screenshot Nov 7 20:38) | {start: Press where the {name} goes · drag empty ground to look around, lineStart: Tap where the {line} starts, ok: {Name}: tap Build, or dr | N241 |
 | J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked, charge: Charge, fallBack: Fall back, hold: Hold, recall: Recall, hunt: Hunt, hunt3: Hunt ×3, hunters: 3, home: Home, op | N241 |
 | J32 | the Pause screen's words: its title, the pause mark on the top bar (SoRen's), New game and its confirm (Albert, Nov 7: New game on the pause screen, with a confirm) | {title: Paused, mark: ❙❙, newGame: New game, sure: Sure? Tap again} | N241 |
+| J39 | the help line under the top bar (Albert, Nov 8 18:57, 20:49: one place the eyes go; quiet-looking; a research tells what it does on the first tap and is bought on the second); its card's title; the words for a step with no number to show | {title: Help, arm: {name}: {what} · {cost}. Tap again to research., done: {name}: {what}., rank: a new rank, tier: a taller tower, opens: op | N208 |
+| J40 | each number research moves (the O book's fx s), in words, and the family that tints it (C26): economy, speed, health, war, sight, other | {rate: [gathering, economy], make: [making, economy], scale: [yield per plot, economy], sell: [sale price, economy], trade: [trade, economy] | N160 |
 

@@ -4141,3 +4141,20 @@ MODIFIED (20):
 LOCKED (2250 of 2270): byte for byte as sealed, 1,244,475 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2270 items sealed · 2142 book entries · 93 laws · 280 citations, 20 still to open · 7 known
+
+## B29: the help line under the top bar: every message lands there, gold while fresh, then dim, never gone; a tap opens the Help card with the whole text; a research cell carries a tint by what it helps, the first tap tells what it does and the second buys it · 2026-11-08 20:57
+Albert, Nov 8 18:57-19:00 and 20:49 (Calls - Nov 8.md; the mock's notes)
+Opened: book:words, book:colours, book:screen, book:comments, code:menu.js
+MODIFIED (9):
+- book:colours:C26 · added
+- book:comments:E737 · 116 → 264 bytes
+- book:comments:E739 · 153 → 291 bytes
+- book:comments:E814 · added
+- book:comments:E815 · added
+- book:screen:SN18 · added
+- book:words:J39 · added
+- book:words:J40 · added
+- code:menu.js · 90,661 → 91,884 bytes
+LOCKED (2267 of 2276): byte for byte as sealed, 1,399,298 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2276 items sealed · 2148 book entries · 93 laws · 280 citations, 20 still to open · 7 known
