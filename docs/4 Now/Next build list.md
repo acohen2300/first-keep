@@ -115,3 +115,5 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 
 ### "Job Ribbon Main" (Albert, 10:51; mock jobs-3stack)
 - The jobs rows as locked, with one more box on top of column 1 and of column 6 (3 px above), so those two columns stand three boxes tall and columns 2–5 two; 138 tall at the corners, 91 in the middle. The column 6 top box is crimson (R4, as the controller; Albert, 10:52), where War sits today; the column 1 top box brown. What the two top boxes hold: not yet set.
+### "Job Ribbon Hide" (Albert, 10:56–10:57; mock jobs-main3)
+- Job Ribbon Main with one more brown box on top of column 6's crimson box (3 px above): column 6 four tall (brown, crimson, then the two job boxes), column 1 three tall, columns 2–5 two; 185 tall at column 6. What the new box holds: not yet set.
