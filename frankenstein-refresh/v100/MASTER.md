@@ -258,6 +258,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E312** nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no t
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
 - **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
+- **E807** QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, so · QCJ (N163, N167) · D242 (N188, N273)
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
 - **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te
 - **E104** every unit within r of from (a square), never itself
@@ -336,7 +337,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E141** SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three st
 - **E142** the channel wanders but leans home to its foot
 - **E579** a falling star streaks down onto its spot
-- **E143** the light: the sun's by the ramp, the horizon's warmth within 8° of it; rain no longer was · E381
+- **E143** the light: the sun's by the ramp, the horizon's warmth within 8° of it; rain no longer was · E381 · D117 (N41, N215, N216, N217, N218, N220, N247, N248) · QAL (N41, N215, N216, N217, N218, N220, N247, N248)
 - **E381** the white of low visibility: the contrast lost over the screen's width, 1 − e^(−3.912 d ÷  · QK (N10, N210, N245)
 - **E144** KW7: Koschmieder's reach (QK) limits sight on the Display floor; here the haze · QK (N10, N210, N245)
 - **E552** the sky told ahead, the sky's news, the flood and the ruts (D293–D295); the ground's marks · D293 (N7, N203) · D295 (N203)
@@ -349,10 +350,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E722** zero and one are named from the count row (D346), no longer borrowed from the hazards' bas · D346 (N102)
 - **E568** where an event comes in: a spot on one of the land's edges, its far side through the middl
 - **E569** an event comes only in its season, or in the rain; never the same twice running
-- **E741** an event's knobs (damage, speed) while it runs, how far through it is, and the eclipse's d
+- **E741** an event's knobs (damage, speed) while it runs, and how far through it is
 - **E570** a Poisson wait with a floor: least plus −(mean − least) ln U (QM) · QM (N12)
 - **E571** what each event does when it starts, each second it runs and when it ends (Mid's EV)
-- **E742** the eclipse: a corona at the top of the glass, the moon's black disc over it, as Base's
 - **E743** the mirage: an army seen on the small map ahead of your Town Center toward the middle, tol
 - **E744** the circus crosses the land like the wagon; a villager near a performer is cheered and gat
 - **E745** the aurora: curtains of green and violet over the top of the glass, swaying unless motion 
@@ -393,6 +393,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E598** the view's eyes, lights and stage: the light and each eye's range (real math, Albert Nov 6
 - **E599** the light on the ground (D117): the sun's by its height, the moon's by its phase and heigh · D117 (N41, N215, N216, N217, N218, N220, N247, N248)
 - **E717** the eye sees the ground's light, not the sky's: the lux × the albedo of what covers the gr · D117 (N41, N215, N216, N217, N218, N220, N247, N248) · N248
+- **E808** a side's exposure to cold and wet (D354): the air's cold and the ground's wetness, each cu · D354 (N275, N276, N277)
 - **E600** a thing's range (QAL): the least of the horizon from its eye, the eye's range in this ligh · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QK (N10, N210, N245)
 - **E603** another side's building shows only while your people see it
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
@@ -641,7 +642,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
-- **E350** an order of yours costs its soldiers' meals for D213's seconds, never more than the store  · D213 (N170)
+- **E350** an order of yours costs its soldiers' meals for D213's seconds, never more than the store  · D213 (N170) · E806
 - **E351** the year's work: everyone eats; a field's soil wears while worked and rests back, never un · QAA (N29)
 - **E352** each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY · QAD (N32, N33) · QY (N27) · QZ (N28)
 - **E353** a cut-out plot is replanted at D222's share of its price and is full again; from a drop-of · D222 (N170)
@@ -772,9 +773,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E372** the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps t
 - **E392** a group dressed into its shape at a tile (Mid's formUp): facing from home to there, the sq
 - **E407** the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, 
-- **E393** Albert's x% by x%: a soldier in a drill not D242's share of the way to its place by that s · D242 (N188)
+- **E806** an order leaves its soldiers tired as a charge does (D247 slow, settling back with tired): · D247 (N190)
+- **E393** time to contact: a soldier in a drill fights where it stands when the nearest foe would re · D242 (N188, N273)
 - **E394** at home an army stands in the yard of the building that trained it (or its Town Center), t
 - **E239** a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; ou · QAI (N76, N188) · QP (N16) · QAO (N45)
+- **E809** a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure) · D354 (N275, N276, N277)
 - **E395** a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own p · D231 (N188, N76, N16)
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
@@ -803,7 +806,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E401** the standards (Mid's drawStandards): a group of D sprites' least on the move carries its s
 - **E329** a gate is shut to a foe of its owner, and to an unknown walker (the seal's foe)
 - **E238** QAF a group's power: each one's health × its blow (Mid's dmgOf), the blow at least D194, o · QAF (N35) · D194 (N157) · D193 (N157, N188)
-- **E283** QAF the odds an army gives itself against a side, the one home the computers read: the cou · QAF (N35) · D193 (N157, N188)
+- **E283** QAF the odds an army gives itself against a side, the one home the computers read, countin · QAF (N35) · E624 · D193 (N157, N188)
 - **E284** against theirs: its soldiers, its towers (not its seat) at D177 each, its people at D192 ( · D177 (N157) · D192 (N157)
 - **E465** priests, medics and spies (Mid's 14-sim-troops, spyTick): the support troops' own work, th
 - **E466** a hand on a runner that did not get away: a prisoner, not a blow (Mid's soldier tick; ride
@@ -820,7 +823,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E584** a defender weighs a stranger now and then: it fights with probability V / C, C the strange · QAH (N38)
 - **E585** a traveller joins the first side to meet him, as villagers (on its rally job), or as food 
 - **E586** one weighted draw: p = w_i / Σw (QAR) · QAR (N49)
-- **E587** now and then the robbers' camp nearest the player sends its band at a villager or caravan 
+- **E587** now and then the robbers send a band from the camp nearest a side at a villager or caravan · D307 (N205)
 - **E588** a computer hires drifters it can pay for, and sends half its idle army at the nearest find
 - **E589** a scout left to itself goes for a find whose guards have fallen, else loops the land
 - **E519** Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies  · D280 (N198, N199)

@@ -4029,3 +4029,46 @@ MODIFIED (10):
 LOCKED (2247 of 2257): byte for byte as sealed, 1,354,625 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2257 items sealed · 2129 book entries · 93 laws · 272 citations, 12 still to open · 7 known
+
+## B27: the war's rules back and real: orders tire, forming by time to contact, the lower arm gives way; the night as the eye sees it (moonlit snow glows); exposure to cold and wet (rations, sickness, nerve; the cloaks' job); the eclipse cut; plots both 36 minutes; robbers rob whoever pays best, any side, and come back; the computers judge war by sight · 2026-11-08 20:24
+Albert, Nov 8 18:09-20:10 (Calls - Nov 8.md; go go yes yes 20:10)
+Opened: book:measure, book:comments, book:citations, book:words, book:colours, book:shells, code:index.html, code:combat.js, code:econ.js
+MODIFIED (35):
+- book:citations:N253 · removed
+- book:citations:N273 · added
+- book:citations:N274 · added
+- book:citations:N275 · added
+- book:citations:N276 · added
+- book:citations:N277 · added
+- book:colours:C18 · 470 → 430 bytes
+- book:comments:E143 · 277 → 422 bytes
+- book:comments:E283 · 211 → 342 bytes
+- book:comments:E350 · 162 → 163 bytes
+- book:comments:E393 · 164 → 169 bytes
+- book:comments:E587 · 193 → 242 bytes
+- book:comments:E741 · 131 → 85 bytes
+- book:comments:E742 · removed
+- book:comments:E806 · added
+- book:comments:E807 · added
+- book:comments:E808 · added
+- book:comments:E809 · added
+- book:measure:D213 · 169 → 249 bytes
+- book:measure:D222 · 244 → 409 bytes
+- book:measure:D239 · 1,993 → 2,090 bytes
+- book:measure:D242 · 231 → 578 bytes
+- book:measure:D292 · 446 → 614 bytes
+- book:measure:D307 · 897 → 1,078 bytes
+- book:measure:D308 · 3,491 → 3,200 bytes
+- book:measure:D311 · 1,305 → 1,370 bytes
+- book:measure:D354 · added
+- book:shells:BCL2 · 227 → 202 bytes
+- book:words:J19 · 2,666 → 2,492 bytes
+- code:combat.js · 59,064 → 59,658 bytes
+- code:econ.js · 106,289 → 106,410 bytes
+- code:index.html#floor-5-movables · 18,635 → 18,966 bytes
+- code:index.html#floor-6-climate · 29,825 → 29,177 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 22,791 → 23,008 bytes
+- code:index.html#touch · 7,551 → 7,561 bytes
+LOCKED (2232 of 2265): byte for byte as sealed, 1,228,300 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2265 items sealed · 2137 book entries · 93 laws · 276 citations, 16 still to open · 7 known

@@ -1109,8 +1109,10 @@ function collide() { // E304
   units.forEach((u, n) => (u.ix = n));
   for (const a of units) unitsNear(a, SP, (b) => { if (b.ix < a.ix || a.inside || b.inside) return; const dx = b.bx - a.bx, dy = b.by - a.by, d = Math.hypot(dx, dy), g = a.ix + b.ix; if (d >= SP) return;
     const [nx, ny] = d ? [dx / d, dy / d] : [Math.cos(g), Math.sin(g)], px = nx - PASS * ny, py = ny + PASS * nx, ma = massOf(a.code), mb = massOf(b.code), o = (SP - d) / (ma + mb);
+    if (forming(a) && forming(b)) { const soft = (SP - d) * FORM.soft, [y, s] = FORM.yield.indexOf(SH[a.code].class) <= FORM.yield.indexOf(SH[b.code].class) ? [a, -ONE] : [b, ONE]; shove(y, px * soft * s, py * soft * s); return; } // E807
     const fa = shove(a, -px * o * mb, -py * o * mb), fb = shove(b, px * o * ma, py * o * ma); if (!fa) shove(b, px * o * mb, py * o * mb); if (!fb) shove(a, -px * o * ma, -py * o * ma); });
 }
+const FORM = D.forming, forming = (u) => !!(u.drill && !u.drill.held && u.job === 'march');
 const shove = (u, x, y) => walkable(tileAt(u.bx + x, u.by + y), u) && ((u.bx += x), (u.by += y), place(u), (u.shoved = true));
 // E103
 const cellKey = (cx, cy) => cy * N * D.tile + cx, file = (g, size, t) => { const c = cellKey(Math.floor(t.bx / size), Math.floor(t.by / size)); // E767
@@ -1211,7 +1213,7 @@ const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.d
 // E123
 function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - D.noon) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
   K.moonAlt = alt(dec * Math.cos(f), Hh + f); K.moonLit = (1 - Math.cos(f)) / 2; return alt(dec, Hh); } // E551
-const MO = D.moon, [DARK0, DARK1] = MO.dark, moonPhase = () => (K.t / D.day / MO.month) % 1, nightOf = () => Math.max(clamp(-K.alt / MO.twilight, 0, 1), eclipse());
+const MO = D.moon, moonPhase = () => (K.t / D.day / MO.month) % 1, nightOf = () => clamp(-K.alt / MO.twilight, 0, 1);
 const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // E124
 function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i < RAMP.length; i++) if (a <= RAMP[i][0]) { const [a0, l0] = RAMP[i - 1], [a1, l1] = RAMP[i]; return l0 + ((l1 - l0) * (a - a0)) / (a1 - a0); } return 1; }
 // E125
@@ -1224,7 +1226,7 @@ on('start', () => { GUST = fractal(dice(seed ^ WX.wind.seed), WX.wind.k, WX.wind
 // E126
 function climate(dt) {
   K.t0 = K.t; K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // E127
-  K.alt = sunAlt(); K.light = lightAt(K.alt) * eclipsed(); K.temp = mean + D.swing * (K.light - 0.6);
+  K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
   const hour = Math.floor(K.t / HOUR), was = K.wetHour, fresh = hour !== K.hour; if (fresh) { K.hour = hour; ahead(was); if (K.wetHour !== was) { const r = K.wetHour ? rnd(-1, 1) : 0; K.I = Math.abs(r); K.dir = Math.sign(r); } K.storm = K.I >= D.stormAt; }
   const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; if (fresh) turned(was, falling); // E128
   const ease = Math.min(1, dt / 12); K.rain += ((falling === 'rain') * K.I - K.rain) * ease; K.snowing += ((falling === 'snow') * K.I - K.snowing) * ease; // E129
@@ -1274,7 +1276,7 @@ function drawSky(dt) { // E140
   if (evOn('meteor')) { const e = K.ev.cur, [dx, dy, tail, lw, r] = ER.meteor.streak, f = Math.min(ONE, (K.t - e.t0) / (e.until - e.t0)), [x1, y1] = toScreen(...toView(...e.at, null)), x = x1 - dx * (ONE - f), y = y1 - dy * (ONE - f); // E579
     ctx.strokeStyle = ctx.fillStyle = C.wild.streak; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x - dx * tail, y - dy * tail); ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r, null, A.round * RAD); ctx.fill(); }
   wash(SKYC.flash, Math.min(ONE, K.flash));
-  const night = (1 - K.light) * 0.7 * (DARK0 - DARK1 * K.moonLit), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
+  const night = MO.dark * (ONE - clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), ZERO, ONE)), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); wash(SKYC.veil, veil); // E381
   wash(SKYC.glow, dusk); wash(SKYC.blue, night); wash(SKYC.fog, K.fog * 0.8); if (K.sky === 'frost') wash(SKYC.rime, BD.frost); flushWash(); skyBand(); // E144
 }
@@ -1303,8 +1305,8 @@ const evOn = (k) => !!K.ev.cur && K.ev.cur.kind === k, raining = () => K.sky ===
 function edgeSpot() { const [e, off] = EV.edge, lo = B0 + e * D.tile, hi = B1 - e * D.tile, S = [(v) => [v, lo], (v) => [hi, v], (v) => [v, hi], (v) => [lo, v]], f = S[Math.floor(rng() * S.length)]; return f(between(rng, [B0 + off * D.tile, B1 - off * D.tile])); }
 function wildSpot() { const [w, lake, keep, fall] = EV.wild, R = [B0 + w * D.tile, B1 - w * D.tile];
   for (let i = D.tries.spot; i--; ) { const [x, y] = [between(rng, R), between(rng, R)]; if (walkable(tileAt(x, y)) && !byLake(x, y, lake * D.tile) && !things.some((s) => has(s, 'Seat') && Math.hypot(s.bx - x, s.by - y) < keep * D.tile)) return [x, y]; } return [MID, MID - fall * D.tile]; }
-const canEv = (k) => !(ER[k].season && !ER[k].season.includes(season())) && !(ER[k].rain && !raining()) && !(ER[k].need && !hz(ER[k].need)) && !(ER[k].night && nightOf() < ER[k].night) && !(ER[k].sun && !(K.alt > null)); // E569
-const evKnob = (k) => (K.ev.cur && ER[K.ev.cur.kind][k]) || ONE, evPart = () => clamp((K.t - K.ev.cur.t0) / (K.ev.cur.until - K.ev.cur.t0), null, ONE), eclipse = () => (evOn('eclipse') ? Math.sin(evPart() * Math.PI) : null), eclipsed = () => ONE - eclipse() * (ONE - ER.eclipse.lux); // E741
+const canEv = (k) => !(ER[k].season && !ER[k].season.includes(season())) && !(ER[k].rain && !raining()) && !(ER[k].need && !hz(ER[k].need)) && !(ER[k].night && nightOf() < ER[k].night); // E569
+const evKnob = (k) => (K.ev.cur && ER[K.ev.cur.kind][k]) || ONE, evPart = () => clamp((K.t - K.ev.cur.t0) / (K.ev.cur.until - K.ev.cur.t0), null, ONE); // E741
 function pickEv(roll) { const can = Object.keys(ER).filter(canEv); let k = can[Math.floor(roll() * can.length)]; if (k === K.ev.last && can.some((c) => c !== k)) k = can[-~can.indexOf(k) % can.length]; return k; }
 const wait = (roll, mean, least) => least - (mean - least) * Math.log1p(-roll()); // E570
 function walker(code, a, b, s) { const j = (p) => near1(s ? p.map((v) => v + between(rng, [-s, s]) * D.tile) : p, s || J.edge), k = j(a); if (!~k) return null; const u = spawn(code, -1, k, rng), g = j(b); if (!~g || !go(u, g)) { vanish(u); return null; } return Object.assign(u, { then: 'walk', herd: true, to: g }); }
@@ -1324,8 +1326,6 @@ const EVS = { // E571
   quicksand: { start(e) { const [bx, by] = wildSpot(); K.sand = { bx, by, r: ER.quicksand.r * D.tile }; }, tick() { for (const u of units) u.sand = !!K.sand && dist(u, K.sand) < K.sand.r; }, end() { K.sand = null; for (const u of units) u.sand = false; } },
   wagon: { start(e) { const a = edgeSpot(); e.units = [walker(ER.wagon.code, a, far(a))].filter(Boolean); } },
   mercs: { start(e) { const k = near1(edgeSpot(), NEAR); if (!~k) return; put('mercs', k, rng); e.f = things.at(-1); guard(e.f, rng); }, end(e) { if (!e.f) return; for (const u of [...units]) if (u.find === e.f && !SIDES[u.side]) vanish(u); if (!e.f.gone) drop(e.f); } },
-  eclipse: { draw(c) { const f = eclipse(), [px, py, r0, r1] = ER.eclipse.disc, x = cw * px, y = ch * py, g = c.createRadialGradient(x, y, r0, x, y, r1); g.addColorStop(null, C.wild.corona); g.addColorStop(ONE, C.wild.corona + C.wild.clear); // E742
-    c.save(); c.globalAlpha = f; c.fillStyle = g; c.beginPath(); c.arc(x, y, r1, -Math.PI, Math.PI); c.fill(); c.fillStyle = C.wild.moon; c.beginPath(); c.arc(x, y, r0, -Math.PI, Math.PI); c.fill(); c.restore(); } },
   heatwave: {},
   mirage: { says: true, start() { const R = ER.mirage, h = things.find((t) => t.side === ME && has(t, 'Seat')) || { bx: MID, by: MID }, d = Math.hypot(MID - h.bx, MID - h.by) || ONE, bx = h.bx + ((MID - h.bx) / d) * R.ahead * D.tile, by = h.by + ((MID - h.by) / d) * R.ahead * D.tile; // E743
     K.mirage = { bx, by }; fire('say', WL.events.mirage[ONE].replace('{at}', MENU.coord(bx, by))); }, end() { K.mirage = null; fire('say', WL.mirage); } },
@@ -1421,7 +1421,8 @@ on('press', (p) => { if (RADAR && Math.hypot(p.x0 - RADAR.sx, p.y0 - RADAR.sy) <
 // ── The view's eyes, lights and stage (E598)
 const LKO = D.lookout, LGT = D.light, FLM = D.flames, KLV = D.kelvin, STG = D.stage, DRS = D.dress, PDR = SPRITE.dress, MNI = D.mini, LBL = fromBook('screen').label, CLT = C.light, CDR = C.dress, CMN = C.mini, DRW = D.draw;
 const lux = () => { const S = EYE.sun, [full, quarter] = EYE.moon; const i = Math.min(S.length - ONE, Math.max(ONE, S.filter(([x]) => x < K.alt).length)), [[a0, l0], [a1, l1]] = [S[i - ONE], S[i]], f = Math.min(ONE, (K.alt - a0) / (a1 - a0)); // E599
-  return ((K.alt < a0 ? null : l0 * (l1 / l0) ** f * eclipsed()) + full * K.moonLit ** Math.log2(full / quarter) * Math.max(null, Math.sin((K.moonAlt * Math.PI) / EYE.deg)) + EYE.star) * (K.wetHour ? EYE.overcast / EYE.star : ONE) * (ONE + Math.min(ONE, K.snow / G.snow.full) * (EYE.albedo.snow / EYE.albedo.grass - ONE)); }; // E717
+  return ((K.alt < a0 ? null : l0 * (l1 / l0) ** f) + full * K.moonLit ** Math.log2(full / quarter) * Math.max(null, Math.sin((K.moonAlt * Math.PI) / EYE.deg)) + EYE.star) * (K.wetHour ? EYE.overcast / EYE.star : ONE) * (ONE + Math.min(ONE, K.snow / G.snow.full) * (EYE.albedo.snow / EYE.albedo.grass - ONE)); }; // E717
+const XP = D.exposure, exposure = (code, side) => clamp(stat(code, side, 'chill') * (clamp((XP.cold - K.temp) / XP.span, ZERO, ONE) * stat(code, side, 'cold') + Math.min(ONE, K.wet) * stat(code, side, 'wet')), ZERO, ONE); // E808
 const sightOf = (t) => { const lamp = (t.kind === 'bld' && stat(t.code, t.side, 'lamp')) || null, a = clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), null, ONE); const m = stat(t.code, t.side, 'sight') / stat(t.code, null, 'sight'); return Math.min(m * Math.sqrt(EYE.earth * stat(t.code, t.side, 'eye')) * D.upm, m * EYE.day * D.upm * (ONE - (ONE - a) * (ONE - lamp)), K.vis * D.upm); }; // E600
 on('hide', (t) => !inSight(t)); // E603
 // E604
@@ -1692,7 +1693,7 @@ const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.
 function start(sd, S = null) { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
 const boot = () => { const h = Number(location.hash.slice(ONE)), got = TEST ? null : readSave(), S = got && (!h || got.seed === h) ? got : null; if (S) try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); return; } catch (e) { fault(e); aside(); } start(TEST ? D.testField.seed : null); }; // E662
 addEventListener('hashchange', () => start()); addEventListener('resize', resize);
-window.FK = { clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { exposure, clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, labelK, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>

@@ -61,7 +61,7 @@ function snap(side, c, i, j, tol) { const [, n] = B[c]; let best = [i, j], bd = 
     if (Number.isInteger(h) && Math.abs(ci - i) < P.guide && Math.abs(cj - j) < P.guide) { for (const d of around) { take(ci, j + d); take(i + d, cj); } } } // E716
   return best; }
 function plan(side, code, i, j) { const cost = D.cost[code] || {}; if (!canPay(side, cost) || placeWhy(side, code, i, j)) return null; if (is(code, 'Gate') && wallAt(j * N + i)) FK.unbuild(wallAt(j * N + i)); const t = site(side, code, i, j); if (t) pay(side, cost, 'buildings'); return t; }
-function site(side, code, i, j) { const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; t.done = t.crew = 0; if (is(code, 'Supply')) t.supply = D.camp.start; if (FK.SH[code].amount) t.amount = t.max = FK.ref(FK.SH[code].amount); if (is(code, 'Flock')) t.sheep = D.flock.start; if (is(code, 'Soil')) t.fert = D.soil.full; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
+function site(side, code, i, j) { const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; t.done = t.crew = 0; if (is(code, 'Supply')) t.supply = D.camp.start; if (is(code, 'Field')) t.amount = t.max = Math.round(D.plot.lasts * FK.stat(code, side, 'rate')); else if (FK.SH[code].amount) t.amount = t.max = FK.ref(FK.SH[code].amount); if (is(code, 'Flock')) t.sheep = D.flock.start; if (is(code, 'Soil')) t.fert = D.soil.full; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
 const costBy = (t, f) => Object.fromEntries(Object.entries(D.cost[t.code] || {}).map(([y, n]) => [y, f(n)])), refund = (t) => costBy(t, (n) => Math.floor(n * (t.done < D.refund.first ? D.refund.early : D.refund.share))); // E317
 function cancel(t) { while (t.q && t.q.length) unqueue(t); payBack(t.side, refund(t), 'buildings'); FK.unbuild(t); }
 const repairCost = (t) => costBy(t, (n) => Math.ceil((n * D.repair.cost * (t.hpMax - t.hp)) / t.hpMax));
@@ -164,7 +164,7 @@ function assign(side, y, n) { const vs = villagersOf(side);
   const u = vs.find((v) => v.job === 'idle' || v.job === 'wait') || vs.filter((v) => jobOf(v) && jobOf(v) !== y && jobOf(v) !== 'build' && !posted(v)).reduce((a, v) => (!a || forageNow(v) < forageNow(a) ? v : a), null); if (!u) return false;
   const t = bestFind(u, y); if (!t) return false; gatherAt(u, t); return true; }
 // E348
-const SAY = fromBook('words').say, eats = (u) => (FK.stat(u.code, u.side, 'eat') * D.upkeep) / D.day, hungerOf = (side) => (bell - ((SIDES[side] || {}).famine ?? bell) >= D.hunger.days * D.day ? D.hunger.work : 1);
+const SAY = fromBook('words').say, eats = (u) => (FK.stat(u.code, u.side, 'eat') * D.upkeep * (ONE + D.exposure.ration * FK.exposure(u.code, u.side))) / D.day, hungerOf = (side) => (bell - ((SIDES[side] || {}).famine ?? bell) >= D.hunger.days * D.day ? D.hunger.work : 1);
 const docked = (side, t) => !FK.has(t, 'Catch') || FK.blds().some((b) => b.side === side && FK.has(b, 'Shore') && up(b) && Math.abs(b.bx - t.bx) < D.fish.near && Math.abs(b.by - t.by) < D.fish.near);
 const inReach = (side) => findsOf('food').some((t) => (t.kind !== 'bld' || t.side === side) && docked(side, t)) || units().some((u) => FK.has(u, 'Prey'));
 const fromFind = (u) => FK.has(u, 'Gather') && u.target && !u.target.gone && (jobOf(u) === 'food' || FK.has(u.target, 'Prey')) && !FK.has(u.target, 'Flock'); // E349
@@ -188,7 +188,7 @@ function seasonTurn() { const spring = !FK.season(), F = D.flock; // E352
   if (units().some((u) => u.route && SIDES[u.side]) && chance(HE.plague[+FK.hz('plague')], ONE)) { plague = FK.K.t + HE.lasts * D.season; for (const s of SIDES) s.plagueDead = null; tell(HW.sick.roads); }
   if (things().some((t) => t.side === ME && FK.has(t, 'Flock'))) FK.fire('event', 'spring', null); }
 // E353
-const replantCost = (t) => costBy(t, (n) => Math.round(n * D.treeFarm.replant));
+const replantCost = (t) => costBy(t, (n) => Math.round(n * D.plot.replant));
 const replantWhy = (side, t) => (!t.max ? SAY.none : t.amount ? SAY.growing : canPay(side, replantCost(t)) ? '' : 'cost');
 function replant(side, t) { if (replantWhy(side, t)) return false; pay(side, replantCost(t), 'buildings'); t.amount = t.max; return true; }
 const cutOut = (side, at) => things().filter((q) => q.side === side && q.max && !q.amount && (FK.SH[at.code].drop || []).includes(yieldOf(q))), replantAll = (side, at) => cutOut(side, at).sort((a, b) => dist(a, at) - dist(b, at)).filter((q) => replant(side, q)).length;
@@ -471,7 +471,7 @@ function shot(a, t, d) { if (!up(t) || !SIDES[a.side]) return; const F = FI.arro
 // E596
 const HE = D.health, [HBEAT] = D.beats.health; let plague = -Infinity;
 const town = (side, k) => units().filter((u) => u.side === side && !u.inside && !u.gone && u.hp > null && (dist(u, k) < HE.near * D.tile || !!depotFor(u)));
-const sickRisk = (side) => HE.risk * HE.seasons[FK.season()] * FK.stat('', side, 'sick') * FK.stat('', side, 'chill') ** (FK.season() === HE.winter);
+const sickRisk = (side) => HE.risk * (ONE + D.exposure.sick * FK.exposure('', side)) * FK.stat('', side, 'sick');
 function outbreak(side, share, pl) { const k = FK.seatOf(side); if (!k || fell.has(side)) return; const P = town(side, k).filter((u) => !(u.sick > FK.K.t)), n = Math.max(ONE, Math.round(P.length * share * FK.stat('', side, 'plague') ** !!pl));
   for (let i = n; i-- && P.length; ) { const [u] = P.splice(Math.floor(FK.rng() * P.length), ONE); Object.assign(u, { sick: FK.K.t + HE.sickFor, plague: !!pl }); } if (side === ME) tell(pl ? HW.sick.plague : HW.sick.ill, { n }); }
 function health() { const now = FK.K.t, H = [...things().filter((b) => b.kind === 'bld' && FK.has(b, 'Heal') && up(b) && alive(b)), ...units().filter((u) => FK.has(u, 'Heal') && !u.gone && u.hp > null)]; // E597

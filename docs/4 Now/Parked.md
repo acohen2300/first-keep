@@ -632,3 +632,10 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - B10: sprites and woods at device pixels; the ground in chunks at the zoom step when zoomed in (one a frame); caches to pixel budgets (D164). The phone then crashed on a stale cached measure.js beside the new page (?v= busts the page only; GitHub caches 10 min).
 - B11: network-first service worker (sw.js, SoRen's) and a manifest: online every file is fetched fresh, offline the last copies serve (checked: controls on second load, plays offline). The fault message now says the last good save is kept. Left: app icons for the manifest; theme-color (a typed colour in the page head: wants a home in the Colours book).
 - Owed: scars, snow, ice and flood masks at device pixels (same chunk way).
+
+## Cut in B24-B27 (Nov 8), logged by Albert's rule
+- B24: the grass's soft mottle blots and the baked-in specks (replaced by the meadow layer); Mid's shore rule for mud (mud deeper within a few tiles of water) replaced by the wetness index; ruts in 5 m cells (now a tile).
+- B26: the play edge along the tiles' edges (now a contour); the ground's per-tile slope light (now in the meadow layer).
+- B27: the eclipse (cut again; its words, colours, event row, light dip and corona); the x% by x% forming clock (now time to contact); Mid's sickness-by-season table [1, 1.2, 1, 1.2] with the summer 1.2 (the weather's exposure is the one home: summer has no cold or wet toll now); the robbers' "the side they regard least" (now gain over risk, any side; regard still keeps a tributary safe through atWar); the computers' all-seeing in war odds (a live-test crutch); the farm as an endless plot (now 36 minutes, as a tree farm).
+- The juice pass (shove, jolt, recoil) was found already in v100 as real momentum (impact, E112), so nothing to restore.
+- Spoilage cuts already compounded under QCA (Salting × Ice house leave a quarter), so nothing to change.

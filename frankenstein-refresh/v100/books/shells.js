@@ -23,7 +23,7 @@ BOOK("shells", {
  "BCR1": {"name": "Market", "layer": 110, "size": "D9", "style": "Open", "look": "market", "material": "timber", "ticks": ["Trade", "Spawn", "Burn", "Health", "Research"], "cite": ["N144", "N195", "N206"]},
  "BCR2": {"name": "Tavern", "layer": 110, "size": "D8", "style": "Closed", "look": "tavern", "material": "timber", "ticks": ["Burn", "Care", "Health"], "cite": ["N144", "N206"]},
  "BCL1": {"name": "Farm", "layer": 110, "size": "D9", "style": "Open", "look": "farm", "material": "timber", "ticks": ["Field", "Health", "Soil"], "yield": "food", "rate": "D136", "cite": ["N144", "N170"]},
- "BCL2": {"name": "Tree farm", "layer": 110, "size": "D9", "style": "Open", "look": "treefarm", "material": "timber", "ticks": ["Field", "Health"], "yield": "wood", "rate": "D222.rate", "amount": "D222.amount", "cite": ["N144", "N170"]},
+ "BCL2": {"name": "Tree farm", "layer": 110, "size": "D9", "style": "Open", "look": "treefarm", "material": "timber", "ticks": ["Field", "Health"], "yield": "wood", "rate": "D222.rate", "cite": ["N144", "N170"]},
  "BCL3": {"name": "Pasture", "layer": 110, "size": "D9", "style": "Open", "look": "pasture", "material": "timber", "ticks": ["Field", "Health", "Flock"], "yield": "food", "rate": "D219.milk", "cite": ["N144", "N170"]},
  "BCL4": {"name": "Quarry", "layer": 110, "size": "D9", "style": "Open", "look": "quarry", "material": "timber", "ticks": ["Field", "Health", "Research"], "yield": "stone", "rate": "D336", "cite": ["N144", "N235"]},
  "BCT1": {"name": "Trade post", "layer": 110, "size": "D8", "style": "Open", "look": "tpost", "material": "timber", "ticks": ["Post", "Shoot", "Health", "Research"], "cite": ["N144", "N195"]},
