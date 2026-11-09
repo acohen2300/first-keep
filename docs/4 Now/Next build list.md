@@ -126,3 +126,12 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - Fill gunmetal (S1, #2c3238); outline ring blue (#2f8cff, the working villager's ring, Colours C24 "work"); text white (#ece5d3) at 12 · 400, upright (not italic); contrast 10.3:1.
 - Tried and not chosen: glass (Albert: "that didn't work"); the three browns (tray, normal, lighter by the tray-to-box step x = 17, 12, 9); mint C6 (white ink fails, 1.5:1); italic.
 - 22 is half Apple's 44 tap height: if it is tapped, its tap area stays 44 while the bar draws 22.
+### Research buttons: LOCKED (Albert, 11:23–11:31; mocks mr3-soft, mr3-states, mr3-thick, colour-sheet)
+Each a box in gunmetal (S1, #2c3238) on the MR tray; only the outline changes.
+- "Research Buttons - Blue Dim": 1 px, inactive blue #284c7c.
+- "Research Buttons - Blue Active": 1 px, ring blue #2f8cff.
+- "Research Buttons - Blue Double": 2 px, ring blue #2f8cff.
+- "Research Buttons - Green Dim": 1 px, inactive green #3d6b47 (by the inactive rule; not yet shown in a mock).
+- "Research Buttons - Green Active": 1 px, mint #5fd08a (C6).
+- "Research Buttons - Green Double": 2 px, mint #5fd08a.
+Inactive rule (draft colour sheet, not yet locked): the active colour mixed 55% into the tray brown (#221811).
