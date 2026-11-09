@@ -101,3 +101,5 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - On the 6 box ribbon's tray: one wide box (where slots 1–4 were) and three small boxes (the space of slots 5–6 split in three), all four 3 px apart; the small boxes about 38.7 wide on a 390 screen, the wide box taking the rest (253). Same tray, edges and height (44 boxes on a 46 tray).
 - Note: the wide box ends 3 px past the six-slot grid line (the three small boxes keep their width).
 - The small boxes are under Apple's 44 tap width (about 39): flagged.
+### "Menu ribbon footer 2": LOCKED (Albert, 10:34–10:36; mock jobs-bar10)
+- The full-width dark tray (as the 6 box ribbon: 46 tall, 5 px from the screen's edges) with only the menu ribbon title's three small boxes, on the right (about 38.7 wide, 3 px apart, 6 px from the right edge); the left of the tray open, no box.
