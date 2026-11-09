@@ -1,6 +1,6 @@
 # First Keep: handoff (Nov 9, 2026, 06:50; v100 at B31b, live)
 
-**A new chat starts here.** Read this file, then `Calls - Nov 8.md` (every decision) and `Build plan - Nov 8.md` (plan and log). Albert's standing rules live in Claude's memory too.
+**A new chat starts here.** Read this file, then `Calls - Nov 8.md` (every decision), `Build plan - Nov 8.md` (plan and log) and `Next build list.md` (agreed items waiting to build, Nov 9 on). Albert's standing rules live in Claude's memory too.
 
 ## Where it stands
 - Code: `frankenstein-refresh/v100/` (index.html, combat.js, econ.js, menu.js, books/*.js). Live: https://acohen2300.github.io/first-keep/frankenstein-refresh/v100/
