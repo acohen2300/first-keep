@@ -36,3 +36,4 @@
 - Batch 4: keep the speed changes and lightning/night-sight, and open their sources. Sight research must not make people taller: height only for what really stands higher (towers, outposts, castles, walls); optics (the spyglass, from 1608) for scouts and lookouts. Sight kept conservative: the game feels like everything comes at you all the time (animals, robbers); fix sightlines in general, grounded in real math.
 - Batch 5, yes: the home pond stays (towns by water); gifts with no gather rate pay once on touch; fields and tree farms both last 36 minutes.
 - Batch 6: map features talked through later; merges closed (kept separate); four formations only: shield wall, loose/arc, charge (wedge as its look), ambush. The Depot is the camp's mini-store (wagon-only: a forward operating base for long fights); the Store is the town's warehouse.
+- Batch 7, killed: the eclipse (cut again; remove from code), dragon and troll (no fantasy world), the small map as a weather radar.
