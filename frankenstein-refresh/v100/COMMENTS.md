@@ -315,12 +315,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E202 | menu.js | the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, people, idle, records, rank, army |
 | E203 | menu.js | Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), the three stances, ✓. Drawn now, built with diplomacy (Later) |
 | E204 | menu.js | the five stores, sound, play, mail (SN5) |
-| E205 | menu.js | a page opens from the bottom edge, over the base's rows; the card waits behind it |
+| E205 | menu.js | a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and hides them while it is open, as tall as its own rows (Albert, Nov 9: no fixed height); the card waits behind a page |
 | E206 | menu.js | the ghost: press and slide on the map moves it; the tile under the finger is its middle. Build confirms. Nothing of this reaches the canvas's own pan while a ghost is up |
 | E207 | menu.js | the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing under it becomes the subject, and a picked villager or soldier is sent at it |
 | E208 | menu.js | one height for every page but the Tall ones: each is laid out once, the tallest sets the panel, the others fill it (Albert: menus never move) |
-| E209 | menu.js | the tallest of the pages that are not Tall sets the one height |
-| E210 | menu.js | sized once the modules and fonts are in (the first start) |
 | E211 | menu.js | the game opens on the player's hall |
 | E212 | menu.js | the version, said once (D171) |
 | E213 | econ.js | First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only through FK. Costs, homes, training, sites, ages, upkeep, and the villager as one state machine: idle, walk, gather, carry, build, repair, wait. |
@@ -809,3 +807,5 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E820 | menu.js, econ.js | a villager told to take cover goes into the nearest building of yours with room, as fright sends it; like fright's, it comes out when no foe is near (so with none near, there is nothing to hide from) |
 | E821 | menu.js | one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wherever it sits; the pause panel lived outside the three listeners and its buttons never ran |
 | E822 | index.html#the-view-s-eyes-lights-and-stage | the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rate, otherwise the full rate; the loop paces by it and the shed budgets by it |
+| E824 | index.html#the-view-s-eyes-lights-and-stage | glass goes solid as soon as the phone sheds a level: the blur behind menus, cards and the square is the first thing a struggling phone gives back (Albert, Nov 9 08:18) |
+| E825 | menu.js | every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, and a tap opens Help; the same line under the top ribbon comes and goes on its own (Albert, Nov 9 12:29) |

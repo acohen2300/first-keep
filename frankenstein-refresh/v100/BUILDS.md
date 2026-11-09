@@ -4237,3 +4237,28 @@ MODIFIED (1):
 LOCKED (2285 of 2286): byte for byte as sealed, 1,503,431 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2286 items sealed · 2158 book entries · 93 laws · 281 citations, 20 still to open · 7 known
+
+## N2 · B1, the look pass: the type rule; menus and cards as bottom sheets over the base rows, as tall as their rows; glass (solid when the phone sheds); the jobs rows; the villager square at 44 as one card; the mallet; the help line as Info Help Ribbon 1 · 2026-11-09 12:31
+Albert, Nov 9 12:23: proceed with the builds (Next build list items 1, 2, 3, 9, 11; the help line 12:26)
+Opened: book:screen, book:colours, book:measure, book:comments, book:citations, code:menu.js, code:index.html#the-view-s-eyes-lights-and-stage
+MODIFIED (17):
+- book:citations:N283 · added
+- book:colours:C28 · added
+- book:colours:C29 · added
+- book:comments:E205 · 93 → 218 bytes
+- book:comments:E209 · removed
+- book:comments:E210 · removed
+- book:comments:E824 · added
+- book:comments:E825 · added
+- book:measure:D321 · 895 → 966 bytes
+- book:screen:SN1 · 353 → 456 bytes
+- book:screen:SN19 · 503 → 669 bytes
+- book:screen:SN20 · added
+- book:screen:SN21 · added
+- book:screen:SN31 · added
+- book:screen:SN40 · added
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,023 → 23,098 bytes
+- code:menu.js · 93,750 → 95,180 bytes
+LOCKED (2278 of 2293): byte for byte as sealed, 1,386,643 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2293 items sealed · 2165 book entries · 93 laws · 282 citations, 20 still to open · 7 known

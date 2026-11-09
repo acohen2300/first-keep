@@ -138,7 +138,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144, N206)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225) · D125 (N169, N168, N195, N198) · SN1 (N133) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225) · D125 (N169, N168, N195, N198) · SN1 (N133, N283) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
 - **E694** a unit's row of numbers with its side's research applied, kept until the research changes:
 - **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198) · D130 (N160)
@@ -402,6 +402,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
+- **E824** glass goes solid as soon as the phone sheds a level: the blur behind menus, cards and the 
 - **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
@@ -537,7 +538,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
-- **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
+- **E825** every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, a
+- **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
 - **E821** one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wh
@@ -583,8 +585,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E647** what the town needs next, first that holds: room, villagers, wood, idle hands, a barracks,
 - **E648** every lesson beat: a new tip is said, then the first milestone newly true, one a beat
 - **E208** one height for every page but the Tall ones: each is laid out once, the tallest sets the p
-- **E209** the tallest of the pages that are not Tall sets the one height
-- **E210** sized once the modules and fonts are in (the first start)
 - **E211** the game opens on the player's hall
 - **E212** the version, said once (D171) · D171 (N118)
 - **E670** The test tools (Mid's matchLog, copyLog, tapCount): the match log for Claude to read, tap 

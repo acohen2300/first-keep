@@ -1436,7 +1436,7 @@ function meter(wall, sim, drawn) { if (!(wall > null)) return; const k = Math.mi
 function shed(work, secs) { const due = DRW.ms / rate(); DRAW.ema += (work - DRAW.ema) * Math.min(ONE, secs / DRW.tau); const was = DRAW.lvl; // E605
   if (DRAW.ema > DRW.slow * due && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
   else if (DRAW.ema < DRW.fast * due && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
-  if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } }
+  if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } document.body.classList.toggle('solid', DRAW.lvl >= DRW.lv.glass); } // E824
 const area = (v) => (v.cv || v).width * (v.cv || v).height, used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; } } // E606
 // E607
 const spring = (x, v, to, w, dt) => { const e = Math.exp(-w * dt), d = x - to, t = (v + w * d) * dt; return [to + (d + t) * e, (v - w * t) * e]; };

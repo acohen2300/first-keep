@@ -381,6 +381,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N280** (to open) Xenophon, Anabasis (c. 370 BC): the Ten Thousand took guides to cross Kurdistan and Armenia (Books III-IV); th → D355, O260, O261
 - **N281** (to open) US Army FM 21-75, Combat Skills of the Soldier (1984), chapter 3, individual movement: the low crawl and the h → unused
 - **N282** Design: Albert, Nov 9 2026 08:28-09:08 (talk mode; docs/4 Now/Next build list.md items 4, 5 and 8): rain and s → C17, D229, D321
+- **N283** Design: Albert, Nov 9 2026 07:20-12:23 (docs/4 Now/Next build list.md items 1, 2, 3, 9, 11): the type rule, me → C28, C29, D321, SN1, SN20, SN21, SN31, SN40
 
 ## Named exceptions
 

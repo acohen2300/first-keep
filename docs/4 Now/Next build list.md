@@ -194,3 +194,13 @@ The ring: a 2 px outline around a box, pinned at 12 o'clock, receding clockwise,
 | Blue | Knowledge, sight and relations: learning research (writing, medicine, maths, optics), speed research, scouting and familiarity fading, envoys, alliances, contracts |
 Research families mapped: economy → green, health → green, war → red, speed → blue, sight → blue, other → blue.
 Flags: gold already marks "selected" (the gold 2 px inset); one must move. The age-up gives white a second meaning (info and milestone).
+
+## Built N2 (Nov 9, B1 the look pass)
+- Type rule (SN20): titles IM Fell 18; first lines 14 · 600; second lines 12 · 400; Barlow 400 carried inside the game (fonts.css, OFL, N283).
+- Menus and cards are bottom sheets: they hide the base rows while open and are as tall as their own rows (the fixed height cut).
+- Glass on menus, cards and the villager square (SN40); solid as soon as the phone sheds (D321 lv.glass).
+- The jobs rows (SN21): 12 type, 3 px between rows and pairs, one ink and fill.
+- The villager square: one 44 card, inset dividers, 14 icons; the mallet (SN19).
+- Info Help Ribbon 1 (SN31): under the top ribbon, coming and going with each message; and the footer of every menu, always there, a tap opens Help (Albert, 12:29).
+- New colours: C28 brown ladder, C29 gunmetal.
+- Open: the Help page shows the message twice (its text and its footer); the pause panel still drops from the top; the meter's font still its own.

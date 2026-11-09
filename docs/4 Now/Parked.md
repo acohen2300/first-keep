@@ -644,3 +644,10 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - B30: D-085's road-speed rule is folded into familiarity (one home); scouted ground is not saved (a reload forgets it).
 - B31a: words on the map scaling with the zoom (labelK, Mid's floor and zoom on SN14) cut: labels keep 12 px at any zoom (Albert, Nov 8 21:21). The ghost-card size question is held until Albert says what looked off.
 - B31b: the picked villagers' bar cut (its "n picked" header and close, the five send-to-the-nearest-food/wood/stone/gold/iron buttons, Build and Focus there); a plain map tap no longer orders picked villagers (Send to does, then the tap). Attack for villagers hunts only until B32 (villagers fight). Garrison is dim with no foe near (a sheltered villager comes out when none is near, as fright's).
+
+## Cut in N2 (Nov 9, B1 the look pass; Albert's calls in `Next build list.md`)
+- The one fixed menu height (`sizePanel`, `PANEL`, E209, E210: every non-Tall page padded to the tallest): menus are as tall as their own rows (item 11, "height by ribbon, for now").
+- The help line's stale state (shown at 60% after its message aged) and its gold "fresh" colour: the help line now comes and goes with each message, as Info Help Ribbon 1 (Albert, 12:26).
+- The claw-hammer Build icon (menu.js `SVG.build`): the mallet, one home in the Screen book's icons (SN19).
+- Dim ink and the darker fill in the base rows (item 9: one ink, one fill, "for now").
+- 18 px on Start, the Jobs − / + and the setup's choices; the badge's bold "smaller" text: the type rule (SN20).

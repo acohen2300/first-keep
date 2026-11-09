@@ -1299,6 +1299,11 @@
 "bytes": 351,
 "numbers": 0
 },
+"book:citations:N283": {
+"sha": "1304f113cb8aab9d1d047e82e4dac579dbbda1c7ca82719928a7f0f80ea07feb",
+"bytes": 574,
+"numbers": 0
+},
 "book:citations:N29": {
 "sha": "8a7b10934ae39518148e424e331925750b946be23c50ba1935a43ff55b9b0428",
 "bytes": 348,
@@ -1777,6 +1782,16 @@
 "book:colours:C26": {
 "sha": "008e43f9a73a5f811f4d7500ae6b2a6b5e7e0d8727639602c3acd6e08ca55a28",
 "bytes": 355,
+"numbers": 0
+},
+"book:colours:C28": {
+"sha": "334e604ecd67e0bde2f19a83ff370388c702a5c38a52e2a4c304dfb25960282a",
+"bytes": 261,
+"numbers": 0
+},
+"book:colours:C29": {
+"sha": "ce0552acef0b9de0ece592c6b205c2a8f854ad01f6776c1b3cf9baae698dc93c",
+"bytes": 167,
 "numbers": 0
 },
 "book:colours:C3": {
@@ -2395,8 +2410,8 @@
 "numbers": 0
 },
 "book:comments:E205": {
-"sha": "3cb090ef7e9c06a7f32b8ca3dde5289ea5702fc6fbecd7a0a13971dbe3f66221",
-"bytes": 93,
+"sha": "6ccfdd73981294b3b0490fea2c87961790e0d80ba79f970940c25133406291ee",
+"bytes": 218,
 "numbers": 0
 },
 "book:comments:E206": {
@@ -2414,19 +2429,9 @@
 "bytes": 153,
 "numbers": 0
 },
-"book:comments:E209": {
-"sha": "77261f415132169a9b2096e58cf8068a5d8f0c3d4aced1fe698023a651937253",
-"bytes": 74,
-"numbers": 0
-},
 "book:comments:E21": {
 "sha": "d13ab4490b4bb7aa6fede1a7d5c5436bf25e7e9e8dcc7a045e435c33406d3481",
 "bytes": 245,
-"numbers": 0
-},
-"book:comments:E210": {
-"sha": "b65981a4a702abc33586b718e57d6b2e6dae2dd49baf99b0414804ca072ee1d1",
-"bytes": 69,
 "numbers": 0
 },
 "book:comments:E211": {
@@ -5744,6 +5749,16 @@
 "bytes": 177,
 "numbers": 0
 },
+"book:comments:E824": {
+"sha": "6dbfa7d425ce0cb2640461e7bc2d934fa1c03f51baa5bdde8729befcb189d17c",
+"bytes": 179,
+"numbers": 0
+},
+"book:comments:E825": {
+"sha": "aa35b02381009f50e98bedb398b4a22d7a4de91cbc3283ea60740d1244f0ae72",
+"bytes": 205,
+"numbers": 0
+},
 "book:comments:E83": {
 "sha": "a242239ac68b555f9f0ddf5b89f6c53daa90d069b9ac3267291dd0020301ccf7",
 "bytes": 51,
@@ -7140,8 +7155,8 @@
 "numbers": 0
 },
 "book:measure:D321": {
-"sha": "ef7fbca63af19ba1e9d23fa505059aaea4acfffebc31f68e7a764f7876b1f98f",
-"bytes": 895,
+"sha": "4bd99216b9dcdadc0ee9710332d6b7693ccbb33be6376b21d66b6a6ae4c1de77",
+"bytes": 966,
 "numbers": 0
 },
 "book:measure:D322": {
@@ -8005,8 +8020,8 @@
 "numbers": 0
 },
 "book:screen:SN1": {
-"sha": "90b67ef79eac665b65aa35ade8207432de2fe1fd48f74c7f95b0d04aa9b56bff",
-"bytes": 353,
+"sha": "00a9b2f9ba73f5f1bcbc3f36bbf8e4cf9ecddea675f03de1fc284f859e28215a",
+"bytes": 456,
 "numbers": 0
 },
 "book:screen:SN10": {
@@ -8055,8 +8070,8 @@
 "numbers": 0
 },
 "book:screen:SN19": {
-"sha": "3d96f59a540f35b3254737ec3a21f736b2b0f11c135ac9e9c5d774f1645dce0b",
-"bytes": 503,
+"sha": "9241dc12e96a6d237b06422f5b330c7a6de878928c4cc0daba78178415656220",
+"bytes": 669,
 "numbers": 0
 },
 "book:screen:SN2": {
@@ -8064,14 +8079,34 @@
 "bytes": 521,
 "numbers": 0
 },
+"book:screen:SN20": {
+"sha": "ba5d588dc6764b6c04ed2642382920d5c36603de5d342a95dcc08dc4333cd5f7",
+"bytes": 413,
+"numbers": 0
+},
+"book:screen:SN21": {
+"sha": "4e7f77c353c1021699793f236f0399d8116ae38277cf15dc2943e5ba1bbc2da3",
+"bytes": 297,
+"numbers": 0
+},
 "book:screen:SN3": {
 "sha": "163e9eab4aed24bd84359c637d6dd927758101cc52025a8a95a155b036654719",
 "bytes": 577,
 "numbers": 0
 },
+"book:screen:SN31": {
+"sha": "9b2fd3f29d663910ab2f61b97c306ed56c77c9643efc076e388309bd7b87cc80",
+"bytes": 480,
+"numbers": 0
+},
 "book:screen:SN4": {
 "sha": "dcda455a61ff24d04d3417c00437d2e97c27e42ac322bade5ec8a941c3d7516e",
 "bytes": 459,
+"numbers": 0
+},
+"book:screen:SN40": {
+"sha": "9d8c62d125d905db6848d26be01399fe3719d1780e4ae98cfcdb840c56186472",
+"bytes": 332,
 "numbers": 0
 },
 "book:screen:SN5": {
@@ -10920,8 +10955,8 @@
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
-"sha": "2a5d1b1c5144069174f9fb497fbfd38b7e79de38a25d16aaba5f9990faa22366",
-"bytes": 23023,
+"sha": "c77a19fb35ff59c6352c2b300d7b8bd8ed30047cf02261a357bbb2ba68fff21f",
+"bytes": 23098,
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
@@ -10935,9 +10970,9 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "a5070b7e40588b021ec5149a42d966431efb8fa77ce3b2ebb015aaa378530c42",
-"bytes": 93750,
-"numbers": 565
+"sha": "99686388858489fe8ae65743cf4e7def0d3a749e69c8367937c8c8a98070786f",
+"bytes": 95180,
+"numbers": 560
 },
 "code:sound.js": {
 "sha": "09b79298e416ba977a502349178f95bcc08a9e59715132adc2cc225d5450e2cf",
