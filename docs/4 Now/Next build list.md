@@ -107,10 +107,11 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - Every menu ribbon is "MR": MR6 (menu ribbon 6 box), MR3 (menu ribbon 3 box), MR title (menu ribbon title), MR footer 2 (menu ribbon footer 2). Checked: no "MR" code is used anywhere in the repo. Registered in the Screen book when built (the M shell family, MG/MH/MW/MT, is separate).
 ### "MR footer 1": LOCKED (Albert, 10:39; mock jobs-bar11)
 - The MR6 mold with all six slots as one box: a single outline across the full width (378 × 44 on a 390 screen), on the same dark tray (46 tall, 1 px rim, 5 px from the screen's edges).
-### "Controller": LOCKED (Albert, 10:43–10:48; mocks jobs-12, fills, tri)
-- Twelve boxes in two rows of six (the jobs rows' spacing: 44 tall, 3 px between the rows, 6 px between columns and to the screen's edges), every box a full slot (no − / + pairs).
-- Three colour blocks of four: slots 1–2 (top and bottom) brown (today's cell fill); slots 3–4 gunmetal (S1, #2c3238); slots 5–6 crimson (R4, #a3262a); white ink (today's #ece5d3; contrast 10.3:1 on gunmetal, 5.8:1 on crimson). Colours go into the Colours book when built.
+### "Controller": LOCKED (Albert, 10:43–10:54; mocks jobs-12, fills, tri2; replaces the 10:48 twelve-box version)
+- The Job Ribbon Main shape: two rows of six full boxes (no − / + pairs), plus one more box on top of column 1 and of column 6 (3 px above), so columns 1 and 6 stand three tall and columns 2–5 two: 14 boxes. Spacing as the jobs rows: 44 tall, 3 px between rows, 6 px between columns and to the screen's edges.
+- Colours: columns 1–2 brown (today's cell fill; column 1's top box brown); columns 3–4 gunmetal (S1, #2c3238); columns 5–6 crimson (R4, #a3262a; column 6's top box crimson); white ink (#ece5d3; 10.3:1 on gunmetal, 5.8:1 on crimson). Colours into the Colours book when built.
 - What each box holds: not yet set.
 - Flag: brown and gunmetal are close in brightness (they part by hue), which may blur in dim light or for colour-blind players.
+
 ### "Job Ribbon Main" (Albert, 10:51; mock jobs-3stack)
 - The jobs rows as locked, with one more box on top of column 1 and of column 6 (3 px above), so those two columns stand three boxes tall and columns 2–5 two; 138 tall at the corners, 91 in the middle. The column 6 top box is where War sits today. What the two top boxes hold: not yet set.
