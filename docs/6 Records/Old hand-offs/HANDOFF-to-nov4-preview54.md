@@ -1,0 +1,35 @@
+# First Keep: handoff (Nov 4, 2026, 13:40; Build 80 preview 54, built, not pushed) [2026-11-04 13:40]
+
+**Read START-HERE.md §1 first, then this file.** This is the live state. Do not run the full QC to start. The last handoff (preview 51) is in `docs/6 Records/Old hand-offs/HANDOFF-to-nov4-preview51.md`. [2026-11-04 13:40]
+
+## Where it stands [2026-11-04 13:40]
+- **Preview 54 is built and passes the gate, uncommitted.** Albert stopped the publish at 13:28 and asked for a sitrep. The fingerprint is already re-accepted on disk (`tests/baseline.json`). It goes out with `publish.py --preview` on his word ("push 54"). [2026-11-04 13:40]
+- **The live preview is 53** (`d8e5ab1`): 45°, the building boxes. 52 (`8ccc357`) before it. Live is the older build; nothing went live this session. [2026-11-04 13:40]
+- What 54 is: one view angle (`VIEW.angle = 15`, 01-rules-basics), and everything derives from it. Saves carry their angle and are turned on load (`reTurn`, 34-save). Fields, orchards and pastures lie flat on the turned ground (`drawPlot`). Sites are rising boxes, and the shops are boxed. The shadow is cast from the box. The ghost is a tinted box. The alignment lines are the screen's only. The wall ring is fixed, and so is the keep's door (`doorOf`). `docs/5 Builds/v80/CUTS.md`, preview 54, has every piece. [2026-11-04 13:40]
+- What 52 and 53 are: CUTS, their sections. In short, 52 is the map-maker in six layer files, one shore, one taken list, the first card (`gather`, `src/00-elements.js`), and the Index (`INDEX.md`, generated; key `docs/0 Index/00 Books.md`). 53 is the building box mold with the old pictures behind the Yard's "Buildings". [2026-11-04 13:40]
+
+## Decided this session (Albert's words in CUTS) [2026-11-04 13:40]
+- The day's scope, "yes yes" at 10:15: the overnight runs read, the Index, the Books, the layer rebuild, the box mold. [2026-11-04 13:40]
+- Cards: names, not numbers; `exempt` for his "exclusions"; a missing slot stops the build, not the save; the change log is generated (`tests/index.py --diff`). [2026-11-04 13:40]
+- The view angle 15. Albert, 12:47: "Go to 15 or 10, your call"; 10 makes a side face too thin to read. [2026-11-04 13:40]
+- Decided alone (Albert may overrule): finds keep out of the true shore too (one bush find stood in a bay on seed 55); the wild tests open under a clear sky; `INDEX.md` sits at the root; the wall ring takes squares on or past `WALL_R`; the first villagers stand at the keep's door, past its footprint. [2026-11-04 13:40]
+
+## For Albert to decide [2026-11-04 13:40]
+1. Push 54. [2026-11-04 13:40]
+2. The idle villagers. Albert, 11:42: "I know why the villagers are idle"; his reason is not yet given. The balance run measures about 44,600 villager-seconds a game idle with no work found, against 223 blocked. It heads the economy list. [2026-11-04 13:40]
+3. The economy list (`docs/4 Now/Economy and villagers - v80 - Restore and Fix.md`): A to E, G to I, J2, K to Q; F and J are out. [2026-11-04 13:40]
+4. The boxes or the old pictures (the Yard's toggle); fields as fenced boxes or flat plots. [2026-11-04 13:40]
+5. His handwritten notes of 11:20 (`Parked.md`, last section): water as shape plus overlay (recommended), boats, fish as plots, fish by lake area, crabs, ice, geese and ducks, sharks and whales, archers on boats, flames in stages, rings clockwise. [2026-11-04 13:40]
+6. Locking a definition, not its use (`docs/0 Index/00 Books.md` §4). [2026-11-04 13:40]
+7. The two homes still open (`00 Books.md` §3): the flood counted twice (`37-events` 174); the trade lane straight but the road bent; `inQuarter` and `inQuarterL`; the villager's states unnamed. [2026-11-04 13:40]
+8. Carried over: homes for the Yard's three; anything back from `p46-controller`; Peace and the Games; the brown war colour; walls' hp and archer cover; the match log's job lines. [2026-11-04 13:40]
+
+## Testing, unfinished [2026-11-04 13:40]
+- The planted-bug set on 52 ran to its 2-hour limit, 80 of 381 done: 76 caught. Four need a look before live: "the find seen when the last ran out is forgotten" and "a drilled soldier chases out of its place" fail with another message than the plant expects; "mine: its builder goes back instead of working the gold" and "p15: villagers at rest shuffle" pass with the bug in. The whole set runs again on 54, overnight (it needs more than 2 hours: split it with `--only`). [2026-11-04 13:40]
+- The gate failed once on 53's first publish and passed on the re-run: which check is not yet known (the output was not kept). [2026-11-04 13:40]
+- Before live: the whole plant set; the "from memory" sources in SCIENCE.md opened; a balance run on the new map and angle. [2026-11-04 13:40]
+
+## Owed by Claude [2026-11-04 13:40]
+- The state of the modules page (Albert, 12:33: "a document that laid it all out for me what goes where"): a table of every element, carded and one-home or still folded. [2026-11-04 13:40]
+- The spare worktree of 53 is removed. [2026-11-04 13:42]
+- The session's commits carry the model of the turn in their trailer (Fable 5.1 to 53; Opus 5.5 from 54). [2026-11-04 13:40]
