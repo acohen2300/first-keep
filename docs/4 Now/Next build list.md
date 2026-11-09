@@ -83,3 +83,11 @@ Into items 4 and 5: SoRen draws rain and snow drop by drop from a pool, and Redu
 
 ## Built
 - N1 (Nov 9, Build A): the shed now times drawing only, against shares of the frame's real interval at the rate it runs (D321 slow 0.72, fast 0.42, from SoRen's 12 and 7 of 16.7 ms); one `rate()` for the loop and the shed (E822); rain and snow never off (a shedding phone draws half, Reduce motion holds them still; D229 drops, C17 rain and flake); the pause menu's buttons answer (one tap listener for the whole screen, E821); Smoke 6/6. N1b: the stitched page came back out: the deploy workflow is sealed by the old `v100-ground-up` gate (the one GitHub runs, a folder not to touch), so the stitch failed the site's check; N1c (Albert, 09:25: unlock, edit, relock): the old gate opened for `pages.yml` alone, the stitch added, the old gate resealed and its permit cleared; the site serves v100 as one stitched page. Still open from these items: read the phone's numbers (`?test`); the pause panel's gear still says "Yard" and its first row "Paused · tap to carry on" does not show.
+
+## 9. Menu redesign, Albert directing step by step (Nov 9, from 10:01)
+Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; first lines 14 · 600 (tabs, options, research titles, labels); second lines 12 · 400 (costs, second rows). Replaces item 1's "everything at 18 moves to 14".
+### The jobs rows (10:03–10:08; mocks jobs-2 to jobs-4)
+- Icon, count and word all at 12 (12 · 400), in People, Food, Wood, Stone, Gold, Iron and Build.
+- The − and + of a job 3 px apart; the two rows 3 px apart; only side to side between columns stays 6.
+- One ink and one fill for every cell in the base rows, in every state, Build included: no dim ink, no darker fill ("for now").
+- Build's icon: the mallet (item 3).
