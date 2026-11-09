@@ -4,7 +4,7 @@ Rules for the run: one build at a time, each gated (index.py PASS) and published
 
 | Build | What | State |
 |---|---|---|
-| B27 | War restores (order tiredness; who gives way forming; shove, jolt, recoil); forming by time to contact; moonlit snow lights the night; cold rations and cloaks; cuts (eclipse, players' caltrops and stakes, Depot off the Build menu); spoilage compounds; fields 36 min; robbers by gain over risk, any side, repeat victims; computers judge war by sight; Parked.md logs B24+ cuts | building |
+| B27 | War restores (order tiredness; who gives way forming; shove, jolt, recoil); forming by time to contact; moonlit snow lights the night; cold rations and cloaks; cuts (eclipse, players' caltrops and stakes, Depot off the Build menu); spoilage compounds; fields 36 min; robbers by gain over risk, any side, repeat victims; computers judge war by sight; Parked.md logs B24+ cuts | built, publishing |
 | B28 | No tap-and-hold anywhere (mock first) | |
 | B29 | Help line under the top ribbon; research hints on cards (mock first) | |
 | B30 | Familiarity (outsider penalty, natives know all, scouting earns it, fades), ambush only from cover, scout stealth, Guerrilla warfare and Local guides research | |
@@ -17,3 +17,4 @@ Rules for the run: one build at a time, each gated (index.py PASS) and published
 | Later | Shore slope and waves (mock); sky through reflections; squads, sightlines, map features, the 52 Base differences, a tap on a building, hunting, mind your own business |
 
 ## Log
+- B27 (20:10-20:55): built. Found already in v100: the juice pass (momentum impacts) and compounding spoilage cuts. Cut: the eclipse, the forming clock, the sickness seasons table. The field-defence cut for players and the Depot off the Build menu move to B27b (they open shells, sprites, tech and screen: over the 10-opens cap).
