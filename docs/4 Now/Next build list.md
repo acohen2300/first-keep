@@ -211,3 +211,15 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - Where: the queue (first item runs, the rest lit), the research buttons (dim, lit when armed), the help line under the top ribbon (white, over its reading time: D356, Brysbaert 2019 to open).
 - Cut: the research tints (C26) and the queue's fill.
 - Open: train buttons have no ring yet; long queue names are clipped in the queue slots.
+
+## 13. Menus from the MR kit, Albert's markup (Nov 9, 12:57–13:12; mocks kit2, kit3, kit4)
+- All solid, no glass (undo N2's glass); the tray brown fills the 1 px seams so the stack reads as one card.
+- Title: always ← · book · ✕ on the right (SN27).
+- Type (13:12, replaces 09:59): 14 · 600 only for row headers in column 1; everything inside a box at 12 (first line 12 · 600, second line 12 · 400); card titles IM Fell 18.
+- New game: Fantasy and the World row gone; every item its own line (Difficulty, Length, Scenario, Tension, Daily); the side's description moves into the help line.
+- Help line: a chevron (⌄) when the text runs past one line; a tap opens it to two lines.
+- Build and Town Center: folder tabs, the open tab joined to a gold outline round the card's body.
+- Relations and Misfits: one mold, MR6 with slots 1+2 merged for the name, then gift (bribe on Misfits) · war · terms · ally; the ✓ confirm gone.
+- Mail, Welcome back, Paused: small, two columns wide (columns 3–4, 122 on a 390 screen); the title on its own row, ← · book · ✕ beneath it; Mail and Welcome back centred; Paused under the pause button (columns 5–6); Welcome back's title "Welcome" (the full words don't fit at 18).
+- Barracks: train row, research rows, "All tech" for the rest.
+- Rings on everything: build tiles brown; train red (villagers green); research by family; gift, terms, bribe gold; war red; ally blue; options and speeds white, the chosen one lit (gold stays for money and the folder tabs).
