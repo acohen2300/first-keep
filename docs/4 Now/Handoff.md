@@ -19,6 +19,11 @@
 8. One home?
 Rigid on zero stray numbers: every value in its book, with a citation and a comment, with a rhyme or reason. Beside them: the goal is a perfect product (profit is a bonus); logic above all; ruthless quality control; nothing goes away until it is solved or deliberately removed.
 
+## QC, in tiers (Albert, Nov 9 09:34)
+- Every build: the gate, the smoke test, and a values line for each changed item in the build report (from the gate's own list of what changed).
+- Once a day, overnight: the full test.py, one fresh-eyes review of the whole day's changes, and every slip found becomes a new gate rule (poka-yoke).
+- Milestones, before live: behaviour against Base and Mid; Albert's outside AI audit.
+
 ## Rules (Albert)
 - No building without a double confirm ("yes yes"); mock screens first; talk mode when asked.
 - ECS: one home, books hold every number and word, cited; no patches, redo cleanly; log every cut in `Parked.md`.
