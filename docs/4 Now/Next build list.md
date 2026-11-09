@@ -167,3 +167,11 @@ Codes checked unused everywhere in the repo (books, code, docs, Base, Mid). Scre
 | C28 | The brown ladder: tray, box, lighter (step x = 17, 12, 9) |
 | C29 | Gunmetal S1 #2c3238 |
 | C30 | Crimson R4 #a3262a |
+
+## 11. Menu shells (Albert, 11:36–11:37)
+- Menus are shells; shells have ticks. A menu shell's ticks:
+  - Ribbons: the ordered list of ribbon codes, top to bottom (e.g. SN27 MR title · SN26 MR3 · SN25 MR6 · SN28 MR footer 1). Its length is the ribbon count, which sets the height; its order is the ribbon order; each code is the ribbon type.
+  - Name / title (shown in MR title, IM Fell 18); Source (the book its content comes from); Guide link.
+- Each box in a ribbon carries its own slots: Verb (from VERBS), Text (first line, optional second line; the type rule sets the sizes), Icon (optional), Colour (from the colour sheet, e.g. C29), State (dim, active, double: SN32–SN37).
+- By rule for every menu, no tick: bottom-anchored over the base rows, glass, the ✕ in MR title.
+- Height: by ribbon count, for now (replaces Nov 4's one fixed height and Nov 5's Town Center / Start height exceptions). A cap to be set later.
