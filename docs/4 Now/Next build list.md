@@ -114,4 +114,4 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - Flag: brown and gunmetal are close in brightness (they part by hue), which may blur in dim light or for colour-blind players.
 
 ### "Job Ribbon Main" (Albert, 10:51; mock jobs-3stack)
-- The jobs rows as locked, with one more box on top of column 1 and of column 6 (3 px above), so those two columns stand three boxes tall and columns 2–5 two; 138 tall at the corners, 91 in the middle. The column 6 top box is where War sits today. What the two top boxes hold: not yet set.
+- The jobs rows as locked, with one more box on top of column 1 and of column 6 (3 px above), so those two columns stand three boxes tall and columns 2–5 two; 138 tall at the corners, 91 in the middle. The column 6 top box is crimson (R4, as the controller; Albert, 10:52), where War sits today; the column 1 top box brown. What the two top boxes hold: not yet set.
