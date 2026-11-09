@@ -20,7 +20,7 @@
 - 55. Sheep and cattle that walk the pasture: **later**
 - 56. Famine: people leave; drought and bad weather bite: **later** — Don’t know what this is.
 - 57. Every building does its job (Mint, Baths, Theatre, Tavern, Aqueduct): **do**
-- 58. Midwives' second villager; the Wonder's clock: **(unanswered)** — Don’t know what this is
+- 58. Midwives' second villager; the Wonder's clock: **midwives later; the Wonder's clock do**
 - 59. Gold pay for soldiers; named trade routes: **do**
 - 60. Warehouse view: tap a stock count: **do** — We have this already in the costs chart. Let’s chat.
 - 61. Computers think in smaller slices (late-game hitch): **do**
@@ -36,7 +36,7 @@
 - 69. Ships and naval war: **later**
 - 70. Stronger walls with archer cover; brown war colour: **do**
 - 71. Throne and vassal wins: **later**
-- 72. Tap a building's roof to hit it; hazards under the crosshair: **do** — Talk about
+- 72. Tap a building's roof to hit it; hazards under the crosshair: **do** — yes: a tap on a building's drawn roof counts as a tap on the building
 - 73. Attack card counts by kind; gold ripple on an order: **do**
 - 74. Hill height adds to shooting range: **do**
 - 75. Villagers heal: **do**
