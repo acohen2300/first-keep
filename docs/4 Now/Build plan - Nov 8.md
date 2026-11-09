@@ -20,3 +20,4 @@ Rules for the run: one build at a time, each gated (index.py PASS) and published
 - B27 (20:10-20:55): built. Found already in v100: the juice pass (momentum impacts) and compounding spoilage cuts. Cut: the eclipse, the forming clock, the sickness seasons table. The field-defence cut for players and the Depot off the Build menu move to B27b (they open shells, sprites, tech and screen: over the 10-opens cap).
 - B27b (20:58-21:08): built: laid defences off for players, the Depot wagon-only.
 - Albert 20:33: B28 yes, build it. REMIND: check on Choke and Bombard later (cut in B28: the wall takes the narrow's width by the land; engines sent at a building bombard it).
+- B28 (20:35-20:50): built: no holds on the War bar; five pages of four; Train's double kinds and the Form dial's undefined label fixed. OPEN: the map's hold gesture (box pick) is still a hold.
