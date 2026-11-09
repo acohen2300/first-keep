@@ -18,3 +18,10 @@ To do:
 4. Fix the gate: the number count must catch numbers with units (`14px`, `0.3s`, `.5`); the ratchet becomes a zero rule (a typed number fails, not only more of them).
 
 Why strays got through: the gate's number count (`NUM` in `index.py`) skips any number followed by a letter, so every CSS size passed; and the ratchet only stopped growth, so numbers typed before the seal were grandfathered.
+
+## 2. Menus anchor to the bottom (Albert, Nov 9, 07:55–07:59)
+- Every menu is a bottom sheet: anchored to the screen's bottom edge, covering the base rows (People, Jobs). No exceptions: "if a rule doesn't work everywhere, the rule (logic) or the builder is the problem, not the item."
+- Applies to all: the new game setup, Build, Town Center, every card.
+- Precedent: iOS bottom sheets (Maps, Music); thumb reach is best in the bottom third (Hoober). The menu top drops about 100 pt, more board shows.
+- Keeps the one fixed menu height (Nov 4); only the anchor moves.
+- Later, in the menu review: one standard close (✕) on every menu, by a set formula.
