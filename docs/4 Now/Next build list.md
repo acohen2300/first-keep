@@ -95,3 +95,5 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - Six boxes in a row, each 44 tall, 6 px apart, the first and last 6 px from the screen's edges; each box keeps its own full rounded outline and fill.
 - Behind them a backing tray, one shade darker than the boxes, filling the gaps so no ground shows between them, 1 px past the boxes on every side (46 tall, 5 px from the screen's edges).
 - A new mold of its own (one home in the Screen book), to be used where Albert places it.
+### "Menu ribbon 3 box": LOCKED (Albert, 10:25–10:26; mock jobs-bar5)
+- The 6 box ribbon's mold with boxes 1+2, 3+4 and 5+6 merged: three double-wide boxes (two slots and the 6 px gap between them, 122 wide on a 390 screen), one outline each; same tray, gaps, edges and height. Same grid, different spans.
