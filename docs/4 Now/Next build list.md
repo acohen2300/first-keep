@@ -69,3 +69,13 @@ From SoRen's live code (`acohen2300/soren`, index.html):
 4. Rest pacing: paused, or a card or sheet open, a frame every 66–150 ms; dark, 250 (`tick`). Smooth where it matters, near zero where nothing moves.
 5. Sprites made once: clouds, glows, grain (`makeSprites`).
 Into items 4 and 5: SoRen draws rain and snow drop by drop from a pool, and Reduce Motion holds them still, never removes them (`updateWeather`); First Keep copied the drops but added "off when shedding". SoRen's 12 ms shed trigger fits its 60 frames a second (16.7 ms); First Keep copied 12 ms at 30 frames a second (33 ms).
+
+## 8. Open items from before Nov 9, decided (Albert, Nov 9, 09:01)
+1. The black bar: yes, publish one stitched file (the source stays split; publish writes one page), so a phone can't mix a new page with an old book.
+2. The "Something is in the way" card scaled with the zoom. Rule: words never scale with zoom; "zoom is just what you see, not what you read." Applies to every word and card on the map.
+3. The pause menu: the whole thing doesn't work; fix it (details to take from Albert).
+4. Choke and Bombard: in, but with the war module, not now.
+5. Tap-and-hold: allowed only for the box (square or rectangle) drag to select. Nowhere else.
+6. Help inside each item's own card: later, too big for this build.
+7. A tap on a building (anywhere on its drawn shape) opens the building's card.
+8. Hunting modes, 9. "Mind your own business": later, too big for this build.
