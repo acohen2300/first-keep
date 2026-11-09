@@ -32,3 +32,4 @@
 - Cut for players: caltrops, archers' stakes, pits (field defences). Natives keep booby traps.
 - Forming: time to contact, not a percentage: a soldier fights where he stands when the foe reaches him before he reaches his place (distance ÷ speed against the foe's distance ÷ speed). Muir, Tactics and the Experience of Battle in the Age of Napoleon (1998), to open. Speed it up later.
 - NEW: natives' net trap: a soldier or villager near a native camp may be netted and hoisted into a tree (an animation); the netted one is a prisoner, ransomed by the existing prisoners code.
+- TO TALK LATER: a "mind your own business" setting. Hunting: an animal you see against one you go out to track or capture (a hunt mode, a break from war to go hunting).
