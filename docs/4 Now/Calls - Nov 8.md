@@ -37,3 +37,4 @@
 - Batch 5, yes: the home pond stays (towns by water); gifts with no gather rate pay once on touch; fields and tree farms both last 36 minutes.
 - Batch 6: map features talked through later; merges closed (kept separate); four formations only: shield wall, loose/arc, charge (wedge as its look), ambush. The Depot is the camp's mini-store (wagon-only: a forward operating base for long fights); the Store is the town's warehouse.
 - Batch 7, killed: the eclipse (cut again; remove from code), dragon and troll (no fantasy world), the small map as a weather radar.
+- Batch 8: the old controller branch killed; lock-a-definition closed (the seal does it); idle villagers: an empty farm or post must never count as an idle villager (v100 counts villagers only; watch in play); higher caps wait for an 800-unit phone test; regard against score to test later; usage spend (N17, Claude usage for the old v80 batches) closed as out of date.
