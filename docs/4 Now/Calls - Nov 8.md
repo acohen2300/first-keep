@@ -34,3 +34,4 @@
 - NEW: natives' net trap: a soldier or villager near a native camp may be netted and hoisted into a tree (an animation); the netted one is a prisoner, ransomed by the existing prisoners code.
 - TO TALK LATER: a "mind your own business" setting. Hunting: an animal you see against one you go out to track or capture (a hunt mode, a break from war to go hunting).
 - Batch 4: keep the speed changes and lightning/night-sight, and open their sources. Sight research must not make people taller: height only for what really stands higher (towers, outposts, castles, walls); optics (the spyglass, from 1608) for scouts and lookouts. Sight kept conservative: the game feels like everything comes at you all the time (animals, robbers); fix sightlines in general, grounded in real math.
+- Batch 5, yes: the home pond stays (towns by water); gifts with no gather rate pay once on touch; fields and tree farms both last 36 minutes.
