@@ -139,3 +139,31 @@ Each a box in gunmetal (S1, #2c3238) on the MR tray; only the outline changes.
 - The browns step by x = (17, 12, 9): tray #221811, box #33241a, lighter #443023.
 - Outlines: dim and active 1 px, double 2 px.
 - Flag: the dark colours (browns, gunmetal) barely change when inactive; their inactive state needs another cue.
+
+## 10. Index of the Nov 9 locks (Albert, 11:33)
+Codes checked unused everywhere in the repo (books, code, docs, Base, Mid). Screen book (SN, next after SN19) for the molds; Colours book (C, next after C26) for the colours. They become book entries when built.
+| Code | Locked item |
+|---|---|
+| SN20 | Type rule (card titles IM Fell 18; first lines 14 · 600; second lines 12 · 400) |
+| SN21 | Jobs rows |
+| SN22 | Job Ribbon Main |
+| SN23 | Job Ribbon Hide |
+| SN24 | Job Ribbon Hide - short |
+| SN25 | MR6 (menu ribbon 6 box) |
+| SN26 | MR3 (menu ribbon 3 box) |
+| SN27 | MR title |
+| SN28 | MR footer 1 |
+| SN29 | MR footer 2 |
+| SN30 | Queue |
+| SN31 | Info Help Ribbon 1 |
+| SN32 | Research Buttons - Blue Dim |
+| SN33 | Research Buttons - Blue Active |
+| SN34 | Research Buttons - Blue Double |
+| SN35 | Research Buttons - Green Dim |
+| SN36 | Research Buttons - Green Active |
+| SN37 | Research Buttons - Green Double |
+| SN38 | Controller |
+| C27 | Colour sheet: the inactive rule and the eight active/inactive pairs |
+| C28 | The brown ladder: tray, box, lighter (step x = 17, 12, 9) |
+| C29 | Gunmetal S1 #2c3238 |
+| C30 | Crimson R4 #a3262a |
