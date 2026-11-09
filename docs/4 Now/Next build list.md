@@ -112,3 +112,5 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - Three colour blocks of four: slots 1–2 (top and bottom) brown (today's cell fill); slots 3–4 gunmetal (S1, #2c3238); slots 5–6 crimson (R4, #a3262a); white ink (today's #ece5d3; contrast 10.3:1 on gunmetal, 5.8:1 on crimson). Colours go into the Colours book when built.
 - What each box holds: not yet set.
 - Flag: brown and gunmetal are close in brightness (they part by hue), which may blur in dim light or for colour-blind players.
+### "Job Ribbon Main" (Albert, 10:51; mock jobs-3stack)
+- The jobs rows as locked, with one more box on top of column 1 and of column 6 (3 px above), so those two columns stand three boxes tall and columns 2–5 two; 138 tall at the corners, 91 in the middle. The column 6 top box is where War sits today. What the two top boxes hold: not yet set.
