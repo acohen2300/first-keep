@@ -446,7 +446,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#touch
 
 - **E162** Touch: one finger pans, two pinch; a wheel zooms about the pointer; a held finger picks mo
-- **E163** the camera rule: the board never leaves the screen's middle; a board smaller than the scre
+- **E818** the bottom bars' height, told by the menu when it changes (the top bar's is read as topOf)
+- **E163** the camera rule: the board never leaves the screen's middle; past its edge the camera may  · D315 (N208, N57)
 - **E425** the finger's gesture: where it went down and is, when, and what a module made of it (a lin · D246 (N190)
 - **E164** what is under the finger: the tile at the land's height and the nearest unit it may see (y · D246 (N190)
 - **E725** the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turn
@@ -472,6 +473,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E178** the base's columns, Albert's template
 - **E179** the base's icons: one 24-unit box each, line icons in the cell's colour, finds in their ow
 - **E180** the resources in their colours (COLORS.md)
+- **E819** the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
@@ -501,6 +503,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why (its age
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
+- **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
@@ -535,7 +538,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E205** a page opens from the bottom edge, over the base's rows; the card waits behind it
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
-- **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear) stand two sl
+- **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
@@ -597,6 +600,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## econ.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro

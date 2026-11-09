@@ -273,7 +273,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E160 | index.html#the-woods-cache | a wounded one sways about its feet (QBS) |
 | E161 | index.html#the-woods-cache | L6 the play edge: the contour D7 in from the coast, found cell by cell between the tiles' middles (marching squares) so it follows the fractal coast smoothly, never the tiles' stairs |
 | E162 | index.html#touch | Touch: one finger pans, two pinch; a wheel zooms about the pointer; a held finger picks more, drags the crosshair or draws a box (F21). |
-| E163 | index.html#touch | the camera rule: the board never leaves the screen's middle; a board smaller than the screen sits centred |
+| E163 | index.html#touch | the camera rule: the board never leaves the screen's middle; past its edge the camera may show what the bars cover there and a little more (D315 sea on the sides and below, sky above), so nothing of the board need stay under a bar; a board smaller than that sits centred |
 | E164 | index.html#touch | what is under the finger: the tile at the land's height and the nearest unit it may see (yours, or one in sight and not hidden), within the larger of D246 hit and hitZ a zoom (Mid's hitAt); the menu answers the tap |
 | E165 | index.html#touch | The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a seed in the address overrides it. |
 | E166 | index.html#touch | the door: what the modules may touch |
@@ -803,4 +803,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E814 | menu.js | the help card: the line's whole text, since the line holds one line |
 | E815 | menu.js | a research's hint from its own effects (the O book's fx, words from J40): what it moves, by how much; its tint from the first effect's family (C26) |
 | E816 | econ.js | where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on no guide, the nearest guide line within tol pulls it on (a light pull, as a PDF editor's), so what is drawn is what it snaps to |
-| E817 | menu.js | the small pop-ups on the map (a quick attack on bare ground, the ice's clear) stand two slots above the finger, centred on it, never under it |
+| E817 | menu.js | the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager's square) stand a slot above the point, centred on it, never under it; where the top bar or the help line leaves no room, a slot below instead |
+| E818 | index.html#touch | the bottom bars' height, told by the menu when it changes (the top bar's is read as topOf); a person's head on the screen, a person's height above the feet (and the feet), for what must sit just above one, or just below when the top has no room |
+| E819 | menu.js | the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes above its head, Build, Send to, Attack, More; More turns them to Garrison, Rally, Info, Focus; Send to and Attack wait for the next tap on the map; any other tap closes it and lets the villager go; it follows the villager as it walks |
+| E820 | menu.js, econ.js | a villager told to take cover goes into the nearest building of yours with room, as fright sends it; like fright's, it comes out when no foe is near (so with none near, there is nothing to hide from) |

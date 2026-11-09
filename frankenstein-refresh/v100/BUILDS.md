@@ -4177,3 +4177,23 @@ MODIFIED (11):
 LOCKED (2267 of 2278): byte for byte as sealed, 1,264,247 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2278 items sealed · 2150 book entries · 93 laws · 280 citations, 20 still to open · 7 known
+
+## B31b: the villager's square (a tap on your villager opens four boxes above its head: Build, Send to, Attack, More; More turns them to Garrison, Rally, Info, Focus), in place of the picked villagers' bar; the camera may scroll past the board's edge, sea on the sides and below past the bars, sky above, so nothing of the board stays under a bar · 2026-11-08 21:58
+Albert, Nov 8 21:29-21:46 (yes yes; slim compute; ECS clean; no fixes, no patches; the eight core values)
+Opened: book:comments, book:measure:D315, book:screen, book:words:J41, code:econ.js, code:menu.js, code:index.html#touch
+MODIFIED (12):
+- book:comments:E163 · 117 → 282 bytes
+- book:comments:E817 · 153 → 245 bytes
+- book:comments:E818 · added
+- book:comments:E819 · added
+- book:comments:E820 · added
+- book:measure:D315 · 231 → 517 bytes
+- book:screen:SN1 · 189 → 353 bytes
+- book:screen:SN19 · added
+- book:words:J41 · added
+- code:econ.js · 107,505 → 107,867 bytes
+- code:index.html#touch · 7,572 → 7,905 bytes
+- code:menu.js · 91,785 → 93,772 bytes
+LOCKED (2271 of 2283): byte for byte as sealed, 1,289,607 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2283 items sealed · 2155 book entries · 93 laws · 280 citations, 20 still to open · 7 known
