@@ -220,6 +220,17 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - Rings on the head buttons by the verb map (SN32 verbs).
 - Open for N5: each menu rebuilt (item 13's list below).
 
+## Built N5 (Nov 9, each menu from the kit)
+- New game: one line each (Difficulty, Length, Scenario, Tension, Daily); World gone; the side's words in the help line.
+- Help: the earlier messages, newest first (D357 keeps 20); the latest stays in the help line.
+- Mail and Welcome back: two columns wide (SN33), centred; Mail's title on its own row, ← · book · ✕ beneath; Welcome back only Resume and New game.
+- Paused under the pause button: the speeds and its help line (test builds also keep Fast and Yard there). Sound under mute: the three volumes (icons from HX10) and its help line; mute shows it, a tap again hides it.
+- The book button opens Welcome back mid-match (paused); with no game it is dim.
+- Relations and Misfits: the name over two columns, then gift (bribe) · war · terms · ally, ringed gold, red, gold, blue (SN32 stances); not built yet.
+- Cards: the title row (← · book · ✕); train and research as wide boxes, ringed; All tech.
+- Help lines: the chevron sits first so it shows on a clipped line.
+- Open: the stances do nothing yet; the queue row shows only while something is queued; Mail's long letters are clipped in the narrow card.
+
 ## 13. Menus from the MR kit, Albert's markup (Nov 9, 12:57–13:12; mocks kit2, kit3, kit4)
 - All solid, no glass (undo N2's glass); the tray brown fills the 1 px seams so the stack reads as one card.
 - Title: always ← · book · ✕ on the right (SN27).

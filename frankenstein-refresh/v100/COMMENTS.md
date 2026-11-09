@@ -798,7 +798,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E810 | index.html#floor-7-display | familiarity (D355): a cell is known to a side from the last time one of its eyes stood in it; nothing is saved, so a reload forgets the scouted ground and keeps the own ground |
 | E811 | index.html#floor-7-display | a side's familiarity with a tile: one on its own ground (a finished building of its own within D355 home), the Natives' and the wild's everywhere, else the memory fading from the last look |
 | E813 | combat.js | a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a shooting building watches |
-| E814 | menu.js | the help card: the line's whole text, since the line holds one line |
 | E815 | menu.js | what a research does, in words from its effects; with no effects, why it is there |
 | E816 | econ.js | where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on no guide, the nearest guide line within tol pulls it on (a light pull, as a PDF editor's), so what is drawn is what it snaps to |
 | E817 | menu.js | the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager's square) stand a slot above the point, centred on it, never under it; where the top bar or the help line leaves no room, a slot below instead |
@@ -822,3 +821,12 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E837 | menu.js | a help line wider than its bar shows the chevron; the chevron opens it to two lines and closes it again |
 | E838 | menu.js | the chevron's tap: open or close the help lines |
 | E839 | menu.js | a font from the type rule: its weight and size, in the face named |
+| E840 | menu.js | the stances: a people's name over two columns, then its four boxes (gift or bribe, war, terms, ally), each ringed by its colour; not built yet |
+| E841 | menu.js | the small cards are two columns of the mold wide: the width read from the bar's own width, set once a render |
+| E842 | menu.js | a card hanging under its top button: centred under the button, held inside the screen |
+| E843 | menu.js | Paused: the speeds and its help line; a tap on play plays again |
+| E844 | menu.js | Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and shows it, a tap again hears and hides it |
+| E845 | menu.js | the book: Welcome back mid-match (Resume, New game), paused |
+| E846 | menu.js | a message kept for the Help page, newest first, the same one twice in a row once |
+| E847 | menu.js | Help: the earlier messages, newest first; the latest stays in the help line beneath |
+| E848 | menu.js | a small card's title: the title on its own row, back, book and close beneath it |

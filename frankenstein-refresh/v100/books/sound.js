@@ -56,5 +56,5 @@ BOOK("sound", {
  "HX7": {"key":"reach","value":{"thunder":16093},"name":"how far a sound carries before it fades to the quietest heard, metres: thunder about 10 miles","cite":["N89"],"law":["QBY"]},
  "HX8": {"key":"session","value":"ambient","name":"the phone's audio session: ambient obeys the Ring/Silent switch and plays under the player's own music","cite":["N148"],"law":[]},
  "HX9": {"key":"limiter","value":{"threshold":-3,"knee":10,"ratio":4,"attack":0.005,"release":0.25},"name":"the limiter: a battle's many blows never clip a phone speaker (dB, dB, ratio, seconds, seconds)","cite":["N146"],"law":[]},
- "HX10": {"key":"mix","value":{"steps":[[1,"Full"],[0.5,"Half"],[0,"Off"]],"names":{"fx":"Effects","alert":"Alerts","amb":"Ambience"}},"name":"the three volumes the player sets, a step a tap","cite":["N149"],"law":[]}
+ "HX10": {"key":"mix","value":{"steps":[[1,"Full"],[0.5,"Half"],[0,"Off"]],"names":{"fx":"Effects","alert":"Alerts","amb":"Ambience"},"icons":{"fx":"sound","alert":"bell","amb":"leaf"}},"name":"the three volumes the player sets, a step a tap","cite":["N149"],"law":[]}
 });

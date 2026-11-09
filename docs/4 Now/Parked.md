@@ -658,3 +658,13 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 
 ## Cut in N4 (Nov 9, the MR kit; item 13 of `Next build list.md`)
 - Glass on menus, cards and the villager square (SN40, D321 lv.glass, index.html's solid toggle): Albert 12:57, all solid; the tray brown fills the seams.
+
+## Cut in N5 (Nov 9, each menu from the kit; item 13 of `Next build list.md`)
+- New game's World row and its Fantasy choice (OPTS.world): no fantasy world (Nov 8 batch 7; Albert 12:57).
+- The side's two-line words under the civ row: the help line says them now (the civ blurb one line, joined by ·).
+- The paused panel's "Paused · tap to carry on" box, New game and the three volumes: Paused keeps the speeds; New game moves to the book (Welcome back); the volumes to the Sound card under mute.
+- Welcome back's title row; New game's two-line label.
+- Relations and Misfits: the stance dial (sword, scales, hands), the ✓ confirm and the "not built yet" line: one box each (gift or bribe, war, terms, ally).
+- The Help page's single message (shown twice with the footer): it lists the earlier messages.
+- Cards' plain heading (h2) and their flowing train and research rows: the title row and wide boxes.
+

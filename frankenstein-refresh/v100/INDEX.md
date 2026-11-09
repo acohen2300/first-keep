@@ -357,6 +357,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N283 |  | Design: Albert, Nov 9 2026 07:20-12:23 (docs/4 Now/Next build list.md items 1, 2, 3, 9, 11): the type rule, menus as bottom sheets over the  | opened |
 | N284 |  | Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysbaert, M. (2019), How many words | to open |
 | N285 |  | Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the seams filled; the title always ba | opened |
+| N286 |  | Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row gone, the side's words to the he | opened |
 
 ## colours
 
@@ -1187,7 +1188,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E810 |  | familiarity (D355): a cell is known to a side from the last time one of its eyes stood in it; nothing is saved, so a reload forgets the scou |  |
 | E811 |  | a side's familiarity with a tile: one on its own ground (a finished building of its own within D355 home), the Natives' and the wild's every |  |
 | E813 |  | a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a s |  |
-| E814 |  | the help card: the line's whole text, since the line holds one line |  |
 | E815 |  | what a research does, in words from its effects; with no effects, why it is there |  |
 | E816 |  | where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on no guide, the nearest guide line within tol pulls |  |
 | E817 |  | the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager's square) stand a slot above the point, centred o |  |
@@ -1211,6 +1211,15 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E837 |  | a help line wider than its bar shows the chevron; the chevron opens it to two lines and closes it again |  |
 | E838 |  | the chevron's tap: open or close the help lines |  |
 | E839 |  | a font from the type rule: its weight and size, in the face named |  |
+| E840 |  | the stances: a people's name over two columns, then its four boxes (gift or bribe, war, terms, ally), each ringed by its colour; not built y |  |
+| E841 |  | the small cards are two columns of the mold wide: the width read from the bar's own width, set once a render |  |
+| E842 |  | a card hanging under its top button: centred under the button, held inside the screen |  |
+| E843 |  | Paused: the speeds and its help line; a tap on play plays again |  |
+| E844 |  | Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and shows it, a tap again hears and hides it |  |
+| E845 |  | the book: Welcome back mid-match (Resume, New game), paused |  |
+| E846 |  | a message kept for the Help page, newest first, the same one twice in a row once |  |
+| E847 |  | Help: the earlier messages, newest first; the latest stays in the help line beneath |  |
+| E848 |  | a small card's title: the title on its own row, back, book and close beneath it |  |
 
 ## ground
 
@@ -1586,6 +1595,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D354 | exposure to the weather (Albert, Nov 8 18:39-18:41): a side's share, 0 to 1, is its cold (the air under cold °C, full span °C lower) × its cold cut (Wool cloaks) plus its wet (the ground's wetness) × its wet cut (Oiled cloaks), the whole × its chill cut (Chimneys); everyone eats (1 + ration × exposure) × their meals (the US Army's cold-weather ration, 4,500 against 3,250 kcal a day, N275), the town's cases from outside are × (1 + sick × exposure) (cold and wet raise respiratory infection, N276), and a soldier's nerve settles no higher than full × (1 − nerve × exposure) (cold and wet sap morale, N277); research compounds and never takes it to nothing (QCA) | {cold: 10, span: 20, ration: 0.4, sick: 1, nerve: 0.3} | N275; N276; N277 |
 | D355 | familiarity with the ground (Albert, Nov 8 18:20: the outsider pays, the defender does not; it replaces D-085's road rule): a side knows a cell of cell tiles while one of its eyes (a unit or a finished building) has stood in it, the memory fading as e^(−time ÷ tau) (Ebbinghaus's forgetting, N278); its own ground, within home tiles of a finished building of its own, it always knows; the Natives and the wild know the whole map. A soldier's pace is × (1 − pace × (1 − its familiarity)) (cross-country against road, FM 21-18, N279) and its blows × (1 − fight × (1 − familiarity)); Local guides cut the penalty (guides); scouting ahead is how an army learns the ground, at the risk of the scout being seen | {cell: 8, tau: 600, home: 10, pace: 0.4, fight: 0.3} | N278; N279; N280 |
 | D356 | reading time for a message: the toast's least time (D toast) plus its words at wpm words a minute (min seconds a minute): adults' silent reading (Albert, Nov 9 12:12) | {wpm: 238, min: 60} | N284 |
+| D357 | the Help page: the last keep messages, newest first, the latest one left to the help line beneath (Albert, Nov 9: the Help page lists earlier messages) | {keep: 20} | N286 |
 
 ## rules
 
@@ -1692,6 +1702,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN31 | Info Help Ribbon 1, the help line: h tall on its tray, text pad in from the left, gunmetal with the working ring's blue edge, white second-line words; in two places, one look: the footer of every menu, always there, the latest message (a tap opens Help); and under the top ribbon, only while a message is fresh, coming and going in place of the toasts (Albert, Nov 9 11:14-11:21, 12:26, 12:29) | {h: 22, pad: 10} | N283 |
 | SN32 | the ring round a box (research buttons, the queue, the help line): dim (thin, the dim colour) not chosen; lit (thin, bright) chosen; run (thick, bright, over the dim track) at work, pinned at 12 o'clock and receding clockwise until done; corner radius r; seam closes the full ring (Albert, Nov 9 11:23-12:19); verbs: which buttons ring and in what colour (unit: by what it trains; Albert, Nov 9 12:57: rings on everything), the chosen one lit in place of the gold edge | {thin: 1, thick: 2, r: 6, seam: 0.006, verbs: {pick: brown, train: unit, opt: white, speed: white, hazard: red, vol: white, resume: white, n | N284; N285 |
 | SN27 | MR title: the title's wide box, then back, book (or info) and close, always, in the last slots of the mold, the three small boxes jobs-gap apart (Albert, Nov 9 10:31-10:32, 12:57) | {slots: 2} | N283; N285 |
+| SN33 | a wide box, two columns of the mold: train and research boxes in a card, and the small cards (Mail and Welcome back centred over the bars; Paused under the pause button, Sound under the mute button) (Albert, Nov 9 13:08-13:25) | {slots: 2, small: [Mail, Back]} | N286 |
 
 ## shells
 
@@ -1878,7 +1889,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | HX7 | how far a sound carries before it fades to the quietest heard, metres: thunder about 10 miles | {thunder: 16093} | N89 |
 | HX8 | the phone's audio session: ambient obeys the Ring/Silent switch and plays under the player's own music | ambient | N148 |
 | HX9 | the limiter: a battle's many blows never clip a phone speaker (dB, dB, ratio, seconds, seconds) | {threshold: -3, knee: 10, ratio: 4, attack: 0.005, release: 0.25} | N146 |
-| HX10 | the three volumes the player sets, a step a tap | {steps: [[1, Full], [0.5, Half], [0, Off]], names: {fx: Effects, alert: Alerts, amb: Ambience}} | N149 |
+| HX10 | the three volumes the player sets, a step a tap | {steps: [[1, Full], [0.5, Half], [0, Off]], names: {fx: Effects, alert: Alerts, amb: Ambience}, icons: {fx: sound, alert: bell, amb: leaf}} | N149 |
 
 ## sprites
 
@@ -2263,4 +2274,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J39 | the help line under the top bar (Albert, Nov 8 18:57, 20:49: one place the eyes go; quiet-looking; a research tells what it does on the first tap and is bought on the second); its card's title; the words for a step with no number to show | {title: Help, arm: {name}: {what} · {cost}. Tap again to research., done: {name}: {what}., rank: a new rank, tier: a taller tower, opens: op | N208 |
 | J40 | each number research moves (the O book's fx s), in words, and the family that tints it (C26): economy, speed, health, war, sight, other | {rate: [gathering, economy], make: [making, economy], scale: [yield per plot, economy], sell: [sale price, economy], trade: [trade, economy] | N160 |
 | J41 | the villager's square (Albert, Nov 8 21:35-21:43): its boxes, what a box tells when it waits for a tap, and why one is dim | {build: Build, send: Send to, attack: Attack, more: More, garrison: Garrison, rally: Rally, info: Info, focus: Focus, tell: {send: Tap where | N241 |
+| J42 | N5 words: the stances of Relations and Misfits (a name, then four), the Paused and Sound cards' help lines, the book with no game, the Help page empty (Albert, Nov 9 12:57-13:25) | {sets: {Relations: [gift, war, terms, ally], Misfits: [bribe, war, terms, ally]}, labels: {gift: Gift, bribe: Bribe, war: War, terms: Terms, | N286 |
 

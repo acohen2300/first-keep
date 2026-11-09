@@ -4308,3 +4308,29 @@ MODIFIED (13):
 LOCKED (2299 of 2310): byte for byte as sealed, 1,392,168 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2310 items sealed · 2182 book entries · 93 laws · 284 citations, 21 still to open · 7 known
+
+## N5 · 2026-11-09 13:42
+Albert, Nov 9 2026: "Two is okay. Remember build rules, Core values, And all yourself no helpers." (N4 the kit, N5 each menu rebuilt; Next build list item 13)
+Opened: book:screen, book:measure, book:words, book:comments, book:citations, code:menu.js, book:sound
+MODIFIED (18):
+- book:citations:N286 · added
+- book:comments:E814 · removed
+- book:comments:E840 · added
+- book:comments:E841 · added
+- book:comments:E842 · added
+- book:comments:E843 · added
+- book:comments:E844 · added
+- book:comments:E845 · added
+- book:comments:E846 · added
+- book:comments:E847 · added
+- book:comments:E848 · added
+- book:measure:D357 · added
+- book:screen:SN32 · 756 → 887 bytes
+- book:screen:SN33 · added
+- book:sound:HX10 · 230 → 288 bytes
+- book:words:J26 · 1,120 → 1,120 bytes
+- book:words:J42 · added
+- code:menu.js · 98,408 → 99,572 bytes
+LOCKED (2305 of 2322): byte for byte as sealed, 1,416,025 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2322 items sealed · 2194 book entries · 93 laws · 285 citations, 21 still to open · 7 known

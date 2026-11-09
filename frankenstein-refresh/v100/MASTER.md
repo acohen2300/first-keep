@@ -479,8 +479,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E839** a font from the type rule: its weight and size, in the face named
 - **E826** the help line under the top ribbon carries its words in a span and a white ring (Info Help
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
+- **E844** Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and
 - **E182** the glass's own state, nothing of the world's
 - **E827** a message's time on screen: the toast's least time plus its words at adult reading speed (
+- **E846** a message kept for the Help page, newest first, the same one twice in a row once
 - **E737** the help line under the top bar (Albert, Nov 8: one place the eyes always go): every messa
 - **E837** a help line wider than its bar shows the chevron; the chevron opens it to two lines and cl
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
@@ -505,6 +507,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
 - **E403** the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up op
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
+- **E845** the book: Welcome back mid-match (Resume, New game), paused
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
 - **E188** sound on or off
 - **E451** the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends
@@ -527,10 +530,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
+- **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
-- **E814** the help card: the line's whole text, since the line holds one line
+- **E847** Help: the earlier messages, newest first; the latest stays in the help line beneath
 - **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
@@ -548,11 +552,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E735** the hammer carries a bar for the sites going up (the mean of their progress), and People i · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
+- **E840** the stances: a people's name over two columns, then its four boxes (gift or bribe, war, te
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
+- **E842** a card hanging under its top button: centred under the button, held inside the screen
+- **E841** the small cards are two columns of the mold wide: the width read from the bar's own width,
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E825** every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, a
 - **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
+- **E843** Paused: the speeds and its help line; a tap on play plays again
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
 - **E821** one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wh
