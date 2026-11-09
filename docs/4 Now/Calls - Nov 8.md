@@ -41,3 +41,4 @@
 - Batch 9-10: free ages dropped (nobody remembers it), the timed win folds into race mode; squad star into the squads subject; notebook marks killed; the 6x7 grid closed (v100's mold does it); code size left until it hurts; audit opinions: hold-hints and feature freeze killed, the stranger test kept for go-live, order fatigue already decided.
 - Batch 11: git history left alone (new commits are Albert's); no gatherer cap, watch in play; the 52 differences from Base go through later as their own subject, five at a time.
 - Last call: SoRen's sky (four palettes by the sun's height) comes in, but the sky is barely seen from above. Bring it in where the eye meets it: lakes and puddles reflect it (Fresnel), and its colour tints the land's light (sky light). The 96 to-dos go to a triage page with Albert's answers saved in it.
+- TO TALK LATER: what a tap on a building does (anywhere on its drawn shape counts as the building).
