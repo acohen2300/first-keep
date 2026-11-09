@@ -7,6 +7,17 @@
 - Last builds, all pushed: B24–B30 (Nov 8 plan), B31a (PDF guide lines back and locked, the stuck-finger tap bug, pop-ups above the finger, map words one size), B31b (the villager's 2×2 square; scroll past the board: sea on the sides and below, sky above).
 - Gate: `python3 index.py` (permit.json: opens, grow; numbers only in books; comments only as one E-code per line). Publish: `python3 publish.py --smoke "<message>"` then commit as Albert with the trailer; push. Two quick pushes collide on Pages: fold docs into the build push.
 
+## The core values (Albert Labs: check every piece against them, in order)
+1. Is it fair? (what's good for the goose is good for the gander; if it's unfair, it's out)
+2. Does it follow our logic and rules?
+3. Is there a real-life solution? (nature, science, history, another game)
+4. Real-life math? (the equation, its source, where it lives in the code)
+5. Science?
+6. Purpose?
+7. Function?
+8. One home?
+Rigid on zero stray numbers: every value in its book, with a citation and a comment, with a rhyme or reason. Beside them: the goal is a perfect product (profit is a bonus); logic above all; ruthless quality control; nothing goes away until it is solved or deliberately removed.
+
 ## Rules (Albert)
 - No building without a double confirm ("yes yes"); mock screens first; talk mode when asked.
 - ECS: one home, books hold every number and word, cited; no patches, redo cleanly; log every cut in `Parked.md`.
