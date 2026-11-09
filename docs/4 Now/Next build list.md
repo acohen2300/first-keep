@@ -91,3 +91,7 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - The − and + of a job 3 px apart; the two rows 3 px apart; only side to side between columns stays 6.
 - One ink and one fill for every cell in the base rows, in every state, Build included: no dim ink, no darker fill ("for now").
 - Build's icon: the mallet (item 3).
+### "Menu ribbon 6 box": LOCKED (Albert, 10:13–10:24; mock jobs-bar4)
+- Six boxes in a row, each 44 tall, 6 px apart, the first and last 6 px from the screen's edges; each box keeps its own full rounded outline and fill.
+- Behind them a backing tray, one shade darker than the boxes, filling the gaps so no ground shows between them, 1 px past the boxes on every side (46 tall, 5 px from the screen's edges).
+- A new mold of its own (one home in the Screen book), to be used where Albert places it.
