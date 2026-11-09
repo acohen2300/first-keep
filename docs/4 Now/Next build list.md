@@ -86,7 +86,7 @@ Into items 4 and 5: SoRen draws rain and snow drop by drop from a pool, and Redu
 
 ## 9. Menu redesign, Albert directing step by step (Nov 9, from 10:01)
 Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; first lines 14 · 600 (tabs, options, research titles, labels); second lines 12 · 400 (costs, second rows). Replaces item 1's "everything at 18 moves to 14".
-### The jobs rows (10:03–10:08; mocks jobs-2 to jobs-4)
+### The jobs rows: LOCKED (Albert, 10:10) (10:03–10:08; mocks jobs-2 to jobs-4)
 - Icon, count and word all at 12 (12 · 400), in People, Food, Wood, Stone, Gold, Iron and Build.
 - The − and + of a job 3 px apart; the two rows 3 px apart; only side to side between columns stays 6.
 - One ink and one fill for every cell in the base rows, in every state, Build included: no dim ink, no darker fill ("for now").
