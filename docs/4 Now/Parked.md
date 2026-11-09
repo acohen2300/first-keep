@@ -655,3 +655,6 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 ## Cut in N3 (Nov 9, B2 the rings; item 12 of `Next build list.md`)
 - The research tint bar and its book (Colours C26, B29/E815's tintOf): the ring's colour map (C27) says the same by the ring.
 - The queue's green fill (`queue6`'s gradient): the first item's ring recedes instead.
+
+## Cut in N4 (Nov 9, the MR kit; item 13 of `Next build list.md`)
+- Glass on menus, cards and the villager square (SN40, D321 lv.glass, index.html's solid toggle): Albert 12:57, all solid; the tray brown fills the seams.

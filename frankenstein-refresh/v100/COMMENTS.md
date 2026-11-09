@@ -807,7 +807,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E820 | menu.js, econ.js | a villager told to take cover goes into the nearest building of yours with room, as fright sends it; like fright's, it comes out when no foe is near (so with none near, there is nothing to hide from) |
 | E821 | menu.js | one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wherever it sits; the pause panel lived outside the three listeners and its buttons never ran |
 | E822 | index.html#the-view-s-eyes-lights-and-stage | the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rate, otherwise the full rate; the loop paces by it and the shed budgets by it |
-| E824 | index.html#the-view-s-eyes-lights-and-stage | glass goes solid as soon as the phone sheds a level: the blur behind menus, cards and the square is the first thing a struggling phone gives back (Albert, Nov 9 08:18) |
 | E825 | menu.js | every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, and a tap opens Help; the same line under the top ribbon comes and goes on its own (Albert, Nov 9 12:29) |
 | E826 | menu.js | the help line under the top ribbon carries its words in a span and a white ring (Info Help Ribbon 1), the ring receding over the time it takes to read |
 | E827 | menu.js | a message's time on screen: the toast's least time plus its words at adult reading speed (Brysbaert 2019; Albert, Nov 9 12:12) |
@@ -819,3 +818,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E833 | menu.js | how far the work is: a queue's first item by the time left on it; the help line by its time to read |
 | E834 | menu.js | every frame the running rings recede, pinned at 12, clockwise, gone when the work is done |
 | E835 | menu.js | the queue: the first item rings down (run), those waiting behind it full and bright (lit); the green fill is gone |
+| E836 | menu.js | MR title: every menu's title row ends in back, book and close, always in the same place (Albert, Nov 9 12:57) |
+| E837 | menu.js | a help line wider than its bar shows the chevron; the chevron opens it to two lines and closes it again |
+| E838 | menu.js | the chevron's tap: open or close the help lines |
+| E839 | menu.js | a font from the type rule: its weight and size, in the face named |

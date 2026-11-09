@@ -4287,3 +4287,24 @@ MODIFIED (17):
 LOCKED (2290 of 2306): byte for byte as sealed, 1,414,444 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2306 items sealed · 2178 book entries · 93 laws · 283 citations, 21 still to open · 7 known
+
+## N4 · the menu kit: solid cards (glass cut), the title always back · book · close, 12 inside boxes and 14 for row headers, rings on every button by the colour map, the help line's chevron · 2026-11-09 13:34
+Albert, Nov 9 13:27: two builds; Next build list items 9, 11, 13
+Opened: book:screen, book:measure, book:comments, book:citations, code:menu.js, code:index.html#the-view-s-eyes-lights-and-stage
+MODIFIED (13):
+- book:citations:N285 · added
+- book:comments:E824 · removed
+- book:comments:E836 · added
+- book:comments:E837 · added
+- book:comments:E838 · added
+- book:comments:E839 · added
+- book:measure:D321 · 966 → 903 bytes
+- book:screen:SN20 · 413 → 432 bytes
+- book:screen:SN27 · added
+- book:screen:SN32 · 421 → 756 bytes
+- book:screen:SN40 · removed
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,098 → 23,023 bytes
+- code:menu.js · 97,775 → 98,408 bytes
+LOCKED (2299 of 2310): byte for byte as sealed, 1,392,168 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2310 items sealed · 2182 book entries · 93 laws · 284 citations, 21 still to open · 7 known

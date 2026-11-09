@@ -212,6 +212,14 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - Cut: the research tints (C26) and the queue's fill.
 - Open: train buttons have no ring yet; long queue names are clipped in the queue slots.
 
+## Built N4 (Nov 9, the MR kit)
+- All solid: glass cut (SN40, lv.glass, the solid toggle); menus and cards on the tray brown.
+- Type (SN20): titles IM Fell 18; column-1 row headers 14 · 600; inside boxes 12 · 600 and 12 · 400; one font helper (E839).
+- The title row (SN27): the title's wide box, then ← · book · ✕ (E836).
+- Help lines: the chevron when the text runs past one line; a tap opens two lines (E837, E838); the toast keeps its white ring at the ribbon's width.
+- Rings on the head buttons by the verb map (SN32 verbs).
+- Open for N5: each menu rebuilt (item 13's list below).
+
 ## 13. Menus from the MR kit, Albert's markup (Nov 9, 12:57–13:12; mocks kit2, kit3, kit4)
 - All solid, no glass (undo N2's glass); the tray brown fills the 1 px seams so the stack reads as one card.
 - Title: always ← · book · ✕ on the right (SN27).

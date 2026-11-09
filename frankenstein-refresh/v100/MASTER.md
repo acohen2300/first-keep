@@ -402,7 +402,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
-- **E824** glass goes solid as soon as the phone sheds a level: the blur behind menus, cards and the 
 - **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
@@ -477,11 +476,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E180** the resources in their colours (COLORS.md)
 - **E819** the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
+- **E839** a font from the type rule: its weight and size, in the face named
 - **E826** the help line under the top ribbon carries its words in a span and a white ring (Info Help
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
 - **E827** a message's time on screen: the toast's least time plus its words at adult reading speed (
 - **E737** the help line under the top bar (Albert, Nov 8: one place the eyes always go): every messa
+- **E837** a help line wider than its bar shows the chevron; the chevron opens it to two lines and cl
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
 - **E274** how much slower a full cover of mud or snow makes a march, in percent, from its terrain fa · QN (N13)
@@ -517,6 +518,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
+- **E838** the chevron's tap: open or close the help lines
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
@@ -524,6 +526,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
+- **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
