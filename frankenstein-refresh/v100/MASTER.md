@@ -377,6 +377,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E689** the tops are made again when a building is added, removed or raised further: a site counts
 - **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
+- **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
+- **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
 - **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219)
 - **E150** QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown aw · QAT (N53) · D120 (N112)
 - **E151** left at sunrise, up at noon, right at sunset
@@ -752,7 +754,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E230** the blow's strength (Mid's dmgOf): its blow after research, blades worn by frost, rain or  · D234 (N188)
 - **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
 - **E387** where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own a · D232 (N188)
-- **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188)
+- **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188) · D355 (N278, N279, N280)
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
 - **E518** A blow on a shooter's stake, or on one of a wild group (its regard falls).
 - **E796** one who falls through the ice is lost, as any death, and leaves no body on the ice (under)
@@ -823,6 +825,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E586** one weighted draw: p = w_i / Σw (QAR) · QAR (N49)
 - **E587** now and then the robbers send a band from the camp nearest a side at a villager or caravan · D307 (N205)
 - **E588** a computer hires drifters it can pay for, and sends half its idle army at the nearest find
+- **E813** a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E · D224 (N13, N173, N181, N185, N198) · E472
 - **E589** a scout left to itself goes for a find whose guards have fallen, else loops the land
 - **E519** Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies  · D280 (N198, N199)
 - **E520** A trap sprung: caltrops spike each walker once a while and wear flat; the others go off on

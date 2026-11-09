@@ -457,7 +457,7 @@ BOOK("comments", {
  "E352": {"text": "each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY) and a tended flock is culled to half for mutton (QZ); wolves near a pasture take sheep every season; the harvest of the year is rolled in spring (Mid's seasonTurn)"},
  "E353": {"text": "a cut-out plot is replanted at D222's share of its price and is full again; from a drop-off, every cut-out plot of what it takes, nearest first, as many as can be paid for (Mid's replantWhy, replant, cutOut, replantAll)"},
  "E354": {"text": "send a hunter: the given villager, or the nearest idle one, else the nearest from other work (not a builder or a posted worker); it fights the game (Mid's sendHunt)"},
- "E355": {"text": "QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier, an animal's at D231 wild, a runner's × routHit, × its armour share (D228), its shape's hit and against riders, from behind a blade × D141; roofed against missiles; on a building × the striker's bld (Mid's hurt)"},
+ "E355": {"text": "QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier, an animal's at D231 wild, a runner's × routHit, × its armour share (D228), its shape's hit and against riders, from behind a blade × D141; roofed against missiles; on a building × the striker's bld (Mid's hurt); a stranger's blow is × (1 − D355 fight × (1 − its familiarity)) (Albert, Nov 8: the outsider pays)"},
  "E356": {"text": "a building that falls pays its destroyer D233 of its price (Mid's plunderBld); game falls as a carcass of its meat where it stood, and its hunters butcher it (Mid's kill)"},
  "E357": {"text": "hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from theirs"},
  "E358": {"text": "a pasture's card counts its sheep"},
@@ -792,5 +792,8 @@ BOOK("comments", {
  "E806": {"text": "an order leaves its soldiers tired as a charge does (D247 slow, settling back with tired): give many orders and the army slows (Mid's ORDER.tired; Albert, Nov 8)"},
  "E807": {"text": "QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, softly (foot before archers before riders before engines; Mid's FORMING soft)"},
  "E808": {"text": "a side's exposure to cold and wet (D354): the air's cold and the ground's wetness, each cut by its research (Wool cloaks, Oiled cloaks, Chimneys); read by the meals, the sickness and the nerve"},
- "E809": {"text": "a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure): cold and wet sap morale"}
+ "E809": {"text": "a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure): cold and wet sap morale"},
+ "E810": {"text": "familiarity (D355): a cell is known to a side from the last time one of its eyes stood in it; nothing is saved, so a reload forgets the scouted ground and keeps the own ground"},
+ "E811": {"text": "a side's familiarity with a tile: one on its own ground (a finished building of its own within D355 home), the Natives' and the wild's everywhere, else the memory fading from the last look"},
+ "E813": {"text": "a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E472): unseen unless a foe's soldier is near or a shooting building watches"}
 });

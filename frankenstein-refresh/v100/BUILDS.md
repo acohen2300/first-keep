@@ -4113,3 +4113,31 @@ MODIFIED (15):
 LOCKED (2247 of 2260): byte for byte as sealed, 1,332,412 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2260 items sealed · 2132 book entries · 93 laws · 276 citations, 16 still to open · 7 known
+
+## B30: familiarity with the ground: a side knows what its eyes have stood on, fading with time; its own ground always; the Natives everywhere; a stranger walks and fights worse; Local guides cut it, Guerrilla warfare springs ambushes from farther; the scout's Stealth · 2026-11-08 20:51
+Albert, Nov 8 18:17-18:22 (Calls - Nov 8.md)
+Opened: book:measure, book:comments, book:citations, book:words, book:tech, code:index.html, code:combat.js, code:menu.js
+MODIFIED (20):
+- book:citations:N278 · added
+- book:citations:N279 · added
+- book:citations:N280 · added
+- book:citations:N281 · added
+- book:comments:E355 · 318 → 424 bytes
+- book:comments:E810 · added
+- book:comments:E811 · added
+- book:comments:E813 · added
+- book:measure:D224 · 710 → 779 bytes
+- book:measure:D239 · 2,090 → 2,226 bytes
+- book:measure:D355 · added
+- book:tech:O260 · added
+- book:tech:O261 · added
+- book:words:J11 · 1,761 → 1,812 bytes
+- book:words:J7 · 53,843 → 54,155 bytes
+- code:combat.js · 57,923 → 58,179 bytes
+- code:index.html#floor-5-movables · 18,966 → 19,010 bytes
+- code:index.html#floor-7-display · 7,438 → 7,986 bytes
+- code:index.html#touch · 7,561 → 7,580 bytes
+- code:menu.js · 90,393 → 90,661 bytes
+LOCKED (2250 of 2270): byte for byte as sealed, 1,244,475 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2270 items sealed · 2142 book entries · 93 laws · 280 citations, 20 still to open · 7 known
