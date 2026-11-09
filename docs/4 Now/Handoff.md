@@ -1,45 +1,45 @@
-# First Keep: handoff (Nov 9, 2026, 06:50; v100 at B31b, live)
+# First Keep: handoff (Nov 9, 2026, 14:40; v100 at N5, live)
 
-**A new chat starts here.** Read this file, then `Calls - Nov 8.md` (every decision), `Build plan - Nov 8.md` (plan and log) and `Next build list.md` (agreed items waiting to build, Nov 9 on). Albert's standing rules live in Claude's memory too.
+**A new chat starts here.** Read this file, then `Next build list.md` (every Nov 9 decision, items 1–13, and the Built N1–N5 log), `Calls - Nov 8.md` and `Build plan - Nov 8.md`. Albert's standing rules live in Claude's memory too. Then wait for his go.
 
 ## Where it stands
 - Code: `frankenstein-refresh/v100/` (index.html, combat.js, econ.js, menu.js, books/*.js). Live: https://acohen2300.github.io/first-keep/frankenstein-refresh/v100/
-- Nov 9: N1 (Build A of `Next build list.md`) pushed; the list holds the rest, in order B to E.
-- Last builds, all pushed: B24–B30 (Nov 8 plan), B31a (PDF guide lines back and locked, the stuck-finger tap bug, pop-ups above the finger, map words one size), B31b (the villager's 2×2 square; scroll past the board: sea on the sides and below, sky above).
-- Gate: `python3 index.py` (permit.json: opens, grow; numbers only in books; comments only as one E-code per line). Publish: `python3 publish.py --smoke "<message>"` then commit as Albert with the trailer; push. Two quick pushes collide on Pages: fold docs into the build push.
+- Nov 9 builds, all pushed: N1 (item 8's open items), N2 (the look pass, Barlow), N3 (progress rings, colour map C27), N4 (the MR kit: all solid, glass cut, 12 inside boxes, title row ← · book · ✕, help-line chevron), N5 (every menu rebuilt from the kit; see the log in `Next build list.md`).
+- Gate: `python3 index.py` (permit.json: `opens` and `grow`, key `code:menu.js`; numbers only in books; comments one E-code per line, each named by code). Publish: `python3 publish.py --smoke "<message>"`; it stops at `git pull` with docs unstaged, so fold the docs into the build commit: `git add`, `git commit --amend` as Albert with the trailers, `git pull --rebase`, `git push`. Then clear permit.json (publish does).
+- Menu structure: menu.js. SCREENS (pages), ROWS (card rows), VERBS, `head` / `headS` (title rows), `vcell` (a box with its ring by the SN32 verb map), `.pop` cards (Paused, Sound) hung under their top buttons by `hang`, `w2` (the two-column width).
 
-## The core values (Albert Labs: check every piece against them, in order)
-1. Is it fair? (what's good for the goose is good for the gander; if it's unfair, it's out)
-2. Does it follow our logic and rules?
-3. Is there a real-life solution? (nature, science, history, another game)
-4. Real-life math? (the equation, its source, where it lives in the code)
-5. Science?
-6. Purpose?
-7. Function?
-8. One home?
-Rigid on zero stray numbers: every value in its book, with a citation and a comment, with a rhyme or reason. Beside them: the goal is a perfect product (profit is a bonus); logic above all; ruthless quality control; nothing goes away until it is solved or deliberately removed.
+## The core values (check every piece against them, in order)
+1. Fair? 2. Follows our logic and rules? 3. A real-life solution (nature, science, history, another game)? 4. Real math, its source, where it lives? 5. Science? 6. Purpose? 7. Function? 8. One home?
+Zero stray numbers: every value in its book with a citation and an E-code comment. Logic above all. Nothing goes away until solved or deliberately removed; every cut is logged in `Parked.md`.
 
-## QC, in tiers (Albert, Nov 9 09:34)
-- Every build: the gate, the smoke test, and a values line for each changed item in the build report (from the gate's own list of what changed).
-- Once a day, overnight: the full test.py, one fresh-eyes review of the whole day's changes, and every slip found becomes a new gate rule (poka-yoke).
-- Milestones, before live: behaviour against Base and Mid; Albert's outside AI audit.
+## How Albert works (all him)
+- Concise, no prose; a compacted chat is bad news. "Talk mode" is chat only.
+- List the changes first; build only on his double confirm ("yes yes"). No exceptions to a rule: if a rule fails somewhere, the rule or the builder is the problem.
+- Claude builds everything itself: no helpers, bots, agents or builders.
+- Mock screens first. Check v100 and Mid (`frankenstein-refresh/mid/src`) before proposing new logic.
+- QC tiers: every build runs the gate, the smoke test and a values line for each changed item; overnight, the full `test.py`, a fresh-eyes review, and every slip becomes a gate rule.
+- Commits as `Albert <acohen2300@users.noreply.github.com>` with the session's trailers; the repo is public.
 
-## Rules (Albert)
-- No building without a double confirm ("yes yes"); mock screens first; talk mode when asked.
-- ECS: one home, books hold every number and word, cited; no patches, redo cleanly; log every cut in `Parked.md`.
-- Check v100 and Mid (`frankenstein-refresh/mid/src`) for logic to reuse before proposing new.
-- Concise. Decisions as short Problem/Idea, 3–5 at a time; record answers as we go. No tap-and-hold. Real math with sources. Objective pushback.
+## Open: waiting on Albert
+1. Fast and Yard (test-build tools) sit in the Paused card, which breaks "speeds only" there. Move them where?
+2. The Sound card shows only while muted, so volumes change only while muted (per his markup). Right?
+3. The black bar from B31b (his phone mixed a new page with an old book file): reload and check. Proposed fix: publish one stitched file.
+4. The "Something is in the way" card: oddly sized; held.
+5. Reminders: Choke and Bombard; the map's hold gesture (box pick); what a tap on a building does; hunting; a "mind your own business" setting.
 
-## Open, waiting on Albert
-1. **The black bar** (the ghost's label without words, his phone, 21:49): likely his phone mixed a new page with an old book file (B31a moved the label's nudge into SN14). Asked him to reload and check. Proposed fix if confirmed: **publish one stitched file** (source stays split; publish writes one page), so a phone can't mix builds. He called per-file version tags a bandaid.
-2. **The "Something is in the way" card**: he said it's oddly sized; asked what looked off; held.
-3. **The paused panel** sits where the help line shows; they can overlap. Not raised as a build yet.
-4. Reminders he asked for: Choke and Bombard; the map's hold gesture (box pick) still exists; help moved into each item's own card; what a tap on a building does; hunting; mind-your-own-business setting.
+## Open in the menus (N5)
+- The stance boxes (gift, bribe, war, terms, ally) do nothing yet.
+- The queue row shows only while something is queued; long letters clip in the narrow Mail card.
+- Barracks was not reached in the test game; only the Town Center card was checked.
+- Controller and job-ribbon contents are Albert's call.
 
-## Next in the plan (start only on his go)
-- B32: conversions over the cap wait for a house; building health by age material; **villagers fight** (Lanchester; the square's Attack only hunts until then); animals by the randomizer.
-- B33: quick start, race mode, simple mode. B34–B36: the rest of the Nov 8 triage (`Triage - Nov 8.md`, 96 answered).
+## Next (start only on his go)
+- Item 1: the stray sweep and the gate fix (count numbers with units; the ratchet becomes a zero rule).
+- Item 4b: fog drawn by Beer–Lambert by zoom. Item 6: sight map, fog of war, memory. Item 7: SoRen's renderer.
+- B32: conversions over the cap wait for a house; building health by age material; villagers fight (Lanchester); animals by the randomizer. B33: quick start, race mode, simple mode. B34–B36: the Nov 8 triage (`Triage - Nov 8.md`).
+- Pages source setting (Albert). B32/B33 triage. The overnight full `test.py`.
 
 ## Known
 - `python3 test.py t-walls` crashes the same way before and after B31a: a harness fault, owed.
-- Garrison in the square is dim with no foe near (a sheltered villager leaves when none is near, as fright's rule).
+- The match smooth check warns (a known mid-match stutter, logged in Parked.md; Albert: publish to preview anyway).
+- Garrison in the square is dim with no foe near.
