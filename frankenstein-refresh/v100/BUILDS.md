@@ -4219,3 +4219,12 @@ MODIFIED (14):
 LOCKED (2272 of 2286): byte for byte as sealed, 1,336,890 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2286 items sealed · 2158 book entries · 93 laws · 281 citations, 20 still to open · 7 known
+
+## N1b · the stitched page taken back out of the deploy · 2026-11-09 09:19
+Albert, Nov 9 09:08 (Go for build): the deploy workflow is sealed by the old v100-ground-up gate, which GitHub runs; the stitch waits for Albert's call
+Opened: tool:pages.yml
+MODIFIED (1):
+- tool:pages.yml · 1,972 → 1,137 bytes
+LOCKED (2285 of 2286): byte for byte as sealed, 1,503,431 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2286 items sealed · 2158 book entries · 93 laws · 281 citations, 20 still to open · 7 known
