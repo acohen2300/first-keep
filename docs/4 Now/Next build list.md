@@ -73,9 +73,10 @@ Into items 4 and 5: SoRen draws rain and snow drop by drop from a pool, and Redu
 ## 8. Open items from before Nov 9, decided (Albert, Nov 9, 09:01)
 1. The black bar: yes, publish one stitched file (the source stays split; publish writes one page), so a phone can't mix a new page with an old book.
 2. The "Something is in the way" card scaled with the zoom. Rule: words never scale with zoom; "zoom is just what you see, not what you read." Applies to every word and card on the map.
-3. The pause menu: the whole thing doesn't work; fix it (details to take from Albert).
+3. The pause menu: the whole thing doesn't work; fix it. Found (Nov 9): the pause panel (`#spd`, menu.js E718) is added to the page outside the three places that listen for taps (`ui`, `topEl`, `qaEl`, menu.js line ~302), so its buttons (×1, ×2, ×3, New game, Fast, the gear, Effects, Alerts, Ambience) never run; the gear is still labelled "Yard" (the Yard was removed Nov 7); the first row ("Paused · tap to carry on") is in the markup but not seen. Fix by one tap listener for the whole screen (one home), not a fourth listener.
 4. Choke and Bombard: in, but with the war module, not now.
 5. Tap-and-hold: allowed only for the box (square or rectangle) drag to select. Nowhere else.
 6. Help inside each item's own card: later, too big for this build.
 7. A tap on a building (anywhere on its drawn shape) opens the building's card.
 8. Hunting modes, 9. "Mind your own business": later, too big for this build.
+- Later (Albert, 09:03): B32, B33, the Nov 8 triage (B34–B36) and the overnight full test run wait until after this build list.
