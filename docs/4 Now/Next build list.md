@@ -103,3 +103,5 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - The small boxes are under Apple's 44 tap width (about 39): flagged.
 ### "Menu ribbon footer 2": LOCKED (Albert, 10:34–10:36; mock jobs-bar10)
 - The full-width dark tray (as the 6 box ribbon: 46 tall, 5 px from the screen's edges) with only the menu ribbon title's three small boxes, on the right (about 38.7 wide, 3 px apart, 6 px from the right edge); the left of the tray open, no box.
+### Short names (Albert, 10:37–10:38)
+- Every menu ribbon is "MR": MR6 (menu ribbon 6 box), MR3 (menu ribbon 3 box), MR title (menu ribbon title), MR footer 2 (menu ribbon footer 2). Checked: no "MR" code is used anywhere in the repo. Registered in the Screen book when built (the M shell family, MG/MH/MW/MT, is separate).
