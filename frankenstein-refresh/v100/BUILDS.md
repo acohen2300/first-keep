@@ -4228,3 +4228,12 @@ MODIFIED (1):
 LOCKED (2285 of 2286): byte for byte as sealed, 1,503,431 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2286 items sealed · 2158 book entries · 93 laws · 281 citations, 20 still to open · 7 known
+
+## N1c · one stitched page on the site · 2026-11-09 09:26
+Albert, Nov 9 09:25: unlock, edit, relock (the deploy stitches v100 into one page; Next build list 8.1)
+Opened: tool:pages.yml
+MODIFIED (1):
+- tool:pages.yml · 1,137 → 1,972 bytes
+LOCKED (2285 of 2286): byte for byte as sealed, 1,503,431 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2286 items sealed · 2158 book entries · 93 laws · 281 citations, 20 still to open · 7 known
