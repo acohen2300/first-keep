@@ -175,3 +175,6 @@ Codes checked unused everywhere in the repo (books, code, docs, Base, Mid). Scre
 - Each box in a ribbon carries its own slots: Verb (from VERBS), Text (first line, optional second line; the type rule sets the sizes), Icon (optional), Colour (from the colour sheet, e.g. C29), State (dim, active, double: SN32–SN37).
 - By rule for every menu, no tick: bottom-anchored over the base rows, glass, the ✕ in MR title.
 - Height: by ribbon count, for now (replaces Nov 4's one fixed height and Nov 5's Town Center / Start height exceptions). A cap to be set later.
+
+### "Top Info Ribbon": LOCKED (Albert, 11:39–11:44; mocks t9, t9b) · SN39 (checked unused)
+- At Info Help Ribbon 1's height (SN31: 22 on a 24 tray, 1 px rim, 5 px from the screen's edges): one continuous brown bar (no box outlines), split into nine equal segments by eight straight vertical dividers, 1 px, in the outline colour (#6b5230), each stopping 5 px short of the top and bottom.
