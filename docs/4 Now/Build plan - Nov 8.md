@@ -21,3 +21,5 @@ Rules for the run: one build at a time, each gated (index.py PASS) and published
 - B27b (20:58-21:08): built: laid defences off for players, the Depot wagon-only.
 - Albert 20:33: B28 yes, build it. REMIND: check on Choke and Bombard later (cut in B28: the wall takes the narrow's width by the land; engines sent at a building bombard it).
 - B28 (20:35-20:50): built: no holds on the War bar; five pages of four; Train's double kinds and the Form dial's undefined label fixed. OPEN: the map's hold gesture (box pick) is still a hold.
+- Albert 20:49 on B29: the help bar should be cleaner, less busy and loud. Research: tap to buy with a cancel option, or first tap explains and the second buys (double tap is fine once learned); the bar must do something noticeable or nobody looks up.
+- B30 (20:52-21:00): built: familiarity, Local guides, Guerrilla warfare, the scout's Stealth. Not saved across reloads (logged in E810).
