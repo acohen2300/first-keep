@@ -41,3 +41,21 @@ Why strays got through: the gate's number count (`NUM` in `index.py`) skips any 
 - The trigger is too strict: `shed()` (E605) steps down when a frame's work averages over 12 ms for 2 s (`draw` in the Measurements book), but the game aims at 30 frames a second, a 33 ms budget; it climbs back only under 7 ms held 10 s, so it stays down.
 - The work it measures includes the simulation: at ×3 the sim runs three times a frame, and shedding drawing cannot fix sim cost.
 - Fix: measure against the real frame budget of the target rate; time the sim and the drawing apart and shed drawing only for drawing's cost; read real numbers first from Albert's phone (the preview with `?test` shows the meter). Low Power Mode and heat not ruled out.
+- Measured (Nov 9, 10 s of a match, 161 units, ×3, desktop): sight under 0.5% of the work; the meadow painting (`sweep`, E-meadow) the top named cost at 4.8%; about 35% the browser drawing (canvas, compositing). The targets for shedding are the meadow and the drawing; the phone's own numbers first.
+
+## 6. Sight, fog of war and memory (Albert, Nov 9, 08:38–08:49)
+Albert's sighting: opponents' villagers blink and come back elsewhere; buildings pop out of nowhere; squares and L shapes on the ground (picture, 08:38).
+Causes:
+- The squares and L shapes: every finished building stamps its wear onto the one shared ground picture (econ.js → `wear()`), seen or not: the footprints of hidden buildings show (a fairness leak). The grey puffs above them likely the same (chimney smoke), to confirm.
+- The blink: sight is checked twice a second (`sight.tick` 0.5) pair by pair (`look()`, `sees()`), yes or no, no fade, no memory.
+- The pop: the fog of war and the remembered buildings were cut Nov 6 (Parked.md, "Cut: the fog of war and the made-up sight").
+Build:
+1. One sight map per side, by tile, with a count of eyes on each tile (StarCraft 2's way); casting by shadowcasting (Bergström's recursive shadowcasting), buildings and trees by height casting shadows (the Nov 7 rule).
+2. An eye casts when it steps onto a new tile, never on a timer (no sight beat).
+3. Dominated eyes skip the cast (Albert, 08:45–08:49): an eye whose sight rim is already all seen by others adds nothing (art gallery pruning); checking the rim (about 2πr tiles) costs far less than the disc it saves (πr²).
+4. Fog of war back, with the real sight (not the cut made-up ranges): unexplored, explored (dimmed), in sight.
+5. Remembered buildings, as last seen, until seen again.
+6. Units fade in and out at the edge of sight; never blink.
+7. Everything drawn or heard asks the one map: units, buildings, ground wear, smoke, fire, sounds; wear per side's view, not the shared ground.
+8. The Start page's Fog on/off: Albert's call at build time.
+Also: unit drawing types `side !== 0` (a stray number; a latent bug if the player is ever not side 0): read "me".
