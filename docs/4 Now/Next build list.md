@@ -97,3 +97,7 @@ Type rule (09:59): card titles in the fancy font (IM Fell English SC) at 18; fir
 - A new mold of its own (one home in the Screen book), to be used where Albert places it.
 ### "Menu ribbon 3 box": LOCKED (Albert, 10:25–10:26; mock jobs-bar5)
 - The 6 box ribbon's mold with boxes 1+2, 3+4 and 5+6 merged: three double-wide boxes (two slots and the 6 px gap between them, 122 wide on a 390 screen), one outline each; same tray, gaps, edges and height. Same grid, different spans.
+### "Menu ribbon title": LOCKED (Albert, 10:28–10:32; mocks jobs-bar6 to jobs-bar8)
+- On the 6 box ribbon's tray: one wide box (where slots 1–4 were) and three small boxes (the space of slots 5–6 split in three), all four 3 px apart; the small boxes about 38.7 wide on a 390 screen, the wide box taking the rest (253). Same tray, edges and height (44 boxes on a 46 tray).
+- Note: the wide box ends 3 px past the six-slot grid line (the three small boxes keep their width).
+- The small boxes are under Apple's 44 tap width (about 39): flagged.
