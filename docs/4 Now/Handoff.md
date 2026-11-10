@@ -10,6 +10,11 @@
 
 ## The core values (check every piece against them, in order)
 1. Fair? 2. Follows our logic and rules? 3. A real-life solution (nature, science, history, another game)? 4. Real math, its source, where it lives? 5. Science? 6. Purpose? 7. Function? 8. One home?
+And four more for anything new (Albert, Nov 9 20:41):
+9. Does it have a source? Math, science, physics, a real-life anchor?
+10. Will it improve detail, quality and game play?
+11. Does it solve a problem, or is it just being built for fun?
+12. Will it save code?
 Zero stray numbers: every value in its book with a citation and an E-code comment. Logic above all. Nothing goes away until solved or deliberately removed; every cut is logged in `Parked.md`.
 
 ## How Albert works (all him)
