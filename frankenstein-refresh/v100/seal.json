@@ -6255,8 +6255,8 @@
 "numbers": 0
 },
 "book:comments:E899": {
-"sha": "04d85e882e862b0af71a9b76146a87a90dadc69925eda895e26b6384c9d0dd3e",
-"bytes": 172,
+"sha": "a1296e15ed08648302299349e5ea804e4b49c0c6a3a9e097807fbe682a0ee803",
+"bytes": 255,
 "numbers": 0
 },
 "book:comments:E9": {
@@ -11480,8 +11480,8 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "df58fb83dc6b0c7a1a80e322aec69d614bd677bf628081504223c486618a24da",
-"bytes": 16239,
+"sha": "5d6b945d9a558dcedb3c7474fb109ee3387e90c5e434e8ff854ba46d211aa6ff",
+"bytes": 16251,
 "numbers": 63
 },
 "code:index.html#the-figures": {
@@ -11500,8 +11500,8 @@
 "numbers": 38
 },
 "code:index.html#the-meadow": {
-"sha": "b0943d6086ab3db4187a6ebd2ec75f439ef420079acbf713981da5604c03805a",
-"bytes": 14579,
+"sha": "1767b39134b8c8b8572b0740d77118394dafe5b5b3d91fdeb895dd85b18ec92b",
+"bytes": 14662,
 "numbers": 0
 },
 "code:index.html#the-node-art": {

@@ -875,6 +875,6 @@ BOOK("comments", {
  "E895": {"text": "the pieces one beyond the view are built ahead in idle time, so a pan finds them ready"},
  "E896": {"text": "the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above it, the layer's top level over the lowest ground, so it pools in the hollows"},
  "E897": {"text": "your own people under the canopy drawn as a ring over the trees, so you see who is inside"},
- "E899": {"text": "the meadow is painted again strip by strip until its share of the frame is spent, then waits for the next frame (N10: one eighth of it at once took up to 32 ms)"},
+ "E899": {"text": "the meadow is painted again strip by strip until its share of the frame is spent, then waits for the next frame (N10: one eighth of it at once took up to 32 ms); the land sheet is painted again once, when the meadow is done, not at every strip"},
  "E898": {"text": "the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings hide, so every tab is one height (Albert Nov 9: fit two rows)"}
 });

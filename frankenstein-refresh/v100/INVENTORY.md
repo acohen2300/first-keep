@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 32 | 3,470 | 579,648 | 579,796 |
-| Books | 2278 | 0 | 672,436 | 673,329 |
+| Game code | 32 | 3,471 | 579,743 | 579,891 |
+| Books | 2278 | 0 | 672,519 | 673,412 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 5 | 1,815 | 294,579 | 294,824 |
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
 | index.html#drawn-once-in-the-view-frame | 80 | 12,741 | 12,745 | 96 |
 | index.html#the-view | 9 | 1,084 | 1,088 | 13 |
-| index.html#the-door | 99 | 16,235 | 16,239 | 63 |
+| index.html#the-door | 99 | 16,247 | 16,251 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -36,7 +36,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-6-climate | 170 | 29,544 | 29,556 | 207 |
 | index.html#floor-7-display | 70 | 14,479 | 14,483 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 120 | 23,290 | 23,294 | 0 |
-| index.html#the-meadow | 70 | 14,575 | 14,579 | 0 |
+| index.html#the-meadow | 71 | 14,658 | 14,662 | 0 |
 | index.html#the-woods-cache | 50 | 5,413 | 5,417 | 47 |
 | index.html#touch | 53 | 9,385 | 9,389 | 54 |
 | menu.js | 519 | 102,543 | 102,587 | 544 |
@@ -54,7 +54,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 54 | 16,064 |
 | citations | 298 | 69,928 |
 | colours | 28 | 7,807 |
-| comments | 877 | 152,558 |
+| comments | 877 | 152,641 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 333 | 157,485 |

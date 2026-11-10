@@ -411,7 +411,7 @@ function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
-  slideSheet(LANDS, [show.K, show.G, MSW.row].join(), () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawMeadow(gx, gy); if (fire('land', ctx, cam.z, gx, gy, cw, ch, D.landCache.margin)) LANDS.t = -Infinity; ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); if (show.G && cam.z * D.tile >= D.lod) drawGrid(); }, D.landCache.ms); // E880
+  meadowTick(); slideSheet(LANDS, [show.K, show.G, MSW.v].join(), () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawMeadow(gx, gy); if (fire('land', ctx, cam.z, gx, gy, cw, ch, D.landCache.margin)) LANDS.t = -Infinity; ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); if (show.G && cam.z * D.tile >= D.lod) drawGrid(); }, D.landCache.ms); // E880
   drawThings(); drawUnder(); if (K.beta > ZERO) slideSheet(MISTS, `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}`, drawMist); if (FOGON) slideSheet(FOGS, FOGV, drawFog); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
   if (show.R) drawEdge();
@@ -1573,7 +1573,7 @@ on('press', (p) => { if (!inMini(p)) return; p.eat = true; p.mode = 'mini'; cam.
 on('drag', (p) => { if (p.mode !== 'mini') return; if (Math.hypot(p.x - p.x0, p.y - p.y0) > MNI.pan) p.pan = true; if (p.pan) { camStop(); [cam.x, cam.y] = miniAt(p.x, p.y); keepOn(); } return true; });
 on('drop', (p) => p.mode === 'mini');
 // ── The meadow (E799)
-const MDW = D.meadow, MDC = C.meadow, MEAD = document.createElement('canvas'), MLAND = new Uint8Array(N * N), MGRASS = new Uint8Array(N * N), MBARE = new Uint8Array(N * N), MTWI = new Float32Array(N * N), MDRIFT = new Float32Array(N * N), MTINT = new Float32Array(N * N), MKIND = new Int8Array(N * N), MSTR = new Uint8Array(N * N), MLEAN = new Float32Array(N * N), MTOP = new Map(), MTONE = MDW.layers.map(() => new Float32Array(N * N)), MFIELD = new Float32Array(N * N * MDW.px), MBASE = new Float32Array(N * N * MDW.px), MSW = { row: -ONE, key: '', next: -Infinity, ph: NaN };
+const MDW = D.meadow, MDC = C.meadow, MEAD = document.createElement('canvas'), MLAND = new Uint8Array(N * N), MGRASS = new Uint8Array(N * N), MBARE = new Uint8Array(N * N), MTWI = new Float32Array(N * N), MDRIFT = new Float32Array(N * N), MTINT = new Float32Array(N * N), MKIND = new Int8Array(N * N), MSTR = new Uint8Array(N * N), MLEAN = new Float32Array(N * N), MTOP = new Map(), MTONE = MDW.layers.map(() => new Float32Array(N * N)), MFIELD = new Float32Array(N * N * MDW.px), MBASE = new Float32Array(N * N * MDW.px), MSW = { row: -ONE, key: '', next: -Infinity, ph: NaN, v: ZERO };
 let MMAP = null, MIMG = null, MBLOOM = [];
 const wetAt = (k) => K.wet * Math.max(ZERO, ONE + MDW.twi * MTWI[k]), snowAt = (k) => K.snow * MDRIFT[k], phaseOf = () => (yt() / D.season) % TREE.year; // E804
 const pressOf = (u) => { const b = SH[u.code], f = G.tread[b.mount || b.body] || G.tread.person; return ((massOf(u.code) + (u.load || ZERO) * W.carried.kg + (u.cargo ? W.load.kg : ZERO)) * D.g) / (f.area * f.feet); }, STEP0 = Math.log((W.person.kg * D.g) / (G.tread.person.area * G.tread.person.feet) / G.soil.pa), tread = (u) => Math.max(ZERO, Math.log(pressOf(u) / (G.soil.pa * (ONE - G.soil.soft * Math.min(ONE, wetAt(u.k)))))) / STEP0; // E805
@@ -1627,12 +1627,13 @@ function sweep(rows) { const W = MEAD.width, y0 = MSW.row, y1 = Math.min(MEAD.he
     let up = -ONE, lo = -ONE, wu = ZERO, wl = ZERO; ks.forEach((q, i) => { if (H[q] >= th) { if (ws[i] > wu) { wu = ws[i]; up = MSTR[q]; } } else if (ws[i] > wl) { wl = ws[i]; lo = MSTR[q]; } });
     const f = up < ZERO ? ZERO : lo < ZERO ? ONE : g > ZERO ? clamp(half + (hb - th) / g, ZERO, ONE) : +(hb >= th); acc.fill(ZERO, ZERO, S); take(up, f); take(lo, ONE - f);
     out[d + A] = acc[A] * MDW.opaque; if (acc[A] > ZERO) for (let n = ZERO; n < A; n++) out[d + n] = acc[n] / acc[A]; }
-  MEAD.getContext('2d').putImageData(MIMG, ZERO, ZERO, ZERO, y0, W, y1 - y0); MSW.row = y1 >= MEAD.height ? -ONE : y1; }
+  MEAD.getContext('2d').putImageData(MIMG, ZERO, ZERO, ZERO, y0, W, y1 - y0); MSW.row = y1 >= MEAD.height ? -ONE : y1; if (MSW.row < ZERO) MSW.v++; }
 const meadowKey = () => [phaseOf(), K.wet, sheet(), K.snow / G.snow.full, Math.max(ZERO, -K.temp) / MDW.frost, +(K.temp > ZERO), K.flood > K.t].map((x) => Math.round(x / MDW.q)).join() + Math.floor(K.t / RU.heal[ZERO]);
+function meadowTick() { if (!MMAP) return; // E899
+  if (MSW.row < ZERO && K.t >= MSW.next) { MSW.next = K.t + MDW.beat; const key = meadowKey(); if (key !== MSW.key) { const first = !MSW.key; MSW.key = key; meadowField(); MSW.row = ZERO; if (first) sweep(MEAD.height); } }
+  if (MSW.row >= ZERO) { const t0 = performance.now(), ms = (MDW.frame * DRW.ms) / rate(); do sweep(Math.ceil(MEAD.height / MDW.slices)); while (MSW.row >= ZERO && performance.now() - t0 < ms); } }
 function drawMeadow(gx, gy) { // E802
   if (!MMAP) return; const z = cam.z, [z0, z1] = MDW.zoom, [f0, f1] = MDW.alpha;
-  if (MSW.row < ZERO && K.t >= MSW.next) { MSW.next = K.t + MDW.beat; const key = meadowKey(); if (key !== MSW.key) { const first = !MSW.key; MSW.key = key; meadowField(); MSW.row = ZERO; if (first) sweep(MEAD.height); } }
-  if (MSW.row >= ZERO) { const t0 = performance.now(), ms = (MDW.frame * DRW.ms) / rate(); do sweep(Math.ceil(MEAD.height / MDW.slices)); while (MSW.row >= ZERO && performance.now() - t0 < ms); } // E899
   ctx.globalAlpha = f0 + (f1 - f0) * clamp((z - z0) / (z1 - z0), ZERO, ONE); ctx.drawImage(MEAD, gx, gy, gw * z, gh * z); ctx.globalAlpha = ONE; if (z >= MDW.flowers.near) flowers(z); }
 function flowers(z) { // E803
   const F = MDW.flowers, ph = phaseOf(), T = D.tile, TAU = Math.PI + Math.PI, pad = F.pad * T * z, L = [new Map(), new Map(), new Map()], add = (l, col, x, y, rx, ry) => { const p = L[l].get(col) || L[l].set(col, new Path2D()).get(col); p.moveTo(x + rx, y); p.ellipse(x, y, rx, ry, ZERO, -Math.PI, Math.PI); };

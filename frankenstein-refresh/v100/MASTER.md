@@ -448,8 +448,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E805** a step's wear on the grass: the pressure of everything that walks there (body, mount, kit 
 - **E800** made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each
 - **E801** each tile's colour: the season's grass under its six layers and its flowers' tint, worn to
-- **E802** the meadow drawn: a sweep starts when the season, the weather or the paths have moved a st
 - **E899** the meadow is painted again strip by strip until its share of the frame is spent, then wai · N10
+- **E802** the meadow drawn: a sweep starts when the season, the weather or the paths have moved a st
 - **E803** the flowers and pebbles close up: each cluster's offspring from its own seed, as many open
 
 ## index.html#the-woods-cache

@@ -4519,3 +4519,14 @@ MODIFIED (4):
 LOCKED (2404 of 2408): byte for byte as sealed, 1,548,631 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2408 items sealed · 2278 book entries · 93 laws · 298 citations, 30 still to open · 7 known
+
+## N10b · 2026-11-10 03:27
+Albert, Nov 10 02:52: "Proceed w n10. Go go." (the fresh-eyes review of N10 found the land sheet painted again at every meadow strip, as its key held the strip's row: the meadow now runs on its own before the land, and the land is painted again once, when the meadow is done)
+Opened: code:index.html, book:comments
+MODIFIED (3):
+- book:comments:E899 · 172 → 255 bytes
+- code:index.html#the-door · 16,239 → 16,251 bytes
+- code:index.html#the-meadow · 14,579 → 14,662 bytes
+LOCKED (2405 of 2408): byte for byte as sealed, 1,537,251 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2408 items sealed · 2278 book entries · 93 laws · 298 citations, 30 still to open · 7 known
