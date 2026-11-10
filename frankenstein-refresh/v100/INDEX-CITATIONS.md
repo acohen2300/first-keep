@@ -87,6 +87,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QCS** The pocket's store, Mid's (Z1) → N242 · used by D62, D63, D65, D129, X50, X71
 - **QCT** Lightning through the year → N243 · used by D113
 - **QCU** A flame's glow on the ground → N246
+- **QCV** A flame's flicker → N309, N307 · used by D317
 - **QBO** The blow → N69, N188 · used by SC6, SC10, D138, D141, D143, D221, D232, X57
 - **QBP** Upkeep → N170, N171 · used by D131, D211, D212, D213, X53
 - **QBQ** The break → N76 · used by D142
@@ -102,7 +103,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 
 - **N1** Spherical astronomy, the altitude formula (standard) → QA, QK, QL, QM, QN, QO, QP, QQ, QR, QCA, QCB, QCI, QCJ, QCK, QCL, QCE, QCF, QCD, QCG, QAG, QAI, QBO, QBP, QBT
 - **N2** Meeus, Astronomical Algorithms, 2nd ed. (1998) → QA, QB, QC, QD, QE, QK, QS, QT, QU, QV, QW, QX, QY, QZ, QAA, QCL, QCD, QCH, QCM, QCN, QCO, QAL, QAM, QAN, QCP, QCQ, QCR, QCS, QCT, QCU, D292
-- **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ
+- **N3** JPL, Approximate Positions of the Planets (1800–2050) → QB, QAB, QAC, QAD, QAE, QAF, QAG, QAH, QAJ, QCV
 - **N4** Mallama & Hilton (2018), colour indices → QF, QAJ, QAL, QAM, QAN, QAO, QAP, QAQ, QAR
 - **N5** Ballesteros (2012), colour index to temperature → QF, QAS, QAT, QAU, QAV, QAW, QAX, QAY
 - **N6** (retired: satellites cut, Stone Age) → QAZ, QBA, QBB, QBC, QBD, QBE, QBF, QBG, QBH, QBI, QBK, QBO
@@ -129,7 +130,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N27** Verhulst (1838) → QY, D218, D219
 - **N28** Schaefer (1954) → QZ, D218, D219
 - **N29** (to open) White, L. (1962) Medieval Technology and Social Change, Oxford UP; Rothamsted Research (2017) Broadbalk mean l → QAA, D214
-- **N30** Wright (1936), learning curve → QAB, D277
+- **N30** Wright (1936), learning curve → QAB, QCV, D277
 - **N31** Thomas & Smith (1990), overmanning → QAC
 - **N32** Labuza, first-order food loss → QAD, D217
 - **N33** FAO, Grain storage techniques, ch. 6 → QAD, D217
@@ -244,7 +245,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N142** Design: v100 floor 8, Nov 5 → SN13
 - **N143** Design: Albert, Nov 5 10:28 (Tall for the volume row: keep for now) → SN13
 - **N144** Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) → R1, R5, R2, R3, R4, MG1, MG2, MG3, MG4, BTC1, BTC2, BTC5, BTC6, BTC7, BTC8, BR1, BR2, BCR1, BCR2, BCL1, BCL2, BCL3, BCL4, BCT1, BCT2, BP1, BP2, BP3, BP4, BP5, BP6, BP7, BP8, BP9, BP10, BI1, BI2, BI3, BI4, BI5, BI6, BI7, BI8, BI9, BM1, BM2, BM3, BM4, BW1, BW2, BW3, BW4, BF5, BF1, BF2, BF3, BF4, BS1, BS2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, US5, UT1, UT2, UT4, MH1, MH3, MH4, MH5, MH6, MW3, MW4, MW6, UM17, UM18, UM19, UM20, UM21, UM22
-- **N145** Art: Base → C24, HU1, HU19, HU20, HU21, HU22, HU2, HU3, HU4, HU5, HU6, HU7, HU8, HU9, HU10, HU11, HU12, HU13, HU14, HW1, HW2, HW3, HW4, HC1, HC2, HC4, HC5, HC6, HA1, HA2, HA3, HX2, HX3, HX4, HX6
+- **N145** Art: Base → C24, C35, HU1, HU19, HU20, HU21, HU22, HU2, HU3, HU4, HU5, HU6, HU7, HU8, HU9, HU10, HU11, HU12, HU13, HU14, HW1, HW2, HW3, HW4, HC1, HC2, HC4, HC5, HC6, HA1, HA2, HA3, HX2, HX3, HX4, HX6
 - **N146** Art: Mid (35-sound.js), Nov 5 → HU15, HU16, HU17, HU18, HW5, HC7, HC8, HA4, HA6, HA7, HX2, HX9
 - **N147** Art: Base (the juice pass, Nov 3) → HC3
 - **N148** Design: Apple's ambient audio session for games, carried from Mid (35-sound.js) → HX8
@@ -405,6 +406,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N304** Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slop → D32, D62, D65, D70, D366
 - **N305** (to open) A. Hurwitz (1891), Ueber die angenaeherte Darstellung der Irrationalzahlen durch rationale Brueche: the golden → D366
 - **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, D367, SN6, SN39, J48
+- **N307** Albert, Nov 10, 2026, 12:26 (N17: his N15 notes answered on the N15 Answer Sheet) and 12:38 ("Build N17 yes ye → QCV, SC47, C34, C35, D113, D317, X78, HA3, HX6, J36
+- **N308** Base (preview 49) and Mid, the cost line: costCol(fr) = grad(fr >= 1 ? 0.55 : fr - 1), red at nothing, white n → C34
+- **N309** Xia, X. and Zhang, P., Flickering of buoyant diffusion flames: a vortex dynamics revisit, arXiv:1803.10400 (20 → QCV, D317
+- **N310** CIGRÉ Technical Bulletin 549, Lightning Parameters for Engineering Applications (2013, project team headed by  → D113
 
 ## Named exceptions
 

@@ -68,6 +68,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC44 | a traveller (D306): crosses the land edge to edge and joins the first side to meet him, as villagers, or as food when the town is full | {by: combat.js wild, index.html (they arrive), law: [], needs: [], may: [mount]} | N205 |
 | SC45 | wooden or thatched: it catches fire from lightning in a summer storm, a spark, a shot, sabotage or a wildfire, burns down unless its villagers put it out, and lights its wooden neighbours (D310) | {by: econ.js fire, index.html (drawn, struck), law: [QT, QU], needs: [], may: []} | N206; N21; N22 |
 | SC46 | a place of care or recreation: counts toward the Wellbeing crown, and the wellbeing chaser builds it (Mid's CARE: Hospital, Temple, Baths, Theatre, Tavern) | {by: econ.js crowns, law: [], needs: [], may: []} | N222 |
+| SC47 | built more than once in a row: after placing it, the next one waits beside it to be placed (Build another); a building you raise once closes the placing (Albert, Nov 10, N17 #17) | {by: menu.js place, law: [], needs: [], may: []} | N307 |
 
 ## citations
 
@@ -378,6 +379,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N304 |  | Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slopes and pixelated water, #4 the | opened |
 | N305 |  | A. Hurwitz (1891), Ueber die angenaeherte Darstellung der Irrationalzahlen durch rationale Brueche: the golden ratio is the number worst app | to open |
 | N306 |  | Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menus: title on the card with no b | opened |
+| N307 |  | Albert, Nov 10, 2026, 12:26 (N17: his N15 notes answered on the N15 Answer Sheet) and 12:38 (\Build N17 yes yes\; minus frees a villager): t | opened |
+| N308 |  | Base (preview 49) and Mid, the cost line: costCol(fr) = grad(fr >= 1 ? 0.55 : fr - 1), red at nothing, white near enough, light green (0.55  | opened |
+| N309 |  | Xia, X. and Zhang, P., Flickering of buoyant diffusion flames: a vortex dynamics revisit, arXiv:1803.10400 (2018): the flicker of a buoyant  | opened |
+| N310 |  | CIGRÉ Technical Bulletin 549, Lightning Parameters for Engineering Applications (2013, project team headed by V. A. Rakov; slides by M. Mayt | opened |
 
 ## colours
 
@@ -412,6 +417,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C31 | the fog of war's veil: the near-black green of a moonless meadow (Albert, Nov 9 item 6) | #0b0f09 | N290 |
 | C33 | the paper ground (N11, Albert Nov 10): grass is a light neutral that the season colours; wet sand at the waterline; three sheets of water, shallow to deep; the season: light spring green, emerald, dark green, dull green (fall), greyer dull green (winter), back to spring (grass is mostly evergreen); a sheet's thin shadow; the blades' dark and light inks (v80's); reeds; glints | {grass: #f4f2ea, wet: #a8976a, water: [#3d86a8, #2a6488, #1a3f58], season: [#8cc63f, #3d7a36, #2c5a2a, #6f7a3e, #69714f, #8cc63f], shadow: # | N301 |
 | C22 | a carried bundle by its store: meat and berries red, logs brown, stone grey, gold, iron steel; its outline ink (Albert, Nov 10, #35) | {food: #b0413e, wood: #8a5a32, stone: #9a9488, gold: #d8b23a, iron: #6c7a86, ink: #1a140e} | N306 |
+| C34 | the cost line on one ramp, as Base and Mid: short of it, red at nothing to white as you near it; enough, white the enough share of the way to green (Albert, Nov 10, N17 #13) | {enough: 0.55} | N308; N307 |
+| C35 | the three lines of a lightning bolt, glow, mid and core (Base and Mid; Albert, Nov 10, N17 #15) | [170,200,255, 210,228,255, 255,255,255] | N145; N307 |
 
 ## comments
 
@@ -444,7 +451,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E712 |  | the computers' first buildings (D342), standing and free when the match begins: Mid's handicap for a player that plays worse than a person;  |  |
 | E713 |  | visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Palmer, snow by its fall speed, so the three haze te |  |
 | E738 |  | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |  |
-| E739 |  | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost |  |
+| E739 |  | research, as Base's techBtn: its name and cost; a step that cannot start says why on the button in place of its price (its age, the step bef |  |
 | E740 |  | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |  |
 | E748 |  | the ground painted once into the whole picture: tiles, faces, contours, reeds; its grass also onto the season sheet, which is the blades' ma |  |
 | E749 |  | the cache budgets for what is drawn once and kept |  |
@@ -848,7 +855,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E333 |  | the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it may not stand is kept for the label |  |
 | E334 |  | a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid's wallSnap, wallSet) |  |
 | E335 |  | a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it looks around and a tap adds a corner (Mid's wallHit, w |  |
-| E336 |  | Build: a wall line laid while the stores last, said in one toast; a building sent its nearest free villager (or the one picked), then the gh |  |
+| E336 |  | Build: a wall line laid while the stores last, said in one toast; a building sent its nearest free villager (or the one picked), then, for a |  |
 | E337 |  | while placing, the finger moves the ghost (a wall's corner or line), not the map; the drag holds only its own finger: a second finger, and t |  |
 | E338 |  | the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite and colour (Mid's ghostTint) |  |
 | E339 |  | while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the Town Center (Mid's drawSeal) |  |
@@ -1298,7 +1305,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E923 |  | the water's distance from shore starts at the waterline itself: a water tile beside land takes the fraction of a tile to where the height cr |  |
 | E924 |  | the marsh: each marsh tile draws a number from the seed; where it is over D366's tussock the tile is water, else a tussock of grass; the wat |  |
 | E925 |  | the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and the dangers are drawn from the day's own dice at  |  |
-| E926 |  | a Build cell you can't pay for says what you are short of each store, coloured red to green as you near it (Albert, Nov 10, #24: what you ar |  |
+| E926 |  | a Build cell you can't pay for says what you are short of each store, coloured red at nothing to white as you near it, and light green once  |  |
 | E927 |  | the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the sides |  |
 | E928 |  | the time of day as hours and minutes, one home for the clock and the ribbon |  |
 | E929 |  | a villager walking home with a load carries it on the back, a bundle in its store's colour (Albert, Nov 10, #35) |  |
@@ -1315,6 +1322,15 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E940 |  | a leafy crown takes a warm gloss on its sun side, painted only over its own leaves, baked once with the tree so it costs nothing a frame (Al |  |
 | E941 |  | the quick action (Albert, Nov 10, #37, his sketches): tap open ground for a block of Attack, Build, Rally; Attack gives All, half, quarter,  |  |
 | E942 |  | the quick action's steps that open another step, so the block stays open after them |  |
+| E943 |  | menus are not redrawn while a finger is down on a button (Albert, Nov 10, N17 #7: taps pressed but did nothing): a redraw replaced the butto |  |
+| E944 |  | minus on a job acts at once: the villager drops what it carries and stands idle, so the count falls on the tap (Albert, Nov 10, N17 #10: plu |  |
+| E945 |  | first placed, first built (Albert, Nov 10, N17 #4; AoE2's build queue): a site placed with a builder picked who is still raising another joi |  |
+| E946 |  | an order you give marks each unit sent: its foot ring stays green from the order until its walk ends (Albert, Nov 10, N17 #9) |  |
+| E947 |  | your people under the canopy drawn as a flat ghost in your side's colour, the figure's outline only, with the ring at the feet (Albert, Nov  |  |
+| E948 |  | a villager at work holds its spot (Albert, Nov 10, N17 #16, the twitch): two gathering side by side no longer push each other, and one walki |  |
+| E949 |  | a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall clock so game speed does not hurry it; the flame's hei |  |
+| E950 |  | campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work together at night a campfire is lit among them, and s |  |
+| E951 |  | a lightning flash is three to five return strokes about 60 ms apart (CIGRÉ TB 549), each re-lighting the bolt and whiting the sky by its nea |  |
 
 ## ground
 
@@ -1469,7 +1485,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D107 | snow a second when it snows | 0.03 | N112 |
 | D108 | melt a °C·s | 0.004 | N112 |
 | D112 | between flashes | 0.34 | N112 |
-| D113 | the startle of a strike is Mid's (25-view-weather): a bolt on the screen whites the picture bolt[0] + bolt[1] × its nearness within near m, a sheet flash sheet[0] + sheet[1] × the dice, and the ground shakes shake s (Albert, Nov 7 20:47: a war game, I want to be startled); between strikes in a summer storm, seconds; the year's cloud-to-ground flashes by season (spring, summer, autumn, winter) over the United States, NLDN 2005–2014: 64% in June–August (Holle & Cummins), the other three read from their Fig. 2; a season's storms strike at the summer rate × its share ÷ the largest share, so lightning comes all year and is rare in winter (QCT) | {summer: 6, share: [0.2, 0.64, 0.13, 0.03], flash: {bolt: [0.6, 0.4], sheet: [0.25, 0.3], near: 900}, shake: 1} | N112; N243 |
+| D113 | the startle of a strike is Mid's (25-view-weather): a bolt on the screen whites the picture bolt[0] + bolt[1] × its nearness within near m, a sheet flash sheet[0] + sheet[1] × the dice, and the ground shakes shake s (Albert, Nov 7 20:47: a war game, I want to be startled); a flash is stroke.n return strokes (3 to 5, by the dice) gap s apart, as real ground flashes (CIGRÉ TB 549), each re-lighting the bolt and the sky and fading in fade s, the bolt gone life s after the last; the sky's white capped at cap; the bolt's three lines (glow, mid, core) width and alpha, brighter and wider than Mid's, its near flash raised (Albert, Nov 10, N17 #15: louder, brighter, more startling); timed on the wall clock so game speed does not shorten it; between strikes in a summer storm, seconds; the year's cloud-to-ground flashes by season (spring, summer, autumn, winter) over the United States, NLDN 2005–2014: 64% in June–August (Holle & Cummins), the other three read from their Fig. 2; a season's storms strike at the summer rate × its share ÷ the largest share, so lightning comes all year and is rare in winter (QCT) | {summer: 6, share: [0.2, 0.64, 0.13, 0.03], flash: {bolt: [0.7, 0.3], sheet: [0.25, 0.3], near: 900}, shake: 1, stroke: {n: [3, 5], gap: 0.0 | N112; N243; N310; N307 |
 | D114 | marshy lakes | [1, 2] | N112 |
 | D115 | a marsh's width | 40 | N112 |
 | D116 | Fast, for testing | 8 | N112 |
@@ -1655,7 +1671,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D314 | the small map (Mid's MINI_K, drawMini, miniIncoming, miniAt): px square, gap from the top and the edge; a finger that moves pan is looking; a seat's star (outer, inner, points), a building's square (wall, other, big at big tiles), a unit's and a find's dot; the outline's and the view box's line; the incoming army's flashing ring every beat ms, its radii, dot and line | {px: 172, gap: 6, pan: 8, seat: [7.5, 3, 10], bld: [2, 3.5, 5], big: 5, dot: 2, find: 3, line: 1, view: 1.5, inc: {beat: 350, r: [9, 6], dot | N208 |
 | D315 | the camera's glide (Mid's spring, CAM_W): a critically damped spring of ω w, over in about 4/ω s; it stops within stop of its mark; past the board it may show sea px of open water on the sides and below (beyond what the bars cover there), and sky px above the far edge, where the sky's art will hang (Albert, Nov 8 21:44-21:45: more ocean to scroll out from the bottom; the top scrolls to sky) | {w: 9, stop: 0.3, sea: 48, sky: 160} | N208; N57 |
 | D316 | every flame (Mid's FLAME): its power p, colour temperature K (kelvin), size on the glass s, and whether it is covered (a covered flame keeps its light in rain) | {candle: {p: 1, K: 1850, s: 0, covered: true}, lantern: {p: 4, K: 2000, s: 1.4, covered: true}, torch: {p: 9, K: 1900, s: 2.4}, hearth: {p:  | N208; N54 |
-| D317 | a torch by every door, lit from the start, two on a building two tiles wide or more (Albert, Nov 10, #26); a flame's glow falls by the inverse-square law (QCU): brightness ∝ 1 ÷ (d² + s²), s the flame's own size as a share of its reach (falloff: stops drawn, s), zero at the reach where the eye stops seeing it; the lights after dark (Mid's LIGHT, glow, flame, flameShadow, HEARTH, drawLight): reach k × √power, what rain leaves of an open flame, the glow's strength and its stops (a quarter at half the reach, 1/r²); no glow under dark; rain's own dark; a building under hurt of its health blazes; windows after night; a lantern's door (across, down) and lift; the looks with a hearth; a window's place, size and alpha; a fire's shadow (darker, the flame's height, its width); the flicker, the wind's lean, the teardrop and its white heart; a lantern lifted (door, scale; caravan right, up, scale); a flame's alpha; the looks that carry a flame (a camp's fire, a caravan's lantern) | {two: 4, k: 12, wet: 0.4, a: 0.22, falloff: [8, 0.15], dark: 0.05, rain: 0.3, hurt: 0.5, night: 0.5, lamp: [0.6, 0.5], door: 3, hearth: [hou | N208; N54 |
+| D317 | a torch by every door, lit from the start, two on a building two tiles wide or more (Albert, Nov 10, #26); a flame's glow falls by the inverse-square law (QCU): brightness ∝ 1 ÷ (d² + s²), s the flame's own size as a share of its reach (falloff: stops drawn, s), zero at the reach where the eye stops seeing it; the lights after dark (Mid's LIGHT, glow, flame, flameShadow, HEARTH, drawLight): reach k × √power, what rain leaves of an open flame, the glow's strength and its stops (a quarter at half the reach, 1/r²); no glow under dark; rain's own dark; a building under hurt of its health blazes; windows after night; a lantern's door (across, down) and lift; the looks with a hearth; a window's place, size and alpha; a fire's shadow (darker, the flame's height, its width); the flicker by QCV (the flame's mean height and swing; the glow's swing, a few per cent; Cetegen and Ahmed's 1.5 and a torch's 8 cm head, about 5 Hz; the second rate's ratio, the golden ratio so the two never line up; Albert, Nov 10, N17 #5), the wind's lean, the teardrop and its white heart; a lantern lifted (door, scale; caravan right, up, scale); a flame's alpha; a campfire after nightfall wherever two or more people of a side stand or work within near m of each other (a few steps), lit between them where no fire burns within near, out at dawn (Albert, Nov 10, N17 #12); the looks that carry a flame (a camp's fire, a caravan's lantern) | {two: 4, k: 12, wet: 0.4, a: 0.22, falloff: [8, 0.15], dark: 0.05, rain: 0.3, hurt: 0.5, night: 0.5, lamp: [0.6, 0.5], door: 3, hearth: [hou | N208; N54; N309; N307 |
 | D318 | a black body's colour by temperature (Mid's kelvinRGB, Tanner Helland's fit to the CIE locus, 1000 to 40000 K): t = K / t; red full to the knee, then r0 (t − r1)^r2; green g0 ln t + g1 to the knee, then g2 (t − g3)^g4; blue none to low, b0 ln(t − b1) + b2 to the knee, then full | {t: 100, knee: 66, low: 19, r: [329.698727446, 60, -0.1332047592], g: [99.4708025861, -161.1195681661, 288.1221695283, 60, -0.0755148492], b | N208; N209; N54 |
 | D319 | theatrics (Mid's popC, celebrate, ripple, ripDraw, drawFlash): the pop's swell and its seconds, a unit's born pop; a finished building glows for secs at alpha; a ripple's life in s, radius from and growth, line; the flash's life and alpha; no two celebrations closer than calm s; an upgrade's wave (step, all, glow s, alpha); the size of a new age, a wonder or a victory; a ripple (a tap's ring, a building's) runs on the clock on the wall, not the game's: rip[0] s, its ring growing fast then easing as 1 − (1 − a)^ease, ms milliseconds a second (feedback starts within 0.1 s and lasts about a quarter second: Albert, Nov 8 08:52, the tap ring was slow) | {pop: [0.16, 0.6], born: 0.4, glow: [8, 0.32], rip: [0.25, 6, 18, 2], ease: 3, ms: 1000, flash: [0.9, 0.55], calm: 0.34, wave: [0.06, 1.2, 0 | N256; N257; N208 |
 | D320 | the picked unit's ring at its feet twice as thick (pick) and glowing (glow, its blur in px), green: a glowing, bigger ring, no words (Albert, Nov 9 18:13, 18:29); building and figure dressing (Mid's drawBld, smoke, flagsOn, pileAt, pileArt, LEAN, drawUnit, idleMark, shadowPath): a site's stakes, its walls rising (from, with the work) at alpha, its two posts, its bar (most, lift, mark); a chimney's plume (puffs, rise rate, lean calm and by the wind, rise, radius from and growth ∝ x^0.9, alpha, seed, a worker's seconds), Briggs' rise ∝ x^(2/3); a flag's fly, its wave (calm, most, by the wind), beat, seed, curve and line; a pile's least zoom, log₁₀ scale, most, rows, place, next pile, spacing, line; a woodcutter's lean in (a frame, most, kept off, at work within); a step's bob, a hurt soldier's sway, a lunge into a blow (s, melee, a shooter's kick s and px), a recoil (s, px), a stagger under this share of health, a melee reach in tiles; the marks over a figure (lift for small, big, tall; the nerve bar's width, lift, when it shows; the rout badge; the march chevron; z and F offsets; lines); a find's shadow (tree, other) laid along the sun; the grass's mottling (Mid's makeBg: blots, radius from and to; squashed, turned; its dice's seed) | {foot: 1.6, pick: 3.2, glow: 8, site: {dash: [3, 3], line: 1.5, show: [0.15, 0.85], a: 0.85, posts: [-0.45, 0.45], post: 0.8, bar: [60, 4, 8 | N208; N287 |
@@ -1779,6 +1795,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X76 | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) | {stage: books} | N239 |
 | X74 | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 | {stage: page} | N235; N236 |
 | X77 | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) | {stage: code} | N250 |
+| X78 | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the twelve repeatable buildings; every locked research says why on its button; a tap held a second on Train still trains | {stage: page} | N307 |
 
 ## screen
 
@@ -1832,14 +1849,14 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BTC6 | Training tent | [Spawn, Health, Burn] | N144; N198; N206 |
 | BTC7 | Mess tent | [Shelter, Health, Burn] | N144; N198; N206 |
 | BTC8 | Camp tower | [Shoot, Health, Burn] | N144; N198; N206 |
-| BR1 | Dwelling | [House, Health, Burn, Research] | N144; N206 |
+| BR1 | Dwelling | [House, Health, Burn, Research, Repeat] | N144; N206 |
 | BR2 | Apartment | [House, Health] | N144; N235 |
 | BCR1 | Market | [Trade, Spawn, Burn, Health, Research] | N144; N195; N206 |
 | BCR2 | Tavern | [Burn, Care, Health] | N144; N206 |
-| BCL1 | Farm | [Field, Health, Soil] | N144; N170 |
-| BCL2 | Tree farm | [Field, Health] | N144; N170 |
+| BCL1 | Farm | [Field, Health, Soil, Repeat] | N144; N170 |
+| BCL2 | Tree farm | [Field, Health, Repeat] | N144; N170 |
 | BCL3 | Pasture | [Field, Health, Flock] | N144; N170 |
-| BCL4 | Quarry | [Field, Health, Research] | N144; N235 |
+| BCL4 | Quarry | [Field, Health, Research, Repeat] | N144; N235 |
 | BCT1 | Trade post | [Post, Shoot, Health, Research] | N144; N195 |
 | BCT2 | Dock | [Drop-off, Health, Shore, Burn, Research] | N144; N170; N206 |
 | BP1 | School | [Teach, Health, Research] | N144; N194 |
@@ -1852,23 +1869,23 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BP8 | Courthouse | [Spawn, Shoot, Health, Research] | N144; N194 |
 | BP9 | Hall | [Health, Research] | N144 |
 | BP10 | War Council | [Squad, Health, Research] | N144 |
-| BI1 | Mill | [Drop-off, Health, Burn, Research] | N144; N206 |
-| BI2 | Lumber camp | [Drop-off, Health, Burn, Research] | N144; N206 |
-| BI3 | Mining camp | [Drop-off, Health, Research] | N144 |
+| BI1 | Mill | [Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
+| BI2 | Lumber camp | [Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
+| BI3 | Mining camp | [Drop-off, Health, Research, Repeat] | N144 |
 | BI4 | Store | [Health, Research] | N144 |
 | BI5 | Depot | [Drop-off, Supply, Health, Burn] | N144; N198; N206 |
-| BI6 | Mint | [Make, Health, Research] | N144; N195 |
-| BI7 | Foundry | [Make, Health, Research] | N144; N195 |
+| BI6 | Mint | [Make, Health, Research, Repeat] | N144; N195 |
+| BI7 | Foundry | [Make, Health, Research, Repeat] | N144; N195 |
 | BI8 | Workshop | [Make, Burn, Health, Research] | N144; N195; N206 |
 | BI9 | Smith | [Health, Research] | N144 |
 | BM1 | Barracks | [Spawn, Health, Shelter, Burn, Research] | N144; N206 |
 | BM2 | Range | [Spawn, Health, Burn, Research] | N144; N206 |
 | BM3 | Stable | [Spawn, Health, Burn, Research] | N144; N206 |
 | BM4 | Siege workshop | [Spawn, Health, Research] | N144 |
-| BW1 | Wall | [Health, Line] | N144 |
+| BW1 | Wall | [Health, Line, Repeat] | N144 |
 | BW2 | Gate | [Health, Gate, Burn] | N144; N206 |
-| BW3 | Tower | [Shoot, Health, Hold, Research] | N144 |
-| BW4 | Palisade | [Health, Line, Burn] | N144; N206 |
+| BW3 | Tower | [Shoot, Health, Hold, Research, Repeat] | N144 |
+| BW4 | Palisade | [Health, Line, Burn, Repeat] | N144; N206 |
 | BF5 | Abatis | [Health, Burn] | N144; N198; N206 |
 | BF1 | Pit | [Trap, Health] | N144; N198 |
 | BF2 | Net | [Trap, Health] | N144; N198 |
@@ -1981,7 +1998,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | HC8 | a siege gun, a blast | [0.25, [hiss, 0.55, 0.6, 320, 0.8, 80], [tone, 62, 0.5, sawtooth, 0.36, 30]] | N146 |
 | HA1 | a bird in a tree you can see, by day, not in winter | [1, [tone, 2600, 0.07, sine, 0.04, 3400], [tone, 3000, 0.08, sine, 0.04, 3600, 0.12]] | N145 |
 | HA2 | a cricket at night, not in winter | [1, [tone, 4300, 0.03, square, 0.012], [tone, 4300, 0.03, square, 0.012, 0, 0.06], [tone, 4300, 0.03, square, 0.012, 0, 0.12], [tone, 4300,  | N145 |
-| HA3 | thunder, after the flash by the real delay | [0.5, [hiss, 0.12, 0.5, 2500, 0.8, 600], [hiss, 2.2, 0.4, 160, 0.5, 50, 0.05], [tone, 45, 1.8, sine, 0.25, 30]] | N145 |
+| HA3 | thunder, after the flash by the real delay: the crack, the rumble and the low roll louder and longer than Base's (Albert, Nov 10, N17 #15: louder, more startling) | [0.5, [hiss, 0.15, 0.8, 2500, 0.8, 600], [hiss, 3.2, 0.6, 160, 0.5, 50, 0.05], [tone, 45, 2.6, sine, 0.4, 30]] | N145; N307 |
 | HA4 | the wind, as hard as it blows: heard when it blows past HX4's wind share of its most, a chance a second its share × gust (Mid's AMB.wind and ambience; the wind is measured, not a feature) | [4, [hiss, 2.4, 0.08, 500, 0.6, 280]] | N146; N203 |
 | HA6 | a stampede: a rolling drum of hooves | [1, [tone, 70, 0.08, sine, 0.3, 40], [hiss, 0.05, 0.18, 400, 1, 200], [tone, 70, 0.08, sine, 0.3, 40, 0.13], [hiss, 0.05, 0.18, 400, 1, 200, | N146 |
 | HA7 | the ground shakes | [1.5, [tone, 38, 1.6, sine, 0.4, 28], [hiss, 1.4, 0.3, 120, 0.6, 60]] | N146 |
@@ -1991,7 +2008,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | HX3 | voices at once; how many each kind leaves free | {max: 14, keep: {alert: 0, fx: 2, amb: 5}} | N145 |
 | HX4 | songs a second a singer in view (a Poisson rate), and the most singers counted; the wind heard past wind of its most, a chance a second its share × gust (Mid's 0.35, and ÷ 4) | {bird: 0.025, cricket: 0.04, singers: 12, wind: 0.35, gust: 0.25} | N12; N145; N203 |
 | HX5 | the air's top: Hz with no snow, Hz under full snow; how much rain masks a quiet sound | {open: 16000, snow: 2500, rainMask: 0.5} | N88; N97 |
-| HX6 | which events are also felt, milliseconds of buzz | {place: 8, order: 6, crack: 30, splash: 45, built: 25, builtWar: 25, impact: 25, fell: 40, strike: 40, err: 8} | N145 |
+| HX6 | which events are also felt, milliseconds of buzz; a strike twice Base's (Albert, Nov 10, N17 #15) | {place: 8, order: 6, crack: 30, splash: 45, built: 25, builtWar: 25, impact: 25, fell: 40, strike: 80, err: 8} | N145; N307 |
 | HX7 | how far a sound carries before it fades to the quietest heard, metres: thunder about 10 miles | {thunder: 16093} | N89 |
 | HX8 | the phone's audio session: ambient obeys the Ring/Silent switch and plays under the player's own music | ambient | N148 |
 | HX9 | the limiter: a battle's many blows never clip a phone speaker (dB, dB, ratio, seconds, seconds) | {threshold: -3, knee: 10, ratio: 4, attack: 0.005, release: 0.25} | N146 |
@@ -2372,7 +2389,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J29 | the Guide's and History's fixed words (Mid's guideModel, HIST_NOTE, HIST_ASK, yearOf, guideMd): where a unit no building trains is trained, a building off the Build menu and where it comes from, a shell whose history line is not under its look (key), the eras History dates by name (a year, BC below none), the Markdown's headings | {at: the Town Center, start: where you start, secs:  s, by: ×, beats: {times:  ×, bld: buildings, only: buildings only}, off: {BS1: stands o | N234; N161 |
 | J30 | the song line, said by the Guide and the Sound page (Mid's SONG) | There is no music in life. Life is the music. You will notice a rhythm and a beat emerging from your kingdom: that is its own song, composed | N234 |
 | J31 | a Build cell's second line when the store cannot pay: the sign before each shortfall, the amount you are short of each store (Albert, Nov 10, #24: what you are short, not the word Short), its colour how near (the shortfall is in the tap's Needs) | − | N132 |
-| J36 | why a research cannot start now (B8, as Base's research buttons) | {age: Needs the {age} age, need: Needs {name} first, busy: Being researched, at: Needs its building standing, full: That line is full, cost: | N251 |
+| J36 | why a research cannot start now (B8, as Base's research buttons); shown on the button in place of its price, every lock but the purse (Albert, Nov 10, N17 #18) | {age: Needs the {age} age, need: Needs {name} first, busy: Being researched, at: Needs its building standing, full: That line is full, cost: | N251; N307 |
 | J35 | the Welcome back card (Base's: the saved game opens paused, Resume or New game) and the pause's line (Base's pauseT) | {title: Welcome back, resume: Resume, paused: Paused · tap to carry on} | N241 |
 | J34 | the place bar's words, Base's (26-input placeT; Albert's screenshot Nov 7 20:38) | {helper: + Villager, start: Press where the {name} goes · drag empty ground to look around, lineStart: Tap where the {line} starts, ok: {Nam | N241 |
 | J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked, charge: Charge, fallBack: Fall back, hold: Hold, recall: Recall, hunt: Hunt, hunt3: Hunt ×3, hunters: 3, home: Home, op | N241 |

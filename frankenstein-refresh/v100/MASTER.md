@@ -281,6 +281,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E312** nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no t
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
 - **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
+- **E948** a villager at work holds its spot (Albert, Nov 10, N17 #16, the twitch): two gathering sid · N17
 - **E807** QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, so · QCJ (N163, N167) · D242 (N188, N273)
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
 - **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te
@@ -347,8 +348,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173) · D350 (N17, N173, N262, N263)
 - **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
+- **E951** a lightning flash is three to five return strokes about 60 ms apart (CIGRÉ TB 549), each r · N17
 - **E576** a bolt where it falls: drawn, the ground scorched, the thunder told
-- **E728** a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the grou · D113 (N112, N243)
+- **E728** a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the grou · D113 (N112, N243, N310, N307)
 - **E137** a far flash: its thunder from beyond the screen
 - **E138** the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling · QJ (N9)
 - **E797** a frozen lake under snow: white as the land, with wind-scoured streaks of ice and a rim li
@@ -410,6 +412,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E877** an eye facing no fog: every point round its rim already seen by others, so it casts nothin
 - **E871** the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, cle
 - **E896** the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above i
+- **E947** your people under the canopy drawn as a flat ghost in your side's colour, the figure's out · N17
 - **E897** your own people under the canopy drawn as a ring over the trees, so you see who is inside
 - **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
 - **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
@@ -440,8 +443,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
 - **E609** fire's colour from its temperature (QF, a black body), its life in the rain (an open flame · QF (N4, N5, N54) · QAU (N54)
+- **E949** a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall cloc · QCV (N309, N307) · N17
 - **E610** a flame's light on the ground: a disc fading to a quarter at half its reach, added to the 
 - **E714** the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, inst · QCU (N246)
+- **E950** campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work tog · N17
 - **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
 - **E930** every finished building has a torch by its door from the start, houses their hearth as wel
 - **E938** Lanterns (research) make the door torches brighter: light falls off as the square of dista
@@ -545,7 +550,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E850** a ring is the box's outline: the box drops its own border so the ring sits on the edge, on
 - **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
 - **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
-- **E926** a Build cell you can't pay for says what you are short of each store, coloured red to gree
+- **E926** a Build cell you can't pay for says what you are short of each store, coloured red at noth · N17
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
@@ -564,7 +569,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the St
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E191** tap a yield: new villagers go there (the ring)
-- **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why (its age
+- **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E854** made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm · SN34 (N287)
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
@@ -627,12 +632,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E872** the Start page's Fog of war: off, every side sees all (one rule for all)
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
 - **E821** one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wh
+- **E943** menus are not redrawn while a finger is down on a button (Albert, Nov 10, N17 #7: taps pre · N17
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
 - **E335** a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it look
 - **E726** the place bar says what Base's said (J34): where to press, then the name with 'tap Build,  · J34 (N241)
-- **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near
+- **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near · N17
 - **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map; the drag
 - **E700** only a touch on or near the ghost moves it; a touch away from it falls through to the came
 - **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
@@ -729,6 +735,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
+- **E945** first placed, first built (Albert, Nov 10, N17 #4; AoE2's build queue): a site placed with · N17
 - **E322** back to the very find it left if it still stands, else the best of its yield, else idle (M
 - **E323** the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's 
 - **E861** a builder's next site: the first one laid, then the nearest (a wall line keeps to the near
@@ -738,6 +745,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E309** builders who finish a place of work take it up (Mid's startWork): a field if nobody works 
 - **E310** a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds i
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
+- **E944** minus on a job acts at once: the villager drops what it carries and stands idle, so the co · N17
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
 - **E350** an order of yours costs its soldiers' meals for D213's seconds, never more than the store  · D213 (N170) · E806
@@ -890,6 +898,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E411** a group's order you can follow (Mid's march): its tile, label, start and walk ratio; each 
 - **E412** each soldier's one word (Mid's armyStatus): rout, fight, rally (sent home, walking to the  · D247 (N190)
 - **E413** the obvious order for what is picked (Mid's order, Albert Nov 2): a foe is fought, a beast
+- **E946** an order you give marks each unit sent: its foot ring stays green from the order until its · N17
 - **E475** a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else 
 - **E414** missions: a mission's soldiers, the hostile soldiers a group sees near it, and the chance  · QAF (N35)
 - **E415** each beat: every order's centre, count, fight and time left, arrived once all have stopped

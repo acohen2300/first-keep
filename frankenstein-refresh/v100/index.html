@@ -1126,7 +1126,7 @@ function step(dt) { // E99
   for (const u of units) {
     u.lvx = u.vx; u.lvy = u.vy; u.t += dt; u.mps = 0; const shoved = u.shoved; u.shoved = false;
     if (u.slide) slide(u, dt);
-    if (u.path) { const w = u.path[u.at], end = u.at + 1 === u.path.length; if (holdBack(u, w)) continue; if (stride(u, w.length ? w : tileMid(w), dt, shoved ? SP : end && ARRIVE) && ++u.at >= u.path.length) { u.path = null; u.job = u.then || 'idle'; } continue; } // E303
+    if (u.path) { const w = u.path[u.at], end = u.at + 1 === u.path.length; if (holdBack(u, w)) continue; if (stride(u, w.length ? w : tileMid(w), dt, shoved ? SP : end && ARRIVE) && ++u.at >= u.path.length) { u.path = null; u.go = false; u.job = u.then || 'idle'; } continue; } // E303
     if (u.spot && !shoved && (u.job === 'gather' || u.job === 'wait' || u.job === 'idle') && Math.hypot(u.spot.x - u.bx, u.spot.y - u.by) > ARRIVE) { stride(u, [u.spot.x, u.spot.y], dt); continue; } // E312
     if (has(u, 'Wander') && u.job === 'idle') { // E102
       if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - rng()); const k = tileAt(u.bx + rnd(-D.reach, D.reach), u.by + rnd(-D.reach, D.reach)); if (walkable(k, u)) go(u, k); } else u.wait -= dt; }
@@ -1135,10 +1135,11 @@ function step(dt) { // E99
 }
 function collide() { // E304
   units.forEach((u, n) => (u.ix = n));
-  for (const a of units) unitsNear(a, SP, (b) => { if (b.ix < a.ix || a.inside || b.inside) return; const dx = b.bx - a.bx, dy = b.by - a.by, d = Math.hypot(dx, dy), g = a.ix + b.ix; if (d >= SP) return;
+  for (const a of units) unitsNear(a, SP, (b) => { if (b.ix < a.ix || a.inside || b.inside) return; const sa = a.job === 'gather', sb = b.job === 'gather'; if (sa && sb) return; // E948
+    const dx = b.bx - a.bx, dy = b.by - a.by, d = Math.hypot(dx, dy), g = a.ix + b.ix; if (d >= SP) return;
     const [nx, ny] = d ? [dx / d, dy / d] : [Math.cos(g), Math.sin(g)], px = nx - PASS * ny, py = ny + PASS * nx, ma = massOf(a.code), mb = massOf(b.code), o = (SP - d) / (ma + mb);
     if (forming(a) && forming(b)) { const soft = (SP - d) * FORM.soft, [y, s] = FORM.yield.indexOf(SH[a.code].class) <= FORM.yield.indexOf(SH[b.code].class) ? [a, -ONE] : [b, ONE]; shove(y, px * soft * s, py * soft * s); return; } // E807
-    const fa = shove(a, -px * o * mb, -py * o * mb), fb = shove(b, px * o * ma, py * o * ma); if (!fa) shove(b, px * o * mb, py * o * mb); if (!fb) shove(a, -px * o * ma, -py * o * ma); });
+    const fa = !sa && shove(a, -px * o * mb, -py * o * mb), fb = !sb && shove(b, px * o * ma, py * o * ma); if (!fa) shove(b, px * o * mb, py * o * mb); if (!fb) shove(a, -px * o * ma, -py * o * ma); });
 }
 const FORM = D.forming, forming = (u) => !!(u.drill && !u.drill.held && u.job === 'march');
 const shove = (u, x, y) => walkable(tileAt(u.bx + x, u.by + y), u) && ((u.bx += x), (u.by += y), place(u), (u.shoved = true));
@@ -1268,13 +1269,14 @@ function climate(dt) {
   if (K.temp < 0) { K.fds += -K.temp * dt; if (K.wet > D.groundIce.wet) K.gfd = Math.min(D.groundIce.fdd, K.gfd - K.temp * dt); } // E132
   else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = clamp(Math.floor((ICE.steps * fddDays()) / ICE.span), ZERO, ICE.steps); K.iceOn = Math.floor(fddDays() / ICE.key) + HOLES.size; if (!K.fds) HOLES.clear(); // E364
   if (K.storm && K.rain > 0.5) { K.strikeT -= dt; if (K.strikeT <= 0) { const sh = D.strike.share; K.strikeT = -((D.strike.summer * Math.max(...sh)) / sh[season()]) * Math.log(1 - rng()); strike(); } } // E135
-  K.bolts = K.bolts.filter((b) => K.t - b.t < 0.5); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
+  K.bolts = K.bolts.filter((b) => wallT() - b.w < (b.n - ONE) * STK.gap + STK.life); K.flash *= Math.exp(-dt / 0.09); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
   document.getElementById('clock').textContent = SEASONS[sn] + ' ' + hhmm() + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.vis < FW.wmo ? ' ≈' : '');
 }
 // E136
-const bolt = (vx, vy) => { K.bolts.push({ vx, vy, t: K.t, seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); fire('event', 'strike', { vx, vy }); }; // E576
+const wallT = () => performance.now() / DRW.ms, STK = D.strike.stroke, boltEnv = (b, age) => { let e = ZERO; for (let i = ZERO; i < b.n; i++) if (age >= i * STK.gap) e += Math.exp(-(age - i * STK.gap) / STK.fade); return Math.min(ONE, e); }; // E951
+const bolt = (vx, vy) => { const SF = D.strike.flash; K.bolts.push({ vx, vy, w: wallT(), n: STK.n[ZERO] + Math.floor(glance() * (STK.n[ONE] - STK.n[ZERO] + ONE)), f: SF.bolt[ZERO] + SF.bolt[ONE] * (ONE - Math.min(ONE, Math.hypot(vx - cam.x, vy - cam.y) / D.upm / SF.near)), seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); fire('event', 'strike', { vx, vy }); }; // E576
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
-  const SF = D.strike.flash; if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); bolt(vx, vy); K.flash = Math.max(K.flash, SF.bolt[0] + SF.bolt[1] * (ONE - Math.min(ONE, Math.hypot(vx - cam.x, vy - cam.y) / D.upm / SF.near))); jolt = { t: D.strike.shake, px: D.jolt.max }; } // E728
+  const SF = D.strike.flash; if (close > 0.4) { const vx = cam.x + (glance() - 0.5) * (cw / cam.z), vy = cam.y + (glance() - 0.5) * (ch / cam.z); bolt(vx, vy); jolt = { t: D.strike.shake, px: D.jolt.max }; } // E728
   else { K.flash = Math.max(K.flash, SF.sheet[0] + SF.sheet[1] * close); fire('event', 'strike', { vx: cam.x + (glance() - 0.5) * 4 * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
 // E138
 const fallV = (Dd) => WX.fall.a - WX.fall.b * Math.exp(-WX.fall.c * Dd), active = (strength) => Math.round(WX.pool * strength);
@@ -1297,16 +1299,16 @@ function drawSky(dt) { // E140
     ctx.globalAlpha = a0 + a1 * m.d; ctx.lineWidth = w0 + w1 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x + (K.wind / v) * len, m.y + len); ctx.stroke(); }
   ctx.fillStyle = C.marks.flake; ctx.globalAlpha = WD.snow; for (let i = 0, n = many(K.snowing); i < n; i++) { const m = DROPS[i], z = f0 + f1 * m.d; m.y += (WX.snow.slow + (WX.snow.fast - WX.snow.slow) * m.d) * px * go; m.x += Math.sin(now + i) * m.d * px * go; wrap(m, z); ctx.fillRect(m.x, m.y, z, z); } ctx.globalAlpha = ONE; // E380
   for (const b of K.bolts) { // E141
-    const age = now - b.t, a = clamp(1 - age / 0.45, 0, 1), rr = NS_rng((b.seed * 1e6) | 1), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300); main.push([x, y]);
+    const age = wallT() - b.w, a = boltEnv(b, age), rr = NS_rng((b.seed * 1e6) | 1), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - 0.5) * 80, y = Math.min(0, y1 - 300); main.push([x, y]);
     while (y < y1) { y += 9 + rr() * 15; x += (rr() - 0.5) * 34 + (x1 - x) * 0.12; main.push([x, y]); } main[main.length - 1] = [x1, y1]; const paths = [main]; // E142
     for (let f = 0, nf = 1 + ((rr() * 3) | 0); f < nf; f++) { const fk = main[1 + Math.floor(rr() * (main.length - 3))], dir = rr() < 0.5 ? -1 : 1, br = [fk]; for (let k = 1, kn = 3 + ((rr() * 3) | 0); k <= kn; k++) br.push([fk[0] + dir * k * (7 + rr() * 9), fk[1] + k * (8 + rr() * 9)]); paths.push(br); }
     ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.globalCompositeOperation = 'lighter';
     const foot = ctx.createRadialGradient(x1, y1, 0, x1, y1, 60 * cam.z); foot.addColorStop(0, `rgba(220,235,255,${(0.7 * a).toFixed(2)})`); foot.addColorStop(1, 'rgba(220,235,255,0)'); ctx.fillStyle = foot; ctx.beginPath(); oval(ctx, x1, y1, 60 * cam.z, 30 * cam.z); ctx.fill();
-    for (const [lw, col] of [[12, `rgba(170,200,255,${(0.18 * a).toFixed(2)})`], [4.6, `rgba(210,228,255,${(0.45 * a).toFixed(2)})`], [1.9, `rgba(255,255,255,${a.toFixed(2)})`]]) { ctx.strokeStyle = col; paths.forEach((p, i) => { ctx.lineWidth = i ? lw * 0.55 : lw; ctx.beginPath(); p.forEach(([px, py], j) => (j ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.stroke(); }); }
+    for (const [lw, col] of STK.look.map(([w, al], i) => [w, rgba(C.bolt[i], al * a)])) { ctx.strokeStyle = col; paths.forEach((p, i) => { ctx.lineWidth = i ? lw * 0.55 : lw; ctx.beginPath(); p.forEach(([px, py], j) => (j ? ctx.lineTo(px, py) : ctx.moveTo(px, py))); ctx.stroke(); }); }
     ctx.restore(); }
   if (evOn('meteor')) { const e = K.ev.cur, [dx, dy, tail, lw, r] = ER.meteor.streak, f = Math.min(ONE, (K.t - e.t0) / (e.until - e.t0)), [x1, y1] = toScreen(...toView(...e.at, null)), x = x1 - dx * (ONE - f), y = y1 - dy * (ONE - f); // E579
     ctx.strokeStyle = ctx.fillStyle = C.wild.streak; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x - dx * tail, y - dy * tail); ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r, null, A.round * RAD); ctx.fill(); }
-  wash(SKYC.flash, Math.min(ONE, K.flash));
+  wash(SKYC.flash, Math.min(STK.cap, Math.max(K.flash, ...K.bolts.map((b) => b.f * boltEnv(b, wallT() - b.w)))));
   const night = MO.dark * (ONE - clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), ZERO, ONE)), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); wash(SKYC.veil, veil); // E381
   wash(SKYC.glow, dusk); wash(SKYC.blue, night);  if (K.sky === 'frost') wash(SKYC.rime, BD.frost); flushWash(); skyBand(); // E144
@@ -1437,7 +1439,8 @@ const MISTC = document.createElement('canvas'), MISTS = newSheet(); MISTC.width 
 function drawMist() { const L = D.fogLayer, X = MISTC.getContext('2d'), I = X.createImageData(NC_, NC_), d = I.data, ink = hexRGB(SKYC.fog), A = ink.length, low = Math.min(...CGND), top = low + L.depth * D.upm, camH = camHigh();
   for (let c = ZERO, p = ZERO; c < NC_ * NC_; c++, p += A + ONE) { const deep = Math.max(ZERO, top - CGND[c]) / D.upm, path = Math.min(deep, camH); d.set(ink, p); d[p + A] = Math.round((ONE - Math.exp((-K.beta * path) / L.km)) * D.meadow.opaque); } X.putImageData(I, ZERO, ZERO);
   const T = D.tile * SCELL, M = D.landCache.margin, [x0, y0] = S(ZERO, ZERO, D.land), [x1, y1] = S(NC_ * T, ZERO, D.land), [x2, y2] = S(ZERO, NC_ * T, D.land); ctx.save(); ctx.setTransform(dpr * (x1 - x0) / NC_, dpr * (y1 - y0) / NC_, dpr * (x2 - x0) / NC_, dpr * (y2 - y0) / NC_, dpr * (x0 + M), dpr * (y0 + M)); ctx.imageSmoothingEnabled = true; ctx.drawImage(MISTC, ZERO, ZERO); ctx.restore(); }
-function drawUnder() { const W = D.woods; ctx.save(); ctx.lineWidth = DRS.foot; ctx.globalAlpha = W.sil; for (const u of units) { if (u.side !== ME || u.inside || !inWoods(u.k)) continue; const [x, y] = toScreen(u.vx, u.vy); if (x < ZERO || y < ZERO || x > cw || y > ch) continue; blit(unitSprite(u, cam.z * FIG()), x, y, cam.z * FIG()); ctx.globalAlpha = ONE; ctx.strokeStyle = SIDES[ME].col; ctx.beginPath(); ctx.ellipse(x, y, W.ring * cam.z, W.ring * cam.z * DRW.half, ZERO, ZERO, Math.PI * (ONE + ONE)); ctx.stroke(); ctx.globalAlpha = W.sil; } ctx.restore(); } // E897
+const FLAT = new WeakMap(), flat = (sp, col) => { let m = FLAT.get(sp); if (!m) FLAT.set(sp, (m = new Map())); let c = m.get(col); if (!c) { c = Object.assign(document.createElement('canvas'), { width: sp.width, height: sp.height, q: sp.q, ax: sp.ax, ay: sp.ay }); const x = c.getContext('2d'); x.drawImage(sp, ZERO, ZERO); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(ZERO, ZERO, c.width, c.height); m.set(col, c); } return c; }; // E947
+function drawUnder() { const W = D.woods; ctx.save(); ctx.lineWidth = DRS.foot; ctx.globalAlpha = W.sil; for (const u of units) { if (u.side !== ME || u.inside || !inWoods(u.k)) continue; const [x, y] = toScreen(u.vx, u.vy); if (x < ZERO || y < ZERO || x > cw || y > ch) continue; blit(flat(unitSprite(u, cam.z * FIG()), SIDES[ME].col), x, y, cam.z * FIG()); ctx.globalAlpha = ONE; ctx.strokeStyle = SIDES[ME].col; ctx.beginPath(); ctx.ellipse(x, y, W.ring * cam.z, W.ring * cam.z * DRW.half, ZERO, ZERO, Math.PI * (ONE + ONE)); ctx.stroke(); ctx.globalAlpha = W.sil; } ctx.restore(); } // E897
 let FOGV = ZERO; function fogPaint() { FOGV++; const V = visOf(ME), X = expOf(ME), d = FOGI.data, ink = hexRGB(C.fogwar), A = ink.length, dark = Math.round(FOGW.dark * D.meadow.opaque), dim = Math.round(FOGW.seen * D.meadow.opaque); for (let k = ZERO, p = ZERO; k < NC_ * NC_; k++, p += A + ONE) { d.set(ink, p); d[p + A] = !FOGON || V[k] ? ZERO : X[k] ? dim : dark; } FOGX.putImageData(FOGI, ZERO, ZERO); }
 function drawFog() { const T = D.tile * SCELL, M = D.landCache.margin, [x0, y0] = S(ZERO, ZERO, D.land), [x1, y1] = S(NC_ * T, ZERO, D.land), [x2, y2] = S(ZERO, NC_ * T, D.land); ctx.save(); ctx.setTransform(dpr * (x1 - x0) / NC_, dpr * (y1 - y0) / NC_, dpr * (x2 - x0) / NC_, dpr * (y2 - y0) / NC_, dpr * (x0 + M), dpr * (y0 + M)); ctx.imageSmoothingEnabled = true; ctx.drawImage(FOGC, ZERO, ZERO); ctx.restore(); }
 const FAM = D.familiar, FAMC = Math.ceil(N / FAM.cell), FAMT = new Map(), famCell = (k) => Math.floor(k / N / FAM.cell) * FAMC + Math.floor((k % N) / FAM.cell), famOf = (s) => FAMT.get(s) || FAMT.set(s, new Float32Array(FAMC * FAMC).fill(-Infinity)).get(s); // E810
@@ -1505,23 +1508,29 @@ const W1 = () => K.wind / WX.wind.most, rgba = (c, a) => `rgba(${c},${+a})`;
 const kelvinRGB = (k) => { const t = k / KLV.t, [r0, r1, r2] = KLV.r, [g0, g1, g2, g3, g4] = KLV.g, [b0, b1, b2] = KLV.b, lo = t <= KLV.knee;
   return [lo ? KLV.max : r0 * (t - r1) ** r2, lo ? g0 * Math.log(t) + g1 : g2 * (t - g3) ** g4, t >= KLV.knee ? KLV.max : t <= KLV.low ? null : b0 * Math.log(t - b1) + b2].map((v) => Math.round(clamp(v, null, KLV.max))); };
 const FLAME_RGB = Object.fromEntries(Object.entries(FLM).map(([k, f]) => [k, kelvinRGB(f.K)])), flameLife = (k) => (FLM[k].covered || !(K.rain > null || K.snowing > null) ? ONE : LGT.wet);
-function glowAt(c, x, y, kind, z) { const dark = Math.max(nightOf(), LGT.rain * (K.rain > null)), life = flameLife(kind); if (dark < LGT.dark) return; // E610
+const FLK = LGT.fl, FLW = (Math.PI * (ONE + ONE) * FLK.c) / Math.sqrt(FLK.D), flick = (seed) => { const t = performance.now() / DRW.ms; return (Math.sin(FLW * t + seed) + Math.sin(FLW * FLK.r * t + seed * FLK.r)) / (ONE + ONE); }; // E949
+function glowAt(c, x, y, kind, z, seed = ZERO) { const dark = Math.max(nightOf(), LGT.rain * (K.rain > null)), life = flameLife(kind) * (ONE + FLK.glow * flick(seed)); if (dark < LGT.dark) return; // E610
   const r = LGT.k * Math.sqrt(FLM[kind].p) * z * life, col = FLAME_RGB[kind], [n, sz] = LGT.falloff, g = c.createRadialGradient(x, y, null, x, y, r), E = (f) => ONE / (f * f + sz * sz), E0 = E(null), Er = E(ONE); // E714
   for (let i = null; i <= n; i++) { const f = i / n; g.addColorStop(f, rgba(col, (LGT.a * dark * (E(f) - Er)) / (E0 - Er))); } c.globalCompositeOperation = 'lighter'; c.fillStyle = g; c.beginPath(); oval(c, x, y, r, r * TILT); c.fill(); c.globalCompositeOperation = 'source-over'; }
-function flame(c, x, y, kind, z, seed) { const F = FLM[kind]; if (!F.s || still()) return; const s = F.s * z * flameLife(kind), [a, b, f1, f2, f3] = LGT.fl, fl = a + b * Math.sin(K.t * f1 + seed) * Math.sin(K.t * f2 + seed * f3), lean = W1() * LGT.lean * s, [w, bu, mid, tall] = LGT.shape, [hx, hy, hw, hh] = LGT.heart;
+function flame(c, x, y, kind, z, seed) { const F = FLM[kind]; if (!F.s || still()) return; const s = F.s * z * flameLife(kind), [a, b] = FLK.h, fl = a + b * flick(seed), lean = W1() * LGT.lean * s, [w, bu, mid, tall] = LGT.shape, [hx, hy, hw, hh] = LGT.heart;
   c.fillStyle = rgba(FLAME_RGB[kind], LGT.fa); c.beginPath(); c.moveTo(x - s * w, y); c.quadraticCurveTo(x - s * bu + lean * w, y - s * mid * fl, x + lean, y - s * tall * fl); c.quadraticCurveTo(x + s * bu + lean * w, y - s * mid * fl, x + s * w, y); c.closePath(); c.fill();
   c.fillStyle = CLT.heart; c.beginPath(); c.ellipse(x + lean * hx, y - s * hy * fl, s * hw, s * hh * fl, null, -Math.PI, Math.PI); c.fill(); }
-function lightsOf() { const out = []; if (nightOf() < LGT.dark && !(K.rain > null) && !things.some((t) => t.fire > null)) return out; // E611
+const CAMPS = []; // E950
+function lightsOf() { const out = []; if (nightOf() <= LGT.night) CAMPS.length = ZERO; if (nightOf() < LGT.dark && !(K.rain > null) && !things.some((t) => t.fire > null)) return out; // E611
   for (const t of things) { if (t.kind === 'bld') { if (fire('hide', t)) continue; const up = !(t.done < ONE);
       if (t.fire > null || (up && t.hp < t.hpMax * LGT.hurt)) out.push([t, 'blaze']); else { if (up && LGT.hearth.includes(SH[t.code].look)) out.push([t, 'hearth']); if (up && !has(t, 'Line') && !has(t, 'Field')) out.push([t, 'lantern']); } } // E930
     else if (LGT.looks[(KIND[t.kind] || {}).look]) out.push([t, LGT.looks[KIND[t.kind].look]]); }
-  for (const u of units) if (LGT.looks[SH[u.code].look] && !u.inside && (u.side === ME || inSight(u))) out.push([u, LGT.looks[SH[u.code].look]]); return out; }
+  for (const u of units) if (LGT.looks[SH[u.code].look] && !u.inside && (u.side === ME || inSight(u))) out.push([u, LGT.looks[SH[u.code].look]]);
+  if (nightOf() > LGT.night) { const R = LGT.camp.near * D.upm, sits = (u) => u.side >= ZERO && !u.inside && !moving(u) && (u.side === ME || inSight(u)); // E950
+    for (const u of units) { if (!sits(u) || CAMPS.some((f) => Math.hypot(f.bx - u.bx, f.by - u.by) < R)) continue; let m = null; unitsNear(u, R, (v) => { if (!m && v.side === u.side && sits(v)) m = v; }); if (m) CAMPS.push({ camp: true, bx: (u.bx + m.bx) / (ONE + ONE), by: (u.by + m.by) / (ONE + ONE), vx: (u.vx + m.vx) / (ONE + ONE), vy: (u.vy + m.vy) / (ONE + ONE), i: CAMPS.length }); }
+    for (const f of CAMPS) out.push([f, LGT.camp.kind]); }
+  return out; }
 function drawLights(z) { const nt = nightOf(), m = LGT.k * Math.sqrt(FLM.blaze.p) * z, at = (t) => { const [x, y] = toScreen(t.vx, t.vy); return x > -m && x < cw + m && y > -m && y < ch + m && { x, y }; }, [wx, wy, wf] = LGT.window.at, [la, ld] = LGT.lamp, [, ls, cx, cy, cs] = LGT.up;
   if (nt > LGT.night) { ctx.fillStyle = CLT.window; ctx.globalAlpha = LGT.window.a; for (const t of things) { const p = t.kind === 'bld' && !(t.done < ONE) && LGT.hearth.includes(SH[t.code].look) && !fire('hide', t) && at(t); if (p) ctx.fillRect(p.x + wx * z, p.y - wy * z + t.n * D.tile * wf * TILT * z * DRW.half, LGT.window.px * z, LGT.window.px * z); } ctx.globalAlpha = ONE; }
   for (const [t, kind] of lightsOf()) { const p = at(t); if (!p) continue; const { x, y } = p, half = t.n * D.tile * DRW.half * z;
-    if (t.kind === 'unit') { glowAt(ctx, x, y, kind, z); flame(ctx, x + cx * z, y - cy * z, kind, z * cs, t.k); }
-    else if (kind === 'lantern') { const zl = z * Math.sqrt(ONE + stat(t.code, t.side, 'lamp')); for (const sd of t.n >= LGT.two ? [-ONE, ONE] : [-ONE]) { glowAt(ctx, x + sd * half * la, y + half * TILT * ld, kind, zl); flame(ctx, x + sd * half * la, y + half * TILT * ld - LGT.door * z, kind, z * ls, t.i + t.j + sd); } } // E938
-    else glowAt(ctx, x, y, kind, z); } }
+    if (t.camp) { glowAt(ctx, x, y, kind, z, t.i); flame(ctx, x, y, kind, z, t.i); } else if (t.kind === 'unit') { glowAt(ctx, x, y, kind, z, t.k); flame(ctx, x + cx * z, y - cy * z, kind, z * cs, t.k); }
+    else if (kind === 'lantern') { const zl = z * Math.sqrt(ONE + stat(t.code, t.side, 'lamp')); for (const sd of t.n >= LGT.two ? [-ONE, ONE] : [-ONE]) { glowAt(ctx, x + sd * half * la, y + half * TILT * ld, kind, zl, t.i + t.j + sd); flame(ctx, x + sd * half * la, y + half * TILT * ld - LGT.door * z, kind, z * ls, t.i + t.j + sd); } } // E938
+    else glowAt(ctx, x, y, kind, z, t.k || ZERO); } }
 // E612
 const RIPS = [], [PA, PS] = STG.pop, [GS, GA] = STG.glow, SITE = new Set(), DONE = new WeakMap(), BORN = new WeakMap(), GLOW = new WeakMap(), LEAN = new WeakMap(), HIT = new WeakMap(); let celT = -Infinity, whiteT = -Infinity;
 const popC = (a) => (a >= ONE || a < null ? ONE : ONE + PA * Math.sin(a * Math.PI) * (ONE - a)), ripple = (vx, vy, col) => RIPS.push({ vx, vy, col, t: performance.now() / STG.ms });
@@ -1675,7 +1684,7 @@ function drawWoods(s) { const q = STEP ** Math.round(Math.log(s * dpr) / Math.lo
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u) || u.veil))) return; const [x, y] = toScreen(...vAt(u)); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
-    if (!dots) { const R = C.foot; ctx.strokeStyle = pick.includes(u) ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : u.job === 'idle' && !moving(u) ? R.idle : R.work; const on = pick.includes(u); ctx.lineWidth = on ? DRS.pick : DRS.foot; ctx.shadowColor = R.pick; ctx.shadowBlur = on ? DRS.glow : ZERO; ctx.beginPath(); ctx.ellipse(x, y, 7 * s * FIG(), 3.5 * s * FIG(), 0, 0, 7); ctx.stroke(); ctx.shadowBlur = ZERO; } // E766
+    if (!dots) { const R = C.foot; ctx.strokeStyle = pick.includes(u) || (u.go && u.path) ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : u.job === 'idle' && !moving(u) ? R.idle : R.work; const on = pick.includes(u); ctx.lineWidth = on ? DRS.pick : DRS.foot; ctx.shadowColor = R.pick; ctx.shadowBlur = on ? DRS.glow : ZERO; ctx.beginPath(); ctx.ellipse(x, y, 7 * s * FIG(), 3.5 * s * FIG(), 0, 0, 7); ctx.stroke(); ctx.shadowBlur = ZERO; } // E766
     // E855
     if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else drawUnit(u, x, y, s * FIG()); }; // E160
   if (!dots) { drawWoods(s); drawShadows(s); }

@@ -707,3 +707,8 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 ## Cut in N16, the quick action (Albert, Nov 10, #37) [2026-11-10 12:55]
 - From the quick action: Idle (send idle soldiers), More (Shelter, All hands, an idle villager there). Shelter and All hands stay on the Emergency card. Back only on Albert's word. [2026-11-10 12:55]
 - The Lanterns research no longer adds the door torches (every building has them from the start); it makes them brighter instead. [2026-11-10 12:55]
+
+## Changed in N17 (Albert, Nov 10, his N15 notes) [2026-11-10 14:30]
+- "Build another" is gone from the one-off buildings (only the twelve with the Repeat tick offer it). [2026-11-10 14:30]
+- The old torch flicker (two sines at 11 and 7.3 rad/s on the game clock) replaced by QCV; the bolt's fixed 0.45 s fade replaced by the strokes. [2026-11-10 14:30]
+- Open for later: two campfires can light at one big berry patch (each burns where no fire is within 6 m); a ring of fires is fine at night but may look busy. [2026-11-10 14:30]

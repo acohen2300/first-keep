@@ -141,9 +141,10 @@ function bestFind(u, y, from, b = FK.dropFor(u, y)) { const r = from && searchR(
 function gatherAt(u, t) { u.tool = null; if (u.load && u.carry !== yieldOf(t)) { u.target = t; carry(u); return; } if (u.target !== t && (full(u, t) || (t.kind !== 'bld' && !FK.spotFor(u, t)))) { u.carry = yieldOf(t); u.lost = { x: t.bx, y: t.by, t: bell }; return look(u); } t.wk = ~~t.wk + (u.target !== t); u.target = t; u.carry = yieldOf(t); u.lost = null; if (beside(u, t)) { u.job = 'gather'; return; } u.job = 'walk'; u.then = 'gather'; if (!(t.kind === 'bld' ? FK.goBy(u, t) : FK.toSpot(u, t))) { (t.noPath = t.noPath || {})[u.side] = bell; u.target = u.path = null; u.job = 'gather'; } } // E222
 function carry(u) { u.tool = null; const b = FK.dropFor(u, u.carry); if (!b) { u.job = 'wait'; u.wait = SR.again; return; } if (beside(u, b)) { u.job = 'carry'; return; } u.job = 'walk'; u.then = 'carry'; if (!FK.goBy(u, b)) { u.job = 'wait'; u.wait = SR.again; } }
 function buildAt(u, t, pulled) { if (u.target !== t && jobOf(u) !== 'build') u.was = { t: jobOf(u) && u.target, y: jobOf(u), back: !!pulled }; u.raise = !up(t); u.tool = null; u.target = t; if (beside(u, t)) { u.job = 'build'; u.path = null; return; } u.job = 'walk'; u.then = 'build'; if (!FK.goBy(u, t)) u.job = 'idle'; } // E320
-function idle(u) { u.job = 'idle'; u.then = null; u.tool = null; u.target = null; u.path = null; u.spot = u.lost = u.patch = u.was = null; }
+function idle(u) { u.job = 'idle'; u.then = null; u.tool = null; u.target = null; u.path = null; u.spot = u.lost = u.patch = u.was = u.sites = null; }
 // E321
-function autoBuilder(side, t, by) { if (by) return buildAt(by, t); const vs = villagersOf(side).filter((v) => !posted(v));
+function autoBuilder(side, t, by) { if (by && jobOf(by) === 'build' && by.target && by.target !== t && !up(by.target)) return void (by.sites = [...(by.sites || []), t]); if (by) return buildAt(by, t); // E945
+  const vs = villagersOf(side).filter((v) => !posted(v));
   if (wallish(t) && wallsBusy(side)) return;
   const free = vs.filter((v) => v.job === 'idle' || v.job === 'wait'), busy = vs.filter((v) => jobOf(v) && jobOf(v) !== 'build'), hand = side === ME && !free.length;
   const [v] = free.length || hand ? (hand ? busy : free).sort((a, b) => dist(a, t) - dist(b, t)) : busy.sort((a, b) => forageNow(a) - forageNow(b)); if (v) buildAt(v, t, hand); }
@@ -151,7 +152,7 @@ const wallsBusy = (side) => things().filter((s) => s.side === side && !up(s) && 
 function back(u) { const w = u.was, f = w && (w.t && alive(w.t) ? w.t : w.y && bestFind(u, w.y)); u.raise = false; if (f) gatherAt(u, f); else idle(u); u.was = null; } // E322
 function nextSite(u, t) { const near = (r, ok, first) => { let best = null; FK.bldsNear(u.bx, u.by, r * D.tile, (q) => { if (q.side === u.side && !up(q) && ok(q) && dist(u, q) < r * D.tile && (!best || (first && q.laid !== best.laid ? q.laid < best.laid : dist(u, q) < dist(u, best)))) best = q; }); return best; }; // E323
   return (wallish(t) && near(D.builders.wall, wallish)) || near(D.builders.site, (q) => !units().some((v) => v !== u && v.target === q && jobOf(v) === 'build'), true); } // E861
-function done(u, t) { const w = u.was || {}; if (u.raise && t && alive(t)) { if ((!w.back || FK.SH[t.code].drop) && startWork(u, t)) return (u.was = null); const s = !w.back && nextSite(u, t); if (s) return buildAt(u, s); } back(u); } // E324
+function done(u, t) { const w = u.was || {}, q = (u.sites || []).find((s) => alive(s) && !up(s)); if (q) { u.sites = u.sites.filter((s) => s !== q); return buildAt(u, q); } u.sites = null; if (u.raise && t && alive(t)) { if ((!w.back || FK.SH[t.code].drop) && startWork(u, t)) return (u.was = null); const s = !w.back && nextSite(u, t); if (s) return buildAt(u, s); } back(u); } // E324
 function mend(u, t, dt) { const M = t.hpMax, heal = Math.min(M - t.hp, (M / D.buildTime[t.code] / D.repair.time) * dt), due = addRes({ ...t.rd }, D.cost[t.code], (D.repair.cost * heal) / M); // E325
   if (Object.keys(due).some((y) => Math.floor(due[y]) > SIDES[u.side].store[y])) { if (u.side === ME) FK.fire('event', 'short', t); return back(u); }
   t.rd = {}; for (const y in due) { spend(u.side, y, Math.floor(due[y]), 'repairs'); t.rd[y] = due[y] - Math.floor(due[y]); } t.hp += heal; }
@@ -171,7 +172,7 @@ function boxCut(side, r, n) { const t = things().find((q) => q.kind !== 'bld' &&
 const sendOut = (t) => { const u = villagersOf(t.side).filter((v) => v.target === t).pop(); if (u) idle(u); return !!u; };
 // E223
 function assign(side, y, n) { const vs = villagersOf(side);
-  if (n < 0) { const u = vs.find((v) => jobOf(v) === y); if (!u) return false; if (u.load) carry(u); else idle(u); return true; }
+  if (n < 0) { const u = vs.find((v) => jobOf(v) === y); if (!u) return false; u.load = ZERO; u.carry = null; idle(u); return true; } // E944
   const u = vs.find((v) => v.job === 'idle' || v.job === 'wait') || vs.filter((v) => jobOf(v) && jobOf(v) !== y && jobOf(v) !== 'build' && !posted(v)).reduce((a, v) => (!a || forageNow(v) < forageNow(a) ? v : a), null); if (!u) return false;
   const t = bestFind(u, y); if (!t) return false; gatherAt(u, t); return true; }
 // E348

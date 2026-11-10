@@ -1464,7 +1464,25 @@ async def a1(b):
            v['room'] == [m.get('apt'), m.get('apt')], v['quarry'][0] == 'stone' and v['quarry'][1] and v['quarry'][2] == m.get('quarry'), all(v['tw']) and [TW.get('atk'), TW.get('rof'), TW.get('bow') * 10, TW.get('h') * 10] == m.get('castle'),
            tech, all(v['reach']), v['path'] and all(v['path']), frames <= MEASURE['frameMost'], not errs]
     ok('t-a1', all(got), [got, {k: v[k] for k in ('join', 'drill', 'save', 'civ', 'foe', 'room', 'quarry', 'tw', 'path')}, frames, errs[:2], err[-400:], [k for k, t in mt.items() if k not in cut and not same(k, t)][:6]])
-PAGED = {'t-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+N17JS = r"""(() => { MENU.act('start'); const S = FK.SIDES[0]; for (const k in S.store) S.store[k] = 5000; const vs = ECON.villagersOf(0), h = FK.seatOf(0), out = {};
+ const spot = (c) => { for (let r = 4; r < 30; r++) for (let a = 0; a < 24; a++) { const i = Math.round(h.i + r * Math.cos(a / 24 * 6.283)), j = Math.round(h.j + r * Math.sin(a / 24 * 6.283)); if (ECON.canPlace(c, i, j)) return [i, j]; } };
+ let [i, j] = spot('BR1'); const A = ECON.plan(0, 'BR1', i, j), v = vs[0]; ECON.autoBuilder(0, A, v); for (let n = 0; n < 30; n++) FK.sim(0.1);
+ [i, j] = spot('BR1'); const B = ECON.plan(0, 'BR1', i, j); ECON.autoBuilder(0, B, v); out.stays = v.target === A && (v.sites || []).includes(B);
+ let t = 0; while (A.done < 1 && t < 3000) { FK.sim(0.1); t++; } FK.sim(0.1); out.next = v.target === B;
+ for (const u of vs) ECON.assign(0, 'food', 1); for (let n = 0; n < 200; n++) FK.sim(0.1); const y = 'food', n0 = ECON.jobs(0)[y]; ECON.assign(0, y, -1); out.minus = [n0, ECON.jobs(0)[y]];
+ const prev = new Map(); let g = 0, moved = 0; for (let n = 0; n < 1500; n++) { FK.sim(1 / 30); for (const u of vs) { const p = prev.get(u); prev.set(u, [u.bx, u.by, u.job]); if (!p || u.job !== 'gather' || p[2] !== 'gather') continue; g++; if (Math.hypot(u.bx - p[0], u.by - p[1]) > 0.01) moved++; } } out.hold = [g, moved];
+ out.repeat = Object.keys(FK.SH).filter((c) => FK.has({ code: c }, 'Repeat')).sort();
+ const TB = BOOKS.tech; out.reasons = Object.keys(TB).filter((c) => { const w = ECON.researchWhy(0, c); return w && w !== 'cost' && !(TB[c].value.civ && TB[c].value.civ !== S.civ); }).map((c) => [c, MENU.VERBS.research.label(c).includes('<small>' + MENU.VERBS.research.whyNot(c) + '</small>')]).filter(([, ok]) => !ok);
+ return out; })()"""
+async def n17(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(N17JS)
+    await pg.evaluate("MENU.act('start'); const h = FK.seatOf(0); FK.SIDES[0].store.food = 5000; h.q = []; MENU.S.tab = 'Hall'; MENU.render(true)"); await pg.wait_for_timeout(300)
+    x, y = await pg.evaluate("(() => { const r = document.querySelector('[data-v^=train]').getBoundingClientRect(); return [r.x + r.width / 2, r.y + r.height / 2]; })()")
+    await pg.mouse.move(x, y); await pg.mouse.down(); await pg.wait_for_timeout(1200); await pg.mouse.up(); await pg.wait_for_timeout(200); held = await pg.evaluate("FK.seatOf(0).q.length"); await pg.close()
+    rep = sorted(c for c, e in SHELLS.items() if e.get('name') in ('Farm', 'Tree farm', 'Mint', 'Quarry', 'Mill', 'Lumber camp', 'Mining camp', 'Dwelling', 'Foundry', 'Wall', 'Palisade', 'Tower'))
+    got = [v['stays'], v['next'], v['minus'][1] == v['minus'][0] - 1, v['hold'][0] > 0 and v['hold'][1] < 0.02 * v['hold'][0], v['repeat'] == rep, not v['reasons'], held == 1, not errs]
+    ok('t-n17', all(got), [got, v, held, errs[:2]])
+PAGED = {'t-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:
