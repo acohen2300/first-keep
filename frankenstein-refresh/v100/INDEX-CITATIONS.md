@@ -385,12 +385,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, D356, SN32
 - **N285** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the sea → SN20, SN32, SN27
 - **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → D357, SN33, J42
-- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → SN20, J43
+- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → SN2, SN3, SN20, SN34, J43, J44
 
 ## Named exceptions
 
 - Tall: Start, Hall, Layers, Mail, Back
-- Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4
+- Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL2
 
 ## Sounds waiting for a feature
 

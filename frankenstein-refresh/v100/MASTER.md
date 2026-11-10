@@ -518,6 +518,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why (its age
 - **E192** tap picks, slide places the ghost, tap again builds
+- **E854** made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm · SN34 (N287)
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
 - **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
@@ -534,6 +535,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
+- **E853** the Build menu: the open tab's buildings a side can build, the rest behind Show all; it op
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E847** Help: the earlier messages, newest first; the latest stays in the help line beneath
@@ -642,11 +644,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E371** the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid · D226 (N176)
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
 - **E734** a yield's first age is the earliest age of anything that costs it (units, buildings, resea
+- **E851** what a side cannot build yet (age, research, a building it needs, a later age): the locks 
 - **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198)
 - **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · E686
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
 - **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
 - **E816** where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on
+- **E852** a building raised into another where it stands (the Gate's way over a wall): taken down, t
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin

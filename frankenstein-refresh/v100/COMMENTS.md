@@ -832,3 +832,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E848 | menu.js | a small card's title: the title on its own row, back, book and close beneath it |
 | E849 | menu.js | a group's label over its boxes, in small capitals across the whole row (as the v80 card) |
 | E850 | menu.js | a ring is the box's outline: the box drops its own border so the ring sits on the edge, one line, never a second inside |
+| E851 | econ.js | what a side cannot build yet (age, research, a building it needs, a later age): the locks before the limit; the Build menu hides these |
+| E852 | econ.js | a building raised into another where it stands (the Gate's way over a wall): taken down, the new one's site laid in its place and paid; put back as it was when there is no room |
+| E853 | menu.js | the Build menu: the open tab's buildings a side can build, the rest behind Show all; it opens on the first tab |
+| E854 | menu.js | made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm |

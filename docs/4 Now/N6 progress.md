@@ -10,9 +10,10 @@ Albert's answers (19:37) to the numbered questions:
 17. One build. 18. All of it: stray sweep, fog and sight, SoRen's renderer, hold and building tap.
 
 Order of work (each step committed locally; one push at the end):
-- [x] T1 menus  - [ ] T2 Build menu  - [ ] T3 selection  - [ ] T4 quick action  - [ ] T5 build order
+- [x] T1 menus  - [x] T2 Build menu  - [ ] T3 selection  - [ ] T4 quick action  - [ ] T5 build order
 - [ ] T6 look  - [ ] T7 woods  - [ ] T8 hold, building tap, small fixes  - [ ] T9 stray sweep, gate
 - [ ] T10 fog, sight, fog of war  - [ ] T11 SoRen renderer  - [ ] T12 check and publish
 
 ## Done, with cuts (for Parked.md at the end)
 - T1: first lines 14 · 600, labels (SN20 label, track), TRAIN / RESEARCH (J43, E849), card and box gradients (C28 box, lighter), the plain header (← · book · ✕ no box, no ring), rings on the edge (E850: a ringed box drops its border; the help lines' blue border gone, a white ring instead), Paused: speeds and New game; Welcome back's line. Cut: Fast and the Yard from Paused (the Yard removed Nov 7); the book's white ring; the help lines' blue border; the frame's fixed row height (label rows size to their words).
+- T2: Build menu six tabs of six (SN2), Dwelling first, opens on Home every time; locked buildings hidden, Show all / Hide locked (E853, ECON.lockWhy E851); the Apartment raised from a Dwelling's card where it stands (ECON.raiseTo E852; needs what the Apartment needs: the Aqueduct), the Tree farm planted from a Lumber camp's card (AI.raise), SN34 fromCard; tabs at 12 · 600 (SN20 tab). Cut: the Abatis for players (SN3 offmenu); Base's tab order (up to nine a tab); the Build menu jumping to the suggested building's tab (the hint still marks it blue).
