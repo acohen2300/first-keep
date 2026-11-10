@@ -1014,7 +1014,8 @@ on('tick', () => { if (!every([ICE.beat, ZERO])) return; const load = new Map();
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
 const onIceOk = (k, who) => !who || (who.side === ME ? iceOf(who) !== 'around' : ICE.load.safe * thick(k) ** (ONE + ONE) >= massOf(who.code) * CROSS.ai); // E785
-const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || (iced(k) && onIceOk(k, who))) && (OCC[k] === 0 || OCC[k] === 3 || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
+const woodsPace = (who) => (who && who.code ? D.woods.pace[SH[who.code].mount || SH[who.code].body] || ZERO : ZERO), inWoods = (k) => !!FOR[k] && OCC[k] === ONE; // E863
+const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || (iced(k) && onIceOk(k, who))) && (OCC[k] === 0 || OCC[k] === 3 || (inWoods(k) && woodsPace(who) > ZERO) || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
 const stepOk = (a, b, who) => walkable(b, who) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
 const [ME] = D.players, PACE = D.pace, PAN = D.pace.pandolf, NEED = G.step, SLIP = G.slip; // E88
 function footing(u, to = u.k) { // E360
@@ -1026,7 +1027,7 @@ function pace(u, g = footing(u)) { // E361
   const eta = 1 + stat(c, s, 'mud') * g.mud + stat(c, s, 'snow') * g.snow, F = W.person.drag * (m / W.person.kg) ** PACE.area * (vr * Math.abs(vr) - v0 * v0); // E374
   const a = PAN.walk * eta * M, b = PAN.grade * PACE.pct * Math.max(0, eta * M * g.rise + F / D.g), q = PAN.stand * m + PAN.load * M * (L / m) ** 2 - (PAN.stand + PAN.walk * v0 * v0) * m;
   const v = (Math.sqrt(b * b - 4 * a * q) - b) / (2 * a); // E375
-  return Object.entries(PACE.state).reduce((v, [k, f]) => (u[k] ? v * f : v), v * (u.pacex ?? D.bases.pace) * evKnob('spd') * (ONE - FAM.pace * (ONE - (u.fam ?? ONE)))) * (1 - (!!u.wary && (g.ice * (g.need - Math.min(g.need, g.on))) / g.need));
+  return Object.entries(PACE.state).reduce((v, [k, f]) => (u[k] ? v * f : v), v * (inWoods(u.k) ? woodsPace(u) : ONE) * (u.pacex ?? D.bases.pace) * evKnob('spd') * (ONE - FAM.pace * (ONE - (u.fam ?? ONE)))) * (1 - (!!u.wary && (g.ice * (g.need - Math.min(g.need, g.on))) / g.need));
 }
 // E89
 function around(k, f, who) { const i = k % N, j = (k - i) / N; for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy, q = y * N + x; if (x < 0 || y < 0 || x >= N || y >= N || !stepOk(k, q, who)) continue; if (dx && dy && !(walkable(j * N + x, who) && walkable(y * N + i, who))) continue; f(q, dx && dy); } } // E91
@@ -1040,7 +1041,7 @@ function findPath(from, goal, near, most = D.tries.way, who = null) { // E90
   for (let n = ZERO; HK.length && n < most; n++) {
     const k = pop(); if (DONE[k] === gen) continue; DONE[k] = gen;
     if (goal(k)) { const path = [k]; for (let q = CAME[k]; q >= ZERO; q = CAME[q]) path.push(q); return path.reverse(); }
-    around(k, (q, diag) => { if (DONE[q] === gen) return; const g = G[k] + (diag ? Math.SQRT2 : ONE) + D.danger.cost * !!(AV && AV[q]) + (EDGE && H[q] <= ZERO ? (EDGE * -H[q]) / D.upm : ZERO); if (GEN[q] === gen && g >= G[q]) return; GEN[q] = gen; G[q] = g; CAME[q] = k; push(q, g + hx(q)); }, who);
+    around(k, (q, diag) => { if (DONE[q] === gen) return; const g = G[k] + (diag ? Math.SQRT2 : ONE) + D.danger.cost * !!(AV && AV[q]) + (EDGE && H[q] <= ZERO ? (EDGE * -H[q]) / D.upm : ZERO) + (inWoods(q) ? (diag ? Math.SQRT2 : ONE) * (ONE / woodsPace(who) - ONE) : ZERO); if (GEN[q] === gen && g >= G[q]) return; GEN[q] = gen; G[q] = g; CAME[q] = k; push(q, g + hx(q)); }, who);
   }
   return null;
 }

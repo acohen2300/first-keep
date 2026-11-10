@@ -360,6 +360,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N286 |  | Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row gone, the side's words to the he | opened |
 | N287 |  | Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v80 card he called sharp (first  | opened |
 | N288 |  | Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground opens a small strip at the finge | opened |
+| N289 |  | US Army FM 21-18, Foot Marches (1990), the rates of march by ground: cross-country and wooded ground far slower than a road (from memory: ab | to open |
 
 ## colours
 
@@ -1236,6 +1237,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E860 |  | the square laid with its first box under the finger, held inside the screen |  |
 | E861 |  | a builder's next site: the first one laid, then the nearest (a wall line keeps to the nearest piece) (Albert, Nov 9: first placed, first bui |  |
 | E862 |  | the year's clock: the game's time from a start late in spring (D359), for seasons, leaves, the meadow, the weather and the harvest |  |
+| E863 |  | the woods: walkable for a person or a rider at the woods' pace (D360), never for engines or wagons; the path pays the time lost, so the edge |  |
 
 ## ground
 
@@ -1614,6 +1616,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D357 | the Help page: the last keep messages, newest first, the latest one left to the help line beneath (Albert, Nov 9: the Help page lists earlier messages) | {keep: 20} | N286 |
 | D358 | the quick action's shares of the army, nearest to the spot first: half and a quarter (v80's strip: ½ and ¼; All is everyone, Idle only the idle) (Albert, Nov 9 19:15-19:37) | {half: 0.5, quarter: 0.25} | N288; N287 |
 | D359 | a game starts this share of a season into spring, when the grass has greened (the meadow's green rises from 0.45 of a season: D353 green up): late spring, about May in the north (Albert, Nov 9 19:21, 19:48: start in a greener month) | 0.75 | N287 |
+| D360 | the woods walkable at a cost (Albert, Nov 9 18:33): who may enter, by what carries them, and the share of their pace kept under the trees: foot about half (FM 21-18: wooded ground against open, from memory, to open), riders slower (low boughs, roots; a horse needs room); siege engines, wagons and anything not listed never enter; the pathfinder pays the time, so a gatherer keeps to the edge unless the woods are much shorter | {pace: {person: 0.5, horse: 0.35}} | N289; N287 |
 
 ## rules
 

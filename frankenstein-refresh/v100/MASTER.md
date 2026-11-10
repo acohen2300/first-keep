@@ -223,6 +223,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E790** each beat the ice under every loaded tile of deep water is weighed (a thaw leaves them on 
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
 - **E785** who may step on ice: yours unless told to go around; the computer and the wild only where 
+- **E863** the woods: walkable for a person or a rider at the woods' pace (D360), never for engines o · D360 (N289, N287)
 - **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185, N198) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
 - **E360** the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh alwa · QN (N13) · QR (N179, N178, N174, N18) · D225 (N17, N173) · G9 (N179, N19, N173) · G8 (N107, N18, N178) · G10 (N174, N179, N173)
 - **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185, N198) · QR (N179, N178, N174, N18)
