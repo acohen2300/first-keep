@@ -316,7 +316,7 @@ const GC = D.caches; // E749
 const BLD = document.createElement('canvas'); let BLP = null; // E903
 const bladeSheet = () => { if (BLP) return BLP; const GT = D.lay.grass, t = document.createElement('canvas'), q = t.getContext('2d'), r = NS_rng(GT.seed), [l0, l1] = GT.lean, [h0, h1] = GT.tall; t.width = t.height = GT.tile; q.lineCap = 'round'; q.lineWidth = GT.w; // E59
   for (let i = GT.blades; i--; ) { const x = r() * GT.tile, y = r() * GT.tile; q.strokeStyle = PC.blades[r() < TREE.half ? ZERO : ONE]; q.beginPath(); q.moveTo(x, y); q.lineTo(x + l0 + r() * (l1 - l0), y - h0 - r() * (h1 - h0)); q.stroke(); }
-  return (BLP = BLD.getContext('2d').createPattern(t, 'repeat')); };
+  BLP = BLD.getContext('2d').createPattern(t, 'repeat'); BLP.setTransform(new DOMMatrix().scale(GT.scale)); return BLP; };
 function drawGround(gx, gy) { if (!ground) return; const z = cam.z, M = D.landCache.margin, t = ground.tint, k = PL.tint; // E751
   const x0 = clamp(Math.floor((-M - gx) / z), ZERO, gw), y0 = clamp(Math.floor((-M - gy) / z), ZERO, gh), w = clamp(Math.ceil((cw + M - gx) / z), ZERO, gw) - x0, h = clamp(Math.ceil((ch + M - gy) / z), ZERO, gh) - y0; if (w <= ZERO || h <= ZERO) return;
   const put = (into, src, d) => into.drawImage(src, x0 / d, y0 / d, w / d, h / d, gx + x0 * z, gy + y0 * z, w * z, h * z); put(ctx, ground, ONE);
@@ -324,7 +324,7 @@ function drawGround(gx, gy) { if (!ground) return; const z = cam.z, M = D.landCa
   ctx.globalCompositeOperation = 'multiply'; put(ctx, t, k); ctx.globalCompositeOperation = 'source-over';
   const [z0, z1] = D.paper.blades, a = clamp((z - z0) / (z1 - z0), ZERO, ONE); if (!a) return; // E910
   const c = ctx.canvas, b = BLD.getContext('2d'), L = D.land, [ax, ay] = V(ZERO, ZERO, L), [bx, by] = V(ONE, ZERO, L), [cx, cy] = V(ZERO, ONE, L), p = bladeSheet(); if (BLD.width !== c.width || BLD.height !== c.height) { BLD.width = c.width; BLD.height = c.height; } else { b.setTransform(ONE, ZERO, ZERO, ONE, ZERO, ZERO); b.globalCompositeOperation = 'source-over'; b.clearRect(ZERO, ZERO, BLD.width, BLD.height); } b.setTransform(ctx.getTransform()); // E752
-  p.setTransform(new DOMMatrix([bx - ax, by - ay, cx - ax, cy - ay, ax + ox, ay + oy]).preMultiplySelf(new DOMMatrix().translate(gx, gy).scale(z)).scale(D.lay.grass.scale)); b.fillStyle = p; b.fillRect(gx + x0 * z, gy + y0 * z, w * z, h * z);
+  b.translate(gx, gy); b.scale(z, z); b.transform(bx - ax, by - ay, cx - ax, cy - ay, ax + ox, ay + oy); b.fillStyle = p; b.fillRect(ZERO, ZERO, N * D.tile, N * D.tile); b.setTransform(ctx.getTransform()); // E903
   b.globalCompositeOperation = 'destination-in'; put(b, t, k); ctx.save(); ctx.setTransform(ONE, ZERO, ZERO, ONE, ZERO, ZERO); ctx.globalAlpha = a; ctx.drawImage(BLD, ZERO, ZERO); ctx.restore(); }
 const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null; // E547
 const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
