@@ -825,5 +825,7 @@ BOOK("comments", {
  "E845": {"text": "the book: Welcome back mid-match (Resume, New game), paused"},
  "E846": {"text": "a message kept for the Help page, newest first, the same one twice in a row once"},
  "E847": {"text": "Help: the earlier messages, newest first; the latest stays in the help line beneath"},
- "E848": {"text": "a small card's title: the title on its own row, back, book and close beneath it"}
+ "E848": {"text": "a small card's title: the title on its own row, back, book and close beneath it"},
+ "E849": {"text": "a group's label over its boxes, in small capitals across the whole row (as the v80 card)"},
+ "E850": {"text": "a ring is the box's outline: the box drops its own border so the ring sits on the edge, one line, never a second inside"}
 });

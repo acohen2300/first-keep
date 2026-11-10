@@ -358,6 +358,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N284 |  | Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysbaert, M. (2019), How many words | to open |
 | N285 |  | Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the seams filled; the title always ba | opened |
 | N286 |  | Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row gone, the side's words to the he | opened |
+| N287 |  | Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v80 card he called sharp (first  | opened |
 
 ## colours
 
@@ -1220,6 +1221,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E846 |  | a message kept for the Help page, newest first, the same one twice in a row once |  |
 | E847 |  | Help: the earlier messages, newest first; the latest stays in the help line beneath |  |
 | E848 |  | a small card's title: the title on its own row, back, book and close beneath it |  |
+| E849 |  | a group's label over its boxes, in small capitals across the whole row (as the v80 card) |  |
+| E850 |  | a ring is the box's outline: the box drops its own border so the ring sits on the edge, one line, never a second inside |  |
 
 ## ground
 
@@ -1697,7 +1700,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN15 | the Welcome back card, as Base: a saved game opens paused behind it; the pause itself has no page (the speeds, New game and the volumes drop under the pause button; Paused · tap to carry on; Albert, Nov 7 20:48: all Base) | {ticks: [Tall], rows: title Welcome back, Resume, New game} | N241 |
 | SN14 | words on the map (Mid's LABEL, mapFont, tag): px whatever the zoom, as a screen's words (Albert, Nov 8 21:21: a label must not scale with the zoom; 12 is Mid's, Oct 31); a label's pill (padding, edge, rise, height, inset, the words' nudge down) | {px: 12, pad: [10, 4, 13, 19, 5, 1]} | N208 |
 | SN19 | the villager square's icons the bar lacked (24-unit paths, drawn as the others: a stroke, no fill): send, more, the rally flag, info | {send: <path d=\M4 12h14M13 6l6 6-6 6\/>, more: <circle cx=\5\ cy=\12\ r=\1.6\/><circle cx=\12\ cy=\12\ r=\1.6\/><circle cx=\19\ cy=\12\ r=\ | N133 |
-| SN20 | the type rule: card titles in the display font at title (weight, px); row headers in column 1 head; inside a box, the first line first and the second line second (Albert, Nov 9 07:37-09:59, 13:12: 12 inside boxes) | {ui: Barlow Semi Condensed, display: IM Fell English SC, title: [400, 18], head: [600, 14], first: [600, 12], second: [400, 12]} | N283; N285 |
+| SN20 | the type rule: card titles in the display font at title (weight, px); row headers in column 1 head; inside a box, the first line first and the second line second (Albert, Nov 9 07:37-09:59, 13:12: 12 inside boxes; 19:37: first lines 14 again, as the v80 card; a group's label in small capitals at label, letters spaced track em) | {ui: Barlow Semi Condensed, display: IM Fell English SC, title: [400, 18], head: [600, 14], first: [600, 14], second: [400, 12], label: [600 | N283; N285; N287 |
 | SN21 | the jobs rows: the two rows and a job's − and + gap apart, columns as the mold; icon, count and word at the second line's size, icons icon px; one ink and one fill in every state (Albert, Nov 9 10:03-10:10) | {gap: 3, icon: 12} | N283 |
 | SN31 | Info Help Ribbon 1, the help line: h tall on its tray, text pad in from the left, gunmetal with the working ring's blue edge, white second-line words; in two places, one look: the footer of every menu, always there, the latest message (a tap opens Help); and under the top ribbon, only while a message is fresh, coming and going in place of the toasts (Albert, Nov 9 11:14-11:21, 12:26, 12:29) | {h: 22, pad: 10} | N283 |
 | SN32 | the ring round a box (research buttons, the queue, the help line): dim (thin, the dim colour) not chosen; lit (thin, bright) chosen; run (thick, bright, over the dim track) at work, pinned at 12 o'clock and receding clockwise until done; corner radius r; seam closes the full ring (Albert, Nov 9 11:23-12:19); verbs: which buttons ring and in what colour (unit: by what it trains; Albert, Nov 9 12:57: rings on everything), the chosen one lit in place of the gold edge | {thin: 1, thick: 2, r: 6, seam: 0.006, verbs: {pick: brown, train: unit, opt: white, speed: white, hazard: red, vol: white, resume: white, n | N284; N285 |
@@ -2275,4 +2278,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J40 | each number research moves (the O book's fx s), in words, and the family that tints it (C26): economy, speed, health, war, sight, other | {rate: [gathering, economy], make: [making, economy], scale: [yield per plot, economy], sell: [sale price, economy], trade: [trade, economy] | N160 |
 | J41 | the villager's square (Albert, Nov 8 21:35-21:43): its boxes, what a box tells when it waits for a tap, and why one is dim | {build: Build, send: Send to, attack: Attack, more: More, garrison: Garrison, rally: Rally, info: Info, focus: Focus, tell: {send: Tap where | N241 |
 | J42 | N5 words: the stances of Relations and Misfits (a name, then four), the Paused and Sound cards' help lines, the book with no game, the Help page empty (Albert, Nov 9 12:57-13:25) | {sets: {Relations: [gift, war, terms, ally], Misfits: [bribe, war, terms, ally]}, labels: {gift: Gift, bribe: Bribe, war: War, terms: Terms, | N286 |
+| J43 | N6 words: a card's group labels (as the v80 card) and Welcome back's help line (Albert, Nov 9 19:37) | {train: Train, research: Research, welcome: Resume where you left off, or start a New game.} | N287 |
 

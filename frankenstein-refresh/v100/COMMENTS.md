@@ -830,3 +830,5 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E846 | menu.js | a message kept for the Help page, newest first, the same one twice in a row once |
 | E847 | menu.js | Help: the earlier messages, newest first; the latest stays in the help line beneath |
 | E848 | menu.js | a small card's title: the title on its own row, back, book and close beneath it |
+| E849 | menu.js | a group's label over its boxes, in small capitals across the whole row (as the v80 card) |
+| E850 | menu.js | a ring is the box's outline: the box drops its own border so the ring sits on the edge, one line, never a second inside |

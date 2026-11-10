@@ -496,6 +496,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E830** dim is the colour mixed into the tray brown by one share, never picked by hand
 - **E831** the box's outline as one path from 12 o'clock, clockwise, round its corners
 - **E832** each ring drawn once its box has a size, and again only when its size, colour or state cha
+- **E850** a ring is the box's outline: the box drops its own border so the ring sits on the edge, on
 - **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
 - **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
 - **E183** 60w 60f, as Albert's Build menu
@@ -529,6 +530,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
+- **E849** a group's label over its boxes, in small capitals across the whole row (as the v80 card)
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
