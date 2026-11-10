@@ -11,7 +11,7 @@ Albert's answers (19:37) to the numbered questions:
 
 Order of work (each step committed locally; one push at the end):
 - [x] T1 menus  - [x] T2 Build menu  - [x] T3 selection  - [x] T4 quick action  - [x] T5 build order
-- [x] T6 look  - [x] T7 woods  - [x] T8 hold, building tap, small fixes  - [ ] T9 stray sweep, gate
+- [x] T6 look  - [x] T7 woods  - [x] T8 hold, building tap, small fixes  - [x] T9 stray sweep, gate (part)
 - [ ] T10 fog, sight, fog of war  - [ ] T11 SoRen renderer  - [ ] T12 check and publish
 
 ## Done, with cuts (for Parked.md at the end)
@@ -23,3 +23,4 @@ Order of work (each step committed locally; one push at the end):
 - T6: games start late in spring (D359 startIn 0.75 of a season; one year clock yt(), E862, for seasons, leaves, the meadow, weather, harvest); the camera opens further out (D open.px 20, was 40); v80's gold, stone and iron piles at v80's size (W27 outcrop 3 m, was 1.2; the art was already v80's); the meadow at res 2 (D353, was 4: four times the pixels, to measure on the phone). Cut: the start in late winter.
 - T7: the woods walkable (E863, D360): a person at half pace, a rider at 0.35 (FM 21-18, from memory, to open: N289); engines, wagons and beasts never enter; the pathfinder pays the lost time, so gatherers keep to the edge unless the trees are much shorter; one rule for every side. Not reused: the ice crossing's modes and its ask (the woods need no ask: Albert, never "ask"; one rule, so no mode to remember). Owed: units under the canopy drawn as a silhouette, and foes there seen only by sight (with T10).
 - T8: a tap anywhere on a building's drawn shape is the building (E864: the front-most whose picture is solid under the finger; a unit near still wins); a hold is only the box drag (E865). Checked on screen: the Barracks card (title row, TRAIN, RESEARCH, All tech, Repair, Demolish). Cut: the hold that picked a unit and added it to the pick; the hold that dragged the crosshair (a tap moves it). Still open: long names clipped in the queue slots and in Mail.
+- T9 (part): the gate now counts a number with a unit (14px, 0.3s, .5em, 90deg) in the ratchet (index.py NUM); every size typed in menu.js's style swept into the Screen book (SN35 css, E866: 69 sizes, now 0); the map's 14px canvas words read the head type (E867); the gradient's 90deg became "to right". Not done: the zero rule. The code still types about 6,150 bare numbers (index.html about 5,500: sprite and path coordinates, mostly; menu.js about 470), each to move to a book with a cite: weeks of work, not one build. The ratchet keeps them from growing; the sweep goes on file by file.

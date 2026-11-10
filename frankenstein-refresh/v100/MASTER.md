@@ -413,6 +413,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
 - **E613** words on the map keep one size whatever the zoom, as the screen's own words; a label is a 
+- **E867** words drawn on the map at the head type (SN20), never a size typed in the code · SN20 (N283, N285, N287)
 - **E614** the dressing: a site staked out and rising with the work, a finished building's pop and fr
 - **E615** a building site: the stakes round its footprint, the walls rising with the work between tw
 - **E616** a building's flags, drawn live over its picture where its art put them, waving more in a s
@@ -482,6 +483,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E819** the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes
 - **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
 - **E839** a font from the type rule: its weight and size, in the face named
+- **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287)
 - **E826** the help line under the top ribbon carries its words in a span and a white ring (Info Help
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E844** Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and

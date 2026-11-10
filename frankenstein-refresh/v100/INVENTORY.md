@@ -4,16 +4,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,398 | 562,754 | 562,902 (+3,525) |
-| Books | 2220 | 0 | 655,725 | 656,601 (+1,417) |
+| Game code | 31 | 3,399 | 563,460 | 563,608 (+4,231) |
+| Books | 2223 | 0 | 656,728 | 657,606 (+1,417) |
 | Laws | 93 | 0 | 19,761 | 20,292 |
-| Tools | 4 | 1,781 | 290,524 | 290,765 |
+| Tools | 4 | 1,781 | 290,664 | 290,905 (+140) |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 32 | 1,874 | 1,874 | 10 |
+| index.html#page | 32 | 1,874 | 1,874 | 11 |
 | index.html#frames | 13 | 1,111 | 1,111 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
 | index.html#drawn-once-in-the-view-frame | 80 | 12,702 | 12,706 | 96 |
 | index.html#the-view | 9 | 1,080 | 1,084 | 13 |
-| index.html#the-door | 95 | 14,405 | 14,409 | 65 |
+| index.html#the-door | 95 | 14,373 | 14,377 (-32) | 65 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -35,11 +35,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,949 | 5,953 | 90 |
 | index.html#floor-6-climate | 169 | 29,438 | 29,450 (+55) | 208 |
 | index.html#floor-7-display | 46 | 7,982 | 7,986 | 55 |
-| index.html#the-view-s-eyes-lights-and-stage | 119 | 23,019 | 23,023 | 0 |
+| index.html#the-view-s-eyes-lights-and-stage | 120 | 23,155 | 23,159 (+136) | 0 |
 | index.html#the-meadow | 69 | 14,370 | 14,374 (+1) | 0 |
 | index.html#the-woods-cache | 50 | 5,413 | 5,417 (+146) | 47 |
 | index.html#touch | 52 | 8,485 | 8,489 (+584) | 54 |
-| menu.js | 517 | 101,316 | 101,360 (+1,788) | 544 |
+| menu.js | 517 | 101,918 | 101,962 (+2,390) | 544 |
 | econ.js | 590 | 108,486 | 108,486 (+619) | 72 |
 | combat.js | 349 | 58,179 | 58,179 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
@@ -53,12 +53,12 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,145 |
 | citations | 288 | 66,303 |
 | colours | 26 | 7,379 |
-| comments | 843 | 147,504 |
+| comments | 845 | 147,718 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 329 | 152,210 |
 | rules | 75 | 28,346 |
-| screen | 23 | 9,514 |
+| screen | 24 | 10,338 |
 | shells | 110 | 23,401 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,506 |
@@ -154,4 +154,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2348 items sealed · 2220 book entries · 93 laws · 288 citations, 22 still to open · 7 known
+2351 items sealed · 2223 book entries · 93 laws · 288 citations, 22 still to open · 7 known

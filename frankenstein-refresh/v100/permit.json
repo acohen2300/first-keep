@@ -12,7 +12,8 @@
   "code:index.html",
   "code:econ.js",
   "code:combat.js",
-  "book:mass"
+  "book:mass",
+  "tool:index.py"
  ],
  "grow": {
   "code:menu.js": 6000,
@@ -24,6 +25,7 @@
   "code:index.html#floor-6-climate": 455,
   "code:index.html#the-meadow": 401,
   "code:index.html#the-trees": 401,
-  "code:index.html#touch": 976
+  "code:index.html#touch": 976,
+  "code:index.html#the-view-s-eyes-lights-and-stage": 536
  }
 }

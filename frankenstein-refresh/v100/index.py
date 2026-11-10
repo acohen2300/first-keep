@@ -19,7 +19,7 @@ def items():   # every sealed thing, id → text: a book entry, a law, a section
     out.update({'code:' + f: text(f) for f in CODE[1:]}); out.update({'tool:' + f.split('/')[-1]: text(f) for f in TOOLS if text(f) is not None})
     return out
 NCODE = re.compile(r'N\d+')   # a citation code (outside the f-string: Python before 3.12 forbids a backslash inside one)
-NUM = lambda t: len(re.findall(r'(?<![\w.#$-])\d+\.?\d*(?![\w%])', t)) + 3 * len(re.findall(r'#[0-9a-fA-F]{6}\b', t))   # typed numbers; a colour counts three
+NUM = lambda t: len(re.findall(r'(?<![\w.#$-])\d+\.?\d*(?![\w%])', t)) + len(re.findall(r'(?<![\w#$-])\d*\.?\d+(?:px|ms|s|em|rem|vh|vw|deg|%)\b', t)) + 3 * len(re.findall(r'#[0-9a-fA-F]{6}\b', t))   # typed numbers, with a unit too (N6, item 1: 14px, 0.3s and .5 got through); a colour counts three
 SHELL = re.compile(r"['\"](?:" + '|'.join(sorted(BOOKS['shells'], key=len, reverse=True)) + r")['\"]|\b[A-Z]{1,2}\.(?:" + '|'.join(BOOKS['shells']) + r")\b")   # a shell named in code
 BYNAME = re.compile(r"\b(?:kind|type|code)\s*[!=]==?\s*['\"]\w+['\"]")   # a thing asked what it is by a typed name
 def SWALLOW(line): c = re.search(r'(?<![:"\'\\])//(.*)$', line); return bool(c and re.search(r'\w\(.*\)\s*;\s*($|\w|\})', c.group(1)) and not re.search(r'[\'"`]', c.group(1)[:3]))

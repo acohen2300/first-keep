@@ -847,3 +847,5 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E863 | index.html#floor-5-movables | the woods: walkable for a person or a rider at the woods' pace (D360), never for engines or wagons; the path pays the time lost, so the edge wins unless the trees are much shorter |
 | E864 | index.html#touch | a tap anywhere on a building's drawn shape is the building: the front-most whose picture is solid under the finger (Albert, Nov 9 item 8.7) |
 | E865 | index.html#touch | a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it |
+| E866 | menu.js | the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) |
+| E867 | index.html#the-view-s-eyes-lights-and-stage | words drawn on the map at the head type (SN20), never a size typed in the code |

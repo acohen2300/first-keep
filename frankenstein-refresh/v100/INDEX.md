@@ -1240,6 +1240,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E863 |  | the woods: walkable for a person or a rider at the woods' pace (D360), never for engines or wagons; the path pays the time lost, so the edge |  |
 | E864 |  | a tap anywhere on a building's drawn shape is the building: the front-most whose picture is solid under the finger (Albert, Nov 9 item 8.7) |  |
 | E865 |  | a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it |  |
+| E866 |  | the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) |  |
+| E867 |  | words drawn on the map at the head type (SN20), never a size typed in the code |  |
 
 ## ground
 
@@ -1727,6 +1729,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN27 | MR title: the title's wide box, then back, book (or info) and close, always, in the last slots of the mold, the three small boxes jobs-gap apart (Albert, Nov 9 10:31-10:32, 12:57) | {slots: 2} | N283; N285 |
 | SN33 | a wide box, two columns of the mold: train and research boxes in a card, and the small cards (Mail and Welcome back centred over the bars; Paused under the pause button, Sound under the mute button) (Albert, Nov 9 13:08-13:25) | {slots: 2, small: [Mail, Back]} | N286 |
 | SN34 | made from a building's own card, not the Build menu: a Dwelling raised to an Apartment (a house adding a floor), a Tree farm planted from the Lumber camp (Albert, Nov 9 18:29) | {BR1: BR2, BI2: BCL2} | N287 |
+| SN35 | the menus' sizes in px, once (item 1, the stray sweep: every size typed in menu.js's style comes here): hair a 1 px line; edge a 2 px border; r a box's corner, rc a card's, rq the quick square's, rb a bar's; icon an icon's side; glyph the − / + signs; pad a small gap inside a box; side the inset of a bar and the card text; tpad a title's left inset; vpad and hpad a card's padding; bar a progress bar's height; strip a strip row's height; none the safe-area fallback; caps the title's letter spacing in em (the values as they were typed, now named) | {hair: 1, edge: 2, r: 6, rc: 9, rq: 8, rb: 2, icon: 18, glyph: 18, pad: 4, side: 12, tpad: 14, vpad: 8, hpad: 10, bar: 3, strip: 30, none: 0 | N283; N287 |
 
 ## shells
 

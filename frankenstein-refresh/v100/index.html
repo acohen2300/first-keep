@@ -427,7 +427,7 @@ function drawGrid() { // E69
   ctx.stroke(); ctx.restore();
 }
 function drawZones() { // E70
-  ctx.save(); ctx.strokeStyle = C.white; ctx.fillStyle = C.white; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.setLineDash([6, 6]); ctx.font = '14px "Barlow Semi Condensed", sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.save(); ctx.strokeStyle = C.white; ctx.fillStyle = C.white; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.setLineDash([6, 6]); ctx.font = headFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   for (const [cx, cy, a0] of [[B0, B0, 0], [B1, B0, 90], [B1, B1, 180], [B0, B1, 270]]) {
     for (const r of D.zone) { const pts = []; for (let a = a0; a <= a0 + 90; a += 3) pts.push(toScreen(...toView(cx + r * Math.cos(a * RAD), cy + r * Math.sin(a * RAD), D.land))); path(pts); ctx.stroke(); }
     const ux = Math.cos((a0 + 45) * RAD), uy = Math.sin((a0 + 45) * RAD);
@@ -1485,6 +1485,7 @@ on('draw', (c, z) => { const [life, r0, gr, lw] = STG.rip; c.save(); c.lineWidth
 on('over', (c) => { const [life, al] = STG.flash, a = K.t - whiteT; if (a >= null && a < life) { c.save(); c.globalAlpha = al * (ONE - a / life); c.fillStyle = CLT.flash; c.fillRect(null, null, cw, ch); c.restore(); } drawMini(c); });
 // E613
 let FONT = null;
+const headFont = () => { const T = fromBook('screen').type; return `${T.head[ZERO]} ${T.head[ONE]}px "${T.ui}", sans-serif`; }; // E867
 const mapFont = () => { const b = FONT || (FONT = getComputedStyle(document.body)); return `${b.fontWeight} ${LBL.px}px ${b.fontFamily}`; };
 function tag(c, text, x, y) { const [pad, edge, rise, hi, inset, nudge] = LBL.pad; c.save(); c.font = mapFont(); c.textAlign = 'left'; const w = c.measureText(text).width + pad; x = clamp(x - w * DRW.half, edge, cw - w - edge);
   c.fillStyle = CMN.pill; c.fillRect(x, y - rise, w, hi); c.fillStyle = CDR.white; c.fillText(text, x + inset, y + nudge); c.restore(); }

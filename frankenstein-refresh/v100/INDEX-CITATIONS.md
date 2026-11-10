@@ -381,11 +381,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N280** (to open) Xenophon, Anabasis (c. 370 BC): the Ten Thousand took guides to cross Kurdistan and Armenia (Books III-IV); th → D355, O260, O261
 - **N281** (to open) US Army FM 21-75, Combat Skills of the Soldier (1984), chapter 3, individual movement: the low crawl and the h → unused
 - **N282** Design: Albert, Nov 9 2026 08:28-09:08 (talk mode; docs/4 Now/Next build list.md items 4, 5 and 8): rain and s → C17, D229, D321
-- **N283** Design: Albert, Nov 9 2026 07:20-12:23 (docs/4 Now/Next build list.md items 1, 2, 3, 9, 11): the type rule, me → C28, C29, D321, SN1, SN20, SN21, SN31, SN27
+- **N283** Design: Albert, Nov 9 2026 07:20-12:23 (docs/4 Now/Next build list.md items 1, 2, 3, 9, 11): the type rule, me → C28, C29, D321, SN1, SN20, SN21, SN31, SN27, SN35
 - **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, D356, SN32
 - **N285** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the sea → SN20, SN32, SN27
 - **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → D357, SN33, J42
-- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D358, D359, D360, SN2, SN3, SN20, SN34, J43, J44, J45
+- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D358, D359, D360, SN2, SN3, SN20, SN34, SN35, J43, J44, J45
 - **N288** Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground op → D358, J45
 - **N289** (to open) US Army FM 21-18, Foot Marches (1990), the rates of march by ground: cross-country and wooded ground far slowe → D360
 
