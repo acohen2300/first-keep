@@ -211,7 +211,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D352, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D114, D115, D116, D120, D121, D169, D170, D230, D343
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D352, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D114, D115, D116, D120, D169, D170, D230, D343, D365
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D163, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -385,7 +385,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, D356, SN32
 - **N285** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the sea → SN20, SN32, SN27
 - **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → D357, SN33, J42
-- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → SC47, W27, D165, D320, D353, D358, D359, D360, D361, D362, D363, D364, X26, SN2, SN3, SN20, SN34, SN35, CL1, CL2, J43, J44, J45, J46, J47
+- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D358, D359, D360, D361, D362, D363, X26, SN2, SN3, SN20, SN34, SN35, J43, J44, J45, J46, J47
 - **N288** Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground op → D358, J45
 - **N289** (to open) US Army FM 21-18, Foot Marches (1990), the rates of march by ground: cross-country and wooded ground far slowe → unused
 - **N290** (to open) Bergström, B., FOV using recursive shadowcasting (RogueBasin, 2001) and StarCraft II's fog of war (Blizzard, 2 → C31, D361
@@ -393,11 +393,13 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N292** Soule, R. G. and Goldman, R. F., Terrain coefficients for energy cost prediction (J. Appl. Physiol. 32, 1972): → D360
 - **N293** Atkinson, M. P. (Naval Postgraduate School), on Lanchester's laws (opened Nov 9 2026): Lanchester's ancient mo → unused
 - **N294** (to open) A line through a random stand of trunks is blocked with chance 1 - e^(-n d L) (the mean free path; Beer-Lamber → D360
-- **N295** (to open) Poisson-disk sampling: Cook, R. L., Stochastic sampling in computer graphics (ACM Transactions on Graphics 5,  → SC48, D364, CL1
-- **N296** (to open) Teschner, M. et al., Optimized spatial hashing for collision detection of deformable objects (VMV 2003): the p → D364
-- **N297** (to open) Varnish: a clear coat fills a surface’s roughness, so less light scatters off the top and the colours under it → SC47, SC49, C32, D364, CL2
-- **N298** (to open) Roberts, M., An improved version of Bridson's algorithm for Poisson disc sampling (Extreme Learning blog, 2019 → D364
+- **N295** (to open) Poisson-disk sampling: Cook, R. L., Stochastic sampling in computer graphics (ACM Transactions on Graphics 5,  → unused
+- **N296** (to open) Teschner, M. et al., Optimized spatial hashing for collision detection of deformable objects (VMV 2003): the p → unused
+- **N297** (to open) Varnish: a clear coat fills a surface’s roughness, so less light scatters off the top and the colours under it → unused
+- **N298** (to open) Roberts, M., An improved version of Bridson's algorithm for Poisson disc sampling (Extreme Learning blog, 2019 → unused
 - **N299** (to open) Google, web.dev, Measure performance with the RAIL model: a frame at 60 fps has about 16 ms, of which the brow → D353
+- **N300** (to open) Alex Walker, The Cicada Principle and Why It Matters to Web Designers (SitePoint, 2011): tiles of prime-number → D348
+- **N301** Albert, Nov 10, 2026, on the ground: four sheets (water, sand, dirt, grass), lakes rivers streams and marshes  → C33, D366
 
 ## Named exceptions
 

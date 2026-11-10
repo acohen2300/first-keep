@@ -43,7 +43,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E755 | index.html#the-things-drawn-each-frame-back-to-fr | how tall a drawing is: from its first to its last painted row |
 | E756 | index.html#the-things-drawn-each-frame-back-to-fr | the figures' scale: a villager's body height over its drawing's, one for every figure (riders, animals and engines are drawn at the same art scale) |
 | E757 | index.html#the-things-drawn-each-frame-back-to-fr | a find's scale: its body's height (tree, bush, outcrop) over its own drawing's; a find with no body is drawn as the figures are |
-| E758 | index.html#drawn-once-in-the-view-frame | a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth across the tiles |
+| E758 | index.html#drawn-once-in-the-view-frame | a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth across the tiles (N11: a marsh is shallow water; the woods' floor is grass; no rim colour) |
 | E759 | index.html#drawn-once-in-the-view-frame | the shore and the strata as contours: between four tiles' middles the lowest band is laid, then each higher band above its level, so the coast and the sand, dirt and grass edges cut across the tiles instead of stepping; foam on the water's edge; a cliff or a wood keeps its tiles |
 | E760 | index.html#the-building-art | a stone wall laid course by course, each stone with its own faint tint |
 | E761 | index.html#the-building-art | damp moss rising from a wall's foot, fading upward |
@@ -164,13 +164,13 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E50 | index.html#floor-3-non-movables | drawn back to front |
 | E51 | index.html#floor-3-non-movables | a tree with trees on all eight sides is deep: nothing can stand between it and its neighbours, so the deep woods are painted once a chunk (see the woods cache) |
 | E52 | index.html#floor-3-non-movables | 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23) |
-| E53 | index.html#floor-3-non-movables | the first band is what can be waded (D24) |
-| E54 | index.html#floor-3-non-movables | the forest floor: the grass, shaded; the marsh: the grass, toward the water |
+| E53 | index.html#floor-3-non-movables | the first band is what can be waded (D24) (N11: three sheets of water, shallow to deep) |
+| E54 | index.html#floor-3-non-movables | the forest floor: the grass, shaded; the marsh: the grass, toward the water (N11: the paper sheets from the waterline up: wet sand, sand, the dirt lip, grass; grass is a light neutral the season colours, E902) |
 | E55 | index.html#floor-3-non-movables | what a face shows between two heights (L1): the grass is the land's top skin; anything raised above it shows bare earth |
 | E56 | index.html#drawn-once-in-the-view-frame | Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward the camera. Then every frame is one picture, moved and scaled. |
 | E57 | index.html#drawn-once-in-the-view-frame | the masks at a quarter scale: the land in white and in shadow, the inland water |
 | E58 | index.html#drawn-once-in-the-view-frame | a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right and down, so the next tile's edge lands on solid paint and no seam shows |
-| E59 | index.html#drawn-once-in-the-view-frame | the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (preview 49's) |
+| E59 | index.html#drawn-once-in-the-view-frame | the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (preview 49's) (N11: two tiles, E903) |
 | E60 | index.html#drawn-once-in-the-view-frame | the ground is painted flat; the light stands high to the left and in front and the meadow layer lights it (D353 lit): ground leaning that way warm, ground leaning away cool |
 | E61 | index.html#drawn-once-in-the-view-frame | runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills) |
 | E62 | index.html#drawn-once-in-the-view-frame | faces: the +y edge and the +x edge face the camera (the turn is under 45°) |
@@ -784,13 +784,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E685 | index.html#the-door | a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, not timed, so the game does not depend on the machine); a job not done goes to the back and resumes next frame |
 | E686 | ai.js | a site the computer cannot pay for, or may not build, is not searched for: plan() would refuse it after the search (the same answer, without the rings); the search then asks each tile only about the ground (its limit asked once, here) |
 | E680 | menu.js | the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a bar in a cell made a slash |
-| E799 | index.html#the-meadow | the meadow: a layer of the ground, one colour a tile from the season, the weather and the feet, painted into a picture of the land that a frame draws whole (the woods and buildings are shells; the grass is the land's own layer) |
-| E800 | index.html#the-meadow | made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each tile's flow by the steepest of the eight ways, the area that drains through it and its wetness index ln(a ÷ tan β) (TOPMODEL); the snow's lognormal drift by the relief; the six layers' weights; the clusters of flowers and pebbles; and for each texel of the picture the tile under it, found by walking the height until the view and the land agree (a cliff face, where they never do, is left to the ground below) |
-| E801 | index.html#the-meadow | each tile's colour: the season's grass under its six layers and its flowers' tint, worn to a path by the ruts, darkened when wet, mud where bare and wet, frozen in a frost, puddles where the wetness passes the brim (ruts hold water), hoarfrost, then snow by its drift, slush when it thaws; kept with its colour times its cover so a texel between two tiles blends without a fringe |
-| E802 | index.html#the-meadow | the meadow drawn: a sweep starts when the season, the weather or the paths have moved a step, runs a few rows a frame (no frame pays for all), and the picture is drawn whole each frame, more see-through close up so the blades show |
-| E803 | index.html#the-meadow | the flowers and pebbles close up: each cluster's offspring from its own seed, as many open as its season allows, none under snow or on a trodden path; one path a colour, filled in layers |
-| E804 | index.html#the-meadow | a tile's wetness by its wetness index and its snow by its drift: one home each for the step, the footing and the picture |
-| E805 | index.html#the-meadow | a step's wear on the grass: the pressure of everything that walks there (body, mount, kit and the load carried) over its prints, past the soil's precompression stress (lower when wet), by the log of the ratio, in person-steps: a light step wears nothing, a laden villager a little more than an empty one, a knight or a ram several times |
+| E800 | index.html#the-ground-s-soil-and-paper | made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each tile's flow by the steepest of the eight ways, the area that drains through it and its wetness index ln(a ÷ tan β) (TOPMODEL); the snow's lognormal drift by the relief; the six layers' weights; the clusters of flowers and pebbles; and for each texel of the picture the tile under it, found by walking the height until the view and the land agree (a cliff face, where they never do, is left to the ground below) |
+| E803 | index.html#the-ground-s-soil-and-paper | the flowers and pebbles close up: each cluster's offspring from its own seed, as many open as its season allows, none under snow or on a trodden path; one path a colour, filled in layers |
+| E804 | index.html#the-ground-s-soil-and-paper | a tile's wetness by its wetness index and its snow by its drift: one home each for the step, the footing and the picture |
+| E805 | index.html#the-ground-s-soil-and-paper | a step's wear on the grass: the pressure of everything that walks there (body, mount, kit and the load carried) over its prints, past the soil's precompression stress (lower when wet), by the log of the ratio, in person-steps: a light step wears nothing, a laden villager a little more than an empty one, a knight or a ram several times |
 | E806 | combat.js | an order leaves its soldiers tired as a charge does (D247 slow, settling back with tired): give many orders and the army slows (Mid's ORDER.tired; Albert, Nov 8) |
 | E807 | index.html#floor-5-movables | QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, softly (foot before archers before riders before engines; Mid's FORMING soft) |
 | E808 | index.html#the-view-s-eyes-lights-and-stage | a side's exposure to cold and wet (D354): the air's cold and the ground's wetness, each cut by its research (Wool cloaks, Oiled cloaks, Chimneys); read by the meals, the sickness and the nerve |
@@ -862,22 +859,20 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E878 | index.html#floor-7-display | a sight cell's woods: how much of it is wood and its ground under the trees, so a ray through the trunks thins by e^(-n d L) and a ray over the canopy meets a wall |
 | E879 | index.html#the-door | the fog of war is saved with the game: the ground each side has seen and the buildings it remembers, and whether fog is on; sight is cast again on load |
 | E880 | index.html#the-door | the land kept while the camera holds still: one copy drawn back instead of the ground, the meadow, the scars and the skin each frame (SoRen's keyed layers) |
-| E881 | index.html#the-view-s-eyes-lights-and-stage, index.html#the-meadow | the grass by the phone: full resolution while the phone keeps up, a quarter the pixels once it sheds its first step; the meadow is laid again when it crosses |
-| E882 | cels.js | the cels module: clear sheets over the meadow, built once from the seed in pieces, light and shade only |
-| E883 | cels.js | the cels' measures and shells, read from the books |
-| E884 | cels.js | the cels in their order, and the pieces held near the view |
-| E885 | cels.js | Poisson-disk spacing (Bridson's dart throwing on a grid of r / sqrt 2): random, never clumped, never bare |
-| E886 | cels.js | a piece built from the map's seed and its place: the same piece every time it comes back, never the same as its neighbour |
-| E887 | cels.js | the cels drawn in order over the meadow, each piece at the zoom step it is seen at; a cel with a fade fades in by zoom |
-| E888 | cels.js | a piece reaches up by its longest blade, so a blade rooted near its top edge is drawn whole and no seam shows between pieces |
 | E889 | index.html#the-door | the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a new land |
-| E890 | cels.js | a piece's blades and grain gathered into a few paths, one for each shade and tier, each laid with one stroke |
-| E891 | cels.js | the clear coat: the land so far laid over itself in a soft light, deeper and crisper, never blurred |
-| E892 | cels.js | a missing piece waits in a queue and is built in the browser's idle time, one at a time; the land is drawn again once it is ready |
 | E893 | index.html#the-door | a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel for pixel with the camera, painted again only when it slides past its margin, the zoom or its key changes, or its time runs out; the land and the fog of war are each one |
 | E894 | index.html#the-door | with ?test the frame meter shows from the start (its only door, the Yard, left the Paused card in N6) |
-| E895 | cels.js | the pieces one beyond the view are built ahead in idle time, so a pan finds them ready |
 | E896 | index.html#floor-7-display | the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above it, the layer's top level over the lowest ground, so it pools in the hollows |
 | E897 | index.html#floor-7-display | your own people under the canopy drawn as a ring over the trees, so you see who is inside |
-| E899 | index.html#the-meadow | the meadow is painted again strip by strip until its share of the frame is spent, then waits for the next frame (N10: one eighth of it at once took up to 32 ms); the land sheet is painted again once, when the meadow is done, not at every strip |
 | E898 | menu.js | the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings hide, so every tab is one height (Albert Nov 9: fit two rows) |
+| E900 | index.html#the-ground-s-soil-and-paper | the ground's soil and paper (N11): wet and snow on the ground for play, and the light, season, snow, flowers and glints over the paper sheets |
+| E901 | index.html#the-ground-s-soil-and-paper | over the baked ground: the hills' sun and shade and the meadow's soft patches as one small soft picture, then the snow sheet, then the flowers |
+| E902 | index.html#drawn-once-in-the-view-frame, index.html#the-ground-s-soil-and-paper | grass is painted a light neutral and also on its own sheet; that sheet takes the season's one colour (multiplied), recoloured only when the colour moves a visible step, so the ground is never painted again for the season |
+| E903 | index.html#drawn-once-in-the-view-frame | the blades are two tiles of different sizes laid over each other, so the repeat never lines up (the Cicada Principle) |
+| E904 | index.html#drawn-once-in-the-view-frame | a marsh is shallow water; reeds stand in it |
+| E905 | index.html#drawn-once-in-the-view-frame | each paper sheet casts a thin shadow on the sheet below, along its edge |
+| E906 | index.html#the-ground-s-soil-and-paper | the flowers come up in new places each year; the pebbles stay where they lie |
+| E907 | index.html#the-ground-s-soil-and-paper | snow is one more paper sheet, in six steps: it lies where play's drift would cover the ground, hollows first |
+| E908 | index.html#the-ground-s-soil-and-paper | glints on the water: a few short strokes that come and go |
+| E909 | index.html#floor-3-non-movables | how far each water tile lies from its shore, in tiles (a chamfer distance in two passes); the water's three sheets follow it, so their edges are smooth |
+| E910 | index.html#drawn-once-in-the-view-frame | the blades fade in with the zoom, as v80's did: none from far away, full close up |

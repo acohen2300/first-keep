@@ -243,13 +243,16 @@ function openWays(fixed) { // E652
 }
 const lay = (kind, bx, by, amount) => { put(kind, tileAt(bx, by), rng); return Object.assign(things.at(-1), { amount }); }; // E345
 const byLake = (bx, by, r) => lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + D.beach + r);
-const stratum = (h) => (h <= 0 ? 0 : h < D.sandTop ? 1 : h < D.dirtTop || h >= D.land + D.bare ? 2 : 3); // E52
-const BANDS = 6, deepest = shade(C.water, 0.6);
-const waterBand = (h) => (h > -D.wade ? 0 : 1 + Math.min(BANDS - 2, Math.floor((-h - D.wade) / ((D.sea - D.wade) / (BANDS - 1))))); // E53
+const PC = C.paper, TOP = [null, PC.wet, C.sand, C.dirt, PC.grass], GR = TOP.length - D.count.one, DT = GR - D.count.one; // E54
+const stratum = (h) => (h <= 0 ? 0 : h < D.wetTop ? ONE : h < D.sandTop ? ONE + ONE : h < D.dirtTop || h >= D.land + D.bare ? DT : GR); // E52
+const BANDS = PC.water.length, deepest = PC.water[BANDS - D.count.one];
+const SHORE = new Float32Array(N * N), waterBand = (k) => { let b = D.count.zero; while (b < D.paper.water.length && SHORE[k] >= D.paper.water[b]) b++; return b; }; // E53
+function shoreOf() { const big = N * N, R2 = Math.SQRT2, O = ONE; for (let k = ZERO; k < big; k++) SHORE[k] = H[k] > ZERO ? ZERO : big; // E909
+  const at = (i, j) => (i < ZERO || j < ZERO || i >= N || j >= N ? big : SHORE[j * N + i]), pass = (j0, j1, dj, i0, i1, di) => { for (let j = j0; j !== j1; j += dj) for (let i = i0; i !== i1; i += di) { const k = j * N + i; if (!SHORE[k]) continue; SHORE[k] = Math.min(SHORE[k], at(i - di, j) + O, at(i, j - dj) + O, at(i - di, j - dj) + R2, at(i + di, j - dj) + R2); } };
+  pass(ZERO, N, ONE, ZERO, N, ONE); pass(N - ONE, -ONE, -ONE, N - ONE, -ONE, -ONE); }
 const blend = (a, b, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - f) + parseInt(b.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
-const WATER = Array.from({ length: BANDS }, (_, k) => blend(C.water, deepest, k / (BANDS - 1)));
-const TOP = [null, C.sand, C.dirt, C.grass], FACE = [null, shade(C.sand, 0.72), shade(C.dirt, 0.72), shade(C.grass, 0.72)], FLOOR = shade(C.grass, 0.8), REED = blend(C.grass, C.water, 0.3); // E54
-const STRATA = [[0, D.sandTop, 1], [D.sandTop, D.dirtTop, 2], [D.dirtTop, D.land, 3], [D.land, 1e9, 2]]; // E55
+const WATER = PC.water; // E53
+const STRATA = [[D.count.zero, D.wetTop, D.count.one], [D.wetTop, D.sandTop, D.count.one + D.count.one], [D.sandTop, D.dirtTop, DT], [D.dirtTop, D.land + D.bare, GR], [D.land + D.bare, Infinity, DT]]; // E55
 
 // ── Drawn once in the view frame (E56)
 let ground, gw, gh, ox, oy; const maskFlood = document.createElement('canvas'), ICE = D.ice, ICEM = Array.from({ length: ICE.steps }, () => document.createElement('canvas')), HOLES = new Map(), CRACK = new Map(), fddDays = () => K.fds / D.day, onsetOf = (k) => ICE.onset.metre * (-H[k] / D.upm) * (ONE + (ICE.onset.fetch * LAKER[k]) / ICE.onset.per); // E780
@@ -258,27 +261,29 @@ function renderGround() {
   const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
   gw = Math.ceil(maxX - minX) + 2; gh = Math.ceil(maxY - minY) + 2; ox = 1 - minX; oy = 1 - minY;
   ground = document.createElement('canvas'); ground.width = gw; ground.height = gh;
-  let g = ground.getContext('2d'), blades = null; GCH.clear(); [CHLO, CHHI] = CH.reduce(([a, b], v) => [Math.min(a, v), Math.max(b, v)], [Infinity, -Infinity]);
+  ground.tint = document.createElement('canvas'); ground.tint.width = Math.ceil(gw / PL.tint); ground.tint.height = Math.ceil(gh / PL.tint); let g = ground.getContext('2d'), gm = ground.tint.getContext('2d'), blades = null, bladeA = ONE; gm.scale(ONE / PL.tint, ONE / PL.tint); shoreOf(); GCH.clear(); [CHLO, CHHI] = CH.reduce(([a, b], v) => [Math.min(a, v), Math.max(b, v)], [Infinity, -Infinity]);
   g.fillStyle = deepest; g.fillRect(0, 0, gw, gh);
   for (const m of [maskFlood, ...ICEM]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskFlood ? C.water : C.ground.ice; } // E57
   scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); for (const t of things) if (t.kind === 'bld' && (t.side === ME || memOf(ME).has(t))) wear(t); // E546
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // E58
-  const quad = (a, b, c, d, fill) => { g.fillStyle = fill; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0] + 1, b[1]); g.lineTo(c[0] + 1, c[1] + 1); g.lineTo(d[0], d[1] + 1); g.closePath(); g.fill(); };
-  const BL = new Map(), bladesAt = (s) => BL.get(s) || BL.set(s, bladeAt(s)).get(s), bladeAt = (s) => { const bladeTile = document.createElement('canvas'); const GT = LAY.grass, S2 = GT.tile; bladeTile.width = bladeTile.height = Math.ceil(S2 * s); const q = bladeTile.getContext('2d'), r = NS_rng(GT.seed); q.scale(s, s); q.lineCap = 'round'; q.lineWidth = ONE; // E59
-    const tufts = Array.from({ length: GT.tufts }, () => [r() * S2, r() * S2, GT.spread[ZERO] + r() * GT.spread[ONE]]); for (let i = GT.blades; i--; ) { const [cx, cy, sp] = r() < GT.loose ? [r() * S2, r() * S2, ZERO] : tufts[Math.floor(r() * tufts.length)], a = r() * Math.PI * (ONE + ONE), d = r() * sp, x = (cx + Math.cos(a) * d + S2) % S2, y = (cy + Math.sin(a) * d * TILT + S2) % S2, [l0, l1] = GT.lean, [h0, h1] = GT.tall; q.strokeStyle = shade(C.grass, GT.shades[Math.floor(r() * GT.shades.length)]); q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - TREE.half) * l0 + l1, y - h0 - r() * h1); q.stroke(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale((D.upm * LAY.blade) / s)); return p; };
+  const quad = (a, b, c, d, fill, grass = fill === PC.grass) => { for (const x of grass ? [g, gm] : [g]) { x.fillStyle = x === g ? fill : PC.grass; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0] + 1, b[1]); x.lineTo(c[0] + 1, c[1] + 1); x.lineTo(d[0], d[1] + 1); x.closePath(); x.fill(); } }; // E902
+  const BL = new Map(); // E903
+  const bladesAt = (s) => BL.get(s) || BL.set(s, LAY.grass.tile.map((_, n) => bladeAt(s, n))).get(s), bladeAt = (s, n) => { const bladeTile = document.createElement('canvas'); const GT = LAY.grass, S2 = GT.tile[n]; bladeTile.width = bladeTile.height = Math.ceil(S2 * s); const q = bladeTile.getContext('2d'), r = NS_rng(GT.seed + n); q.scale(s, s); q.lineCap = 'round'; q.lineWidth = ONE; // E59
+    const tufts = Array.from({ length: GT.tufts }, () => [r() * S2, r() * S2, GT.spread[ZERO] + r() * GT.spread[ONE]]); for (let i = Math.round((GT.blades * S2 * S2) / (GT.tile[ZERO] * GT.tile[ZERO])); i--; ) { const [cx, cy, sp] = r() < GT.loose ? [r() * S2, r() * S2, ZERO] : tufts[Math.floor(r() * tufts.length)], a = r() * Math.PI * (ONE + ONE), d = r() * sp, x = (cx + Math.cos(a) * d + S2) % S2, y = (cy + Math.sin(a) * d * TILT + S2) % S2, [l0, l1] = GT.lean, [h0, h1] = GT.tall; q.strokeStyle = PC.blades[Math.floor(r() * PC.blades.length)]; q.beginPath(); q.moveTo(x, y); q.lineTo(x + (r() - TREE.half) * l0 + l1, y - h0 - r() * h1); q.stroke(); } const p = g.createPattern(bladeTile, 'repeat'); p.setTransform(new DOMMatrix().scale((D.upm * LAY.blade) / s)); return p; };
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
   const LAY = D.lay; let MASKS = false, ICEP = null; // E60
-  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h); return FOR[k] ? FLOOR : MARSH[k] ? REED : s ? TOP[s === ONE && BRIM[k] ? STRATA.length - ONE : s] : WATER[waterBand(h)]; }; // E758
-  paintGround = (into, s, i0, iN, j0, j1, masks) => { g = into; MASKS = masks; if (masks) { ICEP = ICEM.map(() => new Path2D()); ICEP.land = new Path2D(); } blades = bladesAt(s); // E748
+  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h); return MARSH[k] && h > ZERO ? WATER[ZERO] : s ? TOP[s] : WATER[waterBand(k)]; }; // E758
+  paintGround = (into, s, i0, iN, j0, j1, masks, tint) => { g = into; gm = tint; MASKS = masks; const [z0, z1] = D.paper.blades; bladeA = clamp((s / dpr - z0) / (z1 - z0), ZERO, ONE); // E910
+   if (masks) { ICEP = ICEM.map(() => new Path2D()); ICEP.land = new Path2D(); } blades = bladesAt(s); // E748
   for (let j = j0; j <= j1; j++) {
     for (let i = i0; i <= iN; ) { // E61
       const col = colour(i, j), h0 = CH[(j * N + i) * 4]; let i1 = i;
       if (flat(i, j)) while (i1 + 1 <= iN && flat(i1 + 1, j) && colour(i1 + 1, j) === col && CH[(j * N + i1 + 1) * 4] === h0) i1++;
       const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
       const a = P(i * T, j * T, CH[k]), b = P((i1 + 1) * T, j * T, CH[k1 + 1]), c = P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), d = P(i * T, (j + 1) * T, CH[k + 2]); quad(a, b, c, d, col);
-      if (col === C.grass || col === FLOOR) { g.globalAlpha = D.blades; quad(a, b, c, d, blades); g.globalAlpha = 1; }
+      if (col === PC.grass) { g.globalAlpha = bladeA; for (const bl of blades) quad(a, b, c, d, bl, false); g.globalAlpha = ONE; } if (MARSH[j * N + i] && H[j * N + i] > ZERO) for (let m = i; m <= i1; m++) reeds(m, j); // E904
       const h = H[j * N + i]; if (masks) for (const m of h > 0 && BANK[j * N + i] <= FLD.rise ? [maskFlood] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.closePath(); q.fill(); q.strokeStyle = q.fillStyle; q.lineWidth = LAY.mask; q.stroke(); }
       i = i1 + 1;
     }
@@ -289,41 +294,43 @@ function renderGround() {
     }
   }
   for (let p = ZERO; p < STRATA.length; p++) for (let j = Math.max(ZERO, j0 - ONE); j < Math.min(N - ONE, j1 + ONE); j++) for (let i = Math.max(ZERO, i0 - ONE); i < Math.min(N - ONE, iN + ONE); i++) contour(i, j, p); if (masks) ICEM.forEach((m, l) => { const q = m.getContext('2d'); q.fill(ICEP[l]); q.globalCompositeOperation = 'destination-out'; q.fill(ICEP.land); q.globalCompositeOperation = 'source-over'; }); }; // E779
-  paintGround(g, ONE, ZERO, N - ONE, ZERO, N - ONE, true); makeMeadow();
+  paintGround(g, ONE, ZERO, N - ONE, ZERO, N - ONE, true, gm); makeSoil();
+  function reeds(i, j) { const R = D.paper.reeds, r = NS_rng(j * N + i), T2 = D.tile; g.lineCap = 'round'; g.lineWidth = R.w; for (let n = R.n; n--; ) { const x = (i + r()) * T2, y = (j + r()) * T2, [px, py] = P(x, y, H[j * N + i]); g.strokeStyle = PC.reeds[Math.floor(r() * PC.reeds.length)]; g.beginPath(); g.moveTo(px, py); g.lineTo(px + (r() - DRW.half) * R.lean, py - R.tall[ZERO] - r() * R.tall[ONE]); g.stroke(); } } // E904
   function contour(i, j, pass) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], ks = cell.map(([x, y]) => y * N + x), v = ks.map((k) => H[k]), up = v.map((h) => Math.max(null, h)), bs = v.map(stratum), lo = Math.min(...bs), hi = Math.max(...bs); // E759
     if ((lo === hi && hi) || ks.some((k) => FOR[k]) || Math.max(...up) - Math.min(...up) > REPOSE * LAY.steep) return;
     const at = ({ x, y, h }) => P(x * T, y * T, Math.max(null, h)), pts = cell.map(([x, y], n) => ({ x: x + DRW.half, y: y + DRW.half, h: v[n] }));
-    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; const top = TOP[b === ONE && ks.some((k) => BRIM[k]) ? STRATA.length - ONE : b]; g.fillStyle = b ? (ks.some((k) => MARSH[k]) ? REED : top) : WATER[ZERO]; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.strokeStyle = g.fillStyle; g.lineWidth = LAY.seam; g.stroke(); if (top === C.grass) { g.globalAlpha = D.blades; g.fillStyle = blades; g.fill(); g.globalAlpha = ONE; } };
+    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; const col = b && !ks.some((k) => MARSH[k] && H[k] > ZERO) ? TOP[b] : WATER[ZERO], path = new Path2D(); poly.forEach((p, n) => (n ? path.lineTo : path.moveTo).call(path, ...at(p))); path.closePath(); for (const x of col === PC.grass ? [g, gm] : [g]) { x.fillStyle = x.strokeStyle = col; x.lineWidth = LAY.seam; x.fill(path); x.stroke(path); } if (col === PC.grass) { g.globalAlpha = bladeA; for (const bl of blades) { g.fillStyle = bl; g.fill(path); } g.globalAlpha = ONE; } };
     const above = (poly, L) => poly.flatMap((p, n) => { const q = poly[(n + ONE) % poly.length], out = p.h > L ? [p] : []; if ((p.h > L) !== (q.h > L)) { const t = (L - p.h) / (q.h - p.h); out.push({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t, h: L }); } return out; });
     const paint = (poly, f) => { if (poly.length < cell.length - ONE) return; g.fillStyle = g.strokeStyle = f; g.lineWidth = LAY.seam; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.stroke(); };
     if (MASKS && !pass && !lo && ks.every((k) => DEP[k] >= D.edge)) { const add = (P2, poly) => { if (poly.length < cell.length - ONE) return; poly.forEach((p, n) => (n ? P2.lineTo : P2.moveTo).call(P2, ...at(p))); P2.closePath(); }; const chill = pts.map((p, n) => ({ ...p, h: -onsetOf(ks[n]) })); ICEP.forEach((P2, l) => add(P2, above(chill, (-ICE.span * (l + ONE)) / ICE.steps))); add(ICEP.land, above(pts, ZERO)); } // E782
-    if (!hi) { if (pass) return; const wb = v.map(waterBand), a = Math.min(...wb), z = Math.max(...wb), sink = pts.map((p) => ({ ...p, h: -p.h })); if (a === z) return; paint(pts, WATER[a]); for (let w = a + ONE; w <= z; w++) paint(above(sink, D.wade + (w - ONE) * ((D.sea - D.wade) / (BANDS - ONE))).map((p) => ({ ...p, h: -p.h })), WATER[w]); return; } // E776
-    if (pass < lo || pass > hi) return; if (pass === lo) return fill(pts, lo); for (let b = pass; b === pass; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L); fill(poly, b); const edge = poly.filter((p) => p.h === L); if (!L && edge.length > ONE && Math.min(...v) < ZERO) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } }
+    if (!hi) { if (pass) return; const wb = ks.map(waterBand), a = Math.min(...wb), z = Math.max(...wb), far = pts.map((p, n) => ({ ...p, h: SHORE[ks[n]] })); if (a === z) return; paint(pts, WATER[a]); for (let w = a + ONE; w <= z; w++) paint(above(far, D.paper.water[w - ONE]).map((p) => ({ ...p, h: -ONE })), WATER[w]); return; } // E776
+    if (pass < lo || pass > hi) return; if (pass === lo) return fill(pts, lo); for (let b = pass; b === pass; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L), edge = poly.filter((p) => p.h === L), SH = D.paper.shadow; if (edge.length > ONE && !ks.some((k) => MARSH[k])) { const [a1, b1] = at(edge[ZERO]), [a2, b2] = at(edge[ONE]); g.strokeStyle = PC.shadow; g.lineWidth = SH.w; g.lineCap = 'butt'; g.beginPath(); g.moveTo(a1 + SH.dx, b1 + SH.dy); g.lineTo(a2 + SH.dx, b2 + SH.dy); g.stroke(); } fill(poly, b); if (!L && edge.length > ONE && Math.min(...v) < ZERO) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } } // E905
   function face(x1, y1, x2, y2, topL, topR, botL, botR) {
     if (topL <= botL && topR <= botR) return;
     for (const [lo, hi, s] of STRATA) {
       const tl = clamp(topL, lo, hi), bl = clamp(botL, lo, hi), tr = clamp(topR, lo, hi), br = clamp(botR, lo, hi);
       if (tl - bl < 0.01 && tr - br < 0.01) continue;
-      quad(P(x1, y1, tl), P(x2, y2, tr), P(x2, y2, br), P(x1, y1, bl), lit(TOP[s], LAY.face));
+      quad(P(x1, y1, tl), P(x2, y2, tr), P(x2, y2, br), P(x1, y1, bl), lit(TOP[s], LAY.face), s === GR);
     }
   }
 }
 
 const GC = D.caches, GCH = new Map(); let paintGround = null, CHLO, CHHI; // E749
 function groundChunk(cx, cy, q, make) { const key = cx + '@' + cy + '@' + q; let c = GCH.get(key); if (c) { GCH.delete(key); GCH.set(key, c); return c; } if (!make) return null;
-  const S = GC.chunk + GC.pad, x0 = cx * GC.chunk, y0 = cy * GC.chunk, T = D.tile, ij = [], hs = [CHLO, CHHI]; c = document.createElement('canvas'); c.width = c.height = Math.ceil(S * q); const g = c.getContext('2d'); // E750
-  g.setTransform(q, ZERO, ZERO, q, -x0 * q, -y0 * q); g.fillStyle = deepest; g.fillRect(x0, y0, S, S);
+  const S = GC.chunk + GC.pad, x0 = cx * GC.chunk, y0 = cy * GC.chunk, T = D.tile, ij = [], hs = [CHLO, CHHI]; c = document.createElement('canvas'); c.width = c.height = Math.ceil(S * q); c.tint = document.createElement('canvas'); c.tint.width = c.tint.height = Math.ceil(c.width / PL.tint); const g = c.getContext('2d'), gt = c.tint.getContext('2d'); // E750
+  g.setTransform(q, ZERO, ZERO, q, -x0 * q, -y0 * q); gt.setTransform(q / PL.tint, ZERO, ZERO, q / PL.tint, (-x0 * q) / PL.tint, (-y0 * q) / PL.tint); g.fillStyle = deepest; g.fillRect(x0, y0, S, S);
   for (const [x, y] of [[x0, y0], [x0 + S, y0], [x0, y0 + S], [x0 + S, y0 + S]]) for (const h of hs) { const [sx, sy] = fromBoard(x - ox, (y - oy + h * UP) / TILT); ij.push([Math.floor(sx / T), Math.floor(sy / T)]); }
   const lo = (n) => clamp(Math.min(...ij.map((p) => p[n])) - GC.margin, ZERO, N - ONE), hi = (n) => clamp(Math.max(...ij.map((p) => p[n])) + GC.margin, ZERO, N - ONE);
-  paintGround(g, q, lo(ZERO), hi(ZERO), lo(ONE), hi(ONE), false); GCH.set(key, c); fitCache(GCH, GC.ground); return c; }
-function drawGround(gx, gy) { if (!ground) return; const z = cam.z, q = STEP ** Math.round(Math.log(z * dpr) / Math.log(STEP)); if (q <= GC.sharp) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); return; } // E751
+  paintGround(g, q, lo(ZERO), hi(ZERO), lo(ONE), hi(ONE), false, gt); GCH.set(key, c); fitCache(GCH, GC.ground); return c; }
+function drawGround(gx, gy) { if (!ground) return; const z = cam.z, q = STEP ** Math.round(Math.log(z * dpr) / Math.log(STEP)); if (q <= GC.sharp) { tintBlit(ground, gx, gy, gw * z, gh * z); return; } // E751
   const S = GC.chunk, at = (v) => Math.floor(v / z / S), last = (w) => Math.ceil(w / S) - ONE, seen = [];
   for (let cy = Math.max(ZERO, at(-gy)); cy <= Math.min(last(gh), at(ch - gy)); cy++) for (let cx = Math.max(ZERO, at(-gx)); cx <= Math.min(last(gw), at(cw - gx)); cx++) seen.push([cx, cy, groundChunk(cx, cy, q)]);
-  const miss = seen.find(([, , c]) => !c); if (miss) { ctx.drawImage(ground, gx, gy, gw * z, gh * z); miss[2] = groundChunk(miss[0], miss[1], q, true); dirty(); } // E752
+  const miss = seen.find(([, , c]) => !c); if (miss) { tintBlit(ground, gx, gy, gw * z, gh * z); miss[2] = groundChunk(miss[0], miss[1], q, true); dirty(); } // E752
   else if (!DRAW.lvl && used(GCH) + ((S + GC.pad) * q) ** (ONE + ONE) <= GC.ground) for (let cy = Math.max(ZERO, at(-gy) - ONE); cy <= Math.min(last(gh), at(ch - gy) + ONE); cy++) for (let cx = Math.max(ZERO, at(-gx) - ONE); cx <= Math.min(last(gw), at(cw - gx) + ONE); cx++) if (!groundChunk(cx, cy, q)) { groundChunk(cx, cy, q, true); return drawChunks(seen, gx, gy, z); } // E771
   drawChunks(seen, gx, gy, z); }
 function drawChunks(seen, gx, gy, z) { const S = GC.chunk;
-  for (const [cx, cy, c] of seen) if (c) ctx.drawImage(c, gx + cx * S * z, gy + cy * S * z, (S + GC.pad) * z, (S + GC.pad) * z); }
+  for (const [cx, cy, c] of seen) if (c) tintBlit(c, gx + cx * S * z, gy + cy * S * z, (S + GC.pad) * z, (S + GC.pad) * z); }
+function tintBlit(c, x, y, w, h) { if (!c.width) return; ctx.drawImage(c, x, y, w, h); const t = c.tint; if (t.k !== SEASON.key) { const q = t.getContext('2d'); q.save(); q.setTransform(ONE, ZERO, ZERO, ONE, ZERO, ZERO); q.globalCompositeOperation = 'source-in'; q.fillStyle = SEASON.col; q.fillRect(ZERO, ZERO, t.width, t.height); q.restore(); t.k = SEASON.key; } ctx.globalCompositeOperation = 'multiply'; ctx.drawImage(t, x, y, w, h); ctx.globalCompositeOperation = 'source-over'; } // E902
 const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null; // E547
 const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
 function wear(b) { if (!scarX || has(b, 'Field') || has(b, 'Line') || has(b, 'Gate') || has(b, 'Trap')) return; const [dx, dy, rx, ry] = SC.wear, w = b.n * D.tile, [x, y] = onGround(b.bx, b.by); blot(x + w * dx, y + w * dy * TILT, w * rx, w * ry, SCAR.wear); } // E548
@@ -341,7 +348,7 @@ function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 
 function resize() { const [w0, h0] = [cw, ch]; dpr = Math.min(2, devicePixelRatio || 1) * DRW.half ** !!show.half; cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; if (cw !== w0 || ch !== h0) fit(); dirty(); } // E698
 function dirty() { if (!queued) { queued = true; requestAnimationFrame(draw); } }
 // ── The door (E65)
-const HOOK = { tick: [], draw: [], land: [], over: [], tap: [], start: [], begin: [], save: [], load: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [], rest: [], cracking: [], fell: [], drown: [] }; // E66
+const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], begin: [], save: [], load: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [], rest: [], cracking: [], fell: [], drown: [] }; // E66
 const on = (ev, fn) => HOOK[ev].push(fn), fire = (ev, ...a) => { for (const f of HOOK[ev]) if (f(...a)) return true; return false; };
 // E277
 const known = new Map(), FXC = new Map(); on('start', () => { known.clear(); FXC.clear(); });
@@ -411,8 +418,8 @@ function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
-  meadowTick(); slideSheet(LANDS, [show.K, show.G, MSW.v].join(), () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawMeadow(gx, gy); if (fire('land', ctx, cam.z, gx, gy, cw, ch, D.landCache.margin)) LANDS.t = -Infinity; ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); if (show.G && cam.z * D.tile >= D.lod) drawGrid(); }, D.landCache.ms); // E880
-  drawThings(); drawUnder(); if (K.beta > ZERO) slideSheet(MISTS, `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}`, drawMist); if (FOGON) slideSheet(FOGS, FOGV, drawFog); fire('draw', ctx, cam.z);
+  seasonNow(); slideSheet(LANDS, [show.K, show.G, SEASON.key, snowStep(), BLOOMY].join(), () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawPaper(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); if (show.G && cam.z * D.tile >= D.lod) drawGrid(); }, D.landCache.ms); // E880
+  drawGlints(); drawThings(); drawUnder(); if (K.beta > ZERO) slideSheet(MISTS, `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}`, drawMist); if (FOGON) slideSheet(FOGS, FOGV, drawFog); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
   if (show.R) drawEdge();
   if (show.K) { drawSky(frameDt); drawLights(cam.z); } fire('over', ctx, cam.z);
@@ -1468,8 +1475,8 @@ function meter(wall, sim, drawn) { if (!(wall > null)) return; const k = Math.mi
 function shed(work, secs) { const due = DRW.ms / rate(); DRAW.ema += (work - DRAW.ema) * Math.min(ONE, secs / DRW.tau); const was = DRAW.lvl; // E605
   if (DRAW.ema > DRW.slow * due && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
   else if (DRAW.ema < DRW.fast * due && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
-  if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } if ((was >= DRW.lv.shadows) !== (DRAW.lvl >= DRW.lv.shadows) && MMAP) makeMeadow(); } // E881
-const area = (v) => (v.cv || v).width * (v.cv || v).height, used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; } } // E606
+  if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } }
+const area = (v) => (v.cv || v).width * (v.cv || v).height + (v.tint ? v.tint.width * v.tint.height : ZERO), used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; if (v.tint) v.tint.width = v.tint.height = null; } } // E606
 // E607
 const spring = (x, v, to, w, dt) => { const e = Math.exp(-w * dt), d = x - to, t = (v + w * d) * dt; return [to + (d + t) * e, (v - w * t) * e]; };
 function camStop() { cam.tx = cam.ty = undefined; cam.vx = cam.vy = null; }
@@ -1572,69 +1579,53 @@ const inMini = (p) => MINI && p.x0 >= MINI.x0 && p.x0 <= MINI.x0 + MINI.s && p.y
 on('press', (p) => { if (!inMini(p)) return; p.eat = true; p.mode = 'mini'; cam.follow = false; camGo(...miniAt(p.x0, p.y0)); return true; });
 on('drag', (p) => { if (p.mode !== 'mini') return; if (Math.hypot(p.x - p.x0, p.y - p.y0) > MNI.pan) p.pan = true; if (p.pan) { camStop(); [cam.x, cam.y] = miniAt(p.x, p.y); keepOn(); } return true; });
 on('drop', (p) => p.mode === 'mini');
-// ── The meadow (E799)
-const MDW = D.meadow, MDC = C.meadow, MEAD = document.createElement('canvas'), MLAND = new Uint8Array(N * N), MGRASS = new Uint8Array(N * N), MBARE = new Uint8Array(N * N), MTWI = new Float32Array(N * N), MDRIFT = new Float32Array(N * N), MTINT = new Float32Array(N * N), MKIND = new Int8Array(N * N), MSTR = new Uint8Array(N * N), MLEAN = new Float32Array(N * N), MTOP = new Map(), MTONE = MDW.layers.map(() => new Float32Array(N * N)), MFIELD = new Float32Array(N * N * MDW.px), MBASE = new Float32Array(N * N * MDW.px), MSW = { row: -ONE, key: '', next: -Infinity, ph: NaN, v: ZERO };
-let MMAP = null, MIMG = null, MBLOOM = [];
+// ── The ground's soil and paper (E900)
+const MDW = D.meadow, MDC = C.meadow, PL = D.paper, MLAND = new Uint8Array(N * N), MGRASS = new Uint8Array(N * N), MTWI = new Float32Array(N * N), MDRIFT = new Float32Array(N * N), LIGHT = document.createElement('canvas'), SNOWP = new Map(), SEASON = { key: '', col: PC.grass }; // E900
+let MBLOOM = [], BLOOMY = NaN, GLINTS = [];
 const wetAt = (k) => K.wet * Math.max(ZERO, ONE + MDW.twi * MTWI[k]), snowAt = (k) => K.snow * MDRIFT[k], phaseOf = () => (yt() / D.season) % TREE.year; // E804
 const pressOf = (u) => { const b = SH[u.code], f = G.tread[b.mount || b.body] || G.tread.person; return ((massOf(u.code) + (u.load || ZERO) * W.carried.kg + (u.cargo ? W.load.kg : ZERO)) * D.g) / (f.area * f.feet); }, STEP0 = Math.log((W.person.kg * D.g) / (G.tread.person.area * G.tread.person.feet) / G.soil.pa), tread = (u) => Math.max(ZERO, Math.log(pressOf(u) / (G.soil.pa * (ONE - G.soil.soft * Math.min(ONE, wetAt(u.k)))))) / STEP0; // E805
-const smoothOf = (t) => t * t * (MDW.smooth[ZERO] - MDW.smooth[ONE] * t), bloomAt = (kind, ph) => { const [a, b] = MDW.bloom[kind], f = MDW.flowers.fade; return clamp((ph - a) / f, ZERO, ONE) * clamp((b - ph) / f, ZERO, ONE); };
-function makeMeadow() { // E800
-  const r = dice(seed + MDW.seed), T = D.tile, TAU = Math.PI + Math.PI, land = [], half = ONE / (ONE + ONE), GRASS = TOP.indexOf(C.grass);
+const bloomAt = (kind, ph) => { const [a, b] = MDW.bloom[kind], f = MDW.flowers.fade; return clamp((ph - a) / f, ZERO, ONE) * clamp((b - ph) / f, ZERO, ONE); };
+function makeSoil() { // E800
+  const r = dice(seed + MDW.seed), T = D.tile, TAU = Math.PI + Math.PI, land = [], half = ONE / (ONE + ONE), GRASS = GR;
   const oct = (os = MDW.octaves) => os.map(([k, w]) => [k * (MDW.jitter[ZERO] + r() * MDW.jitter[ONE]), k * (MDW.jitter[ZERO] + r() * MDW.jitter[ONE]), r() * TAU, r() * TAU, w]);
   const field = (o) => { const out = new Float32Array(N * N), xs = o.map(([kx, , px]) => Float32Array.from({ length: N }, (_, i) => Math.sin(i * kx + px))), ys = o.map(([, ky, , py, w]) => Float32Array.from({ length: N }, (_, j) => w * Math.cos(j * ky + py)));
     for (let j = ZERO; j < N; j++) for (let i = ZERO; i < N; i++) { let v = ZERO; for (let n = o.length; n--; ) v += xs[n][i] * ys[n][j]; out[j * N + i] = v; } return out; };
   const score = (a) => { let s = ZERO, q = ZERO; for (const k of land) { s += a[k]; q += a[k] * a[k]; } const m = s / land.length, sd = Math.sqrt(Math.max(ZERO, q / land.length - m * m)) || ONE; for (const k of land) a[k] = (a[k] - m) / sd; };
-  for (let k = ZERO; k < N * N; k++) { const h = H[k], s = stratum(h), open = h > ZERO && !FOR[k] && !MARSH[k]; MLAND[k] = +(h > ZERO); MGRASS[k] = +(open && (s === GRASS || (s === ONE && !!BRIM[k]))); MBARE[k] = +(open && !MGRASS[k]); MSTR[k] = h > ZERO ? s : ZERO; if (h > ZERO) land.push(k); }
-  const CS = CH.length / (N * N), [c0, c1, c2, c3] = Array.from({ length: CS }, (_, n) => n); for (const k of land) { const c = k * CS; MLEAN[k] = clamp(MDW.lit * ((CH[c + c0] + CH[c + c2] - CH[c + c1] - CH[c + c3]) / (ONE + ONE) + (CH[c + c2] + CH[c + c3] - CH[c + c0] - CH[c + c1]) / (ONE + ONE)), -D.lay.lean, D.lay.lean); }
+  for (let k = ZERO; k < N * N; k++) { const h = H[k], s = stratum(h), open = h > ZERO && !FOR[k] && !MARSH[k]; MLAND[k] = +(h > ZERO); MGRASS[k] = +(open && s === GRASS); if (h > ZERO) land.push(k); }
+  const MLEAN = new Float32Array(N * N), CS = CH.length / (N * N), [c0, c1, c2, c3] = Array.from({ length: CS }, (_, n) => n); for (const k of land) { const c = k * CS; MLEAN[k] = clamp(MDW.lit * ((CH[c + c0] + CH[c + c2] - CH[c + c1] - CH[c + c3]) / (ONE + ONE) + (CH[c + c2] + CH[c + c3] - CH[c + c0] - CH[c + c1]) / (ONE + ONE)), -D.lay.lean, D.lay.lean); }
   const rel = field(oct(MDW.relief.octaves)); score(rel); const Z = Float32Array.from(H, (h, k) => h + rel[k] * MDW.relief.h), A = new Float32Array(N * N).fill(ONE), tan = new Float32Array(N * N);
   for (const k of land.slice().sort((a, b) => Z[b] - Z[a])) { const i = k % N, j = (k - i) / N; let to = -ONE;
     for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy; if (x < ZERO || y < ZERO || x >= N || y >= N) continue; const n = y * N + x, s = (Z[k] - Z[n]) / (Math.hypot(dx, dy) * T); if (s > tan[k]) { tan[k] = s; to = n; } }
     if (to >= ZERO && H[to] > ZERO) A[to] += A[k]; }
   MTWI.fill(ZERO); for (const k of land) MTWI[k] = Math.log((A[k] * T) / Math.max(tan[k], MDW.slope)); score(MTWI);
   const sg = Math.log(ONE + MDW.cv * MDW.cv); MDRIFT.fill(ONE); for (const k of land) MDRIFT[k] = Math.exp(-Math.sqrt(sg) * rel[k] - sg * half);
-  MDW.layers.forEach((L, n) => { const f = field(oct()), [e0, e1] = MDW.edge, w = MTONE[n]; w.fill(ZERO); for (const k of land) if (MGRASS[k]) w[k] = smoothOf(clamp((f[k] + L.wet * MDW.lean * MTWI[k] - e0) / e1, ZERO, ONE) * L.a); });
-  const F = MDW.flowers, grass = land.filter((k) => MGRASS[k]); MBLOOM = []; MTINT.fill(ZERO); MKIND.fill(-ONE);
-  for (let c = Math.round(grass.length / F.per); c-- > ZERO; ) { const k = grass[Math.floor(r() * grass.length)], peb = r() < F.peb, kind = peb ? -ONE : Math.floor(r() * MDC.flowers.length), [n0, n1] = peb ? F.pebbles : F.kids, b = { x: (k % N) + r(), y: Math.floor(k / N) + r(), kind, n: Math.floor(n0 + r() * n1), sp: F.spread[ZERO] + r() * F.spread[ONE], seed: Math.floor(r() * F.seeds) + ONE }; MBLOOM.push(b);
-    if (!peb) for (let j = Math.floor(b.y - b.sp); j <= b.y + b.sp; j++) for (let i = Math.floor(b.x - b.sp); i <= b.x + b.sp; i++) { const t = j * N + i; if (i < ZERO || j < ZERO || i >= N || j >= N || !MGRASS[t] || Math.hypot(i + half - b.x, j + half - b.y) > b.sp) continue; const d = Math.min(ONE, (b.n * F.tint) / (Math.PI * b.sp * b.sp)); if (d > MTINT[t]) { MTINT[t] = d; MKIND[t] = kind; } } }
-  const R = DRAW.lvl >= DRW.lv.shadows ? MDW.resShed : MDW.res; MEAD.res = R; MEAD.width = Math.ceil(gw / R); // E881
-  MEAD.height = Math.ceil(gh / R); const W = MEAD.width, P = W * MEAD.height; MMAP = { k: new Int32Array(P).fill(-ONE), u: new Float32Array(P), v: new Float32Array(P) }; MIMG = new ImageData(W, MEAD.height);
-  const hAt = (u, v) => { const i = clamp(Math.floor(u - half), ZERO, N - ONE - ONE), j = clamp(Math.floor(v - half), ZERO, N - ONE - ONE), fx = clamp(u - half - i, ZERO, ONE), fy = clamp(v - half - j, ZERO, ONE), k = j * N + i; return (H[k] * (ONE - fx) + H[k + ONE] * fx) * (ONE - fy) + (H[k + N] * (ONE - fx) + H[k + N + ONE] * fx) * fy; };
-  for (let py = ZERO, p = ZERO; py < MEAD.height; py++) for (let px = ZERO; px < W; px++, p++) { const bx = (px + half) * R - ox, vy = (py + half) * R - oy; let h = D.land, u = -ONE, v = -ONE, ok = false;
-    for (let it = MDW.iter; it-- > ZERO; ) { const x = bx - MID, y = (vy + h * UP) / TILT - MID; u = (MID + x * COS + y * SIN) / T; v = (MID - x * SIN + y * COS) / T; if (u < ZERO || v < ZERO || u >= N || v >= N) break; const h1 = hAt(u, v); ok = Math.abs(h1 - h) < MDW.tol; h = h1; if (ok) break; }
-    if (!ok || H[Math.floor(v) * N + Math.floor(u)] <= ZERO) continue; const i = clamp(Math.floor(u - half), ZERO, N - ONE - ONE), j = clamp(Math.floor(v - half), ZERO, N - ONE - ONE); MMAP.k[p] = j * N + i; MMAP.u[p] = clamp(u - half - i, ZERO, ONE); MMAP.v[p] = clamp(v - half - j, ZERO, ONE); }
-  MSW.key = ''; MSW.row = -ONE; MSW.next = -Infinity; MSW.ph = NaN; }
-function meadowField() { // E801
-  const ph = phaseOf(), rgb = (h) => hexRGB(h), lerp = (a, b, t) => a.map((x, n) => x + (b[n] - x) * t), RGB = rgb(MDC.path).length, S = MDW.px;
-  if (Math.round(ph / MDW.q) !== MSW.ph) { MSW.ph = Math.round(ph / MDW.q); const G0 = MDW.green, L = (x) => ONE / (ONE + Math.exp(-x)), gr = (t) => L(G0.a * (t - G0.up)) - L(G0.a * (t - G0.down)), g = clamp(gr(ph), ZERO, ONE), dg = (gr(ph + G0.dt) - gr(ph)) / G0.dt;
-    const dull = lerp(rgb(MDC.dormant), rgb(MDC.emerald), g), base = dg > ZERO ? lerp(dull, rgb(MDC.fresh), Math.min(G0.fresh, dg / G0.rate)) : lerp(dull, rgb(MDC.olive), Math.min(G0.olive, -dg / G0.rate));
-    const tones = MDW.layers.map((Ly) => (Ly.lift ? base.map((x) => x * Ly.lift) : lerp(rgb(MDC.tones[Ly.tone]), base, ONE - g))), FL = MDC.flowers.map(([petal]) => rgb(petal)), BL = MDW.bloom.map((_, n) => bloomAt(n, ph));
-    for (let k = ZERO; k < N * N; k++) { if (!MGRASS[k]) continue; const o = k * RGB; for (let n = ZERO; n < RGB; n++) { let v = base[n]; for (let l = ZERO; l < tones.length; l++) v += (tones[l][n] - v) * MTONE[l][k]; if (MKIND[k] >= ZERO) v += (FL[MKIND[k]][n] - v) * MTINT[k] * BL[MKIND[k]]; MBASE[o + n] = v; } } }
-  const [path, mud, rut, pool, ice, frost, snow, slush, dark] = [MDC.path, MDC.mud, MDC.rut, MDC.pool, C.ground.ice, MDC.frost, C.ground.snow, MDC.slush, MDC.wet].map(rgb), [sun, shadow] = [SUN, SHADOW].map(rgb), F = sheet(), hoar = clamp(-K.temp / MDW.frost, ZERO, ONE) * MDW.hoar, thaw = K.temp > ZERO, [m0, m1] = MDW.mud, [p0, p1] = MDW.pool, [l0, l1] = MDW.lie;
-  const lid = lerp(pool, ice, F), mire = lerp(mud, rut, F), c = [ZERO, ZERO, ZERO]; let a = ZERO; const lay = (col, t) => { if (t <= ZERO) return; for (let n = ZERO; n < RGB; n++) c[n] = a > ZERO ? c[n] + (col[n] - c[n]) * t : col[n]; a = Math.max(a, t); };
-  for (let k = ZERO; k < N * N; k++) { const o = k * S; MFIELD[o + RGB] = ZERO; if (!MLAND[k]) continue; a = ZERO;
-    const wear = smoothOf(clamp(rutOf(k) / RU.deep, ZERO, ONE)), wet = flooded(k) ? ONE : wetAt(k), soak = wet * (ONE + wear), bare = MBARE[k] ? ONE : MGRASS[k] ? wear : ZERO;
-    if (!MGRASS[k]) { const h = H[k], s = stratum(h), b = FOR[k] ? FLOOR : MARSH[k] ? REED : TOP[s]; if (!MTOP.has(b)) MTOP.set(b, rgb(b)); const col = MTOP.get(b); for (let n = ZERO; n < RGB; n++) c[n] = col[n]; a = ONE; }
-    if (MGRASS[k]) { const d = MDW.wet * Math.min(ONE, wet) * (ONE - wear); for (let n = ZERO; n < RGB; n++) { const v = MBASE[k * RGB + n] + (path[n] - MBASE[k * RGB + n]) * wear; c[n] = v + (dark[n] - v) * d; } a = ONE; }
-    lay(mire, bare * clamp((Math.min(ONE, soak) - m0) / (m1 - m0), ZERO, ONE)); lay(lid, smoothOf(clamp((soak - p0) / p1, ZERO, ONE))); lay(frost, hoar);
-    const s = smoothOf(clamp((snowAt(k) / G.snow.full - l0) / l1, ZERO, ONE)); lay(snow, s); if (thaw) lay(slush, s * Math.min(ONE, wet));
-    const lk = MLEAN[k], lc = lk >= ZERO ? sun : shadow; for (let n = ZERO; n < RGB; n++) c[n] += (lc[n] - c[n]) * Math.abs(lk);
-    for (let n = ZERO; n < RGB; n++) MFIELD[o + n] = c[n] * a; MFIELD[o + RGB] = a; } }
-function sweep(rows) { const W = MEAD.width, y0 = MSW.row, y1 = Math.min(MEAD.height, y0 + rows), S = MDW.px, A = S - ONE, out = MIMG.data, F = MFIELD, { k: KK, u: UU, v: VV } = MMAP, half = ONE / (ONE + ONE), TX = MEAD.res / D.tile, EDGES = [ZERO, D.sandTop, D.dirtTop, D.land + D.bare], ks = [], ws = [], acc = [];
-  const take = (c, f) => { if (f <= ZERO) return; let sum = ZERO; ks.forEach((q, i) => { if (MSTR[q] === c) sum += ws[i]; }); if (sum) ks.forEach((q, i) => { if (MSTR[q] === c) for (let n = ZERO; n < S; n++) acc[n] += (F[q * S + n] * ws[i] * f) / sum; }); };
-  for (let p = y0 * W, d = p * S; p < y1 * W; p++, d += S) { const k = KK[p]; if (k < ZERO) { out[d + A] = ZERO; continue; } const u = UU[p], v = VV[p]; ks[ZERO] = k; ks[ONE] = k + ONE; ks[ONE + ONE] = k + N; ks[A] = k + N + ONE;
-    ws[ZERO] = (ONE - u) * (ONE - v); ws[ONE] = u * (ONE - v); ws[ONE + ONE] = (ONE - u) * v; ws[A] = u * v; const s0 = MSTR[k]; if (s0 && MSTR[ks[ONE]] === s0 && MSTR[ks[ONE + ONE]] === s0 && MSTR[ks[A]] === s0) { acc.fill(ZERO, ZERO, S); for (let i = ZERO; i < ks.length; i++) for (let n = ZERO; n < S; n++) acc[n] += F[ks[i] * S + n] * ws[i]; out[d + A] = acc[A] * MDW.opaque; if (acc[A] > ZERO) for (let n = ZERO; n < A; n++) out[d + n] = acc[n] / acc[A]; continue; } let hb = ZERO; ks.forEach((q, i) => { hb += H[q] * ws[i]; });
-    const g = Math.hypot((H[ks[ONE]] - H[k]) * (ONE - v) + (H[ks[A]] - H[ks[ONE + ONE]]) * v, (H[ks[ONE + ONE]] - H[k]) * (ONE - u) + (H[ks[A]] - H[ks[ONE]]) * u) * TX, th = EDGES.reduce((b, x) => (Math.abs(hb - x) < Math.abs(hb - b) ? x : b));
-    let up = -ONE, lo = -ONE, wu = ZERO, wl = ZERO; ks.forEach((q, i) => { if (H[q] >= th) { if (ws[i] > wu) { wu = ws[i]; up = MSTR[q]; } } else if (ws[i] > wl) { wl = ws[i]; lo = MSTR[q]; } });
-    const f = up < ZERO ? ZERO : lo < ZERO ? ONE : g > ZERO ? clamp(half + (hb - th) / g, ZERO, ONE) : +(hb >= th); acc.fill(ZERO, ZERO, S); take(up, f); take(lo, ONE - f);
-    out[d + A] = acc[A] * MDW.opaque; if (acc[A] > ZERO) for (let n = ZERO; n < A; n++) out[d + n] = acc[n] / acc[A]; }
-  MEAD.getContext('2d').putImageData(MIMG, ZERO, ZERO, ZERO, y0, W, y1 - y0); MSW.row = y1 >= MEAD.height ? -ONE : y1; if (MSW.row < ZERO) MSW.v++; }
-const meadowKey = () => [phaseOf(), K.wet, sheet(), K.snow / G.snow.full, Math.max(ZERO, -K.temp) / MDW.frost, +(K.temp > ZERO), K.flood > K.t].map((x) => Math.round(x / MDW.q)).join() + Math.floor(K.t / RU.heal[ZERO]);
-function meadowTick() { if (!MMAP) return; // E899
-  if (MSW.row < ZERO && K.t >= MSW.next) { MSW.next = K.t + MDW.beat; const key = meadowKey(); if (key !== MSW.key) { const first = !MSW.key; MSW.key = key; meadowField(); MSW.row = ZERO; if (first) sweep(MEAD.height); } }
-  if (MSW.row >= ZERO) { const t0 = performance.now(), ms = (MDW.frame * DRW.ms) / rate(); do sweep(Math.ceil(MEAD.height / MDW.slices)); while (MSW.row >= ZERO && performance.now() - t0 < ms); } }
-function drawMeadow(gx, gy) { // E802
-  if (!MMAP) return; const z = cam.z, [z0, z1] = MDW.zoom, [f0, f1] = MDW.alpha;
-  ctx.globalAlpha = f0 + (f1 - f0) * clamp((z - z0) / (z1 - z0), ZERO, ONE); ctx.drawImage(MEAD, gx, gy, gw * z, gh * z); ctx.globalAlpha = ONE; if (z >= MDW.flowers.near) flowers(z); }
+  const patch = field(oct()); score(patch); LIGHT.width = LIGHT.height = N; const lx = LIGHT.getContext('2d'), li = lx.createImageData(N, N), [sun, shade] = [SUN, SHADOW].map(hexRGB), A4 = sun.length + ONE; // E901
+  for (const k of land) { const v = clamp((MLEAN[k] / D.lay.lean) * PL.light.slope + patch[k] * PL.light.patch, -PL.light.shade, PL.light.sun); li.data.set([...(v > ZERO ? sun : shade), Math.round(Math.abs(v) * D.meadow.opaque)], k * A4); }
+  lx.putImageData(li, ZERO, ZERO); SNOWP.clear(); BLOOMY = NaN;
+  GLINTS = []; for (let k = ZERO; k < N * N; k++) if (H[k] < -D.wade && r() < PL.glint.per) GLINTS.push([((k % N) + r()) * T, (Math.floor(k / N) + r()) * T, r() * TAU, PL.glint.len[ZERO] + r() * PL.glint.len[ONE]]); }
+function makeBlooms(y) { // E906
+  const r = dice(seed + MDW.seed), ry = dice(seed + MDW.seed + (y + ONE) * PL.year), grass = []; for (let k = ZERO; k < N * N; k++) if (MGRASS[k]) grass.push(k); const F = MDW.flowers; MBLOOM = []; BLOOMY = y;
+  for (let c = Math.round(grass.length / F.per); c-- > ZERO; ) { const peb = r() < F.peb, q = peb ? r : ry, k = grass[Math.floor(q() * grass.length)], kind = peb ? -ONE : Math.floor(q() * MDC.flowers.length), [n0, n1] = peb ? F.pebbles : F.kids; MBLOOM.push({ x: (k % N) + q(), y: Math.floor(k / N) + q(), kind, n: Math.floor(n0 + q() * n1), sp: F.spread[ZERO] + q() * F.spread[ONE], seed: Math.floor(q() * F.seeds) + ONE }); } }
+function seasonNow() { // E902
+  const t = phaseOf() / TREE.year, S = PL.season, cs = PC.season.map(hexRGB); let i = ONE; while (i < S.length - ONE && t > S[i]) i++; const f = clamp((t - S[i - ONE]) / (S[i] - S[i - ONE]), ZERO, ONE), e = f * f * (ONE + ONE + ONE - (ONE + ONE) * f), q = PL.step;
+  const rgb = cs[i - ONE].map((v, n) => Math.round((v + (cs[i][n] - v) * e) / q) * q), key = rgb.join(); if (key !== SEASON.key) { SEASON.key = key; SEASON.col = `rgb(${key})`; }
+  const y = Math.floor(yt() / D.season / TREE.year); if (y !== BLOOMY) makeBlooms(y); }
+const snowStep = () => Math.min(PL.snow.steps, Math.round((K.snow / G.snow.full) * PL.snow.steps)); // E907
+function snowPath(s) { if (SNOWP.has(s)) return SNOWP.get(s); // E907
+  const T = D.tile, t = (G.snow.covers * PL.snow.steps) / (s * G.snow.full), p = new Path2D(), f = (i, j) => (H[j * N + i] > ZERO ? MDRIFT[j * N + i] : ZERO), at = (x, y, h) => { const [a, b] = V((x + DRW.half) * T, (y + DRW.half) * T, h); return [a + ox, b + oy]; }, hh = (i, j) => Math.max(ZERO, H[j * N + i]);
+  for (let j = ZERO; j < N - ONE; j++) { let run = -ONE; for (let i = ZERO; i < N; i++) { const q = i < N - ONE ? [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]].map(([x, y]) => ({ x, y, v: f(x, y), h: hh(x, y) })) : null, ins = q ? q.map((c) => c.v >= t) : [], all = q && ins.every(Boolean);
+      if (all) { if (run < ZERO) run = i; continue; }
+      if (run >= ZERO) { [at(run, j, hh(run, j)), at(i, j, hh(i, j)), at(i, j + ONE, hh(i, j + ONE)), at(run, j + ONE, hh(run, j + ONE))].forEach(([x, y], n) => (n ? p.lineTo(x, y) : p.moveTo(x, y))); p.closePath(); run = -ONE; }
+      if (!q || !ins.some(Boolean)) continue; const poly = []; q.forEach((c, n) => { const d = q[(n + ONE) % q.length]; if (ins[n]) poly.push(at(c.x, c.y, c.h)); if (ins[n] !== ins[(n + ONE) % q.length]) { const u = (t - c.v) / (d.v - c.v); poly.push(at(c.x + (d.x - c.x) * u, c.y + (d.y - c.y) * u, c.h + (d.h - c.h) * u)); } });
+      poly.forEach(([x, y], n) => (n ? p.lineTo(x, y) : p.moveTo(x, y))); p.closePath(); } }
+  SNOWP.set(s, p); return p; }
+function drawPaper(gx, gy) { // E901
+  const T = D.tile, M = D.landCache.margin, [x0, y0] = S(ZERO, ZERO, D.land), [x1, y1] = S(N * T, ZERO, D.land), [x2, y2] = S(ZERO, N * T, D.land); ctx.save(); ctx.setTransform((dpr * (x1 - x0)) / N, (dpr * (y1 - y0)) / N, (dpr * (x2 - x0)) / N, (dpr * (y2 - y0)) / N, dpr * (x0 + M), dpr * (y0 + M)); ctx.imageSmoothingEnabled = true; ctx.drawImage(LIGHT, ZERO, ZERO); ctx.restore();
+  const s = snowStep(); if (s > ZERO) { const P = snowPath(s), SH = PL.shadow; ctx.save(); ctx.translate(gx, gy); ctx.scale(cam.z, cam.z); ctx.translate(SH.dx, SH.dy); ctx.fillStyle = PC.shadow; ctx.fill(P); ctx.translate(-SH.dx, -SH.dy); ctx.fillStyle = C.ground.snow; ctx.fill(P); ctx.restore(); }
+  if (cam.z >= MDW.flowers.near) flowers(cam.z); }
+function drawGlints() { if (!GLINTS.length || K.ice || lessMotion || cam.z < PL.glint.near) return; const G2 = PL.glint, t = performance.now() / DRW.ms, z = cam.z; ctx.save(); ctx.strokeStyle = PC.glint; ctx.lineWidth = G2.w; ctx.lineCap = 'round'; // E908
+  for (const [x, y, ph, len] of GLINTS) { const [sx, sy] = toScreen(...V(x, y, ZERO)); if (sx < ZERO || sy < ZERO || sx > cw || sy > ch) continue; const a = Math.sin(t * G2.rate + ph); if (a <= ZERO) continue; ctx.globalAlpha = a * G2.a; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + len * z, sy); ctx.stroke(); }
+  ctx.restore(); }
 function flowers(z) { // E803
   const F = MDW.flowers, ph = phaseOf(), T = D.tile, TAU = Math.PI + Math.PI, pad = F.pad * T * z, L = [new Map(), new Map(), new Map()], add = (l, col, x, y, rx, ry) => { const p = L[l].get(col) || L[l].set(col, new Path2D()).get(col); p.moveTo(x + rx, y); p.ellipse(x, y, rx, ry, ZERO, -Math.PI, Math.PI); };
   for (const b of MBLOOM) { const k = Math.floor(b.y) * N + Math.floor(b.x), [x, y] = toScreen(...V(b.x * T, b.y * T, H[k])); if (x < -pad || y < -pad || x > cw + pad || y > ch + pad || snowAt(k) > G.snow.covers) continue;
@@ -1733,7 +1724,7 @@ const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.
 function start(sd, S = null) { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
 const boot = () => { const h = Number(location.hash.slice(ONE)), got = TEST ? null : readSave(), S = got && (!h || got.seed === h) ? got : null; if (S) try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); return; } catch (e) { fault(e); aside(); } start(TEST ? D.testField.seed : null); }; // E662
 addEventListener('hashchange', () => start()); addEventListener('resize', resize);
-window.FK = { seedNow: () => seed, dice, zoomStep: (z) => STEP ** Math.round(Math.log(z * dpr) / Math.log(STEP)), groundBox: () => [ox, oy, gw, gh], grassView: (vx, vy) => { const [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile); return i >= ZERO && j >= ZERO && i < N && j < N && !!MGRASS[j * N + i]; }, inWoods, woodsLine: (a, t) => { const [i0, j0] = cellOf(a), [i1, j1] = cellOf(t), n = Math.max(Math.abs(i1 - i0), Math.abs(j1 - j0), ONE); let w = ZERO; for (let s = ZERO; s <= n; s++) if (inWoods(Math.round(j0 + ((j1 - j0) * s) / n) * N + Math.round(i0 + ((i1 - i0) * s) / n))) w++; return (w * Math.hypot(i1 - i0, j1 - j0) * D.tile) / (n + ONE) / D.upm; }, fog: (on) => { FOGON = on; VIS.clear(); CAST.clear(); fogPaint(); }, fogOn: () => FOGON, visOf, expOf, bars, headOf, fam, exposure, clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
+window.FK = { inWoods, woodsLine: (a, t) => { const [i0, j0] = cellOf(a), [i1, j1] = cellOf(t), n = Math.max(Math.abs(i1 - i0), Math.abs(j1 - j0), ONE); let w = ZERO; for (let s = ZERO; s <= n; s++) if (inWoods(Math.round(j0 + ((j1 - j0) * s) / n) * N + Math.round(i0 + ((i1 - i0) * s) / n))) w++; return (w * Math.hypot(i1 - i0, j1 - j0) * D.tile) / (n + ONE) / D.upm; }, fog: (on) => { FOGON = on; VIS.clear(); CAST.clear(); fogPaint(); }, fogOn: () => FOGON, visOf, expOf, bars, headOf, fam, exposure, clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   yt, rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>
@@ -1742,7 +1733,6 @@ window.fk = FK; // E167
 <script src="combat.js"></script>
 <script src="ai.js"></script>
 <script src="sound.js"></script>
-<script src="cels.js"></script>
 <script>resize(); boot(); requestAnimationFrame(loop);</script>
 </body>
 </html>

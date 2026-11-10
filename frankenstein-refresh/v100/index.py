@@ -5,7 +5,7 @@
 #   python3 index.py --survey ../mid ../map   (paths from this folder) read another game (Mid) with the same measures; hold it to its seal; write its map
 import json, re, glob, os, sys, hashlib, subprocess, tempfile
 os.chdir(os.path.dirname(os.path.abspath(__file__))); CI, SEAL = '--ci' in sys.argv, '--seal' in sys.argv
-CODE = ['index.html', 'menu.js', 'econ.js', 'combat.js', 'ai.js', 'sound.js', 'cels.js']   # the game, in load order after the books
+CODE = ['index.html', 'menu.js', 'econ.js', 'combat.js', 'ai.js', 'sound.js']   # the game, in load order after the books
 TOOLS = ['index.py', 'publish.py', 'test.py', 'ship.py', '../../.github/workflows/pages.yml']
 text = lambda p: open(p, encoding='utf-8').read() if os.path.exists(p) else None
 BOOKS = {m.group(1): json.loads(m.group(2)) for f in sorted(glob.glob('books/*.js')) for m in [re.search(r'BOOK\("(\w+)", ([\s\S]*)\);\s*$', text(f))]}

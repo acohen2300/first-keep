@@ -1,5 +1,21 @@
 {
- "build": "",
- "agreed": "",
- "opens": []
+ "build": "N11",
+ "agreed": "Albert, Nov 10 06:34-06:36: \"This is good. Let's implement\" then \"Go go go\" on the N11 list (the paper ground from the approved mock: sheets, water close to the grass, marsh as shallow water with reeds, woods' floor and rim colours cut, one season colour, v80 blades in two tiles, flowers in new places each year, snow as a sheet in six steps, glints; mud and frost cut for now, no cloud shadows; the meadow picture and cels.js cut)",
+ "opens": [
+  "code:index.html",
+  "code:cels.js",
+  "tool:index.py",
+  "tool:test.py",
+  "book:measure",
+  "book:colours",
+  "book:comments",
+  "book:citations",
+  "book:shells",
+  "book:capabilities"
+ ],
+ "grow": {
+  "code:index.html#drawn-once-in-the-view-frame": 2441,
+  "code:index.html#floor-3-non-movables": 1053,
+  "code:index.html#the-view-s-eyes-lights-and-stage": 406
+ }
 }

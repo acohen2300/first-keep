@@ -94,9 +94,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E50** drawn back to front
 - **E652** The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by wo · QCQ (N229, N233)
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
+- **E54** the forest floor: the grass, shaded; the marsh: the grass, toward the water (N11: the pape · N11 · E902
 - **E52** 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23) · D23 (N112)
-- **E53** the first band is what can be waded (D24) · D24 (N112)
-- **E54** the forest floor: the grass, shaded; the marsh: the grass, toward the water
+- **E53** the first band is what can be waded (D24) (N11: three sheets of water, shallow to deep) · D24 (N112) · N11
+- **E909** how far each water tile lies from its shore, in tiles (a chamfer distance in two passes); 
 - **E55** what a face shows between two heights (L1): the grass is the land's top skin; anything rai
 
 ## index.html#drawn-once-in-the-view-frame
@@ -106,16 +107,21 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E57** the masks at a quarter scale: the land in white and in shadow, the inland water
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
-- **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102)
+- **E902** grass is painted a light neutral and also on its own sheet; that sheet takes the season's 
+- **E903** the blades are two tiles of different sizes laid over each other, so the repeat never line
+- **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102) · N11 · E903
 - **E60** the ground is painted flat; the light stands high to the left and in front and the meadow  · D353 (N299, N264, N265, N266, N267, N268, N269, N270, N287)
-- **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N299, N264, N265, N266, N267, N268, N269, N270, N287)
+- **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N299, N264, N265, N266, N267, N268, N269, N270, N287) · N11
+- **E910** the blades fade in with the zoom, as v80's did: none from far away, full close up
 - **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
+- **E904** a marsh is shallow water; reeds stand in it
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
 - **E779** the contours painted band by band over the whole piece of land, lowest first, so a band la
 - **E759** the shore and the strata as contours: between four tiles' middles the lowest band is laid,
 - **E782** each water cell adds its shallow part to every step's ice path and its land part to the la
 - **E776** water cells traced like the land: each depth band of the water drawn along its contour, so
+- **E905** each paper sheet casts a thin shadow on the sheet below, along its edge
 - **E749** the ground's chunk cache and the height range its windows are found from
 - **E750** a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, 
 - **E751** the ground: nothing before the land is made (a frame drawn before the first map threw a dr
@@ -419,7 +425,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
-- **E881** the grass by the phone: full resolution while the phone keeps up, a quarter the pixels onc
 - **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
@@ -440,16 +445,17 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E731** the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map 
 - **E747** the mirage's dots on the small map, in the colour of what is coming
 
-## index.html#the-meadow
+## index.html#the-ground-s-soil-and-paper
 
-- **E881** the grass by the phone: full resolution while the phone keeps up, a quarter the pixels onc
-- **E799** the meadow: a layer of the ground, one colour a tile from the season, the weather and the 
+- **E902** grass is painted a light neutral and also on its own sheet; that sheet takes the season's 
+- **E900** the ground's soil and paper (N11): wet and snow on the ground for play, and the light, sea · N11
 - **E804** a tile's wetness by its wetness index and its snow by its drift: one home each for the ste
 - **E805** a step's wear on the grass: the pressure of everything that walks there (body, mount, kit 
 - **E800** made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each
-- **E801** each tile's colour: the season's grass under its six layers and its flowers' tint, worn to
-- **E899** the meadow is painted again strip by strip until its share of the frame is spent, then wai · N10
-- **E802** the meadow drawn: a sweep starts when the season, the weather or the paths have moved a st
+- **E901** over the baked ground: the hills' sun and shade and the meadow's soft patches as one small
+- **E906** the flowers come up in new places each year; the pebbles stay where they lie
+- **E907** snow is one more paper sheet, in six steps: it lies where play's drift would cover the gro
+- **E908** glints on the water: a few short strokes that come and go
 - **E803** the flowers and pebbles close up: each cluster's offspring from its own seed, as many open
 
 ## index.html#the-woods-cache
@@ -968,17 +974,3 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E265** ambience as events: a bird from a tree in view by day, a cricket in the dark, never in win · HX4 (N12, N145, N203)
 - **E266** QBX: the air's top falls with snow cover, on a log scale · QBX (N88)
 - **E563** the wind is heard as hard as it blows (HA4, HX4) · HA4 (N146, N203) · HX4 (N12, N145, N203)
-
-## cels.js
-
-- **E882** the cels module: clear sheets over the meadow, built once from the seed in pieces, light a
-- **E883** the cels' measures and shells, read from the books
-- **E884** the cels in their order, and the pieces held near the view
-- **E885** Poisson-disk spacing (Bridson's dart throwing on a grid of r / sqrt 2): random, never clum
-- **E888** a piece reaches up by its longest blade, so a blade rooted near its top edge is drawn whol
-- **E886** a piece built from the map's seed and its place: the same piece every time it comes back, 
-- **E890** a piece's blades and grain gathered into a few paths, one for each shade and tier, each la
-- **E892** a missing piece waits in a queue and is built in the browser's idle time, one at a time; t
-- **E887** the cels drawn in order over the meadow, each piece at the zoom step it is seen at; a cel 
-- **E891** the clear coat: the land so far laid over itself in a soft light, deeper and crisper, neve
-- **E895** the pieces one beyond the view are built ahead in idle time, so a pan finds them ready
