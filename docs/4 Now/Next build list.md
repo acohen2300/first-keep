@@ -2,39 +2,36 @@
 
 Items agreed in talk mode, to build on Albert's go. Newest last.
 
-## OPEN: the one list (checked against v100's code, Nov 9 19:30)
-Everything still open, once. The numbered items below are the record of how each was decided.
+## OPEN: the one list (rebuilt Nov 10 14:20 from the three latest hand-offs and every list; the only open list) [2026-11-10 14:20]
+Rule: when Albert answers or a build closes an item, change it here in the same commit. The numbered sections below are the record of how things were decided, not open items. [2026-11-10 14:20]
 
-**A. Waiting on Albert's answer**
-1. The quick action: v80's ground strip (item 14, proposed).
-2. Rally and Shelter to the Town Center's card; Info and Focus parked (item 14, proposed).
-3. Fast and Yard sit in the Paused card in test builds: move where?
-4. The Sound card shows only while muted: right?
-5. "Guard?" on note 4: what it means.
-6. "Rings thicker": every ring, or only the selected unit's?
-7. The Start page's Fog on/off (item 6.8): his call at build time.
-8. His phone's numbers with `?test` (item 5).
+**A. Waiting on Albert** [2026-11-10 14:20]
+1. Show all on the Build menu: he dislikes it; talk it through (today a tab with locked buildings gets a 7th box, a third row). [2026-11-10 14:20]
+2. His phone's `?test` meter numbers (he will send). [2026-11-10 14:20]
+3. #8, refund on cancel: he checks in his game (t-n15 says a cancelled unit is paid back in full). [2026-11-10 14:20]
+4. The GitHub Pages source setting (from the Nov 9 hand-off; Albert's to set). [2026-11-10 14:20]
 
-**B. Decided, ready to build on his yes yes**
-1. Item 14: the ring as the box's outline; New game in Paused; Welcome back's line; Start at 14; the Build menu's six tabs; tap a unit, tap a thing; first placed, first built; walkable woods; spring start, camera further out, v80's gold, stone and iron.
-2. Item 1: the stray sweep and the gate fix (checked: `NUM` in index.py still skips a number followed by a unit).
-3. Item 4b: fog by Beer–Lambert by zoom (checked: the flat fog wash is still in index.html), with the dark fog edge.
-4. Item 6: the sight map, fog of war, remembered buildings, fading at the edge; ground wear per side (checked: unit drawing still types `side !== 0`).
-5. Item 7: SoRen's renderer (baked layers, stacked canvases, rest pacing, sprites).
-6. Item 8.5: hold only for the box drag (checked: a hold still picks a unit and drags the aim, menu.js `FK.on('hold')`).
-7. Item 8.7: a tap anywhere on a building's drawn shape opens its card (checked: `hitAt` picks a building by its footprint tile).
-8. Small fixes: long names clipped (queue slots, Mail); the Barracks card checked on screen; the stances do nothing yet.
+**B. To build (decided; each needs his go)** [2026-11-10 14:20]
+1. Stance buttons (gift, bribe, war, terms, ally) do nothing yet. [2026-11-10 14:20]
+2. Controller menus. [2026-11-10 14:20]
+3. Colour check (every colour against the Colours book and the colour sheet). [2026-11-10 14:20]
+4. Menu check (every menu against the MR kit). [2026-11-10 14:20]
+5. B2's remainder, the zero rule: about 330 numbers still typed in code move to their books; then the gate refuses any typed number (about 3 h). [2026-11-10 14:20]
+6. Audit item 5: sort the 15 old failing tests, bug or stale, one line each (about 2 h, overnight). [2026-11-10 14:20]
+7. Flame brightness from real data: lumens per flame (Nordhaus) and light per person in history (Fouquet and Pearson, 1300-2000); settles the torch head. [2026-11-10 14:20]
+8. B32: conversions wait for a house; building health by material; villagers fight (Lanchester); animals by the randomizer. [2026-11-10 14:20]
+9. B33: quick start, race mode, simple mode. [2026-11-10 14:20]
+10. B34-B36: the Nov 8 triage's "do" items (`Triage - Nov 8.md`, about 55), not yet checked one by one against the code. [2026-11-10 14:20]
+11. Small: long names clipped in Mail; the colour and season cels (parked in N10). [2026-11-10 14:20]
 
-**C. Later, by Albert's word**
-Choke and Bombard (with the war module); help inside each item's card; a help line for every action; the Guide (nothing opens it since the book opens Welcome back); hunting modes; "mind your own business"; the squads subject; the 52 Base differences; every research showing what it helps and by how much; computers held to sight (the crutches off one at a time); B32, B33, B34–B36 (Nov 8 plan and triage); the overnight full `test.py`.
+**C. Later, by Albert's word** [2026-11-10 14:20]
+Choke and Bombard (with the war module); help inside each card and a help line for every action; the Guide; hunting modes; "mind your own business"; squads; the 52 Base differences; computers held to sight; the Throne; the triage's "later" items. [2026-11-10 14:20]
 
-**D. Done since the older lists said open**
-The black bar (N1c: one stitched page); the pause menu's taps (N1) and its panel (N5); the Help page's double message (N5); the train buttons' rings (N4); one standard ✕ (N4's title row); bottom sheets (N2); glass (cut, N4); rain and snow never off and the shed trigger (N1); map words one size at any zoom, the "in the way" card among them (B31a, to confirm on his phone).
+**D. Closed (so no chat asks again)** [2026-11-10 14:20]
+The Nov 9 questions (quick action, Rally and Shelter, Guard, thicker rings, Fast and Yard, the Sound card, Fog on Start, the v80 card picks) were answered Nov 9 19:37 and built in N6. Hold only for the box drag, tap a building's drawn shape, fog and sight, SoRen's renderer: built N6 to N8. First placed, first built: N17. [2026-11-10 14:20]
 
-**E. Known faults**
-`test.py t-walls` crashes (a harness fault); the match stutter (a smoke warning).
-
-Not merged: `Owed.md` is the v80 list (Nov 1); left as it was, not checked line by line.
+**E. Known faults** [2026-11-10 14:20]
+`test.py t-walls` crashes (a harness fault); t-proof's plant no longer matches menu.js; the match smooth check's stutter warning; the Garrison box is dim when no foe is near. [2026-11-10 14:20]
 
 ## 1. Font issue and changes (Albert, Nov 9, 07:37–07:44)
 Cap exception: this run may open more than 10 items (Albert, 07:44).
