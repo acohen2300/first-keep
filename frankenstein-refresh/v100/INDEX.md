@@ -68,6 +68,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC44 | a traveller (D306): crosses the land edge to edge and joins the first side to meet him, as villagers, or as food when the town is full | {by: combat.js wild, index.html (they arrive), law: [], needs: [], may: [mount]} | N205 |
 | SC45 | wooden or thatched: it catches fire from lightning in a summer storm, a spark, a shot, sabotage or a wildfire, burns down unless its villagers put it out, and lights its wooden neighbours (D310) | {by: econ.js fire, index.html (drawn, struck), law: [QT, QU], needs: [], may: []} | N206; N21; N22 |
 | SC46 | a place of care or recreation: counts toward the Wellbeing crown, and the wellbeing chaser builds it (Mid's CARE: Hospital, Temple, Baths, Theatre, Tavern) | {by: econ.js crowns, law: [], needs: [], may: []} | N222 |
+| SC47 | the mold of a cel (layer 90): a clear sheet laid over the meadow in its order, built once from the map's seed in pieces that never repeat, light and shade only so it takes the meadow's colour; it may fade by zoom (Albert, Nov 9 20:31-20:44) | {by: shells (cels), law: [], needs: [order, cel], may: [fade]} | N297; N287 |
+| SC48 | a cel of grass blades on the meadow, spaced by Poisson-disk sampling (N295) | {by: cels.js, law: [], needs: [cel], may: []} | N295 |
+| SC49 | the clear coat: the land laid over itself in a soft light, as varnish deepens a painting's colours (Albert, Nov 9 20:52: crisp, a clear coat, not a matte that blurs) | {by: cels.js, law: [], needs: [cel], may: []} | N297 |
 
 ## citations
 
@@ -366,6 +369,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N292 |  | Soule, R. G. and Goldman, R. F., Terrain coefficients for energy cost prediction (J. Appl. Physiol. 32, 1972): the terrain factor eta in the | opened |
 | N293 |  | Atkinson, M. P. (Naval Postgraduate School), on Lanchester's laws (opened Nov 9 2026): Lanchester's ancient model, a series of one-on-one du | opened |
 | N294 |  | A line through a random stand of trunks is blocked with chance 1 - e^(-n d L) (the mean free path; Beer-Lambert for obstacles): n stems a sq | to open |
+| N295 |  | Poisson-disk sampling: Cook, R. L., Stochastic sampling in computer graphics (ACM Transactions on Graphics 5, 1986; blue noise, as the cones | to open |
+| N296 |  | Teschner, M. et al., Optimized spatial hashing for collision detection of deformable objects (VMV 2003): the primes 73856093 and 19349663, s | to open |
+| N297 |  | Varnish: a clear coat fills a surface’s roughness, so less light scatters off the top and the colours under it read deeper (the conservator’ | to open |
+| N298 |  | Roberts, M., An improved version of Bridson's algorithm for Poisson disc sampling (Extreme Learning blog, 2019): candidates thrown on a thin | to open |
 
 ## colours
 
@@ -398,6 +405,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C29 | gunmetal (S1): the queue, the help line, the research boxes (Albert, Nov 9 10:45-11:22) | #2c3238 | N283 |
 | C27 | the progress rings, one colour a kind of work (Albert, Nov 9 12:03-12:19): white the age-up and info; red war; green people and economy; brown building (the wood colour); gold money; blue knowledge, sight and relations; a research takes its family's colour, brown when it strengthens a building; dim = the colour mixed share into the tray brown (C28); replaces the research tints (C26) | {colour: {white: #ece5d3, red: #a3262a, green: #5fd08a, brown: #c08a58, gold: #e6b947, blue: #2f8cff}, family: {economy: green, health: gree | N284 |
 | C31 | the fog of war's veil: the near-black green of a moonless meadow (Albert, Nov 9 item 6) | #0b0f09 | N290 |
+| C32 | a cel's light and shade: a warm white and a near-black green, laid clear so the meadow's season colour shows through (Albert, Nov 9 20:39) | {light: #fffbe8, dark: #0b1406} | N297 |
 
 ## comments
 
@@ -1262,6 +1270,18 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E879 |  | the fog of war is saved with the game: the ground each side has seen and the buildings it remembers, and whether fog is on; sight is cast ag |  |
 | E880 |  | the land kept while the camera holds still: one copy drawn back instead of the ground, the meadow, the scars and the skin each frame (SoRen' |  |
 | E881 |  | the grass by the phone: full resolution while the phone keeps up, a quarter the pixels once it sheds its first step; the meadow is laid agai |  |
+| E882 |  | the cels module: clear sheets over the meadow, built once from the seed in pieces, light and shade only |  |
+| E883 |  | the cels' measures and shells, read from the books |  |
+| E884 |  | the cels in their order, and the pieces held near the view |  |
+| E885 |  | Poisson-disk spacing (Bridson's dart throwing on a grid of r / sqrt 2): random, never clumped, never bare |  |
+| E886 |  | a piece built from the map's seed and its place: the same piece every time it comes back, never the same as its neighbour |  |
+| E887 |  | the cels drawn in order over the meadow, each piece at the zoom step it is seen at; a cel with a fade fades in by zoom |  |
+| E888 |  | a piece reaches up by its longest blade, so a blade rooted near its top edge is drawn whole and no seam shows between pieces |  |
+| E889 |  | the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a new land |  |
+| E890 |  | a piece's blades and grain gathered into a few paths, one for each shade and tier, each laid with one stroke |  |
+| E891 |  | the clear coat: the land so far laid over itself in a soft light, deeper and crisper, never blurred |  |
+| E892 |  | a missing piece waits in a queue and is built in the browser's idle time, one at a time; the land is drawn again once it is ready |  |
+| E893 |  | a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel for pixel with the camera, painted again only when |  |
 
 ## ground
 
@@ -1643,7 +1663,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D360 | the woods walkable at a cost (Albert, Nov 9 18:33, 19:59: the ice's crossing modes, real math for walking and fighting): who may enter, by what carries them (a person, a rider; engines, wagons and beasts never); eta the Pandolf terrain factor for heavy brush (Soule and Goldman 1972: 1.5), so the pace falls by the same physics as mud and snow; walk a horse's walk in m/s (about 6 km/h: low boughs keep a rider to it); stems a square metre and trunk the trunk's width in m (about 500 a hectare, 0.3 m), so an arrow or shot through L metres of wood is stopped with chance 1 - e^(-stems x trunk x L); edge the crossing's stick-to-edges weight a tile of woods by how deep in it is | {enter: {person: 1, horse: 1}, eta: 1.5, walk: 1.7, stems: 0.05, trunk: 0.3, edge: 4} | N292; N294; N287 |
 | D361 | (in or under woods an eye looks between the trunks: a ray goes on while the chance a line is still clear, e^(-stems x trunk x metres of wood, D360), stays above see, about 45 m; from above the canopy the wood is a wall (Albert, Nov 9 20:17: villagers in trees can’t really see); sight in cells of cell × cell tiles, 5 m; each eye sends rays × π × reach rays, so neighbouring rays meet at the rim; a ray marks each cell whose ground, a body high, rises above the steepest top before it, and stops at a wall: ground steeper than the tops by wall; an eye whose rim, rim points round it, is all seen by others casts nothing (Albert, Nov 9 20:12-20:13: you see until the first thing that blocks; only the eyes facing the fog see)) the fog of war's veil over the map (Albert, Nov 9 item 6; StarCraft's three states, N290): ground never seen under dark, ground seen before under seen, ground in sight clear; the veil drawn a pixel a tile and smoothed, so its edge is soft and units fade in and out at the edge of sight | {dark: 0.88, seen: 0.5, cell: 4, rays: 2, rim: 16, wall: 0, see: 0.5} | N290; N287 |
 | D362 | fog seen from the camera (Albert, Nov 9 item 4): radiation fog a layer depth m deep (Roach: tens to a couple of hundred m); the camera's height from the zoom: the ground's width on the screen, half of it over tan(fov / 2), a phone camera's field of view in degrees; the light's path through the fog is the layer, or the camera's height when the camera is inside it, so zoomed out the fog is white and zoomed in you see through; km: metres a kilometre, as beta is per km | {depth: 100, fov: 60, rad: 0.0174533, km: 1000} | N291; N287 |
-| D363 | the land (the ground, the meadow, scars, the skin of snow and ice, the grid) drawn once and kept while the camera holds still, drawn again when it moves, when the meadow is sweeping, or every ms milliseconds so a new scar or hole shows within a quarter second (SoRen's layers baked once, keyed: Albert, Nov 9 item 7, 20:24) | {ms: 250} | N287 |
+| D363 | (N8: the land is a sheet margin px larger than the screen on every side and slides with a pan, drawn again only when the pan runs past the margin, the zoom changes, or ms passes: the cels of an old cartoon, Albert, Nov 9 20:31) the land (the ground, the meadow, scars, the skin of snow and ice, the grid) drawn once and kept while the camera holds still, drawn again when it moves, when the meadow is sweeping, or every ms milliseconds so a new scar or hole shows within a second (SoRen's layers baked once, keyed: Albert, Nov 9 item 7, 20:24) | {ms: 1000, margin: 64} | N287 |
+| D364 | the cels (Albert, Nov 9 20:31-20:44): a piece piece view units square, built at the zoom step it is seen at, keep pieces held, the rest built again from the seed when they come back; Poisson-disk tries a point and ring the band past r they are thrown in (Roberts 2019: tries on a thin ring past r pack as tightly with 8 as Bridson’s 30 on the full annulus); prime the spatial hash a piece's seed comes from (Teschner 2003); blades fade in between the fade zooms (far out they would shimmer); a blade every gap view units at least (so a piece holds the same blades at any zoom), its strokes in tiers of alpha, each tier and shade one stroke; a missing piece is built in the browser’s idle time, one at a time, never inside a frame, and only when need ms of idle remain (a piece of 64 builds in about 5 ms), len view units long plus up to len[1], lean of its length, lit the share that catch the light, a its alpha, w its width; the clear coat: the land laid over itself at a in mode (soft light: lights lighter, darks deeper, no blur); blades are tapered, w their width at the root in view units | {layer: 90, piece: 64, need: 8, tries: 8, ring: 0.1, half: 0.5, prime: [73856093, 19349663], keep: 160, fade: {blades: [0.8, 1.6]}, blades:  | N295; N296; N297; N298; N287 |
 
 ## rules
 
@@ -1868,6 +1889,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | UM20 | Mongol horse archer | [Walk, Fight, Shoot, Health] | N144; N170; N176; N225 |
 | UM21 | Maurya war elephant | [Walk, Fight, Health] | N144; N170; N176; N225 |
 | UM22 | Mali horseman | [Walk, Fight, Health] | N144; N170; N176; N225 |
+| CL1 | Blades | [Blades] | N295; N287 |
+| CL2 | Clear coat | [Coat] | N297; N287 |
 
 ## sides
 

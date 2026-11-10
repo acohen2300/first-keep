@@ -385,7 +385,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, D356, SN32
 - **N285** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the sea → SN20, SN32, SN27
 - **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → D357, SN33, J42
-- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D358, D359, D360, D361, D362, D363, SN2, SN3, SN20, SN34, SN35, J43, J44, J45, J46, J47
+- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → SC47, W27, D165, D320, D353, D358, D359, D360, D361, D362, D363, D364, SN2, SN3, SN20, SN34, SN35, CL1, CL2, J43, J44, J45, J46, J47
 - **N288** Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground op → D358, J45
 - **N289** (to open) US Army FM 21-18, Foot Marches (1990), the rates of march by ground: cross-country and wooded ground far slowe → unused
 - **N290** (to open) Bergström, B., FOV using recursive shadowcasting (RogueBasin, 2001) and StarCraft II's fog of war (Blizzard, 2 → C31, D361
@@ -393,6 +393,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N292** Soule, R. G. and Goldman, R. F., Terrain coefficients for energy cost prediction (J. Appl. Physiol. 32, 1972): → D360
 - **N293** Atkinson, M. P. (Naval Postgraduate School), on Lanchester's laws (opened Nov 9 2026): Lanchester's ancient mo → unused
 - **N294** (to open) A line through a random stand of trunks is blocked with chance 1 - e^(-n d L) (the mean free path; Beer-Lamber → D360
+- **N295** (to open) Poisson-disk sampling: Cook, R. L., Stochastic sampling in computer graphics (ACM Transactions on Graphics 5,  → SC48, D364, CL1
+- **N296** (to open) Teschner, M. et al., Optimized spatial hashing for collision detection of deformable objects (VMV 2003): the p → D364
+- **N297** (to open) Varnish: a clear coat fills a surface’s roughness, so less light scatters off the top and the colours under it → SC47, SC49, C32, D364, CL2
+- **N298** (to open) Roberts, M., An improved version of Bridson's algorithm for Poisson disc sampling (Extreme Learning blog, 2019 → D364
 
 ## Named exceptions
 

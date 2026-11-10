@@ -159,8 +159,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E660** a save that will not open is kept aside, never written over; the one before opens instead
 - **E661** the game opened from a save: the fresh map from its seed, then the lists, the sides and th
 - **E696** the screen stays awake while a match runs; let go when paused, at rest or hidden; a browse
-- **E880** the land kept while the camera holds still: one copy drawn back instead of the ground, the
+- **E893** a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel 
+- **E889** the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a n
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
+- **E880** the land kept while the camera holds still: one copy drawn back instead of the ground, the
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)
 - **E70** Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the groun · D3 (N112)
 
@@ -961,3 +963,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E265** ambience as events: a bird from a tree in view by day, a cricket in the dark, never in win · HX4 (N12, N145, N203)
 - **E266** QBX: the air's top falls with snow cover, on a log scale · QBX (N88)
 - **E563** the wind is heard as hard as it blows (HA4, HX4) · HA4 (N146, N203) · HX4 (N12, N145, N203)
+
+## cels.js
+
+- **E882** the cels module: clear sheets over the meadow, built once from the seed in pieces, light a
+- **E883** the cels' measures and shells, read from the books
+- **E884** the cels in their order, and the pieces held near the view
+- **E885** Poisson-disk spacing (Bridson's dart throwing on a grid of r / sqrt 2): random, never clum
+- **E888** a piece reaches up by its longest blade, so a blade rooted near its top edge is drawn whol
+- **E886** a piece built from the map's seed and its place: the same piece every time it comes back, 
+- **E890** a piece's blades and grain gathered into a few paths, one for each shade and tier, each la
+- **E892** a missing piece waits in a queue and is built in the browser's idle time, one at a time; t
+- **E887** the cels drawn in order over the meadow, each piece at the zoom step it is seen at; a cel 
+- **E891** the clear coat: the land so far laid over itself in a soft light, deeper and crisper, neve

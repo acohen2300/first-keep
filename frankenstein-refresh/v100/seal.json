@@ -259,6 +259,21 @@
 "bytes": 281,
 "numbers": 0
 },
+"book:capabilities:SC47": {
+"sha": "3e6448bf5ab21b30112c6d85b8df65211a0ae9c2f56ec7e165b0a1423b52e947",
+"bytes": 396,
+"numbers": 0
+},
+"book:capabilities:SC48": {
+"sha": "7652e4cadf26924df3cfae47975f9b74e3bf1186df510aecdab66f56d87086b5",
+"bytes": 201,
+"numbers": 0
+},
+"book:capabilities:SC49": {
+"sha": "001cea7a364af3993b4403f09ff3d251b3cb8c348be858e4085a348c3883505f",
+"bytes": 289,
+"numbers": 0
+},
 "book:capabilities:SC5": {
 "sha": "76a36a9e76c51bff8e6b625e58797407f59a546508269d2ea0a84659eeca3765",
 "bytes": 243,
@@ -1364,6 +1379,26 @@
 "bytes": 442,
 "numbers": 0
 },
+"book:citations:N295": {
+"sha": "b8a7e3af0bc3edc81b3994782abd3504a6673cb301462da4263cc83982e6e57a",
+"bytes": 417,
+"numbers": 0
+},
+"book:citations:N296": {
+"sha": "6edcb00122d0a3fa62aa498da3b451f7a2d193da9a786e1494f79044a7151c5d",
+"bytes": 278,
+"numbers": 0
+},
+"book:citations:N297": {
+"sha": "c1324013ef21283581eda39e84d136f19bbd086abdd770697f52f3c65937614d",
+"bytes": 421,
+"numbers": 0
+},
+"book:citations:N298": {
+"sha": "560a53a4511f7c3056299793c0ad67643ba6c98c219ff781eb4262af62182307",
+"bytes": 323,
+"numbers": 0
+},
 "book:citations:N3": {
 "sha": "bfa4210804f92842892c11c0583bb366e189ac21d67493a7d36ca09f42403c78",
 "bytes": 83,
@@ -1857,6 +1892,11 @@
 "book:colours:C31": {
 "sha": "00a7629d5db71e4fc939b82f898fc11b8a839ead643d6f748a05e2a86e66d61e",
 "bytes": 165,
+"numbers": 0
+},
+"book:colours:C32": {
+"sha": "4bb3365fddbb2dd0480c76eb2b1f90729c8e4dd5473f1a5e0c23813312f0b722",
+"bytes": 243,
 "numbers": 0
 },
 "book:colours:C4": {
@@ -6119,9 +6159,69 @@
 "bytes": 169,
 "numbers": 0
 },
+"book:comments:E882": {
+"sha": "df6ac0439074b609e980c73293e02287ce76411711c4eb944059d93b83c11f9f",
+"bytes": 115,
+"numbers": 0
+},
+"book:comments:E883": {
+"sha": "d2f15196485ce28740ae735b7c32782360c12b570a02a21997146c648125facc",
+"bytes": 62,
+"numbers": 0
+},
+"book:comments:E884": {
+"sha": "eb7326591dab56ad53937f13d540082fe3e61820cfe7425631b415b67827885b",
+"bytes": 70,
+"numbers": 0
+},
+"book:comments:E885": {
+"sha": "7557d9ba26f95cc17b97ee383caa4a2f25479544ff7ef960c4081602b69489e2",
+"bytes": 117,
+"numbers": 0
+},
+"book:comments:E886": {
+"sha": "fc82138e450137c4c8b4fea4ecff770e0afb7a2bee21e172f97061834e35f79f",
+"bytes": 133,
+"numbers": 0
+},
+"book:comments:E887": {
+"sha": "4998ee15c8140271c3fd00fb220dbaa4fd3ccb5614dc9afa7e74a389fdad2c7f",
+"bytes": 130,
+"numbers": 0
+},
+"book:comments:E888": {
+"sha": "0f09b1ee060e69bbbb1e02f39a9e6bc33ad7006573f12e999d8f5ddde790164d",
+"bytes": 136,
+"numbers": 0
+},
+"book:comments:E889": {
+"sha": "817c15655c0d2018a63acec908e4b2f951a587552e12e551795bc976e9a62145",
+"bytes": 109,
+"numbers": 0
+},
 "book:comments:E89": {
 "sha": "644b37b23ec515b690c18c81d39fcad148c314236e28dc31e8be9f5d14737ceb",
 "bytes": 412,
+"numbers": 0
+},
+"book:comments:E890": {
+"sha": "d2fedb09b6376d1408ef6e173799611ae260a4be17b61cbb06d2cea09835f69c",
+"bytes": 120,
+"numbers": 0
+},
+"book:comments:E891": {
+"sha": "d1c13afd8d3622ddab63d1276ab3d29096aa67c46a91860d1a4c455a6b949010",
+"bytes": 111,
+"numbers": 0
+},
+"book:comments:E892": {
+"sha": "a8c1742556742eb62ccfcc8fcb95a51946e9ec4273b66102a45e84194aab8d50",
+"bytes": 141,
+"numbers": 0
+},
+"book:comments:E893": {
+"sha": "a6a903fef2ebae72a5b11070c47cd81c104fedf8427532a774b94701f48e47c2",
+"bytes": 271,
 "numbers": 0
 },
 "book:comments:E9": {
@@ -7710,8 +7810,13 @@
 "numbers": 0
 },
 "book:measure:D363": {
-"sha": "06218546a1f657c5bdbaa2478d791636d197c2218f66e49631344ed04bc5f188",
-"bytes": 406,
+"sha": "72b3f8a68df7e7ba5ba4a633fc0c0871ec3c286cd0f7836a293ecb9ddc3a3728",
+"bytes": 641,
+"numbers": 0
+},
+"book:measure:D364": {
+"sha": "f701d9cd0dab60d43f99a6f1ad17c5d422214baf1e61ca815144e5423eee28fe",
+"bytes": 1498,
 "numbers": 0
 },
 "book:measure:D37": {
@@ -8757,6 +8862,16 @@
 "book:shells:BW4": {
 "sha": "f755152cbba0576d1fe21ad8af9d9d1cae2c6766ee618d9f22af521c4ac97a74",
 "bytes": 174,
+"numbers": 0
+},
+"book:shells:CL1": {
+"sha": "4645a137f4d0cc8e2215106aa7cbb119c5f5681c89fa19ca5ecf541321a28fa0",
+"bytes": 130,
+"numbers": 0
+},
+"book:shells:CL2": {
+"sha": "260cf274b7d70343fde1a86a964c1c9f8beb5b072c3366e9ec2bd7c0b9c93c7e",
+"bytes": 112,
 "numbers": 0
 },
 "book:shells:MG1": {
@@ -11244,6 +11359,11 @@
 "bytes": 27330,
 "numbers": 25
 },
+"code:cels.js": {
+"sha": "abca13b777a571adf78671fd2a3e00ce19408025034ec43556ab2d9a12f8844c",
+"bytes": 5012,
+"numbers": 0
+},
 "code:combat.js": {
 "sha": "f3076f5257761bb49693ed343e44f5a23e616d756521cc5b8c219799b6ca7866",
 "bytes": 58478,
@@ -11285,8 +11405,8 @@
 "numbers": 207
 },
 "code:index.html#floor-7-display": {
-"sha": "3651f5dd3dcc663e5a858e7837de0b49430ca9cf5428d49585a10a936b8388cc",
-"bytes": 12955,
+"sha": "6ad6913a398b692f3932de9336b91ed3f3923c6a452450b20c5f4b775712240c",
+"bytes": 12996,
 "numbers": 54
 },
 "code:index.html#frames": {
@@ -11325,9 +11445,9 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "d15526da75ecbd08fe9cc8431b712cd7eee9decd5e022284b4015045f68321b7",
-"bytes": 15449,
-"numbers": 65
+"sha": "90f631188a15549ad13e04503f618b7e5ae464897a1b1c6e9d37a635bd84d449",
+"bytes": 16059,
+"numbers": 63
 },
 "code:index.html#the-figures": {
 "sha": "75985dfb8843b547769415a3e083bcd074374a1dea21461e7d04b619cd8d9f23",
@@ -11365,8 +11485,8 @@
 "numbers": 16
 },
 "code:index.html#the-view": {
-"sha": "361d83e341d94538dc3a937c071f2a250f154f8a16cbf261beef6c5916956fd2",
-"bytes": 1084,
+"sha": "1f7c93c00d51b6eb40b4bea70d847b20147362d0fcace89c8a54082f69dc148c",
+"bytes": 1088,
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
@@ -11380,8 +11500,8 @@
 "numbers": 47
 },
 "code:index.html#touch": {
-"sha": "f87fd42d20ac29706daea9f7a5c7f2cc69f10985be36433dc78fa11973bace29",
-"bytes": 9005,
+"sha": "bdc50d0fc4249452b48718c85ee08b6bcff8b2a670b95826ef5dedca466af6fd",
+"bytes": 9389,
 "numbers": 54
 },
 "code:menu.js": {
@@ -11860,8 +11980,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "fa88d61bd16fc54109d89b541c2aa6b2852819950ad2888260441da30d4f0dd2",
-"bytes": 27775,
+"sha": "69a03ea0a944b67b23a800d0b92d727c8e83037503b09ab0c05eaf68f97d62ba",
+"bytes": 27790,
 "numbers": 0
 },
 "tool:pages.yml": {

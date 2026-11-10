@@ -682,3 +682,7 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - The twice-a-second pair-by-pair look (replaced by the sight map).
 - The woods' first-pass flat shares of pace (0.5, 0.35), replaced by the Pandolf terrain factor and a horse's walk.
 
+## Cut in N8 (Nov 9)
+- The matte grain cel (dither dots): Albert 20:52, a clear coat, not a matte that blurs; the Grain tick became Coat.
+- The land cache keyed on the camera's place (N7): the land now slides with the camera instead.
+

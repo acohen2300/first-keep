@@ -4436,3 +4436,41 @@ MODIFIED (12):
 LOCKED (2365 of 2377): byte for byte as sealed, 1,357,364 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2377 items sealed · 2248 book entries · 93 laws · 293 citations, 25 still to open · 7 known
+
+## N8 · 2026-11-09 21:15
+Albert, Nov 9 2026 20:44: "Proceed" (the cels, layer 90, in the ECS: shells, ticks, one module)
+Opened: book:measure, book:comments, book:citations, book:capabilities, book:shells, book:colours, code:index.html, code:cels.js, tool:index.py
+MODIFIED (30):
+- book:capabilities:SC47 · added
+- book:capabilities:SC48 · added
+- book:capabilities:SC49 · added
+- book:citations:N295 · added
+- book:citations:N296 · added
+- book:citations:N297 · added
+- book:citations:N298 · added
+- book:colours:C32 · added
+- book:comments:E882 · added
+- book:comments:E883 · added
+- book:comments:E884 · added
+- book:comments:E885 · added
+- book:comments:E886 · added
+- book:comments:E887 · added
+- book:comments:E888 · added
+- book:comments:E889 · added
+- book:comments:E890 · added
+- book:comments:E891 · added
+- book:comments:E892 · added
+- book:comments:E893 · added
+- book:measure:D363 · 406 → 641 bytes
+- book:measure:D364 · added
+- book:shells:CL1 · added
+- book:shells:CL2 · added
+- code:cels.js · added
+- code:index.html#floor-7-display · 12,955 → 12,996 bytes
+- code:index.html#the-door · 15,449 → 16,059 bytes
+- code:index.html#the-view · 1,084 → 1,088 bytes
+- code:index.html#touch · 9,005 → 9,389 bytes
+- tool:index.py · 27,775 → 27,790 bytes
+LOCKED (2371 of 2401): byte for byte as sealed, 1,482,951 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2401 items sealed · 2271 book entries · 93 laws · 297 citations, 29 still to open · 7 known

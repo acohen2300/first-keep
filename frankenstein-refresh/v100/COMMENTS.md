@@ -863,3 +863,15 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E879 | index.html#the-door | the fog of war is saved with the game: the ground each side has seen and the buildings it remembers, and whether fog is on; sight is cast again on load |
 | E880 | index.html#the-door | the land kept while the camera holds still: one copy drawn back instead of the ground, the meadow, the scars and the skin each frame (SoRen's keyed layers) |
 | E881 | index.html#the-view-s-eyes-lights-and-stage, index.html#the-meadow | the grass by the phone: full resolution while the phone keeps up, a quarter the pixels once it sheds its first step; the meadow is laid again when it crosses |
+| E882 | cels.js | the cels module: clear sheets over the meadow, built once from the seed in pieces, light and shade only |
+| E883 | cels.js | the cels' measures and shells, read from the books |
+| E884 | cels.js | the cels in their order, and the pieces held near the view |
+| E885 | cels.js | Poisson-disk spacing (Bridson's dart throwing on a grid of r / sqrt 2): random, never clumped, never bare |
+| E886 | cels.js | a piece built from the map's seed and its place: the same piece every time it comes back, never the same as its neighbour |
+| E887 | cels.js | the cels drawn in order over the meadow, each piece at the zoom step it is seen at; a cel with a fade fades in by zoom |
+| E888 | cels.js | a piece reaches up by its longest blade, so a blade rooted near its top edge is drawn whole and no seam shows between pieces |
+| E889 | index.html#the-door | the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a new land |
+| E890 | cels.js | a piece's blades and grain gathered into a few paths, one for each shade and tier, each laid with one stroke |
+| E891 | cels.js | the clear coat: the land so far laid over itself in a soft light, deeper and crisper, never blurred |
+| E892 | cels.js | a missing piece waits in a queue and is built in the browser's idle time, one at a time; the land is drawn again once it is ready |
+| E893 | index.html#the-door | a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel for pixel with the camera, painted again only when it slides past its margin, the zoom or its key changes, or its time runs out; the land and the fog of war are each one |

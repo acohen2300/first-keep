@@ -5,7 +5,7 @@
 #   python3 index.py --survey ../mid ../map   (paths from this folder) read another game (Mid) with the same measures; hold it to its seal; write its map
 import json, re, glob, os, sys, hashlib, subprocess, tempfile
 os.chdir(os.path.dirname(os.path.abspath(__file__))); CI, SEAL = '--ci' in sys.argv, '--seal' in sys.argv
-CODE = ['index.html', 'menu.js', 'econ.js', 'combat.js', 'ai.js', 'sound.js']   # the game, in load order after the books
+CODE = ['index.html', 'menu.js', 'econ.js', 'combat.js', 'ai.js', 'sound.js', 'cels.js']   # the game, in load order after the books
 TOOLS = ['index.py', 'publish.py', 'test.py', 'ship.py', '../../.github/workflows/pages.yml']
 text = lambda p: open(p, encoding='utf-8').read() if os.path.exists(p) else None
 BOOKS = {m.group(1): json.loads(m.group(2)) for f in sorted(glob.glob('books/*.js')) for m in [re.search(r'BOOK\("(\w+)", ([\s\S]*)\);\s*$', text(f))]}
@@ -117,7 +117,7 @@ for c, s in BOOKS['shells'].items():
     for slot in ('amount', 'size', 'room', 'pace', 'rate'): rule('pointers', not s.get(slot) or points(s[slot]), f'{c}.{slot} points at {s.get(slot)}, not in a book')
     for k in [s.get('body'), s.get('mount')] + s.get('kit', []): rule('pointers', not k or k in keys('mass'), f'{c} is made of {k}, not in the Mass book')
     for k in (s.get('sound'), s.get('voice')): rule('pointers', not k or k in keys('sound'), f'{c} sounds {k}, not in the Sound book')
-    rule('pointers', s['layer'] != 120 or s['look'] in keys('sprites'), f'{c} wears {s["look"]}, not in the Sprites book')
+    rule('pointers', s['layer'] != 120 or s['look'] in keys('sprites'), f'{c} wears {s.get("look")}, not in the Sprites book')
 for c, e in BOOKS['screen'].items():
     if isinstance(e['value'], dict) and 'ticks' in e['value']: mold(c, {**e['value'], 'name': e['name'], 'cite': e['cite'], 'layer': 'page'})
 for ev, s in book('sound')['on'].items(): rule('sounds', s in keys('sound'), f'event {ev} plays {s}, not in the Sound book')

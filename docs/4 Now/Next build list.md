@@ -282,6 +282,12 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - The fog of war saved with the game: the ground each side has seen, the buildings it remembers, fog on or off (E879).
 - Fixed: the quick action's ½, All, ¼ could throw once the square closed (share() read a closed square).
 
+## Built N8 (Nov 9 20:44-21:05, Albert: "Proceed"; the cels)
+- The cel mold (layer 90, SC47) with two shells: Blades (CL1: tapered blades, light and shade only, so they take the meadow's season colour; Poisson-disk spacing, Roberts' ring, 8 tries; built once from the map's seed in pieces that never repeat; fade in by zoom) and Clear coat (CL2: the land laid over itself in a soft light, deeper and crisper, never blurred: Albert 20:52-20:53, an anti-reflective screen, not a matte). One module, `cels.js` (ticks Blades, Coat); values in D364 and C32; cited N295-N298.
+- Sheets (E893, one helper, `slideSheet`): the land and the fog of war are each a picture 64 px larger than the screen, slid pixel for pixel with a pan, painted again only past the margin, on a zoom, when their key changes, or (the land) every second (D363). A cel piece (64 view units) is built in the browser's idle time, never inside a frame.
+- Measured (desktop, software drawing, at the opening zoom): a pan from 64 ms a frame (N7) to 33 ms; N5 at the same zoom 18 ms. On a phone's graphics chip the slides cost far less; the meter's numbers will tell. Code: +4.5 KB (cels.js); nothing removed yet. Rule 12 (save code) not met: the meadow's sweep stays, as it carries the paths, mud, puddles, frost and snow.
+- Open: the colour and season cels (the meadow's three tones and its tint as cels of their own) and the woods and fog of war as cels; the spikes on a long pan (build pieces ahead while idle).
+
 ## 13. Menus from the MR kit, Albert's markup (Nov 9, 12:57–13:12; mocks kit2, kit3, kit4)
 - All solid, no glass (undo N2's glass); the tray brown fills the 1 px seams so the stack reads as one card.
 - Title: always ← · book · ✕ on the right (SN27).
