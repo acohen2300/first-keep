@@ -383,7 +383,7 @@ Preview: `frankenstein-refresh/preview-n17/`. Gate PASS, smoke 6/6 (the match sm
 
 ## N18: Albert's notes on N17 (Nov 10, 14:47, notebook page "N17", 22 items; found causes by Claude) [2026-11-10 15:00]
 1. New Game pills lost their curves: N17's corner rule was overridden by `.cells.seg .cell` (radius 0). Fix the selector. [2026-11-10 15:00]
-2. White outline still not right (needs his look at a mock). [2026-11-10 15:00]
+2. White outline still not right (Albert 15:01, his screenshot): the selected ring sits a few px inside the pill, with a dark gap to the pill's outer line and smaller corners. It must lie on the pill's own outline: top and bottom on the outer line, the ends on the outer line with the pill's corners (end boxes) or on the dividers (middle boxes). Cause: N17's ring svg was given width/height auto, which an svg takes from its own size, not the box. [2026-11-10 15:05]
 3. Daily on: options are locked (the toast says so) but look the same as free ones. One state rule with #7. [2026-11-10 15:00]
 4. Row titles back to 14/600 (N17 set them 12/400: Claude misread #3). [2026-11-10 15:00]
 5. Options 12/400 (already 12/400 in code; check on his phone with #4). [2026-11-10 15:00]
