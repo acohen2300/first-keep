@@ -27,7 +27,7 @@ function draw(ctx, z, gx, gy, w, h, m = ZERO) { const P = CE.piece, q = FK.zoomS
   for (const code of CODES) { if (has(code, 'Coat')) { const K = FK.ref(SH[code].cel); ctx.save(); ctx.setTransform(ONE, ZERO, ZERO, ONE, ZERO, ZERO); ctx.globalCompositeOperation = K.mode; ctx.globalAlpha = K.a; ctx.drawImage(ctx.canvas, ZERO, ZERO); ctx.restore(); continue; } // E891
     const [z0, z1] = SH[code].fade ? CE.fade[SH[code].fade] : [ZERO, ZERO], a = z1 > z0 ? Math.min(ONE, Math.max(ZERO, (z - z0) / (z1 - z0))) : ONE; if (a <= ZERO) continue; ctx.globalAlpha = a;
     const i0 = Math.max(ZERO, Math.floor((-m - gx) / (P * z))), i1 = Math.min(n[ZERO] - ONE, Math.floor((w + m - gx) / (P * z))), j0 = Math.max(ZERO, Math.floor((-m - gy) / (P * z))), j1 = Math.min(n[ONE] - ONE, Math.floor((h + m - gy) / (P * z)));
-    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) { const key = `${code}|${i}|${j}|${q}`; const c = PIECES.get(key); if (!c) { want(key, [code, i, j, q]); continue; }
+    for (let j = j0 - ONE; j <= j1 + ONE; j++) for (let i = i0 - ONE; i <= i1 + ONE; i++) { if (i < ZERO || j < ZERO || i >= n[ZERO] || j >= n[ONE]) continue; const key = `${code}|${i}|${j}|${q}`, c = PIECES.get(key), out = i < i0 || i > i1 || j < j0 || j > j1; if (!c) { want(key, [code, i, j, q]); continue; } if (out) continue; // E895
       ctx.drawImage(c, gx + i * P * z, gy + j * P * z - (c.top / q) * z, P * z, P * z + (c.top / q) * z); } }
   ctx.globalAlpha = ONE; const f = fresh; fresh = false; return f; }
 FK.on('start', () => { PIECES.clear(); QUEUE.clear(); }); FK.on('land', draw);

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 32 | 3,464 | 577,694 | 577,842 |
-| Books | 2272 | 0 | 670,174 | 671,067 |
+| Game code | 32 | 3,470 | 579,511 | 579,659 |
+| Books | 2276 | 0 | 671,625 | 672,518 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
-| Tools | 5 | 1,807 | 292,453 | 292,694 |
+| Tools | 5 | 1,815 | 294,579 | 294,824 |
 
 ## The trades (code)
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
 | index.html#drawn-once-in-the-view-frame | 80 | 12,741 | 12,745 | 96 |
 | index.html#the-view | 9 | 1,084 | 1,088 | 13 |
-| index.html#the-door | 99 | 16,088 | 16,092 | 63 |
+| index.html#the-door | 99 | 16,235 | 16,239 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -33,18 +33,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 149 | 19,651 | 19,655 | 78 |
 | index.html#the-body-s-laws | 32 | 2,789 | 2,793 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,949 | 5,953 | 90 |
-| index.html#floor-6-climate | 170 | 29,663 | 29,675 | 207 |
-| index.html#floor-7-display | 65 | 12,992 | 12,996 | 54 |
+| index.html#floor-6-climate | 170 | 29,544 | 29,556 | 207 |
+| index.html#floor-7-display | 70 | 14,479 | 14,483 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 120 | 23,290 | 23,294 | 0 |
 | index.html#the-meadow | 70 | 14,438 | 14,442 | 0 |
 | index.html#the-woods-cache | 50 | 5,413 | 5,417 | 47 |
 | index.html#touch | 53 | 9,385 | 9,389 | 54 |
-| menu.js | 518 | 102,397 | 102,441 | 544 |
+| menu.js | 519 | 102,543 | 102,587 | 544 |
 | econ.js | 590 | 108,520 | 108,520 | 72 |
 | combat.js | 351 | 58,478 | 58,478 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 57 | 6,050 | 6,050 | 66 |
-| cels.js | 35 | 5,012 | 5,012 | 0 |
+| cels.js | 35 | 5,168 | 5,168 | 0 |
 
 ## The books
 
@@ -54,18 +54,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 54 | 16,064 |
 | citations | 297 | 69,634 |
 | colours | 28 | 7,807 |
-| comments | 872 | 151,792 |
+| comments | 876 | 152,375 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 333 | 156,671 |
-| rules | 75 | 28,346 |
+| measure | 333 | 157,129 |
+| rules | 75 | 28,555 |
 | screen | 24 | 10,338 |
 | shells | 112 | 23,663 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,506 |
 | sprites | 69 | 34,632 |
 | tech | 259 | 75,824 |
-| words | 46 | 95,885 |
+| words | 46 | 96,130 |
 
 ## The shells
 
@@ -104,7 +104,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X23 | t-version | page | the page shows the version from the book |
 | X24 | t-top | page | the top is one ribbon of the cells the Screen book names |
 | X25 | t-tabs | page | Build renders the book's tabs, each with its buildings |
-| X26 | t-height | page | every page that is not Tall shares one height |
+| X26 | t-height | page | every Build tab shares one height, two rows of three (Albert Nov 9: fit two rows; since N2 the other menus are bottom sheets that hug their rows) |
 | X27 | t-tall | page | the Tall pages keep their own height |
 | X28 | t-solid | page | the panel is solid |
 | X29 | t-queue | page | the seat's queue is the mold's six single slots, filling in order |
@@ -142,7 +142,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X63 | t-mind | page | the computers' minds and the sky, the moon and the ground (F29+F30): Mid's PERS, PLAYERS, WAVE, SAVE, DIFF, EASY_SAFE, SYNODIC, CLIMATE.rut, CLIMATE.shore and EVENTS.flood in the books; a computer's plan by need each minute over four minutes is Mid's frozen needOf and runsOut on the same hands, rates, stores, goal and draw, and every computer grows its town; the moon's phase and light are Mid's (the night's sight is now QAL's, t-sight); a walker wears the ground a unit-second a second, and the ruts heal, deepen the mud and pool by water as Mid's frozen rutHeal, rutOf and mudAt; a flood blocks the land within its rise and harms a building there unless Levees, and goes |
 | X64 | t-wild | page | finds, wild guards, drifters, events and the hazards (F31): Mid's FINDS (guards, spoils, the ruins' scroll, the drifters' price), WAYFARER_EVERY, WILD_LOOK, the leash, NATIVE's raids, GROUP_R, EV_MEAN, EV_MIN, EV_WARN, the kept EVENTS, HAZARDS, HORDE and the bandit's and robber's UNIT rows in the books; on the seed every find laid with its guards on its ring (drifters by their fire); with every hazard on, the events in order with their warnings and the horde's warnings, arrival and number, fed one string of dice, are Mid's frozen eventsTick and hordeTick's (each event's doing set aside); a robbers' raid's band and mark are Mid's frozen natRaid's for the same camp, people and strengths; a drifter's refusals, price and three foot soldiers are Mid's frozen hireWhy and hire's; a chest taken pays Mid's frozen findsTick's spoils, the ruins a free research |
 | X65 | t-fire | page | fire and sickness (F32): Mid's FIRE, FIRE_SMOKE, FIREARMS and HEALTH in the books, its wooden buildings the ones that Burn, its water, sewer and quarantine research the measured shares (MEASURED); fireHeat and Rothermel's η are Mid's; a summer storm's strike on a wooden town of two clusters: the home with villagers beside it saved, its neighbour untouched, and the other cluster's three burning down one from another, each when Mid's frozen lightning, ignite, fireTick and repairTick's buckets do on the same town and dice (to the 3 s look); then an outbreak, beat by beat, sickens and cures the same people as Mid's frozen outbreak and healthTick |
-| X66 | t-sight | page | sight by real math, no fog of war (Albert, Nov 6): a person's range equals QAL worked from the books alone at noon, dusk, a full and a half moon, starlight, an overcast night and a fog; a tree between two villagers hides each from the other's side, felled it opens both ways, a fog thinner than their distance hides them, and nothing is remembered once the eye is gone; no fog image, no fog-of-war numbers; the small map's incoming mark lands on the soldiers seen and a tap there glides the camera |
+| X66 | t-sight | page | sight by real math, with the fog of war (Albert Nov 9, D361; his Nov 6 call had none): a person's range equals QAL worked from the books alone at noon, dusk, a full and a half moon, starlight, an overcast night and a fog; a tree between two villagers hides each from the other's side, felled it opens both ways, a fog thinner than their distance hides them, and once your last eye is gone you see nothing, while the foe's eye still sees that ground; the fog of war drawn, none of the old fog-of-war numbers; the small map's incoming mark lands on the soldiers seen and a tap there glides the camera |
 | X67 | t-stage | page | lights, the glide, theatrics and the draw budget (F34): Mid's FLAME, LIGHT, CAM_W, the pop and the shed thresholds in the books; a glide to the Town Center follows Mid's frozen spring and followCam frame by frame; after dark the Town Center, a finished house, a burning house, a badly hurt and a lanterned camp give the lights Mid's frozen drawLight gives; each flame's colour and its life in the rain are Mid's kelvinRGB and flameLife; the finished house's pop runs Mid's popC frame by frame; a slow phone sheds and climbs back on Mid's frozen shed |
 | X68 | t-dew | page | fog by the atmosphere (Albert, Nov 6 14:44): on a dry calm evening with the dew point just under the air, the air cools to it and fog forms (visibility under the WMO's 1 km); the visibility equals CALVIS's 3.912 ÷ (144.7 C^0.88) for the vapour above saturation by Magnus, never past the typical fog's water; a breeze past 7 knots clears it; the sun lifts it once the air warms past the dew point |
 | X69 | t-peace | page | peace, the crowns, the mail, the messengers, milestones and tips (F35): a board truce stands a computer's soldiers above Mid's armyAim down to villagers one for one as Mid's frozen standDown; a year of it opens the hidden age as Mid's nextAge; a kill credits its cost as warCredit; the Wealth, War, Wellbeing and overall crowns equal Mid's crownsOf on the same sides; news of a foe out of sight is never told, told by a runner or a rider at Mid's tell's delay for the same walked metres, or heard as a fight with its way, as Mid's tell; repeats merge; the world's news and the first-house line equal Mid's NEWS and MS_TEXT; a tip done three times retires; the Games wait with the Throne |
@@ -155,4 +155,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2402 items sealed · 2272 book entries · 93 laws · 297 citations, 29 still to open · 7 known
+2406 items sealed · 2276 book entries · 93 laws · 297 citations, 29 still to open · 7 known

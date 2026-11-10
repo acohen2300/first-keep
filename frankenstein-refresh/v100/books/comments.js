@@ -871,5 +871,9 @@ BOOK("comments", {
  "E891": {"text": "the clear coat: the land so far laid over itself in a soft light, deeper and crisper, never blurred"},
  "E892": {"text": "a missing piece waits in a queue and is built in the browser's idle time, one at a time; the land is drawn again once it is ready"},
  "E893": {"text": "a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel for pixel with the camera, painted again only when it slides past its margin, the zoom or its key changes, or its time runs out; the land and the fog of war are each one"},
- "E894": {"text": "with ?test the frame meter shows from the start (its only door, the Yard, left the Paused card in N6)"}
+ "E894": {"text": "with ?test the frame meter shows from the start (its only door, the Yard, left the Paused card in N6)"},
+ "E895": {"text": "the pieces one beyond the view are built ahead in idle time, so a pan finds them ready"},
+ "E896": {"text": "the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above it, the layer's top level over the lowest ground, so it pools in the hollows"},
+ "E897": {"text": "your own people under the canopy drawn as a ring over the trees, so you see who is inside"},
+ "E898": {"text": "the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings hide, so every tab is one height (Albert Nov 9: fit two rows)"}
 });

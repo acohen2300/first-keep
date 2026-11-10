@@ -686,3 +686,7 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - The matte grain cel (dither dots): Albert 20:52, a clear coat, not a matte that blurs; the Grain tick became Coat.
 - The land cache keyed on the camera's place (N7): the land now slides with the camera instead.
 
+
+## N9 and the overnight QC (Nov 10)
+- Show all with every building shown makes a third row on Build (7 cells): waits for Albert to choose its home.
+- Old test failures found in the first full run since N5, none from N6-N9: listed in Next build list "Built N9"; each waits for its own pass.

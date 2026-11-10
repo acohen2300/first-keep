@@ -412,7 +412,7 @@ function draw() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
   slideSheet(LANDS, [show.K, show.G, MSW.row].join(), () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawMeadow(gx, gy); if (fire('land', ctx, cam.z, gx, gy, cw, ch, D.landCache.margin)) LANDS.t = -Infinity; ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); if (show.G && cam.z * D.tile >= D.lod) drawGrid(); }, D.landCache.ms); // E880
-  drawThings(); if (FOGON) slideSheet(FOGS, FOGV, drawFog); fire('draw', ctx, cam.z);
+  drawThings(); drawUnder(); if (K.beta > ZERO) slideSheet(MISTS, `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}`, drawMist); if (FOGON) slideSheet(FOGS, FOGV, drawFog); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
   if (show.R) drawEdge();
   if (show.K) { drawSky(frameDt); drawLights(cam.z); } fire('over', ctx, cam.z);
@@ -1227,7 +1227,7 @@ function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i 
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 const sheet = () => Math.sqrt(K.gfd / D.groundIce.fdd); // E365
 const WX = D.weather, FW = WX.fog, HOUR = D.day / 24; let GUST = () => 0, DROPS = []; // E377
-const fogVeil = () => { const L = D.fogLayer, camH = (cw / cam.z / D.upm) * DRW.half / Math.tan(L.fov * L.rad * DRW.half); return ONE - Math.exp((-(K.beta || ZERO) * Math.min(L.depth, camH)) / L.km); }; // E873
+const camHigh = () => (cw / cam.z / D.upm) * DRW.half / Math.tan(D.fogLayer.fov * D.fogLayer.rad * DRW.half); // E873
 const sky = (rain, snow, C = null) => { const R = rain * WX.rain.most, S = snow * WX.snow.most, flake = (WX.snow.slow + WX.snow.fast) * D.place.half, wind = Math.max(rain, snow) * WX.wind.most, fog = FW.beta * C ** FW.pow; return { R, S, wind, fog, gust: wind * (1 + WX.wind.gust), vis: (WX.km * WX.k) / (WX.rain.beta * (WX.rain.mp.a * R ** WX.rain.mp.b) ** WX.rain.pow + WX.snow.beta * (S / (WX.perHour * flake)) ** WX.snow.pow + fog) }; }; // E713
 const blizzard = (s) => s.S > 0 && s.gust >= WX.blizzard.wind && s.vis < WX.blizzard.vis; // E378
 on('start', () => { GUST = fractal(dice(seed ^ WX.wind.seed), WX.wind.k, WX.wind.dim); DROPS = Array.from({ length: WX.pool }, () => ({ x: glance() * cw, y: glance() * ch, q: glance(), d: glance() })); });
@@ -1286,7 +1286,7 @@ function drawSky(dt) { // E140
   wash(SKYC.flash, Math.min(ONE, K.flash));
   const night = MO.dark * (ONE - clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), ZERO, ONE)), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
   const veil = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)); wash(SKYC.veil, veil); // E381
-  wash(SKYC.glow, dusk); wash(SKYC.blue, night); wash(SKYC.fog, fogVeil()); if (K.sky === 'frost') wash(SKYC.rime, BD.frost); flushWash(); skyBand(); // E144
+  wash(SKYC.glow, dusk); wash(SKYC.blue, night);  if (K.sky === 'frost') wash(SKYC.rime, BD.frost); flushWash(); skyBand(); // E144
 }
 // E552
 const FC = D.forecast, SKYW = fromBook('words').sky, FLD = D.flood, RU = D.ruts, RC = Math.ceil(N / RU.cell), RUTS = new Float32Array(RC * RC), BANK = new Uint8Array(N * N), HEAL = Math.exp(-RU.heal[0] / RU.tau);
@@ -1410,6 +1410,11 @@ let TOPV = ZERO; function look(dt) { seeT -= dt; const beat = seeT <= ZERO; if (
   if (!beat) return; seeT = EYE.tick; fogPaint();
   for (const s of D.players) { const S = new Set(), M = memOf(s), T = famOf(s); for (const e of all) if (e.side === s) T[famCell(tileAt(e.bx, e.by))] = K.t; for (const t of all) if (SIDES[t.side] && t.side !== s && (!FOGON || seenNow(t, s))) { S.add(t); if (t.kind === 'bld' && !M.has(t)) { M.add(t); if (s === ME && t.done >= ONE) wear(t); } } SEEN.set(s, S); } }
 const FOGC = document.createElement('canvas'); FOGC.width = FOGC.height = NC_; const FOGX = FOGC.getContext('2d'), FOGI = FOGX.createImageData(NC_, NC_); // E871
+const MISTC = document.createElement('canvas'), MISTS = newSheet(); MISTC.width = MISTC.height = NC_; // E896
+function drawMist() { const L = D.fogLayer, X = MISTC.getContext('2d'), I = X.createImageData(NC_, NC_), d = I.data, ink = hexRGB(SKYC.fog), A = ink.length, low = Math.min(...CGND), top = low + L.depth * D.upm, camH = camHigh();
+  for (let c = ZERO, p = ZERO; c < NC_ * NC_; c++, p += A + ONE) { const deep = Math.max(ZERO, top - CGND[c]) / D.upm, path = Math.min(deep, camH); d.set(ink, p); d[p + A] = Math.round((ONE - Math.exp((-K.beta * path) / L.km)) * D.meadow.opaque); } X.putImageData(I, ZERO, ZERO);
+  const T = D.tile * SCELL, M = D.landCache.margin, [x0, y0] = S(ZERO, ZERO, D.land), [x1, y1] = S(NC_ * T, ZERO, D.land), [x2, y2] = S(ZERO, NC_ * T, D.land); ctx.save(); ctx.setTransform(dpr * (x1 - x0) / NC_, dpr * (y1 - y0) / NC_, dpr * (x2 - x0) / NC_, dpr * (y2 - y0) / NC_, dpr * (x0 + M), dpr * (y0 + M)); ctx.imageSmoothingEnabled = true; ctx.drawImage(MISTC, ZERO, ZERO); ctx.restore(); }
+function drawUnder() { const W = D.woods; ctx.save(); ctx.lineWidth = DRS.foot; ctx.globalAlpha = W.sil; for (const u of units) { if (u.side !== ME || u.inside || !inWoods(u.k)) continue; const [x, y] = toScreen(u.vx, u.vy); if (x < ZERO || y < ZERO || x > cw || y > ch) continue; ctx.strokeStyle = SIDES[ME].col; ctx.beginPath(); ctx.ellipse(x, y, W.ring * cam.z, W.ring * cam.z * DRW.half, ZERO, ZERO, Math.PI * (ONE + ONE)); ctx.stroke(); } ctx.restore(); } // E897
 let FOGV = ZERO; function fogPaint() { FOGV++; const V = visOf(ME), X = expOf(ME), d = FOGI.data, ink = hexRGB(C.fogwar), A = ink.length, dark = Math.round(FOGW.dark * D.meadow.opaque), dim = Math.round(FOGW.seen * D.meadow.opaque); for (let k = ZERO, p = ZERO; k < NC_ * NC_; k++, p += A + ONE) { d.set(ink, p); d[p + A] = !FOGON || V[k] ? ZERO : X[k] ? dim : dark; } FOGX.putImageData(FOGI, ZERO, ZERO); }
 function drawFog() { const T = D.tile * SCELL, M = D.landCache.margin, [x0, y0] = S(ZERO, ZERO, D.land), [x1, y1] = S(NC_ * T, ZERO, D.land), [x2, y2] = S(ZERO, NC_ * T, D.land); ctx.save(); ctx.setTransform(dpr * (x1 - x0) / NC_, dpr * (y1 - y0) / NC_, dpr * (x2 - x0) / NC_, dpr * (y2 - y0) / NC_, dpr * (x0 + M), dpr * (y0 + M)); ctx.imageSmoothingEnabled = true; ctx.drawImage(FOGC, ZERO, ZERO); ctx.restore(); }
 const FAM = D.familiar, FAMC = Math.ceil(N / FAM.cell), FAMT = new Map(), famCell = (k) => Math.floor(k / N / FAM.cell) * FAMC + Math.floor((k % N) / FAM.cell), famOf = (s) => FAMT.get(s) || FAMT.set(s, new Float32Array(FAMC * FAMC).fill(-Infinity)).get(s); // E810

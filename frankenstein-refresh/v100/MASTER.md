@@ -392,6 +392,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E870** seen now: a unit whose tile is in sight; a building any of whose corners is
 - **E877** an eye facing no fog: every point round its rim already seen by others, so it casts nothin
 - **E871** the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, cle
+- **E896** the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above i
+- **E897** your own people under the canopy drawn as a ring over the trees, so you see who is inside
 - **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
 - **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
 - **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219)
@@ -561,6 +563,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E853** the Build menu: the open tab's buildings a side can build, the rest behind Show all; it op
+- **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E847** Help: the earlier messages, newest first; the latest stays in the help line beneath
@@ -977,3 +980,4 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E892** a missing piece waits in a queue and is built in the browser's idle time, one at a time; t
 - **E887** the cels drawn in order over the meadow, each piece at the zoom step it is seen at; a cel 
 - **E891** the clear coat: the land so far laid over itself in a soft light, deeper and crisper, neve
+- **E895** the pieces one beyond the view are built ahead in idle time, so a pan finds them ready

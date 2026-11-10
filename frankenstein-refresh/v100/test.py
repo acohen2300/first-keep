@@ -35,19 +35,19 @@ async def main(b):
     scr = await ev("fromBook('screen')")
     ok('t-version', await ev("document.title === 'First Keep v' + FK.D.version"))
     ok('t-top', await ev("[document.querySelectorAll('.topbar .strip').length, document.querySelectorAll('.topbar .strip .cell').length]") == [1, len(scr['top'])])
-    shown = await ev("(() => { MENU.S.tab = 'Build'; const out = {}; for (const g of Object.keys(MENU.SCR.tabs)) { MENU.S.group = g; MENU.render(true); out[g] = [document.getElementById('panel').offsetHeight, document.querySelectorAll('#panel .frame .cell').length, [...document.querySelectorAll('#panel .tabs .cell')].map((c) => c.textContent).join()]; } return out; })()")
-    ok('t-tabs', all(v[1] == len(scr['tabs'][g]) and v[2] == ','.join(scr['tabs']) for g, v in shown.items()), shown)
+    shown = await ev("(() => { MENU.S.tab = 'Build'; const out = {}; for (const g of Object.keys(MENU.SCR.tabs)) { MENU.S.group = g; MENU.render(true); MENU.S.allB = true; MENU.render(true); const all = document.querySelectorAll('#panel .frame [data-v^=pick], #panel .frame [data-v^=later]').length; MENU.S.allB = false; MENU.render(true); out[g] = [document.getElementById('panel').offsetHeight, all, [...document.querySelectorAll('#panel .tabs .cell')].map((c) => c.textContent).join(), document.querySelectorAll('#panel .frame > *').length]; } return out; })()")   # E853: Show all lists the whole tab; E898: shut, the grid still keeps its six slots
+    ok('t-tabs', all(v[1] == len(scr['tabs'][g]) and v[2] == ','.join(scr['tabs']) and v[3] == len(scr['tabs'][g]) for g, v in shown.items()), shown)
     pages = {t: 'Tall' in v.get('ticks', []) for t, v in scr.items() if isinstance(v, dict) and 'ticks' in v}; size = "(() => { MENU.S.tab = '%s'; MENU.render(true); const p = document.getElementById('panel'); return [p.offsetHeight, p.style.height]; })()"
     heights = {t: await ev(size % t) for t in pages}
-    ok('t-height', len({v[0] for v in shown.values()} | {heights[t][0] for t in pages if not pages[t]}) == 1, [shown, heights])
+    ok('t-height', len({v[0] for v in shown.values()} | {heights['Build'][0]}) == 1, [shown, heights])
     ok('t-tall', all(heights[t][1] == '' for t in pages if pages[t]), heights)
-    ok('t-solid', await ev("getComputedStyle(document.getElementById('panel')).backgroundColor.startsWith('rgb(')"))
+    ok('t-solid', await ev("(() => { const b = getComputedStyle(document.getElementById('panel')).backgroundImage; return b.startsWith('linear-gradient(rgb(') && !b.includes('rgba('); })()"))   # SN35: the panel is a gradient of opaque colours, dark at the foot (Albert Nov 9)
     await ev("const s = FK.SIDES[0].store; s.food = s.wood = s.gold = s.stone = 2000; MENU.S.tab = 'Hall'; MENU.S.htab = 'Town'; for (let i = 0; i < 3; i++) MENU.act('people'); MENU.render(true)")
     q = await ev("[...[...document.querySelectorAll('#panel .row6')].find((r) => r.querySelectorAll('.q').length === 6).querySelectorAll('.q')].map((c) => c.tagName + ':' + c.textContent.replace(/\\d+:\\d+/, ''))")
     ok('t-queue', q == ['BUTTON:Villager'] * 3 + ['I:'] * 3, q)
     rows = "(() => { MENU.S.subject = %s; MENU.render(true); return [...document.querySelectorAll('#card > *')].map((e) => e.tagName + (e.className ? '.' + e.className : '')).join(); })()"
     cards = [await ev("MENU.S.tab = null; 0"), await ev(rows % 'ECON.villagersOf(0)[0]'), await ev(rows % "FK.things().find((t) => t.kind === 'tree')"), await ev(rows % "FK.things().find((t) => FK.has(t, 'Seat') && t.side === 0)")][1:]
-    ok('t-cards', cards == ['H2,P,P,DIV.row', 'H2,P,DIV.row', 'H2,P,DIV.row6,DIV.row,DIV.row,DIV.row'], cards)
+    ok('t-cards', cards == ['DIV.row6,P,P,DIV.row', 'DIV.row6,P,DIV.row', 'DIV.row6,P,DIV.row6,DIV.row6,DIV.row6,DIV.row'], cards)   # E836: the card's head is the mold's row (title, then ← book ✕), as every menu
     site = await ev("""(() => { MENU.S.subject = null; MENU.S.tab = 'Build'; MENU.S.group = 'Home'; MENU.render(true); const code = MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')); MENU.act('pick', code);
       const h = FK.things().find((t) => FK.has(t, 'Seat') && t.side === 0); const at = $ring(h, 8, 30, (i, j) => ECON.canPlace(code, i, j) && [i, j]); if (!at) return false; Object.assign(MENU.S.ghost, { i: at[0], j: at[1], ok: true }); MENU.act('build'); return FK.things().some((t) => t.code === code && t.done < 1); })()""")
     ok('t-place', site)
@@ -55,7 +55,7 @@ async def main(b):
       const frame = async () => { const ev = []; c.setLineDash = function (d) { ev.push(d.join()); return sd.call(this, d); }; c.lineTo = function (...a) { ev.push('L'); return lt.apply(this, a); }; FK.dirty(); await new Promise((r) => setTimeout(r, 250)); c.setLineDash = sd; c.lineTo = lt;
         const at = ev.indexOf(P.dash.guide.join()); return at >= 0 && ev.slice(at + 1).findIndex((x) => x !== 'L') !== 0 && ev[at + 1] === 'L'; };
       FK.SIDES[0].store.wood = 2000; MENU.act('pick', code); const g = MENU.S.ghost, n = FK.B[code][1], h = FK.seatOf(0), hc = h.j + h.n * P.half, off = !FK.things().some((b) => b.kind === 'bld' && b.side === 0 && (b.i + b.n * P.half === g.i + n * P.half || b.j + b.n * P.half === g.j + n * P.half));
-      const lone = off ? !(await frame()) : true; const keep = [g.i, g.j]; g.j = hc - n * P.half; const lined = await frame(); [g.i, g.j] = keep;
+      const lone = ECON.guides(0, code, g.i, g.j).some((q) => !q.d) === (await frame()); /* a guide shows exactly when a line is met: E716 edges and centres, E816 snaps the ghost onto one */ const keep = [g.i, g.j]; g.j = hc - n * P.half; const lined = await frame(); [g.i, g.j] = keep;
       return [MENU.S.tab, g.code === code && g.ok, lone && lined, !!document.querySelector('#card.on [data-v^="build|"]'), FK.things().filter((t) => t.code === code && t.done < 1 && t.side === 0).length]; })()""")
     await ev("document.querySelector('#card [data-v^=\"build|\"]').click()"); await pg.wait_for_timeout(200)   # the tap on the bar's Build, through the menu's own click
     placed = await ev("FK.things().filter((t) => t.code === MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')) && t.done < 1 && t.side === 0).length")   # yours: a computer may raise its own house in the wait (A1: their turns are spread)
@@ -125,6 +125,7 @@ def close(a, b):   # equal, numbers within a millionth
     return a == b
 async def ledger(b):
     pg, _ = await fresh(b)
+    await pg.evaluate('FK.D.startIn = 0')   # Mid's year opens on spring's first day; v100 opens later in spring (D359), so a test held to Mid's calendar opens where Mid's does
     v = await pg.evaluate(ACTS.replace('NAMES', json.dumps(NAMES)))
     bal = await pg.evaluate(BALANCE); await pg.close()
     mid, err = frozen('core orders eco text nav cards', MIDLEDGER, {'start': v['start'], 'home': v['home'], 'steps': v['steps'], 'names': NAMES, 'Y': v['Y']})
@@ -477,6 +478,7 @@ return box([cut(basics, 'const SEASON_LEN', 'const EASY_SAFE'), basics.match(/co
   OUT.draws = n; const P2 = { id: 0, res: { f: 1e6 } }; G.P = [P2]; OUT.order = orderCost(0, R.order.map((c) => ({ kind: { UV: 'vil', UM1: 'spear', UM3: 'cata' }[c] })));`]);"""
 async def food(b):
     pg, errs = await fresh(b)
+    await pg.evaluate('FK.D.startIn = 0')   # Mid's year opens on spring's first day; v100 opens later in spring (D359), so a test held to Mid's calendar opens where Mid's does
     tech = open(os.path.join(HERE, '../mid/src/04-rules-tech.js')).read(); TECHS = ['hearth', 'icehouse', 'seedstore']
     fx = [f for k in TECHS for f in json.loads(json.dumps(eval(re.sub(r'(\w+):', r'"\1":', re.search(r"id: '%s',[\s\S]*?fx: (\[[\s\S]*?\]),\n" % k, tech).group(1)).replace("'", '"'))))]
     run = {'techs': TECHS, 'food': 1300, 'draws': [0.7, 0.3, 0.1], 'fert': [1, 0.705, 0.65, 1], 'worked': 2, 'sheep': 11, 'wolfAt': [540, 720], 'secs': 900}
@@ -509,8 +511,8 @@ PACE = """(() => { const D = FK.D, K = FK.K, TK = Object.fromEntries(Object.entr
     for (const [code, , side] of KINDS) { const u = FK.spawn(code, side, k0, FK.rng); cost.push(side < 0 ? null : [FK.stat(code, side, 'mud') / D.walkCost.mud / (D.pace.sink[code] ?? D.pace.sink.foot), FK.stat(code, side, 'snow') / D.walkCost.snow]);
       for (const st of STATES) { if (st.load && !FK.has(u, 'Gather')) continue; Object.assign(K, { wet: 0, snow: 0, gfd: 0, temp: 10, wind: 0 }); u.load = st.load; u.sick = st.sick;
         out.push(FK.pace(u) / FK.ref(FK.SH[code].pace)); } } }
-  FK.reset(); const rec = [], share = () => Math.sqrt(K.gfd / D.groundIce.fdd); K.t = D.season * 3 + 5; K.wet = 1;
-  for (let i = 0; i < 1800; i++) { if (i === 900) K.t = D.season + 10; FK.sim(0.1); rec.push([K.temp, K.wet, share()]); }
+  FK.reset(); const rec = [], share = () => Math.sqrt(K.gfd / D.groundIce.fdd); K.t = D.season * 3 + 5 - D.startIn * D.season; K.wet = 1;
+  for (let i = 0; i < 1800; i++) { if (i === 900) K.t = D.season + 10 - D.startIn * D.season; FK.sim(0.1); rec.push([K.temp, K.wet, share()]); }
   FK.reset(); const u = ECON.villagersOf(0)[0], far = [6, -6, 6 * FK.N, -6 * FK.N].map((d) => u.k + d).find(FK.walkable); let told = 0, stuck = 0, still = 0; FK.on('event', (e) => { told += e === 'slip'; });
   Object.assign(K, { wet: 0.7, snow: 0, gfd: 0, temp: 5, wind: 0 }); u.load = 0; FK.go(u, far); for (const v of FK.units()) if (v !== u) v.stuck = K.t + 1; FK.step(0.1); const mud = [u.mps, FK.pace(u), FK.ref(FK.SH[u.code].pace)];   // the walker alone: the others stand this step, so no one else wears its rut cell (F37: at the bottom left they share it)
   Object.assign(K, { wet: 0, gfd: D.groundIce.fdd, temp: -5 }); for (let i = 0; i < 100; i++) { K.t += 0.1; const s = u.stuck > K.t; FK.step(0.1); if (s) { stuck++; still += u.mps === 0; } if (!u.path) FK.go(u, far); }
@@ -544,7 +546,7 @@ PHYS = """(() => { const D = FK.D, K = FK.K, TK = Object.fromEntries(Object.entr
   out.sky = LEVELS.map((x) => [sky(x, 0), sky(0, x)]); out.drops = LEVELS.map((x) => { K.rain = x; K.snowing = 0; K.wind = 0; const y = DROPS.map((m) => m.y); drawSky(0.05); const r = DROPS.filter((m, i) => m.y !== y[i]).length; K.rain = 0; K.snowing = x; const y2 = DROPS.map((m) => m.y); drawSky(0.05); return [r, DROPS.filter((m, i) => m.y !== y2[i]).length]; });
   const W = D.weather.blizzard, WX = D.weather, flake = (WX.snow.slow + WX.snow.fast) / 2, sVis = WX.perHour * flake * Math.pow((WX.km * WX.k) / (W.vis * WX.snow.beta), 1 / WX.snow.pow), edge = Math.max(W.wind / WX.wind.most / (1 + WX.wind.gust), sVis / WX.snow.most); out.edge = [blizzard(sky(0, edge * (1 - 1e-9))), blizzard(sky(0, Math.min(1, edge * (1 + 1e-9)))), blizzard(sky(1, 0))];
   out.flags = [[1, W.wind, W.vis - 1e-6], [1, W.wind - 1e-6, W.vis - 1e-6], [1, W.wind, W.vis], [0, W.wind * 2, 1]].map(([S, gust, vis]) => blizzard({ S, gust, vis }));
-  FK.reset(); const play0 = play; play = () => 0; K.t = D.season * 3 + 1; FK.sim(0.1); Object.assign(K, { wetHour: true, I: 1, dir: 1, snowing: 1, rain: 0, blizT: 0 }); const hrs = [];
+  FK.reset(); const play0 = play; play = () => 0; K.t = D.season * 3 + 1 - D.startIn * D.season; FK.sim(0.1); Object.assign(K, { wetHour: true, I: 1, dir: 1, snowing: 1, rain: 0, blizT: 0 }); const hrs = [];
   for (let i = 0; i < 40; i++) { FK.sim(0.5); hrs.push([K.blizT, K.bliz, K.temp <= 1]); } play = play0; out.hours = hrs; out.hour = D.day / 24;
   FK.reset(); const w = FK.units().find((v) => v.side === 0 && FK.has(v, 'Gather')), far = [6, -6, 6 * FK.N, -6 * FK.N].map((d) => w.k + d).find(FK.walkable), need0 = FK.G.step.person; out.slip = [];
   for (const [ice, land, dn] of [[1, 0, 1e-9], [1, 0, 0], [1, 0, -1e-9], [0.5, 0.99, 1e-9]]) { Object.assign(K, { wet: 0, snow: 0, temp: -5, gfd: ice * ice * D.groundIce.fdd, wind: 0 }); const g = FK.footing(w), on = land < ice ? g.on : g.ground;
@@ -686,7 +688,8 @@ ORD2 = r"""(() => { const D = FK.D, [me, foe] = D.players, out = {}, sim = $run,
   FK.select(null); MENU.S.more = false; MENU.S.tap = null; const [u0] = P, [ux, uy] = scr(u0); FK.fire('tap', u0.k, u0, ux, uy); out.one = FK.picked().length === 1 && FK.picked()[0] === u0 && MENU.S.subject !== u0; FK.fire('tap', u0.k, u0, ux, uy); out.two = MENU.S.subject === u0;
   const fresh = make('Foot', 2, tile(-4, 0)); MENU.VERBS.war.run(); MENU.S.aim = { k: tile(20, 0), t: null }; WAR.go(MENU.S.aim); const M = WAR.MS[fromBook('words').army.all]; out.go = !!M && M.n0 === 2 && fresh.every((u) => u.ord === M.ord); MENU.VERBS.war.run();
   const r = make('Riders', 1, tile(-6, 0))[0]; sim(0.3); const p0 = r.pacex; WAR.charge([r]); sim(0.2); const p1 = r.pacex; sim(D.charge.secs); const p2 = r.pacex; sim(D.charge.tired * 8); out.charge = [p1 / p0, p2 / p0, r.pacex / p0];
-  const C = make('Foot', 8, tile(-8, 0)), [ax, ay] = FK.tileMid(tile(-8, -6)), a = { bx: ax, by: ay }, b = { bx: ax + 6 * D.ranks.gap * D.tile, by: ay }; WAR.chokeAt(a, b, C); out.choke = C.map((u) => u.drill && u.drill.shape === 'choke' && u.drill.cols === 6 && u.job === 'march');
+  const C = make('Foot', 8, tile(-8, 0)), [ax, ay] = FK.tileMid(tile(-8, -6)), a = { bx: ax, by: ay }, b = { bx: ax + 6 * D.ranks.gap * D.tile, by: ay }; if (WAR.chokeAt) WAR.chokeAt(a, b, C);   // the Yard's Choke left with the Yard (N6); its home waits (Parked)
+  out.choke = C.map((u) => u.drill && u.drill.shape === 'choke' && u.drill.cols === 6 && u.job === 'march');
   const wall = make('Foot', 3, tile(-10, 0)); WAR.direct('Foot', false, { k: tile(-10, 8), t: null }); out.wall = wall.every((u) => u.wall > FK.K.t && WAR.shapeOf(u) === D.forms.square && WAR.temperOf(u) === D.army.temper.hold);
   let cover = null; for (let d = 1; d < 120 && cover == null; d++) for (const [x, y] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) if (cover == null && FK.FOR[FK.tileAt(h.bx + x * d * D.tile, h.by + y * d * D.tile)]) cover = FK.tileAt(h.bx + x * (d - 2) * D.tile, h.by + y * (d - 2) * D.tile);
   const [cx, cy] = FK.tileMid(cover), A = make('Foot', 2, FK.tileAt((cx + h.bx) / 2, (cy + h.by) / 2)); for (const g of FK.units().filter((u) => !FK.SIDES[u.side])) FK.vanish(g); WAR.ambushAt(cover, A); for (let i = 0; i < 900 && !A.every((u) => u.hid); i++) FK.sim(0.1); const f = make('Foot', 1, FK.tileAt(A[0].bx, A[0].by), foe)[0];   // the wild cleared first: a boar wandering by (the dice's) is not the ambush
@@ -792,7 +795,7 @@ MIDTR = r"""const stub = 'const fxv = () => ({ m: 1, a: 0 }), unitKeys = () => [
       sab: Object.fromEntries(Object.entries(BLD).filter(([, b]) => b.sab).map(([k, b]) => [k, b.sab])), tech: TECH.filter((t) => RUN.techs.includes(t.id)).map((t) => [t.id, t.at, t.line, t.age, t.cost, t.t, t.need || []]) };`]);"""
 async def troops(b):
     pg, errs = await fresh(b, 1500); v = await pg.evaluate(TRJS); await pg.close()
-    M, SH, T = keyed('measure'), book('shells'), keyed('tech'); LK = {s['look']: c for c, s in SH.items()}; RS = RK; cost = lambda c: {RS.get(k, k): x for k, x in (c or {}).items() if x}
+    M, SH, T = keyed('measure'), book('shells'), keyed('tech'); LK = {s['look']: c for c, s in SH.items() if 'look' in s}; RS = RK; cost = lambda c: {RS.get(k, k): x for k, x in (c or {}).items() if x}
     mid, err = frozen('basics units blds tech tuning core8 orders', MIDTR,
         {'hp0': v['heal'][0], 'max': v['heal'][2], 'techs': [k for k, e in T.items() if e.get('at') in ('BP3', 'BP8') or e.get('line') in ('Levy', 'Teaching')]}); m = mid or {}
     te, pr, cv, ze, sb, hl = M['teach'], M['prison'], M['convert'], M['zeal'], M['sab'], M['heal']
@@ -800,7 +803,7 @@ async def troops(b):
         and [ze['cost']['gold'], ze['secs'], ze['cd'], ze['mul']] == [m['ZEAL']['cost']['g'], m['ZEAL']['secs'], m['ZEAL']['cd'], m['ZEAL']['mul']] and [sb['burn'], sb['stall']] == [m['SAB']['burn'], m['SAB']['stall']] and [round(x * 10, 6) for x in sb['seen']] == m['seen'] \
         and {SH[c]['look']: h for c, h in sb['how'].items()} == {k: h for k, h in m['sab'].items() if k in LK} and [hl['US2']['heal'], hl['US2']['r'] * 10] == m['medic'] and [hl['BP6']['heal'], hl['BP6']['r'] * 10] == m['hosp'] \
         and all([cost(M['cost'][c]), M['train'][c], M['stats'][c]['hp'], M['ages'].index(SH[c]['age']), SH[[k for k, n in M['trains'].items() if c in n][0]]['look']] == [cost(u[0]), u[1], u[2], u[3], u[4]] for c, u in zip(('US1', 'US2', 'US3'), m['units']))
-    tech = bool(m) and len(m['tech']) == 18 and all(T[k]['at'] in [c for c, s in SH.items() if s['look'] == at] and T[k]['line'] == ln and T[k]['age'] == ag and T[k]['cost'] == cost(co) and T[k]['time'] == t and T[k].get('need', []) == nd for k, at, ln, ag, co, t, nd in m['tech'])
+    tech = bool(m) and len(m['tech']) == 18 and all(T[k]['at'] in [c for c, s in SH.items() if s.get('look') == at] and T[k]['line'] == ln and T[k]['age'] == ag and T[k]['cost'] == cost(co) and T[k]['time'] == t and T[k].get('need', []) == nd for k, at, ln, ag, co, t, nd in m['tech'])
     MT = {k: (to, c, s) for k, to, c, s in m.get('teach', [])}
     pairs = bool(v['pairs']) and all(f in MT and MT[f][0] == to and c == cost(MT[f][1]) and close(s, MT[f][2]) for f, to, c, s in v['pairs']) and len(v['pairs']) == len([k for k in MT if k in LK])
     W = keyed('words')['troops']; tc = v['teach']
@@ -867,7 +870,7 @@ async def trade(b):
     R = v['run']; mid, err = frozen('basics units blds tech tuning core8 orders civil eco', MIDTRADE,
         {'rolls': [ROLL], 'run': {'res': {'f': 610, 'w': 700, 's': 0, 'i': 0}, 'goods': {'cloth': 12, 'beer': 5}, 'want': R['want'], 'd': R['d']}, 'ally': v['ally']['d'], 'work': v['shop']['work']}); m = mid or {}
     M, SH, T = keyed('measure'), book('shells'), keyed('tech'); Y = RK; y = lambda o: {Y.get(k, k): x for k, x in (o or {}).items()}; C = m.get('consts', {})
-    mk, pc, tr = M['market'], M['price'], M['trade']; LOOK = {s['look']: c for c, s in SH.items()}
+    mk, pc, tr = M['market'], M['price'], M['trade']; LOOK = {s['look']: c for c, s in SH.items() if 'look' in s}
     nums = bool(C) and mk['worth'] == y(C['TRADE']) and [mk['sell'], mk['buy']] == [C['SELL'], C['BUY']] and mk['sells'] == [Y.get(k, k) for k in C['MKT_SELL']] and mk['buys'] == [Y.get(k, k) for k in C['MKT_BUY']] \
         and {k: y({kk: vv for kk, vv in e.items() if kk != 'col' and kk != 'name'}) for k, e in C['GOODS'].items()} == M['goods'] and pc['eps'] == y(C['PRICE']['eps']) and [pc['q0'], pc['tau'], pc['floor'], pc['cap']] == [C['PRICE'][k] for k in ('q0', 'tau', 'floor', 'cap')] \
         and [M['mint']['debase'], M['mint']['price']] == [C['MINT']['debase'], C['MINT']['price']] and M['venture'] == C['VENTURE'] and M['interest']['cap'] == C['BANK_CAP'] and [M['scale'][k] for k in ('per', 'cap')] == [C['SCALE']['per'], C['SCALE']['cap']] \
@@ -902,7 +905,7 @@ REALMJS = r"""(() => { const D = FK.D, E = ECON, [me, foe] = D.players, out = {}
   const sb = FK.SIDES[me].spentBy; out.supply = { d: Math.hypot(dep.bx - mkt.bx, dep.by - mkt.by), food: (sb.food || {}).camps, gold: (sb.gold || {}).camps, stock: dep.supply, done: !cv.sup };
   const ar = []; FK.stamp(dep.bx, dep.by, 8 * D.tile, (k, d) => { if (FK.walkable(k) && d > (dep.n / 2 + 1) * D.tile) ar.push([d, k]); }); ar.sort((a, b) => a[0] - b[0]); const S4 = ar.slice(0, 4).map(([, k]) => mk(SP, me, ...FK.tileMid(k))); dep.supply = 50; const e1 = S4.reduce((a, u) => a + E.eats(u), 0); sim(5, () => S4.forEach((u) => { u.job = 'idle'; })); out.eat = [50 - dep.supply, e1 * 5, S4.some((u) => u.unfed)]; dep.supply = 0; sim(1, () => S4.forEach((u) => { u.job = 'idle'; u.target = null; })); out.unfed = [S4.every((u) => u.unfed), S4[0].tire];   // on open ground beside the depot (F37: Z3's woods can stand where the row of four stood)
   // caltrops on a passing rider and spearman; a foe's pit hidden until a scout finds it
-  fresh(); FK.SIDES[me].techs.add(TK('caltrops')); FK.learn(me, TK('caltrops')); const cal = put(look('caltrops'), me), r = mk(RD, foe, cal.bx, cal.by), f = mk(SP, foe, cal.bx, cal.by), t0 = FK.K.t, steps = []; for (const dt of [0, 1, 2.1, 3.2]) { FK.K.t = t0 + dt; WAR.traps(); steps.push([r.hp / r.hpMax, f.hp / f.hpMax, ~~cal.hits, !!cal.gone, (r.stuck || 0) - FK.K.t > 0]); } out.caltrops = steps;
+  fresh(); if (TK('caltrops')) { FK.SIDES[me].techs.add(TK('caltrops')); FK.learn(me, TK('caltrops')); } /* the research cut for players, Calls Nov 8: the trap itself stays (the Natives') */ const cal = put(look('caltrops'), me), r = mk(RD, foe, cal.bx, cal.by), f = mk(SP, foe, cal.bx, cal.by), t0 = FK.K.t, steps = []; for (const dt of [0, 1, 2.1, 3.2]) { FK.K.t = t0 + dt; WAR.traps(); steps.push([r.hp / r.hpMax, f.hp / f.hpMax, ~~cal.hits, !!cal.gone, (r.stuck || 0) - FK.K.t > 0]); } out.caltrops = steps;
   fresh(); const pit = put(look('pit'), foe), hid0 = FK.fire('hide', pit), sc = mk(look('scout'), me, pit.bx + 4 * D.tile, pit.by); WAR.traps(); FK.look(99); const hid1 = FK.fire('hide', pit), walker = mk(SP, me, pit.bx, pit.by); WAR.traps(); out.pit = [hid0, hid1, !!pit.gone, walker.hp === walker.hpMax];
   // war after its notice; an envoy's answers
   fresh(); WAR.treaty(me, foe, 'peace'); out.notice = [E.setRel(me, foe, 'war'), E.noticeLeft(me, foe)]; sim(29); out.notice.push(WAR.stance(me, foe)); sim(2); out.notice.push(WAR.stance(me, foe));
@@ -937,13 +940,13 @@ MIDREALM = r"""const stub = `var G = { t: 0, tick: 1, rel: [0, 1, 2, 3, 4].map((
     G.t = 0; G.P[0].res.g = 1e4; OUT.gifts = [100, 100, 300, 50].map((amt) => { const g = giftGain(0, amt, 'ban'); gangState('ban').gifts[0].push(G.t); return g; });`]);"""
 async def realm(b):
     pg, errs = await fresh(b, 1500); v = await pg.evaluate(REALMJS); await pg.close()
-    M, SH, T = keyed('measure'), book('shells'), keyed('tech'); LK = {s['look']: c for c, s in SH.items()}; RS = RK; cost = lambda c: {RS.get(k, k): x for k, x in (c or {}).items() if x}
+    M, SH, T = keyed('measure'), book('shells'), keyed('tech'); LK = {s['look']: c for c, s in SH.items() if 'look' in s}; RS = RK; cost = lambda c: {RS.get(k, k): x for k, x in (c or {}).items() if x}
     A = [[a['ask'], 'war' if a['ask'] == 'peace' else 'ally' if a['who'] == 'yours' else 'peace', *a['odds']] for a in v['answers']]
     mid, err = frozen('basics units blds wild tuning core8 nav orders eco camps natives games', MIDREALM,
         {'layout': [[s, f] for s, f, _ in v['layout']], 'hp0': v['heal'][0], 'max': v['heal'][2], 'd': v['supply']['d'], 'answers': A}); m = mid or {}
     ca, tp, rl, rg, va, sz = M['camp'], M['trap'], M['relations'], M['regard'], M['vassal'], M['camps']; C = m.get('CAMP', {}); K = tp['kinds']
     nums = bool(m) and [ca['build'], ca['extra'], ca['home'], ca['burn'], ca['supply'], ca['load'], ca['fee'], ca['per'] * 10, ca['reach'] * 10, ca['wear'], ca['mend'], ca['keep'], ca['hold'], sz['large']['side']] == [C['build'], C['extra'], C['sendHome'], C['burn'], C['supply'], C['load'], C['fee'], 100, C['reach'], C['wear'], C['mend'], cost(C['keep']), C['hold'], C['side']] \
-        and [K['caltrops']['hits'], K['caltrops']['hurt']['horse'], K['caltrops']['hurt']['foot'], K['caltrops']['stuck']['horse'], K['caltrops']['again'], tp['stake']['plant'], tp['stake']['dmg'], tp['stake']['shove'] * 10] == [m['CALTROPS'][k] for k in ('hits', 'horse', 'foot', 'stuck', 'again')] + [m['STAKES'][k] for k in ('plant', 'dmg', 'shove')] \
+        and [K['caltrops']['hits'], K['caltrops']['hurt']['horse'], K['caltrops']['hurt']['foot'], K['caltrops']['stuck']['horse'], K['caltrops']['again']] == [m['CALTROPS'][k] for k in ('hits', 'horse', 'foot', 'stuck', 'again')] + [m['STAKES'][k] for k in ('plant', 'dmg', 'shove')] \
         and [tp['scout'] * 10, tp['r'] * 10, K['pit']['hurt']['foot'], K['pit']['stuck']['foot']] == [m['NATIVE'][k] for k in ('scoutSees', 'trapR', 'pit', 'stuck')] and rl['notice'] == m['NOTICE'] and rl['truce'] == {**m['truce'], 'round': 10} \
         and {k: rg[k] for k in m['REGARD']} == m['REGARD'] and va['demand'] == {**m['DEMAND'], 'least': 1} and va['tribute'] == m['TAX']['fair'] and all(va[k] == m['VASSAL'][k] for k in ('tau', 'garrison', 'garrisonMax', 'kill', 'protectMax', 'decay', 'share', 'shareAt', 'giftAt', 'crushed', 'rise', 'freeAfter', 'invest')) and va['r'] * 10 == m['VASSAL']['r'] \
         and keyed('sides')['names'] == m['GANG'] and keyed('sides')['words'] == m['REL_WORD']
@@ -1095,7 +1098,7 @@ FIREJS = r"""(() => { const D = FK.D, K = FK.K, ME = D.players[0], out = {}, rng
   const [b0, b1, b2, b3, b4] = town, vs = ECON.villagersOf(ME).slice(0, 2); for (const u of FK.units().filter((u) => u.side === ME && !vs.includes(u))) FK.vanish(u);
   vs.forEach((u, i) => { ECON.idle(u); u.bx = b0.bx + (i - 0.5) * D.tile; u.by = b0.by + (n / 2 + 0.6) * D.tile; FK.place(u); }); FK.step(0);
   const W = FK.things().filter((b) => b.side === ME && b.kind === 'bld' && FK.has(b, 'Burn') && b.done >= 1 && b.hp > 0), seq = [0.001, (W.indexOf(b0) + 0.5) / W.length];
-  K.t = D.season + 10; Object.assign(K, { storm: true, wetHour: true, wet: 0 }); FK.rng = () => (seq.length ? seq.shift() : 0.2); const t0 = K.t; ECON.lightning(); ECON.ignite(b3, 'lightning');
+  K.t = D.season + 10 - D.startIn * D.season; Object.assign(K, { storm: true, wetHour: true, wet: 0 }); FK.rng = () => (seq.length ? seq.shift() : 0.2); const t0 = K.t; ECON.lightning(); ECON.ignite(b3, 'lightning');
   const ig = W.map(() => null), saved = W.map(() => null), down = W.map(() => null);
   for (let s = 0; s < 1200; s++) { W.forEach((b, i) => { if (ig[i] == null && b.fire > 0) ig[i] = K.t - t0; if (ig[i] != null && saved[i] == null && down[i] == null && !(b.fire > 0) && !b.gone) saved[i] = K.t - t0; if (b.gone && down[i] == null) down[i] = K.t - t0; }); FK.sim(0.1); K.wet = 0; K.ev.next = Infinity; }
   out.town = { pos: W.map((b) => [b.bx, b.by]), hp: b0.hpMax, half: (n * D.tile) / 2, v: vs.map((u) => [u.bx, u.by]), pick: (W.indexOf(b0) + 0.5) / W.length, b3: W.indexOf(b3), t0, ig, saved, down, idx: [b0, b1, b2, b3, b4].map((b) => W.indexOf(b)) };
@@ -1149,7 +1152,7 @@ SIGHTJS = r"""(() => { const D = FK.D, K = FK.K, N = FK.N, ME = D.players[0], fo
   const t = FK.things().find((x) => x.k === kt && x.kind === 'tree'); FK.take(t, t.amount); look(); out.felled = [FK.inSight(them), FK.inSight(me, foe), tree(kt)];
   sky({ vis: (Math.hypot(me.bx - them.bx, me.by - them.by) / D.upm) * 0.5 }); look(); out.fog = [FK.inSight(them), FK.inSight(me, foe)]; sky({});
   FK.units().splice(FK.units().indexOf(me), 1); look(); out.gone = [FK.inSight(them), FK.inSight(me, foe)];
-  out.d = Math.hypot(me.bx - them.bx, me.by - them.by); out.fogDraw = typeof FK.drawFog; return out; })()"""
+  out.d = Math.hypot(me.bx - them.bx, me.by - them.by); out.fogDraw = typeof FK.fog; return out; })()"""
 MINIJS = r"""(async () => { const D = FK.D, ME = D.players[0], foe = D.players[1]; $calm(ME, foe); FK.show.M = true; MENU.S.tab = null; MENU.render(true);
   const h = FK.seatOf(ME), sol = FK.kinds('Foot')[0] || Object.keys(D.stats).find((c) => (D.stats[c].tags || []).includes('infantry')), k0 = $ring(h, 14, 40, (i, j) => FK.walkable(j * FK.N + i) && j * FK.N + i);
   for (let n = 0; n < 3; n++) FK.spawn(sol, foe, k0, FK.rng); $run(2); for (let i = 0; i < 40 && !(FK.mini() && FK.mini().mark); i++) { FK.dirty(); await new Promise((r) => setTimeout(r, 50)); } const q = FK.near, M = FK.mini(); if (!q || !M || !M.mark) return { q: !!q, M: !!M };
@@ -1165,8 +1168,8 @@ async def sight(b):
     pg, errs = await fresh(b); v = await pg.evaluate(SIGHTJS); pg2, errs2 = await fresh(b); mn = await pg2.evaluate(MINIJS); await pg.close(); await pg2.close(); v = v or {}
     S = MEASURE['sight']; cases = v.get('cases') or []
     num = len(cases) == 7 and v['h'] == S['body'] and all(abs(r - law(o, v['h'])) <= 1e-6 * r + 1e-9 for o, r in cases) and cases[0][1] > cases[2][1] > cases[4][1] >= cases[5][1] and cases[6][1] == 300 * MEASURE['upm']
-    los = v.get('tree') == [False, False] and v.get('felled') == [True, True, False] and v.get('fog') == [False, False] and v.get('gone') == [False, False]
-    nofog = v.get('fogDraw') == 'undefined' and not any(k in MEASURE for k in ('fogDim', 'fogWait', 'fogLast', 'woods', 'fogTick')) and set(MEASURE['lookout']) == {'h'}
+    los = v.get('tree') == [False, False] and v.get('felled') == [True, True, False] and v.get('fog') == [False, False] and v.get('gone') == [False, True]
+    nofog = v.get('fogDraw') == 'function' and 'fogwar' in MEASURE and not any(k in MEASURE for k in ('fogDim', 'fogWait', 'fogLast', 'fogTick')) and set(MEASURE['lookout']) == {'h'}   # the fog of war, with its On/Off on the Start page (Albert Nov 9, D361; replaces his Nov 6 no-fog call), and the woods walkable (D360)
     mini = bool(mn.get('mark')) and mn['mark'] == mn['u'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['back'], mn['u'])) and mn['mode'] == 'mini' and mn['eat'] and all(abs(a - c) < 1e-6 for a, c in zip(mn['to'], mn['u'])) and mn['beat'] == 350
     got = [num, los, nofog, mini, not errs and not errs2]
     ok('t-sight', all(got), [got, v, [law(o, v.get('h') or 0) for o, _ in cases], mn, errs[:2], errs2[:2]])
@@ -1277,7 +1280,7 @@ CIVJS = r"""(() => { const D = FK.D, T = BOOKS.tech, out = {}, [ME, A] = D.playe
     const o = { uu, base, mine: FK.trains(at, ME).includes(uu) && !FK.trains(at, ME).includes(base), theirs: FK.trains(at, A).includes(base) && !FK.trains(at, A).includes(uu), stats: D.stats[uu], cost: D.cost[uu], t: D.train[uu], age: D.ages.indexOf(FK.SH[uu].age), spd: FK.stat(uu, ME, 'spd'),
       bonus: FK.stat(code, ME, key) / FK.stat(code, A, key), why: [ECON.researchWhy(A, hall[0]), ECON.researchWhy(ME, hall[0])], rows: hall.map((c) => [T[c].key, T[c].value.cost, T[c].value.time, T[c].value.age, T[c].value.line]) };
     const s0 = keys.map((y) => FK.stat(uu, ME, y)); FK.learn(ME, elite); o.elite = [FK.rankName(uu, ME), ...keys.map((y, i) => FK.stat(uu, ME, y) - s0[i]), FK.stat(uu, ME, 'hp') / s0[0]]; out[civ] = o; }
-  FK.reset(); FK.tops(); const R1 = FK.SHELLS ? null : null, tree = Object.keys(D.trees)[0], h = D.trees[tree].h * D.upm, dt = []; for (let k = 0; k < FK.N * FK.N; k++) if (FK.OCC[k] === 1 && FK.TOPS[k] > FK.H[k] + 1e-6 && FK.TOPS[k] - FK.H[k] < h * 1.5) dt.push(FK.TOPS[k] - FK.H[k]);
+  FK.reset(); FK.tops(); const R1 = FK.SHELLS ? null : null, h = FK.W[FK.SH[FK.KIND.tree.code].body].height * D.upm, dt = []; for (let k = 0; k < FK.N * FK.N; k++) if (FK.OCC[k] === 1 && FK.TOPS[k] > FK.H[k] + 1e-6 && FK.TOPS[k] - FK.H[k] < h * 1.5) dt.push(FK.TOPS[k] - FK.H[k]);
   out.tree = [dt.length, dt.every((x) => Math.abs(x - h) < 1e-3), h]; return out; })()"""
 MIDCIVS = r"""const fx = qca(cut(core, 'function fxList', '// Two words'));
 return box([basics, units, blds, tech, tuning, fx, cut(core, 'const baseKind', '\n'), `const standing = () => false, G = { t: 0, fxv: 0, P: [{ techs: new Set(), uc: {} }, { techs: new Set(), uc: {} }], blds: [] };
@@ -1304,7 +1307,7 @@ async def civs(b):
         return [unit, vs, bonus, elite, hall, a['mine'], a['theirs']]
     per = {c: civ(c) for c in CIVKEYS}; bad = [x for x in art if x[4] != 0 or x[5] < 20]
     trees = v['tree'][0] > 0 and v['tree'][1] and M['trees']['R1']['h'] == 21 and 'sight' in M and 'tree' not in M['sight'] and keyed('citations') if False else None
-    C = book('citations'); trees = v['tree'][0] > 0 and v['tree'][1] and M['trees']['R1']['h'] == 21 and 'tree' not in M['sight'] and C['N219']['opened'] and C['N221']['opened']
+    C = book('citations'); trees = v['tree'][0] > 0 and v['tree'][1] and 'tree' not in M['sight'] and C['N219']['opened'] and C['N221']['opened']
     got = [all(all(x) for x in per.values()), not bad and len(art) == 72, trees, not errs]
     ok('t-civs', all(got), [got, per, bad[:4], v['tree'], {c: [v[c]['bonus'], (m.get(c) or {}).get('m'), v[c]['elite'], (m.get(c) or {}).get('tier'), v[c]['why']] for c in CIVKEYS}, errs[:2], err[-600:]])
 # F37: the map's character, new game and scenarios; Albert's map calls (the bottom-left corner, the pocket's law, Z3 the transition)
@@ -1377,7 +1380,7 @@ async def saving(b):
     mid = [m.get('every') == M['saveBeat'][0], re.search(r'G\.t - fightHold < (\d+)', src).group(1) == str(M['save']['fight']), re.search(r'saveFailT \?\? -999\) > (\d+)', src).group(1) == str(M['save']['fail']), m.get('ui') == M['ui']]
     army = [sum(n for _, n in M['testField']['army'][0][1]), sum(n for _, n in M['testField']['army'][1][1])]
     got = mid + [v['held'], v['late'], v['bak'], not v['same'], v['runs'], all(v['aside']), 'SEEN' not in v['keys'] and 'seen' not in v['keys'], all(v['fault']), v['taps'], all(v['log']), 0 < v['ui'] <= M['ui'],
-                 f[:4] == [True, True, sorted(MEASURE['players'][:2]), 'war'] and f[4] == army[0] and f[5] >= army[1] and all(f[6:]), back[0] == SEED and back[1] >= 4321 and back[2] is None, not errs and not fe and not re_]
+                 f[:4] == [True, True, sorted(MEASURE['players'][:2]), 'war'] and f[4] == army[0] and f[5] >= army[1] and all(f[6:]), back[0] == SEED and back[1] >= 4321 and back[2] == 'Back', not errs and not fe and not re_]
     ok('t-save', all(got), [got, v, f, back, errs[:2], fe[:2], re_[:2], err[-400:]])
 
 # F39: the Guide and History, written from the books; Mid's frozen guideModel and histRows run on v100's tables (each building, kind, step, age, people and find as Mid's table rows)
@@ -1408,6 +1411,9 @@ async def guidebook(b):
     rules = [[fillrule(w), fillrule(t), fillrule(y)] for w, (t, y) in keyed('words')['guide'].items()]
     m, err = frozen('core guide=31-guide', MIDGUIDE, {'tables': v['tables'], 'rules': rules}); m = m or {}; M, g = json.loads(re.sub(r'"(?:null|undefined) s"', '""', json.dumps(m.get('model') or {}))), v['g']   # Mid prints a missing time (the Envoy is sent, not trained) as 'undefined s'; v100 leaves it out
     for u in g.get('units', []): u['at'] = u['at'].split(', ')[0] if u.get('at') else u.get('at')   # A2 (Albert, Nov 7): v100's Guide names every building that trains a unit; Mid named the first, so the first is compared
+    off = keyed('words')['guidebook']['off']   # a building off the Build menu is placed as the Guide's word (J29) says: SN34 (Albert Nov 9 18:29) makes the Apartment and the Tree farm from a card and the Depot comes with the camp wagon (Nov 8), where Mid had them the Natives'
+    for x in M.get('buildings', []):
+        if x['id'] in off: x['menu'] = off[x['id']]
     same = {k: M.get(k) == g[k] for k in ('buildings', 'units', 'techs', 'ages', 'civs', 'finds', 'rules')}
     open_ = [r for r in g['rules'] if re.search(r'\{\w+:', json.dumps(r))]; whyless = [x['id'] for k in ('buildings', 'units', 'finds') for x in g[k] if not x.get('why')]
     got = [all(same.values()), m.get('hist') == v['hist'] and len(v['hist']) > len(MEASURE['ages']), not open_, set(whyless) <= set(v['off']),
@@ -1451,7 +1457,7 @@ async def a1(b):
     await pg.evaluate("FK.reset()"); await pg.wait_for_timeout(1500); frames = min([await pg.evaluate(win) for _ in range(3)]); await pg.close()   # a hitch of the game's own repeats every turn; a stall of the machine's does not
     m, err = frozen('basics units blds tech', "return box([basics, units, blds, tech, 'var OUT = { tech: TECH, apt: BLD.apartment.room, quarry: BLD.quarry.rate, castle: [BLD.castle.dmg, BLD.castle.cd, BLD.castle.bow, BLD.castle.h] };']);"); m = m or {}
     T, R = {e['key']: e['value'] for e in book('tech').values()}, {'f': 'food', 'w': 'wood', 'g': 'gold', 's': 'stone', 'i': 'iron'}
-    mt = {t['id']: t for t in m.get('tech', [])}; cut = {'satrapy', 'sixth'}; DATED = {'windmill'}   # parked with the tax (Albert, Nov 5 11:16); DATED: dates corrected to the record in S1 (N161: the first English windmill before 1137, Mid said 1180s)
+    mt = {t['id']: t for t in m.get('tech', [])}; cut = {'satrapy', 'sixth', 'caltrops', 'archerstakes'}; DATED = {'windmill'}   # parked with the tax (Albert, Nov 5 11:16); caltrops and archers' stakes cut for players (Albert, Calls Nov 8); DATED: dates corrected to the record in S1 (N161: the first English windmill before 1137, Mid said 1180s)
     same = lambda k, t: T.get(k) and T[k].get('age', 0) == t.get('age', 0) and T[k].get('time') == t.get('t') and (T[k].get('when') == t.get('when') or k in DATED) and T[k].get('cost') == {R[x]: n for x, n in t.get('cost', {}).items()} and [n for n in T[k].get('need', [])] == [n for n in t.get('need', []) if n not in cut]
     tech = bool(mt) and all(same(k, t) for k, t in mt.items() if k not in cut) and T['potato']['line'] == mt['potato']['line'] and T['potato']['fx'][0]['p'] == round(mt['potato']['fx'][0]['m'] - 1, 9) and len(T['townwatch']['fx']) == 1
     TW = MEASURE['tower'].get(next(c for c, e in SHELLS.items() if e.get('look') == 'castle'), {})
@@ -1465,8 +1471,10 @@ async def page():
     async with async_playwright() as p:
         b = await p.chromium.launch(executable_path=CHROME, args=['--no-sandbox', '--allow-file-access-from-files'])
         if any(k not in PAGED and k not in PLAIN for k in ONLY): await main(b)
-        for k, f in PAGED.items():
-            if k in ONLY: await f(b)
+        for k, f in PAGED.items():   # a test that throws is that rule's FAIL, and the suite runs on (Nov 10: one stale key stopped every rule after it)
+            if k in ONLY:
+                try: await f(b)
+                except Exception as e: ok(k, False, f'threw: {type(e).__name__}: {str(e)[:300]}')
         await b.close()
 for k in ONLY:
     if k not in RULES: print(f'FAIL [{k}] no such page rule'); sys.exit(1)

@@ -4484,3 +4484,26 @@ MODIFIED (2):
 LOCKED (2400 of 2402): byte for byte as sealed, 1,545,690 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2402 items sealed · 2272 book entries · 93 laws · 297 citations, 29 still to open · 7 known
+
+## N9 · 2026-11-10 01:54
+Albert, Nov 10 00:57: "Continue your build without me." (the open list: grass pieces built ahead, queue names, your people under the canopy, fog in the hollows; the overnight QC: Build keeps two rows (his Nov 9 note 5), stale tests brought to his calls; the Guide names how each off-menu building comes)
+Opened: code:index.html, code:menu.js, code:cels.js, book:measure, book:comments, book:rules, tool:test.py, book:words
+MODIFIED (15):
+- book:comments:E895 · added
+- book:comments:E896 · added
+- book:comments:E897 · added
+- book:comments:E898 · added
+- book:measure:D360 · 862 → 1,038 bytes
+- book:measure:D362 · 603 → 885 bytes
+- book:rules:X26 · 133 → 241 bytes
+- book:rules:X66 · 611 → 712 bytes
+- book:words:J29 · 2,061 → 2,306 bytes
+- code:cels.js · 5,012 → 5,168 bytes
+- code:index.html#floor-6-climate · 29,675 → 29,556 bytes
+- code:index.html#floor-7-display · 12,996 → 14,483 bytes
+- code:index.html#the-door · 16,092 → 16,239 bytes
+- code:menu.js · 102,441 → 102,587 bytes
+- tool:test.py · 258,677 → 260,807 bytes
+LOCKED (2391 of 2406): byte for byte as sealed, 1,132,732 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2406 items sealed · 2276 book entries · 93 laws · 297 citations, 29 still to open · 7 known

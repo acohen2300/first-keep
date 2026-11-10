@@ -317,3 +317,12 @@ Proposed, waiting on Albert's yes:
 - Where the square's Rally and Shelter go (proposed: the Town Center's card); Info and Focus parked.
 
 Still open from N5: Fast and Yard in the Paused card (test builds); the Sound card only while muted.
+
+## Built N9 and the overnight QC (Nov 10, 01:00-, Albert: "Continue your build without me")
+- N9: grass pieces one ring beyond the view built ahead in idle time (E895); queue names wrap; your own people under the canopy drawn as a ring (E897, D360 sil, ring); the weather's fog as a sheet that pools in the hollows (E896, D362 step).
+- Build keeps two rows of three on every tab: empty slots fill where locked buildings hide (E898; his Nov 9 note 5). One case left: Show all on a tab with locked ones makes 7 cells, a third row. For Albert: put Show all somewhere else (the tab row? the header?).
+- The Guide says how each off-menu building comes (J29): the Apartment raised from a Dwelling's card, the Tree farm planted from a Lumber camp's card, the Depot with the camp wagon, the field defences the Natives'.
+- Full test.py run end to end for the first time since N5 (it crashed partway before). Compared rule by rule with N5: no rule broke from N6-N9 code. The four that looked broken (t-pace, t-physics, t-food, t-ledger) were the tests' clocks, set before the year began later in spring (D359).
+- Tests brought to Albert's calls: Build tabs and Show all, panel gradient, card heads, guide lines on edges, Welcome back on reopen, fog of war, caltrops and stakes cut, cel shells with no look, the tree height's home.
+- Gate rule from the slips: a test that throws is its rule's FAIL and the suite runs on.
+- Still failing, all also failing at N5 (old, for a later pass): t-land (home gold and stone sit past the pocket's 300 m from the corner), t-civs and t-kinds (unit figures differ from Mid's by pixels), t-stage, t-wild, t-fire, t-mind, t-realm, t-alarm, t-orders (Choke and the wheel left with the Yard), t-same, t-odds, t-gather, t-walls, t-sight's small-map mark, t-proof (its plant no longer matches menu.js).
