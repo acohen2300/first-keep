@@ -705,3 +705,11 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - The ground chunk cache (v100 N8/N9: the ground re-painted in 128-unit squares at four zoom steps, one square a frame, with a ring painted ahead). Cut for one picture at every zoom, as Base, Mid and v80 drew it: the steps made the seams and the blade-less pieces (open list #4, #7). Back only if the one picture reads fuzzy on the phone; then the hard lines (foam, cliff rims) as shapes built once, not chunks.
 - The N11 blade tile (192 units, 600 strokes in 70 tufts) and the ideas to mend it (three prime tiles, blades by wetness): Albert, Nov 10 08:19, v80's tile instead. The tufts made landmark repeats.
 - N13 (Nov 10 08:38) cut: the ground as one 1x picture with its season sheet (N12), and v80's blade tile (N12b/c). The ground is now shapes replayed under the camera (the paper mock). Back only if the shapes prove slow on the phone.
+## Cut in N14 build 1 (Nov 10, Albert 10:16 "yes yes") [2026-11-10 12:30]
+- The dashed play-edge line (drawEdge, D348's rim, C23's edge colour, the Rim layer in the layers list): Albert #4. The beach and cliffs mark the edge. [2026-11-10 12:30]
+- A new match written into the address and the address change restarting the game (the hashchange listener): Albert #38, a back swipe lost a match. New matches use replaceState. [2026-11-10 12:30]
+- The single save plus .bak and the .lost copy: replaced by three rolling slots per build folder (D331 slots). [2026-11-10 12:30]
+- The grass mask from tile squares: now from contour cells (E922); the tile version stepped over sloped dirt. [2026-11-10 12:30]
+- Marsh tiles painted whole as water, and the woods' cells skipped by the shore contours: both made the tile staircase (#3, #9). [2026-11-10 12:30]
+- Open: the dirt band round lakes reads wide at 3:1 banks (12 units); narrowing it means moving D.dirtTop, shared with hills and coast. Albert's look owed. [2026-11-10 12:30]
+- Open: hilltops above D.land + D.bare still draw as dirt (old open item #1); not in this build. [2026-11-10 12:30]
