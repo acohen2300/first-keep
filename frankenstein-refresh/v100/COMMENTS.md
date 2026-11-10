@@ -866,7 +866,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E900 | index.html#the-ground-s-soil-and-paper | the ground's soil and paper (N11): wet and snow on the ground for play, and the light, season, snow, flowers and glints over the paper sheets |
 | E901 | index.html#the-ground-s-soil-and-paper | over the baked ground: the hills' sun and shade and the meadow's soft patches as one small soft picture, then the snow sheet, then the flowers |
 | E902 | index.html#drawn-once-in-the-view-frame, index.html#the-ground-s-soil-and-paper | grass is painted a light neutral and also on its own sheet; that sheet takes the season's one colour (multiplied), recoloured only when the colour moves a visible step, so the ground is never painted again for the season |
-| E903 | index.html#drawn-once-in-the-view-frame | the blade sheet is laid in the ground's own frame, turned and squashed with it as v80's was, at half a ground unit a pixel |
+| E903 | index.html#drawn-once-in-the-view-frame | the blade sheet is laid in the ground's own frame, turned and squashed with it as v80's was, at half a ground unit a pixel; the turn, pan and zoom go on the canvas and the pattern keeps only its scale, as v80's did (Safari kept a pattern's own moving transform fixed to the screen: Albert, Nov 10 08:33) |
 | E904 | index.html#drawn-once-in-the-view-frame | a marsh is shallow water; reeds stand in it |
 | E905 | index.html#drawn-once-in-the-view-frame | each paper sheet casts a thin shadow on the sheet below, along its edge |
 | E906 | index.html#the-ground-s-soil-and-paper | the flowers come up in new places each year; the pebbles stay where they lie |

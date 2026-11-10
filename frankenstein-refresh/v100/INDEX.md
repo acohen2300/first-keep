@@ -1273,7 +1273,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E900 |  | the ground's soil and paper (N11): wet and snow on the ground for play, and the light, season, snow, flowers and glints over the paper sheet |  |
 | E901 |  | over the baked ground: the hills' sun and shade and the meadow's soft patches as one small soft picture, then the snow sheet, then the flowe |  |
 | E902 |  | grass is painted a light neutral and also on its own sheet; that sheet takes the season's one colour (multiplied), recoloured only when the  |  |
-| E903 |  | the blade sheet is laid in the ground's own frame, turned and squashed with it as v80's was, at half a ground unit a pixel |  |
+| E903 |  | the blade sheet is laid in the ground's own frame, turned and squashed with it as v80's was, at half a ground unit a pixel; the turn, pan an |  |
 | E904 |  | a marsh is shallow water; reeds stand in it |  |
 | E905 |  | each paper sheet casts a thin shadow on the sheet below, along its edge |  |
 | E906 |  | the flowers come up in new places each year; the pebbles stay where they lie |  |
