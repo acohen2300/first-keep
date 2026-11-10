@@ -334,3 +334,24 @@ Still open from N5: Fast and Yard in the Paused card (test builds); the Sound ca
 - Found: the smoke's "known mid-match stutter" was the frame right after a reload (the ground rebuilt, 83-100 ms), not mid-match. Smoke now times the reload's ten seconds apart from the match's; the match check passes.
 - For Albert: phone `?test` meter numbers before and after would confirm the phone gain.
 - N10b (fresh-eyes review of N10): the land sheet's key held the meadow's strip row, so the whole land (ground, meadow, grass pieces, scars) was painted again at every strip. N10's smaller strips made that worse. The meadow now runs on its own before the land, and the land is painted again once, when the meadow is done (E899). Measured over 30 s of play (desktop, headless): dropped frames (over 20 ms) 62-69 → 18-21; 99th-percentile frame 50 → 33 ms; frames drawn 1,700 → 1,780.
+
+## N17: Albert's N15 notes, answered Nov 10 12:26 (build on his "yes yes") [2026-11-10 12:30]
+Answer sheet: claude.ai artifact "N15 Answer Sheet". Each item: his answer, then the idea. [2026-11-10 12:30]
+1. Yes. New Game: the white selection ring 1 px bigger so it sits on the pill's edge. [2026-11-10 12:30]
+2. Yes. Daily first; on locks everything below, off frees it. [2026-11-10 12:30]
+3. Yes. Start's label 14/600; all else 12/400. [2026-11-10 12:30]
+4. Yes. First placed, first built: a new site never pulls a builder off an unfinished one; he finishes, then walks to the next (AoE2's build queue). This is the cause of #19/#27/#36. [2026-11-10 12:30]
+5. Yes. Torches flicker by real flame flicker (about 1-10 Hz, a few % brightness); the glow follows the flame. Find and cite the source. [2026-11-10 12:30]
+6. Yes. Rings on Build and People draw tiny in the top left: `#base .cell.ic svg` sizes the ring svg as an icon; the ring must fill its button. [2026-11-10 12:30]
+7. Fix it. Taps depress but don't act: likely the card redrawing (queue clocks) replaces the button under the finger; hold redraws while a pointer is down. Verify first. [2026-11-10 12:30]
+8. Albert checks again (units not refunded on cancel). [2026-11-10 12:30]
+9. Yes. The foot ring is green from an order until they arrive. [2026-11-10 12:30]
+10. Albert: plus works, minus does not; plus takes someone from another job (so it already does a minus there). Make minus act at once: the count drops, the villager drops the load and goes idle. [2026-11-10 12:30]
+11. Yes, and the ring at the feet: in the woods a flat ghost silhouette in the side's colour, not the drawn unit, plus the foot ring. [2026-11-10 12:30]
+12. Yes. At night two or more working or standing together set a campfire (the campfire light), out at dawn. [2026-11-10 12:30]
+13. Yes. The shortfall colour red → white → green as Base and Mid: compare with their code and match. [2026-11-10 12:30]
+14. Both must show: the queue's ring and the gold outline of the Train and Research sections; "there should be enough room, it was designed carefully". [2026-11-10 12:30]
+15. Lightning: Base and Mid had good lightning; make it better, louder, brighter and more startling. Read their code first. [2026-11-10 12:30]
+16. Villagers twitch when gathering together: find the cause first. [2026-11-10 12:30]
+17. Yes. "Build another" only on repeatable buildings (a Repeat tick on shells): farm, tree farm, mint, quarry, mill, lumber, mining camp, dwelling, foundry, walls, towers. [2026-11-10 12:30]
+18. Not in all cases: find the locked techs that don't say why (age or other) and make every one say it. [2026-11-10 12:30]
