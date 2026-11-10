@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,457 | 584,973 | 585,121 |
-| Books | 2330 | 0 | 688,713 | 689,607 |
+| Game code | 31 | 3,457 | 585,957 | 586,105 |
+| Books | 2332 | 0 | 689,930 | 690,824 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,864 | 302,096 | 302,341 |
+| Tools | 5 | 1,882 | 305,010 | 305,255 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 40 | 4,342 | 4,346 | 38 |
 | index.html#touch | 53 | 9,422 | 9,426 | 54 |
-| menu.js | 529 | 106,907 | 106,951 | 528 |
+| menu.js | 529 | 107,891 | 107,935 | 526 |
 | econ.js | 592 | 108,897 | 108,897 | 72 |
 | combat.js | 354 | 58,723 | 58,723 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
@@ -51,14 +51,14 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 311 | 74,647 |
+| citations | 312 | 75,238 |
 | colours | 32 | 8,883 |
 | comments | 907 | 159,675 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 335 | 158,500 |
-| rules | 79 | 30,081 |
-| screen | 26 | 11,132 |
+| rules | 80 | 30,691 |
+| screen | 26 | 11,169 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
@@ -157,5 +157,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X79 | t-ground | page | the paper ground (N11-N14): on the opening view, open water well below the land is drawn blue and open land well above it green, nine in ten points or more, away from shores, finds and trees |
 | X80 | t-n15 | page | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark |
 | X81 | t-n16 | page | N16, the quick action: open ground gives Attack, Build, Rally; Attack gives All, half, quarter and Squad; Build gives the six groups; a message with a place shows Go on a menu's help line |
+| X82 | t-n18 | page | N18 build 1, Albert's N17 notes on the menus: a pill keeps its curved ends; the selected ring lies on the pill's own outline, its ends on the pill's corners; row titles 14/600, options 12/400; a hazard's ring is the options' white; with Daily on a locked option is flat and dark with no ring; the paused Play button wears the ring at its own size; the Paused card hangs below the Top Info Ribbon; the quick action's ring is its box's size; the tap that opens the quick action does not press the box under the finger |
 
-2460 items sealed · 2330 book entries · 94 laws · 311 citations, 33 still to open · 0 known
+2462 items sealed · 2332 book entries · 94 laws · 312 citations, 33 still to open · 0 known

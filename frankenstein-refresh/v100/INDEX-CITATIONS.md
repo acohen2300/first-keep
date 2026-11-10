@@ -412,6 +412,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N310** CIGRÉ Technical Bulletin 549, Lightning Parameters for Engineering Applications (2013, project team headed by  → D113
 - **N311** (to open) The 24-hour clock: a day of 24 hours, each of 60 minutes (ISO 8601 time of day); from memory, to open → D368
 - **N312** Proxemics (Psychology Wiki, Fandom), after Edward T. Hall (1963; The Hidden Dimension, 1966): intimate 15-45 c → D317
+- **N313** Albert, Nov 10, 2026, 14:47-15:07 (notebook page N17, his N18 list) and 15:32 "Go": build 1 of N18, the menus: → X82
 
 ## Named exceptions
 

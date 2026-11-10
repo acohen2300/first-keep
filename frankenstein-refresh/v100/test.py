@@ -1482,6 +1482,24 @@ async def n17(b):
     rep = sorted(c for c, e in SHELLS.items() if e.get('name') in ('Farm', 'Tree farm', 'Mint', 'Quarry', 'Mill', 'Lumber camp', 'Mining camp', 'Dwelling', 'Foundry', 'Wall', 'Palisade', 'Tower'))
     got = [v['stays'], v['next'], v['minus'][1] == v['minus'][0] - 1, v['hold'][0] > 0 and v['hold'][1] < 0.02 * v['hold'][0], v['repeat'] == rep, not v['reasons'], held == 1, not errs]
     ok('t-n17', all(got), [got, v, held, errs[:2]])
+N18JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), cs = (e) => getComputedStyle(e), px = (v) => parseFloat(v), cells = () => [...document.querySelectorAll('.cell')], by = (t) => cells().find((e) => e.textContent.trim().startsWith(t)), o = {};
+ MENU.S.tab = 'Start'; MENU.render(true); await W(300);
+ const seg = document.querySelector('.cells.seg'), first = seg.querySelector('.cell'), on = seg.querySelector('.cell.on'), rg = on.querySelector('svg.rg'), hair = px(cs(document.documentElement).getPropertyValue('--hair')), r = rg.getBoundingClientRect(), vb = rg.getAttribute('viewBox').split(' ').map(Number);
+ o.curve = px(cs(first).borderTopLeftRadius) > 0 && px(cs(seg.querySelector('.cell:last-child')).borderBottomRightRadius) > 0;
+ o.edge = Math.abs(r.width - on.offsetWidth - 2 * hair) < 0.5 && Math.abs(r.height - on.offsetHeight - 2 * hair) < 0.5 && vb[2] === Math.round(r.width) && vb[3] === Math.round(r.height);
+ const lab = [...document.querySelectorAll('.lab')][0]; o.head = cs(lab).fontWeight === '600' && cs(lab).fontSize === '14px';
+ o.opt = cs(by('Easy')).fontWeight === '400' && cs(by('Easy')).fontSize === '12px';
+ by('Famine').click(); await W(150); const fr = by('Famine').querySelector('svg.rg path'); o.hazard = !!fr && fr.getAttribute('stroke').toLowerCase() === String(FK.C.rings.colour.white).toLowerCase(); by('Famine').click(); await W(100);
+ const free = cs(by('Han')).backgroundImage; cells().filter((e) => e.textContent.trim() === 'On')[0].click(); await W(200); const lk = by('Han'); o.lock = lk.classList.contains('dim') && cs(lk).backgroundImage !== free && (!lk.querySelector('svg.rg') || cs(lk.querySelector('svg.rg')).display === 'none'); cells().filter((e) => e.textContent.trim() === 'Off')[0].click(); await W(100);
+ MENU.act('start'); await W(400); FK.pause(true); MENU.render(true); await W(300);
+ const pb = document.querySelector('.topbar [data-v^="pause|"]'), pr = pb && pb.querySelector('svg.rg'); o.play = !!pr && Math.abs(pr.getBoundingClientRect().width - pb.clientWidth) < 1;
+ const pop = document.querySelector('.pop.on'), rib = document.querySelector('.rib'); o.pop = !!pop && pop.getBoundingClientRect().top >= rib.getBoundingClientRect().bottom;
+ FK.pause(false); MENU.S.qa = { k: FK.seatOf(0).k, px: 195, py: 400 }; MENU.render(true); await W(200);
+ const qc = [...document.querySelectorAll('#qa .cell')].find((c) => c.querySelector('svg.rg')); o.qring = !qc || Math.abs(qc.querySelector('svg.rg').getBoundingClientRect().width - qc.offsetWidth) < 1;
+ const was = JSON.stringify(MENU.S.qa); MENU.S.eat = true; const c0 = document.querySelector('#qa .cell'); if (c0) c0.click(); await W(100); o.eat = JSON.stringify(MENU.S.qa) === was; return o; })()"""
+async def n18(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(N18JS); await pg.close()
+    ok('t-n18', all(v.values()) and not errs, [v, errs[:2]])
 GROUNDJS = r"""(() => { MENU.act('start'); FK.fog(false); return true; })()"""
 GROUNDJS2 = r"""(() => { const N = FK.N, H = FK.H, L = FK.D.land, c = FK.ctx, [cw, ch] = FK.size(), dpr = c.canvas.width / cw, out = { water: [0, 0], land: [0, 0] };
  for (let k = 0; k < N * N; k += 7) { const [bx, by] = FK.tileMid(k), [x, y] = FK.toScreen(...FK.toView(bx, by, Math.max(0, H[k]))); if (x < 20 || y < 120 || x > cw - 20 || y > ch - 240) continue;
@@ -1514,7 +1532,7 @@ async def n16(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N16JS); await pg.close()
     got = [v['block'][:3] == ['qstep', 'qbuild', 'qrally'], v['army'] == ['qsend', 'qsend', 'qsend', 'qstep'], v['groups'] == 6, v['go'], not errs]
     ok('t-n16', all(got), [got, v, errs[:2]])
-PAGED = {'t-ground': ground, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-ground': ground, 't-n18': n18, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

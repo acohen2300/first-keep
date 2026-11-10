@@ -4722,3 +4722,14 @@ MODIFIED (184):
 LOCKED (2306 of 2460): byte for byte as sealed, 788,024 bytes
 Tests: 6/6 smoke checks hold; t-ground, t-n15, t-n16, t-n17, t-trade, t-match hold; the full test.py at 13:05 had 17 known failures (t-match and t-trade since fixed); sealed on branch n11, not published to live
 Inventory: 2460 items sealed · 2330 book entries · 94 laws · 311 citations, 33 still to open · 0 known
+
+## N18 build 1: Albert's N17 notes on the menus (#1, #2, #3, #4, #5, #6, #7, #9, #12, #13) · 2026-11-10 15:43
+Albert, Nov 10 15:01-15:07 answers on #2, #3, #7; 15:32 "Go" on N18 (the hand-off's "Yes yes"); builds of 10 changes at most (Nov 10 15:20)
+Opened: code:menu.js, book:screen:SN32, book:rules:X82, book:citations:N313, tool:test.py
+MODIFIED (5):
+- book:citations:N313 · added
+- book:rules:X82 · added
+- book:screen:SN32 · 1,108 → 1,145 bytes
+- code:menu.js · 106,951 → 107,935 bytes
+- tool:test.py · 268,335 → 271,249 bytes
+Tests: t-n18 holds (10 checks); t-n15, t-n16, t-n17 hold; smoke 6/6; sealed on branch n11, not published to live

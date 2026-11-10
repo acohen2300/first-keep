@@ -1,0 +1,73 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+body{margin:0;background:#111;color:#ddd;font:600 13px system-ui}
+.p{position:relative;width:390px}
+.t{position:absolute;left:8px;top:6px;text-shadow:0 1px 2px #000}
+canvas{display:block}
+</style></head><body>
+<div class="p"><canvas id="a" width="390" height="300"></canvas><div class="t">Now: glow 0.22, ground only</div></div>
+<div class="p"><canvas id="b" width="390" height="300"></canvas><div class="t">Proposed: brighter core + fire highlights on units</div></div>
+<script>
+// Same math as the game: reach = LIGHT.k·√p; glow falls as 1/r² (a quarter at half reach); colour = black body (Tanner Helland) at K.
+const kelvinRGB = (K) => { const t = K / 100; const r = 255; const g = Math.min(255, 99.4708025861 * Math.log(t) - 161.1195681661); return [r, Math.round(g), 0]; };
+const FLAME = { torch: { p: 9, K: 1900, s: 2.4 }, campfire: { p: 36, K: 1900, s: 4 } };
+const TILT = 0.5, z = 1.6, k = 12;
+function scene(c, prop) {
+	const x = c.getContext('2d');
+	const a = prop ? 0.45 : 0.22; // the glow's strength
+	x.fillStyle = '#2b3a25'; x.fillRect(0, 0, 390, 300);
+	x.fillStyle = 'rgba(10,16,40,.72)'; x.fillRect(0, 0, 390, 300); // night
+	// drop-off (a mill): a box with a roof
+	const bx = 120, by = 120;
+	x.fillStyle = '#4a3a2a'; x.fillRect(bx - 30, by - 22, 60, 34);
+	x.fillStyle = '#3a2618'; x.beginPath(); x.moveTo(bx - 36, by - 22); x.lineTo(bx, by - 46); x.lineTo(bx + 36, by - 22); x.fill();
+	if (prop) { const g2 = x.createLinearGradient(bx + 30, 0, bx - 30, 0); g2.addColorStop(0, 'rgba(255,150,40,.45)'); g2.addColorStop(1, 'rgba(255,150,40,0)'); x.fillStyle = g2; x.fillRect(bx - 30, by - 22, 60, 34); } // the wall facing the fire takes its light
+	// figures: [x, y, colour]
+	const vil = [[90, 170, '#c8b27a'], [150, 172, '#c8b27a'], [118, 190, '#c8b27a']];
+	const army = []; for (let i = 0; i < 6; i++) army.push([270 + (i % 3) * 18, 150 + Math.floor(i / 3) * 18, '#9aa4b8']);
+	const fires = [];
+	if (prop) fires.push({ x: 160, y: 150, kind: 'campfire' }); // by the drop-off, 2+ villagers within 3.5 m
+	fires.push({ x: 300, y: 128, kind: 'torch', pole: true }); // the standard
+	// glow
+	x.globalCompositeOperation = 'lighter';
+	for (const f of fires) {
+		const F = FLAME[f.kind], r = k * Math.sqrt(F.p) * z, [cr, cg, cb] = kelvinRGB(F.K), gy = f.pole ? f.y + 28 : f.y;
+		const g = x.createRadialGradient(f.x, gy, 0, f.x, gy, r);
+		g.addColorStop(0, `rgba(${cr},${cg},${cb},${a})`); g.addColorStop(0.5, `rgba(${cr},${cg},${cb},${a / 4})`); g.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+		x.fillStyle = g; x.beginPath(); x.ellipse(f.x, gy, r, r * TILT, 0, 0, 7); x.fill();
+		if (prop) { // hot core: white-orange bloom at the flame, a tenth of the reach
+			const rc = r * 0.12, h = x.createRadialGradient(f.x, f.y - 4, 0, f.x, f.y - 4, rc);
+			h.addColorStop(0, 'rgba(255,240,200,.9)'); h.addColorStop(1, `rgba(${cr},${cg},${cb},0)`);
+			x.fillStyle = h; x.beginPath(); x.arc(f.x, f.y - 4, rc, 0, 7); x.fill();
+		}
+	}
+	x.globalCompositeOperation = 'source-over';
+	// figures, then the rim light from the nearest flame: I = (1 − d/r)² (the glow's own falloff) × Lambert (the lit side faces the fire)
+	for (const [ux, uy, col] of [...vil, ...army]) {
+		x.fillStyle = col; x.beginPath(); x.ellipse(ux, uy - 9, 4, 9, 0, 0, 7); x.fill();
+		x.beginPath(); x.arc(ux, uy - 21, 3.5, 0, 7); x.fill();
+		if (!prop) continue;
+		let best = null, bi = 0;
+		for (const f of fires) {
+			const r = k * Math.sqrt(FLAME[f.kind].p) * z, d = Math.hypot(ux - f.x, (uy - (f.pole ? f.y + 28 : f.y)) / TILT), I = Math.max(0, 1 - d / r) ** 2;
+			if (I > bi) { bi = I; best = f; }
+		}
+		if (!best) continue;
+		const [cr, cg, cb] = kelvinRGB(FLAME[best.kind].K), ang = Math.atan2(best.y - (uy - 12), best.x - ux);
+		x.strokeStyle = `rgba(${cr},${Math.min(255, cg + 60)},${cb + 40},${Math.min(1, bi * 5).toFixed(2)})`;
+		x.lineWidth = 2;
+		x.beginPath(); x.ellipse(ux, uy - 9, 4, 9, 0, ang - 1.2, ang + 1.2); x.stroke(); // Lambert: lit within ±70° of the fire's direction
+		x.beginPath(); x.arc(ux, uy - 21, 3.5, ang - 1.2, ang + 1.2); x.stroke();
+	}
+	// flames
+	for (const f of fires) {
+		const s = FLAME[f.kind].s * z * (prop ? (f.pole ? 2 : 1.4) : 1), [r, g] = kelvinRGB(FLAME[f.kind].K);
+		if (f.pole) { x.strokeStyle = '#3a2a1a'; x.lineWidth = 1.8; x.beginPath(); x.moveTo(f.x, f.y + 28); x.lineTo(f.x, f.y); x.stroke(); }
+		if (f.kind === 'campfire') { x.strokeStyle = '#3a2412'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(f.x - 7, f.y + 2); x.lineTo(f.x + 7, f.y - 1); x.moveTo(f.x - 7, f.y - 1); x.lineTo(f.x + 7, f.y + 2); x.stroke(); }
+		x.fillStyle = `rgba(${r},${g},0,.9)`; x.beginPath(); x.moveTo(f.x - s * 0.5, f.y); x.quadraticCurveTo(f.x - s * 0.55, f.y - s * 1.2, f.x + 1, f.y - s * 2.4); x.quadraticCurveTo(f.x + s * 0.55, f.y - s * 1.2, f.x + s * 0.5, f.y); x.fill();
+		x.fillStyle = 'rgba(255,245,210,.9)'; x.beginPath(); x.ellipse(f.x, f.y - s * 0.6, s * 0.28, s * 0.7, 0, 0, 7); x.fill();
+	}
+}
+scene(document.getElementById('a'), false);
+scene(document.getElementById('b'), true);
+</script></body></html>
