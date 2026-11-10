@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,422 | 569,810 | 569,958 (+10,581) |
-| Books | 2243 | 0 | 662,473 | 663,356 (+1,417) |
+| Game code | 31 | 3,423 | 570,364 | 570,512 |
+| Books | 2244 | 0 | 662,938 | 663,823 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
-| Tools | 4 | 1,781 | 290,664 | 290,905 (+140) |
+| Tools | 4 | 1,781 | 290,664 | 290,905 |
 
 ## The trades (code)
 
@@ -21,27 +21,27 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
 | index.html#floor-2-terrain | 84 | 9,289 | 9,293 | 115 |
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
-| index.html#drawn-once-in-the-view-frame | 80 | 12,741 | 12,745 (+39) | 96 |
+| index.html#drawn-once-in-the-view-frame | 80 | 12,741 | 12,745 | 96 |
 | index.html#the-view | 9 | 1,080 | 1,084 | 13 |
-| index.html#the-door | 95 | 14,384 | 14,388 (-21) | 65 |
+| index.html#the-door | 95 | 14,384 | 14,388 | 65 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
-| index.html#the-trees | 43 | 9,448 | 9,452 (+1) | 16 |
+| index.html#the-trees | 43 | 9,448 | 9,452 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 149 | 19,651 | 19,655 (+645) | 78 |
+| index.html#floor-5-movables | 149 | 19,651 | 19,655 | 78 |
 | index.html#the-body-s-laws | 32 | 2,789 | 2,793 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,949 | 5,953 | 90 |
-| index.html#floor-6-climate | 170 | 29,663 | 29,675 (+280) | 207 |
-| index.html#floor-7-display | 64 | 12,397 | 12,401 (+4,415) | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 120 | 23,198 | 23,202 (+179) | 0 |
-| index.html#the-meadow | 69 | 14,370 | 14,374 (+1) | 0 |
-| index.html#the-woods-cache | 50 | 5,413 | 5,417 (+146) | 47 |
-| index.html#touch | 52 | 9,001 | 9,005 (+1,100) | 54 |
-| menu.js | 518 | 102,372 | 102,416 (+2,844) | 544 |
-| econ.js | 590 | 108,520 | 108,520 (+653) | 72 |
-| combat.js | 351 | 58,478 | 58,478 (+299) | 84 |
+| index.html#floor-6-climate | 170 | 29,663 | 29,675 | 207 |
+| index.html#floor-7-display | 65 | 12,951 | 12,955 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 120 | 23,198 | 23,202 | 0 |
+| index.html#the-meadow | 69 | 14,370 | 14,374 | 0 |
+| index.html#the-woods-cache | 50 | 5,413 | 5,417 | 47 |
+| index.html#touch | 52 | 9,001 | 9,005 | 54 |
+| menu.js | 518 | 102,372 | 102,416 | 544 |
+| econ.js | 590 | 108,520 | 108,520 | 72 |
+| combat.js | 351 | 58,478 | 58,478 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 57 | 6,050 | 6,050 | 66 |
 
@@ -53,10 +53,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,145 |
 | citations | 293 | 68,145 |
 | colours | 27 | 7,554 |
-| comments | 855 | 149,303 |
+| comments | 856 | 149,489 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 331 | 154,041 |
+| measure | 331 | 154,336 |
 | rules | 75 | 28,346 |
 | screen | 24 | 10,338 |
 | shells | 110 | 23,401 |
@@ -154,4 +154,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2371 items sealed · 2243 book entries · 93 laws · 293 citations, 25 still to open · 7 known
+2372 items sealed · 2244 book entries · 93 laws · 293 citations, 25 still to open · 7 known

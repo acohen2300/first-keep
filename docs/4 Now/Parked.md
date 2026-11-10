@@ -668,3 +668,17 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - The Help page's single message (shown twice with the footer): it lists the earlier messages.
 - Cards' plain heading (h2) and their flowing train and research rows: the title row and wide boxes.
 
+## Cut in N6 (Nov 9 evening, the whole open list in one build; `N6 progress.md` holds the detail)
+- Fast and the Yard from the Paused card (the Yard was removed Nov 7).
+- The book's white ring and the help lines' blue border: a ring is the box's outline now, one line.
+- The menu frame's fixed row height (label rows size to their words).
+- The Abatis from the players' Build menu (field defences cut for players, Nov 8); Base's tab order of up to nine a tab; the Build menu jumping to the hint's tab.
+- The villager square over the head (Build, Send to, Attack, More; Garrison, Rally, Info, Focus) and its words (J41): tap a unit, tap a thing; the quick action square holds Rally, Shelter and Garrison.
+- Soldiers staying picked after an order; villagers dropping the pick on a ground tap.
+- The quick action's ✕ box and the Attack + ✕ pair.
+- Nearest-first for a builder's next site (a wall line keeps it).
+- The start in late winter.
+- The hold that picked a unit and the hold that dragged the crosshair.
+- The twice-a-second pair-by-pair look (replaced by the sight map).
+- The woods' first-pass flat shares of pace (0.5, 0.35), replaced by the Pandolf terrain factor and a horse's walk.
+

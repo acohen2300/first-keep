@@ -382,6 +382,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
 - **E868** the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL
+- **E878** a sight cell's woods: how much of it is wood and its ground under the trees, so a ray thro
 - **E869** an eye's tiles: every tile in its reach whose ground, a body high, its line clears over th
 - **E870** seen now: a unit whose tile is in sight; a building any of whose corners is
 - **E877** an eye facing no fog: every point round its rim already seen by others, so it casts nothin

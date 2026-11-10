@@ -859,3 +859,4 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E875 | combat.js | in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L the metres of wood the line runs through |
 | E876 | combat.js | in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear Law): a blow is shared among all who strike the same foe |
 | E877 | index.html#floor-7-display | an eye facing no fog: every point round its rim already seen by others, so it casts nothing; eyes in one cell share one cast |
+| E878 | index.html#floor-7-display | a sight cell's woods: how much of it is wood and its ground under the trees, so a ray through the trunks thins by e^(-n d L) and a ray over the canopy meets a wall |

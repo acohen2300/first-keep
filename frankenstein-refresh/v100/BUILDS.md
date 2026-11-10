@@ -4334,3 +4334,85 @@ MODIFIED (18):
 LOCKED (2305 of 2322): byte for byte as sealed, 1,416,025 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2322 items sealed · 2194 book entries · 93 laws · 285 citations, 21 still to open · 7 known
+
+## N6 · 2026-11-09 20:21
+Albert, Nov 9 2026 19:37: "One build. All at the same time. Do the whole list and chart so I can play it complete. Remember our core values for building. Go go go" (Next build list: OPEN and item 14) Cap exception: item 1 (the stray sweep) is in this build; Albert, Nov 9 07:44: "this run may open more than 10 items".
+Opened: book:screen, book:measure, book:words, book:comments, book:citations, book:colours, code:menu.js, code:index.html, code:econ.js, code:combat.js, book:mass, tool:index.py
+MODIFIED (74):
+- book:citations:N287 · added
+- book:citations:N288 · added
+- book:citations:N289 · added
+- book:citations:N290 · added
+- book:citations:N291 · added
+- book:citations:N292 · added
+- book:citations:N293 · added
+- book:citations:N294 · added
+- book:colours:C31 · added
+- book:comments:E849 · added
+- book:comments:E850 · added
+- book:comments:E851 · added
+- book:comments:E852 · added
+- book:comments:E853 · added
+- book:comments:E854 · added
+- book:comments:E855 · added
+- book:comments:E856 · added
+- book:comments:E857 · added
+- book:comments:E858 · added
+- book:comments:E859 · added
+- book:comments:E860 · added
+- book:comments:E861 · added
+- book:comments:E862 · added
+- book:comments:E863 · added
+- book:comments:E864 · added
+- book:comments:E865 · added
+- book:comments:E866 · added
+- book:comments:E867 · added
+- book:comments:E868 · added
+- book:comments:E869 · added
+- book:comments:E870 · added
+- book:comments:E871 · added
+- book:comments:E872 · added
+- book:comments:E873 · added
+- book:comments:E874 · added
+- book:comments:E875 · added
+- book:comments:E876 · added
+- book:comments:E877 · added
+- book:comments:E878 · added
+- book:mass:W27 · 184 → 375 bytes
+- book:measure:D165 · 400 → 531 bytes
+- book:measure:D320 · 2,133 → 2,328 bytes
+- book:measure:D353 · 3,895 → 4,052 bytes
+- book:measure:D358 · added
+- book:measure:D359 · added
+- book:measure:D360 · added
+- book:measure:D361 · added
+- book:measure:D362 · added
+- book:screen:SN2 · 521 → 635 bytes
+- book:screen:SN20 · 432 → 646 bytes
+- book:screen:SN3 · 577 → 771 bytes
+- book:screen:SN32 · 887 → 1,108 bytes
+- book:screen:SN34 · added
+- book:screen:SN35 · added
+- book:words:J41 · removed
+- book:words:J43 · added
+- book:words:J44 · added
+- book:words:J45 · added
+- book:words:J46 · added
+- book:words:J47 · added
+- code:combat.js · 58,179 → 58,478 bytes
+- code:econ.js · 107,867 → 108,520 bytes
+- code:index.html#drawn-once-in-the-view-frame · 12,706 → 12,745 bytes
+- code:index.html#floor-5-movables · 19,010 → 19,655 bytes
+- code:index.html#floor-6-climate · 29,395 → 29,675 bytes
+- code:index.html#floor-7-display · 7,986 → 12,955 bytes
+- code:index.html#the-door · 14,409 → 14,388 bytes
+- code:index.html#the-meadow · 14,373 → 14,374 bytes
+- code:index.html#the-trees · 9,451 → 9,452 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,023 → 23,202 bytes
+- code:index.html#the-woods-cache · 5,271 → 5,417 bytes
+- code:index.html#touch · 7,905 → 9,005 bytes
+- code:menu.js · 99,572 → 102,416 bytes
+- tool:index.py · 27,624 → 27,764 bytes
+LOCKED (2299 of 2372): byte for byte as sealed, 1,074,029 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2372 items sealed · 2244 book entries · 93 laws · 293 citations, 25 still to open · 7 known

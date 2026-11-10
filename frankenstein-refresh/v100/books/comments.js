@@ -854,5 +854,6 @@ BOOK("comments", {
  "E874": {"text": "a crossing is ice or woods: the same modes for both (single file, thin out, one at a time, stick to edges, go around), chosen once on the crossing card"},
  "E875": {"text": "in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L the metres of wood the line runs through"},
  "E876": {"text": "in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear Law): a blow is shared among all who strike the same foe"},
- "E877": {"text": "an eye facing no fog: every point round its rim already seen by others, so it casts nothing; eyes in one cell share one cast"}
+ "E877": {"text": "an eye facing no fog: every point round its rim already seen by others, so it casts nothing; eyes in one cell share one cast"},
+ "E878": {"text": "a sight cell's woods: how much of it is wood and its ground under the trees, so a ray through the trunks thins by e^(-n d L) and a ray over the canopy meets a wall"}
 });

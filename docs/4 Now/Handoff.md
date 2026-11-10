@@ -1,10 +1,10 @@
-# First Keep: handoff (Nov 9, 2026, 14:40; v100 at N5, live)
+# First Keep: handoff (Nov 9, 2026, 20:30; v100 at N6, live)
 
 **A new chat starts here.** Read this file, then `Next build list.md` (every Nov 9 decision, items 1–13, and the Built N1–N5 log), `Calls - Nov 8.md` and `Build plan - Nov 8.md`. Albert's standing rules live in Claude's memory too. Then wait for his go.
 
 ## Where it stands
 - Code: `frankenstein-refresh/v100/` (index.html, combat.js, econ.js, menu.js, books/*.js). Live: https://acohen2300.github.io/first-keep/frankenstein-refresh/v100/
-- Nov 9 builds, all pushed: N1 (item 8's open items), N2 (the look pass, Barlow), N3 (progress rings, colour map C27), N4 (the MR kit: all solid, glass cut, 12 inside boxes, title row ← · book · ✕, help-line chevron), N5 (every menu rebuilt from the kit; see the log in `Next build list.md`).
+- Nov 9 builds, all pushed: N1 (item 8's open items), N2 (the look pass, Barlow), N3 (progress rings, colour map C27), N4 (the MR kit: all solid, glass cut, 12 inside boxes, title row ← · book · ✕, help-line chevron), N5 (every menu rebuilt from the kit), N6 (the whole open list in one build: menus, Build menu, tap model, quick action square, woods, sight by rays, fog of war; `N6 progress.md` has every step, measurement and cut).
 - Gate: `python3 index.py` (permit.json: `opens` and `grow`, key `code:menu.js`; numbers only in books; comments one E-code per line, each named by code). Publish: `python3 publish.py --smoke "<message>"`; it stops at `git pull` with docs unstaged, so fold the docs into the build commit: `git add`, `git commit --amend` as Albert with the trailers, `git pull --rebase`, `git push`. Then clear permit.json (publish does).
 - Menu structure: menu.js. SCREENS (pages), ROWS (card rows), VERBS, `head` / `headS` (title rows), `vcell` (a box with its ring by the SN32 verb map), `.pop` cards (Paused, Sound) hung under their top buttons by `hang`, `w2` (the two-column width).
 

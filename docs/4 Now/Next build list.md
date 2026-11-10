@@ -265,6 +265,16 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - Help lines: the chevron sits first so it shows on a clipped line.
 - Open: the stances do nothing yet; the queue row shows only while something is queued; Mail's long letters are clipped in the narrow card.
 
+## Built N6 (Nov 9 evening, the whole open list; detail in `N6 progress.md`)
+- Menus: first lines 14 · 600; TRAIN / RESEARCH labels; card and box gradients; plain header (← · book · ✕); rings on the box's edge; Paused: speeds and New game; Welcome back's line; Fog of war On / Off on New game.
+- Build menu: Home, Resources, Military, Defence, Trade, Arts, two rows of three; Dwelling first; locked hidden behind Show all; the Apartment raised from a Dwelling, the Tree farm planted from a Lumber camp.
+- Tap a unit (green glowing ring), tap a thing: it does it; the ground: it goes; then the pick clears. The quick action: a square, Attack · Build · Squad · More; All · ½ · ¼ · Idle; three taps in one spot send all.
+- First placed, first built. Spring start; the camera further out; v80's gold, stone and iron; the grass at twice the resolution.
+- Woods walkable for foot and riders with the ice's crossing modes; Pandolf heavy brush; arrows lost in the trunks; one-on-one fights.
+- Sight by rays that stop at the first block (trees, walls, buildings, ground; trunks thin it inside woods; weather shortens it); only the outermost eyes cast; fog of war with memory; weather fog by Beer-Lambert from the zoom.
+- A tap anywhere on a building's drawn shape; a hold only for the box drag. The gate counts numbers with units; menu.js's sizes swept into the Screen book.
+- Open: the zero rule (about 6,150 typed numbers left, mostly sprite coordinates); stacked canvases; fog pooling in low ground; silhouettes under the canopy; long names clipped in the queue and Mail; sight not saved across a reload; the stances do nothing.
+
 ## 13. Menus from the MR kit, Albert's markup (Nov 9, 12:57–13:12; mocks kit2, kit3, kit4)
 - All solid, no glass (undo N2's glass); the tray brown fills the 1 px seams so the stack reads as one card.
 - Title: always ← · book · ✕ on the right (SN27).
