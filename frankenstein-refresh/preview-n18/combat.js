@@ -1,7 +1,7 @@
 'use strict';
 // E227
 window.WAR = (() => {
-const { D, C, W, K, A, SIDES, N } = FK;
+const { D, C, W, K, A, SIDES, N } = FK, STD = []; // E961
 // E170
 const things = FK.things, units = FK.units, T = D.tile, [ME] = D.players, MO = D.nerve, FL = D.flanking, AR = D.army, GR = D.ranks, FLY = D.flight, FM = D.forms, ST = FK.SPRITE, WD = fromBook('words').army;
 const HU = D.hud, CH = D.charge, FB = D.fallback, CK = D.choke, AM = D.ambush, FAM = D.familiar, DI = D.direct, WO = fromBook('words').orders, ORD = new Set(), MS = {}, AT = {}; // E406
@@ -259,8 +259,9 @@ FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size(), 
     ctx.beginPath(); ctx.moveTo(...pt(p - FLY.tail)); ctx.lineTo(...pt(p)); ctx.stroke(); }
   const K0 = ST.spark; ctx.save(); ctx.strokeStyle = C.flame; ctx.lineWidth = K0.line * s; for (const k of sparks) { const a = (K.t - k.t) / FLY.spark; if (a < 0 || a >= 1) continue; const [x, y] = at(k.x, k.y, K0.lift), g = (K0.to + a * K0.grow) * s; ctx.globalAlpha = 1 - a; ctx.beginPath(); // E400
     for (let i = K0.rays; i--; ) { const an = i * K0.turn + k.t * K0.spin, c = Math.cos(an), e = Math.sin(an); ctx.moveTo(x + c * K0.from * s, y + e * K0.from * s); ctx.lineTo(x + c * g, y + e * g); } ctx.stroke(); } ctx.restore();
-  const S0 = ST.standard, grp = new Map(); if (FK.cam.z < S0.zoom) return; for (const u of units()) if (armed(u) && alive(u) && !engine(u) && (u.job === 'march' || u.job === 'hold' || u.was != null) && FK.inSight(u)) { const key = u.side + ' ' + (u.was ?? u.goal), g = grp.get(key) || grp.set(key, { o: u.side, us: [] }).get(key); g.us.push(u); } // E401
-  for (const { o, us } of grp.values()) { if (us.length < S0.least) continue; const [x, y] = at(sum(us, (u) => u.bx) / us.length, sum(us, (u) => u.by) / us.length), h = S0.pole * s, [r0, r1] = S0.ring, r = r0 * s + r1, col = SIDES[o].col, [fw, f1, f2, f3] = S0.flag.map((v) => v * s), [sp, sw, tail] = S0.wave, a = Math.sin(K.t * sp + o) * sw * s, top = S0.top;
+// E960
+  const S0 = ST.standard, grp = new Map(); STD.length = ZERO; if (FK.cam.z < S0.zoom) return; for (const u of units()) if (armed(u) && alive(u) && !engine(u) && (u.job === 'march' || u.job === 'hold' || u.was != null) && FK.inSight(u)) { const key = u.side + ' ' + (u.ord ?? u.rally ?? u.was ?? u.goal), g = grp.get(key) || grp.set(key, { o: u.side, us: [] }).get(key); g.us.push(u); } // E401
+  for (const { o, us } of grp.values()) { if (us.length < S0.least) continue; const [x, y] = at(sum(us, (u) => u.bx) / us.length, sum(us, (u) => u.by) / us.length), h = S0.pole * s, [r0, r1] = S0.ring, r = r0 * s + r1, col = SIDES[o].col, [fw, f1, f2, f3] = S0.flag.map((v) => v * s), [sp, sw, tail] = S0.wave, a = Math.sin(K.t * sp + o) * sw * s, top = S0.top; STD.push({ pole: S0.pole, vx: sum(us, (u) => u.vx) / us.length, vy: sum(us, (u) => u.vy) / us.length, i: o + us.length });
     ctx.lineWidth = S0.line * s; ctx.save(); ctx.strokeStyle = C.shade; ctx.globalAlpha = S0.alpha; oval(x, y, r, S0.tilt); ctx.stroke(); ctx.restore(); ctx.strokeStyle = col; oval(x, y, r, S0.tilt, top, top + (sum(us, (u) => u.hp) / sum(us, (u) => u.hpMax)) * a1); ctx.stroke();
     ctx.strokeStyle = C.pole; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - h); ctx.stroke(); ctx.fillStyle = col; ctx.strokeStyle = C.shade; ctx.lineWidth = s; ctx.beginPath(); ctx.moveTo(x, y - h); ctx.quadraticCurveTo(x + half(fw), y - h + a, x + fw, y - h + f1 + a * tail); ctx.lineTo(x + fw, y - h + f2 + a * tail); ctx.quadraticCurveTo(x + half(fw), y - h + f2 + a, x, y - h + f3); ctx.closePath(); ctx.fill(); ctx.stroke(); }
 });
@@ -350,5 +351,5 @@ function spring(b, v, kind, E) { const horse = FK.SH[v.code].mount ? 'horse' : '
 FK.on('save', (X) => { X.war = { waves, homeT, routSaid, ordT, ORD, MS, AT, rel, SQ, raid }; }); // E667
 FK.on('load', ({ war: W }) => { ({ homeT, routSaid, ordT } = W); const keep = { waves, ORD, MS, AT, rel, SQ, raid }; for (const k in keep) FK.refill(keep[k], W[k]); });
 const take = (t) => { for (const u of units()) if (u.target === t) u.target = null; FK.vanish(t); }; // E691
-return { chargeWhy, take, wild, meet, raids, loot, scout, roulette, guardsLeft, besideK, traps, shown, spring, guard, guardsOf, order, send, go, callHome, everyHome, reinforcePlan, reinforce, direct, directWait, ambushAt, foesNear, status, free, freeWhy, sendable, centreOf, routeK, etaOf, mixOf, chance, homeAll, charge, fallBack, ORD, MS, attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, power1, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat, vs, fromWhere, reachOf, fly, speedFor, dress, drillOn, rebattalion, plan, squad, lack, cycle, dialOf, temperOf, shapeOf, formOf, kiteOf, SQ, DIAL, SHAPES, bestFoe, canBeat, worth, formHome, wear, dmgOf, knows };
+return { standards: STD, chargeWhy, take, wild, meet, raids, loot, scout, roulette, guardsLeft, besideK, traps, shown, spring, guard, guardsOf, order, send, go, callHome, everyHome, reinforcePlan, reinforce, direct, directWait, ambushAt, foesNear, status, free, freeWhy, sendable, centreOf, routeK, etaOf, mixOf, chance, homeAll, charge, fallBack, ORD, MS, attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, power1, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat, vs, fromWhere, reachOf, fly, speedFor, dress, drillOn, rebattalion, plan, squad, lack, cycle, dialOf, temperOf, shapeOf, formOf, kiteOf, SQ, DIAL, SHAPES, bestFoe, canBeat, worth, formHome, wear, dmgOf, knows };
 })();
