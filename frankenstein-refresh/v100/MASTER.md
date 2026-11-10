@@ -152,12 +152,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E655** The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save
 - **E656** each kind of error logged once; a second kind holds the save (the last good one stands) an
 - **E657** the save: the seed (the map is laid again from it), the lists, the climate, the sides, wha
+- **E879** the fog of war is saved with the game: the ground each side has seen and the buildings it 
 - **E681** a plain record held in two places (a war order, a camp, an ambush) is saved once, tagged o
 - **E658** a save opened: the places turned back into the things and units, the Maps, Sets and Infini · D331 (N230)
 - **E659** the save waits while you fight, at most D331's fight; a failed save says so once in D331's · D331 (N230)
 - **E660** a save that will not open is kept aside, never written over; the one before opens instead
 - **E661** the game opened from a save: the fresh map from its seed, then the lists, the sides and th
 - **E696** the screen stays awake while a match runs; let go when paused, at rest or hidden; a browse
+- **E880** the land kept while the camera holds still: one copy drawn back instead of the ground, the
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)
 - **E70** Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the groun · D3 (N112)
@@ -412,6 +414,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
+- **E881** the grass by the phone: full resolution while the phone keeps up, a quarter the pixels onc
 - **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
@@ -434,6 +437,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## index.html#the-meadow
 
+- **E881** the grass by the phone: full resolution while the phone keeps up, a quarter the pixels onc
 - **E799** the meadow: a layer of the ground, one colour a tile from the season, the weather and the 
 - **E804** a tile's wetness by its wetness index and its snow by its drift: one home each for the ste
 - **E805** a step's wear on the grass: the pressure of everything that walks there (body, mount, kit 

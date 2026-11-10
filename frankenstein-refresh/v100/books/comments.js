@@ -855,5 +855,8 @@ BOOK("comments", {
  "E875": {"text": "in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L the metres of wood the line runs through"},
  "E876": {"text": "in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear Law): a blow is shared among all who strike the same foe"},
  "E877": {"text": "an eye facing no fog: every point round its rim already seen by others, so it casts nothing; eyes in one cell share one cast"},
- "E878": {"text": "a sight cell's woods: how much of it is wood and its ground under the trees, so a ray through the trunks thins by e^(-n d L) and a ray over the canopy meets a wall"}
+ "E878": {"text": "a sight cell's woods: how much of it is wood and its ground under the trees, so a ray through the trunks thins by e^(-n d L) and a ray over the canopy meets a wall"},
+ "E879": {"text": "the fog of war is saved with the game: the ground each side has seen and the buildings it remembers, and whether fog is on; sight is cast again on load"},
+ "E880": {"text": "the land kept while the camera holds still: one copy drawn back instead of the ground, the meadow, the scars and the skin each frame (SoRen's keyed layers)"},
+ "E881": {"text": "the grass by the phone: full resolution while the phone keeps up, a quarter the pixels once it sheds its first step; the meadow is laid again when it crosses"}
 });

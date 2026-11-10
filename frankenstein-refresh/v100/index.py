@@ -6,7 +6,7 @@
 import json, re, glob, os, sys, hashlib, subprocess, tempfile
 os.chdir(os.path.dirname(os.path.abspath(__file__))); CI, SEAL = '--ci' in sys.argv, '--seal' in sys.argv
 CODE = ['index.html', 'menu.js', 'econ.js', 'combat.js', 'ai.js', 'sound.js']   # the game, in load order after the books
-TOOLS = ['index.py', 'publish.py', 'test.py', '../../.github/workflows/pages.yml']
+TOOLS = ['index.py', 'publish.py', 'test.py', 'ship.py', '../../.github/workflows/pages.yml']
 text = lambda p: open(p, encoding='utf-8').read() if os.path.exists(p) else None
 BOOKS = {m.group(1): json.loads(m.group(2)) for f in sorted(glob.glob('books/*.js')) for m in [re.search(r'BOOK\("(\w+)", ([\s\S]*)\);\s*$', text(f))]}
 LAWS = {m.group(1): m.group(0) for m in re.finditer(r'(?m)^(Q[A-Z]+) .*$', text('CALCULATIONS.md'))}

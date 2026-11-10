@@ -275,6 +275,13 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - A tap anywhere on a building's drawn shape; a hold only for the box drag. The gate counts numbers with units; menu.js's sizes swept into the Screen book.
 - Open: the zero rule (about 6,150 typed numbers left, mostly sprite coordinates); stacked canvases; fog pooling in low ground; silhouettes under the canopy; long names clipped in the queue and Mail; sight not saved across a reload; the stances do nothing.
 
+## Built N7 (Nov 9 20:24-20:45, Albert: "Do all 4")
+- The docs do not ship: `frankenstein-refresh/v100/ship.py` writes the live page (one stitched file; each book's cite and law gone, and its name where the name is a description; tech and shells keep their names, which the game shows; the JSON without spaces): 1,122 KB to 942 KB. The Pages workflow runs it (the old gate unlocked for `pages.yml`, resealed, relocked). Correction: the comments and citations books were never loaded by the page; what shipped was the name, cite and law text inside the books the game loads.
+- SoRen's keyed layers: the land (ground, meadow, scars, skin, grid) drawn once and copied back while the camera holds still, drawn again when it moves, while the meadow sweeps, or every 250 ms (D363, E880). Measured: drawImage from 32% to 3% of the work.
+- The grass by the phone: full resolution (2) while it keeps up, a quarter the pixels (4) once it sheds its first step (D353 resShed, E881); no reading needed by hand.
+- The fog of war saved with the game: the ground each side has seen, the buildings it remembers, fog on or off (E879).
+- Fixed: the quick action's ½, All, ¼ could throw once the square closed (share() read a closed square).
+
 ## 13. Menus from the MR kit, Albert's markup (Nov 9, 12:57–13:12; mocks kit2, kit3, kit4)
 - All solid, no glass (undo N2's glass); the tray brown fills the 1 px seams so the stack reads as one card.
 - Title: always ← · book · ✕ on the right (SN27).

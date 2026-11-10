@@ -4416,3 +4416,23 @@ MODIFIED (74):
 LOCKED (2299 of 2372): byte for byte as sealed, 1,074,029 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2372 items sealed · 2244 book entries · 93 laws · 293 citations, 25 still to open · 7 known
+
+## N7 · 2026-11-09 20:33
+Albert, Nov 9 2026 20:24: "Do all 4" (1 the docs do not ship: ship.py; 2 SoRen's keyed layers: the land kept while the camera holds; 3 the grass by the phone's numbers; 4 the fog of war saved)
+Opened: book:measure, book:comments, code:index.html, tool:index.py, tool:pages.yml, tool:ship.py, code:menu.js
+MODIFIED (12):
+- book:comments:E879 · added
+- book:comments:E880 · added
+- book:comments:E881 · added
+- book:measure:D353 · 4,052 → 4,220 bytes
+- book:measure:D363 · added
+- code:index.html#the-door · 14,388 → 15,449 bytes
+- code:index.html#the-meadow · 14,374 → 14,442 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,202 → 23,294 bytes
+- code:menu.js · 102,416 → 102,441 bytes
+- tool:index.py · 27,764 → 27,775 bytes
+- tool:pages.yml · 1,972 → 1,409 bytes
+- tool:ship.py · added
+LOCKED (2365 of 2377): byte for byte as sealed, 1,357,364 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2377 items sealed · 2248 book entries · 93 laws · 293 citations, 25 still to open · 7 known

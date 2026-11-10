@@ -230,7 +230,7 @@ const key = (o) => { const k = o.kind + (o.code || '') + (o.k ?? o.i + '_' + o.j
 // E195
 // E196
 const row = (...items) => `<div class="row6">${items.join('')}</div>`;
-const share = (a) => { const q = S.qa, [bx, by] = FK.tileMid(q.k), U = (a === 'idle' ? WAR.free() : WAR.sendable()).slice().sort((u, v) => Math.hypot(u.bx - bx, u.by - by) - Math.hypot(v.bx - bx, v.by - by)); return a in D.send ? U.slice(ZERO, Math.ceil(U.length * D.send[a])) : U; }; // E858
+const share = (a) => { const q = S.qa; if (!q) return []; const [bx, by] = FK.tileMid(q.k), U = (a === 'idle' ? WAR.free() : WAR.sendable()).slice().sort((u, v) => Math.hypot(u.bx - bx, u.by - by) - Math.hypot(v.bx - bx, v.by - by)); return a in D.send ? U.slice(ZERO, Math.ceil(U.length * D.send[a])) : U; }; // E858
 const idleVil = () => { const q = S.qa; if (!q) return null; const [bx, by] = FK.tileMid(q.k); let best = null, bd = Infinity; for (const u of units()) if (isVil(u) && u.job === 'idle') { const d = Math.hypot(u.bx - bx, u.by - by); if (d < bd) [best, bd] = [u, d]; } return best; };
 const thumbAt = (x, y) => { const m = SCR.mold, [w, h] = FK.size(), c = qaEl.firstElementChild; if (!c) return; const r = qaEl.getBoundingClientRect(), b = c.getBoundingClientRect(); qaEl.style.left = Math.min(w - r.width - m.gap, Math.max(m.gap, x - (b.left - r.left) - b.width * P.half)) + 'px'; qaEl.style.top = Math.min(h - r.height - m.gap, Math.max(m.gap, y - (b.top - r.top) - b.height * P.half)) + 'px'; }; // E860
 const span = (n, html) => html.replace('class="', `style="grid-column:span ${n}" class="`);

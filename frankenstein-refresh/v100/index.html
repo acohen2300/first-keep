@@ -375,7 +375,8 @@ const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\
 function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > ONE && !paused) { paused = true; fire('say', WS.fault.replace('{line}', m.split('\n').shift())); fire('event', 'fault', null); MENU.S.tab = 'Pause'; } } // E656
 addEventListener('error', (e) => fault(e.error || e.message)); addEventListener('unhandledrejection', (e) => fault(e.reason));
 const ARR = () => ({ H, OCC, FOR, MARSH, RUTS }), refill = (a, b) => { if (a instanceof Map || a instanceof Set) { a.clear(); for (const x of b) a instanceof Map ? a.set(...x) : a.add(x); } else if (Array.isArray(a)) a.splice(null, a.length, ...b); else { for (const k in a) delete a[k]; Object.assign(a, b); } };
-function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n) => [t, n])), base = new Map(BASE0.things.map((t, n) => [t, n])), S = { seed, dice: play.at(), things: [], units, K, SIDES, known, HZ, arr: {} }; // E657
+function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n) => [t, n])), base = new Map(BASE0.things.map((t, n) => [t, n])), S = { seed, dice: play.at(), things: [], units, K, SIDES, known, HZ, arr: {}, fog: { on: FOGON, exp: [...EXPL].map(([s, a]) => [s, a.reduce((o, v, c) => (v ? (o.push(c), o) : o), [])]), mem: MEM } }; // E657
+  // E879
   S.things = things.map((t) => { const n = base.get(t); if (n == null) return t; const was = BASE0.shot[n], d = {}; for (const k in t) if (t[k] !== was[k] || (t[k] && typeof t[k] === 'object')) d[k] = t[k]; return Object.keys(d).length ? { [TG.base]: n, ...d } : n; });
   for (const [name, a] of Object.entries(ARR())) { const d = []; a.forEach((v, k) => { if (v !== BASE0[name][k]) d.push([k, v]); }); S.arr[name] = d; }
   if (fire('save', S)) return null; const seen = new Set(), twice = new Set(), own = new Map(), walk = (v) => { if (!v || typeof v !== 'object' || ids.has(v)) return; if (v.constructor === Object) { if (seen.has(v)) return void twice.add(v); seen.add(v); } else if (!(v instanceof Map || v instanceof Set || Array.isArray(v))) return; for (const x of v instanceof Map || v instanceof Set ? v.values() : Object.values(v)) walk(x); };
@@ -397,17 +398,20 @@ function readSave(key = SV.key) { try { const t = localStorage.getItem(key), S =
   catch (e) { if (key !== SV.key) return null; aside(); return readSave(SV.key + SV.bak); } }
 const aside = () => { try { localStorage.setItem(SV.key + SV.lost, localStorage.getItem(SV.key)); localStorage.removeItem(SV.key); } catch (x) {} };
 function load(R) { WALKV++; TV++; const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
-  for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v;
+  for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v; VIS.clear(); CAST.clear(); EXPL.clear(); MEM.clear(); topN = -ONE; if (S.fog) { FOGON = S.fog.on; for (const [s, cs] of S.fog.exp) { const X = expOf(s); for (const c of cs) X[c] = ONE; } for (const [s, m] of S.fog.mem) MEM.set(s, m); } // E879
   GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = null; WOODS.clear(); for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
 let wakeL = null, wakeP = false; const wakeOn = async (on) => { if (wakeP) return; try { if (on && !wakeL && navigator.wakeLock) { wakeP = true; wakeL = await navigator.wakeLock.request('screen'); } else if (!on && wakeL) { const w = wakeL; wakeL = null; await w.release(); } } catch (e) { wakeL = null; } wakeP = false; }; // E696
 on('tick', () => { if (every(D.saveBeat)) save(); wakeOn(!document.hidden && !resting()); }); addEventListener('pagehide', () => save(true)); document.addEventListener('visibilitychange', () => { if (document.hidden) { save(true); wakeOn(false); } });
+const LANDC = document.createElement('canvas'), LANDX = LANDC.getContext('2d'), LAND = { key: '', t: -Infinity }; // E880
 function draw() {
   queued = false;
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
-  ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
-  const [gx, gy] = toScreen(-ox, -oy); drawGround(gx, gy); drawMeadow(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
-  if (show.G && cam.z * D.tile >= D.lod) drawGrid();
+  const lk = [cam.x, cam.y, cam.z, cw, ch, dpr, show.K, show.G, MSW.row, jolt.t > ZERO].join(), now = performance.now(); // E880
+  if (lk !== LAND.key || now - LAND.t > D.landCache.ms) { LAND.key = lk; LAND.t = now; ctx.fillStyle = deepest; ctx.fillRect(0, 0, cw, ch);
+    const [gx, gy] = toScreen(-ox, -oy); drawGround(gx, gy); drawMeadow(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin();
+    if (show.G && cam.z * D.tile >= D.lod) drawGrid(); if (LANDC.width !== canvas.width || LANDC.height !== canvas.height) { LANDC.width = canvas.width; LANDC.height = canvas.height; } LANDX.setTransform(ONE, ZERO, ZERO, ONE, ZERO, ZERO); LANDX.drawImage(canvas, ZERO, ZERO); }
+  else { ctx.save(); ctx.setTransform(ONE, ZERO, ZERO, ONE, ZERO, ZERO); ctx.drawImage(LANDC, ZERO, ZERO); ctx.restore(); }
   drawThings(); drawFog(); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
   if (show.R) drawEdge();
@@ -1459,7 +1463,7 @@ function meter(wall, sim, drawn) { if (!(wall > null)) return; const k = Math.mi
 function shed(work, secs) { const due = DRW.ms / rate(); DRAW.ema += (work - DRAW.ema) * Math.min(ONE, secs / DRW.tau); const was = DRAW.lvl; // E605
   if (DRAW.ema > DRW.slow * due && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
   else if (DRAW.ema < DRW.fast * due && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
-  if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } }
+  if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } if ((was >= DRW.lv.shadows) !== (DRAW.lvl >= DRW.lv.shadows) && MMAP) makeMeadow(); } // E881
 const area = (v) => (v.cv || v).width * (v.cv || v).height, used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; } } // E606
 // E607
 const spring = (x, v, to, w, dt) => { const e = Math.exp(-w * dt), d = x - to, t = (v + w * d) * dt; return [to + (d + t) * e, (v - w * t) * e]; };
@@ -1587,7 +1591,8 @@ function makeMeadow() { // E800
   const F = MDW.flowers, grass = land.filter((k) => MGRASS[k]); MBLOOM = []; MTINT.fill(ZERO); MKIND.fill(-ONE);
   for (let c = Math.round(grass.length / F.per); c-- > ZERO; ) { const k = grass[Math.floor(r() * grass.length)], peb = r() < F.peb, kind = peb ? -ONE : Math.floor(r() * MDC.flowers.length), [n0, n1] = peb ? F.pebbles : F.kids, b = { x: (k % N) + r(), y: Math.floor(k / N) + r(), kind, n: Math.floor(n0 + r() * n1), sp: F.spread[ZERO] + r() * F.spread[ONE], seed: Math.floor(r() * F.seeds) + ONE }; MBLOOM.push(b);
     if (!peb) for (let j = Math.floor(b.y - b.sp); j <= b.y + b.sp; j++) for (let i = Math.floor(b.x - b.sp); i <= b.x + b.sp; i++) { const t = j * N + i; if (i < ZERO || j < ZERO || i >= N || j >= N || !MGRASS[t] || Math.hypot(i + half - b.x, j + half - b.y) > b.sp) continue; const d = Math.min(ONE, (b.n * F.tint) / (Math.PI * b.sp * b.sp)); if (d > MTINT[t]) { MTINT[t] = d; MKIND[t] = kind; } } }
-  const R = MDW.res; MEAD.width = Math.ceil(gw / R); MEAD.height = Math.ceil(gh / R); const W = MEAD.width, P = W * MEAD.height; MMAP = { k: new Int32Array(P).fill(-ONE), u: new Float32Array(P), v: new Float32Array(P) }; MIMG = new ImageData(W, MEAD.height);
+  const R = DRAW.lvl >= DRW.lv.shadows ? MDW.resShed : MDW.res; MEAD.res = R; MEAD.width = Math.ceil(gw / R); // E881
+  MEAD.height = Math.ceil(gh / R); const W = MEAD.width, P = W * MEAD.height; MMAP = { k: new Int32Array(P).fill(-ONE), u: new Float32Array(P), v: new Float32Array(P) }; MIMG = new ImageData(W, MEAD.height);
   const hAt = (u, v) => { const i = clamp(Math.floor(u - half), ZERO, N - ONE - ONE), j = clamp(Math.floor(v - half), ZERO, N - ONE - ONE), fx = clamp(u - half - i, ZERO, ONE), fy = clamp(v - half - j, ZERO, ONE), k = j * N + i; return (H[k] * (ONE - fx) + H[k + ONE] * fx) * (ONE - fy) + (H[k + N] * (ONE - fx) + H[k + N + ONE] * fx) * fy; };
   for (let py = ZERO, p = ZERO; py < MEAD.height; py++) for (let px = ZERO; px < W; px++, p++) { const bx = (px + half) * R - ox, vy = (py + half) * R - oy; let h = D.land, u = -ONE, v = -ONE, ok = false;
     for (let it = MDW.iter; it-- > ZERO; ) { const x = bx - MID, y = (vy + h * UP) / TILT - MID; u = (MID + x * COS + y * SIN) / T; v = (MID - x * SIN + y * COS) / T; if (u < ZERO || v < ZERO || u >= N || v >= N) break; const h1 = hAt(u, v); ok = Math.abs(h1 - h) < MDW.tol; h = h1; if (ok) break; }
@@ -1609,7 +1614,7 @@ function meadowField() { // E801
     const s = smoothOf(clamp((snowAt(k) / G.snow.full - l0) / l1, ZERO, ONE)); lay(snow, s); if (thaw) lay(slush, s * Math.min(ONE, wet));
     const lk = MLEAN[k], lc = lk >= ZERO ? sun : shadow; for (let n = ZERO; n < RGB; n++) c[n] += (lc[n] - c[n]) * Math.abs(lk);
     for (let n = ZERO; n < RGB; n++) MFIELD[o + n] = c[n] * a; MFIELD[o + RGB] = a; } }
-function sweep(rows) { const W = MEAD.width, y0 = MSW.row, y1 = Math.min(MEAD.height, y0 + rows), S = MDW.px, A = S - ONE, out = MIMG.data, F = MFIELD, { k: KK, u: UU, v: VV } = MMAP, half = ONE / (ONE + ONE), TX = MDW.res / D.tile, EDGES = [ZERO, D.sandTop, D.dirtTop, D.land + D.bare], ks = [], ws = [], acc = [];
+function sweep(rows) { const W = MEAD.width, y0 = MSW.row, y1 = Math.min(MEAD.height, y0 + rows), S = MDW.px, A = S - ONE, out = MIMG.data, F = MFIELD, { k: KK, u: UU, v: VV } = MMAP, half = ONE / (ONE + ONE), TX = MEAD.res / D.tile, EDGES = [ZERO, D.sandTop, D.dirtTop, D.land + D.bare], ks = [], ws = [], acc = [];
   const take = (c, f) => { if (f <= ZERO) return; let sum = ZERO; ks.forEach((q, i) => { if (MSTR[q] === c) sum += ws[i]; }); if (sum) ks.forEach((q, i) => { if (MSTR[q] === c) for (let n = ZERO; n < S; n++) acc[n] += (F[q * S + n] * ws[i] * f) / sum; }); };
   for (let p = y0 * W, d = p * S; p < y1 * W; p++, d += S) { const k = KK[p]; if (k < ZERO) { out[d + A] = ZERO; continue; } const u = UU[p], v = VV[p]; ks[ZERO] = k; ks[ONE] = k + ONE; ks[ONE + ONE] = k + N; ks[A] = k + N + ONE;
     ws[ZERO] = (ONE - u) * (ONE - v); ws[ONE] = u * (ONE - v); ws[ONE + ONE] = (ONE - u) * v; ws[A] = u * v; const s0 = MSTR[k]; if (s0 && MSTR[ks[ONE]] === s0 && MSTR[ks[ONE + ONE]] === s0 && MSTR[ks[A]] === s0) { acc.fill(ZERO, ZERO, S); for (let i = ZERO; i < ks.length; i++) for (let n = ZERO; n < S; n++) acc[n] += F[ks[i] * S + n] * ws[i]; out[d + A] = acc[A] * MDW.opaque; if (acc[A] > ZERO) for (let n = ZERO; n < A; n++) out[d + n] = acc[n] / acc[A]; continue; } let hb = ZERO; ks.forEach((q, i) => { hb += H[q] * ws[i]; });
