@@ -790,7 +790,7 @@ g.strokeStyle = 'rgba(10,12,14,.5)'; g.lineWidth = 0.4; g.beginPath(); g.moveTo(
 
 // ── The trees: twelve kinds from the Sprites book, each in a few variants, drawn once a leaf stage and kept (E773)
 const TREE = SPRITE.trees, TD = TREE.dab, TW = TREE.twig, HALF = TREE.half;
-const leafStage = (v) => { const f = (K.t / D.season + NS_rng(TREE.seed + v)() * TREE.lag) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), ZERO); }; // E777
+const leafStage = (v) => { const f = (yt() / D.season + NS_rng(TREE.seed + v)() * TREE.lag) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), ZERO); }; // E777
 const treeLook = (v) => leafStage(v) + (K.snow > G.snow.covers ? TREE.snowKey : '');
 const kindOf = (v) => TREE.kinds[Math.floor(v / TREE.variants) % TREE.kinds.length];
 function treeKindAt(k, roll) { const h = H[k], where = h > D.land ? 'hill' : h < TREE.wet ? 'wet' : 'plain', W8 = TREE.kinds.map((s) => s.where[where] || ZERO), sum = W8.reduce((a, b) => a + b), x = roll() * sum; // E774
@@ -999,7 +999,7 @@ const YIELD = (t) => KIND[t.kind].yield;
 // E86
 const thick = (k) => (K.snow > G.snow.covers ? ICE.alpha.snow : ICE.alpha.bare) * Math.sqrt(Math.max(ZERO, fddDays() - Math.max(onsetOf(k), HOLES.get(k) ?? -Infinity))), holds = (k) => ICE.load.fail * thick(k) ** (ONE + ONE); // E784
 const iced = (k) => H[k] <= 0 && DEP[k] >= D.edge && holds(k) >= W.person.kg; // E87
-const CROSS = D.crossing, onIce = (u) => !u.inside && H[u.k] <= -D.wade / (ONE + ONE) && DEP[u.k] >= D.edge, year = () => Math.floor(K.t / (D.season * SPRITE.trees.year)); // E786
+const CROSS = D.crossing, onIce = (u) => !u.inside && H[u.k] <= -D.wade / (ONE + ONE) && DEP[u.k] >= D.edge, year = () => Math.floor(yt() / (D.season * SPRITE.trees.year)); // E786
 const iceOf = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < ZERO || K.iceMem.year === year()) ? K.iceMem.mode : CROSS.modes[ZERO]);
 const holdBack = (u, w) => { if (w.length || u.side !== ME || !iced(w) || onIce(u)) return false; const R = CROSS.rules[iceOf(u)]; if (R.ask) return true; let n = ZERO, near = false; // E787
   for (const v of units) if (v !== u && v.side === u.side && onIce(v)) { n++; if (R.gap && Math.hypot(v.bx - tileMid(w)[ZERO], v.by - tileMid(w)[ONE]) <= R.gap * D.tile) near = true; } return near || (R.most && n >= R.most); };
@@ -1209,7 +1209,8 @@ const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => 
 // ── Floor 6, climate (E122)
 const K = { ev: {}, t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: null, iceOn: null, fog: 0, dew: null, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
 const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
-const season = () => Math.floor(K.t / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
+const yt = () => K.t + D.startIn * D.season; // E862
+const season = () => Math.floor(yt() / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
 // E123
 function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - D.noon) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
   K.moonAlt = alt(dec * Math.cos(f), Hh + f); K.moonLit = (1 - Math.cos(f)) / 2; return alt(dec, Hh); } // E551
@@ -1225,7 +1226,7 @@ const blizzard = (s) => s.S > 0 && s.gust >= WX.blizzard.wind && s.vis < WX.bliz
 on('start', () => { GUST = fractal(dice(seed ^ WX.wind.seed), WX.wind.k, WX.wind.dim); DROPS = Array.from({ length: WX.pool }, () => ({ x: glance() * cw, y: glance() * ch, q: glance(), d: glance() })); });
 // E126
 function climate(dt) {
-  K.t0 = K.t; K.t += dt; const sn = season(), f = (K.t / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // E127
+  K.t0 = K.t; K.t += dt; const sn = season(), f = (yt() / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // E127
   K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
   const hour = Math.floor(K.t / HOUR), was = K.wetHour, fresh = hour !== K.hour; if (fresh) { K.hour = hour; ahead(was); if (K.wetHour !== was) { const r = K.wetHour ? rnd(-1, 1) : 0; K.I = Math.abs(r); K.dir = Math.sign(r); } K.storm = K.I >= D.stormAt; }
   const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; if (fresh) turned(was, falling); // E128
@@ -1542,7 +1543,7 @@ on('drop', (p) => p.mode === 'mini');
 // ── The meadow (E799)
 const MDW = D.meadow, MDC = C.meadow, MEAD = document.createElement('canvas'), MLAND = new Uint8Array(N * N), MGRASS = new Uint8Array(N * N), MBARE = new Uint8Array(N * N), MTWI = new Float32Array(N * N), MDRIFT = new Float32Array(N * N), MTINT = new Float32Array(N * N), MKIND = new Int8Array(N * N), MSTR = new Uint8Array(N * N), MLEAN = new Float32Array(N * N), MTOP = new Map(), MTONE = MDW.layers.map(() => new Float32Array(N * N)), MFIELD = new Float32Array(N * N * MDW.px), MBASE = new Float32Array(N * N * MDW.px), MSW = { row: -ONE, key: '', next: -Infinity, ph: NaN };
 let MMAP = null, MIMG = null, MBLOOM = [];
-const wetAt = (k) => K.wet * Math.max(ZERO, ONE + MDW.twi * MTWI[k]), snowAt = (k) => K.snow * MDRIFT[k], phaseOf = () => (K.t / D.season) % TREE.year; // E804
+const wetAt = (k) => K.wet * Math.max(ZERO, ONE + MDW.twi * MTWI[k]), snowAt = (k) => K.snow * MDRIFT[k], phaseOf = () => (yt() / D.season) % TREE.year; // E804
 const pressOf = (u) => { const b = SH[u.code], f = G.tread[b.mount || b.body] || G.tread.person; return ((massOf(u.code) + (u.load || ZERO) * W.carried.kg + (u.cargo ? W.load.kg : ZERO)) * D.g) / (f.area * f.feet); }, STEP0 = Math.log((W.person.kg * D.g) / (G.tread.person.area * G.tread.person.feet) / G.soil.pa), tread = (u) => Math.max(ZERO, Math.log(pressOf(u) / (G.soil.pa * (ONE - G.soil.soft * Math.min(ONE, wetAt(u.k)))))) / STEP0; // E805
 const smoothOf = (t) => t * t * (MDW.smooth[ZERO] - MDW.smooth[ONE] * t), bloomAt = (kind, ph) => { const [a, b] = MDW.bloom[kind], f = MDW.flowers.fade; return clamp((ph - a) / f, ZERO, ONE) * clamp((b - ph) / f, ZERO, ONE); };
 function makeMeadow() { // E800
@@ -1621,7 +1622,7 @@ function wake(t) { // E156
 const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = (c - ci) / NC, pts = []; for (const [x, y] of [[ci, cj], [ci + 1, cj], [ci, cj + 1], [ci + 1, cj + 1]]) pts.push(V(x * CS * D.tile, y * CS * D.tile, D.land));
   return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // E157
 function woodsChunk(c, q) { // E158
-  const key = c + '@' + q + '@' + Math.floor(K.t / D.season * TREE.stages.length) + treeLook(ZERO); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
+  const key = c + '@' + q + '@' + Math.floor(yt() / D.season * TREE.stages.length) + treeLook(ZERO); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
   const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
   for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, (q * t.size * artOf(t.kind)) / dpr), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size * artOf(t.kind), g2);
   w = { cv, q }; WOODS.set(key, w); fitCache(WOODS, GC.woods); return w;
@@ -1698,7 +1699,7 @@ function start(sd, S = null) { edgeSegs = null; playPoly = null; FOR.fill(0); OC
 const boot = () => { const h = Number(location.hash.slice(ONE)), got = TEST ? null : readSave(), S = got && (!h || got.seed === h) ? got : null; if (S) try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); return; } catch (e) { fault(e); aside(); } start(TEST ? D.testField.seed : null); }; // E662
 addEventListener('hashchange', () => start()); addEventListener('resize', resize);
 window.FK = { bars, headOf, fam, exposure, clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
-  rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
+  yt, rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>
 <script src="menu.js"></script>

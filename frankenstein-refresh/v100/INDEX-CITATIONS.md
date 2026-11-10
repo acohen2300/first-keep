@@ -385,7 +385,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, D356, SN32
 - **N285** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the sea → SN20, SN32, SN27
 - **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → D357, SN33, J42
-- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → D320, D358, SN2, SN3, SN20, SN34, J43, J44, J45
+- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D358, D359, SN2, SN3, SN20, SN34, J43, J44, J45
 - **N288** Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground op → D358, J45
 
 ## Named exceptions

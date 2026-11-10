@@ -10,8 +10,8 @@ Albert's answers (19:37) to the numbered questions:
 17. One build. 18. All of it: stray sweep, fog and sight, SoRen's renderer, hold and building tap.
 
 Order of work (each step committed locally; one push at the end):
-- [x] T1 menus  - [x] T2 Build menu  - [x] T3 selection  - [x] T4 quick action  - [ ] T5 build order
-- [ ] T6 look  - [ ] T7 woods  - [ ] T8 hold, building tap, small fixes  - [ ] T9 stray sweep, gate
+- [x] T1 menus  - [x] T2 Build menu  - [x] T3 selection  - [x] T4 quick action  - [x] T5 build order
+- [x] T6 look  - [ ] T7 woods  - [ ] T8 hold, building tap, small fixes  - [ ] T9 stray sweep, gate
 - [ ] T10 fog, sight, fog of war  - [ ] T11 SoRen renderer  - [ ] T12 check and publish
 
 ## Done, with cuts (for Parked.md at the end)
@@ -19,3 +19,5 @@ Order of work (each step committed locally; one push at the end):
 - T2: Build menu six tabs of six (SN2), Dwelling first, opens on Home every time; locked buildings hidden, Show all / Hide locked (E853, ECON.lockWhy E851); the Apartment raised from a Dwelling's card where it stands (ECON.raiseTo E852; needs what the Apartment needs: the Aqueduct), the Tree farm planted from a Lumber camp's card (AI.raise), SN34 fromCard; tabs at 12 · 600 (SN20 tab). Cut: the Abatis for players (SN3 offmenu); Base's tab order (up to nine a tab); the Build menu jumping to the suggested building's tab (the hint still marks it blue).
 - T3: a picked unit's green ring at the feet, thick and glowing (D320 pick, glow; E855); the next tap is its one order (a thing: it does it; the ground: it goes), then the pick clears for soldiers too (E856). Cut: the villager square (Build, Send to, Attack, More; Garrison, Rally, Info, Focus) and its words (J41); villagers no longer drop the pick on a ground tap; soldiers no longer stay picked after an order.
 - T4: the quick action, a square of four, the first box under the finger (E857, E860): Attack · Build · Squad · More; Attack → All · ½ · ¼ · Idle (D358 send, nearest first, E858); Squad → the squads by name (WAR.send); More → Rally (new units gather here) · Shelter · Garrison (the alarm's own cells) · Villager (the nearest idle one goes); Build opens the Build menu on Home with the ghost at the spot (E859). Rings by the colour map (SN32 quick). v80's strip (N288). Cut: the ✕ box (a tap outside closes it); the old Attack + ✕ pair.
+- T5: a builder's next site is the first laid, then the nearest (E861; t.laid). Cut: nearest-first for sites (a wall line keeps it).
+- T6: games start late in spring (D359 startIn 0.75 of a season; one year clock yt(), E862, for seasons, leaves, the meadow, weather, harvest); the camera opens further out (D open.px 20, was 40); v80's gold, stone and iron piles at v80's size (W27 outcrop 3 m, was 1.2; the art was already v80's); the meadow at res 2 (D353, was 4: four times the pixels, to measure on the phone). Cut: the start in late winter.

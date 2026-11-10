@@ -71,7 +71,7 @@ function spot(side, c, i, j, tol) { const s = snap(side, c, i, j, tol), [si, sj]
   return best; }
 function plan(side, code, i, j) { const cost = D.cost[code] || {}; if (!canPay(side, cost) || placeWhy(side, code, i, j)) return null; if (is(code, 'Gate') && wallAt(j * N + i)) FK.unbuild(wallAt(j * N + i)); const t = site(side, code, i, j); if (t) pay(side, cost, 'buildings'); return t; }
 function raiseTo(side, t, code) { const { i, j } = t, hp = t.hp, old = t.code; if (!canPay(side, D.cost[code] || {}) || capWhy(side, code)) return null; FK.unbuild(t); const u = plan(side, code, i, j); if (u) return u; const b = FK.build(old, i, j, SIDES[side].col); if (b) b.hp = hp; return null; } // E852
-function site(side, code, i, j) { const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; t.done = t.crew = 0; if (is(code, 'Supply')) t.supply = D.camp.start; if (is(code, 'Field')) t.amount = t.max = Math.round(D.plot.lasts * FK.stat(code, side, 'rate')); else if (FK.SH[code].amount) t.amount = t.max = FK.ref(FK.SH[code].amount); if (is(code, 'Flock')) t.sheep = D.flock.start; if (is(code, 'Soil')) t.fert = D.soil.full; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
+function site(side, code, i, j) { const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; t.done = t.crew = 0; t.laid = FK.K.t; if (is(code, 'Supply')) t.supply = D.camp.start; if (is(code, 'Field')) t.amount = t.max = Math.round(D.plot.lasts * FK.stat(code, side, 'rate')); else if (FK.SH[code].amount) t.amount = t.max = FK.ref(FK.SH[code].amount); if (is(code, 'Flock')) t.sheep = D.flock.start; if (is(code, 'Soil')) t.fert = D.soil.full; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
 const costBy = (t, f) => Object.fromEntries(Object.entries(D.cost[t.code] || {}).map(([y, n]) => [y, f(n)])), refund = (t) => costBy(t, (n) => Math.floor(n * (t.done < D.refund.first ? D.refund.early : D.refund.share))); // E317
 function cancel(t) { while (t.q && t.q.length) unqueue(t); payBack(t.side, refund(t), 'buildings'); FK.unbuild(t); }
 const repairCost = (t) => costBy(t, (n) => Math.ceil((n * D.repair.cost * (t.hpMax - t.hp)) / t.hpMax));
@@ -148,8 +148,8 @@ function autoBuilder(side, t, by) { if (by) return buildAt(by, t); const vs = vi
   const [v] = free.length || hand ? (hand ? busy : free).sort((a, b) => dist(a, t) - dist(b, t)) : busy.sort((a, b) => forageNow(a) - forageNow(b)); if (v) buildAt(v, t, hand); }
 const wallsBusy = (side) => things().filter((s) => s.side === side && !up(s) && wallish(s) && units().some((v) => v.target === s && jobOf(v) === 'build')).length >= D.builders.crew;
 function back(u) { const w = u.was, f = w && (w.t && alive(w.t) ? w.t : w.y && bestFind(u, w.y)); u.raise = false; if (f) gatherAt(u, f); else idle(u); u.was = null; } // E322
-function nextSite(u, t) { const near = (r, ok) => { let best = null; FK.bldsNear(u.bx, u.by, r * D.tile, (q) => { if (q.side === u.side && !up(q) && ok(q) && dist(u, q) < r * D.tile && (!best || dist(u, q) < dist(u, best))) best = q; }); return best; }; // E323
-  return (wallish(t) && near(D.builders.wall, wallish)) || near(D.builders.site, (q) => !units().some((v) => v !== u && v.target === q && jobOf(v) === 'build')); }
+function nextSite(u, t) { const near = (r, ok, first) => { let best = null; FK.bldsNear(u.bx, u.by, r * D.tile, (q) => { if (q.side === u.side && !up(q) && ok(q) && dist(u, q) < r * D.tile && (!best || (first && q.laid !== best.laid ? q.laid < best.laid : dist(u, q) < dist(u, best)))) best = q; }); return best; }; // E323
+  return (wallish(t) && near(D.builders.wall, wallish)) || near(D.builders.site, (q) => !units().some((v) => v !== u && v.target === q && jobOf(v) === 'build'), true); } // E861
 function done(u, t) { const w = u.was || {}; if (u.raise && t && alive(t)) { if ((!w.back || FK.SH[t.code].drop) && startWork(u, t)) return (u.was = null); const s = !w.back && nextSite(u, t); if (s) return buildAt(u, s); } back(u); } // E324
 function mend(u, t, dt) { const M = t.hpMax, heal = Math.min(M - t.hp, (M / D.buildTime[t.code] / D.repair.time) * dt), due = addRes({ ...t.rd }, D.cost[t.code], (D.repair.cost * heal) / M); // E325
   if (Object.keys(due).some((y) => Math.floor(due[y]) > SIDES[u.side].store[y])) { if (u.side === ME) FK.fire('event', 'short', t); return back(u); }
@@ -187,7 +187,7 @@ const orderCost = (side, S) => { const f = Math.min(Math.round((sumCost(S.map((u
 // E351
 function nature(dt) {
   for (const t of FK.blds()) if (FK.has(t, 'Soil') && up(t)) t.fert = Math.min(D.soil.full, Math.max(FK.stat(t.code, t.side, 'soil'), t.fert + (bell - t.workT < D.soil.worked ? -D.soil.loss / D.year : D.soil.rest / D.season) * dt));
-  const n = Math.floor(FK.K.t / D.season); if (n !== turned) { turned = n; seasonTurn(); } upkeep(dt); }
+  const n = Math.floor(FK.yt() / D.season); if (n !== turned) { turned = n; seasonTurn(); } upkeep(dt); }
 function seasonTurn() { const spring = !FK.season(), F = D.flock; // E352
   for (const side of D.players) { const s = SIDES[side], lost = Math.floor(-s.store.food * Math.expm1((Math.log1p(-D.spoil.year) * D.season * FK.stat('', side, 'spoil')) / D.year / D.spoil.year)); spend(side, 'food', lost, 'spoiled'); if (side === ME && lost >= D.spoil.say) FK.fire('event', 'spoiled', null, lost); }
   if (spring) for (const t of things()) if (FK.has(t, 'Catch') && t.amount < t.max) t.amount += (D.fish.r * t.amount * (t.max - t.amount)) / t.max;
@@ -227,7 +227,7 @@ FK.on('tick', (dt) => {
 });
 FK.on('gone', (t) => { t.gone = true; });
 FK.on('gone', (t) => { if (FK.has(t, 'Wonder') && t.held != null) tell(EW.lost[+(t.side !== ME)], { side: EW.sides[t.side] }); if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side) || fell.has(t.side) || things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) return; fall(t.side, t.by); });
-FK.on('start', () => { result = emg = FK.near = null; bell = 0; warnT = -Infinity; fell.clear(); rang.clear(); turned = Math.floor(FK.K.t / D.season); harvest = D.harvest.at(-1); for (const s of SIDES) Object.assign(s, fresh(), { store: { ...D.start }, capA: null }); for (const s of D.players) { scares[s] = []; delete FK.DANGER[s]; } // E225
+FK.on('start', () => { result = emg = FK.near = null; bell = 0; warnT = -Infinity; fell.clear(); rang.clear(); turned = Math.floor(FK.yt() / D.season); harvest = D.harvest.at(-1); for (const s of SIDES) Object.assign(s, fresh(), { store: { ...D.start }, capA: null }); for (const s of D.players) { scares[s] = []; delete FK.DANGER[s]; } // E225
   for (const side of D.players) villagersOf(side).forEach((u, i) => { const f = bestFind(u, D.first.jobs[i] || D.first.rest); if (f) gatherAt(u, f); }); });
 // E436
 const DG = D.danger, FL = D.flee, AL = D.alarm, AW = fromBook('words').alarm, EW = fromBook('words').end, T0 = D.tile, scares = {}, fell = new Set(), rang = new Set(), BEST = 'fk.best'; let emg = null, warnT;

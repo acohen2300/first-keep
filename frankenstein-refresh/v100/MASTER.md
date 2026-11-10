@@ -107,8 +107,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
 - **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102)
-- **E60** the ground is painted flat; the light stands high to the left and in front and the meadow  · D353 (N264, N265, N266, N267, N268, N269, N270)
-- **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N264, N265, N266, N267, N268, N269, N270)
+- **E60** the ground is painted flat; the light stands high to the left and in front and the meadow  · D353 (N264, N265, N266, N267, N268, N269, N270, N287)
+- **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N264, N265, N266, N267, N268, N269, N270, N287)
 - **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
@@ -301,6 +301,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#floor-6-climate
 
 - **E122** Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), ac · D20 (N112) · D21 (N112) · D22 (N112)
+- **E862** the year's clock: the game's time from a start late in spring (D359), for seasons, leaves, · D359 (N287)
 - **E123** QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year · QA (N1, N2) · D99 (N112)
 - **E551** the moon (QB to first order, QC): it runs ahead of the sun by its phase on a declination t · QB (N2, N3) · QC (N2)
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
@@ -675,6 +676,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
 - **E322** back to the very find it left if it still stands, else the best of its yield, else idle (M
 - **E323** the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's 
+- **E861** a builder's next site: the first one laid, then the nearest (a wall line keeps to the near
 - **E324** a site finished: a drop-off or field puts its builder to work there, unless it was pulled 
 - **E325** mending, Mid's: three times the build time for a whole building, a quarter of its price pa · QCK (N168)
 - **E308** a lost find (Mid's decision 1): it delivers what it carries, then looks from where the fin · D197 (N164)

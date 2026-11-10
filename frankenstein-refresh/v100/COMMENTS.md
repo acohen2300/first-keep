@@ -842,3 +842,5 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E858 | menu.js | a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle only |
 | E859 | menu.js | Build from the quick action: the Build menu opens on its first tab, the building's ghost starts at the spot |
 | E860 | menu.js | the square laid with its first box under the finger, held inside the screen |
+| E861 | econ.js | a builder's next site: the first one laid, then the nearest (a wall line keeps to the nearest piece) (Albert, Nov 9: first placed, first built) |
+| E862 | index.html#floor-6-climate | the year's clock: the game's time from a start late in spring (D359), for seasons, leaves, the meadow, the weather and the harvest |

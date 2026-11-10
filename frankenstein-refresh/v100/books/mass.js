@@ -15,7 +15,7 @@ BOOK("mass", {
  "W14": {"key":"load","value":{"kg":100},"name":"a wagon's or caravan's load","cite":["N97"],"law":["QBT"]},
  "W25": {"key":"tree","value":{"height":10},"name":"a tree of the woods by a village: woodland edge and coppiced wood stand 10–15 m (a high forest oak 20–25 m); its crown hides what stands behind it (sight) and the drawing stands this tall; the low end, coppiced wood by the village (Nov 8 13:08; was 15)","cite":["N258","N259"],"law":[]},
  "W26": {"key":"bush","value":{"height":1.5},"name":"a berry bush (bramble, hawthorn, elder: 1–3 m)","cite":["N259"],"law":[]},
- "W27": {"key":"outcrop","value":{"height":1.2},"name":"a rock outcrop where stone, gold or iron is dug: a field boulder, waist high (Nov 8 13:08; was 2 m)","cite":["N259"],"law":[]},
+ "W27": {"key":"outcrop","value":{"height":3},"name":"a rock outcrop where stone, gold or iron is dug: a tor or a lode's face standing out of the grass, about two men high (Nov 9 19:21, Albert: v80's gold, stone and iron piles, which read at a glance; tors stand about 3 to 5 m, from memory, to open; Nov 8 13:08 was 1.2, before that 2 m)","cite":["N259","N287"],"law":[]},
  "W12": {"key":"timber","value":{"density":600},"name":"timber","cite":["N87"],"law":[]},
  "W15": {"key":"stone","value":{"density":2400},"name":"stone","cite":["N87"],"law":[]},
  "W16": {"key":"iron","value":{"density":7870},"name":"iron","cite":["N87"],"law":[]},
