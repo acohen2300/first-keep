@@ -349,7 +349,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E131** QO degree-day melt, rain on snow twice as fast · QO (N14, N15)
 - **E132** QQ: lake ice grows with the freezing degree-seconds (D350, by Stefan's law); ice on the gr · QQ (N17) · D350 (N17, N173, N262, N263) · D225 (N17, N173)
 - **E364** above freezing lake ice's degree-seconds fall four times as fast; ground ice thaws by the  · D225 (N17, N173) · D350 (N17, N173, N262, N263)
-- **E135** QL, QM: strikes on Poisson waits in a storm · QL (N11) · QM (N12)
+- **E135** (Albert, Nov 10 16:58: never saw a bolt; a storm strikes all through, not only in its heav · QL (N11) · QM (N12)
 - **E136** a strike: on the ground in view when close, a sheet flash when far; the flash never comes  · D112 (N112) · QL (N11)
 - **E951** a lightning flash is three to five return strokes about 60 ms apart (CIGRÉ TB 549), each r · N17
 - **E576** a bolt where it falls: drawn, the ground scorched, the thunder told

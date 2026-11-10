@@ -241,7 +241,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E131 | index.html#floor-6-climate | QO degree-day melt, rain on snow twice as fast |
 | E132 | index.html#floor-6-climate | QQ: lake ice grows with the freezing degree-seconds (D350, by Stefan's law); ice on the ground grows the same way while the ground is wet, full at D225 |
 | E133 | index.html#floor-6-climate | fog by the atmosphere (QK, QCL): the air keeps its dew point (D229 fog); falling rain or snow saturates it; past the fog's water the rest settles as dew and lowers the dew point (Magnus inverted) |
-| E135 | index.html#floor-6-climate | QL, QM: strikes on Poisson waits in a storm |
+| E135 | index.html#floor-6-climate | (Albert, Nov 10 16:58: never saw a bolt; a storm strikes all through, not only in its heaviest rain, which had halved the strikes of a storm already rare) QL, QM: strikes on Poisson waits in a storm |
 | E136 | index.html#floor-6-climate | a strike: on the ground in view when close, a sheet flash when far; the flash never comes within D112 of the last (QL, WCAG 2.3.1), and the bolt is pinned to the ground it hits |
 | E137 | index.html#floor-6-climate | a far flash: its thunder from beyond the screen |
 | E138 | index.html#floor-6-climate | the rain's fall speed (QJ, Atlas's fit to Gunn & Kinzer); how many of the pool are falling: the strength |

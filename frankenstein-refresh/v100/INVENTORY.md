@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,476 | 593,367 | 593,515 |
-| Books | 2354 | 0 | 697,915 | 698,818 |
+| Game code | 31 | 3,476 | 593,351 | 593,499 |
+| Books | 2356 | 0 | 700,644 | 701,554 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,908 | 309,455 | 309,700 |
+| Tools | 5 | 1,912 | 309,929 | 310,174 |
 
 ## The trades (code)
 
@@ -33,7 +33,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 149 | 19,647 | 19,651 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,956 | 5,960 | 90 |
-| index.html#floor-6-climate | 172 | 30,262 | 30,274 | 127 |
+| index.html#floor-6-climate | 172 | 30,246 | 30,258 | 126 |
 | index.html#floor-7-display | 74 | 16,231 | 16,235 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 135 | 28,156 | 28,160 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 314 | 75,852 |
+| citations | 315 | 76,135 |
 | colours | 32 | 8,966 |
-| comments | 924 | 164,038 |
+| comments | 924 | 164,193 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 160,092 |
-| rules | 82 | 31,579 |
+| measure | 335 | 162,200 |
+| rules | 83 | 31,790 |
 | screen | 26 | 11,169 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -160,5 +160,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X82 | t-n18 | page | N18 build 1, Albert's N17 notes on the menus: a pill keeps its curved ends; the selected ring lies on the pill's own outline, its ends on the pill's corners; row titles 14/600, options 12/400; a hazard's ring is the options' white; with Daily on a locked option is flat and dark with no ring; the paused Play button wears the ring at its own size; the Paused card hangs below the Top Info Ribbon; the quick action's ring is its box's size; the tap that opens the quick action does not press the box under the finger |
 | X83 | t-n18b | page | N18 build 2, Albert's N17 notes: People's ring recedes while a villager trains; a line said while another shows waits its turn; soldiers trained while a rally flag stands are dressed into one formation there; at night a campfire burns by a drop-off where villagers work and the army's standard carries a torch; no figure is clipped by its box (the horse's head); three blade tiles; a rock's sprite is cached at or above its size; a person behind a building shows through it |
 | X84 | t-n18c | page | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
+| X85 | t-n19 | page | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side |
 
-2484 items sealed · 2354 book entries · 94 laws · 314 citations, 33 still to open · 0 known
+2486 items sealed · 2356 book entries · 94 laws · 315 citations, 33 still to open · 0 known

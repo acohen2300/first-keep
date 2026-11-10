@@ -4796,3 +4796,8 @@ MODIFIED (14):
 - code:menu.js · 108,153 → 109,111 bytes
 - tool:test.py · 274,506 → 275,694 bytes
 Tests: t-n18c holds; t-n16, t-n18, t-n18b, t-ground hold; smoke 6/6. #23 not reproduced (40 save-and-load rounds, fights cut short mid-save): the message now says why the newest save failed. Sealed on branch n11, not published to live
+
+## N19: slower days, a bigger world, lightning · 2026-11-10 18:45
+Albert, Nov 10 18:19-18:22: map too small (a: enemies too close), day doubled to 240 for now (1 and 2), 'Yes yes' to the six items (#5 nerve: numbers first)
+Opened: code:index.html, book:measure, book:comments, book:rules, book:citations, tool:test.py
+Day 240 s, season 360 s, year 1440 s; upkeep 15 a day (3.75 a minute as before), hunger 1 day, soil loss 0.2 and rest 0.8, spoil 0.0975 a year, dry start 1.5 days, a plague lasts 1 season; board 2160 to 3060 (216 to 306 tiles, area 2.007x), site 3960; rocks, lakes, hills, herds, marshes, berry patches, crevices and forest trees doubled with the area; lightning strikes all through a storm. Nerve (#5): measured only, not changed (10 v 10 swordsmen: first rout at 7.8 s with 1 dead a side; the fight stalls after 60 s: the rallied go idle). Tests: t-n19 holds; t-n15-t-n18c, t-ground hold; smoke 6/6 (match WARN as known); day fps 58.5 headless. Sealed on branch n11, not published to live.

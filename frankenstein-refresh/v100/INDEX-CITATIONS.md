@@ -415,6 +415,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N313** Albert, Nov 10, 2026, 14:47-15:07 (notebook page N17, his N18 list) and 15:32 "Go": build 1 of N18, the menus: → X82
 - **N314** Albert, Nov 10, 2026, 14:47-15:30 (his N17 notebook page and the fire talk: a big bright campfire by a drop-of → X83
 - **N315** Albert, Nov 10, 2026, 16:54 "Sure" on build 3 of N18 and 16:55 "A is fine for now" (the aimer mock): #15 a pla → X84, P49
+- **N316** Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubl → X85
 
 ## Named exceptions
 
