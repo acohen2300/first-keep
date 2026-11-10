@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,433 | 574,378 | 574,526 (+4,357) |
-| Books | 2275 | 0 | 668,771 | 669,652 (-4,191) |
+| Game code | 31 | 3,430 | 575,808 | 575,956 (+5,787) |
+| Books | 2282 | 0 | 672,699 | 673,580 (-3,230) |
 | Laws | 93 | 0 | 19,761 | 20,292 |
-| Tools | 5 | 1,815 | 294,568 | 294,813 (-11) |
+| Tools | 5 | 1,814 | 294,991 | 295,236 (+412) |
 
 ## The trades (code)
 
@@ -20,10 +20,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
 | index.html#floor-2-terrain | 84 | 9,289 | 9,293 | 115 |
-| index.html#floor-3-non-movables | 66 | 9,526 | 9,530 (+653) | 54 |
-| index.html#drawn-once-in-the-view-frame | 91 | 16,869 | 16,873 (+4,128) | 91 |
-| index.html#the-view | 9 | 1,084 | 1,088 | 13 |
-| index.html#the-door | 99 | 16,201 | 16,205 (-46) | 63 |
+| index.html#floor-3-non-movables | 67 | 9,797 | 9,801 (+924) | 54 |
+| index.html#drawn-once-in-the-view-frame | 98 | 19,035 | 19,039 (+6,294) | 92 |
+| index.html#the-view | 9 | 1,075 | 1,079 (-9) | 13 |
+| index.html#the-door | 98 | 16,434 | 16,438 (+187) | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -37,9 +37,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-7-display | 70 | 14,479 | 14,483 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 120 | 23,296 | 23,300 (+6) | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 50 | 5,413 | 5,417 | 47 |
-| index.html#touch | 52 | 9,001 | 9,005 (-384) | 54 |
-| menu.js | 519 | 102,543 | 102,587 | 544 |
+| index.html#the-woods-cache | 40 | 4,273 | 4,277 (-1,140) | 43 |
+| index.html#touch | 52 | 9,003 | 9,007 (-382) | 54 |
+| menu.js | 519 | 102,450 | 102,494 (-93) | 543 |
 | econ.js | 590 | 108,520 | 108,520 | 72 |
 | combat.js | 351 | 58,478 | 58,478 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 51 | 15,145 |
-| citations | 300 | 70,607 |
-| colours | 28 | 7,819 |
-| comments | 877 | 152,380 |
+| citations | 304 | 71,888 |
+| colours | 28 | 7,802 |
+| comments | 880 | 153,816 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 333 | 154,433 |
-| rules | 75 | 28,555 |
+| measure | 333 | 155,568 |
+| rules | 75 | 28,657 |
 | screen | 24 | 10,338 |
 | shells | 110 | 23,401 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,506 |
 | sprites | 69 | 34,632 |
 | tech | 259 | 75,824 |
-| words | 46 | 96,130 |
+| words | 46 | 96,196 |
 
 ## The shells
 
@@ -147,11 +147,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X69 | t-peace | page | peace, the crowns, the mail, the messengers, milestones and tips (F35): a board truce stands a computer's soldiers above Mid's armyAim down to villagers one for one as Mid's frozen standDown; a year of it opens the hidden age as Mid's nextAge; a kill credits its cost as warCredit; the Wealth, War, Wellbeing and overall crowns equal Mid's crownsOf on the same sides; news of a foe out of sight is never told, told by a runner or a rider at Mid's tell's delay for the same walked metres, or heard as a fight with its way, as Mid's tell; repeats merge; the world's news and the first-house line equal Mid's NEWS and MS_TEXT; a tip done three times retires; the Games wait with the Throne |
 | X70 | t-civs | page | the civilisations (F36): each of the six trains its own kind in place of the common one and no other side does; the kind's numbers, cost, time, age and pace equal Mid's UNIT; its bonus applied by QCA equals Mid's fxv for the civ; its elite rank equals Mid's tier; its Hall rows equal Mid's and only its side may research them; the legionary, Immortal and Mali horseman draw as Mid's figures; every standing tree in the woods stands its kind's Forest Service height (D326) in line of sight |
 | X71 | t-land | page | the map's character, new game and scenarios (F37), with Albert's map calls: the lands and the scenarios equal Mid's frozen LAND, SCENARIOS and MODES, and each scenario plays as its row (age, store, research, relations, buildings by their spot, villagers, its line); past the pocket each find is worth its land's share; no find of your quarter is walled in by trees (only water may cut it off); your Town Center is at the bottom left of the screen; the pocket holds QBJ's amounts from the costs and the Bronze price; Z3 thickens toward Z4, is more open than Z4, Z2 has no woods, and Z3's finds are more than the pocket's and less than the wilds' |
-| X72 | t-save | page | saving, the safety net and the test tools (F38): the save beat, the fight wait, the failure's minute and the button budget equal Mid's frozen SAVE_EVERY, saveGame and UI_BUDGET; a save waits out a fight up to its limit, keeps the one before, and opens to the same units, finds, buildings, stores, climate, relations and mail; a damaged save is kept aside and the one before opens; no seen or remembered state is saved; a thrown error costs a frame and the game runs on; taps are counted; the match log rows a minute; the test field (?test) is you and one rival at war with both armies out, never saved; the game opens where you left it |
+| X72 | t-save | page | saving, the safety net and the test tools (F38): the save beat, the fight wait, the failure's minute and the button budget equal Mid's frozen SAVE_EVERY, saveGame and UI_BUDGET; a save waits out a fight up to its limit, keeps the one before, and opens to the same units, finds, buildings, stores, climate, relations and mail; saves roll through their slots; a damaged save is skipped and the one before opens; a new match adds nothing to the browser's history (Albert, Nov 10, #38); no seen or remembered state is saved; a thrown error costs a frame and the game runs on; taps are counted; the match log rows a minute; the test field (?test) is you and one rival at war with both armies out, never saved; the game opens where you left it |
 | X73 | t-guide | page | the Guide and History, written from the books (F39): Mid's frozen guideModel and histRows, run on v100's tables, list the same buildings, units, research, ages, peoples, finds and rules, with the same numbers, names, lines and order as v100's guide() and hist(); every rule's numbers and names are filled from the books (none left open), each building, unit and find has its history line where the Words book holds one, and the Markdown holds one row an entry |
 | X75 | rawstats | code | G1: code reading the raw stats table (D.stats[…]) outside stat's own home: ask FK.stat |
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2404 items sealed · 2275 book entries · 93 laws · 300 citations, 31 still to open · 7 known
+2411 items sealed · 2282 book entries · 93 laws · 304 citations, 32 still to open · 7 known

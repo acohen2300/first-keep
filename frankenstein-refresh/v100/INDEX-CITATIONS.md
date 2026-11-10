@@ -400,6 +400,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N299** (to open) Google, web.dev, Measure performance with the RAIL model: a frame at 60 fps has about 16 ms, of which the brow → D353
 - **N300** (to open) Alex Walker, The Cicada Principle and Why It Matters to Web Designers (SitePoint, 2011): tiles of prime-number → D348
 - **N301** Albert, Nov 10, 2026, on the ground: four sheets (water, sand, dirt, grass), lakes rivers streams and marshes  → C33, D366
+- **N302** Albert, Nov 10, 2026, 09:45 and 10:16 (#38, a match lost when Safari's back swipe loaded the previous seed): s → D331
+- **N303** USDA NRCS Conservation Practice Standard, Pond (Code 378), 2022: embankment side slopes two horizontal to one  → D32
+- **N304** Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slop → D32, D62, D65, D70, D366
+- **N305** (to open) A. Hurwitz (1891), Ueber die angenaeherte Darstellung der Irrationalzahlen durch rationale Brueche: the golden → D366
 
 ## Named exceptions
 

@@ -248,7 +248,8 @@ const stratum = (h) => (h <= 0 ? 0 : h < D.wetTop ? ONE : h < D.sandTop ? ONE + 
 const BANDS = PC.water.length, deepest = PC.water[BANDS - D.count.one];
 const SHORE = new Float32Array(N * N), waterBand = (k) => { let b = D.count.zero; while (b < D.paper.water.length && SHORE[k] >= D.paper.water[b]) b++; return b; }; // E53
 function shoreOf() { const big = N * N, R2 = Math.SQRT2, O = ONE; for (let k = ZERO; k < big; k++) SHORE[k] = H[k] > ZERO ? ZERO : big; // E909
-  const at = (i, j) => (i < ZERO || j < ZERO || i >= N || j >= N ? big : SHORE[j * N + i]), pass = (j0, j1, dj, i0, i1, di) => { for (let j = j0; j !== j1; j += dj) for (let i = i0; i !== i1; i += di) { const k = j * N + i; if (!SHORE[k]) continue; SHORE[k] = Math.min(SHORE[k], at(i - di, j) + O, at(i, j - dj) + O, at(i - di, j - dj) + R2, at(i + di, j - dj) + R2); } };
+  for (let k = ZERO; k < big; k++) if (H[k] <= ZERO) { const i = k % N; for (const n of [i ? k - O : -O, i < N - O ? k + O : -O, k - N, k + N]) if (n >= ZERO && n < big && H[n] > ZERO) SHORE[k] = Math.min(SHORE[k], H[k] / (H[k] - H[n])); } // E923
+  const at = (i, j) => (i < ZERO || j < ZERO || i >= N || j >= N || H[j * N + i] > ZERO ? big : SHORE[j * N + i]), pass = (j0, j1, dj, i0, i1, di) => { for (let j = j0; j !== j1; j += dj) for (let i = i0; i !== i1; i += di) { const k = j * N + i; if (!SHORE[k]) continue; SHORE[k] = Math.min(SHORE[k], at(i - di, j) + O, at(i, j - dj) + O, at(i - di, j - dj) + R2, at(i + di, j - dj) + R2); } };
   pass(ZERO, N, ONE, ZERO, N, ONE); pass(N - ONE, -ONE, -ONE, N - ONE, -ONE, -ONE); }
 const blend = (a, b, f) => '#' + [1, 3, 5].map((i) => Math.round(parseInt(a.slice(i, i + 2), 16) * (1 - f) + parseInt(b.slice(i, i + 2), 16) * f).toString(16).padStart(2, '0')).join('');
 const WATER = PC.water; // E53
@@ -260,7 +261,7 @@ class PB { constructor() { this.s = []; this.c = null; } moveTo(x, y) { this.c =
 class Rec extends PB { constructor() { super(); this.L = new Map(); this.ix = new Map(); this.ph = 'top'; this.fillStyle = this.strokeStyle = null; this.lineWidth = ONE; this.lineCap = 'butt'; } beginPath() { this.s = []; } fill(p = this) { this.put('f', this.fillStyle, p.s); } stroke(p = this) { this.put('s', this.strokeStyle, p.s); } // E912
   put(k, st, s) { const L = this.L.get(this.ph) || this.L.set(this.ph, []).get(this.ph), key = k + st + (k === 's' ? this.lineWidth + this.lineCap : ''), o = this.ix.get(this.ph + key), c = s.map((a) => Object.assign(a.slice(), { z: a.z })); if (o && o.key === key) o.s.push(...c); else { const n = { key, k, st, lw: this.lineWidth, cap: this.lineCap, s: c }; L.push(n); this.ix.set(this.ph + key, n); } } // E920
   done() { return [...this.L.values()].flat().map(({ k, st, lw, cap, s }) => { const p = new Path2D(); for (let a of s) { if (a.length < (ONE + ONE) * (ONE + ONE)) continue; if (k === 'f') { let ar = ZERO; for (let i = ZERO; i < a.length; i += ONE + ONE) { const j = (i + ONE + ONE) % a.length; ar += a[i] * a[j + ONE] - a[j] * a[i + ONE]; } if (ar < ZERO) { const r = []; for (let i = a.length - (ONE + ONE); i >= ZERO; i -= ONE + ONE) r.push(a[i], a[i + ONE]); a = Object.assign(r, { z: ONE }); } } p.moveTo(a[ZERO], a[ONE]); for (let i = ONE + ONE; i < a.length; i += ONE + ONE) p.lineTo(a[i], a[i + ONE]); if (k === 'f' || a.z) p.closePath(); } return { k, st, lw, cap, p }; }); } }
-let GOPS = null, GRASSP = null, LEVELP = null, LEVELE = null; const BLADES = [], CLOUD = { c: document.createElement('canvas') }; // E913
+let GOPS = null, REEDS = [], GRASSP = null, LEVELP = null, LEVELE = null; const BLADES = [], CLOUD = { c: document.createElement('canvas') }; // E913
 function bladeTile(B, A) { const TT = TILT * TILT, tw = Math.max(PL.blade.least, Math.round(B.S * A)), th = Math.max(PL.blade.least, Math.round(B.S * TT * A)), key = tw + 'x' + th; if (B.key === key) return B.pat; B.key = key; const t = document.createElement('canvas'), q = t.getContext('2d'); t.width = tw; t.height = th; // E914
   for (const [u, v, len, lean, dark] of B.marks) { q.fillStyle = PC.blades[dark ? ZERO : ONE]; const x = u * tw, y = v * th, L = len * TT * A * PL.blade.tall, w = PL.blade.w * A, dx = lean * A; for (const [ox2, oy2] of [[ZERO, ZERO], [ZERO, th], [tw, ZERO], [-tw, ZERO]]) { q.beginPath(); q.moveTo(x + ox2 - w, y + oy2); q.lineTo(x + ox2 + dx, y + oy2 - L); q.lineTo(x + ox2 + w, y + oy2); q.fill(); } }
   B.pat = ctx.createPattern(t, 'repeat'); B.pat.setTransform(new DOMMatrix().scale(B.S / tw, (B.S * TT) / th)); return B.pat; }
@@ -275,16 +276,16 @@ function renderGround() {
   const pts = []; for (const [x, y] of [[0, 0], [D.site, 0], [0, D.site], [D.site, D.site]]) for (const h of [0, D.land]) pts.push(V(x, y, h));
   const minX = Math.min(...pts.map((p) => p[0])), maxX = Math.max(...pts.map((p) => p[0])), minY = Math.min(...pts.map((p) => p[1])), maxY = Math.max(...pts.map((p) => p[1]));
   gw = Math.ceil(maxX - minX) + 2; gh = Math.ceil(maxY - minY) + 2; ox = 1 - minX; oy = 1 - minY;
-  let g = new Rec(), gm = new Rec(); const REC = g, RG = gm; shoreOf(); // E912
+  let g = new Rec(), gm = new Rec(); const REC = g, RG = gm, RR = new Rec(); shoreOf(); // E912
   for (const m of [maskFlood, ...ICEM]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskFlood ? C.water : C.ground.ice; } // E57
   scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); for (const t of things) if (t.kind === 'bld' && (t.side === ME || memOf(ME).has(t))) wear(t); // E546
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // E58
-  const quad = (a, b, c, d, fill, grass = fill === PC.grass) => { for (const x of grass ? [g, gm] : [g]) { x.fillStyle = x === g ? fill : PC.grass; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0] + 1, b[1]); x.lineTo(c[0] + 1, c[1] + 1); x.lineTo(d[0], d[1] + 1); x.closePath(); x.fill(); } }; // E902
+  const quad = (a, b, c, d, fill, grass = false) => { for (const x of grass ? [g, gm] : [g]) { x.fillStyle = x === g ? fill : PC.grass; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0] + 1, b[1]); x.lineTo(c[0] + 1, c[1] + 1); x.lineTo(d[0], d[1] + 1); x.closePath(); x.fill(); } }; // E902
   const T = D.tile, ch = (i, j, c) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : CH[(j * N + i) * 4 + c]);
   const flat = (i, j) => { const k = (j * N + i) * 4; return CH[k] === CH[k + 1] && CH[k] === CH[k + 2] && CH[k] === CH[k + 3]; };
   const LAY = D.lay; let MASKS = false, ICEP = null; // E60
-  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h); return MARSH[k] && h > ZERO ? WATER[ZERO] : s ? TOP[s] : WATER[waterBand(k)]; }; // E758
+  const colour = (i, j) => { const k = j * N + i, h = H[k], s = stratum(h); return s ? TOP[s] : WATER[waterBand(k)]; }; // E758
   const paintGround = (into, i0, iN, j0, j1, masks, tint) => { g = into; gm = tint; MASKS = masks; // E748
    if (masks) { ICEP = ICEM.map(() => new Path2D()); ICEP.land = new Path2D(); }
   for (let j = j0; j <= j1; j++) {
@@ -293,7 +294,7 @@ function renderGround() {
       if (flat(i, j)) while (i1 + 1 <= iN && flat(i1 + 1, j) && colour(i1 + 1, j) === col && CH[(j * N + i1 + 1) * 4] === h0) i1++;
       const k = (j * N + i) * 4, k1 = (j * N + i1) * 4;
       const a = P(i * T, j * T, CH[k]), b = P((i1 + 1) * T, j * T, CH[k1 + 1]), c = P((i1 + 1) * T, (j + 1) * T, CH[k1 + 3]), d = P(i * T, (j + 1) * T, CH[k + 2]); g.ph = gm.ph = 'top'; quad(a, b, c, d, col);
-      if (MARSH[j * N + i] && H[j * N + i] > ZERO) for (let m = i; m <= i1; m++) reeds(m, j); // E904
+      for (let m = i; m <= i1; m++) if (MARSH[j * N + m] && H[j * N + m] > ZERO && dice(seed + j * N + m)() > PL.marsh.tussock) reeds(m, j); // E904
       const h = H[j * N + i]; if (masks) for (const m of h > 0 && BANK[j * N + i] <= FLD.rise ? [maskFlood] : []) { const q = m.getContext('2d'); q.beginPath(); q.moveTo(a[0], a[1]); q.lineTo(b[0] + 2, b[1]); q.lineTo(c[0] + 2, c[1] + 2); q.lineTo(d[0], d[1] + 2); q.closePath(); q.fill(); q.strokeStyle = q.fillStyle; q.lineWidth = LAY.mask; q.stroke(); }
       i = i1 + 1;
     }
@@ -303,24 +304,31 @@ function renderGround() {
       face((i + 1) * T, j * T, (i + 1) * T, (j + 1) * T, CH[k + 1], CH[k + 3], ch(i + 1, j, 0), ch(i + 1, j, 2));
     }
   }
+  for (let w = ZERO; w < BANDS; w++) g.L.set('w' + w, g.L.get('w' + w) || []); // E921
+  const pure = (i, j) => [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]].every(([x, y]) => x < N && y < N && stratum(H[y * N + x]) === GR), cut = (i, j, sx, sy) => P((i + DRW.half) * T + sx * LAY.seam, (j + DRW.half) * T + sy * LAY.seam, H[j * N + i]); gm.ph = 'g'; // E922
+  for (let j = Math.max(ZERO, j0 - ONE); j < Math.min(N - ONE, j1 + ONE); j++) for (let i = Math.max(ZERO, i0 - ONE); i < Math.min(N - ONE, iN + ONE); i++) { if (!pure(i, j)) continue; const h = H[j * N + i], flatAt = (x) => H[j * N + x] === h && H[(j + ONE) * N + x] === h; let i1 = i; if (flatAt(i) && flatAt(i + ONE)) while (i1 + ONE < N - ONE && pure(i1 + ONE, j) && flatAt(i1 + ONE + ONE)) i1++; const a = cut(i, j, -ONE, -ONE), b = cut(i1 + ONE, j, ONE, -ONE), c = cut(i1 + ONE, j + ONE, ONE, ONE), d = cut(i, j + ONE, -ONE, ONE); gm.fillStyle = PC.grass; gm.beginPath(); gm.moveTo(...a); gm.lineTo(...b); gm.lineTo(...c); gm.lineTo(...d); gm.closePath(); gm.fill(); i = i1; }
   for (let p = ZERO; p < STRATA.length; p++) { g.ph = gm.ph = 'c' + p; for (let j = Math.max(ZERO, j0 - ONE); j < Math.min(N - ONE, j1 + ONE); j++) for (let i = Math.max(ZERO, i0 - ONE); i < Math.min(N - ONE, iN + ONE); i++) contour(i, j, p); } if (masks) ICEM.forEach((m, l) => { const q = m.getContext('2d'); q.fill(ICEP[l]); q.globalCompositeOperation = 'destination-out'; q.fill(ICEP.land); q.globalCompositeOperation = 'source-over'; }); }; // E779
   paintGround(g, ZERO, N - ONE, ZERO, N - ONE, true, gm); makeSoil();
-  GOPS = REC.done(); GRASSP = new Path2D(); for (const o of RG.done()) if (o.k === 'f') GRASSP.addPath(o.p); // E912
+  GOPS = REC.done(); REEDS = RR.done(); GRASSP = new Path2D(); for (const o of RG.done()) if (o.k === 'f') GRASSP.addPath(o.p); // E912
   ground = document.createElement('canvas'); ground.width = Math.ceil(gw * PL.mini); ground.height = Math.ceil(gh * PL.mini); const mg = ground.getContext('2d'); mg.scale(PL.mini, PL.mini); mg.fillStyle = deepest; mg.fillRect(ZERO, ZERO, gw, gh); replay(mg); // E919
   LEVELP = new Path2D(); LEVELE = new Path2D(); const LV = PL.level; // E918
   for (let j = ZERO; j < N - ONE; j++) for (let i = ZERO; i < N - ONE; i++) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], v = cell.map(([x, y]) => H[y * N + x]); if (Math.max(...v) <= ZERO || Math.min(...v) >= LV || cell.some(([x, y]) => FOR[y * N + x])) continue;
     const poly = []; cell.forEach(([x, y], n) => { const m = (n + ONE) % cell.length, [x2, y2] = cell[m], a = v[n], b = v[m]; if (a < LV) poly.push([x, y, a]); if ((a < LV) !== (b < LV)) { const t = (LV - a) / (b - a); poly.push([x + (x2 - x) * t, y + (y2 - y) * t, LV, ONE]); } });
     if (poly.length < cell.length - ONE) continue; const at = ([x, y, h]) => P((x + DRW.half) * T, (y + DRW.half) * T, clamp(h, ZERO, LV)); poly.forEach((q, n) => (n ? LEVELP.lineTo : LEVELP.moveTo).call(LEVELP, ...at(q))); LEVELP.closePath(); const e = poly.filter((q) => q[3]); if (e.length === ONE + ONE) { LEVELE.moveTo(...at(e[ZERO])); LEVELE.lineTo(...at(e[ONE])); } }
+  const MS = PL.marsh, wetOf = (x, y) => (MARSH[y * N + x] && H[y * N + x] > ZERO ? dice(seed + y * N + x)() : -ONE); // E924
+  for (let j = ZERO; j < N - ONE; j++) for (let i = ZERO; i < N - ONE; i++) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], v = cell.map(([x, y]) => wetOf(x, y)); if (Math.max(...v) <= MS.tussock) continue;
+    const poly = []; cell.forEach(([x, y], n) => { const m = (n + ONE) % cell.length, [x2, y2] = cell[m], a = v[n], b = v[m]; if (a > MS.tussock) poly.push([x, y, H[y * N + x]]); if ((a > MS.tussock) !== (b > MS.tussock)) { const t = (MS.tussock - a) / (b - a); poly.push([x + (x2 - x) * t, y + (y2 - y) * t, H[y * N + x] + (H[y2 * N + x2] - H[y * N + x]) * t, ONE]); } });
+    const at = ([x, y, h]) => P((x + DRW.half) * T, (y + DRW.half) * T, Math.max(ZERO, h)); poly.forEach((q, n) => (n ? LEVELP.lineTo : LEVELP.moveTo).call(LEVELP, ...at(q))); LEVELP.closePath(); const e = poly.filter((q) => q[3]); if (e.length === ONE + ONE) { LEVELE.moveTo(...at(e[ZERO])); LEVELE.lineTo(...at(e[ONE])); } }
   makeBlades(); makeClouds();
-  function reeds(i, j) { g.ph = 'reed'; const R = D.paper.reeds, r = NS_rng(j * N + i), T2 = D.tile; g.lineCap = 'round'; g.lineWidth = R.w; for (let n = R.n; n--; ) { const x = (i + r()) * T2, y = (j + r()) * T2, [px, py] = P(x, y, H[j * N + i]); g.strokeStyle = PC.reeds[Math.floor(r() * PC.reeds.length)]; g.beginPath(); g.moveTo(px, py); g.lineTo(px + (r() - DRW.half) * R.lean, py - R.tall[ZERO] - r() * R.tall[ONE]); g.stroke(); } } // E904
+  function reeds(i, j) { const g = RR, R = D.paper.reeds, r = NS_rng(j * N + i), T2 = D.tile; g.lineCap = 'round'; g.lineWidth = R.w; for (let n = R.n; n--; ) { const x = (i + r()) * T2, y = (j + r()) * T2, [px, py] = P(x, y, H[j * N + i]); g.strokeStyle = PC.reeds[Math.floor(r() * PC.reeds.length)]; g.beginPath(); g.moveTo(px, py); g.lineTo(px + (r() - DRW.half) * R.lean, py - R.tall[ZERO] - r() * R.tall[ONE]); g.stroke(); } } // E904
   function contour(i, j, pass) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], ks = cell.map(([x, y]) => y * N + x), v = ks.map((k) => H[k]), up = v.map((h) => Math.max(null, h)), bs = v.map(stratum), lo = Math.min(...bs), hi = Math.max(...bs); // E759
-    if ((lo === hi && hi) || ks.some((k) => FOR[k]) || Math.max(...up) - Math.min(...up) > REPOSE * LAY.steep) return;
+    if ((lo === hi && hi) || Math.max(...up) - Math.min(...up) > REPOSE * LAY.steep) return;
     const at = ({ x, y, h }) => P(x * T, y * T, Math.max(null, h)), pts = cell.map(([x, y], n) => ({ x: x + DRW.half, y: y + DRW.half, h: v[n] }));
-    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; const col = b && !ks.some((k) => MARSH[k] && H[k] > ZERO) ? TOP[b] : WATER[ZERO], path = new PB(); poly.forEach((p, n) => (n ? path.lineTo : path.moveTo).call(path, ...at(p))); path.closePath(); for (const x of col === PC.grass ? [g, gm] : [g]) { x.fillStyle = x.strokeStyle = col; x.lineWidth = LAY.seam; x.fill(path); x.stroke(path); } };
+    const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; const col = b ? TOP[b] : WATER[ZERO], path = new PB(); poly.forEach((p, n) => (n ? path.lineTo : path.moveTo).call(path, ...at(p))); path.closePath(); for (const x of col === PC.grass ? [g, gm] : [g]) { x.fillStyle = x.strokeStyle = col; x.lineWidth = LAY.seam; x.fill(path); x.stroke(path); } };
     const above = (poly, L) => poly.flatMap((p, n) => { const q = poly[(n + ONE) % poly.length], out = p.h > L ? [p] : []; if ((p.h > L) !== (q.h > L)) { const t = (L - p.h) / (q.h - p.h); out.push({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t, h: L }); } return out; });
     const paint = (poly, f) => { if (poly.length < cell.length - ONE) return; g.fillStyle = g.strokeStyle = f; g.lineWidth = LAY.seam; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.stroke(); };
     if (MASKS && !pass && !lo && ks.every((k) => DEP[k] >= D.edge)) { const add = (P2, poly) => { if (poly.length < cell.length - ONE) return; poly.forEach((p, n) => (n ? P2.lineTo : P2.moveTo).call(P2, ...at(p))); P2.closePath(); }; const chill = pts.map((p, n) => ({ ...p, h: -onsetOf(ks[n]) })); ICEP.forEach((P2, l) => add(P2, above(chill, (-ICE.span * (l + ONE)) / ICE.steps))); add(ICEP.land, above(pts, ZERO)); } // E782
-    if (!hi) { if (pass) return; const wb = ks.map(waterBand), a = Math.min(...wb), z = Math.max(...wb), far = pts.map((p, n) => ({ ...p, h: SHORE[ks[n]] })); if (a === z) return; paint(pts, WATER[a]); for (let w = a + ONE; w <= z; w++) paint(above(far, D.paper.water[w - ONE]).map((p) => ({ ...p, h: -ONE })), WATER[w]); return; } // E776
+    if (!hi) { if (pass) return; const wb = ks.map(waterBand), a = Math.min(...wb), z = Math.max(...wb), far = pts.map((p, n) => ({ ...p, h: SHORE[ks[n]] })); if (a === z) return; g.ph = 'w' + a; paint(pts, WATER[a]); for (let w = a + ONE; w <= z; w++) { g.ph = 'w' + w; paint(above(far, D.paper.water[w - ONE]).map((p) => ({ ...p, h: -ONE })), WATER[w]); } g.ph = 'c' + pass; return; } // E776
     if (pass < lo || pass > hi) return; if (pass === lo) return fill(pts, lo); for (let b = pass; b === pass; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L), edge = poly.filter((p) => p.h === L), SH = D.paper.shadow; if (edge.length > ONE && !ks.some((k) => MARSH[k])) { const [a1, b1] = at(edge[ZERO]), [a2, b2] = at(edge[ONE]); g.strokeStyle = PC.shadow; g.lineWidth = SH.w; g.lineCap = 'butt'; g.beginPath(); g.moveTo(a1 + SH.dx, b1 + SH.dy); g.lineTo(a2 + SH.dx, b2 + SH.dy); g.stroke(); } fill(poly, b); if (!L && edge.length > ONE && Math.min(...v) < ZERO) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } } // E905
   function face(x1, y1, x2, y2, topL, topR, botL, botR) { g.ph = gm.ph = 'face';
     if (topL <= botL && topR <= botR) return;
@@ -333,11 +341,11 @@ function renderGround() {
 }
 
 const GC = D.caches; // E749
-function replay(c) { for (const o of GOPS) { if (o.k === 'f') { c.fillStyle = o.st; c.fill(o.p); } else { c.strokeStyle = o.st; c.lineWidth = o.lw; c.lineCap = o.cap; c.stroke(o.p); } } } // E912
+function replay(c, ops = GOPS) { for (const o of ops) { if (o.k === 'f') { c.fillStyle = o.st; c.fill(o.p); } else { c.strokeStyle = o.st; c.lineWidth = o.lw; c.lineCap = o.cap; c.stroke(o.p); } } } // E912
 function drawGround(gx, gy) { if (!GOPS) return; const z = cam.z; ctx.save(); ctx.translate(gx, gy); ctx.scale(z, z); replay(ctx); // E751
   ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = SEASON.col; ctx.fill(GRASSP); ctx.globalCompositeOperation = 'source-over'; // E902
   const [z0, z1] = D.paper.blades, a = clamp((z - z0) / (z1 - z0), ZERO, ONE) * (ONE - snowStep() / (PL.snow.steps + ONE)); if (a > ZERO) { ctx.globalAlpha = a; for (const B of BLADES) { ctx.fillStyle = bladeTile(B, z * dpr); ctx.fill(GRASSP); } ctx.globalAlpha = ONE; } // E910
-  ctx.fillStyle = WATER[ZERO]; ctx.fill(LEVELP); ctx.strokeStyle = C.ground.foam; ctx.lineWidth = D.lay.foam; ctx.lineCap = 'round'; ctx.stroke(LEVELE); ctx.restore(); } // E918
+  ctx.fillStyle = WATER[ZERO]; ctx.fill(LEVELP); ctx.strokeStyle = C.ground.foam; ctx.lineWidth = D.lay.foam; ctx.lineCap = 'round'; ctx.stroke(LEVELE); replay(ctx, REEDS); ctx.restore(); } // E918
 const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null; // E547
 const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
 function wear(b) { if (!scarX || has(b, 'Field') || has(b, 'Line') || has(b, 'Gate') || has(b, 'Trap')) return; const [dx, dy, rx, ry] = SC.wear, w = b.n * D.tile, [x, y] = onGround(b.bx, b.by); blot(x + w * dx, y + w * dy * TILT, w * rx, w * ry, SCAR.wear); } // E548
@@ -347,7 +355,7 @@ function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; 
   for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); scarX.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }
 // ── The view (E63)
 const canvas = document.getElementById('map'); let ctx = canvas.getContext('2d');
-const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), P: false, G: false, Z: false, T: true, R: true, B: true, U: true, K: true, V: true, fast: false }; // E64
+const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), P: false, G: false, Z: false, T: true, B: true, U: true, K: true, V: true, fast: false }; // E64
 let cw, ch, dpr, zmin, zmax = D.open.most / (W.person.height * D.upm), queued = false;
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
@@ -404,14 +412,14 @@ function unpack(S) { const fresh = BASE0.things; S.things = S.things.map((e) => 
   const fix = (v) => { if (!v || typeof v !== 'object') return v; if (Array.isArray(v)) { v.forEach((x, n) => { v[n] = fix(x); }); return v; }
   if (TG.ref in v) return all[v[TG.ref]]; if (TG.same in v) return own[v[TG.same]]; if (TG.num in v) return Number(v[TG.num]); if (TG.map in v) return new Map(fix(v[TG.map])); if (TG.set in v) return new Set(fix(v[TG.set])); for (const k in v) v[k] = fix(v[k]); return v; };
   for (const k in S) S[k] = fix(S[k]); return S; }
-const clearSave = () => { try { localStorage.removeItem(SV.key); localStorage.removeItem(SV.key + SV.bak); } catch (e) {} };
+const SLOT = (n) => SV.key + location.pathname + '.' + n, NOW = SLOT(SV.now), slotKeys = () => [...Array.from({ length: SV.slots }, (_, d) => SLOT((slot - d + SV.slots) % SV.slots)), SV.key]; let slot = D.count.zero; try { slot = Number(localStorage.getItem(NOW)) || D.count.zero; } catch (e) {} // E660
+const clearSave = () => { try { for (const k of slotKeys()) localStorage.removeItem(k); localStorage.removeItem(NOW); } catch (e) {} };
 function save(force) { if (TEST || seenErr.size > ONE) return; const fight = units.some((u) => u.side === ME && u.target && u.target.hp > null && u.target.side !== ME && u.target.side != null && !has(u.target, 'Wander')); // E659
   if (!force && fight && (fightT ??= K.t) > K.t - SV.fight) return; fightT = null;
-  try { const t = pack(); if (t == null) return clearSave(); const prev = localStorage.getItem(SV.key); if (prev) localStorage.setItem(SV.key + SV.bak, prev); localStorage.setItem(SV.key, t); }
+  try { const t = pack(); if (t == null) return clearSave(); const n = (slot + D.count.one) % SV.slots; try { localStorage.setItem(SLOT(n), t); } catch (q) { localStorage.removeItem(SLOT((n + D.count.one) % SV.slots)); localStorage.setItem(SLOT(n), t); } slot = n; localStorage.setItem(NOW, n); }
   catch (e) { if (K.t - failT > SV.fail) { failT = K.t; fire('say', WS.saveFail); } } }
-function readSave(key = SV.key) { try { const t = localStorage.getItem(key), S = t && JSON.parse(t); return S && S.things ? S : key === SV.key ? readSave(SV.key + SV.bak) : null; } // E660
-  catch (e) { if (key !== SV.key) return null; aside(); return readSave(SV.key + SV.bak); } }
-const aside = () => { try { localStorage.setItem(SV.key + SV.lost, localStorage.getItem(SV.key)); localStorage.removeItem(SV.key); } catch (x) {} };
+const openSave = (k) => { try { const t = localStorage.getItem(k), S = t && JSON.parse(t); return S && S.things ? S : null; } catch (e) { return null; } }; // E660
+function readSave() { for (const k of slotKeys()) { const S = openSave(k); if (S) return S; } return null; }
 function load(R) { WALKV++; TV++; const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
   for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v; VIS.clear(); CAST.clear(); EXPL.clear(); MEM.clear(); topN = -ONE; if (S.fog) { FOGON = S.fog.on; for (const [s, cs] of S.fog.exp) { const X = expOf(s); for (const c of cs) X[c] = ONE; } for (const [s, m] of S.fog.mem) MEM.set(s, m); } // E879
   GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = null; WOODS.clear(); for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
@@ -428,7 +436,6 @@ function draw() {
   seasonNow(); slideSheet(LANDS, [show.K, show.G, SEASON.key, snowStep(), BLOOMY].join(), () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawPaper(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); if (show.G && cam.z * D.tile >= D.lod) drawGrid(); }, D.landCache.ms); // E880
   drawGlints(); drawClouds(); drawThings(); drawUnder(); if (K.beta > ZERO) slideSheet(MISTS, `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}`, drawMist); if (FOGON) slideSheet(FOGS, FOGV, drawFog); fire('draw', ctx, cam.z);
   if (show.Z) drawZones();
-  if (show.R) drawEdge();
   if (show.K) { drawSky(frameDt); drawLights(cam.z); } fire('over', ctx, cam.z);
 }
 function path(points) { ctx.beginPath(); points.forEach((p, n) => (n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); }
@@ -1680,16 +1687,6 @@ function drawThings() {
   }
   while (n < us.length) unit(us[n++]);
 }
-let edgeSegs = null;
-function drawEdge() { // E161
-  if (!edgeSegs) { edgeSegs = []; const T = D.tile, f = (i, j) => DEP[j * N + i] - D.edge, hh = (i, j) => Math.max(ZERO, H[j * N + i]), half = ONE / (ONE + ONE);
-    for (let j = ZERO; j < N - ONE; j++) for (let i = ZERO; i < N - ONE; i++) { const c = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], v = c.map(([a, b]) => f(a, b)), pts = [];
-      c.forEach(([ax, ay], e) => { const n = (e + ONE) % c.length, [bx, by] = c[n]; if (v[e] >= ZERO === v[n] >= ZERO) return; const s = v[e] / (v[e] - v[n]); pts.push([(ax + (bx - ax) * s + half) * T, (ay + (by - ay) * s + half) * T, hh(ax, ay) + (hh(bx, by) - hh(ax, ay)) * s]); });
-      for (let q = ZERO; q + ONE < pts.length; q += ONE + ONE) edgeSegs.push([...pts[q], ...pts[q + ONE]]); } }
-  ctx.save(); ctx.strokeStyle = C.ground.edge; ctx.globalAlpha = D.lay.rim.a; ctx.lineWidth = D.lay.rim.line; ctx.setLineDash(D.lay.rim.dash); ctx.beginPath();
-  for (const [x1, y1, h1, x2, y2, h2] of edgeSegs) { const a = S(x1, y1, h1), b = S(x2, y2, h2); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); }
-  ctx.stroke(); ctx.restore();
-}
 
 // ── Touch (E162)
 const ptrs = new Map();
@@ -1728,11 +1725,11 @@ on('draw', (c) => { if (!press || press.moved) return; const f = (performance.no
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); camStop(); keepOn(); dirty(); }, { passive: false });
 // E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start(sd, S = null) { edgeSegs = null; playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
-const boot = () => { const h = Number(location.hash.slice(ONE)), got = TEST ? null : readSave(), S = got && (!h || got.seed === h) ? got : null; if (S) try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); return; } catch (e) { fault(e); aside(); } start(TEST ? D.testField.seed : null); }; // E662
-addEventListener('hashchange', () => start()); addEventListener('resize', resize);
+function start(sd, S = null) { playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
+const boot = () => { for (const [n, k] of (TEST ? [] : slotKeys()).entries()) { const S = openSave(k); if (!S) continue; try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); if (n) fire('say', WS.older); return; } catch (e) { fault(e); } } start(TEST ? D.testField.seed : null); }; // E662
+addEventListener('resize', resize);
 window.FK = { inWoods, woodsLine: (a, t) => { const [i0, j0] = cellOf(a), [i1, j1] = cellOf(t), n = Math.max(Math.abs(i1 - i0), Math.abs(j1 - j0), ONE); let w = ZERO; for (let s = ZERO; s <= n; s++) if (inWoods(Math.round(j0 + ((j1 - j0) * s) / n) * N + Math.round(i0 + ((i1 - i0) * s) / n))) w++; return (w * Math.hypot(i1 - i0, j1 - j0) * D.tile) / (n + ONE) / D.upm; }, fog: (on) => { FOGON = on; VIS.clear(); CAST.clear(); fogPaint(); }, fogOn: () => FOGON, visOf, expOf, bars, headOf, fam, exposure, clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
-  yt, rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, restart: () => { location.hash = String(Math.floor(Math.random() * 4294967296)); }, reset: start }; // E166
+  yt, rng, rnd, every, relax, unitsNear, bldsNear, things: () => things, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, restart: (daily) => { history.replaceState(null, '', daily ? location.pathname + location.search : '#' + Math.floor(Math.random() * 4294967296)); start(); }, reset: start }; // E166
 window.fk = FK; // E167
 </script>
 <script src="menu.js"></script>

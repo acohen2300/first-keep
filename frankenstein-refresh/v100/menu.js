@@ -4,7 +4,7 @@
 window.MENU = (() => {
 const { D, B, U, SIDES, N, show } = FK, { zero: ZERO, one: ONE } = FK.D.count, things = FK.things, units = FK.units, [ME] = D.players;
 // E170
-const LAYERS = [['P', 'Pace'], ['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['R', 'Rim'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
+const LAYERS = [['P', 'Pace'], ['G', 'Grid'], ['Z', 'Zones'], ['T', 'Things'], ['B', 'Buildings'], ['U', 'Units'], ['K', 'Climate'], ['V', 'View']]; // E171
 const SCR = fromBook('screen'), GROUPS = SCR.tabs; // E172
 const seatCode = () => FK.ticked('Seat')[0], born = () => FK.trains(seatCode())[0]; // E173
 const classes = () => [...new Set(Object.values(D.trains).flat().filter((k) => !FK.SH[k]))], kindOf = (cls) => FK.kinds(cls).find((c) => FK.aged(c, ME)) || FK.kinds(cls)[0]; // E174
@@ -160,7 +160,7 @@ const VERBS = {
   work: { label: () => `<span class="t">${SVG[AW.cells.work.icon]}</span>${AW.cells.work.name}`, whyNot: () => '', run: () => ECON.allClear() },
   later: { label: (t) => SVG[t] || `${t}<small>Later</small>`, whyNot: () => 'Not built yet', run: () => {} }, // E189
   hazard: { label: (id) => `${OPTS.hazard.find(([, k]) => k === id)[0]}<small>${D.hazards.pts[id]}</small>`, whyNot: () => '', run: (id) => { S.opt.hz.has(id) ? S.opt.hz.delete(id) : S.opt.hz.add(id); } }, // E705
-  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1], mine = civOf(S.opt.civ); ECON.deal([mine, ...PEOPLES().filter((k) => k !== mine)]); ECON.setBell(o('len') || Infinity); S.tab = null; FK.pause(false); if (!o('daily')) FK.restart(); else if (location.hash.length > 1) location.hash = ''; else FK.reset(); } }, // E190
+  start: { label: () => `Start<small>${summary()}</small>`, whyNot: () => '', run: () => { const o = (k) => OPTS[k][S.opt[k]][1], mine = civOf(S.opt.civ); ECON.deal([mine, ...PEOPLES().filter((k) => k !== mine)]); ECON.setBell(o('len') || Infinity); S.tab = null; FK.pause(false); FK.restart(o('daily')); } }, // E190
   job: { label: (y, n) => (n > 0 ? '+' : '−'), whyNot: (y, n) => (VERBS.yield.whyNot(y) ? VERBS.yield.whyNot(y) : n > 0 && !ECON.villagersOf(ME).length ? 'No villagers' : n < 0 && !ECON.jobs(ME)[y] ? `No one on ${y}` : ''), run: (y, n) => { if (!ECON.assign(ME, y, n)) toast(n > 0 ? `No ${y} within reach` : `No one on ${y}`); } },
   people: { label: () => `<span class="t">${SVG.people}</span>People`, whyNot: () => { const h = hall(); return !h ? 'No hall' : VERBS.train.whyNot(born(), h); }, run: () => ECON.queue(hall(), born()) },
   yield: { label: (y) => `<span class="t">${SVG[y]}${ECON.jobs(ME)[y]}</span>${NAME[y]}`, whyNot: (y) => (ECON.yieldAge(y) > SIDES[ME].age ? WD.bar.opens.replace('{y}', NAME[y]).replace('{age}', D.ages[ECON.yieldAge(y)]) : ''), run: (y) => { SIDES[ME].rally = SIDES[ME].rally === y ? null : y; } }, // E191

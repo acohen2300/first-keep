@@ -52,11 +52,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E24** the four roads: corner to middle
 - **E25** every tile whose middle lies within r of a board point: fn(k, d, dx, dy)
 - **E768** the board point of each tile's middle stepped across the square, not turned afresh for eve
-- **E26** a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land · D27 (N112) · QAZ (N60) · D28 (N112) · QBG (N67) · D32 (N112) · D16 (N112)
+- **E26** a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land · D27 (N112) · QAZ (N60) · D28 (N112) · QBG (N67) · D32 (N112, N303, N304) · D16 (N112)
 - **E775** a pond's bank: a short fall to the water on every side, the water filled near the brim (no
 - **E783** a pond's water marks the lake's radius on each of its tiles (for how late it freezes); a b
 - **E27** a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok · QAZ (N60)
-- **E28** a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32 · D32 (N112)
+- **E28** a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32 · D32 (N112, N303, N304)
 - **E29** a smooth hill: its steepest slope is 0.77 h / r, under the angle of repose at these number
 - **E30** The home pond: Who every corner · What one small lake · Where Z3, the same spot in each co · D51 (N112) · D52 (N112) · QAZ (N60)
 - **E31** Lakes: Who the map · What their number, size and place · Where Z4, off the roads and the m · D25 (N112) · QBA (N61) · QAZ (N60)
@@ -74,15 +74,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N256, N242) · D63 (N228, N242) · D65 (N228, N231, N242)
+- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N256, N242, N304) · D63 (N228, N242) · D65 (N228, N231, N242, N304)
 - **E711** the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and  · QCS (N242)
 - **E43** what stands on each tile, and the shells themselves
 - **E709** the buildings as their own list, a derived index of things rebuilt only when things change
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
-- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112, N258) · D65 (N228, N231, N242) · QBF (N65)
-- **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231, N242)
+- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112, N258, N304) · D65 (N228, N231, N242, N304) · QBF (N65)
+- **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231, N242, N304)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
@@ -98,6 +98,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E52** 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23) · D23 (N112)
 - **E53** the first band is what can be waded (D24) (N11: three sheets of water, shallow to deep) · D24 (N112) · N11
 - **E909** how far each water tile lies from its shore, in tiles (a chamfer distance in two passes); 
+- **E923** the water's distance from shore starts at the waterline itself: a water tile beside land t
 - **E55** what a face shows between two heights (L1): the grass is the land's top skin; anything rai
 
 ## index.html#drawn-once-in-the-view-frame
@@ -122,9 +123,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E904** a marsh is shallow water; reeds stand in it
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
+- **E921** each water band gets its own layer, laid in order before the first contour: the shapes are
+- **E922** the grass mask (where the season's colour and the blades go) is cut from the contour cells
 - **E779** the contours painted band by band over the whole piece of land, lowest first, so a band la
 - **E919** the minimap's picture: the shapes replayed once, small
 - **E918** the water fills every cut up to one level just under the grass (the mock's 'high'): the ba
+- **E924** the marsh: each marsh tile draws a number from the seed; where it is over D366's tussock t · D366 (N301, N305, N304)
 - **E759** the shore and the strata as contours: between four tiles' middles the lowest band is laid,
 - **E782** each water cell adds its shallow part to every step's ice path and its land part to the la
 - **E776** water cells traced like the land: each depth band of the water drawn along its contour, so
@@ -166,9 +170,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E657** the save: the seed (the map is laid again from it), the lists, the climate, the sides, wha
 - **E879** the fog of war is saved with the game: the ground each side has seen and the buildings it 
 - **E681** a plain record held in two places (a war order, a camp, an ambush) is saved once, tagged o
-- **E658** a save opened: the places turned back into the things and units, the Maps, Sets and Infini · D331 (N230)
-- **E659** the save waits while you fight, at most D331's fight; a failed save says so once in D331's · D331 (N230)
-- **E660** a save that will not open is kept aside, never written over; the one before opens instead
+- **E658** a save opened: the places turned back into the things and units, the Maps, Sets and Infini · D331 (N230, N302)
+- **E660** saves roll through D331's slots, one set per build folder, so live and a preview never sha · D331 (N230, N302)
+- **E659** the save waits while you fight, at most D331's fight; a failed save says so once in D331's · D331 (N230, N302)
 - **E661** the game opened from a save: the fresh map from its seed, then the lists, the sides and th
 - **E696** the screen stays awake while a match runs; let go when paused, at rest or hidden; a browse
 - **E893** a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel 
@@ -475,7 +479,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E855** a picked unit: the green ring at its feet, thick and glowing
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
 - **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170, N195, N205)
-- **E161** L6 the play edge: the contour D7 in from the coast, found cell by cell between the tiles'  · D7 (N112)
 
 ## index.html#touch
 
@@ -489,7 +492,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E864** a tap anywhere on a building's drawn shape is the building: the front-most whose picture i
 - **E426** the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)
 - **E165** The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a see · QBF (N65)
-- **E662** The opening: the game opens where you left it, unless the address names another seed; ?tes
+- **E662** The opening: the game opens where you left it, newest save first, saying so if it had to o
 - **E166** the door: what the modules may touch
 - **E167** the test hook
 

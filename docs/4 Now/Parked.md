@@ -694,3 +694,12 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 ## Cut in N10 (Nov 10)
 - Colour and season cels in place of the meadow sweep: fail N10's own test (states are per-tile thresholds a cel cannot show; the sweep stays for paths, mud and snow, so code grows). Revisit only if the sweep itself is cut.
 - Season repaint keyed on a visible colour step (a JND, ΔE about 2.3, Sharma 2003) instead of every phase step: would cut repaints in summer and winter; not built tonight (the flowers' bloom also rides on the phase). Idea for later.
+
+## Cut in N14 build 1 (Nov 10, Albert 10:16 "yes yes") [2026-11-10 12:30]
+- The dashed play-edge line (drawEdge, D348's rim, C23's edge colour, the Rim layer in the layers list): Albert #4. The beach and cliffs mark the edge. [2026-11-10 12:30]
+- A new match written into the address and the address change restarting the game (the hashchange listener): Albert #38, a back swipe lost a match. New matches use replaceState. [2026-11-10 12:30]
+- The single save plus .bak and the .lost copy: replaced by three rolling slots per build folder (D331 slots). [2026-11-10 12:30]
+- The grass mask from tile squares: now from contour cells (E922); the tile version stepped over sloped dirt. [2026-11-10 12:30]
+- Marsh tiles painted whole as water, and the woods' cells skipped by the shore contours: both made the tile staircase (#3, #9). [2026-11-10 12:30]
+- Open: the dirt band round lakes reads wide at 3:1 banks (12 units); narrowing it means moving D.dirtTop, shared with hills and coast. Albert's look owed. [2026-11-10 12:30]
+- Open: hilltops above D.land + D.bare still draw as dirt (old open item #1); not in this build. [2026-11-10 12:30]

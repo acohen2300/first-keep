@@ -62,9 +62,8 @@ async def main(b):
     mid = open(os.path.join(HERE, '../mid/src/26-input.js')).read(); sp = mid[mid.index('function startPlace'):mid.index('function cancelPlace')]
     ok('t-place', flow[:4] == [None, True, True, True] and placed == flow[4] + 1 and 'closeCard();' in sp and 'G.place = {' in sp, [flow, placed])   # C4 (Albert, Nov 6 19:09): Build gives the ghost and its guides with the menu closed, as Mid's startPlace; one tap on Build places
     start = await ev("JSON.stringify(FK.D.start)")
-    await ev("FK.SIDES[0].store.food = 9999; FK.K.rain = 1; FK.restart ? location.hash = '#20261106' : 0")
-    await pg.wait_for_timeout(1200)
-    ok('t-start', await ev(f"(() => {{ const b = {start}; return [0, 2].every((s) => Object.keys(b).every((y) => Math.abs(FK.SIDES[s].store[y] - b[y]) < 1)) && FK.K.rain === 0; }})()"), await ev("[FK.SIDES[0].store, FK.K.rain]"))   # within the food the people ate since
+    await ev("FK.SIDES[0].store.food = 9999; FK.K.rain = 1; FK.restart()")   # #38 (Albert, Nov 10): a restart no longer rides on the address, so it is checked at once, before anyone can spend
+    ok('t-start', await ev(f"(() => {{ const b = {start}; return [0, 2].every((s) => Object.keys(b).every((y) => Math.abs(FK.SIDES[s].store[y] - b[y]) < 1)) && FK.K.rain === 0; }})()"), await ev("[FK.SIDES[0].store, FK.K.rain, FK.SIDES[2].store]"))   # within the food the people ate since
     waited = await ev("""(() => { const h = FK.seatOf(0), s = FK.SIDES[0].store; s.food = 500; h.q = []; ECON.queue(h, FK.D.trains[h.code][0]); const ring = []; for (let y = h.j - 1; y <= h.j + h.n; y++) for (let x = h.i - 1; x <= h.i + h.n; x++) { const k = y * FK.N + x; if (FK.OCC[k] === 0) { ring.push(k); FK.OCC[k] = 2; } }
       const n0 = FK.units().length; h.qt = 0; FK.sim(0.1); const held = h.q.length === 1 && FK.units().length === n0; for (const k of ring) FK.OCC[k] = 0; FK.sim(0.1); return [held, FK.units().length === n0 + 1, h.q.length]; })()""")
     ok('t-wait', waited == [False, True, 0], waited)   # A2 (Albert, Nov 7): a paid unit with no room beside its building appears further out instead of waiting; the queue still empties
@@ -1357,20 +1356,20 @@ async def land(b):
     got = tables + played + b_ + [v['amt'], v['ways'][0] > 0 and not v['ways'][1], v['land'] in M['lands']['rows'], not errs]
     ok('t-land', all(got), [got, v['corner'], v['pocket'], expect, v['woods'], v['ring'], v['more'], v['ways'][1][:5], {k: v['scen'][k] for k in v['scen']} if not all(played) else '', errs[:2], err[-400:]])
 # F38: the save, the safety net and the test tools
-SAVEJS = r"""(async () => { const D = FK.D, SV = D.save, ME = D.players[0], foe = D.players[1], out = {}; MENU.S.opt.scen = 0; FK.reset(); $run(30); localStorage.removeItem(SV.key); localStorage.removeItem(SV.key + SV.bak);
+SAVEJS = r"""(async () => { const D = FK.D, SV = D.save, ME = D.players[0], foe = D.players[1], out = {}, mine = () => Object.keys(localStorage).filter((k) => k.startsWith(SV.key + location.pathname + '.') && !k.endsWith('.' + SV.now)), newest = () => SV.key + location.pathname + '.' + localStorage.getItem(SV.key + location.pathname + '.' + SV.now); MENU.S.opt.scen = 0; FK.reset(); $run(30); for (const k of Object.keys(localStorage)) if (k.startsWith(SV.key)) localStorage.removeItem(k);
   const sig = () => ({ u: FK.units().map((u) => [u.code, u.side, u.k, u.hp, u.load || 0, u.target ? FK.things().indexOf(u.target) + ':' + FK.units().indexOf(u.target) : null]), t: FK.things().map((t) => [t.kind, t.code, t.k, t.amount, t.done, t.hp, t.gone]),
     s: FK.SIDES.map((s) => [s.age, JSON.stringify(s.store), [...s.techs].join()]), K: [FK.K.t, FK.K.temp, FK.K.sky], occ: FK.OCC.join(''), war: D.players.map((p) => WAR.stance(ME, p)), bell: ECON.bell(), mail: MENU.mail.length });
-  WAR.treaty(ME, foe, 'war'); const a = FK.units().find((u) => u.side === ME), e = FK.units().find((u) => u.side === foe); a.target = e; FK.save(); out.held = localStorage.getItem(SV.key) === null;
-  FK.K.t += SV.fight + 1; FK.save(); out.late = localStorage.getItem(SV.key) !== null; a.target = null; FK.save(true); out.bak = localStorage.getItem(SV.key + SV.bak) !== null;
-  const before = sig(), text = localStorage.getItem(SV.key), S = JSON.parse(text); out.keys = Object.keys(S); out.bytes = text.length; FK.resume(FK.readSave()); const after = sig();
+  WAR.treaty(ME, foe, 'war'); const a = FK.units().find((u) => u.side === ME), e = FK.units().find((u) => u.side === foe); a.target = e; FK.save(); out.held = mine().length === 0;
+  FK.K.t += SV.fight + 1; FK.save(); out.late = mine().length === 1; a.target = null; for (let i = 0; i < SV.slots + 1; i++) FK.save(true); out.bak = mine().length === SV.slots;
+  const before = sig(), text = localStorage.getItem(newest()), S = JSON.parse(text); out.keys = Object.keys(S); out.bytes = text.length; FK.resume(FK.readSave()); const after = sig();
   out.same = Object.keys(before).filter((k) => JSON.stringify(before[k]) !== JSON.stringify(after[k])); $run(5); out.runs = FK.K.t > after.K[0];
-  localStorage.setItem(SV.key, '{broken'); const got = FK.readSave(); out.aside = [got && got.seed === S.seed, localStorage.getItem(SV.key + SV.lost) === '{broken', localStorage.getItem(SV.key) === null];
+  localStorage.setItem(newest(), '{broken'); const got = FK.readSave(); const h0 = history.length; FK.restart(); FK.restart(); out.aside = [got && got.seed === S.seed, history.length === h0, location.hash.length > 1];
   let threw = 0; FK.on('tick', () => { if (!threw++) throw new Error('t-save: one frame'); }); const t0 = FK.K.t; await new Promise((r) => setTimeout(r, 1500)); out.fault = [threw >= 2, FK.K.t > t0];
   const n0 = (MENU.TAPS.people || [0])[0]; MENU.act('people'); out.taps = (MENU.TAPS.people || [0])[0] === n0 + 1;
   $run(130); const L = JSON.parse(MENU.logText()); out.log = [L.rows.length >= 2, L.rows.every((r) => r.s.length === D.players.length), L.seed === FK.seed()];
   MENU.render(true); out.ui = document.querySelectorAll('#base button, .topbar button').length; return out; })()"""
 FIELDJS = r"""(() => { const D = FK.D, F = D.testField, [ME, foe] = D.players, seats = FK.things().filter((t) => FK.has(t, 'Seat')).map((t) => t.side), n = (s) => FK.units().filter((u) => u.side === s && !FK.has(u, 'Gather')).length;
-  localStorage.removeItem(D.save.key); FK.save(true); return [FK.TEST, FK.seed() === F.seed, seats.sort(), WAR.stance(ME, foe), n(ME), n(foe), Object.entries(FK.SIDES[ME].store).every(([y, v]) => v === F.store || (y === 'food' && v > F.store * 0.99)), FK.SIDES[ME].age === F.age, localStorage.getItem(D.save.key) === null]; })()"""
+  for (const k of Object.keys(localStorage)) if (k.startsWith(D.save.key)) localStorage.removeItem(k); FK.save(true); return [FK.TEST, FK.seed() === F.seed, seats.sort(), WAR.stance(ME, foe), n(ME), n(foe), Object.entries(FK.SIDES[ME].store).every(([y, v]) => v === F.store || (y === 'food' && v > F.store * 0.99)), FK.SIDES[ME].age === F.age, Object.keys(localStorage).every((k) => !k.startsWith(D.save.key))]; })()"""
 async def saving(b):
     pg, errs = await fresh(b); v = await pg.evaluate(SAVEJS); await pg.close(); M = MEASURE; src = open(os.path.join(HERE, '../mid/src/34-save.js')).read()
     pg = await b.new_page(); fe = []; pg.on('pageerror', lambda e: fe.append(str(e))); await pg.goto('file://' + os.path.join(HERE, 'index.html') + '?test'); await pg.wait_for_timeout(1500); f = await pg.evaluate(FIELDJS); await pg.close()
