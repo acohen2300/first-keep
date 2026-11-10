@@ -2,7 +2,7 @@
 
 Items agreed in talk mode, to build on Albert's go. Newest last.
 
-## OPEN: the one list (checked against v100's code, Nov 9 19:30)
+## OPEN: the one list (checked against v100's code, Nov 9 19:30) — SUPERSEDED Nov 10 07:10: the current list is in `Handoff.md`; this one is kept as the record
 Everything still open, once. The numbered items below are the record of how each was decided.
 
 **A. Waiting on Albert's answer**
