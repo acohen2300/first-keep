@@ -331,7 +331,7 @@ def match():
     mid, _ = frozen('sound', REC); hb = keyed('sound')
     full = lambda p: list(p) + {'tone': [0, 0, 0], 'hiss': [1, 0, 0], 'knock': [0, 1]}[p[0]][len(p) - {'tone': 5, 'hiss': 4, 'knock': 4}[p[0]]:]   # a recipe drops its trailing defaults
     same = lambda a, b: len(a) == len(b) and all(abs(x - y) < 1e-9 if isinstance(x, (int, float)) and isinstance(y, (int, float)) else x == y for x, y in zip(a, b))
-    cut = {k for k, v in json.load(open(os.path.join(HERE, '../clean/sound.json')))['pieces']['SFX'][2].items() if v[0] == 'cut'}   # a sound Albert cut is not brought
+    cut = {k for k, v in json.load(open(os.path.join(HERE, '../clean/sound.json')))['pieces']['SFX'][2].items() if v[0] in ('cut', 'changed')}   # a sound Albert cut, or changed by his call, is not Mid's any more
     off = [k for k, r in (mid or {}).items() if k not in cut and (k not in hb or not (same(r[:1], hb[k][:1]) and len(r) == len(hb[k]) and all(same(full(a), full(b)) for a, b in zip(r[1:], hb[k][1:]))))]
     ok('t-match', mid and not off, off)
 WALLS = """(() => { const D = FK.D, E = ECON, N = FK.N, out = {}, [ME, FOE] = D.players, at = E.at, us = FK.SIDES[ME];

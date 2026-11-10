@@ -405,11 +405,13 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N303** USDA NRCS Conservation Practice Standard, Pond (Code 378), 2022: embankment side slopes two horizontal to one  → D32
 - **N304** Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slop → D32, D62, D65, D70, D366
 - **N305** (to open) A. Hurwitz (1891), Ueber die angenaeherte Darstellung der Irrationalzahlen durch rationale Brueche: the golden → D366
-- **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, D367, SN6, SN39, J48
-- **N307** Albert, Nov 10, 2026, 12:26 (N17: his N15 notes answered on the N15 Answer Sheet) and 12:38 ("Build N17 yes ye → QCV, SC47, C34, C35, D113, D317, X78, HA3, HX6, J36
+- **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, C36, D367, SN6, SN39, J48
+- **N307** Albert, Nov 10, 2026, 12:26 (N17: his N15 notes answered on the N15 Answer Sheet) and 12:38 ("Build N17 yes ye → QCV, SC47, C34, C35, D113, D317, X78, SN40, HA3, HX6, J36
 - **N308** Base (preview 49) and Mid, the cost line: costCol(fr) = grad(fr >= 1 ? 0.55 : fr - 1), red at nothing, white n → C34
 - **N309** Xia, X. and Zhang, P., Flickering of buoyant diffusion flames: a vortex dynamics revisit, arXiv:1803.10400 (20 → QCV, D317
 - **N310** CIGRÉ Technical Bulletin 549, Lightning Parameters for Engineering Applications (2013, project team headed by  → D113
+- **N311** (to open) The 24-hour clock: a day of 24 hours, each of 60 minutes (ISO 8601 time of day); from memory, to open → D368
+- **N312** Proxemics (Psychology Wiki, Fandom), after Edward T. Hall (1963; The Hidden Dimension, 1966): intimate 15-45 c → D317
 
 ## Named exceptions
 

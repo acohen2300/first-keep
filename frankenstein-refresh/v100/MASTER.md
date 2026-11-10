@@ -60,6 +60,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E29** a smooth hill: its steepest slope is 0.77 h / r, under the angle of repose at these number
 - **E30** The home pond: Who every corner · What one small lake · Where Z3, the same spot in each co · D51 (N112) · D52 (N112) · QAZ (N60)
 - **E31** Lakes: Who the map · What their number, size and place · Where Z4, off the roads and the m · D25 (N112) · QBA (N61) · QAZ (N60)
+- **E952** a lake keeps off the trade roads' stops, as it keeps off another lake: a stop is a place o
 - **E32** Rivers: Who the map · What one from each lake big enough, to the nearest free coast · Wher · QAZ (N60) · QBB (N62)
 - **E33** Fords (TC4): Who every river · What a shallow crossing · Where wherever a river crosses on · D33 (N112)
 - **E34** Hills (TR1): Who the map · What a few smooth rises · Where Z4, clear of water and roads ·  · D36 (N112) · D37 (N112) · D38 (N112)
@@ -268,7 +269,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E298** a find's working ring (Mid's WORK_R, D196): as many spots as fit a pace apart round it, ⌊2 · D196 (N164, N165, N166, N167) · D169 (N112)
 - **E299** spot i of c: round a find on its ring; round a building on its outline, the lane of tiles 
 - **E687** past the lane beside a building, the next ring a pace further out, as many rings as the mo
-- **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167)
+- **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167) · N166 · N17
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
 - **E98** a find used up is gone; its tile is free again
@@ -281,7 +282,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E312** nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no t
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
 - **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
-- **E948** a villager at work holds its spot (Albert, Nov 10, N17 #16, the twitch): two gathering sid · N17
 - **E807** QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, so · QCJ (N163, N167) · D242 (N188, N273)
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
 - **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te

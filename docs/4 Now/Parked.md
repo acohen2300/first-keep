@@ -711,4 +711,4 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 ## Changed in N17 (Albert, Nov 10, his N15 notes) [2026-11-10 14:30]
 - "Build another" is gone from the one-off buildings (only the twelve with the Repeat tick offer it). [2026-11-10 14:30]
 - The old torch flicker (two sines at 11 and 7.3 rad/s on the game clock) replaced by QCV; the bolt's fixed 0.45 s fade replaced by the strokes. [2026-11-10 14:30]
-- Open for later: two campfires can light at one big berry patch (each burns where no fire is within 6 m); a ring of fires is fine at night but may look busy. [2026-11-10 14:30]
+- Open for later: two campfires can light at one big berry patch (each burns where no fire is within 3.5 m); a ring of fires is fine at night but may look busy. [2026-11-10 14:30]
