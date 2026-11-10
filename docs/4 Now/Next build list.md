@@ -395,7 +395,7 @@ Preview: `frankenstein-refresh/preview-n17/`. Gate PASS, smoke 6/6 (the match sm
 11. The outline recedes on Build but not on People. Albert 14:59: People recedes by person (one villager's training at a time), not as a sum; find why it does not move. [2026-11-10 15:05]
 12. Quick action: small ring top left (the same icon-size bug as #6). [2026-11-10 15:00]
 13. Quick action does not work: the tap that opens it also clicks the box under the finger, so it skips a step. [2026-11-10 15:00]
-14. "Arm should firm up" (ask: the research's armed state?). [2026-11-10 15:00]
+14. Albert 15:02: armies should form up (soldiers standing or arriving together take a formation, not a loose crowd; see his N13 call: spawned soldiers form up near their spawn). Find why they do not. [2026-11-10 15:07]
 15. No aimer on the quick action: the aim step is a small icon in an empty box. Albert 14:59: Base's reticle is too fancy; a simple aimer under the finger (mock first). [2026-11-10 15:05]
 16. A horse's head disappears (find the frame). [2026-11-10 15:00]
 17. Grass patterns still visible at close zoom (the blade tile repeats). [2026-11-10 15:00]
