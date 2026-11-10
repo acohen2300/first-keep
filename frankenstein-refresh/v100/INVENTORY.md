@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,457 | 586,005 | 586,153 |
-| Books | 2332 | 0 | 689,930 | 690,824 |
+| Game code | 31 | 3,472 | 591,520 | 591,668 |
+| Books | 2348 | 0 | 695,698 | 696,595 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,882 | 305,010 | 305,255 |
+| Tools | 5 | 1,901 | 308,267 | 308,512 |
 
 ## The trades (code)
 
@@ -32,18 +32,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
 | index.html#floor-5-movables | 149 | 19,647 | 19,651 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,949 | 5,953 | 90 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,956 | 5,960 | 90 |
 | index.html#floor-6-climate | 172 | 30,262 | 30,274 | 127 |
-| index.html#floor-7-display | 71 | 15,071 | 15,075 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 127 | 24,895 | 24,899 | 0 |
+| index.html#floor-7-display | 74 | 16,231 | 16,235 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 135 | 28,156 | 28,160 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 40 | 4,342 | 4,346 | 38 |
+| index.html#the-woods-cache | 40 | 4,618 | 4,622 | 38 |
 | index.html#touch | 53 | 9,422 | 9,426 | 54 |
-| menu.js | 529 | 107,939 | 107,983 | 526 |
-| econ.js | 592 | 108,897 | 108,897 | 72 |
-| combat.js | 354 | 58,723 | 58,723 | 84 |
+| menu.js | 530 | 108,109 | 108,153 | 526 |
+| econ.js | 593 | 109,146 | 109,146 | 72 |
+| combat.js | 355 | 58,927 | 58,927 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
-| sound.js | 57 | 6,050 | 6,050 | 66 |
+| sound.js | 58 | 6,238 | 6,238 | 66 |
 
 ## The books
 
@@ -51,18 +51,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 312 | 75,238 |
-| colours | 32 | 8,883 |
-| comments | 907 | 159,675 |
+| citations | 313 | 75,612 |
+| colours | 32 | 8,966 |
+| comments | 921 | 163,206 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 158,500 |
-| rules | 80 | 30,691 |
+| measure | 335 | 159,771 |
+| rules | 81 | 31,260 |
 | screen | 26 | 11,169 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
-| sprites | 69 | 34,964 |
+| sprites | 69 | 35,082 |
 | tech | 259 | 75,824 |
 | words | 47 | 96,852 |
 
@@ -158,5 +158,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X80 | t-n15 | page | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark |
 | X81 | t-n16 | page | N16, the quick action: open ground gives Attack, Build, Rally; Attack gives All, half, quarter and Squad; Build gives the six groups; a message with a place shows Go on a menu's help line |
 | X82 | t-n18 | page | N18 build 1, Albert's N17 notes on the menus: a pill keeps its curved ends; the selected ring lies on the pill's own outline, its ends on the pill's corners; row titles 14/600, options 12/400; a hazard's ring is the options' white; with Daily on a locked option is flat and dark with no ring; the paused Play button wears the ring at its own size; the Paused card hangs below the Top Info Ribbon; the quick action's ring is its box's size; the tap that opens the quick action does not press the box under the finger |
+| X83 | t-n18b | page | N18 build 2, Albert's N17 notes: People's ring recedes while a villager trains; a line said while another shows waits its turn; soldiers trained while a rally flag stands are dressed into one formation there; at night a campfire burns by a drop-off where villagers work and the army's standard carries a torch; no figure is clipped by its box (the horse's head); three blade tiles; a rock's sprite is cached at or above its size; a person behind a building shows through it |
 
-2462 items sealed · 2332 book entries · 94 laws · 312 citations, 33 still to open · 0 known
+2478 items sealed · 2348 book entries · 94 laws · 313 citations, 33 still to open · 0 known

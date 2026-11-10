@@ -4736,3 +4736,43 @@ Tests: t-n18 holds (10 checks); t-n15, t-n16, t-n17 hold; smoke 6/6; sealed on b
 
 ## N18 build 1b · 2026-11-10 15:45
 #3 locked options' text faint (wfaint), the locked selection bright. t-n18 and t-n15 hold.
+
+## N18 build 2: Albert's N17 notes #8, #10, #11, #14, #16, #17, #18, #19, #20, #21 · 2026-11-10 16:52
+Albert, Nov 10 15:07-15:30 (#8: a big bright campfire by a drop-off where villagers work, the army torch from v80, fire-coloured highlights; mock approved 15:30 'This is good'); 15:02 #14; 14:59 #11; 16:24 "Go" on build 2
+Opened: code:index.html, code:menu.js, code:sound.js, code:econ.js, code:combat.js, book:comments, book:measure, book:sprites, book:colours, book:rules, book:citations, tool:test.py
+MODIFIED (34):
+- book:citations:N314 · added
+- book:colours:C19 · 360 → 443 bytes
+- book:comments:E953 · added
+- book:comments:E954 · added
+- book:comments:E955 · added
+- book:comments:E956 · added
+- book:comments:E957 · added
+- book:comments:E958 · added
+- book:comments:E959 · added
+- book:comments:E960 · added
+- book:comments:E961 · added
+- book:comments:E962 · added
+- book:comments:E963 · added
+- book:comments:E964 · added
+- book:comments:E965 · added
+- book:comments:E966 · added
+- book:measure:D317 · 2,234 → 3,122 bytes
+- book:measure:D323 · 243 → 362 bytes
+- book:measure:D366 · 2,702 → 2,966 bytes
+- book:rules:X83 · added
+- book:sprites:P11 · 125 → 125 bytes
+- book:sprites:P12 · 119 → 119 bytes
+- book:sprites:P17 · 245 → 245 bytes
+- book:sprites:P26 · 988 → 988 bytes
+- book:sprites:P35 · 576 → 694 bytes
+- code:combat.js · 58,723 → 58,927 bytes
+- code:econ.js · 108,897 → 109,146 bytes
+- code:index.html#floor-7-display · 15,075 → 16,235 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 5,953 → 5,960 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 24,899 → 28,160 bytes
+- code:index.html#the-woods-cache · 4,346 → 4,622 bytes
+- code:menu.js · 107,983 → 108,153 bytes
+- code:sound.js · 6,050 → 6,238 bytes
+- tool:test.py · 271,249 → 274,506 bytes
+Tests: t-n18b holds (9 checks; the sound fix #10/#19 needs his phone); t-n15, t-n16 (now clears the shown line first: lines wait their turn), t-n17, t-n18, t-ground hold; t-fire fails as sealed (one of the known old failures); smoke 6/6; night view 55 fps headless (day 58); sealed on branch n11, not published to live

@@ -3,11 +3,12 @@
 // E251
 window.SOUND = (() => {
 const { HB, D, SH, KIND, cam } = FK;
-let AC = null, master = null, air = null, NOISE = null, voices = 0, on = true, ambT = 0;
+let AC = null, master = null, air = null, NOISE = null, voices = 0, on = true, ambT = 0, stuck = false;
 const mix = Object.fromEntries(Object.keys(HB.mix.names).map((c) => [c, [...HB.mix.steps]])); // E252
 const last = {}, chan = (n) => (HB.chan.amb.includes(n) ? 'amb' : HB.chan.alert.includes(n) ? 'alert' : 'fx');
 function wake() { // E253
-  if (AC) { if (AC.state !== 'running') AC.resume().catch(() => {}); return; }
+  if (AC && AC.state !== 'running' && stuck) { try { AC.close(); } catch (e) {} AC = null; stuck = false; } // E953
+  if (AC) { if (AC.state !== 'running') AC.resume().then(() => { stuck = AC.state !== 'running'; }, () => { stuck = true; }); return; }
   try { if (navigator.audioSession) navigator.audioSession.type = HB.session; } catch (e) {} // E254
   try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; } if (AC.state !== 'running') AC.resume().catch(() => {}); // E723
   const lim = AC.createDynamicsCompressor(); for (const [k, v] of Object.entries(HB.limiter)) lim[k].value = v; lim.connect(AC.destination); // E255

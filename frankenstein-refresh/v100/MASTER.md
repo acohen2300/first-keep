@@ -315,6 +315,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E756** the figures' scale: a villager's body height over its drawing's, one for every figure (rid
 - **E757** a find's scale: its body's height (tree, bush, outcrop) over its own drawing's; a find wit
 - **E118** W × H units, the art's origin at (tx, ty), its anchor (the point stamped at the thing's st
+- **E957** a sprite is cached at the next size up the √2 ladder, never the one below: drawn smaller i · N17
 - **E119** the node art's own small dice, seeded by the variant, so a tree's leaves fall the same eac
 - **E120** each drawn at its stand (x, y on the screen), s pixels a unit
 - **E580** a find drawn as blobs from the Sprites book
@@ -413,6 +414,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E871** the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, cle
 - **E896** the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above i
 - **E947** your people under the canopy drawn as a flat ghost in your side's colour, the figure's out · N17
+- **E958** your people behind a tree or a building show through it as a silhouette, as Age of Empires · N17
+- **E959** each pair is drawn once the frame's things are down: the person's figure in your colour, c
 - **E897** your own people under the canopy drawn as a ring over the trees, so you see who is inside
 - **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
 - **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
@@ -446,9 +449,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E949** a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall cloc · QCV (N309, N307) · N17
 - **E610** a flame's light on the ground: a disc fading to a quarter at half its reach, added to the 
 - **E714** the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, inst · QCU (N246)
+- **E964** an open flame's white-hot core: a bloom at its heart the flame's own height across, laid o
 - **E950** campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work tog · N17
 - **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
 - **E930** every finished building has a torch by its door from the start, houses their hearth as wel
+- **E962** a campfire after dark by a drop-off where two or more of a side gather and bring their loa · N17
+- **E963** the lights add a torch on each army's standard, its glow at the standard's foot and its fl
+- **E965** one scratch canvas for the fire's highlights
+- **E966** firelight on the side that faces it (Albert, Nov 10, N17 #8, the mock): each person and fi · N17
 - **E938** Lanterns (research) make the door torches brighter: light falls off as the square of dista
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
 - **E934** an order's target answers: a unit glows, a thing ripples in the done colour (Albert, Nov 1
@@ -534,6 +542,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E182** the glass's own state, nothing of the world's
 - **E827** a message's time on screen: the toast's least time plus its words at adult reading speed (
 - **E846** a message kept for the Help page, newest first, the same one twice in a row once
+- **E954** the blue info strip is read, not flashed (Albert, Nov 10, N17 #18): each line stays its re · N17
 - **E737** the help line under the top bar (Albert, Nov 8: one place the eyes always go): every messa
 - **E837** a help line wider than its bar shows the chevron; the chevron opens it to two lines and cl
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
@@ -625,6 +634,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E841** the small cards are two columns of the mold wide: the width read from the bar's own width,
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E825** every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, a
+- **E955** the base and the rank row are drawn once a render and that one drawing is both compared an · N17
 - **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
 - **E843** Paused: the speeds and its help line; a tap on play plays again
 - **E941** the quick action (Albert, Nov 10, #37, his sketches): tap open ground for a block of Attac
@@ -721,6 +731,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
 - **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195, N198, N225) · D129 (N160)
 - **E931** any queued item can be taken out, not only the last, and is paid back in full; taking out 
+- **E956** a soldier trained while a rally flag stands joins the ones already marching to it or holdi · N17 · N13
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
@@ -845,6 +856,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E227** First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), n · QBO (N69, N188) · QBT (N81, N82, N83, N18) · QAG (N36, N37, N188) · QAF (N35) · QAI (N76, N188) · QAO (N45) · QBQ (N76) · QAJ (N39, N40)
+- **E961** the standards drawn this frame, kept so the lights put a torch on each after dark (v80's f
 - **E406** the orders, missions and the War Director's measures and words; the groups on the march (O
 - **E285** the Sides book (I) and the stances made in play, each pair's own; a new game forgets them
 - **E286** who belongs (the kind decides): a side's own are no group; an animal (I4) is a beast; a ki · I4 (N158, N170) · I3 (N158)
@@ -915,6 +927,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
 - **E399** the missiles in flight: a streak along the drag path, its tail D245's share of the flight · D245 (N188, N39, N40)
 - **E400** a blow's sparks (Mid's sparkDraw)
+- **E960** an army's standard groups the soldiers of one order, one rally or one march (Albert, Nov 1 · N17
 - **E401** the standards (Mid's drawStandards): a group of D sprites' least on the move carries its s
 - **E329** a gate is shut to a foe of its owner, and to an unknown walker (the seal's foe)
 - **E238** QAF a group's power: each one's health × its blow (Mid's dmgOf), the blow at least D194, o · QAF (N35) · D194 (N157) · D193 (N157, N188)
@@ -993,6 +1006,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E251** The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow · QAX (N58) · QAY (N59) · QBX (N88)
 - **E252** each channel's volume steps, the one in use first (HX10) · HX10 (N149)
 - **E253** a phone opens its audio only on a touch
+- **E953** a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS · N17
 - **E254** the Ring/Silent switch silences the game; the player's music plays on (HX8) · HX8 (N148)
 - **E723** the sound engine is woken the moment it is made: a phone makes it asleep until a gesture r
 - **E255** a battle's many blows never clip a phone speaker
