@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,399 | 562,619 | 562,767 (+3,390) |
-| Books | 2218 | 0 | 655,468 | 656,344 (+1,417) |
+| Game code | 31 | 3,398 | 562,754 | 562,902 (+3,525) |
+| Books | 2220 | 0 | 655,725 | 656,601 (+1,417) |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 4 | 1,781 | 290,524 | 290,765 |
 
@@ -38,8 +38,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 119 | 23,019 | 23,023 | 0 |
 | index.html#the-meadow | 69 | 14,370 | 14,374 (+1) | 0 |
 | index.html#the-woods-cache | 50 | 5,413 | 5,417 (+146) | 47 |
-| index.html#touch | 51 | 7,905 | 7,909 (+4) | 54 |
-| menu.js | 519 | 101,761 | 101,805 (+2,233) | 544 |
+| index.html#touch | 52 | 8,485 | 8,489 (+584) | 54 |
+| menu.js | 517 | 101,316 | 101,360 (+1,788) | 544 |
 | econ.js | 590 | 108,486 | 108,486 (+619) | 72 |
 | combat.js | 349 | 58,179 | 58,179 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
@@ -53,7 +53,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 51 | 15,145 |
 | citations | 288 | 66,303 |
 | colours | 26 | 7,379 |
-| comments | 841 | 147,225 |
+| comments | 843 | 147,504 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 329 | 152,210 |
@@ -154,4 +154,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2346 items sealed · 2218 book entries · 93 laws · 288 citations, 22 still to open · 7 known
+2348 items sealed · 2220 book entries · 93 laws · 288 citations, 22 still to open · 7 known

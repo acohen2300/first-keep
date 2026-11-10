@@ -11,7 +11,7 @@ Albert's answers (19:37) to the numbered questions:
 
 Order of work (each step committed locally; one push at the end):
 - [x] T1 menus  - [x] T2 Build menu  - [x] T3 selection  - [x] T4 quick action  - [x] T5 build order
-- [x] T6 look  - [x] T7 woods  - [ ] T8 hold, building tap, small fixes  - [ ] T9 stray sweep, gate
+- [x] T6 look  - [x] T7 woods  - [x] T8 hold, building tap, small fixes  - [ ] T9 stray sweep, gate
 - [ ] T10 fog, sight, fog of war  - [ ] T11 SoRen renderer  - [ ] T12 check and publish
 
 ## Done, with cuts (for Parked.md at the end)
@@ -22,3 +22,4 @@ Order of work (each step committed locally; one push at the end):
 - T5: a builder's next site is the first laid, then the nearest (E861; t.laid). Cut: nearest-first for sites (a wall line keeps it).
 - T6: games start late in spring (D359 startIn 0.75 of a season; one year clock yt(), E862, for seasons, leaves, the meadow, weather, harvest); the camera opens further out (D open.px 20, was 40); v80's gold, stone and iron piles at v80's size (W27 outcrop 3 m, was 1.2; the art was already v80's); the meadow at res 2 (D353, was 4: four times the pixels, to measure on the phone). Cut: the start in late winter.
 - T7: the woods walkable (E863, D360): a person at half pace, a rider at 0.35 (FM 21-18, from memory, to open: N289); engines, wagons and beasts never enter; the pathfinder pays the lost time, so gatherers keep to the edge unless the trees are much shorter; one rule for every side. Not reused: the ice crossing's modes and its ask (the woods need no ask: Albert, never "ask"; one rule, so no mode to remember). Owed: units under the canopy drawn as a silhouette, and foes there seen only by sight (with T10).
+- T8: a tap anywhere on a building's drawn shape is the building (E864: the front-most whose picture is solid under the finger; a unit near still wins); a hold is only the box drag (E865). Checked on screen: the Barracks card (title row, TRAIN, RESEARCH, All tech, Repair, Demolish). Cut: the hold that picked a unit and added it to the pick; the hold that dragged the crosshair (a tap moves it). Still open: long names clipped in the queue slots and in Mail.

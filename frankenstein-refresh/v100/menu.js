@@ -393,18 +393,16 @@ function askIce(P, t, k) { const U = P.filter((u) => u.path && u.path.some((q) =
 FK.on('cracking', (k, mine) => { if (!mine) return; const [x, y] = FK.toScreen(...FK.toView(...FK.tileMid(k), ZERO)); S.crack = { px: x, py: y, t: FK.K.t }; say(WI.crack); render(true); }); // E795
 FK.on('fell', (n) => say(WI.fell.replace('{n}', n)));
 FK.on('tick', () => { if (S.crack && FK.K.t - S.crack.t > CR.show && !units().some((u) => u.side === ME && FK.onIce(u))) { S.crack = null; render(true); } });
-function pickToggle(u, hold) { const P = FK.picked(); FK.select(S.more && !hold ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : [u]); S.more = S.more || !!hold; S.subject = null; render(true); }
+function pickToggle(u) { const P = FK.picked(); FK.select(S.more ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : [u]); S.subject = null; render(true); }
 const ordAt = (px, py) => { let best = null, bd = TO.ord; for (const O of WAR.ORD) { const d = O.n ? Math.hypot(...onMap(O.k).map((v, n) => v - [px, py][n])) : Infinity; if (d < bd) [best, bd] = [O, d]; } return best; };
 const boardAt = (px, py) => { const [bx, by] = FK.tileMid(tileK(px, py)); return { bx, by }; }, aimK = () => (!S.aim ? null : S.aim.t ? FK.tileAt(S.aim.t.bx, S.aim.t.by) : S.aim.k), toolSet = () => { const P = FK.picked().filter(isSoldier); return P.length ? P : WAR.sendable(); };
 const onB = (k) => k !== -1; // E433
 function aimSpot(k, u) { const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null); S.aim = { k: onB(k) ? k : S.aim.k, t: t && !own(t) && (t.kind === 'unit' || t.kind === 'bld' || isFind(t)) ? t : null }; } // E430
-const aimNear = (px, py) => S.war && S.aim && Math.hypot(...aimAt().map((v, n) => v - [px, py][n])) < HUD.aim, aimAt = () => (S.aim.t ? FK.toScreen(S.aim.t.vx, S.aim.t.vy) : onMap(S.aim.k));
+const aimAt = () => (S.aim.t ? FK.toScreen(S.aim.t.vx, S.aim.t.vy) : onMap(S.aim.k));
 function aimColor() { const t = S.aim.t, C = FK.C; if (t && t.side === ME) return C.green; if (t && WAR.isFoe(ME, t)) return C.red; if (t && SIDES[t.side] && WAR.friendly(ME, t.side)) return C.blue; return WAR.foesNear(boardAt(...aimAt()), HUD.danger).length ? C.red : C.white; }
 function boxPick(p) { const [x0, x1] = [p.x0, p.x].sort((a, b) => a - b), [y0, y1] = [p.y0, p.y].sort((a, b) => a - b), mine = units().filter((u) => (isSoldier(u) || isVil(u)) && !u.gone && ((x, y) => x >= x0 && x <= x1 && y >= y0 && y <= y1)(...FK.toScreen(u.vx, u.vy)));
   if (!mine.length) return toast(WO.boxNone); FK.select(mine); S.more = true; S.subject = null; render(true); }
 FK.on('press', (p) => { if (S.qa) { S.qa = null; p.eat = true; render(true); } }); // E431
-FK.on('hold', (p, k, u) => { if (S.ghost) return; if (aimNear(p.x0, p.y0)) { p.mode = 'ret'; S.drag = true; } else if (u && own(u) && !S.war) { pickToggle(u, true); FK.fire('event', 'pick', u); p.mode = 'done'; } });
-FK.on('drag', (p) => { if (p.mode === 'ret') aimSpot(...FK.hitAt(p.x, p.y)); });
 FK.on('drop', (p, cancel) => { S.drag = false; if (cancel) return; if (p.mode === 'box') { if (Math.max(Math.abs(p.x - p.x0), Math.abs(p.y - p.y0)) < TO.box) FK.tap(p.x, p.y); else boxPick(p); } render(true); });
 FK.on('say', (msg, m) => say(msg, m && typeof m === 'object' ? m : {}));
 const msnSay = (slot) => { const m = WAR.MS[slot]; return !m || m.end ? '' : m.st === 'act' ? `${Math.round(m.odds * SAY.percent)}%` : m.ord.eta ? clock(m.ord.eta) : ''; };

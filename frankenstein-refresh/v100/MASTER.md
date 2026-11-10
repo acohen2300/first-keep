@@ -453,8 +453,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E818** the bottom bars' height, told by the menu when it changes (the top bar's is read as topOf)
 - **E163** the camera rule: the board never leaves the screen's middle; past its edge the camera may  · D315 (N208, N57)
 - **E425** the finger's gesture: where it went down and is, when, and what a module made of it (a lin · D246 (N190)
+- **E865** a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens fo
 - **E164** what is under the finger: the tile at the land's height and the nearest unit it may see (y · D246 (N190)
 - **E725** the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turn
+- **E864** a tap anywhere on a building's drawn shape is the building: the front-most whose picture i
 - **E426** the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)
 - **E165** The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a see · QBF (N65)
 - **E662** The opening: the game opens where you left it, unless the address names another seed; ?tes

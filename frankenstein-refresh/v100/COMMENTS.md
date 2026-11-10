@@ -845,3 +845,5 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E861 | econ.js | a builder's next site: the first one laid, then the nearest (a wall line keeps to the nearest piece) (Albert, Nov 9: first placed, first built) |
 | E862 | index.html#floor-6-climate | the year's clock: the game's time from a start late in spring (D359), for seasons, leaves, the meadow, the weather and the harvest |
 | E863 | index.html#floor-5-movables | the woods: walkable for a person or a rider at the woods' pace (D360), never for engines or wagons; the path pays the time lost, so the edge wins unless the trees are much shorter |
+| E864 | index.html#touch | a tap anywhere on a building's drawn shape is the building: the front-most whose picture is solid under the finger (Albert, Nov 9 item 8.7) |
+| E865 | index.html#touch | a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it |

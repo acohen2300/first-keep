@@ -1671,7 +1671,7 @@ const TO = D.touch, TM = SPRITE.touch; let press = null, holdT = null; const one
 canvas.addEventListener('pointerdown', (e) => { canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY, e.clientX, e.clientY]); clearTimeout(holdT);
   if (!one()) { if (press && press.mode) fire('drop', press, true); press = null; return; }
   press = { x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t: performance.now(), mode: null }; fire('press', press);
-  if (!press.mode) holdT = setTimeout(() => { if (!press || press.moved || press.mode) return; fire('hold', press, ...hitAt(press.x0, press.y0)); press.mode = press.mode || 'box'; }, TO.hold); });
+  if (!press.mode) holdT = setTimeout(() => { if (!press || press.moved || press.mode) return; fire('hold', press, ...hitAt(press.x0, press.y0)); press.mode = press.mode || 'box'; }, TO.hold); }); // E865
 canvas.addEventListener('pointermove', (e) => {
   if (!ptrs.has(e.pointerId)) return;
   const was = ptrs.get(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY, was[2], was[3]]);
@@ -1687,6 +1687,7 @@ for (const ev of ['pointerup', 'pointercancel']) canvas.addEventListener(ev, (e)
 function hitAt(px, py) { // E164
   const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i, r = Math.max(TO.hit, TO.hitZ * cam.z * FIG());
   let near = null; for (const u of units) if (!u.inside && (u.side === ME || (inSight(u) && !u.hid && !u.veil))) { const [x, y] = toScreen(...vAt(u)), d = Math.hypot(x - px, y - TO.lift * cam.z * FIG() - py); if (d < r && (!near || d < near[1])) near = [u, d]; } // E725
+  if (!near) { let top = null; for (const t of things) { if (t.kind !== 'bld' || fire('hide', t)) continue; const [x, y] = toScreen(t.vx, t.vy), c = bldSprite(t.code, t.col, cam.z, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), f = cam.z / c.q, X = (px - x + c.ax * cam.z) / f, Y = (py - y + c.ay * cam.z) / f; if (X < ZERO || Y < ZERO || X >= c.width || Y >= c.height || (top && top.vy > t.vy)) continue; if (c.getContext('2d').getImageData(Math.floor(X), Math.floor(Y), ONE, ONE).data.at(-ONE)) top = t; } if (top) return [top.j * N + top.i, null]; } // E864
   return [k, near && near[0]]; }
 const tap = (px, py) => fire('tap', ...hitAt(px, py), px, py);
 on('draw', (c) => { if (!press || press.moved) return; const f = (performance.now() - press.t - TO.show) / (TO.hold - TO.show), [fa, fl] = TM.box; c.save(); c.strokeStyle = c.fillStyle = C.gold; // E426
