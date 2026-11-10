@@ -694,3 +694,9 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 ## Cut in N10 (Nov 10)
 - Colour and season cels in place of the meadow sweep: fail N10's own test (states are per-tile thresholds a cel cannot show; the sweep stays for paths, mud and snow, so code grows). Revisit only if the sweep itself is cut.
 - Season repaint keyed on a visible colour step (a JND, ΔE about 2.3, Sharma 2003) instead of every phase step: would cut repaints in summer and winter; not built tonight (the flowers' bloom also rides on the phase). Idea for later.
+
+## Cut in N11, the paper ground (Nov 10)
+- The meadow picture: per-pixel season greens, six tone layers, flower tints, wet darkening, mud, puddles, frost, slush, path wear on the grass, and its repaint (N10's strip budget went with it). Mud and frost to come back as steps like the snow (Albert: fine).
+- cels.js (Poisson blades and the clear coat) and their books (CL1, CL2, SC47-49, D364, C32).
+- The woods' floor colour, the marsh's reed colour, the shore rim colour.
+- Cloud shadows (Albert: no).
