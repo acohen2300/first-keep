@@ -440,11 +440,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E738 |  | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |  |
 | E739 |  | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost |  |
 | E740 |  | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |  |
-| E748 |  | the ground painted for a window of tiles at a scale, into the whole picture once or into a chunk; the grass blades' tile drawn at that scale |  |
-| E749 |  | the ground's chunk cache and the height range its windows are found from |  |
-| E750 |  | a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, from the tiles under it (a tile's height can lift  |  |
+| E748 |  | the ground painted once into the whole picture: tiles, faces, contours, reeds; its grass also onto the season sheet, which is the blades' ma |  |
+| E749 |  | the cache budgets for what is drawn once and kept |  |
 | E751 |  | the ground: nothing before the land is made (a frame drawn before the first map threw a drawImage error, the intermittent one), then the one |  |
-| E752 |  | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |  |
+| E752 |  | the blades are drawn sharp for the zoom in hand over the land sheet, then cut to the grass by the season sheet (grass only: no blades on wat |  |
 | E753 |  | a figure that moved this step walks; it swings its tool only standing at its work |  |
 | E754 |  | a drawing's size in the world comes from its body's real height in the Mass book: the art is measured once and drawn so it stands that tall |  |
 | E755 |  | how tall a drawing is: from its first to its last painted row |  |
@@ -459,7 +458,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E768 |  | the board point of each tile's middle stepped across the square, not turned afresh for every tile (a stamp of a tower's reach turned a thous |  |
 | E769 |  | a research's needs worked out once and kept: the Tech book does not change in play |  |
 | E770 |  | the pace meter: frames a second and the ms a frame spends on logic and on drawing, averaged over tau s, shown with the Yard's P |  |
-| E771 |  | while nothing is missing and the draw budget is whole, one ground chunk a frame is painted a ring past the view, so a pan finds it ready; ne |  |
 | E772 |  | every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go, a double tap the open chime, a wall's point the  |  |
 | E773 |  | the trees as a cast: twelve kinds from the Sprites book (PT1), each a few variants by its own seed; a crown is leaf dabs inside its outline, |  |
 | E774 |  | which kind a tree is: weighed by where it stands (wet low ground, the plain, the hills), one roll picks the kind and its variant |  |
@@ -1473,7 +1471,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D157 | villagers sent to a site | 2 | N114 |
 | D162 | the glass redraws every | 0.25 | N114 |
 | D163 | a reason stays | 2.5 | N114 |
-| D164 | what is drawn once and kept, at the phone's own pixels: the ground in chunk-unit squares (pad overlapped so no seam shows, margin tiles painted past each edge) once a ground pixel would be stretched past sharp screen pixels, else the one whole picture; sprites, woods and ground chunks each kept to a budget of pixels, the oldest dropped first (an iPhone page is closed when its canvases pass a few hundred MB: Albert, Nov 8 08:04, the map fuzzy on the phone) | {chunk: 128, pad: 1, margin: 2, sharp: 1.2, sprites: 16000000, woods: 8000000, ground: 8000000} | N114; N254; N255 |
+| D164 | what is drawn once and kept, at the phone's own pixels: sprites and woods each kept to a budget of pixels, the oldest dropped first (the ground is one picture at every zoom, as Base, Mid and v80 drew it: Albert, Nov 10 07:54, the chunks cut) (an iPhone page is closed when its canvases pass a few hundred MB: Albert, Nov 8 08:04, the map fuzzy on the phone) | {sprites: 16000000, woods: 8000000} | N114; N254; N255 |
 | D165 | the camera by a person's height on the glass: the game opens with a villager px tall (20 since Nov 9 19:21: further out, as v80, where the town, the trees, the bushes and the gold show on one screen; was 40), and comes no closer than most px; the screen's size of the people comes from the person, not from a building (Albert, Nov 8 13:08; was the Town Center at 0.3 of the width, a villager 12 px, and a closest zoom typed as 6) | {px: 20, most: 60} | N115; N287 |
 | D166 | the screen jolt: pixels a m/s the struck one is sent, at most, for, and from what speed | {px: 1, max: 3, s: 0.08, from: 1.5} | N116 |
 | D167 | blood lost at the shock classes' edges: II, III, IV (health lost read as blood lost) | [0.15, 0.3, 0.4] | N77; N78 |

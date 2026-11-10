@@ -108,12 +108,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
 - **E902** grass is painted a light neutral and also on its own sheet; that sheet takes the season's 
-- **E903** the blades are two tiles of different sizes laid over each other, so the repeat never line
-- **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102) · N11 · E903
 - **E60** the ground is painted flat; the light stands high to the left and in front and the meadow  · D353 (N299, N264, N265, N266, N267, N268, N269, N270, N287)
 - **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N299, N264, N265, N266, N267, N268, N269, N270, N287) · N11
-- **E910** the blades fade in with the zoom, as v80's did: none from far away, full close up
-- **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
+- **E748** the ground painted once into the whole picture: tiles, faces, contours, reeds; its grass a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E904** a marsh is shallow water; reeds stand in it
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
@@ -122,11 +119,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E782** each water cell adds its shallow part to every step's ice path and its land part to the la
 - **E776** water cells traced like the land: each depth band of the water drawn along its contour, so
 - **E905** each paper sheet casts a thin shadow on the sheet below, along its edge
-- **E749** the ground's chunk cache and the height range its windows are found from
-- **E750** a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, 
+- **E749** the cache budgets for what is drawn once and kept
+- **E903** the blades are two tiles of different sizes laid over each other, so the repeat never line
+- **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102) · N11 · E903
 - **E751** the ground: nothing before the land is made (a frame drawn before the first map threw a dr
-- **E752** a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, 
-- **E771** while nothing is missing and the draw budget is whole, one ground chunk a frame is painted
+- **E910** the blades fade in with the zoom, as v80's did: none from far away, full close up
+- **E752** the blades are drawn sharp for the zoom in hand over the land sheet, then cut to the grass
 - **E547** the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so 
 - **E548** bare earth worn by feet round a finished building (not a field, a wall or a trap)
 - **E549** the dark where someone fell, wider for a big body, a blade's cut for a soldier

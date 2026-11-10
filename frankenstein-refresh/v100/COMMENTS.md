@@ -33,11 +33,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E738 | menu.js | a building's research on its card: the next step of each of its lines, as Base's card (the Town Center's next age first) |
 | E739 | menu.js | research, as Base's techBtn: its name and cost; a step that cannot start says why (its age, the step before, the line busy or full, the cost); the first tap on a step tells what it does on the help line and arms it, the second buys it, any other tap disarms (Albert, Nov 8 20:49) |
 | E740 | menu.js | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |
-| E748 | index.html#drawn-once-in-the-view-frame | the ground painted for a window of tiles at a scale, into the whole picture once or into a chunk; the grass blades' tile drawn at that scale so they stay sharp |
-| E749 | index.html#drawn-once-in-the-view-frame | the ground's chunk cache and the height range its windows are found from |
-| E750 | index.html#drawn-once-in-the-view-frame | a ground chunk: a square of the picture painted at the phone's pixels for this zoom step, from the tiles under it (a tile's height can lift it into the square from below) |
-| E751 | index.html#drawn-once-in-the-view-frame | the ground: nothing before the land is made (a frame drawn before the first map threw a drawImage error, the intermittent one), then the one picture while it is not stretched past sharp, else the chunks in view at this zoom step |
-| E752 | index.html#drawn-once-in-the-view-frame | a missing chunk is painted one a frame, the whole picture drawn under the rest meanwhile, so zooming never stalls |
+| E748 | index.html#drawn-once-in-the-view-frame | the ground painted once into the whole picture: tiles, faces, contours, reeds; its grass also onto the season sheet, which is the blades' mask |
+| E749 | index.html#drawn-once-in-the-view-frame | the cache budgets for what is drawn once and kept |
+| E751 | index.html#drawn-once-in-the-view-frame | the ground: nothing before the land is made (a frame drawn before the first map threw a drawImage error, the intermittent one), then the one picture at every zoom, as Base, Mid and v80 drew it: no zoom steps, so no seams and nothing missing |
+| E752 | index.html#drawn-once-in-the-view-frame | the blades are drawn sharp for the zoom in hand over the land sheet, then cut to the grass by the season sheet (grass only: no blades on water, sand or rock), and laid on at the zoom's fade |
 | E753 | index.html#the-body-s-laws | a figure that moved this step walks; it swings its tool only standing at its work |
 | E754 | index.html#the-things-drawn-each-frame-back-to-fr | a drawing's size in the world comes from its body's real height in the Mass book: the art is measured once and drawn so it stands that tall |
 | E755 | index.html#the-things-drawn-each-frame-back-to-fr | how tall a drawing is: from its first to its last painted row |
@@ -52,7 +51,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E768 | index.html#floor-2-terrain | the board point of each tile's middle stepped across the square, not turned afresh for every tile (a stamp of a tower's reach turned a thousand points a beat) |
 | E769 | econ.js | a research's needs worked out once and kept: the Tech book does not change in play |
 | E770 | index.html#the-view-s-eyes-lights-and-stage | the pace meter: frames a second and the ms a frame spends on logic and on drawing, averaged over tau s, shown with the Yard's P |
-| E771 | index.html#drawn-once-in-the-view-frame | while nothing is missing and the draw budget is whole, one ground chunk a frame is painted a ring past the view, so a pan finds it ready; never past the ground's pixel budget |
 | E772 | menu.js | every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go, a double tap the open chime, a wall's point the place, a wall off the land the err, else the tap |
 | E773 | index.html#the-trees | the trees as a cast: twelve kinds from the Sprites book (PT1), each a few variants by its own seed; a crown is leaf dabs inside its outline, lit by where each sits; bare limbs grow by twig; evergreen tiers fade light to shade across the tree; drawn once a leaf stage (and snow) and kept |
 | E774 | index.html#the-trees | which kind a tree is: weighed by where it stands (wet low ground, the plain, the hills), one roll picks the kind and its variant |
