@@ -4474,3 +4474,13 @@ MODIFIED (30):
 LOCKED (2371 of 2401): byte for byte as sealed, 1,482,951 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2401 items sealed · 2271 book entries · 93 laws · 297 citations, 29 still to open · 7 known
+
+## N8b · 2026-11-09 21:35
+Albert, Nov 9 21:33: "Where is the frame meter?" (its only door, the Yard, came out of the Paused card in N6; ?test now shows it)
+Opened: code:index.html, book:comments
+MODIFIED (2):
+- book:comments:E894 · added
+- code:index.html#the-door · 16,059 → 16,092 bytes
+LOCKED (2400 of 2402): byte for byte as sealed, 1,545,690 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2402 items sealed · 2272 book entries · 93 laws · 297 citations, 29 still to open · 7 known

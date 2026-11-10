@@ -150,6 +150,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E695** at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, · D340 (N238)
 - **E715** the loop as Mid's (41-boot frame): the world steps at a fixed rate (D343) however the fram · D343 (N112)
 - **E655** The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save
+- **E894** with ?test the frame meter shows from the start (its only door, the Yard, left the Paused  · N6
 - **E656** each kind of error logged once; a second kind holds the save (the last good one stands) an
 - **E657** the save: the seed (the map is laid again from it), the lists, the climate, the sides, wha
 - **E879** the fog of war is saved with the game: the ground each side has seen and the buildings it 

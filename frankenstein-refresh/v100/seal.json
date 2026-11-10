@@ -6224,6 +6224,11 @@
 "bytes": 271,
 "numbers": 0
 },
+"book:comments:E894": {
+"sha": "0da1cfdff76f6479e36c3c116c03a362ff094a945e55473b2ecea35ccdcabf29",
+"bytes": 113,
+"numbers": 0
+},
 "book:comments:E9": {
 "sha": "b6a2591eef83429472e259fcf3031d46193544c06ff52c01013960656318412b",
 "bytes": 123,
@@ -11445,8 +11450,8 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "90f631188a15549ad13e04503f618b7e5ae464897a1b1c6e9d37a635bd84d449",
-"bytes": 16059,
+"sha": "8c70ba77b575d823cf888843aeb4d72bf59960e5317ea0cd941d575080cf84de",
+"bytes": 16092,
 "numbers": 63
 },
 "code:index.html#the-figures": {

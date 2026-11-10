@@ -870,5 +870,6 @@ BOOK("comments", {
  "E890": {"text": "a piece's blades and grain gathered into a few paths, one for each shade and tier, each laid with one stroke"},
  "E891": {"text": "the clear coat: the land so far laid over itself in a soft light, deeper and crisper, never blurred"},
  "E892": {"text": "a missing piece waits in a queue and is built in the browser's idle time, one at a time; the land is drawn again once it is ready"},
- "E893": {"text": "a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel for pixel with the camera, painted again only when it slides past its margin, the zoom or its key changes, or its time runs out; the land and the fog of war are each one"}
+ "E893": {"text": "a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel for pixel with the camera, painted again only when it slides past its margin, the zoom or its key changes, or its time runs out; the land and the fog of war are each one"},
+ "E894": {"text": "with ?test the frame meter shows from the start (its only door, the Yard, left the Paused card in N6)"}
 });

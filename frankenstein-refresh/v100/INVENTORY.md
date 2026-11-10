@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 32 | 3,463 | 577,661 | 577,809 |
-| Books | 2271 | 0 | 670,061 | 670,954 |
+| Game code | 32 | 3,464 | 577,694 | 577,842 |
+| Books | 2272 | 0 | 670,174 | 671,067 |
 | Laws | 93 | 0 | 19,761 | 20,292 |
 | Tools | 5 | 1,807 | 292,453 | 292,694 |
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 63 | 8,873 | 8,877 | 74 |
 | index.html#drawn-once-in-the-view-frame | 80 | 12,741 | 12,745 | 96 |
 | index.html#the-view | 9 | 1,084 | 1,088 | 13 |
-| index.html#the-door | 98 | 16,055 | 16,059 | 63 |
+| index.html#the-door | 99 | 16,088 | 16,092 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -54,7 +54,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 54 | 16,064 |
 | citations | 297 | 69,634 |
 | colours | 28 | 7,807 |
-| comments | 871 | 151,668 |
+| comments | 872 | 151,792 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 333 | 156,671 |
@@ -155,4 +155,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 
-2401 items sealed · 2271 book entries · 93 laws · 297 citations, 29 still to open · 7 known
+2402 items sealed · 2272 book entries · 93 laws · 297 citations, 29 still to open · 7 known
