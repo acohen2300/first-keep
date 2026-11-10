@@ -2,6 +2,40 @@
 
 Items agreed in talk mode, to build on Albert's go. Newest last.
 
+## OPEN: the one list (checked against v100's code, Nov 9 19:30)
+Everything still open, once. The numbered items below are the record of how each was decided.
+
+**A. Waiting on Albert's answer**
+1. The quick action: v80's ground strip (item 14, proposed).
+2. Rally and Shelter to the Town Center's card; Info and Focus parked (item 14, proposed).
+3. Fast and Yard sit in the Paused card in test builds: move where?
+4. The Sound card shows only while muted: right?
+5. "Guard?" on note 4: what it means.
+6. "Rings thicker": every ring, or only the selected unit's?
+7. The Start page's Fog on/off (item 6.8): his call at build time.
+8. His phone's numbers with `?test` (item 5).
+
+**B. Decided, ready to build on his yes yes**
+1. Item 14: the ring as the box's outline; New game in Paused; Welcome back's line; Start at 14; the Build menu's six tabs; tap a unit, tap a thing; first placed, first built; walkable woods; spring start, camera further out, v80's gold, stone and iron.
+2. Item 1: the stray sweep and the gate fix (checked: `NUM` in index.py still skips a number followed by a unit).
+3. Item 4b: fog by Beer–Lambert by zoom (checked: the flat fog wash is still in index.html), with the dark fog edge.
+4. Item 6: the sight map, fog of war, remembered buildings, fading at the edge; ground wear per side (checked: unit drawing still types `side !== 0`).
+5. Item 7: SoRen's renderer (baked layers, stacked canvases, rest pacing, sprites).
+6. Item 8.5: hold only for the box drag (checked: a hold still picks a unit and drags the aim, menu.js `FK.on('hold')`).
+7. Item 8.7: a tap anywhere on a building's drawn shape opens its card (checked: `hitAt` picks a building by its footprint tile).
+8. Small fixes: long names clipped (queue slots, Mail); the Barracks card checked on screen; the stances do nothing yet.
+
+**C. Later, by Albert's word**
+Choke and Bombard (with the war module); help inside each item's card; a help line for every action; the Guide (nothing opens it since the book opens Welcome back); hunting modes; "mind your own business"; the squads subject; the 52 Base differences; every research showing what it helps and by how much; computers held to sight (the crutches off one at a time); B32, B33, B34–B36 (Nov 8 plan and triage); the overnight full `test.py`.
+
+**D. Done since the older lists said open**
+The black bar (N1c: one stitched page); the pause menu's taps (N1) and its panel (N5); the Help page's double message (N5); the train buttons' rings (N4); one standard ✕ (N4's title row); bottom sheets (N2); glass (cut, N4); rain and snow never off and the shed trigger (N1); map words one size at any zoom, the "in the way" card among them (B31a, to confirm on his phone).
+
+**E. Known faults**
+`test.py t-walls` crashes (a harness fault); the match stutter (a smoke warning).
+
+Not merged: `Owed.md` is the v80 list (Nov 1); left as it was, not checked line by line.
+
 ## 1. Font issue and changes (Albert, Nov 9, 07:37–07:44)
 Cap exception: this run may open more than 10 items (Albert, 07:44).
 

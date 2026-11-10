@@ -21,11 +21,10 @@ Zero stray numbers: every value in its book with a citation and an E-code commen
 - Commits as `Albert <acohen2300@users.noreply.github.com>` with the session's trailers; the repo is public.
 
 ## Open: waiting on Albert
+The full open list, checked against the code: the top of `Next build list.md` ("OPEN: the one list").
 1. Fast and Yard (test-build tools) sit in the Paused card, which breaks "speeds only" there. Move them where?
 2. The Sound card shows only while muted, so volumes change only while muted (per his markup). Right?
-3. The black bar from B31b (his phone mixed a new page with an old book file): reload and check. Proposed fix: publish one stitched file.
-4. The "Something is in the way" card: oddly sized; held.
-5. Reminders: Choke and Bombard; the map's hold gesture (box pick); what a tap on a building does; hunting; a "mind your own business" setting.
+3. Reminders: Choke and Bombard; the map's hold gesture (box pick); what a tap on a building does; hunting; a "mind your own business" setting.
 
 ## Open in the menus (N5)
 - The stance boxes (gift, bribe, war, terms, ally) do nothing yet.
