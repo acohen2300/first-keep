@@ -1,6 +1,6 @@
 # First Keep: handoff (Nov 10, 2026, 07:15; live v100 at N10b, N11 on preview)
 
-**A new chat starts here.** Read this file, then `Next build list.md` (how each item was decided, and the Built N1–N11 log), `Parked.md` (every cut), `N6 progress.md`. Albert's standing rules are in Claude's memory too. Then wait for his go.
+**A new chat starts here.** Read this file, then `Session Nov 9-10.md` (what the last window decided and learned), `Next build list.md` (how each item was decided, and the Built N1–N11 log), `Parked.md` (every cut), `N6 progress.md`. Albert's standing rules are in Claude's memory too. Then wait for his go.
 
 ## Where it stands
 - **Live:** https://acohen2300.github.io/first-keep/frankenstein-refresh/v100/ (N10b). Source: `frankenstein-refresh/v100/` on `main`.
