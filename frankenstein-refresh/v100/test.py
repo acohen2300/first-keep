@@ -1519,6 +1519,13 @@ N18BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, m
 async def n18b(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N18BJS); await pg.close()
     ok('t-n18b', all(v.values()) and not errs, [v, errs[:2]])
+N18CJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); MENU.S.tab = null; MENU.render(true); await W(200); const h = FK.seatOf(0);
+ MENU.S.qa = { k: FK.tileAt(h.bx + 70, h.by + 70), px: 260, py: 520 }; MENU.render(true); MENU.act('qrally'); MENU.render(true); await W(200); const qa = document.getElementById('qa'); o.aim = qa.classList.contains('s1') && qa.querySelectorAll('[data-v]').length === 1 && qa.getBoundingClientRect().bottom <= 520;
+ MENU.S.qa = null; MENU.render(true); await W(300); const z0 = FK.cam.z, T0 = performance.now(); let paints = 0, last = LANDS.t, n = 0; await new Promise((res) => { function f(t) { n++; FK.cam.z = z0 * (1 + 0.3 * Math.min(1, (t - T0) / 1500)); FK.dirty(); if (LANDS.t !== last) { paints++; last = LANDS.t; } if (t - T0 < 1500) requestAnimationFrame(f); else res(); } requestAnimationFrame(f); }); o.pinch = n > 10 && paints <= 3; await W(500); o.settle = LANDS.z === FK.cam.z;
+ return o; })()"""
+async def n18c(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(N18CJS); await pg.close()
+    ok('t-n18c', all(v.values()) and not errs, [v, errs[:2]])
 GROUNDJS = r"""(() => { MENU.act('start'); FK.fog(false); return true; })()"""
 GROUNDJS2 = r"""(() => { const N = FK.N, H = FK.H, L = FK.D.land, c = FK.ctx, [cw, ch] = FK.size(), dpr = c.canvas.width / cw, out = { water: [0, 0], land: [0, 0] };
  for (let k = 0; k < N * N; k += 7) { const [bx, by] = FK.tileMid(k), [x, y] = FK.toScreen(...FK.toView(bx, by, Math.max(0, H[k]))); if (x < 20 || y < 120 || x > cw - 20 || y > ch - 240) continue;
@@ -1551,7 +1558,7 @@ async def n16(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N16JS); await pg.close()
     got = [v['block'][:3] == ['qstep', 'qbuild', 'qrally'], v['army'] == ['qsend', 'qsend', 'qsend', 'qstep'], v['groups'] == 6, v['go'], not errs]
     ok('t-n16', all(got), [got, v, errs[:2]])
-PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

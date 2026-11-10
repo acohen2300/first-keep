@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,472 | 591,520 | 591,668 |
-| Books | 2348 | 0 | 695,698 | 696,595 |
+| Game code | 31 | 3,476 | 593,367 | 593,515 |
+| Books | 2354 | 0 | 697,915 | 698,818 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,901 | 308,267 | 308,512 |
+| Tools | 5 | 1,908 | 309,455 | 309,700 |
 
 ## The trades (code)
 
@@ -21,9 +21,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
 | index.html#floor-2-terrain | 84 | 9,478 | 9,482 | 115 |
 | index.html#floor-3-non-movables | 67 | 9,797 | 9,801 | 54 |
-| index.html#drawn-once-in-the-view-frame | 98 | 19,035 | 19,039 | 92 |
+| index.html#drawn-once-in-the-view-frame | 98 | 19,098 | 19,102 | 92 |
 | index.html#the-view | 9 | 1,075 | 1,079 | 13 |
-| index.html#the-door | 98 | 16,434 | 16,438 | 63 |
+| index.html#the-door | 100 | 17,167 | 17,171 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -38,8 +38,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 135 | 28,156 | 28,160 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 40 | 4,618 | 4,622 | 38 |
-| index.html#touch | 53 | 9,422 | 9,426 | 54 |
-| menu.js | 530 | 108,109 | 108,153 | 526 |
+| index.html#touch | 53 | 9,515 | 9,519 | 54 |
+| menu.js | 532 | 109,067 | 109,111 | 526 |
 | econ.js | 593 | 109,146 | 109,146 | 72 |
 | combat.js | 355 | 58,927 | 58,927 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 313 | 75,612 |
+| citations | 314 | 75,852 |
 | colours | 32 | 8,966 |
-| comments | 921 | 163,206 |
+| comments | 924 | 164,038 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 159,771 |
-| rules | 81 | 31,260 |
+| measure | 335 | 160,092 |
+| rules | 82 | 31,579 |
 | screen | 26 | 11,169 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
-| sprites | 69 | 35,082 |
+| sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 47 | 96,852 |
+| words | 47 | 96,938 |
 
 ## The shells
 
@@ -159,5 +159,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X81 | t-n16 | page | N16, the quick action: open ground gives Attack, Build, Rally; Attack gives All, half, quarter and Squad; Build gives the six groups; a message with a place shows Go on a menu's help line |
 | X82 | t-n18 | page | N18 build 1, Albert's N17 notes on the menus: a pill keeps its curved ends; the selected ring lies on the pill's own outline, its ends on the pill's corners; row titles 14/600, options 12/400; a hazard's ring is the options' white; with Daily on a locked option is flat and dark with no ring; the paused Play button wears the ring at its own size; the Paused card hangs below the Top Info Ribbon; the quick action's ring is its box's size; the tap that opens the quick action does not press the box under the finger |
 | X83 | t-n18b | page | N18 build 2, Albert's N17 notes: People's ring recedes while a villager trains; a line said while another shows waits its turn; soldiers trained while a rally flag stands are dressed into one formation there; at night a campfire burns by a drop-off where villagers work and the army's standard carries a torch; no figure is clipped by its box (the horse's head); three blade tiles; a rock's sprite is cached at or above its size; a person behind a building shows through it |
+| X84 | t-n18c | page | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
 
-2478 items sealed · 2348 book entries · 94 laws · 313 citations, 33 still to open · 0 known
+2484 items sealed · 2354 book entries · 94 laws · 314 citations, 33 still to open · 0 known

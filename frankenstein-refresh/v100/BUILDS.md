@@ -4776,3 +4776,23 @@ MODIFIED (34):
 - code:sound.js · 6,050 → 6,238 bytes
 - tool:test.py · 271,249 → 274,506 bytes
 Tests: t-n18b holds (9 checks; the sound fix #10/#19 needs his phone); t-n15, t-n16 (now clears the shown line first: lines wait their turn), t-n17, t-n18, t-ground hold; t-fire fails as sealed (one of the known old failures); smoke 6/6; night view 55 fps headless (day 58); sealed on branch n11, not published to live
+
+## N18 build 3: #15 aimer, #22 zoom, #23 save · 2026-11-10 17:11
+Albert, Nov 10 16:54 "Sure" on build 3; 16:55 "A is fine for now"
+Opened: code:index.html, code:menu.js, book:comments, book:measure, book:sprites, book:words, book:rules, book:citations, tool:test.py
+MODIFIED (14):
+- book:citations:N315 · added
+- book:comments:E967 · added
+- book:comments:E968 · added
+- book:comments:E969 · added
+- book:measure:D363 · 641 → 962 bytes
+- book:rules:X84 · added
+- book:sprites:P49 · added
+- book:words:J28 · 1,457 → 1,528 bytes
+- book:words:J45 · 446 → 461 bytes
+- code:index.html#drawn-once-in-the-view-frame · 19,039 → 19,102 bytes
+- code:index.html#the-door · 16,438 → 17,171 bytes
+- code:index.html#touch · 9,426 → 9,519 bytes
+- code:menu.js · 108,153 → 109,111 bytes
+- tool:test.py · 274,506 → 275,694 bytes
+Tests: t-n18c holds; t-n16, t-n18, t-n18b, t-ground hold; smoke 6/6. #23 not reproduced (40 save-and-load rounds, fights cut short mid-save): the message now says why the newest save failed. Sealed on branch n11, not published to live

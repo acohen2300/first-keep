@@ -111,6 +111,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E920** the shapes are kept by layer (tiles, faces, reeds, then each band's contours) and by colou
 - **E913** the ground's shapes, the grass's one shape (the season's colour and the blades' bed), the 
 - **E914** a blade tile drawn at the screen's own pixels for the zoom in hand, thin triangles in the 
+- **E967** the grass blades' tiles are made at the next step up the √2 ladder of the zoom and stretch · N17
 - **E915** the blades' marks, made once per map from the seed: where in the tile, how long, how much 
 - **E916** the cloud tile: soft noise that wraps, made once per map
 - **E917** cloud shadows drift over the land each frame, the camera and the drift on the canvas (Safa
@@ -178,6 +179,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E696** the screen stays awake while a match runs; let go when paused, at rest or hidden; a browse
 - **E893** a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel 
 - **E889** the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a n
+- **E968** while a pinch moves, the land sheet is stretched to the new zoom instead of drawn again; o · N17
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
 - **E880** the land kept while the camera holds still: one copy drawn back instead of the ground, the
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)
@@ -667,6 +669,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E433** a tile on the board (the floor gives -1 off it)
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
 - **E431** the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picki
+- **E969** the quick action's aimer: on the aim step a plain white ring with four ticks and a dot sit
 - **E432** the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, 
 - **E359** the town is told what food, the seasons and the flock do, in the Words book's news
 - **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
