@@ -33,10 +33,10 @@ Zero stray numbers: every value in its book with a citation and an E-code commen
 1. Hilltops draw as blocky brown crosses: make them grass.
 2. Blades too dark and dense at mid zoom: one tile on preview now, his look owed.
 3. Hill light too strong (reads as cloud shadow).
-4. Patchwork seams between ground pieces of different zoom steps.
+4. ~~Patchwork seams~~ N12 (preview, Nov 10 08:15): chunks cut, one picture at every zoom; Albert's look owed.
 5. Dark zig-zag wedges on map-edge cliffs.
 6. Rivers and lakes look like trenches: water to fill close to the grass.
-7. Brief blade-less pieces while new ones are made.
+7. ~~Blade-less pieces~~ N12: blades are one sheet over the land, cut to the grass.
 8. Mud and frost: back later as steps, like snow.
 9. Publish N11 live (his go).
 
