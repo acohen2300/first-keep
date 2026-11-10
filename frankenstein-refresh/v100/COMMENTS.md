@@ -35,8 +35,8 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E740 | menu.js | a building's lines, each as its next step to learn (none when the line is done); another people's lines are left out |
 | E748 | index.html#drawn-once-in-the-view-frame | the ground painted once into the whole picture: tiles, faces, contours, reeds; its grass also onto the season sheet, which is the blades' mask |
 | E749 | index.html#drawn-once-in-the-view-frame | the cache budgets for what is drawn once and kept |
-| E751 | index.html#drawn-once-in-the-view-frame | the ground: nothing before the land is made (a frame drawn before the first map threw a drawImage error, the intermittent one), then the one picture at every zoom, as Base, Mid and v80 drew it: no zoom steps, so no seams and nothing missing |
-| E752 | index.html#drawn-once-in-the-view-frame | the blades are drawn sharp for the zoom in hand over the land sheet, then cut to the grass by the season sheet (grass only: no blades on water, sand or rock), and laid on at the zoom's fade |
+| E751 | index.html#drawn-once-in-the-view-frame | the ground: nothing before the land is made (a frame drawn before the first map threw a drawImage error, the intermittent one), then the one picture at every zoom, as Base, Mid and v80 drew it, only the part on the sheet (v80's viewBox): no zoom steps, so no seams and nothing missing |
+| E752 | index.html#drawn-once-in-the-view-frame | the blades are laid over the land sheet, then cut to the grass by the season sheet (grass only: no blades on water, sand or rock, the one way it differs from v80), and laid on at the zoom's fade |
 | E753 | index.html#the-body-s-laws | a figure that moved this step walks; it swings its tool only standing at its work |
 | E754 | index.html#the-things-drawn-each-frame-back-to-fr | a drawing's size in the world comes from its body's real height in the Mass book: the art is measured once and drawn so it stands that tall |
 | E755 | index.html#the-things-drawn-each-frame-back-to-fr | how tall a drawing is: from its first to its last painted row |
@@ -168,7 +168,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E56 | index.html#drawn-once-in-the-view-frame | Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward the camera. Then every frame is one picture, moved and scaled. |
 | E57 | index.html#drawn-once-in-the-view-frame | the masks at a quarter scale: the land in white and in shadow, the inland water |
 | E58 | index.html#drawn-once-in-the-view-frame | a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right and down, so the next tile's edge lands on solid paint and no seam shows |
-| E59 | index.html#drawn-once-in-the-view-frame | the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (preview 49's) (N11: two tiles, E903) |
+| E59 | index.html#drawn-once-in-the-view-frame | the grass's blades, v80's exactly (Albert, Nov 10 08:19: as close to v80 as possible): one 128-pixel tile of 260 short strokes scattered evenly at random (no tufts, so no landmark repeats), half dark and half light, drawn once |
 | E60 | index.html#drawn-once-in-the-view-frame | the ground is painted flat; the light stands high to the left and in front and the meadow layer lights it (D353 lit): ground leaning that way warm, ground leaning away cool |
 | E61 | index.html#drawn-once-in-the-view-frame | runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills) |
 | E62 | index.html#drawn-once-in-the-view-frame | faces: the +y edge and the +x edge face the camera (the turn is under 45°) |
@@ -866,7 +866,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E900 | index.html#the-ground-s-soil-and-paper | the ground's soil and paper (N11): wet and snow on the ground for play, and the light, season, snow, flowers and glints over the paper sheets |
 | E901 | index.html#the-ground-s-soil-and-paper | over the baked ground: the hills' sun and shade and the meadow's soft patches as one small soft picture, then the snow sheet, then the flowers |
 | E902 | index.html#drawn-once-in-the-view-frame, index.html#the-ground-s-soil-and-paper | grass is painted a light neutral and also on its own sheet; that sheet takes the season's one colour (multiplied), recoloured only when the colour moves a visible step, so the ground is never painted again for the season |
-| E903 | index.html#drawn-once-in-the-view-frame | the blades are two tiles of different sizes laid over each other, so the repeat never lines up (the Cicada Principle) |
+| E903 | index.html#drawn-once-in-the-view-frame | the blade sheet is laid in the ground's own frame, turned and squashed with it as v80's was, at half a ground unit a pixel |
 | E904 | index.html#drawn-once-in-the-view-frame | a marsh is shallow water; reeds stand in it |
 | E905 | index.html#drawn-once-in-the-view-frame | each paper sheet casts a thin shadow on the sheet below, along its edge |
 | E906 | index.html#the-ground-s-soil-and-paper | the flowers come up in new places each year; the pebbles stay where they lie |

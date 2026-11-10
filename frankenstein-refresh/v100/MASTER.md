@@ -120,11 +120,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E776** water cells traced like the land: each depth band of the water drawn along its contour, so
 - **E905** each paper sheet casts a thin shadow on the sheet below, along its edge
 - **E749** the cache budgets for what is drawn once and kept
-- **E903** the blades are two tiles of different sizes laid over each other, so the repeat never line
-- **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102) · N11 · E903
+- **E903** the blade sheet is laid in the ground's own frame, turned and squashed with it as v80's wa
+- **E59** the grass's blades, v80's exactly (Albert, Nov 10 08:19: as close to v80 as possible): one
 - **E751** the ground: nothing before the land is made (a frame drawn before the first map threw a dr
 - **E910** the blades fade in with the zoom, as v80's did: none from far away, full close up
-- **E752** the blades are drawn sharp for the zoom in hand over the land sheet, then cut to the grass
+- **E752** the blades are laid over the land sheet, then cut to the grass by the season sheet (grass 
 - **E547** the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so 
 - **E548** bare earth worn by feet round a finished building (not a field, a wall or a trap)
 - **E549** the dark where someone fell, wider for a big body, a blade's cut for a soldier
