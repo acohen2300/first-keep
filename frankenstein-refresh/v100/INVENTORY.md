@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,457 | 584,973 | 585,121 (+14,952) |
-| Books | 2327 | 0 | 687,782 | 688,676 (+647) |
+| Game code | 31 | 3,457 | 584,973 | 585,121 |
+| Books | 2330 | 0 | 688,713 | 689,607 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,832 | 297,867 | 298,112 (+3,288) |
+| Tools | 5 | 1,864 | 302,096 | 302,341 |
 
 ## The trades (code)
 
@@ -19,29 +19,29 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
-| index.html#floor-2-terrain | 84 | 9,478 | 9,482 (+189) | 115 |
-| index.html#floor-3-non-movables | 67 | 9,797 | 9,801 (+924) | 54 |
-| index.html#drawn-once-in-the-view-frame | 98 | 19,035 | 19,039 (+6,294) | 92 |
-| index.html#the-view | 9 | 1,075 | 1,079 (-9) | 13 |
-| index.html#the-door | 98 | 16,434 | 16,438 (+187) | 63 |
+| index.html#floor-2-terrain | 84 | 9,478 | 9,482 | 115 |
+| index.html#floor-3-non-movables | 67 | 9,797 | 9,801 | 54 |
+| index.html#drawn-once-in-the-view-frame | 98 | 19,035 | 19,039 | 92 |
+| index.html#the-view | 9 | 1,075 | 1,079 | 13 |
+| index.html#the-door | 98 | 16,434 | 16,438 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
-| index.html#the-trees | 44 | 9,922 | 9,926 (+474) | 16 |
+| index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 149 | 19,647 | 19,651 (-4) | 78 |
-| index.html#the-body-s-laws | 32 | 2,819 | 2,823 (+30) | 32 |
+| index.html#floor-5-movables | 149 | 19,647 | 19,651 | 78 |
+| index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,949 | 5,953 | 90 |
-| index.html#floor-6-climate | 172 | 30,262 | 30,274 (+718) | 127 |
-| index.html#floor-7-display | 71 | 15,071 | 15,075 (+592) | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 127 | 24,895 | 24,899 (+1,605) | 0 |
+| index.html#floor-6-climate | 172 | 30,262 | 30,274 | 127 |
+| index.html#floor-7-display | 71 | 15,071 | 15,075 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 127 | 24,895 | 24,899 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 40 | 4,342 | 4,346 (-1,071) | 38 |
-| index.html#touch | 53 | 9,422 | 9,426 (+37) | 54 |
-| menu.js | 529 | 106,907 | 106,951 (+4,364) | 528 |
-| econ.js | 592 | 108,897 | 108,897 (+377) | 72 |
-| combat.js | 354 | 58,723 | 58,723 (+245) | 84 |
+| index.html#the-woods-cache | 40 | 4,342 | 4,346 | 38 |
+| index.html#touch | 53 | 9,422 | 9,426 | 54 |
+| menu.js | 529 | 106,907 | 106,951 | 528 |
+| econ.js | 592 | 108,897 | 108,897 | 72 |
+| combat.js | 354 | 58,723 | 58,723 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 57 | 6,050 | 6,050 | 66 |
 
@@ -57,7 +57,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 335 | 158,500 |
-| rules | 76 | 29,120 |
+| rules | 79 | 30,081 |
 | screen | 26 | 11,132 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -154,5 +154,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
 | X78 | t-n17 | page | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the twelve repeatable buildings; every locked research says why on its button; a tap held a second on Train still trains |
+| X79 | t-ground | page | the paper ground (N11-N14): on the opening view, open water well below the land is drawn blue and open land well above it green, nine in ten points or more, away from shores, finds and trees |
+| X80 | t-n15 | page | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark |
+| X81 | t-n16 | page | N16, the quick action: open ground gives Attack, Build, Rally; Attack gives All, half, quarter and Squad; Build gives the six groups; a message with a place shows Go on a menu's help line |
 
-2457 items sealed · 2327 book entries · 94 laws · 311 citations, 33 still to open · 0 known
+2460 items sealed · 2330 book entries · 94 laws · 311 citations, 33 still to open · 0 known

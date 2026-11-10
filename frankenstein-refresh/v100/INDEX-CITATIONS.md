@@ -400,12 +400,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N298** (to open) Roberts, M., An improved version of Bridson's algorithm for Poisson disc sampling (Extreme Learning blog, 2019 → unused
 - **N299** (to open) Google, web.dev, Measure performance with the RAIL model: a frame at 60 fps has about 16 ms, of which the brow → D353
 - **N300** (to open) Alex Walker, The Cicada Principle and Why It Matters to Web Designers (SitePoint, 2011): tiles of prime-number → D348
-- **N301** Albert, Nov 10, 2026, on the ground: four sheets (water, sand, dirt, grass), lakes rivers streams and marshes  → C33, D366
+- **N301** Albert, Nov 10, 2026, on the ground: four sheets (water, sand, dirt, grass), lakes rivers streams and marshes  → C33, D366, X79
 - **N302** Albert, Nov 10, 2026, 09:45 and 10:16 (#38, a match lost when Safari's back swipe loaded the previous seed): s → D331
 - **N303** USDA NRCS Conservation Practice Standard, Pond (Code 378), 2022: embankment side slopes two horizontal to one  → D32
-- **N304** Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slop → D32, D62, D65, D70, D366
+- **N304** Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slop → D32, D62, D65, D70, D366, X79
 - **N305** (to open) A. Hurwitz (1891), Ueber die angenaeherte Darstellung der Irrationalzahlen durch rationale Brueche: the golden → D366
-- **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, C36, D367, SN6, SN39, J48
+- **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, C36, D367, X80, X81, SN6, SN39, J48
 - **N307** Albert, Nov 10, 2026, 12:26 (N17: his N15 notes answered on the N15 Answer Sheet) and 12:38 ("Build N17 yes ye → QCV, SC47, C34, C35, D113, D317, X78, SN40, HA3, HX6, J36
 - **N308** Base (preview 49) and Mid, the cost line: costCol(fr) = grad(fr >= 1 ? 0.55 : fr - 1), red at nothing, white n → C34
 - **N309** Xia, X. and Zhang, P., Flickering of buoyant diffusion flames: a vortex dynamics revisit, arXiv:1803.10400 (20 → QCV, D317

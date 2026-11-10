@@ -4530,3 +4530,195 @@ MODIFIED (3):
 LOCKED (2405 of 2408): byte for byte as sealed, 1,537,251 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2408 items sealed · 2278 book entries · 93 laws · 298 citations, 30 still to open · 7 known
+
+## N11–N13 + N14 build 1: N14 · build 1: save and ground (Albert's N13 notebook #38, #1, #2, #3, #4, #5, #6, #7, #8, #9) · N15 · builds 2-4 (Albert's N13 notebook: menus, villagers and queue, army, light and the quick action) · N16 · N17 · Albert's N15 notes, 18 items (#8 left for his check) · N17 audit · 2026-11-10 13:47
+Albert, Nov 10 06:34-06:36: "This is good. Let's implement" then "Go go go" on the N11 list (the paper ground from the approved mock: sheets, water close to the grass, marsh as shallow water with reeds, woods' floor and rim colours cut, one season colour, v80 blades in two tiles, flowers in new places each year, snow as a sheet in six steps, glints; mud and frost cut for now, no cloud shadows; the meadow picture and cels.js cut) · N12: Albert, Nov 10 07:54: "Try it. Go go" on the ground draw: one picture at every zoom (Base, Mid and v80's way), the chunk cache cut, the blades one sheet over the land cut to the grass · N12b: Albert 08:19 "Try to get it as close to v80 as possible": v80's blade tile · N13: Albert 08:34 'Can you implement this' (the paper ground mock) then 08:38 'Keep cloud shadows. And set water to high. Go go' · N14: Albert, Nov 10 10:00 (answers on the N13 sheet) and 10:16 'yes yes' (build 1: save + ground) · N15: Albert, Nov 10 11:32 'Just do it all' (builds 2 to 4 as listed 10:12-10:15) · N16: Albert, Nov 10 11:51 'Go' (#37 quick action in four taps, #22 sun on trees, #30 Go on the info bar, Daily locks civ, difficulty and length, Lanterns brighten the torches) · N17: Albert, Nov 10 12:26 (answers on the N15 Answer Sheet) and 12:38 'Build N17 yes yes' (minus frees a villager) · N17 audit: Albert, Nov 10 13:29 'yes yes' (items 1-9)
+Opened: code:index.html, code:cels.js, tool:index.py, tool:test.py, book:measure, book:colours, book:comments, book:citations, book:shells, book:capabilities, code:menu.js, book:words, book:rules, book:screen, code:combat.js, code:econ.js, book:sprites, book:sound, law:QCV, code:sound.js
+MODIFIED (184):
+- book:capabilities:SC47 · 396 → 305 bytes
+- book:capabilities:SC48 · removed
+- book:capabilities:SC49 · removed
+- book:citations:N300 · added
+- book:citations:N301 · added
+- book:citations:N302 · added
+- book:citations:N303 · added
+- book:citations:N304 · added
+- book:citations:N305 · added
+- book:citations:N306 · added
+- book:citations:N307 · added
+- book:citations:N308 · added
+- book:citations:N309 · added
+- book:citations:N310 · added
+- book:citations:N311 · added
+- book:citations:N312 · added
+- book:colours:C22 · added
+- book:colours:C23 · 422 → 403 bytes
+- book:colours:C25 · 947 → 463 bytes
+- book:colours:C32 · removed
+- book:colours:C33 · added
+- book:colours:C34 · added
+- book:colours:C35 · added
+- book:colours:C36 · added
+- book:comments:E161 · removed
+- book:comments:E300 · 158 → 299 bytes
+- book:comments:E336 · 245 → 289 bytes
+- book:comments:E394 · 213 → 358 bytes
+- book:comments:E53 · 53 → 99 bytes
+- book:comments:E54 · 87 → 221 bytes
+- book:comments:E59 · removed
+- book:comments:E660 · 101 → 222 bytes
+- book:comments:E662 · 140 → 194 bytes
+- book:comments:E735 · 288 → 423 bytes
+- book:comments:E739 · 291 → 386 bytes
+- book:comments:E748 · 171 → 154 bytes
+- book:comments:E749 · 84 → 61 bytes
+- book:comments:E750 · removed
+- book:comments:E751 · 240 → 112 bytes
+- book:comments:E752 · removed
+- book:comments:E758 · 116 → 190 bytes
+- book:comments:E771 · removed
+- book:comments:E799 · removed
+- book:comments:E801 · removed
+- book:comments:E802 · removed
+- book:comments:E881 · removed
+- book:comments:E882 · removed
+- book:comments:E883 · removed
+- book:comments:E884 · removed
+- book:comments:E885 · removed
+- book:comments:E886 · removed
+- book:comments:E887 · removed
+- book:comments:E888 · removed
+- book:comments:E890 · removed
+- book:comments:E891 · removed
+- book:comments:E892 · removed
+- book:comments:E895 · removed
+- book:comments:E899 · removed
+- book:comments:E900 · added
+- book:comments:E901 · added
+- book:comments:E902 · added
+- book:comments:E904 · added
+- book:comments:E905 · added
+- book:comments:E906 · added
+- book:comments:E907 · added
+- book:comments:E908 · added
+- book:comments:E909 · added
+- book:comments:E910 · added
+- book:comments:E911 · added
+- book:comments:E912 · added
+- book:comments:E913 · added
+- book:comments:E914 · added
+- book:comments:E915 · added
+- book:comments:E916 · added
+- book:comments:E917 · added
+- book:comments:E918 · added
+- book:comments:E919 · added
+- book:comments:E920 · added
+- book:comments:E921 · added
+- book:comments:E922 · added
+- book:comments:E923 · added
+- book:comments:E924 · added
+- book:comments:E925 · added
+- book:comments:E926 · added
+- book:comments:E927 · added
+- book:comments:E928 · added
+- book:comments:E929 · added
+- book:comments:E930 · added
+- book:comments:E931 · added
+- book:comments:E932 · added
+- book:comments:E933 · added
+- book:comments:E934 · added
+- book:comments:E935 · added
+- book:comments:E936 · added
+- book:comments:E937 · added
+- book:comments:E938 · added
+- book:comments:E939 · added
+- book:comments:E940 · added
+- book:comments:E941 · added
+- book:comments:E942 · added
+- book:comments:E943 · added
+- book:comments:E944 · added
+- book:comments:E945 · added
+- book:comments:E946 · added
+- book:comments:E947 · added
+- book:comments:E949 · added
+- book:comments:E950 · added
+- book:comments:E951 · added
+- book:comments:E952 · added
+- book:measure:D113 · 861 → 2,107 bytes
+- book:measure:D121 · removed
+- book:measure:D14 · 86 → 160 bytes
+- book:measure:D15 · 251 → 176 bytes
+- book:measure:D164 · 653 → 481 bytes
+- book:measure:D246 · 865 → 1,008 bytes
+- book:measure:D317 · 1,463 → 2,234 bytes
+- book:measure:D32 · 393 → 621 bytes
+- book:measure:D320 · 2,328 → 2,435 bytes
+- book:measure:D331 · 606 → 748 bytes
+- book:measure:D348 · 2,021 → 1,700 bytes
+- book:measure:D353 · 4,576 → 1,077 bytes
+- book:measure:D364 · removed
+- book:measure:D365 · added
+- book:measure:D366 · added
+- book:measure:D367 · added
+- book:measure:D368 · added
+- book:measure:D62 · 794 → 866 bytes
+- book:measure:D65 · 676 → 805 bytes
+- book:measure:D70 · 610 → 876 bytes
+- book:measure:D96 · 119 → 289 bytes
+- book:rules:X72 · 721 → 823 bytes
+- book:rules:X78 · added
+- book:rules:X79 · added
+- book:rules:X80 · added
+- book:rules:X81 · added
+- book:screen:SN20 · 646 → 694 bytes
+- book:screen:SN39 · added
+- book:screen:SN40 · added
+- book:screen:SN6 · 262 → 205 bytes
+- book:shells:BCL1 · 196 → 206 bytes
+- book:shells:BCL2 · 202 → 212 bytes
+- book:shells:BCL4 · 205 → 215 bytes
+- book:shells:BI1 · 198 → 208 bytes
+- book:shells:BI2 · 207 → 217 bytes
+- book:shells:BI3 · 208 → 218 bytes
+- book:shells:BI6 · 185 → 195 bytes
+- book:shells:BI7 · 191 → 201 bytes
+- book:shells:BR1 · 182 → 192 bytes
+- book:shells:BW1 · 149 → 159 bytes
+- book:shells:BW3 · 170 → 180 bytes
+- book:shells:BW4 · 174 → 184 bytes
+- book:shells:CL1 · removed
+- book:shells:CL2 · removed
+- book:sound:HA3 · 236 → 406 bytes
+- book:sound:HX6 · 247 → 304 bytes
+- book:sprites:PT1 · 6,678 → 7,023 bytes
+- book:words:J28 · 1,391 → 1,457 bytes
+- book:words:J31 · 196 → 318 bytes
+- book:words:J34 · 501 → 525 bytes
+- book:words:J36 · 313 → 439 bytes
+- book:words:J39 · 487 → 503 bytes
+- book:words:J48 · added
+- code:cels.js · removed
+- code:combat.js · 58,478 → 58,723 bytes
+- code:econ.js · 108,520 → 108,897 bytes
+- code:index.html#drawn-once-in-the-view-frame · 12,745 → 19,039 bytes
+- code:index.html#floor-2-terrain · 9,293 → 9,482 bytes
+- code:index.html#floor-3-non-movables · 8,877 → 9,801 bytes
+- code:index.html#floor-5-movables · 19,655 → 19,651 bytes
+- code:index.html#floor-6-climate · 29,556 → 30,274 bytes
+- code:index.html#floor-7-display · 14,483 → 15,075 bytes
+- code:index.html#the-body-s-laws · 2,793 → 2,823 bytes
+- code:index.html#the-door · 16,251 → 16,438 bytes
+- code:index.html#the-ground-s-soil-and-paper · added
+- code:index.html#the-meadow · removed
+- code:index.html#the-trees · 9,452 → 9,926 bytes
+- code:index.html#the-view · 1,088 → 1,079 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 23,294 → 24,899 bytes
+- code:index.html#the-woods-cache · 5,417 → 4,346 bytes
+- code:index.html#touch · 9,389 → 9,426 bytes
+- code:menu.js · 102,587 → 106,951 bytes
+- law:QCV · added
+- tool:index.py · 27,790 → 27,779 bytes
+- tool:test.py · 260,807 → 268,335 bytes
+LOCKED (2306 of 2460): byte for byte as sealed, 788,024 bytes
+Tests: 6/6 smoke checks hold; t-ground, t-n15, t-n16, t-n17, t-trade, t-match hold; the full test.py at 13:05 had 17 known failures (t-match and t-trade since fixed); sealed on branch n11, not published to live
+Inventory: 2460 items sealed · 2330 book entries · 94 laws · 311 citations, 33 still to open · 0 known

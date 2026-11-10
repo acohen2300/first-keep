@@ -371,3 +371,15 @@ Preview: `frankenstein-refresh/preview-n17/`. Gate PASS, smoke 6/6 (the match sm
 - #16 Twitch, cause found: neighbours' gather spots sit closer than a person's room, so each frame the push moved them and the walk back returned them. Fixed at the rule: spots now keep the full 3 ft (OSHA 1910.142(b)(3), N166), no exception in the push. Measured: moving while gathering 5.3% of frames → 0.4%, back-and-forth 13 → 0. [2026-11-10 14:30]
 - #17 Repeat tick on the twelve repeatable buildings; only they offer the next one beside the last. #18 Every locked research says why on its button (age, the step before, busy, full, its building); only the purse shows the shortfall. [2026-11-10 14:30]
 
+
+### N17 values lines (the 12 core values, per item; ✓ all unless named) [2026-11-10 15:20]
+- #1 ring on pill edge ✓ (9 source: design, your call). #2 Daily first, locks all ✓ (9: design). #3 Start 14/600 ✓ (9: design; 12 saves code: setup spans now one book row). [2026-11-10 15:20]
+- #4 first placed, first built ✓ (3 real-life: AoE2's build queue; 12: one list, no new loop). #5 torch flicker ✓ (4/9: QCV, N309; the 8 cm head is design). #6 rings fill ✓ (12: one selector). [2026-11-10 15:20]
+- #7 held taps ✓ (11 solves a real problem, verified first). #9 green foot ring ✓ (9: design). #10 minus at once ✓ (12: shorter than before). #11 woods ghost ✓ (9: design). [2026-11-10 15:20]
+- #12 campfires ✓ (9: Hall's social distance, N312). #13 cost ramp ✓ (one home with Base and Mid, N308). #14 queue in frame ✓ (12: no new rule). [2026-11-10 15:20]
+- #15 lightning ✓ (4/9: CIGRÉ TB 549, N310; brightness and loudness are design). #16 twitch ✓ (2 our rules: fixed at OSHA 3 ft, N166; 12: one condition, the patch removed). #17 Repeat tick ✓ (ECS: a tick on shells). #18 locked reasons ✓ (12: one label rule). [2026-11-10 15:20]
+
+### N17 audit (Albert, Nov 10 13:29 "yes yes") [2026-11-10 15:20]
+- Twitch fixed at the rule (spots keep the full 3 ft), exception removed. Lakes keep off the trade stops (t-trade 8/8). t-match records your louder thunder. Numbers moved to books (lightning drawing, foot ring, New Game rows, clock, colour mix). Inline font moved to the stylesheet. [2026-11-10 15:20]
+- New tests for the builds that had none: t-ground (N11–N14), t-n15, t-n16. t-n15 confirms a queued unit taken out is paid back in full (your #8). [2026-11-10 15:20]
+- Sealed N11–N17 on n11 (not published to live). From here: one build, one permit, 10 changes max. [2026-11-10 15:20]

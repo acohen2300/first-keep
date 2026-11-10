@@ -1482,7 +1482,39 @@ async def n17(b):
     rep = sorted(c for c, e in SHELLS.items() if e.get('name') in ('Farm', 'Tree farm', 'Mint', 'Quarry', 'Mill', 'Lumber camp', 'Mining camp', 'Dwelling', 'Foundry', 'Wall', 'Palisade', 'Tower'))
     got = [v['stays'], v['next'], v['minus'][1] == v['minus'][0] - 1, v['hold'][0] > 0 and v['hold'][1] < 0.02 * v['hold'][0], v['repeat'] == rep, not v['reasons'], held == 1, not errs]
     ok('t-n17', all(got), [got, v, held, errs[:2]])
-PAGED = {'t-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+GROUNDJS = r"""(() => { MENU.act('start'); FK.fog(false); return true; })()"""
+GROUNDJS2 = r"""(() => { const N = FK.N, H = FK.H, L = FK.D.land, c = FK.ctx, [cw, ch] = FK.size(), dpr = c.canvas.width / cw, out = { water: [0, 0], land: [0, 0] };
+ for (let k = 0; k < N * N; k += 7) { const [bx, by] = FK.tileMid(k), [x, y] = FK.toScreen(...FK.toView(bx, by, Math.max(0, H[k]))); if (x < 20 || y < 120 || x > cw - 20 || y > ch - 240) continue;
+  let near = false; for (const d of [-1, 1, -N, N, -N - 1, N + 1]) if ((H[k + d] < 0) !== (H[k] < 0) || FK.OCC[k + d] || FK.FOR[k + d]) near = true; if (near || FK.OCC[k] || FK.FOR[k] || FK.MARSH[k]) continue;
+  const [r, g, b] = c.getImageData(Math.round(x * dpr), Math.round(y * dpr), 1, 1).data;
+  if (H[k] < 0) { out.water[0]++; if (b > r && b >= g * 0.85) out.water[1]++; } else if (H[k] >= L) { out.land[0]++; if (g > b && g >= r * 0.85) out.land[1]++; } }
+ return out; })()"""
+async def ground(b):
+    pg, errs = await fresh(b); await pg.evaluate(GROUNDJS); await pg.wait_for_timeout(1000); v = await pg.evaluate(GROUNDJS2)
+    await pg.evaluate("(() => { const H = FK.H, N = FK.N, h = FK.seatOf(0); let best = -1, bd = Infinity; for (let k = 0; k < N * N; k++) if (H[k] < -FK.D.land / 2) { const [x, y] = FK.tileMid(k), d = Math.hypot(x - h.bx, y - h.by); if (d < bd) [best, bd] = [k, d]; } const [vx, vy] = FK.toView(...FK.tileMid(best), 0); FK.cam.x = vx; FK.cam.y = vy; FK.dirty(); })()")
+    await pg.wait_for_timeout(1000); w = await pg.evaluate(GROUNDJS2); await pg.close()
+    share = lambda p: p[0] >= 20 and p[1] >= 0.9 * p[0]
+    ok('t-ground', share(v['land']) and share(w['water']) and not errs, [v, w, errs[:2]])
+N15JS = r"""(() => { const S = MENU.S, out = {}; S.opt.daily = 1; MENU.VERBS.opt.run('civ', 0); const a = { ...S.opt }; out.daily = ['civ', 'diff', 'len', 'scen', 'fog'].every((k) => MENU.VERBS.opt.whyNot(k) !== '') && MENU.VERBS.opt.run('civ', 0) === undefined && ['civ', 'diff', 'len', 'scen', 'fog'].every((k) => S.opt[k] === a[k]);
+ S.opt.daily = 0; out.free = MENU.VERBS.opt.whyNot('civ') === ''; MENU.act('start'); const me = FK.SIDES[0]; for (const y in me.store) me.store[y] = 5000; const h = FK.seatOf(0), c = FK.trains(h.code, 0)[0], before = JSON.stringify(me.store);
+ ECON.queue(h, c); ECON.queue(h, c); ECON.unqueue(h, 1); ECON.unqueue(h, 0); out.refund = JSON.stringify(me.store) === before && !h.q.length;
+ MENU.render(true); out.ribbon = document.querySelectorAll('.rib > span').length === MENU.SCR.ribbon.cells.length;
+ const L = FK.D.light, lit = FK.lightsOf().filter(([t, k]) => k === 'lantern').length; out.torch = [lit, FK.blds().filter((t) => !(t.done < 1) && !FK.has(t, 'Line') && !FK.has(t, 'Field')).length];
+ return out; })()"""
+async def n15(b):
+    pg, errs = await fresh(b); await pg.evaluate("FK.K.alt = -30"); v = await pg.evaluate(N15JS); await pg.close()
+    got = [v['daily'], v['free'], v['refund'], v['ribbon'], v['torch'][0] >= v['torch'][1] > 0, not errs]
+    ok('t-n15', all(got), [got, v, errs[:2]])
+N16JS = r"""(() => { MENU.act('start'); const S = MENU.S, h = FK.seatOf(0), out = {}, sol = Object.keys(FK.SH).find((c) => ECON.soldier(c)); for (let n = 0; n < 2; n++) FK.spawn(sol, 0, $ring(h, 4, 20, (i, j) => { const q = j * FK.N + i; return FK.walkable(q) && q; }), FK.rng); const k = $ring(h, 6, 30, (i, j) => { const q = j * FK.N + i; return FK.free(q) && FK.walkable(q) && q; });
+ S.qa = { k, px: 200, py: 400 }; MENU.render(true); const cells = () => [...document.querySelectorAll('#qa [data-v]')].map((e) => e.dataset.v.split('|')[0]);
+ out.block = cells(); MENU.act('qstep', 'army'); out.army = cells(); S.qa = { k, px: 200, py: 400 }; MENU.render(true); MENU.act('qbuild'); out.groups = cells().length;
+ MENU.say('test', { at: { bx: h.bx, by: h.by } }); S.tab = 'Hall'; MENU.render(true); out.go = !!document.querySelector('#panel .ihr .go');
+ return out; })()"""
+async def n16(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(N16JS); await pg.close()
+    got = [v['block'][:3] == ['qstep', 'qbuild', 'qrally'], v['army'] == ['qsend', 'qsend', 'qsend', 'qstep'], v['groups'] == 6, v['go'], not errs]
+    ok('t-n16', all(got), [got, v, errs[:2]])
+PAGED = {'t-ground': ground, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:
