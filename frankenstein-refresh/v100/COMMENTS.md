@@ -803,7 +803,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E817 | menu.js | the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager's square) stand a slot above the point, centred on it, never under it; where the top bar or the help line leaves no room, a slot below instead |
 | E818 | index.html#touch | the bottom bars' height, told by the menu when it changes (the top bar's is read as topOf); a person's head on the screen, a person's height above the feet (and the feet), for what must sit just above one, or just below when the top has no room |
 | E819 | menu.js | the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes above its head, Build, Send to, Attack, More; More turns them to Garrison, Rally, Info, Focus; Send to and Attack wait for the next tap on the map; any other tap closes it and lets the villager go; it follows the villager as it walks |
-| E820 | menu.js, econ.js | a villager told to take cover goes into the nearest building of yours with room, as fright sends it; like fright's, it comes out when no foe is near (so with none near, there is nothing to hide from) |
+| E820 | econ.js | a villager told to take cover goes into the nearest building of yours with room, as fright sends it; like fright's, it comes out when no foe is near (so with none near, there is nothing to hide from) |
 | E821 | menu.js | one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wherever it sits; the pause panel lived outside the three listeners and its buttons never ran |
 | E822 | index.html#the-view-s-eyes-lights-and-stage | the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rate, otherwise the full rate; the loop paces by it and the shed budgets by it |
 | E825 | menu.js | every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, and a tap opens Help; the same line under the top ribbon comes and goes on its own (Albert, Nov 9 12:29) |
@@ -836,3 +836,9 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E852 | econ.js | a building raised into another where it stands (the Gate's way over a wall): taken down, the new one's site laid in its place and paid; put back as it was when there is no room |
 | E853 | menu.js | the Build menu: the open tab's buildings a side can build, the rest behind Show all; it opens on the first tab |
 | E854 | menu.js | made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm |
+| E855 | index.html#the-woods-cache | a picked unit: the green ring at its feet, thick and glowing |
+| E856 | menu.js | a picked unit takes the next tap as its one order (a thing: it does that; the ground: it goes there), then the pick clears |
+| E857 | menu.js | the quick action: a tap on open ground opens a square of four, the first under the finger (Attack, Build, Squad, More); each step opens in the same place, so three taps in one spot send everyone |
+| E858 | menu.js | a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle only |
+| E859 | menu.js | Build from the quick action: the Build menu opens on its first tab, the building's ghost starts at the spot |
+| E860 | menu.js | the square laid with its first box under the finger, held inside the screen |

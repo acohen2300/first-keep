@@ -831,5 +831,11 @@ BOOK("comments", {
  "E851": {"text": "what a side cannot build yet (age, research, a building it needs, a later age): the locks before the limit; the Build menu hides these"},
  "E852": {"text": "a building raised into another where it stands (the Gate's way over a wall): taken down, the new one's site laid in its place and paid; put back as it was when there is no room"},
  "E853": {"text": "the Build menu: the open tab's buildings a side can build, the rest behind Show all; it opens on the first tab"},
- "E854": {"text": "made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm"}
+ "E854": {"text": "made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm"},
+ "E855": {"text": "a picked unit: the green ring at its feet, thick and glowing"},
+ "E856": {"text": "a picked unit takes the next tap as its one order (a thing: it does that; the ground: it goes there), then the pick clears"},
+ "E857": {"text": "the quick action: a tap on open ground opens a square of four, the first under the finger (Attack, Build, Squad, More); each step opens in the same place, so three taps in one spot send everyone"},
+ "E858": {"text": "a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle only"},
+ "E859": {"text": "Build from the quick action: the Build menu opens on its first tab, the building's ghost starts at the spot"},
+ "E860": {"text": "the square laid with its first box under the finger, held inside the screen"}
 });

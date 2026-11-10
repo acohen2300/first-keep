@@ -1632,7 +1632,8 @@ function drawWoods(s) { const q = STEP ** Math.round(Math.log(s * dpr) / Math.lo
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u) || u.veil))) return; const [x, y] = toScreen(...vAt(u)); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
-    if (!dots) { const R = C.foot; ctx.strokeStyle = pick.includes(u) ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : u.job === 'idle' && !moving(u) ? R.idle : R.work; ctx.lineWidth = DRS.foot; ctx.beginPath(); ctx.ellipse(x, y, 7 * s * FIG(), 3.5 * s * FIG(), 0, 0, 7); ctx.stroke(); } // E766
+    if (!dots) { const R = C.foot; ctx.strokeStyle = pick.includes(u) ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : u.job === 'idle' && !moving(u) ? R.idle : R.work; const on = pick.includes(u); ctx.lineWidth = on ? DRS.pick : DRS.foot; ctx.shadowColor = R.pick; ctx.shadowBlur = on ? DRS.glow : ZERO; ctx.beginPath(); ctx.ellipse(x, y, 7 * s * FIG(), 3.5 * s * FIG(), 0, 0, 7); ctx.stroke(); ctx.shadowBlur = ZERO; } // E766
+    // E855
     if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else drawUnit(u, x, y, s * FIG()); }; // E160
   if (!dots) { drawWoods(s); drawShadows(s); }
   for (const t of things) {

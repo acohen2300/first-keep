@@ -440,6 +440,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E158** the chunk's deep trees on one canvas
 - **E159** a hit moves to the back: the oldest goes first
 - **E766** the ring at a unit's feet, full and bright: green picked, blue working, yellow idle (yours · C24 (N145)
+- **E855** a picked unit: the green ring at its feet, thick and glowing
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
 - **E305** a find drawn smaller as it is used: PN1's left share and the rest by what is left (Mid's n · PN1 (N152, N164, N170, N195, N205)
 - **E161** L6 the play edge: the contour D7 in from the coast, found cell by cell between the tiles'  · D7 (N112)
@@ -520,7 +521,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E854** made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm · SN34 (N287)
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
-- **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
+- **E857** the quick action: a tap on open ground opens a square of four, the first under the finger 
+- **E858** a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle o
+- **E859** Build from the quick action: the Build menu opens on its first tab, the building's ghost s
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
@@ -531,6 +534,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
+- **E860** the square laid with its first box under the finger, held inside the screen
 - **E849** a group's label over its boxes, in small capitals across the whole row (as the v80 card)
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
@@ -586,6 +590,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
+- **E856** a picked unit takes the next tap as its one order (a thing: it does that; the ground: it g
 - **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)
@@ -627,7 +632,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## econ.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
-- **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
@@ -695,6 +699,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E440** a worker leaves a find that turns unsafe (Mid's vilTick): it drops the find and looks agai
 - **E441** going inside (Mid's vilTick, stepOut): a unit sent to a building with room walks to it and
 - **E442** a villager's fright (Mid's vilTick, D254): soldiers near scare it, beasts or robbers when  · D254 (N192)
+- **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
 - **E443** the Alarm's ranking (Mid's shelterRank, roomIn, fillRank, threatDir): buildings with room, · D255 (N192)
 - **E444** the Alarm (Mid's emgStart, townSquare, soldiersIn, villagersIn): its first order notes eac
 - **E445** the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see · D255 (N192)

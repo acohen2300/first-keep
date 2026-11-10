@@ -1,6 +1,23 @@
 {
  "build": "N6",
  "agreed": "Albert, Nov 9 2026 19:37: \"One build. All at the same time. Do the whole list and chart so I can play it complete. Remember our core values for building. Go go go\" (Next build list: OPEN and item 14)",
- "opens": ["book:screen", "book:measure", "book:words", "book:comments", "book:citations", "book:colours", "code:menu.js", "code:index.html", "code:econ.js", "code:combat.js"],
- "grow": {"code:menu.js": 6000, "code:index.html": 6000, "code:econ.js": 3000, "code:combat.js": 2000}
+ "opens": [
+  "book:screen",
+  "book:measure",
+  "book:words",
+  "book:comments",
+  "book:citations",
+  "book:colours",
+  "code:menu.js",
+  "code:index.html",
+  "code:econ.js",
+  "code:combat.js"
+ ],
+ "grow": {
+  "code:menu.js": 6000,
+  "code:index.html": 6000,
+  "code:econ.js": 3000,
+  "code:combat.js": 2000,
+  "code:index.html#the-woods-cache": 3000
+ }
 }
