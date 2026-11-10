@@ -4,8 +4,8 @@
 
 ## Where it stands
 - **Live:** https://acohen2300.github.io/first-keep/frankenstein-refresh/v100/ (N10b). Source: `frankenstein-refresh/v100/` on `main`.
-- **Preview:** https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n11/ (N11, the paper ground, with one blade tile). The preview folder is a plain copy of v100 with N11 in it, on `main`.
-- **N11 source:** branch `n11` (v100 with N11: sheets, water by shore distance, season tint, blades, flowers by year, snow sheet, glints; meadow picture and `cels.js` cut). The preview's one-tile change is on the branch too. On Albert's go: merge `n11` into `main`, fix the N11 items below, publish v100, delete `preview-n11/`.
+- **Preview:** https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n13/ (N11, the paper ground, with one blade tile). The preview folder is a plain copy of v100 with N11 in it, on `main`.
+- **N11 source:** branch `n11` (v100 with N11: sheets, water by shore distance, season tint, blades, flowers by year, snow sheet, glints; meadow picture and `cels.js` cut). The preview's one-tile change is on the branch too. On Albert's go: merge `n11` into `main`, fix the N11 items below, publish v100, delete `preview-n13/`.
 - **Gate:** `python3 index.py` in v100 (permit.json: `build`, `agreed`, `opens`, `grow`; numbers only in books; code comments are bare E-codes, their words in the comments book; each E-code named by code; init order: anything at the top of index.html runs before `ONE`/`ZERO` exist, use `D.count.one`).
 - **Publish:** `python3 publish.py --smoke "<message>"` (gate + smoke, seal, commit, push). It stops at `git pull` when docs are unstaged: `git add -A`, `git commit --amend` as Albert with the trailers, `git pull --rebase`, `git push`. Check the Pages run: `gh run list -L 1`.
 - **Tests:** `python3 test.py` (full, about 40 min); a throwing test is that rule's FAIL and the suite runs on. Tests held to Mid's calendar set `FK.D.startIn = 0`. `python3 smoke.py` (6 checks; the reload's frames are timed apart from the match's).
