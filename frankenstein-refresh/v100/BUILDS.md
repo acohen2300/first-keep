@@ -4733,3 +4733,6 @@ MODIFIED (5):
 - code:menu.js · 106,951 → 107,935 bytes
 - tool:test.py · 268,335 → 271,249 bytes
 Tests: t-n18 holds (10 checks); t-n15, t-n16, t-n17 hold; smoke 6/6; sealed on branch n11, not published to live
+
+## N18 build 1b · 2026-11-10 15:45
+#3 locked options' text faint (wfaint), the locked selection bright. t-n18 and t-n15 hold.

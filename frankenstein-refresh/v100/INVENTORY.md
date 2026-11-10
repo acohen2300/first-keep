@@ -4,7 +4,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,457 | 585,957 | 586,105 |
+| Game code | 31 | 3,457 | 586,005 | 586,153 |
 | Books | 2332 | 0 | 689,930 | 690,824 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
 | Tools | 5 | 1,882 | 305,010 | 305,255 |
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 40 | 4,342 | 4,346 | 38 |
 | index.html#touch | 53 | 9,422 | 9,426 | 54 |
-| menu.js | 529 | 107,891 | 107,935 | 526 |
+| menu.js | 529 | 107,939 | 107,983 | 526 |
 | econ.js | 592 | 108,897 | 108,897 | 72 |
 | combat.js | 354 | 58,723 | 58,723 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
