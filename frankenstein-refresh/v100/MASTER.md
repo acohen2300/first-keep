@@ -104,6 +104,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E56** Drawn once in the view frame: every tile a lifted quad, a face where it steps down toward 
 - **E780** the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake · D27 (N112) · D350 (N17, N173, N262, N263)
+- **E911** a path kept as lists of points, so a run of one colour can be joined into one shape
+- **E912** the ground is recorded once per map as shapes, not painted into a picture: each run of one
+- **E920** the shapes are kept by layer (tiles, faces, reeds, then each band's contours) and by colou
+- **E913** the ground's shapes, the grass's one shape (the season's colour and the blades' bed), the 
+- **E914** a blade tile drawn at the screen's own pixels for the zoom in hand, thin triangles in the 
+- **E915** the blades' marks, made once per map from the seed: where in the tile, how long, how much 
+- **E916** the cloud tile: soft noise that wraps, made once per map
+- **E917** cloud shadows drift over the land each frame, the camera and the drift on the canvas (Safa
 - **E57** the masks at a quarter scale: the land in white and in shadow, the inland water
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
@@ -115,16 +123,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E904** a marsh is shallow water; reeds stand in it
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
 - **E779** the contours painted band by band over the whole piece of land, lowest first, so a band la
+- **E919** the minimap's picture: the shapes replayed once, small
+- **E918** the water fills every cut up to one level just under the grass (the mock's 'high'): the ba
 - **E759** the shore and the strata as contours: between four tiles' middles the lowest band is laid,
 - **E782** each water cell adds its shallow part to every step's ice path and its land part to the la
 - **E776** water cells traced like the land: each depth band of the water drawn along its contour, so
 - **E905** each paper sheet casts a thin shadow on the sheet below, along its edge
 - **E749** the cache budgets for what is drawn once and kept
-- **E903** the blade sheet is laid in the ground's own frame, turned and squashed with it as v80's wa
-- **E59** the grass's blades, v80's exactly (Albert, Nov 10 08:19: as close to v80 as possible): one
-- **E751** the ground: nothing before the land is made (a frame drawn before the first map threw a dr
+- **E751** the ground: nothing before the land is made, then its shapes replayed under the camera at 
 - **E910** the blades fade in with the zoom, as v80's did: none from far away, full close up
-- **E752** the blades are laid over the land sheet, then cut to the grass by the season sheet (grass 
 - **E547** the ground remembers (Mid's scarCv): marks painted once into a layer under everything, so 
 - **E548** bare earth worn by feet round a finished building (not a field, a wall or a trap)
 - **E549** the dark where someone fell, wider for a big body, a blade's cut for a soldier

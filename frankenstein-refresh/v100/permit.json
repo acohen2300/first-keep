@@ -1,6 +1,6 @@
 {
  "build": "N11+N12",
- "agreed": "Albert, Nov 10 06:34-06:36: \"This is good. Let's implement\" then \"Go go go\" on the N11 list (the paper ground from the approved mock: sheets, water close to the grass, marsh as shallow water with reeds, woods' floor and rim colours cut, one season colour, v80 blades in two tiles, flowers in new places each year, snow as a sheet in six steps, glints; mud and frost cut for now, no cloud shadows; the meadow picture and cels.js cut) \u00b7 N12: Albert, Nov 10 07:54: \"Try it. Go go\" on the ground draw: one picture at every zoom (Base, Mid and v80's way), the chunk cache cut, the blades one sheet over the land cut to the grass \u00b7 N12b: Albert 08:19 \"Try to get it as close to v80 as possible\": v80's blade tile",
+ "agreed": "Albert, Nov 10 06:34-06:36: \"This is good. Let's implement\" then \"Go go go\" on the N11 list (the paper ground from the approved mock: sheets, water close to the grass, marsh as shallow water with reeds, woods' floor and rim colours cut, one season colour, v80 blades in two tiles, flowers in new places each year, snow as a sheet in six steps, glints; mud and frost cut for now, no cloud shadows; the meadow picture and cels.js cut) \u00b7 N12: Albert, Nov 10 07:54: \"Try it. Go go\" on the ground draw: one picture at every zoom (Base, Mid and v80's way), the chunk cache cut, the blades one sheet over the land cut to the grass \u00b7 N12b: Albert 08:19 \"Try to get it as close to v80 as possible\": v80's blade tile \u00b7 N13: Albert 08:34 'Can you implement this' (the paper ground mock) then 08:38 'Keep cloud shadows. And set water to high. Go go'",
  "opens": [
   "code:index.html",
   "code:cels.js",
@@ -14,8 +14,8 @@
   "book:capabilities"
  ],
  "grow": {
-  "code:index.html#drawn-once-in-the-view-frame": 2441,
-  "code:index.html#floor-3-non-movables": 1053,
-  "code:index.html#the-view-s-eyes-lights-and-stage": 406
+  "code:index.html#drawn-once-in-the-view-frame": 22441,
+  "code:index.html#floor-3-non-movables": 21053,
+  "code:index.html#the-view-s-eyes-lights-and-stage": 20406
  }
 }
