@@ -404,6 +404,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N303** USDA NRCS Conservation Practice Standard, Pond (Code 378), 2022: embankment side slopes two horizontal to one  → D32
 - **N304** Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slop → D32, D62, D65, D70, D366
 - **N305** (to open) A. Hurwitz (1891), Ueber die angenaeherte Darstellung der Irrationalzahlen durch rationale Brueche: the golden → D366
+- **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, D367, SN6, SN39, J48
 
 ## Named exceptions
 

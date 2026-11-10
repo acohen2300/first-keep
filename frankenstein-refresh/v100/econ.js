@@ -88,7 +88,8 @@ const timeOf = (side, c) => (c.plan ? c.t : T[c] ? FK.stat(c, side, 'time') : D.
 const priceOf = (side, c, b) => tentCost(side, b, c.plan ? c.paid : D.ages.includes(c) ? D.age.cost[D.ages.indexOf(c)] : FK.stat(c, side, 'cost')), room = (b) => (b.q || []).length < FK.stat(b.code, b.side, 'queue');
 const order = (b, c) => { (b.q = b.q || []).push(c); if (b.q.length === 1) b.qt = timeOf(b.side, c); };
 function queue(b, code) { if (!up(b) || !FK.trains(b.code, b.side).includes(code) || !FK.aged(code, b.side) || !room(b) || campWhyTrain(b.side, code)) return false; const cost = priceOf(b.side, code, b); if (!canPay(b.side, cost) || popOf(b.side) >= popCap(b.side) || (soldier(code) && armyFull(b.side))) return false; pay(b.side, cost, 'units'); order(b, code); return true; }
-function unqueue(b) { if (!b.q || !b.q.length) return; const code = b.q.pop(); payBack(b.side, priceOf(b.side, code, b), FK.SH[code] || code.plan ? 'units' : 'research'); if (D.ages.includes(code)) SIDES[b.side].aging = 0; if (!b.q.length) b.qt = 0; }
+function unqueue(b, i = b.q && b.q.length - ONE) { if (!b.q || !b.q[i]) return; const [code] = b.q.splice(i, ONE); if (!i) b.qt = ZERO; // E931
+  payBack(b.side, priceOf(b.side, code, b), FK.SH[code] || code.plan ? 'units' : 'research'); if (D.ages.includes(code)) SIDES[b.side].aging = 0; if (!b.q.length) b.qt = 0; }
 function spawnBy(b, code) { const s = FK.spotFor(b, b); if (!s) return null; const u = FK.spawn(code, b.side, FK.tileAt(s.x, s.y), FK.rng); u.bx = s.x; u.by = s.y; u.hb = b; FK.place(u); const fl = SIDES[b.side].flag; if (fl != null && WAR.armed(u)) WAR.march(u, fl); return u; } // E311
 // E402
 const musterN = sumCost, readyAt = (side, c) => things().filter((t) => t.side === side && up(t) && FK.trains(t.code, side).includes(c)).length;

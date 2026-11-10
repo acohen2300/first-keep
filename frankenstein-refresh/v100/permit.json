@@ -1,6 +1,6 @@
 {
- "build": "N11–N13 + N14 build 1: N14 · build 1: save and ground (Albert's N13 notebook #38, #1, #2, #3, #4, #5, #6, #7, #8, #9)",
- "agreed": "Albert, Nov 10 06:34-06:36: \"This is good. Let's implement\" then \"Go go go\" on the N11 list (the paper ground from the approved mock: sheets, water close to the grass, marsh as shallow water with reeds, woods' floor and rim colours cut, one season colour, v80 blades in two tiles, flowers in new places each year, snow as a sheet in six steps, glints; mud and frost cut for now, no cloud shadows; the meadow picture and cels.js cut) · N12: Albert, Nov 10 07:54: \"Try it. Go go\" on the ground draw: one picture at every zoom (Base, Mid and v80's way), the chunk cache cut, the blades one sheet over the land cut to the grass · N12b: Albert 08:19 \"Try to get it as close to v80 as possible\": v80's blade tile · N13: Albert 08:34 'Can you implement this' (the paper ground mock) then 08:38 'Keep cloud shadows. And set water to high. Go go' · N14: Albert, Nov 10 10:00 (answers on the N13 sheet) and 10:16 'yes yes' (build 1: save + ground)",
+ "build": "N11–N13 + N14 build 1: N14 · build 1: save and ground (Albert's N13 notebook #38, #1, #2, #3, #4, #5, #6, #7, #8, #9) · N15 · builds 2-4 (Albert's N13 notebook: menus, villagers and queue, army, light and the quick action)",
+ "agreed": "Albert, Nov 10 06:34-06:36: \"This is good. Let's implement\" then \"Go go go\" on the N11 list (the paper ground from the approved mock: sheets, water close to the grass, marsh as shallow water with reeds, woods' floor and rim colours cut, one season colour, v80 blades in two tiles, flowers in new places each year, snow as a sheet in six steps, glints; mud and frost cut for now, no cloud shadows; the meadow picture and cels.js cut) · N12: Albert, Nov 10 07:54: \"Try it. Go go\" on the ground draw: one picture at every zoom (Base, Mid and v80's way), the chunk cache cut, the blades one sheet over the land cut to the grass · N12b: Albert 08:19 \"Try to get it as close to v80 as possible\": v80's blade tile · N13: Albert 08:34 'Can you implement this' (the paper ground mock) then 08:38 'Keep cloud shadows. And set water to high. Go go' · N14: Albert, Nov 10 10:00 (answers on the N13 sheet) and 10:16 'yes yes' (build 1: save + ground) · N15: Albert, Nov 10 11:32 'Just do it all' (builds 2 to 4 as listed 10:12-10:15)",
  "opens": [
   "code:index.html",
   "code:cels.js",
@@ -14,13 +14,23 @@
   "book:capabilities",
   "code:menu.js",
   "book:words",
-  "book:rules"
+  "book:rules",
+  "book:screen",
+  "code:combat.js",
+  "code:econ.js"
  ],
  "grow": {
   "code:index.html#drawn-once-in-the-view-frame": 28841,
   "code:index.html#floor-3-non-movables": 22053,
   "code:index.html#the-view-s-eyes-lights-and-stage": 20456,
-  "code:index.html#the-door": 200
+  "code:index.html#the-door": 200,
+  "code:index.html#floor-6-climate": 200,
+  "code:index.html#floor-7-display": 400,
+  "code:index.html#the-body-s-laws": 200,
+  "code:index.html#touch": 400,
+  "code:menu.js": 2600,
+  "code:combat.js": 400,
+  "code:econ.js": 200
  },
- "why": "N11–N13 never published, so their opens and growth ride along; N14 build 1 grows the ground floor by the marsh sheet, the grass mask from contour cells, the water bands' layers and the waterline-seeded shore distance (E921–E924), and the door by the rolling save slots (E660, E662)"
+ "why": "N11–N13 never published, so their opens and growth ride along; N14 build 1 grows the ground floor by the marsh sheet, the grass mask from contour cells, the water bands' layers and the waterline-seeded shore distance (E921–E924), and the door by the rolling save slots (E660, E662); N15 grows the menus by the Top Info Ribbon, the Daily challenge, the shortfall, the rings on Build and People, queue cancel, + Villager (E925-E933), the figure by its bundle and woods silhouette and the door torches (E929, E930, E897), the tap by the bigger resource target and the target's glow (E934, E935), war by the formation by type and leaving tame beasts alone (E394, E936, E937)"
 }

@@ -14,6 +14,7 @@ const stance = (a, b) => (a === b ? null : rel.get(a + ' ' + b) ?? SB.start), tr
 const atWar = (a, b) => stance(a, b) === 'war', friendly = (a, b) => a === b || stance(a, b) === 'ally';
 function isFoe(o, x, me) { if (x.side === o) return false; if (!SIDES[x.side]) { const g = groupOf(x); return g === 'beast' || atWar(o, g); } if (SIDES[o]) return atWar(o, x.side); // E288
   const g = (me && groupOf(me)) || 'nat'; return g === 'beast' || (atWar(x.side, g) && x.side === ME); } // E289
+const tame = (u, v) => u.side === ME && v.kind === 'unit' && !SIDES[v.side] && !(v.target && v.target.side === ME); // E937
 const enemies = (a, b) => !b.hid && !b.veil && !FK.has(b, 'Envoy') && isFoe(a.side, b, a) && FK.inSight(b, a.side, a);
 const edgeDist = (u, t) => { if (t.kind !== 'bld') return FK.dist(u, t) / T; const [sx, sy] = FK.fromBoard(u.bx, u.by); return Math.hypot(Math.max(0, t.i * T - sx, sx - (t.i + t.n) * T), Math.max(0, t.j * T - sy, sy - (t.j + t.n) * T)) / T; }; // E228
 const alive = (t) => t.hp > 0 && !t.gone, up = (t) => t.done >= 1 && alive(t), due = (x) => !(x > 0), half = (x) => x / 2; // E229
@@ -98,8 +99,8 @@ const tired = (S) => { for (const u of S) u.tire = CH.slow; }; // E806
 const drillOn = (u) => !!(u.drill && u.drill.until > K.t && u.goal === u.drill.k && (u.job === 'march' || u.job === 'hold')); // E393
 function drillHold(u) { const L = u.drill; if (!drillOn(u) || L.held) return; const [x, y] = FK.tileMid(u.goal), mine = far(u, { bx: x, by: y }) / D.upm / FK.pace(u); let foe = Infinity; for (const f of foesNear(u)) foe = Math.min(foe, far(f, u) / D.upm / FK.pace(f));
   if (foe < mine) { L.held = true; L.k = FK.tileAt(u.bx, u.by); Object.assign(u, { path: null, goal: L.k, job: 'hold' }); } }
-function formHome() { const at = new Map(); for (const u of units()) if (armed(u) && u.job === 'idle' && !u.target && !u.esc) { const b = u.hb && alive(u.hb) ? u.hb : home(u.side); if (!b) continue; const H = at.get(b) || at.set(b, new Map()).get(b), k = u.bn ?? WD.squads.length; (H.get(k) || H.set(k, []).get(k)).push(u); } // E394
-  for (const [b, blocks] of at) { const [fx, fy] = dir(FK.MID - b.bx, FK.MID - b.by), out = (half(b.n) + GR.yard) * T, list = [...blocks.keys()].sort((p, q) => p - q).map((k) => blocks.get(k).sort((p, q) => ranged(p) - ranged(q)));
+function formHome() { const at = new Map(); for (const u of units()) if (armed(u) && u.job === 'idle' && !u.target && !u.esc) { const b = u.hb && alive(u.hb) ? u.hb : home(u.side); if (!b) continue; const H = at.get(b) || at.set(b, new Map()).get(b), k = u.bn ?? u.code; (H.get(k) || H.set(k, []).get(k)).push(u); } // E394
+  for (const [b, blocks] of at) { const [fx, fy] = dir(FK.MID - b.bx, FK.MID - b.by), out = (half(b.n) + GR.yard) * T, list = [...blocks.keys()].sort((p, q) => String(p).localeCompare(String(q))).map((k) => blocks.get(k).sort((p, q) => ranged(p) - ranged(q)));
     const cols = list.map((a) => Math.min(GR.cols, Math.ceil(Math.sqrt(a.length * GR.block)))); let x0 = half(-(sum(cols, (c) => c + 1) - 1) * GR.gap);
     list.forEach((a, bi) => { a.forEach((u, i) => { const c = (x0 + ((i % cols[bi]) + 0.5) * GR.gap) * T, r = out + Math.floor(i / cols[bi]) * GR.gap * T; u.home = { bx: b.bx + fx * r - fy * c, by: b.by + fy * r + fx * c }; if (!u.path) [u.fx, u.fy] = [fx, fy]; }); x0 += (cols[bi] + 1) * GR.gap; }); } }
 // E239
@@ -126,6 +127,7 @@ function brain(u, dt, look) { // E396
     if (atHome && c && !nearHome(u, c) && c.target !== u) c = null;
     if (!c && atHome && !s.bonly) c = (u.home && nearest(u, D.yard, u.home)) || (home(u.side) && nearest(u, D.yard, home(u.side))) || null;
     if (!c && (u.job === 'march' || u.job === 'hold' || u.was != null)) c = foeBld(u, sight);
+    if (c && c !== u.focus && tame(u, c)) c = null; // E936
     t = c || (t && t.kind === 'bld' ? t : null); }
   if (t && !u.focus && ((temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
   u.pacex = shapeOf(u).spd * (marching(u) && u.slow ? u.slow : 1) * (u.chg ? CH.spd * FK.stat(u.code, u.side, 'charge') : u.tire ?? D.bases.pace);

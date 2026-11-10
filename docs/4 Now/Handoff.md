@@ -48,3 +48,9 @@ The full open list, checked against the code: the top of `Next build list.md` ("
 - `python3 test.py t-walls` crashes the same way before and after B31a: a harness fault, owed.
 - The match smooth check warns (a known mid-match stutter, logged in Parked.md; Albert: publish to preview anyway).
 - Garrison in the square is dim with no foe near.
+
+## N15 (Nov 10, Albert 11:32 "Just do it all": builds 2-4 of the N13 notebook) [2026-11-10 12:40]
+- Preview: `frankenstein-refresh/preview-n15/` (source: branch `n11`). Live v100 untouched. Gate PASS, smoke 6/6. [2026-11-10 12:40]
+- Built: #11 #12 #13 #14 #15 #16 #17 #18 #20 #21 #24 (menus, Top Info Ribbon SN39), #10 #23 #25 #29 #31 #33 #34 #35 (villagers, queue), #26 #32 (torches, army by type, no tame-beast chase). [2026-11-10 12:40]
+- Found: #34 was the walk cycle's 4th frame drawing the strike pose (D strideFrames now [0,1,0,2]). #28 already true: research and training share each building's one queue. [2026-11-10 12:40]
+- Not built yet: #22 sun on trees, #30 (which blue box), #37 quick action (4 taps), #19/#27/#36 builders leaving (a single builder finishes cleanly in a headless test; needs Albert's case). [2026-11-10 12:40]

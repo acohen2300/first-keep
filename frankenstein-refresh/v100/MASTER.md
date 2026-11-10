@@ -324,6 +324,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E122** Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), ac · D20 (N112) · D21 (N112) · D22 (N112)
 - **E862** the year's clock: the game's time from a start late in spring (D359), for seasons, leaves, · D359 (N287)
+- **E928** the time of day as hours and minutes, one home for the clock and the ribbon
 - **E123** QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year · QA (N1, N2) · D99 (N112)
 - **E551** the moon (QB to first order, QC): it runs ahead of the sun by its phase on a declination t · QB (N2, N3) · QC (N2)
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
@@ -441,7 +442,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E610** a flame's light on the ground: a disc fading to a quarter at half its reach, added to the 
 - **E714** the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, inst · QCU (N246)
 - **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
+- **E930** every finished building has a torch by its door from the start, houses their hearth as wel
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
+- **E934** an order's target answers: a unit glows, a thing ripples in the done colour (Albert, Nov 1
 - **E613** words on the map keep one size whatever the zoom, as the screen's own words; a label is a 
 - **E867** words drawn on the map at the head type (SN20), never a size typed in the code · SN20 (N283, N285, N287)
 - **E614** the dressing: a site staked out and rising with the work, a finished building's pop and fr
@@ -450,6 +453,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E617** a side's stores as piles by the camp that takes them in: a pyramid by log₁₀ of the store, 
 - **E618** a chimney's plume: rising ∝ x^(2/3) (QAV, Briggs) and widening ∝ x^0.9, leaning downwind ( · QAV (N55, N56)
 - **E619** a figure in motion: the woodcutter's lean into its tree (the view's own memory), the step'
+- **E929** a villager walking home with a load carries it on the back, a bundle in its store's colour
 - **E620** the small map: the ground, the fog, buildings you know (a seat is a star), units you see, 
 - **E731** the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map 
 - **E747** the mirage's dots on the small map, in the colour of what is coming
@@ -490,6 +494,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E164** what is under the finger: the tile at the land's height and the nearest unit it may see (y · D246 (N190)
 - **E725** the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turn
 - **E864** a tap anywhere on a building's drawn shape is the building: the front-most whose picture i
+- **E935** with someone picked, a tap near a resource takes it, so the target is bigger than its tile
 - **E426** the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)
 - **E165** The seed of the day (QBF): the date as YYYYMMDD, the same map for everyone that day; a see · QBF (N65)
 - **E662** The opening: the game opens where you left it, newest save first, saying so if it had to o
@@ -538,10 +543,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E850** a ring is the box's outline: the box drops its own border so the ring sits on the edge, on
 - **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
 - **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
+- **E926** a Build cell you can't pay for says what you are short of each store, coloured red to gree
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
+- **E925** the Daily challenge: when it is on, the dangers are drawn from the day's own dice at the l
 - **E373** why a kind waits: the age it opens in (Mid's trainWhy)
 - **E184** read: the one window onto the world the glass draws from
 - **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
@@ -562,6 +569,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E857** the quick action: a tap on open ground opens a square of four, the first under the finger 
 - **E858** a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle o
 - **E859** Build from the quick action: the Build menu opens on its first tab, the building's ghost s
+- **E932** tap a queued slot to cancel it, refunded (Albert, Nov 10, #29)
+- **E933** a site's card sends one more villager: the nearest idle, else the nearest worker, who goes
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
@@ -596,12 +605,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
-- **E735** the hammer carries a bar for the sites going up (the mean of their progress), and People i · D309 (N205)
+- **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
 - **E840** the stances: a people's name over two columns, then its four boxes (gift or bribe, war, te
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
+- **E927** the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the si · SN39 (N306)
 - **E842** a card hanging under its top button: centred under the button, held inside the screen
 - **E841** the small cards are two columns of the mold wide: the width read from the bar's own width,
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
@@ -699,6 +709,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
 - **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195, N198, N225) · D129 (N160)
+- **E931** any queued item can be taken out, not only the last, and is paid back in full; taking out 
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
@@ -827,6 +838,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E287** a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between i · I2 (N158) · N159
 - **E288** the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of
 - **E289** the wild looking at a side: an animal fights everyone; a group fights a side at war with i
+- **E937** a beast that is not attacking your side is not a target for your soldiers
 - **E228** tiles from a unit to a thing: to a building's footprint, in the grid's frame
 - **E229** gone: pulled down (econ marks it) or dead (die marks it)
 - **E382** a side knows a step of research by its key
@@ -860,12 +872,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E407** the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, 
 - **E806** an order leaves its soldiers tired as a charge does (D247 slow, settling back with tired): · D247 (N190)
 - **E393** time to contact: a soldier in a drill fights where it stands when the nearest foe would re · D242 (N188, N273)
-- **E394** at home an army stands in the yard of the building that trained it (or its Town Center), t
+- **E394** idle soldiers form up at the building that trained them, one block per squad, else one blo
 - **E239** a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; ou · QAI (N76, N188) · QP (N16) · QAO (N45)
 - **E809** a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure) · D354 (N275, N276, N277)
 - **E395** a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own p · D231 (N188, N76, N16)
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
+- **E936** your soldiers leave a wild animal alone unless it is after one of yours or you sent them a
 - **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40)
 - **E409** the orders' shared measures: a point of a tile, the tile of a point, the length between, a
 - **E410** the walk over the straight line (Mid's routeK): the way by A* (QBL), its steps summed, hel · QBL (N74) · D247 (N190)
