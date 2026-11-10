@@ -242,3 +242,21 @@ Flags: gold already marks "selected" (the gold 2 px inset); one must move. The a
 - Mail, Welcome back, Paused: small, two columns wide (122 on a 390 screen). Mail centred: title on its own row, ← · book · ✕ beneath it. Welcome back centred: only Resume, New game and the info bar, no title, no nav (13:14). Paused under the pause button (columns 5–6): only the speeds ×1 ×2 ×3 and the info bar, no title, no nav; a tap on ▶ plays again (13:14). Sound (13:17): Effects, Alerts and Ambience as a card like Paused, two columns wide, hanging under the mute button, with the info bar; a tap on mute mutes and shows it, a tap again unmutes and hides it (as pause and play). A help line too long for its card shows the chevron (13:25). New game mid-match: the Welcome back card (Resume, New game), opened from the book (guide) button (13:25).
 - Barracks: train row, research rows, "All tech" for the rest.
 - Rings on everything: build tiles brown; train red (villagers green); research by family; gift, terms, bribe gold; war red; ally blue; options and speeds white, the chosen one lit (gold stays for money and the folder tabs).
+
+## 14. Albert's play notes, Nov 9 evening (talk mode, 18:09–19:21; mocks quick-action-mock, army-strip-mock, look-mock)
+Decided:
+- Rings: a ring is the box's outline, on its edge (as on research); never a second line inside. Back, book and ✕ all take the same white ring. The top help line and the cards' help lines: the ring replaces the blue border.
+- New game: a box in the Paused card, under the speeds (Albert: A).
+- Welcome back's help line: "Resume where you left off, or start a New game."
+- Start's label: 14 · 600.
+- Build menu: six tabs of two rows of three (36): Home (Dwelling, Town Center, Tavern, Baths, Hospital, Aqueduct) · Resources (Farm, Mill, Lumber camp, Mining camp, Quarry, Pasture) · Military (Barracks, Range, Stable, Siege workshop, Smith, Foundry) · Defence (Wall, Gate, Tower, Castle, War Council, Courthouse: it trains spies and shoots only spies) · Trade (Market, Trade post, Dock, Store, Mint, Workshop) · Arts (School, Library, Temple, Theatre, Hall, Wonder). Off the menu: Abatis (the players' field-defence cut, Nov 8), Apartment (a Dwelling's raise, on its card), Tree farm (planted from the Lumber camp's card). Opens on Home, Dwelling first, top left. Not yet available: hidden, with a "show all".
+- Selecting: tap a villager or soldier: a thick green ring at the feet (the menu ring code). Tap anything: it does that (gather, build, attack a foe or an animal). Tap the ground: it goes there, even if nothing is there. One order, then the selection clears. The floating square over the villager goes.
+- Build order: one villager builds first placed, first built (today `nextSite` takes the nearest).
+- Woods: walkable for foot and riders (riders slower); siege and wagons never enter. Reuse the ice crossing (modes, the permission gate, the edge cost by depth); default "remembered for this game", never "ask". The slowdown figure still needs a source.
+- Look: games start in spring (the grass follows the year; a start in late winter reads straw); the camera opens further out, as v80; a dark fog edge (built with items 4b and 6). Keep v100's trees; bring v80's gold, stone and iron piles.
+
+Proposed, waiting on Albert's yes:
+- The quick action (tap open ground, nothing picked): v80's ground strip (root `index.html`, `showStrip`, Build 40), in the kit: Build · **Attack** · More; Attack → ½ · **All** · More; More → ¼ · 5 · 10 · 20 nearest · each squad. The bold box sits under the finger, so three taps in one spot send all. A tap outside closes it (no ✕). Replaces today's Attack + ✕.
+- Where the square's Rally and Shelter go (proposed: the Town Center's card); Info and Focus parked.
+
+Still open from N5: Fast and Yard in the Paused card (test builds); the Sound card only while muted.
