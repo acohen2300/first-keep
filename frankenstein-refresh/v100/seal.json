@@ -1399,6 +1399,11 @@
 "bytes": 323,
 "numbers": 0
 },
+"book:citations:N299": {
+"sha": "9c20e025b913ff57a582c0cd08d2236426258943b3c7f83fd0561a959d7077a0",
+"bytes": 283,
+"numbers": 0
+},
 "book:citations:N3": {
 "sha": "bfa4210804f92842892c11c0583bb366e189ac21d67493a7d36ca09f42403c78",
 "bytes": 83,
@@ -6249,6 +6254,11 @@
 "bytes": 163,
 "numbers": 0
 },
+"book:comments:E899": {
+"sha": "04d85e882e862b0af71a9b76146a87a90dadc69925eda895e26b6384c9d0dd3e",
+"bytes": 172,
+"numbers": 0
+},
 "book:comments:E9": {
 "sha": "b6a2591eef83429472e259fcf3031d46193544c06ff52c01013960656318412b",
 "bytes": 123,
@@ -7780,8 +7790,8 @@
 "numbers": 0
 },
 "book:measure:D353": {
-"sha": "79d70b8da7b2fbe86980f1d99a5c2c8278490defbbfd4f6b6829049ef1afdba9",
-"bytes": 4220,
+"sha": "8a0affb2cff3aa1b38f5eccd4563d85a027bc7c6a4ad685d4a599a380d995285",
+"bytes": 4576,
 "numbers": 0
 },
 "book:measure:D354": {
@@ -11490,8 +11500,8 @@
 "numbers": 38
 },
 "code:index.html#the-meadow": {
-"sha": "eb193a8a48f80efa7d6d00da3306da92c5276b7e8bf604be0282d670e1a1127e",
-"bytes": 14442,
+"sha": "b0943d6086ab3db4187a6ebd2ec75f439ef420079acbf713981da5604c03805a",
+"bytes": 14579,
 "numbers": 0
 },
 "code:index.html#the-node-art": {

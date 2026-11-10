@@ -326,3 +326,10 @@ Still open from N5: Fast and Yard in the Paused card (test builds); the Sound ca
 - Tests brought to Albert's calls: Build tabs and Show all, panel gradient, card heads, guide lines on edges, Welcome back on reopen, fog of war, caltrops and stakes cut, cel shells with no look, the tree height's home.
 - Gate rule from the slips: a test that throws is its rule's FAIL and the suite runs on.
 - Still failing, all also failing at N5 (old, for a later pass): t-land (home gold and stone sit past the pocket's 300 m from the corner), t-civs and t-kinds (unit figures differ from Mid's by pixels), t-stage, t-wild, t-fire, t-mind, t-realm, t-alarm, t-orders (Choke and the wheel left with the Yard), t-same, t-odds, t-gather, t-walls, t-sight's small-map mark, t-proof (its plant no longer matches menu.js).
+
+## Built N10 (Nov 10, 02:52-, Albert: "Proceed w n10. Go go.")
+- N10 as written (colour and season cels in place of the meadow sweep) was held to its own test: hills and states must look right and the code must shrink. It fails both. The states are thresholds per tile (mud past a soak, pools, snow lying first in hollows), and a cel only fades as a whole. The sweep must stay for paths, mud and snow, so cels would add code on top of it. Not built; logged in Parked.
+- Measured instead (core value 11: a real problem): the meadow is painted again every ~3.3 s of play (the season's step, and the ruts healing every 10 s). Each repaint took an eighth of the meadow per frame: up to 32 ms in one frame on a desktop, likely 3-5× that on a phone.
+- Built: the repaint runs in small strips (1/128) until a tenth of the frame is spent (D.meadow frame 0.1; RAIL, N299; E899). Per frame now 2.6 ms median, 2.9 ms 95th (desktop, headless). Total work the same. Code +1 line.
+- Found: the smoke's "known mid-match stutter" was the frame right after a reload (the ground rebuilt, 83-100 ms), not mid-match. Smoke now times the reload's ten seconds apart from the match's; the match check passes.
+- For Albert: phone `?test` meter numbers before and after would confirm the phone gain.

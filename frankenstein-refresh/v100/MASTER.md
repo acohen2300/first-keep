@@ -107,8 +107,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E546** the ground's memory (D299): a layer as big as the ground's picture, cleared with each map; · D299 (N203)
 - **E58** a quad a, b, c, d (top-left round to bottom-left on the screen) grown half a pixel right a
 - **E59** the grass's blades: one 64-unit tile of short strokes in two tints of C4, repeated (previe · C4 (N102)
-- **E60** the ground is painted flat; the light stands high to the left and in front and the meadow  · D353 (N264, N265, N266, N267, N268, N269, N270, N287)
-- **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N264, N265, N266, N267, N268, N269, N270, N287)
+- **E60** the ground is painted flat; the light stands high to the left and in front and the meadow  · D353 (N299, N264, N265, N266, N267, N268, N269, N270, N287)
+- **E758** a tile's flat colour by what lies there; its light is the meadow layer's (D353), smooth ac · D353 (N299, N264, N265, N266, N267, N268, N269, N270, N287)
 - **E748** the ground painted for a window of tiles at a scale, into the whole picture once or into a
 - **E61** runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills)
 - **E62** faces: the +y edge and the +x edge face the camera (the turn is under 45°)
@@ -449,6 +449,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E800** made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each
 - **E801** each tile's colour: the season's grass under its six layers and its flowers' tint, worn to
 - **E802** the meadow drawn: a sweep starts when the season, the weather or the paths have moved a st
+- **E899** the meadow is painted again strip by strip until its share of the frame is spent, then wai · N10
 - **E803** the flowers and pebbles close up: each cluster's offspring from its own seed, as many open
 
 ## index.html#the-woods-cache

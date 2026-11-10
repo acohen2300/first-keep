@@ -1632,7 +1632,7 @@ const meadowKey = () => [phaseOf(), K.wet, sheet(), K.snow / G.snow.full, Math.m
 function drawMeadow(gx, gy) { // E802
   if (!MMAP) return; const z = cam.z, [z0, z1] = MDW.zoom, [f0, f1] = MDW.alpha;
   if (MSW.row < ZERO && K.t >= MSW.next) { MSW.next = K.t + MDW.beat; const key = meadowKey(); if (key !== MSW.key) { const first = !MSW.key; MSW.key = key; meadowField(); MSW.row = ZERO; if (first) sweep(MEAD.height); } }
-  if (MSW.row >= ZERO) sweep(Math.ceil(MEAD.height / MDW.slices));
+  if (MSW.row >= ZERO) { const t0 = performance.now(), ms = (MDW.frame * DRW.ms) / rate(); do sweep(Math.ceil(MEAD.height / MDW.slices)); while (MSW.row >= ZERO && performance.now() - t0 < ms); } // E899
   ctx.globalAlpha = f0 + (f1 - f0) * clamp((z - z0) / (z1 - z0), ZERO, ONE); ctx.drawImage(MEAD, gx, gy, gw * z, gh * z); ctx.globalAlpha = ONE; if (z >= MDW.flowers.near) flowers(z); }
 function flowers(z) { // E803
   const F = MDW.flowers, ph = phaseOf(), T = D.tile, TAU = Math.PI + Math.PI, pad = F.pad * T * z, L = [new Map(), new Map(), new Map()], add = (l, col, x, y, rx, ry) => { const p = L[l].get(col) || L[l].set(col, new Path2D()).get(col); p.moveTo(x + rx, y); p.ellipse(x, y, rx, ry, ZERO, -Math.PI, Math.PI); };

@@ -397,6 +397,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N296** (to open) Teschner, M. et al., Optimized spatial hashing for collision detection of deformable objects (VMV 2003): the p → D364
 - **N297** (to open) Varnish: a clear coat fills a surface’s roughness, so less light scatters off the top and the colours under it → SC47, SC49, C32, D364, CL2
 - **N298** (to open) Roberts, M., An improved version of Bridson's algorithm for Poisson disc sampling (Extreme Learning blog, 2019 → D364
+- **N299** (to open) Google, web.dev, Measure performance with the RAIL model: a frame at 60 fps has about 16 ms, of which the brow → D353
 
 ## Named exceptions
 

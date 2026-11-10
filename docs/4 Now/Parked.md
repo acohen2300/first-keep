@@ -690,3 +690,7 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 ## N9 and the overnight QC (Nov 10)
 - Show all with every building shown makes a third row on Build (7 cells): waits for Albert to choose its home.
 - Old test failures found in the first full run since N5, none from N6-N9: listed in Next build list "Built N9"; each waits for its own pass.
+
+## Cut in N10 (Nov 10)
+- Colour and season cels in place of the meadow sweep: fail N10's own test (states are per-tile thresholds a cel cannot show; the sweep stays for paths, mud and snow, so code grows). Revisit only if the sweep itself is cut.
+- Season repaint keyed on a visible colour step (a JND, ΔE about 2.3, Sharma 2003) instead of every phase step: would cut repaints in summer and winter; not built tonight (the flowers' bloom also rides on the phase). Idea for later.

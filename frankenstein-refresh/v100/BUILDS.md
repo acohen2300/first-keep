@@ -4507,3 +4507,15 @@ MODIFIED (15):
 LOCKED (2391 of 2406): byte for byte as sealed, 1,132,732 bytes
 Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
 Inventory: 2406 items sealed · 2276 book entries · 93 laws · 297 citations, 29 still to open · 7 known
+
+## N10 · 2026-11-10 03:15
+Albert, Nov 10 02:52: "Proceed w n10. Go go. Remember 12 core values for building. Yes yes." (N10 was: colour and season cels in place of the meadow sweep, only if hills and states look right and code shrinks. Measured: the cels fail both, so the sweep stays; its stutter is fixed instead by painting it within a share of each frame)
+Opened: code:index.html, book:measure, book:comments, book:citations, tool:smoke.py
+MODIFIED (4):
+- book:citations:N299 · added
+- book:comments:E899 · added
+- book:measure:D353 · 4,220 → 4,576 bytes
+- code:index.html#the-meadow · 14,442 → 14,579 bytes
+LOCKED (2404 of 2408): byte for byte as sealed, 1,548,631 bytes
+Tests: 6/6 smoke checks hold (smoke only; the full test.py run is owed)
+Inventory: 2408 items sealed · 2278 book entries · 93 laws · 298 citations, 30 still to open · 7 known

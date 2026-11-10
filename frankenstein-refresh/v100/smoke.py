@@ -33,7 +33,8 @@ async def main():
         await pg.evaluate("FK.reset()")
         out['play_10min'] = await pg.evaluate(PLAY, 10)
         out['save_reload'] = await pg.evaluate(SAVE)
-        out['frames_play'] = await pg.evaluate(FRAMES)
+        out['frames_load'] = await pg.evaluate(FRAMES)   # the ten seconds after the reload: its first frame rebuilds the ground (N10, Nov 10: the one 83 ms frame the old match check flagged was this)
+        out['frames_play'] = await pg.evaluate(FRAMES)   # mid-match: the next ten seconds
         out['errors'] = errs[:5]
         await b.close()
     P, S, F1, F2 = out['play_10min'], out['save_reload'], out['frames_setup'], out['frames_play']
