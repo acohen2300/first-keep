@@ -703,3 +703,4 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 
 ## Cut Nov 10 (N12, Albert 07:54 "Try it. Go go") [2026-11-10 08:15]
 - The ground chunk cache (v100 N8/N9: the ground re-painted in 128-unit squares at four zoom steps, one square a frame, with a ring painted ahead). Cut for one picture at every zoom, as Base, Mid and v80 drew it: the steps made the seams and the blade-less pieces (open list #4, #7). Back only if the one picture reads fuzzy on the phone; then the hard lines (foam, cliff rims) as shapes built once, not chunks.
+- The N11 blade tile (192 units, 600 strokes in 70 tufts) and the ideas to mend it (three prime tiles, blades by wetness): Albert, Nov 10 08:19, v80's tile instead. The tufts made landmark repeats.
