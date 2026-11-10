@@ -361,6 +361,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N287 |  | Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v80 card he called sharp (first  | opened |
 | N288 |  | Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground opens a small strip at the finge | opened |
 | N289 |  | US Army FM 21-18, Foot Marches (1990), the rates of march by ground: cross-country and wooded ground far slower than a road (from memory: ab | to open |
+| N290 |  | Bergström, B., FOV using recursive shadowcasting (RogueBasin, 2001) and StarCraft II's fog of war (Blizzard, 2010): a map of tiles per side, | to open |
+| N291 |  | Roach, W. T., Back to basics: Fog (Weather, 1994-95): radiation fog is a shallow layer over the ground, commonly tens of metres to a couple  | to open |
+| N292 |  | Soule, R. G. and Goldman, R. F., Terrain coefficients for energy cost prediction (J. Appl. Physiol. 32, 1972): the terrain factor eta in the | opened |
+| N293 |  | Atkinson, M. P. (Naval Postgraduate School), on Lanchester's laws (opened Nov 9 2026): Lanchester's ancient model, a series of one-on-one du | opened |
+| N294 |  | A line through a random stand of trunks is blocked with chance 1 - e^(-n d L) (the mean free path; Beer-Lambert for obstacles): n stems a sq | to open |
 
 ## colours
 
@@ -392,6 +397,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C28 | the brown ladder: the tray under a ribbon, the box, a raised box, each a step of x = (17, 12, 9) above the last (Albert, Nov 9 11:16) | {tray: #221811, box: #33241a, lighter: #443023} | N283 |
 | C29 | gunmetal (S1): the queue, the help line, the research boxes (Albert, Nov 9 10:45-11:22) | #2c3238 | N283 |
 | C27 | the progress rings, one colour a kind of work (Albert, Nov 9 12:03-12:19): white the age-up and info; red war; green people and economy; brown building (the wood colour); gold money; blue knowledge, sight and relations; a research takes its family's colour, brown when it strengthens a building; dim = the colour mixed share into the tray brown (C28); replaces the research tints (C26) | {colour: {white: #ece5d3, red: #a3262a, green: #5fd08a, brown: #c08a58, gold: #e6b947, blue: #2f8cff}, family: {economy: green, health: gree | N284 |
+| C31 | the fog of war's veil: the near-black green of a moonless meadow (Albert, Nov 9 item 6) | #0b0f09 | N290 |
 
 ## comments
 
@@ -1242,6 +1248,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E865 |  | a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it |  |
 | E866 |  | the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) |  |
 | E867 |  | words drawn on the map at the head type (SN20), never a size typed in the code |  |
+| E868 |  | the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL); the buildings a side has seen stay as it saw th |  |
+| E869 |  | an eye's tiles: every tile in its reach whose ground, a body high, its line clears over the tops between (trees and buildings by height); ca |  |
+| E870 |  | seen now: a unit whose tile is in sight; a building any of whose corners is |  |
+| E871 |  | the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, clear in sight, drawn over the land and smoothed |  |
+| E872 |  | the Start page's Fog of war: off, every side sees all (one rule for all) |  |
+| E873 |  | the fog drawn by Beer-Lambert: its veil 1 - e^(-beta x path), the path the fog layer or the camera's height inside it, the height read from  |  |
+| E874 |  | a crossing is ice or woods: the same modes for both (single file, thin out, one at a time, stick to edges, go around), chosen once on the cr |  |
+| E875 |  | in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L the metres of wood the line runs through |  |
+| E876 |  | in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear Law): a blow is shared among all who strike the s |  |
+| E877 |  | an eye facing no fog: every point round its rim already seen by others, so it casts nothing; eyes in one cell share one cast |  |
 
 ## ground
 
@@ -1620,7 +1636,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D357 | the Help page: the last keep messages, newest first, the latest one left to the help line beneath (Albert, Nov 9: the Help page lists earlier messages) | {keep: 20} | N286 |
 | D358 | the quick action's shares of the army, nearest to the spot first: half and a quarter (v80's strip: ½ and ¼; All is everyone, Idle only the idle) (Albert, Nov 9 19:15-19:37) | {half: 0.5, quarter: 0.25} | N288; N287 |
 | D359 | a game starts this share of a season into spring, when the grass has greened (the meadow's green rises from 0.45 of a season: D353 green up): late spring, about May in the north (Albert, Nov 9 19:21, 19:48: start in a greener month) | 0.75 | N287 |
-| D360 | the woods walkable at a cost (Albert, Nov 9 18:33): who may enter, by what carries them, and the share of their pace kept under the trees: foot about half (FM 21-18: wooded ground against open, from memory, to open), riders slower (low boughs, roots; a horse needs room); siege engines, wagons and anything not listed never enter; the pathfinder pays the time, so a gatherer keeps to the edge unless the woods are much shorter | {pace: {person: 0.5, horse: 0.35}} | N289; N287 |
+| D360 | the woods walkable at a cost (Albert, Nov 9 18:33, 19:59: the ice's crossing modes, real math for walking and fighting): who may enter, by what carries them (a person, a rider; engines, wagons and beasts never); eta the Pandolf terrain factor for heavy brush (Soule and Goldman 1972: 1.5), so the pace falls by the same physics as mud and snow; walk a horse's walk in m/s (about 6 km/h: low boughs keep a rider to it); stems a square metre and trunk the trunk's width in m (about 500 a hectare, 0.3 m), so an arrow or shot through L metres of wood is stopped with chance 1 - e^(-stems x trunk x L); edge the crossing's stick-to-edges weight a tile of woods by how deep in it is | {enter: {person: 1, horse: 1}, eta: 1.5, walk: 1.7, stems: 0.05, trunk: 0.3, edge: 4} | N292; N294; N287 |
+| D361 | (sight in cells of cell × cell tiles, 5 m; each eye sends rays × π × reach rays, so neighbouring rays meet at the rim; a ray marks each cell whose ground, a body high, rises above the steepest top before it, and stops at a wall: ground steeper than the tops by wall; an eye whose rim, rim points round it, is all seen by others casts nothing (Albert, Nov 9 20:12-20:13: you see until the first thing that blocks; only the eyes facing the fog see)) the fog of war's veil over the map (Albert, Nov 9 item 6; StarCraft's three states, N290): ground never seen under dark, ground seen before under seen, ground in sight clear; the veil drawn a pixel a tile and smoothed, so its edge is soft and units fade in and out at the edge of sight | {dark: 0.88, seen: 0.5, cell: 4, rays: 2, rim: 16, wall: 0} | N290; N287 |
+| D362 | fog seen from the camera (Albert, Nov 9 item 4): radiation fog a layer depth m deep (Roach: tens to a couple of hundred m); the camera's height from the zoom: the ground's width on the screen, half of it over tan(fov / 2), a phone camera's field of view in degrees; the light's path through the fog is the layer, or the camera's height when the camera is inside it, so zoomed out the fog is white and zoomed in you see through; km: metres a kilometre, as beta is per km | {depth: 100, fov: 60, rad: 0.0174533, km: 1000} | N291; N287 |
 
 ## rules
 
@@ -2304,4 +2322,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J43 | N6 words: a card's group labels (as the v80 card) and Welcome back's help line (Albert, Nov 9 19:37) | {train: Train, research: Research, welcome: Resume where you left off, or start a New game.} | N287 |
 | J44 | N6 Build words: the Build menu's show-all box; what to say when a raise or planting finds no room (Albert, Nov 9 18:29) | {all: Show all, few: Hide locked, noRoom: No room to raise it here} | N287 |
 | J45 | the quick action's words: four boxes a step, a square (Albert, Nov 9 19:37) | {attack: Attack, build: Build, squad: Squad, more: More, all: All, half: ½, quarter: ¼, idle: Idle, rally: Rally, villager: Villager, rallyS | N287; N288 |
+| J46 | the Start page's Fog of war row (Albert, Nov 9 item 6, 19:37: it should have been there) | {label: Fog of war, on: On, off: Off} | N287 |
+| J47 | the crossing card when the way runs through woods (Albert, Nov 9 19:59) | {title: Through the woods?, lead: The woods slow the march and break the line: arrows are lost in the trunks, and every man fights his own f | N287 |
 

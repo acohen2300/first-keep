@@ -218,7 +218,7 @@ FK.on('tick', (dt) => {
     else if (u.job === 'build' || u.job === 'repair') { if (u.douse && !(t && t.fire > null)) { u.douse = null; done(u, t); continue; } if (!t || !alive(t) || (up(t) && !(t.fire > null) && t.hp >= t.hpMax - D.repair.within)) { done(u, t); continue; } if (!beside(u, t)) { buildAt(u, t); continue; }
       u.tool = 2; stroke(u, t, 'raise'); if (up(t)) { if (t.fire > null) douse(u, t, dt); else mend(u, t, dt); continue; } // E326
       let k = ((Math.pow(t.crew, D.crew) / t.crew) * dt) / (FK.stat(t.code, t.side, 'build') || 30); if ((D.cost[t.code] || {}).stone && FK.K.temp <= D.frost.at) k *= D.frost.share; t.done = Math.min(1, t.done + k); t.hp = Math.min(t.hpMax, t.hp + t.hpMax * D.rising.rise * k);
-      if (up(t)) { t.hp = t.hpMax; FK.wear(t); if (FK.has(t, 'Wonder')) { t.held = bell + D.wonderHold; tell(EW.built[+(t.side !== ME)], { m: D.wonderHold / MINUTE, side: EW.sides[t.side] }); } if (t.side === ME) FK.fire('event', wallish(t) || FK.trains(t.code).some((c) => !FK.SH[c].ticks.includes('Gather')) ? 'builtWar' : 'built', t); } }
+      if (up(t)) { t.hp = t.hpMax; if (t.side === ME || !FK.fogOn()) FK.wear(t); if (FK.has(t, 'Wonder')) { t.held = bell + D.wonderHold; tell(EW.built[+(t.side !== ME)], { m: D.wonderHold / MINUTE, side: EW.sides[t.side] }); } if (t.side === ME) FK.fire('event', wallish(t) || FK.trains(t.code).some((c) => !FK.SH[c].ticks.includes('Gather')) ? 'builtWar' : 'built', t); } }
     else if (u.job === 'wait') { u.wait -= dt; if (u.wait <= 0) { if (u.load) carry(u); else if (u.lost) look(u); else idle(u); } }
     else if (u.job === 'idle' && u.load) carry(u);
   }

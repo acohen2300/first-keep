@@ -844,5 +844,15 @@ BOOK("comments", {
  "E864": {"text": "a tap anywhere on a building's drawn shape is the building: the front-most whose picture is solid under the finger (Albert, Nov 9 item 8.7)"},
  "E865": {"text": "a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it"},
  "E866": {"text": "the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35)"},
- "E867": {"text": "words drawn on the map at the head type (SN20), never a size typed in the code"}
+ "E867": {"text": "words drawn on the map at the head type (SN20), never a size typed in the code"},
+ "E868": {"text": "the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL); the buildings a side has seen stay as it saw them (MEM)"},
+ "E869": {"text": "an eye's tiles: every tile in its reach whose ground, a body high, its line clears over the tops between (trees and buildings by height); cast again only when the eye steps to a new tile, its reach changes, or the tops change"},
+ "E870": {"text": "seen now: a unit whose tile is in sight; a building any of whose corners is"},
+ "E871": {"text": "the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, clear in sight, drawn over the land and smoothed"},
+ "E872": {"text": "the Start page's Fog of war: off, every side sees all (one rule for all)"},
+ "E873": {"text": "the fog drawn by Beer-Lambert: its veil 1 - e^(-beta x path), the path the fog layer or the camera's height inside it, the height read from the zoom"},
+ "E874": {"text": "a crossing is ice or woods: the same modes for both (single file, thin out, one at a time, stick to edges, go around), chosen once on the crossing card"},
+ "E875": {"text": "in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L the metres of wood the line runs through"},
+ "E876": {"text": "in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear Law): a blow is shared among all who strike the same foe"},
+ "E877": {"text": "an eye facing no fog: every point round its rim already seen by others, so it casts nothing; eyes in one cell share one cast"}
 });

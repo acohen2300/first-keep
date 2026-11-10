@@ -21,11 +21,13 @@
   "code:econ.js": 3000,
   "code:combat.js": 2000,
   "code:index.html#the-woods-cache": 3000,
-  "code:index.html#floor-5-movables": 401,
+  "code:index.html#floor-5-movables": 1045,
   "code:index.html#floor-6-climate": 455,
   "code:index.html#the-meadow": 401,
   "code:index.html#the-trees": 401,
-  "code:index.html#touch": 976,
-  "code:index.html#the-view-s-eyes-lights-and-stage": 536
+  "code:index.html#touch": 1500,
+  "code:index.html#the-view-s-eyes-lights-and-stage": 536,
+  "code:index.html#drawn-once-in-the-view-frame": 439,
+  "code:index.html#floor-7-display": 4782
  }
 }

@@ -849,3 +849,13 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E865 | index.html#touch | a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it |
 | E866 | menu.js | the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) |
 | E867 | index.html#the-view-s-eyes-lights-and-stage | words drawn on the map at the head type (SN20), never a size typed in the code |
+| E868 | index.html#floor-7-display | the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL); the buildings a side has seen stay as it saw them (MEM) |
+| E869 | index.html#floor-7-display | an eye's tiles: every tile in its reach whose ground, a body high, its line clears over the tops between (trees and buildings by height); cast again only when the eye steps to a new tile, its reach changes, or the tops change |
+| E870 | index.html#floor-7-display | seen now: a unit whose tile is in sight; a building any of whose corners is |
+| E871 | index.html#floor-7-display | the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, clear in sight, drawn over the land and smoothed |
+| E872 | menu.js | the Start page's Fog of war: off, every side sees all (one rule for all) |
+| E873 | index.html#floor-6-climate | the fog drawn by Beer-Lambert: its veil 1 - e^(-beta x path), the path the fog layer or the camera's height inside it, the height read from the zoom |
+| E874 | index.html#floor-5-movables | a crossing is ice or woods: the same modes for both (single file, thin out, one at a time, stick to edges, go around), chosen once on the crossing card |
+| E875 | combat.js | in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L the metres of wood the line runs through |
+| E876 | combat.js | in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear Law): a blow is shared among all who strike the same foe |
+| E877 | index.html#floor-7-display | an eye facing no fog: every point round its rim already seen by others, so it casts nothing; eyes in one cell share one cast |

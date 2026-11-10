@@ -223,7 +223,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E790** each beat the ice under every loaded tile of deep water is weighed (a thaw leaves them on 
 - **E328** a gate is walkable only to those its owner does not count a foe: asked of combat.js by the
 - **E785** who may step on ice: yours unless told to go around; the computer and the wild only where 
-- **E863** the woods: walkable for a person or a rider at the woods' pace (D360), never for engines o · D360 (N289, N287)
+- **E863** the woods: walkable for a person or a rider at the woods' pace (D360), never for engines o · D360 (N292, N294, N287)
+- **E874** a crossing is ice or woods: the same modes for both (single file, thin out, one at a time,
 - **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185, N198) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
 - **E360** the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh alwa · QN (N13) · QR (N179, N178, N174, N18) · D225 (N17, N173) · G9 (N179, N19, N173) · G8 (N107, N18, N178) · G10 (N174, N179, N173)
 - **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185, N198) · QR (N179, N178, N174, N18)
@@ -309,6 +310,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
 - **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
 - **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214, N282)
+- **E873** the fog drawn by Beer-Lambert: its veil 1 - e^(-beta x path), the path the fog layer or th
 - **E713** visibility by CALVIS alone (QK): rain and snow enter as water content, rain by Marshall–Pa · QK (N10, N210, N245)
 - **E378** QCL rain and snow rates, the wind, its gusts and the visibility (QK: Koschmieder over rain · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · QK (N10, N210, N245)
 - **E126** QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet | dry) and P( · QH (N7) · D102 (N7) · QCL (N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214) · D103 (N112, N185) · QI (N8)
@@ -379,6 +381,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E689** the tops are made again when a building is added, removed or raised further: a site counts
 - **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
+- **E868** the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL
+- **E869** an eye's tiles: every tile in its reach whose ground, a body high, its line clears over th
+- **E870** seen now: a unit whose tile is in sight; a building any of whose corners is
+- **E877** an eye facing no fog: every point round its rim already seen by others, so it casts nothin
+- **E871** the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, cle
 - **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
 - **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
 - **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219)
@@ -576,6 +583,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
 - **E843** Paused: the speeds and its help line; a tap on play plays again
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
+- **E872** the Start page's Fog of war: off, every side sees all (one rule for all)
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
 - **E821** one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wh
 - **E206** the ghost: press and slide on the map moves it; the tile under the finger is its middle. B
@@ -804,6 +812,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
 - **E387** where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own a · D232 (N188)
 - **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188) · D355 (N278, N279, N280)
+- **E875** in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L 
+- **E876** in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
 - **E518** A blow on a shooter's stake, or on one of a wild group (its regard falls).
 - **E796** one who falls through the ice is lost, as any death, and leaves no body on the ice (under)

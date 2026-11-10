@@ -11,9 +11,9 @@ const classes = () => [...new Set(Object.values(D.trains).flat().filter((k) => !
 const tall = (page) => !!(SCR[page] && SCR[page].ticks.includes('Tall')); // E175
 const OPTS = { // E176
   diff: [['Easy'], ['Normal'], ['Hard']], len: [['Conquest', 0], ['15 min', 900], ['30 min', 1800], ['60 min', 3600]], scen: [['Open', 'open'], ['Siege', 'siege'], ['Silk Road', 'road'], ['Last Keep', 'last']],
-  tension: [['Winner'], ['Diplomacy']], daily: [['Off', false], ['On', true]],
+  tension: [['Winner'], ['Diplomacy']], daily: [['Off', false], ['On', true]], fog: ((W) => [[W.on, true], [W.off, false]])(fromBook('words').fogwar),
   civ: [['Roman'], ['Han'], ['Persian'], ['Mongol'], ['Maurya'], ['Mali']], hazard: [['Hardest', 'hard'], ['Famine', 'starve'], ['Weather', 'winter'], ['Drought', 'drought'], ['Outlaws', 'horde'], ['Plague', 'plague']] };
-const BUILT = { diff: true, len: true, daily: true, civ: true, scen: true }; // E177
+const BUILT = { diff: true, len: true, daily: true, civ: true, scen: true, fog: true }; // E177
 const ICON = { food: '🍖', wood: '🪵', gold: '🪙', stone: '🪨', iron: '⛓' };
 const ORDER = ['food', 'wood', 'stone', 'gold', 'iron'], NAME = { food: 'Food', wood: 'Wood', stone: 'Stone', gold: 'Gold', iron: 'Iron' }; // E178
 // E179
@@ -85,7 +85,7 @@ const toastEl = document.createElement('div'); toastEl.id = 'toast'; toastEl.inn
 const spdEl = document.createElement('div'); spdEl.id = 'spd'; document.body.appendChild(spdEl); // E718
 const sndEl = document.createElement('div'); sndEl.id = 'snd'; document.body.appendChild(sndEl); // E844
 const $ = (id) => document.getElementById(id);
-const S = { tab: 'Start', mailT: -Infinity, prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, tension: 1, daily: 0, civ: 0, hz: new Set() }, group: 'Home', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0, said: [], snd: false }; // E182
+const S = { tab: 'Start', mailT: -Infinity, prev: null, htab: 'Town', war: false, mid: 'map', info: false, opt: { diff: 1, len: OPTS.len.findIndex((o) => o[1] === D.bell), scen: 0, tension: 1, daily: 0, fog: OPTS.fog.findIndex(([, on]) => on), civ: 0, hz: new Set() }, group: 'Home', ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, firedT: -Infinity, aimT: 0, subject: null, lock: {}, last: '', toastT: 0, said: [], snd: false }; // E182
 try { Object.assign(S.lock, JSON.parse(localStorage.getItem('fk.lock') || '{}')); } catch (e) {}
 const readT = (msg) => D.toast + String(msg).split(/\s+/).length * D.read.min / D.read.wpm; // E827
 const said = (msg) => { if (S.said[ZERO] !== msg) S.said = [msg, ...S.said].slice(ZERO, D.said.keep); }; // E846
@@ -245,7 +245,7 @@ const queue6 = (q, done, more, b) => { const n = SCR.mold.slots, shown = more ? 
   return [...shown.map(([name, t], i) => cell(`${b && b.q ? rk(ringOf(b.q[i]), i ? 'lit' : 'run', at) : ''}${name}<small>${clock(t)}</small>`, 'q')), ...(more ? [cell(`+${more}`, 'q')] : []), ...Array(n - shown.length - (more ? 1 : 0)).fill('<i class="q"></i>')]; };
 const SCREENS = {
   Start: () => [head('A new game'), row(part('Difficulty', 3, 'diff', 3)), row(part('Length', 2, 'len', 4)), row(part('Scenario', 2, 'scen', 4)),
-    row(part('Tension', 4, 'tension', 2)), row(part('Daily', 4, 'daily', 2)), row(part('', 0, 'civ', 6)), row(`<div class="cells seg" style="grid-column:span 6;--n:6">${OPTS.hazard.map(([, id]) => vcell('hazard', id, null, 'two', S.opt.hz.has(id))).join('')}</div>`),
+    row(part('Tension', 4, 'tension', 2)), row(part('Daily', 4, 'daily', 2)), row(part(WD.fogwar.label, SCR.mold.slots - SCR.wide.slots, 'fog', SCR.wide.slots)), row(part('', 0, 'civ', 6)), row(`<div class="cells seg" style="grid-column:span 6;--n:6">${OPTS.hazard.map(([, id]) => vcell('hazard', id, null, 'two', S.opt.hz.has(id))).join('')}</div>`),
     row(span(6, vcell('start', null, null, 'go')))], // E718
   Build: () => { const g = GROUPS[S.group], ok = (c) => D.cost[c] && !ECON.lockWhy(ME, c), shown = S.allB ? g : g.filter(ok); // E853
     return [head('Build'), `<div class="row6 tabs">${Object.keys(GROUPS).map((x) => vcell('group', x, null, '', S.group === x)).join('')}</div>`,
@@ -260,7 +260,7 @@ const SCREENS = {
   Mail: () => [headS(WD.mail.title), `<div class="frame list">${mail.map((m, i) => vcell('goto', i, null, 'two left')).join('') || `<p class="blurb">${WD.mail.empty}</p>`}</div>`], // E732
   Help: () => [head(WD.help.title), `<div class="info">${S.said.slice(ONE).map((m) => `<p>${m}</p>`).join('') || `<p>${WS.earlier}</p>`}</div>`], // E847
   Ice: () => { const R = S.ice && FK.iceReport(S.ice.U), n = SCR.mold.slots, M = CR.modes; // E793
-    return [row(span(n, cell(WI.title, 'title'))), `<p class="blurb">${R ? WI.lead.replace('{cm}', Math.round(R.cm)).replace('{n}', Math.floor(R.kg / FK.W.person.kg)).replace('{kg}', Math.round(R.kg)) : WI.thin}</p>`, row(...M.map((m) => vcell('iceMode', m))), row(...CR.keep.map((c) => span(n / CR.keep.length, vcell('iceKeep', c, null, '', S.iceKeep === c))))]; },
+    return [row(span(n, cell(S.ice && S.ice.woods ? WD.woods.title : WI.title, 'title'))), `<p class="blurb">${S.ice && S.ice.woods ? WD.woods.lead : R ? WI.lead.replace('{cm}', Math.round(R.cm)).replace('{n}', Math.floor(R.kg / FK.W.person.kg)).replace('{kg}', Math.round(R.kg)) : WI.thin}</p>`, row(...M.map((m) => vcell('iceMode', m))), row(...CR.keep.map((c) => span(n / CR.keep.length, vcell('iceKeep', c, null, '', S.iceKeep === c))))]; },
   Back: () => [row(span(SCR.mold.slots, vcell('resume', null, null, '', true))), row(span(SCR.mold.slots, vcell('newgame', null, null, '', S.sure)))], // E706
   Layers: () => [row(span(2, cell('Yard', 'title')), vcell('fast', null, null, '', show.fast), vcell('new'), vcell('later', 'book'), vcell('close')), ...LAYERS.map((_, i) => i).filter((i) => !(i % 2)).map((i) => row(...LAYERS.slice(i, i + 2).map(([c, name]) => `<span class="lab" title="${name}">${c}</span><div class="cells seg" style="grid-column:span 2;--n:2">${vcell('show', c, null, '', show[c])}${vcell('lock', c, null, '', S.lock[c])}</div>`))), row(...Object.keys(FK.HB.mix.names).map((c, _, all) => span(SCR.mold.slots / all.length, vcell('vol', c))))], // E198
 };
@@ -321,7 +321,8 @@ function render(force) { for (const k in ARGS) delete ARGS[k]; QB.length = ZERO;
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false;
   if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; else { S.group = Object.keys(GROUPS)[ZERO]; const [w, h] = FK.size(); hintAt(tileK(w * P.half, h * P.half)); } render(true); return; } const inQa = b.closest('#qa'); act(verb, argOf(a), argOf(a2)); if (inQa && verb !== 'qstep') { S.qa = null; render(true); } } // E730
-FK.on('begin', () => { S.game = { ...S.opt }; FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); if (!FK.HZ.size) for (const [, id] of OPTS.hazard) if (FK.rng() < D.hazards.lot) FK.HZ.add(id); }); // E705
+FK.on('begin', () => { S.game = { ...S.opt }; FK.fog(OPTS.fog[S.opt.fog ?? ZERO][ONE]); // E872
+ FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); if (!FK.HZ.size) for (const [, id] of OPTS.hazard) if (FK.rng() < D.hazards.lot) FK.HZ.add(id); }); // E705
 const WQK = WD.quick, SQ4 = SCR.wide.slots * SCR.wide.slots; // E857
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 const popAt = (x, y, foot = y) => { const m = SCR.mold, [w] = FK.size(), up = y - qaEl.offsetHeight - m.slot; qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, x - qaEl.offsetWidth * P.half)) + 'px'; qaEl.style.top = (up < Math.max(topEl.getBoundingClientRect().bottom, toastEl.getBoundingClientRect().bottom) + m.gap ? foot + m.slot : up) + 'px'; }; // E817
@@ -389,7 +390,7 @@ function heard(k, u, px, py) {
   if (t.kind === 'bld' && own(t) && !ECON.replantWhy(ME, t)) { ECON.replant(ME, t); return ['place', t]; }
   if (t.kind === 'unit') FK.select(t); else { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; } render(true); return [t.kind === 'unit' ? 'pick' : 'tap', t];
 }
-function askIce(P, t, k) { const U = P.filter((u) => u.path && u.path.some((q) => !q.length && FK.H[q] <= ZERO && FK.iced(q))); if (!U.length) return; const mem = FK.K.iceMem; if (mem && (mem.year < ZERO || mem.year === FK.year())) { for (const u of U) u.ice = mem.mode; if (CR.rules[mem.mode].avoid) WAR.order(U, t, k); return; } for (const u of U) u.ice = CR.ask; S.ice = { U, t, k }; S.tab = 'Ice'; } // E794
+function askIce(P, t, k) { const U = P.filter((u) => u.path && u.path.some((q) => !q.length && ((FK.H[q] <= ZERO && FK.iced(q)) || FK.inWoods(q)))), woods = !U.some((u) => u.path.some((q) => !q.length && FK.H[q] <= ZERO && FK.iced(q))); if (!U.length) return; const mem = FK.K.iceMem; if (mem && (mem.year < ZERO || mem.year === FK.year())) { for (const u of U) u.ice = mem.mode; if (CR.rules[mem.mode].avoid) WAR.order(U, t, k); return; } for (const u of U) u.ice = CR.ask; S.ice = { U, t, k, woods }; S.tab = 'Ice'; } // E794
 FK.on('cracking', (k, mine) => { if (!mine) return; const [x, y] = FK.toScreen(...FK.toView(...FK.tileMid(k), ZERO)); S.crack = { px: x, py: y, t: FK.K.t }; say(WI.crack); render(true); }); // E795
 FK.on('fell', (n) => say(WI.fell.replace('{n}', n)));
 FK.on('tick', () => { if (S.crack && FK.K.t - S.crack.t > CR.show && !units().some((u) => u.side === ME && FK.onIce(u))) { S.crack = null; render(true); } });
