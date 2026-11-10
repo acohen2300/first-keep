@@ -703,3 +703,7 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - Marsh tiles painted whole as water, and the woods' cells skipped by the shore contours: both made the tile staircase (#3, #9). [2026-11-10 12:30]
 - Open: the dirt band round lakes reads wide at 3:1 banks (12 units); narrowing it means moving D.dirtTop, shared with hills and coast. Albert's look owed. [2026-11-10 12:30]
 - Open: hilltops above D.land + D.bare still draw as dirt (old open item #1); not in this build. [2026-11-10 12:30]
+
+## Cut in N16, the quick action (Albert, Nov 10, #37) [2026-11-10 12:55]
+- From the quick action: Idle (send idle soldiers), More (Shelter, All hands, an idle villager there). Shelter and All hands stay on the Emergency card. Back only on Albert's word. [2026-11-10 12:55]
+- The Lanterns research no longer adds the door torches (every building has them from the start); it makes them brighter instead. [2026-11-10 12:55]

@@ -854,6 +854,7 @@ function treeArt(v) { const S = kindOf(v), st = TREE.stages[leafStage(v)], snow 
   if (col && S.crown) leaves(S.crown, col, keep, S.crown.leaf, S.crown.n, false, S.fruit && st.fruit && blend(S.fruit, paint(st.fruit), HALF));
   if (col && S.weep) leaves(S.weep, shade(col, TD.aspect + HALF), keep, S.weep.leaf, S.weep.n, true);
   if (S.pads) for (const [x, y, rx, ry] of S.pads) { leaves({ type: 'ellipse', c: [x, y], r: [rx, ry] }, col, ONE, S.pads.leaf || TREE.padLeaf, TREE.padN); if (snow) { g.fillStyle = C.ground.snow; g.beginPath(); g.ellipse(x - HALF * HALF, y - ry * HALF, rx * TREE.tier.cap[ZERO], ry * HALF, ZERO, ZERO, Math.PI + Math.PI); g.fill(); } }
+  if (col && S.crown && !snow) { const E = env(S.crown), U = TREE.gloss, w = E.x1 - E.x0, h = E.y1 - E.y0, x = E.x0 + w * U.x, y = E.y0 + h * U.y; if ([w, h, x, y].every(Number.isFinite)) { const gr = g.createRadialGradient(x, y, ZERO, x, y, Math.max(w, h) * U.r); gr.addColorStop(ZERO, U.col); gr.addColorStop(ONE, U.clear); g.save(); g.globalCompositeOperation = 'source-atop'; g.globalAlpha = U.a; g.fillStyle = gr; g.fillRect(E.x0, E.y0, w, h); g.restore(); } } // E940
   if (snow && S.ever && S.crown) for (let i = TREE.flecks; i--; ) { const E = env(S.crown), x = E.x0 + r() * (E.x1 - E.x0), y = E.y0 + r() * (E.y1 - E.y0); if (E.in(x, y)) { g.fillStyle = C.ground.snow; g.beginPath(); g.ellipse(x, y, TREE.litter[3] * (ONE + ONE), TREE.litter[3] * HALF, ZERO, ZERO, Math.PI + Math.PI); g.fill(); } }
 }
 // ── The figures (E75)
@@ -1519,7 +1520,7 @@ function drawLights(z) { const nt = nightOf(), m = LGT.k * Math.sqrt(FLM.blaze.p
   if (nt > LGT.night) { ctx.fillStyle = CLT.window; ctx.globalAlpha = LGT.window.a; for (const t of things) { const p = t.kind === 'bld' && !(t.done < ONE) && LGT.hearth.includes(SH[t.code].look) && !fire('hide', t) && at(t); if (p) ctx.fillRect(p.x + wx * z, p.y - wy * z + t.n * D.tile * wf * TILT * z * DRW.half, LGT.window.px * z, LGT.window.px * z); } ctx.globalAlpha = ONE; }
   for (const [t, kind] of lightsOf()) { const p = at(t); if (!p) continue; const { x, y } = p, half = t.n * D.tile * DRW.half * z;
     if (t.kind === 'unit') { glowAt(ctx, x, y, kind, z); flame(ctx, x + cx * z, y - cy * z, kind, z * cs, t.k); }
-    else if (kind === 'lantern') for (const sd of t.n >= LGT.two ? [-ONE, ONE] : [-ONE]) { glowAt(ctx, x + sd * half * la, y + half * TILT * ld, kind, z); flame(ctx, x + sd * half * la, y + half * TILT * ld - LGT.door * z, kind, z * ls, t.i + t.j + sd); }
+    else if (kind === 'lantern') { const zl = z * Math.sqrt(ONE + stat(t.code, t.side, 'lamp')); for (const sd of t.n >= LGT.two ? [-ONE, ONE] : [-ONE]) { glowAt(ctx, x + sd * half * la, y + half * TILT * ld, kind, zl); flame(ctx, x + sd * half * la, y + half * TILT * ld - LGT.door * z, kind, z * ls, t.i + t.j + sd); } } // E938
     else glowAt(ctx, x, y, kind, z); } }
 // E612
 const RIPS = [], [PA, PS] = STG.pop, [GS, GA] = STG.glow, SITE = new Set(), DONE = new WeakMap(), BORN = new WeakMap(), GLOW = new WeakMap(), LEAN = new WeakMap(), HIT = new WeakMap(); let celT = -Infinity, whiteT = -Infinity;

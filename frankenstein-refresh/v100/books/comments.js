@@ -880,7 +880,7 @@ BOOK("comments", {
 "E922": {"text": "the grass mask (where the season's colour and the blades go) is cut from the contour cells, not the tiles: a whole grass cell goes in, runs of flat cells merged into one shape; the shore and hill cells add only their grass part; so the tint and blades stop at the grass's smooth edge and never step over the dirt (Albert, Nov 10: odd slopes toward lakes)"},
 "E923": {"text": "the water's distance from shore starts at the waterline itself: a water tile beside land takes the fraction of a tile to where the height crosses zero, and the distance spreads only through water; measured from the land tiles' middles it followed the turned grid's staircase, so the bands stepped (Albert, Nov 10, #5: the coast's sawtooth)"},
 "E924": {"text": "the marsh: each marsh tile draws a number from the seed; where it is over D366's tussock the tile is water, else a tussock of grass; the water's edge runs between the tiles' middles (marching squares) and goes in with the shallows, drawn after the grass's colour and blades, with their foam on its edge; so the marsh is smooth and dotted with tussocks, never the tile staircase (Albert, Nov 10, #9)"},
- "E925": {"text": "the Daily challenge: when it is on, the dangers are drawn from the day's own dice at the lot's odds, shown picked and locked, the same for everyone that day (Albert, Nov 10, #14)"},
+ "E925": {"text": "the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and the dangers are drawn from the day's own dice at the lot's odds, shown picked and locked, the same for everyone that day (Albert, Nov 10, #14)"},
  "E926": {"text": "a Build cell you can't pay for says what you are short of each store, coloured red to green as you near it (Albert, Nov 10, #24: what you are short, not the word Short)"},
  "E927": {"text": "the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the sides"},
  "E928": {"text": "the time of day as hours and minutes, one home for the clock and the ribbon"},
@@ -892,5 +892,10 @@ BOOK("comments", {
  "E934": {"text": "an order's target answers: a unit glows, a thing ripples in the done colour (Albert, Nov 10, #31)"},
  "E935": {"text": "with someone picked, a tap near a resource takes it, so the target is bigger than its tile (Albert, Nov 10, #23)"},
  "E936": {"text": "your soldiers leave a wild animal alone unless it is after one of yours or you sent them at it (Albert, Nov 10, #32)"},
- "E937": {"text": "a beast that is not attacking your side is not a target for your soldiers"}
+ "E937": {"text": "a beast that is not attacking your side is not a target for your soldiers"},
+ "E938": {"text": "Lanterns (research) make the door torches brighter: light falls off as the square of distance (E = I / r^2), so a torch seen as far reaches sqrt(1 + gain) as far (Albert, Nov 10 11:51: the tech makes them brighter)"},
+ "E939": {"text": "a message with a place shows Go on the blue info bar, at the top and in a menu's help line; a tap there takes the camera to it and closes the menu (Albert, Nov 10, #30)"},
+ "E940": {"text": "a leafy crown takes a warm gloss on its sun side, painted only over its own leaves, baked once with the tree so it costs nothing a frame (Albert, Nov 10, #22)"},
+ "E941": {"text": "the quick action (Albert, Nov 10, #37, his sketches): tap open ground for a block of Attack, Build, Rally; Attack gives All, half, quarter, Squad; then a reticle in the same spot, and its tap sends them: four taps, the finger never moves; Rally sets the gathering point the same way; Build opens its six groups, then that group's buildings, placed where you tapped"},
+ "E942": {"text": "the quick action's steps that open another step, so the block stays open after them"}
 });

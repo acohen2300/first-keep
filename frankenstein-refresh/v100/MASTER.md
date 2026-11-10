@@ -207,6 +207,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E777** a tree's leaf stage: the year's place in seasons, each tree a little later or earlier by i
 - **E774** which kind a tree is: weighed by where it stands (wet low ground, the plain, the hills), o
 - **E778** every leaf a tree could hold is placed first, each with its own draw; the ones under the s
+- **E940** a leafy crown takes a warm gloss on its sun side, painted only over its own leaves, baked 
 
 ## index.html#the-figures
 
@@ -443,6 +444,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E714** the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, inst · QCU (N246)
 - **E611** what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at 
 - **E930** every finished building has a torch by its door from the start, houses their hearth as wel
+- **E938** Lanterns (research) make the door torches brighter: light falls off as the square of dista
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
 - **E934** an order's target answers: a unit glows, a thing ripples in the done colour (Albert, Nov 1
 - **E613** words on the map keep one size whatever the zoom, as the screen's own words; a label is a 
@@ -548,7 +550,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
-- **E925** the Daily challenge: when it is on, the dangers are drawn from the day's own dice at the l
+- **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
 - **E373** why a kind waits: the age it opens in (Mid's trainWhy)
 - **E184** read: the one window onto the world the glass draws from
 - **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
@@ -573,6 +575,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E933** a site's card sends one more villager: the nearest idle, else the nearest worker, who goes
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
+- **E939** a message with a place shows Go on the blue info bar, at the top and in a menu's help line
 - **E838** the chevron's tap: open or close the help lines
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
@@ -581,6 +584,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
+- **E942** the quick action's steps that open another step, so the block stays open after them
 - **E860** the square laid with its first box under the finger, held inside the screen
 - **E849** a group's label over its boxes, in small capitals across the whole row (as the v80 card)
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
@@ -618,6 +622,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E825** every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, a
 - **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
 - **E843** Paused: the speeds and its help line; a tap on play plays again
+- **E941** the quick action (Albert, Nov 10, #37, his sketches): tap open ground for a block of Attac
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E872** the Start page's Fog of war: off, every side sees all (one rule for all)
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
