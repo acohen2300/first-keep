@@ -171,7 +171,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E61 | index.html#drawn-once-in-the-view-frame | runs: flat tiles of one colour in a row drawn as one quad (no seams, few fills) |
 | E62 | index.html#drawn-once-in-the-view-frame | faces: the +y edge and the +x edge face the camera (the turn is under 45°) |
 | E63 | index.html#the-view | The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are drawn each frame over the one picture. |
-| E64 | index.html#the-view | one flag a layer code (the panel, floor 8) and Fast |
+| E64 | index.html#the-view | (the Pace meter starts on when the page is opened with ?fps, so a phone can show it: Albert, Nov 10 20:02) one flag a layer code (the panel, floor 8) and Fast |
 | E65 | index.html#the-door | The door (floor 8): the modules (menu, econ, combat, ai) hang on these hooks and read the world through FK; nothing else of theirs touches this file |
 | E66 | index.html#the-door | event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by the names in books/sound.js HE1 |
 | E67 | index.html#the-door | a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's frames (D98) |

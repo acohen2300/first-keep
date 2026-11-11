@@ -4960,8 +4960,8 @@
 "numbers": 0
 },
 "book:comments:E64": {
-"sha": "9ec12433368f208bea4d68089b628452a9ee530f9b50b129a9696d90bb86511c",
-"bytes": 63,
+"sha": "ddc191070815779ba97388a12c49d2174c94392606b20025b7c2cc26f8c2bf2c",
+"bytes": 170,
 "numbers": 0
 },
 "book:comments:E640": {
@@ -11950,8 +11950,8 @@
 "numbers": 16
 },
 "code:index.html#the-view": {
-"sha": "441a0f68cf780a782311d926248e32d4575e83b4004a2abd85117c1084f47693",
-"bytes": 1050,
+"sha": "151ac0c67fbfce4f517c4459eef7020499458c3cf0ac394009c689f26f52fa56",
+"bytes": 1078,
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {

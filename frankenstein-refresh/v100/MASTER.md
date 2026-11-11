@@ -146,7 +146,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#the-view
 
 - **E63** The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are dr
-- **E64** one flag a layer code (the panel, floor 8) and Fast
+- **E64** (the Pace meter starts on when the page is opened with ?fps, so a phone can show it: Alber
 - **E698** a draw-level change redraws the canvas at its new sharpness; only a real change of the win
 - **E973** asking for a fresh picture marks the frame wanted; the loop draws every frame while the ga
 

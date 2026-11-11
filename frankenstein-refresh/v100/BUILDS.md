@@ -4811,3 +4811,6 @@ A blow no longer shakes nerve; a loss drains the whole group within crowd tiles 
 Albert, Nov 10 19:22: "I would do 2-5 and let's see what happens"
 Opened: code:index.html, book:comments, book:rules, book:citations, tool:test.py
 Mist and fog one sheet; dirty() no longer queues a second drawing, and a resting still screen is not redrawn; deep forest trees found a forest step apart (4,470 of 8,167 now cached, was 120); one scratch canvas that only grows, silhouettes one mask a person (they had become 36% of the frame). Tests: t-n21 holds; t-n16, t-n18-t-n20, t-ground hold; smoke 6/6 and the match smoothness check passes (it had warned since Nov 7). Headless 3x: about 20 fps, too noisy to call. Sealed on branch n11, not published to live.
+
+## N21b: ?fps · 2026-11-10 20:03
+Albert, Nov 10 20:02 "Sure": the page opened with ?fps shows the Pace meter (fps, logic ms, draw ms). Sealed on n11.
