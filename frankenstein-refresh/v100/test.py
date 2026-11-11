@@ -1564,6 +1564,20 @@ N23JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
 async def n23(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N23JS); await pg.close()
     ok('t-n23', all(v.values()) and not errs, [v, errs[:2]])
+N24JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); MENU.S.tab = null; MENU.render(true); const D = FK.D, N = FK.N, me = 0, h = FK.seatOf(me);
+ const far = D.players.filter((p) => p !== me && FK.seatOf(p)).map((p) => FK.seatOf(p)).sort((a, b) => FK.dist(b, h) - FK.dist(a, h))[0]; WAR.treaty(me, far.side, 'war');
+ const U = []; for (let d = 6; d < 30 && U.length < 3; d++) for (let a = -d; a <= d && U.length < 3; a += 2) { const k = (h.j + d) * N + h.i + a; if (FK.walkable(k)) U.push(FK.spawn('UM1', me, k, FK.rng)); }
+ const f0 = FK.SIDES[me].store.food; WAR.order(U, far, null); for (let i = 0; i < 20; i++) FK.sim(0.1); o.far = U.every((u) => u.job === 'fight' && u.target === far && u.path && u.path.length > 50); o.free = FK.SIDES[me].store.food >= f0 - 1 && !ECON.orderCost;
+ FK.select(U); const g = (h.j + 12) * N + h.i - 12, [gx, gy] = FK.toScreen(...FK.toView(...FK.tileMid(g), Math.max(D.land, FK.H[g]))); FK.fire('tap', g, null, gx, gy); o.kept = FK.picked().length === U.length;
+ FK.select(U.slice(0, 2)); const j2 = U[2].job; MENU.VERBS.recallP.run(); const said = fromBook('words').bar.said.recall.replace('{n}', 2); o.recall = U[0].job === 'rout' && U[2].job === j2 && (document.getElementById('toast').textContent.includes(said) || JSON.stringify(MENU.S.tq || []).includes(said)) || [U[0].job, U[2].job, j2, document.getElementById('toast').textContent, JSON.stringify(MENU.S.tq)];
+ o.ranged = typeof WAR.ranged === 'function'; try { ECON.alarm('hands'); o.hands = true; } catch (e) { o.hands = String(e); } ECON.allClear();
+ FK.K.t = D.noon * D.day; o.clock = FK.clockOfDay().startsWith('12:');
+ const L = (a) => lightAt(a), sl = (a, e) => (L(a + e) - L(a - e)) / (e + e); o.light = [-18, 20].every((a) => Math.abs(sl(a, 1e-3)) < 1e-2) && D.ramp.slice(1, -1).every(([a]) => Math.abs((L(a + 1e-3) - L(a)) - (L(a) - L(a - 1e-3))) < 1e-5) && [...Array(400)].every((_, i) => L(-20 + i * 0.1) <= L(-20 + (i + 1) * 0.1) + 1e-12);
+ o.meter = String(loop).includes('draw(); meter(');
+ const e1 = FK.units().find((u) => u.side === 1); look(0.1); const c = CAST.get(1) && CAST.get(1).get(e1); o.circle = !!c && (c.skip || c.tiles.length === circle(e1, sightOf(e1)).length); return o; })()"""
+async def n24(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(N24JS); await pg.close()
+    ok('t-n24', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
 GROUNDJS = r"""(() => { MENU.act('start'); FK.fog(false); return true; })()"""
 GROUNDJS2 = r"""(() => { const N = FK.N, H = FK.H, L = FK.D.land, c = FK.ctx, [cw, ch] = FK.size(), dpr = c.canvas.width / cw, out = { water: [0, 0], land: [0, 0] };
  for (let k = 0; k < N * N; k += 7) { const [bx, by] = FK.tileMid(k), [x, y] = FK.toScreen(...FK.toView(bx, by, Math.max(0, H[k]))); if (x < 20 || y < 120 || x > cw - 20 || y > ch - 240) continue;
@@ -1596,7 +1610,7 @@ async def n16(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N16JS); await pg.close()
     got = [v['block'][:3] == ['qstep', 'qbuild', 'qrally'], v['army'] == ['qsend', 'qsend', 'qsend', 'qstep'], v['groups'] == 6, v['go'], not errs]
     ok('t-n16', all(got), [got, v, errs[:2]])
-PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

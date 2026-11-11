@@ -334,10 +334,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E122** Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), ac · D20 (N112) · D21 (N112) · D22 (N112)
 - **E862** the year's clock: the game's time from a start late in spring (D359), for seasons, leaves, · D359 (N287)
+- **E990** the clock reads the sun: the day's noon (D341) shows 12:00 (Albert, Nov 11) · D341 (N240, N250)
 - **E928** the time of day as hours and minutes, one home for the clock and the ribbon
 - **E123** QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year · QA (N1, N2) · D99 (N112)
 - **E551** the moon (QB to first order, QC): it runs ahead of the sun by its phase on a declination t · QB (N2, N3) · QC (N2)
 - **E124** light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) · QD (N2)
+- **E991** the light between the ramp's points: a cubic Hermite with Fritsch-Carlson slopes, flat at  · D369 (N322, N323)
 - **E125** QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mi · QP (N16) · N16
 - **E365** the share of the ground under ice: √ of its freezing degree-seconds over D225's full (QQ,  · D225 (N17, N173) · QQ (N17)
 - **E377** the weather's book (D229), a game hour, the gusts (a fractal of the day's dice, set at the · D229 (N9, N10, N180, N182, N183, N184, N186, N187, N185, N210, N211, N212, N213, N214, N282)
@@ -418,6 +420,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E979** a felled tree lowers the top of its own tile and its sight cell only, and the sight caches
 - **E878** a sight cell's woods: how much of it is wood and its ground under the trees, so a ray thro
 - **E869** an eye's tiles: every tile in its reach whose ground, a body high, its line clears over th
+- **E992** a computer's side sees in a plain circle of its sight: it knows what is there, no rays thr
 - **E870** seen now: a unit whose tile is in sight; a building any of whose corners is
 - **E877** an eye facing no fog: every point round its rim already seen by others, so it casts nothin
 - **E871** the fog of war's veil: one pixel a tile, dark where never seen, dim where seen before, cle
@@ -578,6 +581,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
+- **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
 - **E373** why a kind waits: the age it opens in (Mid's trainWhy)
@@ -777,7 +781,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
 - **E981** food in reach is food a side can carry home: a find or prey within the hunger book's reach
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
-- **E350** an order of yours costs its soldiers' meals for D213's seconds, never more than the store  · D213 (N170) · E806
 - **E351** the year's work: everyone eats; a field's soil wears while worked and rests back, never un · QAA (N29)
 - **E352** each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY · QAD (N32, N33) · QY (N27) · QZ (N28)
 - **E353** a cut-out plot is replanted at D222's share of its price and is full again; from a drop-of · D222 (N170)
@@ -938,7 +941,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E417** who can still reach a fight in time, fastest first, until the fight is even (Mid's reinfor
 - **E418** the War Director: the soldiers of a kind that can go, the crosshair's tile, a move's wait 
 - **E419** the Director's three moves (Mid's DIRECTS): each returns what it says, a reason without it
-- **E420** a kind's move, one tap (Mid's direct): it says its word, pays its meals (D213), tires the  · D213 (N170)
+- **E420** a kind's move, one tap (Mid's direct): it says its word, tires the soldiers and sounds its
 - **E421** the narrow at a tile: the open ground across the facing, a tile at a time each way until a
 - **E422** the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D2 · D252 (N190)
 - **E423** an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a fo

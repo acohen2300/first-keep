@@ -4862,3 +4862,17 @@ MODIFIED (2):
 LOCKED (2510 of 2512): byte for byte as sealed, 1,617,063 bytes
 Tests: gate passes; the meter seen centred under the message line headless. Sealed on n11
 Inventory: 2512 items sealed · 2382 book entries · 94 laws · 320 citations, 33 still to open · 0 known
+
+## N24 build 1: the army and the light (Albert's N24 list #1, #2, #3, #4, #8, #9, #10, #11, #13, #14) · 2026-11-11 10:45
+Albert, Nov 11 09:28-09:52: "The fix is go to where I tap. Period." ... "Go build ... go go"
+Opened: code:index.html, code:menu.js, code:combat.js, code:econ.js, book:words, book:measure, book:comments, book:citations, book:rules, law:QBP, tool:test.py
+- #1 an ordered target searches the whole way (toward: D.tries.way when u.focus is the target; short chases keep D.chase): 50 soldiers sent at a town 341 tiles off march and fight (was: idle).
+- #2 the picked stay picked after an order, until the bar's ✕ (Mid 26-input 427, Build 61).
+- #3 the clock reads the sun: the day's noon (D341) shows 12:00 (E990; was 06:00).
+- #4 the light ramp moved to the books (D369, was typed in code) and read through a monotone cubic with flat ends (Fritsch & Carlson, N323): dusk and dawn keep nature's length, the fade has no corner (E991).
+- #8 the pace meter drawn only with a drawn frame (no smear while paused).
+- #9 WAR.ranged exported: the Alarm's All hands threw.
+- #10 #11 the picked bar's Charge, Fall back, Hold, Recall act on the picked only (Recall had sent the whole army) and say what they did (E989, J33 said).
+- #13 a computer's side sees in a plain circle (E992); you keep the rays through woods and hills. Headless, minute 29: 43% of logic was ray casting.
+- #14 the per-order food cost cut (orderCost, D213, E350; Parked with the marching-effort idea waiting for Albert's look at its numbers).
+Tests: gate passes; t-n24 (X90) passes, its plant (the old chase limit) fails it; t-n18, t-n19, t-n20, t-n23 pass; t-sight fails 2 of 5 as in N22; t-war and t-orders throw KeyError ('hit', 'wheel') on the untouched N23c code too (harness faults, known). Sealed on n11.

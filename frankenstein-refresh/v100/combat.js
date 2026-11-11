@@ -72,7 +72,7 @@ function bestFoe(u, r) { let best = null, bv = -Infinity, bb = false; FK.unitsNe
 const nearest = (u, r, at = u, ok = alive) => { let best = null; FK.unitsNear(at, r * T, (v) => { if (enemies(u, v) && alive(v) && ok(v) && gap(at, v) < r && (!best || gap(at, v) < gap(at, best))) best = v; }); return best; };
 const foeBld = (u, r) => { let best = null; FK.bldsNear(u.bx, u.by, (r + D.large) * T, (t) => { if (SIDES[t.side] && enemies(u, t) && alive(t) && edgeDist(u, t) <= r && (!best || edgeDist(u, t) < edgeDist(u, best))) best = t; }); return best; };
 function choose(u, r) { let best = null; FK.unitsNear(u, r * T, (t) => { if (enemies(u, t) && alive(t) && edgeDist(u, t) <= r && (SIDES[t.side] || t.target === u) && (!best || worth(u, t, edgeDist(u, t)) > worth(u, best, edgeDist(u, best)))) best = t; }); return best; }
-const toward = (u, t) => { const r = Math.max(1, stat(u).rng); return FK.walkTo(u, t.kind === 'bld' ? (q) => { const i = q % N, j = (q - i) / N; return i >= t.i - r && i < t.i + t.n + r && j >= t.j - r && j < t.j + t.n + r; } : (q) => q !== t.k && nearK(q, t.k, r), t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k, D.chase); }; // E234
+const toward = (u, t) => { const r = Math.max(1, stat(u).rng); return FK.walkTo(u, t.kind === 'bld' ? (q) => { const i = q % N, j = (q - i) / N; return i >= t.i - r && i < t.i + t.n + r && j >= t.j - r && j < t.j + t.n + r; } : (q) => q !== t.k && nearK(q, t.k, r), t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k, u.focus === t ? D.tries.way : D.chase); }; // E234
 const home = (side) => FK.seatOf(side) || things().find((t) => t.kind === 'bld' && t.side === side); // E235
 const nearHome = (u, t) => (u.home && gap(t, u.home) < D.yard) || (!!home(u.side) && gap(t, home(u.side)) < D.yard); // E390
 const waves = SIDES.map(() => null); // E236
@@ -181,7 +181,7 @@ function ordersTick() { const by = new Map(); for (const u of units()) if (u.sid
     if (m.odds < HU.lose && !m.flash) { m.flash = true; say(WO.losing, { m: m.name }); } else if (m.flash && m.odds > HU.clear) m.flash = false; } }
 function send(i, aim) { const S = free().filter((u) => i == null || u.bn === i), slot = i ?? WD.all, name = i == null ? WD.all : WD.squads[i]; // E416
   if (!S.length) return say(i == null ? freeWhy() : WO.nobody, { m: name }); if (out(slot)) callHome(slot, true);
-  ECON.orderCost(ME, S); tired(S); const O = order(S, aim.t, aim.k); if (O) MS[slot] = { name, sq: i, ord: O, n0: S.length, t: K.t, due: K.t + etaOf(S, O.k, O.rk), st: 'go', odds: HU.clear }; }
+  tired(S); const O = order(S, aim.t, aim.k); if (O) MS[slot] = { name, sq: i, ord: O, n0: S.length, t: K.t, due: K.t + etaOf(S, O.k, O.rk), st: 'go', odds: HU.clear }; }
 const go = (aim) => { const ready = knows(ME, 'command') ? WD.squads.map((_, i) => i).filter((i) => !out(i) && free().some((u) => u.bn === i)) : []; if (ready.length) ready.forEach((i) => send(i, aim)); else send(null, aim); };
 function callHome(slot, quiet) { const m = MS[slot]; if (!m) return; homeAll(mUnits(m)); delete MS[slot]; if (!quiet) say(WO.home, { m: m.name }); }
 const everyHome = () => { for (const k in MS) callHome(k, true); homeAll(sendable()); say(WO.allHome); };
@@ -206,7 +206,7 @@ const DIRECTS = { // E419
   charge: (S, aim, said) => { const why = chargeWhy(S); if (why) return why; order(S, aim.t, aim.k); charge(S); return said; },
 };
 function direct(cls, aim) { const [id, , snd, said] = WO.direct[cls], S = ofKind(cls), [u0] = S; if (!S.length) return say(WO.why.none); // E420
-  const w = DIRECTS[id](S, aim, said); if (!w.endsWith('!')) return say(w); const f = ECON.orderCost(ME, S); tired(S); say(f ? WO.fed : w, { m: w, n: f }); FK.fire('event', snd, u0); }
+  const w = DIRECTS[id](S, aim, said); if (!w.endsWith('!')) return say(w); tired(S); say(w); FK.fire('event', snd, u0); }
 const directWait = (cls) => { const [id] = WO.direct[cls]; return wait(id); };
 function narrowAt(k, [fx, fy]) { const [cx, cy] = FK.tileMid(k), most = CK.max * GR.gap; let w = ZERO; for (const s of [ONE, -ONE]) for (let d = ONE; d <= most; d++) { if (!FK.walkable(FK.tileAt(cx - fy * d * T * s, cy + fx * d * T * s))) break; w++; } // E421
   return w < most + most ? Math.min(CK.max, Math.max(CK.min, Math.round(w / GR.gap))) : null; }
@@ -353,5 +353,5 @@ function spring(b, v, kind, E) { const horse = FK.SH[v.code].mount ? 'horse' : '
 FK.on('save', (X) => { X.war = { waves, homeT, routSaid, ordT, ORD, MS, AT, rel, SQ, raid }; }); // E667
 FK.on('load', ({ war: W }) => { ({ homeT, routSaid, ordT } = W); const keep = { waves, ORD, MS, AT, rel, SQ, raid }; for (const k in keep) FK.refill(keep[k], W[k]); });
 const take = (t) => { for (const u of units()) if (u.target === t) u.target = null; FK.vanish(t); }; // E691
-return { hillReach, standards: STD, chargeWhy, take, wild, meet, raids, loot, scout, roulette, guardsLeft, besideK, traps, shown, spring, guard, guardsOf, order, send, go, callHome, everyHome, reinforcePlan, reinforce, direct, directWait, ambushAt, foesNear, status, free, freeWhy, sendable, centreOf, routeK, etaOf, mixOf, chance, homeAll, charge, fallBack, ORD, MS, attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, power1, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat, vs, fromWhere, reachOf, fly, speedFor, dress, drillOn, rebattalion, plan, squad, lack, cycle, dialOf, temperOf, shapeOf, formOf, kiteOf, SQ, DIAL, SHAPES, bestFoe, canBeat, worth, formHome, wear, dmgOf, knows };
+return { ranged, hillReach, standards: STD, chargeWhy, take, wild, meet, raids, loot, scout, roulette, guardsLeft, besideK, traps, shown, spring, guard, guardsOf, order, send, go, callHome, everyHome, reinforcePlan, reinforce, direct, directWait, ambushAt, foesNear, status, free, freeWhy, sendable, centreOf, routeK, etaOf, mixOf, chance, homeAll, charge, fallBack, ORD, MS, attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, power1, odds, waves, armed, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat, vs, fromWhere, reachOf, fly, speedFor, dress, drillOn, rebattalion, plan, squad, lack, cycle, dialOf, temperOf, shapeOf, formOf, kiteOf, SQ, DIAL, SHAPES, bestFoe, canBeat, worth, formHome, wear, dmgOf, knows };
 })();

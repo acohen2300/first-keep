@@ -7,7 +7,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QA** Sun height → N1, N2 · used by D99, D341
 - **QB** True sun, moon and planets → N2, N3 · used by D292, X63
 - **QC** Moon lit fraction → N2 · used by D292, X63
-- **QD** Day's edges → N2
+- **QD** Day's edges → N2 · used by D369
 - **QE** Eclipses, by geometry · N2 → N2
 - **QF** Colour from temperature → N4, N5, N54 · used by D316, D318, X67
 - **QH** Rain or dry → N7 · used by D102, D293, O205
@@ -89,7 +89,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QCU** A flame's glow on the ground → N246
 - **QCV** A flame's flicker → N309, N307 · used by D317
 - **QBO** The blow → N69, N188 · used by SC6, SC10, D138, D141, D143, D221, D232, X57
-- **QBP** Upkeep → N170, N171 · used by D131, D211, D212, D213, X53
+- **QBP** Upkeep → N170, N171 · used by D131, D211, D212, X53
 - **QBQ** The break → N76 · used by D142
 - **QBR** The score → N75 · used by D135
 - **QBS** Wounded balance → N77, N78, N80 · used by SC8, W1, W3, W4, W5, W17, W18, W23, D167, D168
@@ -270,7 +270,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N167** Moussaid, Helbing, Garnier, Johansson, Combe & Theraulaz (2009) Proc. R. Soc. B 276:2755-2762 (arXiv:0908.3131 → QCJ, D196
 - **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC5, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
 - **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D124, D125, D139
-- **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D213, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, UM17, UM18, UM19, UM20, UM21, UM22, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
+- **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, UM17, UM18, UM19, UM20, UM21, UM22, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** Keys et al. (1950) The Biology of Human Starvation, Univ. of Minnesota Press; via Hargrove, Heinz & Heinz (200 → QBP, D212
 - **N172** Design: Albert, Nov 5 16:07: the Palisade comes only with the war camp, as in Mid (free there); it leaves the  → SN3
 - **N173** Design: Mid's pace (09-nav.js paceOf; 12-sim-core.js sideSpd, insulate; 37-events.js groundNeed, studded, iceM → G5, G6, G7, G9, G10, W24, D350, D224, D225, X54, O80, O81, O82, O83, O84, O85, O86, O87, J8
@@ -418,6 +418,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N316** Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubl → X85
 - **N317** Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 ("Go f → X86
 - **N318** Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 1 → X87
+- **N322** Albert, Nov 11, 2026, 09:28-09:52 (N24): "The fix is go to where I tap. Period."; selection kept; the clock to → D369, X90
+- **N323** (to open) Fritsch, F. N. and Carlson, R. E. (1980), Monotone piecewise cubic interpolation, SIAM Journal on Numerical An → D369
 - **N321** Albert, Nov 11, 2026, 05:50: the pace meter showed off screen on his phone: "Center it" → D349
 - **N320** Albert, Nov 11, 2026, 05:05 "Build n23 as we are planned": Gemini audit 2's fixes (the sprite cache kept by la → D332, X89
 - **N319** Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 "Go for them → X88

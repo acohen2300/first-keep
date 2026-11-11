@@ -231,6 +231,10 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E121 | index.html#the-things-drawn-each-frame-back-to-fr | a find far out, from its look |
 | E122 | index.html#floor-6-climate | Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), acting on everything below (L7). The clock is Y: a day D20, a season D21, a year D22. |
 | E123 | index.html#floor-6-climate | QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year from the spring equinox, H turns with the day (noon at the day's middle) |
+| E989 | menu.js | the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall; Albert, Nov 11) |
+| E990 | index.html#floor-6-climate | the clock reads the sun: the day's noon (D341) shows 12:00 (Albert, Nov 11) |
+| E991 | index.html#floor-6-climate | the light between the ramp's points: a cubic Hermite with Fritsch-Carlson slopes, flat at both ends, so dusk and dawn fade without a corner (D369) |
+| E992 | index.html#floor-7-display | a computer's side sees in a plain circle of its sight: it knows what is there, no rays through woods and hills (Albert, Nov 11; the late game spent 43% of its logic casting rays for four sides) |
 | E124 | index.html#floor-6-climate | light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) |
 | E125 | index.html#floor-6-climate | QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mid's relax: wetness here, and the market, nerve, healing, loyalty to come) |
 | E126 | index.html#floor-6-climate | QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet / dry) and P(wet / wet) are D102; a wet spell draws its intensity and the wind's sign once, from the rules' dice (QCL), a storm from D103. Snow falls instead when the air is at or under 1 °C (QI) |
@@ -449,7 +453,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E347 | econ.js | the gather beat: the field is worked now (its soil wears); a flock's food goes straight to the store; a plot with an amount runs down and its worker waits by it when it is cut out (Mid's replant wait); a famine weakens the work (hungerOf) |
 | E348 | econ.js | what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day; a famine past its grace weakens work and blows (Mid's shareOf, hungerOf); fish are worked only near a finished dock of the side (Mid's dockNear); food in reach is any find, field of one's own or game (Mid's foodInReach) |
 | E349 | econ.js | everyone eats, every moment: a villager working food eats from its find, not the store (a field and game for nothing, a shepherd from the store); the store empty is hunger, and with no food in reach a famine, timed from its start (Mid's upkeepTick, starveTick) |
-| E350 | econ.js | an order of yours costs its soldiers' meals for D213's seconds, never more than the store holds (Mid's orderCost); the tiredness is the charge's (E806) |
 | E351 | econ.js | the year's work: everyone eats; a field's soil wears while worked and rests back, never under its floor (QAA, Mid's natureTick); each season's turn once |
 | E352 | econ.js | each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY) and a tended flock is culled to half for mutton (QZ); wolves near a pasture take sheep every season; the harvest of the year is rolled in spring (Mid's seasonTurn) |
 | E353 | econ.js | a cut-out plot is replanted at D222's share of its price and is full again; from a drop-off, every cut-out plot of what it takes, nearest first, as many as can be paid for (Mid's replantWhy, replant, cutOut, replantAll) |
@@ -519,7 +522,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E417 | combat.js | who can still reach a fight in time, fastest first, until the fight is even (Mid's reinforcePlan); grouped into waves by arrival |
 | E418 | combat.js | the War Director: the soldiers of a kind that can go, the crosshair's tile, a move's wait in seconds; the charge's reason, the charge, fall back in order |
 | E419 | combat.js | the Director's three moves (Mid's DIRECTS): each returns what it says, a reason without its bang when nobody moved |
-| E420 | combat.js | a kind's move, one tap (Mid's direct): it says its word, pays its meals (D213), tires the soldiers and sounds its event |
+| E420 | combat.js | a kind's move, one tap (Mid's direct): it says its word, tires the soldiers and sounds its event |
 | E421 | combat.js | the narrow at a tile: the open ground across the facing, a tile at a time each way until a wall, a tree or water; narrower than the widest choke it is a choke, held in as many files as it is wide (D.choke; Mid's chokeAt without the drag) |
 | E422 | combat.js | the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D252 find of the crosshair |
 | E423 | combat.js | an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a foe within reach or a blow springs them all with a charge |

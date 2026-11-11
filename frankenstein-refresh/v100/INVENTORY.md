@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,485 | 597,042 | 597,190 (-6) |
-| Books | 2382 | 0 | 711,687 | 712,594 (+85) |
-| Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,946 | 315,360 | 315,605 |
+| Game code | 31 | 3,489 | 597,696 | 597,844 |
+| Books | 2388 | 0 | 713,550 | 714,463 |
+| Laws | 94 | 0 | 20,046 | 20,584 |
+| Tools | 5 | 1,960 | 317,825 | 318,070 |
 
 ## The trades (code)
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 67 | 9,797 | 9,801 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 100 | 17,342 | 17,346 | 63 |
+| index.html#the-door | 100 | 17,357 | 17,361 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -33,15 +33,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 150 | 20,114 | 20,118 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,993 | 5,997 | 90 |
-| index.html#floor-6-climate | 172 | 30,246 | 30,258 | 126 |
-| index.html#floor-7-display | 77 | 16,875 | 16,879 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,524 | 28,528 (-6) | 0 |
+| index.html#floor-6-climate | 174 | 30,737 | 30,749 | 115 |
+| index.html#floor-7-display | 78 | 17,290 | 17,294 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,524 | 28,528 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,514 | 9,518 | 54 |
-| menu.js | 533 | 109,168 | 109,212 | 526 |
-| econ.js | 593 | 109,419 | 109,419 | 72 |
-| combat.js | 357 | 59,239 | 59,239 | 83 |
+| menu.js | 535 | 109,199 | 109,243 | 526 |
+| econ.js | 592 | 109,168 | 109,168 | 72 |
+| combat.js | 357 | 59,192 | 59,192 | 83 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 320 | 77,342 |
+| citations | 322 | 78,060 |
 | colours | 32 | 8,966 |
-| comments | 942 | 170,486 |
+| comments | 945 | 170,902 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 164,814 |
-| rules | 87 | 33,127 |
+| measure | 335 | 164,991 |
+| rules | 88 | 33,621 |
 | screen | 25 | 11,058 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 47 | 96,938 |
+| words | 47 | 97,067 |
 
 ## The shells
 
@@ -164,6 +164,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
 | X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
 | X88 | t-n22 | page | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless |
+| X90 | t-n24 | page | N24 build 1: soldiers ordered at a far town find the whole way and go; the picked stay picked after an order; the picked bar's Recall sends only the picked, and says so; All hands runs; the clock reads 12:00 at the sun's noon; the light has no corner (flat ends, smooth knots, never falling as the sun rises); the meter is drawn only with a frame; a computer sees in a circle; an order costs no food |
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the whole frame is timed for shedding |
 
-2512 items sealed · 2382 book entries · 94 laws · 320 citations, 33 still to open · 0 known
+2518 items sealed · 2388 book entries · 94 laws · 322 citations, 34 still to open · 0 known

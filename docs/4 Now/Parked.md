@@ -718,3 +718,4 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - Fewer catch-up steps a frame (Gemini audit 2's death spiral): not needed; a frame already counts at most 0.1 s (D343 cap), 3 steps at 30 a second, so the 6-step limit is never reached. [2026-11-11 05:45]
 - Known failures found in N23's run, there in N22 too, not fixed here: t-n15 (the torch check: one of six) and t-sight (two of five checks). [2026-11-11 05:45]
 
+- Cut in N24 (Albert, Nov 11 09:28): the per-order food cost (Mid's ORDER, D213 30 s of meals, orderCost, E350): about 450 food a tap at 120 soldiers, and real armies ate by the day, not by the order. Its successor waits for Albert's look at the numbers: marching eats more by effort (Pandolf's walk term over standing, 1 + ηV² ≈ 3.3× at 1.52 m/s), which would cost a 6-minute raid of 50 foot about 3,500 food. [2026-11-11 10:20]
