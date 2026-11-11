@@ -1,5 +1,7 @@
 {
- "build": "",
- "agreed": "",
- "opens": []
+ "build": "N24 build 3: rain falls straight; the Relations and Misfits rows work (#12); Audit D shown: Market sell and buy, Workshop cloth or beer, Mint debasing, mercenaries hired, gifts and bribes, surrender, tribute, levy and release, the bank's line",
+ "agreed": "Albert, Nov 11 09:28-09:52: 12 yes; Audit D \"show it all. Why not?\"; 10:40 \"what's with the snow streaks\"; \"Go build\"",
+ "opens": ["code:index.html", "code:menu.js", "code:econ.js", "book:words", "book:comments", "book:screen", "book:rules", "tool:test.py"],
+ "grow": {"code:menu.js": 6000, "code:econ.js": 50, "code:index.html#floor-6-climate": 100, "code:index.html#the-view-s-eyes-lights-and-stage": 100},
+ "why": "E1000 rain straight; E999 the stance rows by setRel, gifts and bribes by giveGift; E1001 the Market, Workshop, Mint and mercenary rows; E1002 surrender, tribute, levy, release; the bank's line on the Hall's info"
 }

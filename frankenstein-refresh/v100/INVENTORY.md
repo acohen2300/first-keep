@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,499 | 601,294 | 601,442 |
-| Books | 2399 | 0 | 717,887 | 718,806 |
+| Game code | 31 | 3,509 | 603,818 | 603,966 (+2,524) |
+| Books | 2405 | 0 | 720,123 | 721,042 (+317) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 1,975 | 320,483 | 320,728 |
+| Tools | 5 | 1,988 | 322,692 | 322,937 (+2,209) |
 
 ## The trades (code)
 
@@ -33,14 +33,14 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 150 | 20,114 | 20,118 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
-| index.html#floor-6-climate | 174 | 30,737 | 30,749 | 115 |
+| index.html#floor-6-climate | 174 | 30,659 | 30,671 (-78) | 115 |
 | index.html#floor-7-display | 78 | 17,290 | 17,294 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 136 | 28,524 | 28,528 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,640 | 9,644 | 54 |
-| menu.js | 540 | 111,344 | 111,388 | 523 |
-| econ.js | 592 | 109,168 | 109,168 | 72 |
+| menu.js | 550 | 113,941 | 113,985 (+2,597) | 523 |
+| econ.js | 592 | 109,173 | 109,173 (+5) | 72 |
 | combat.js | 357 | 59,192 | 59,192 | 83 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -53,18 +53,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 323 | 78,443 |
 | colours | 32 | 8,966 |
-| comments | 951 | 172,186 |
+| comments | 955 | 173,324 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 337 | 166,384 |
-| rules | 89 | 34,285 |
-| screen | 25 | 11,058 |
+| rules | 90 | 34,719 |
+| screen | 25 | 11,172 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 48 | 97,804 |
+| words | 49 | 98,414 |
 
 ## The shells
 
@@ -164,8 +164,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
 | X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
 | X88 | t-n22 | page | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless |
+| X92 | t-n24c | page | N24 build 3: rain falls straight, no lean by wind; the Relations rows carry their side and work (Terms sends an envoy, a bribe pays a group its gift); the Market card sells and buys and a sale pays its going price; the Workshop is set to beer; the Mint debases; a mercenary camp's card can hire; the Bank shows its line on the Hall's info |
 | X91 | t-n24b | page | N24 build 2: a figure is no sharper past 2x zoom; the save is one slot in IndexedDB and nothing of First Keep is left in localStorage; a tab told another has opened pauses and stops saving; a farm makes D136 (0.5 a second); home gold has six piles, four to a vein; a price shows in full, each store its own colour; the Stores and Score cards open from the top bar; a building with research you can start shows the book; the Build menu shows only your age's buildings, no Show all |
 | X90 | t-n24 | page | N24 build 1: soldiers ordered at a far town find the whole way and go; the picked stay picked after an order; the picked bar's Recall sends only the picked, and says so; All hands runs; the clock reads 12:00 at the sun's noon; the light has no corner (flat ends, smooth knots, never falling as the sun rises); the meter is drawn only with a frame; a computer sees in a circle; an order costs no food |
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
 
-2529 items sealed · 2399 book entries · 94 laws · 323 citations, 34 still to open · 0 known
+2535 items sealed · 2405 book entries · 94 laws · 323 citations, 34 still to open · 0 known

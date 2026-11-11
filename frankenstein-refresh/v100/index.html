@@ -1303,9 +1303,9 @@ function drawSkin() { // E139
   if (K.sand) { const [x, y] = toScreen(...toView(K.sand.bx, K.sand.by, Math.max(null, H[tileAt(K.sand.bx, K.sand.by)]))); ctx.fillStyle = C.wild.sand; ctx.beginPath(); oval(ctx, x, y, K.sand.r * cam.z, K.sand.r * cam.z * TILT); ctx.fill(); } // E578
 }
 function drawSky(dt) { // E140
-  const now = K.t, px = WX.glass / fallV(WX.rain.dMax), lam = WX.rain.n0 * (K.rain * WX.rain.most) ** WX.rain.exp, go = lessMotion ? ZERO : dt, WD = WX.drops, many = (s) => Math.round(active(s) * (DRAW.lvl >= DRW.lv.motion ? WD.shed : ONE)), drift = K.wind * px * go, wrap = (m, len) => { m.x = (((m.x + drift) % cw) + cw) % cw; if (m.y > ch + len) { m.y = -len; m.x = glance() * cw; } }; // E719
+  const now = K.t, px = WX.glass / fallV(WX.rain.dMax), lam = WX.rain.n0 * (K.rain * WX.rain.most) ** WX.rain.exp, go = lessMotion ? ZERO : dt, WD = WX.drops, many = (s) => Math.round(active(s) * (DRAW.lvl >= DRW.lv.motion ? WD.shed : ONE)), wrap = (m, len) => { if (m.y > ch + len) { m.y = -len; m.x = glance() * cw; } }; // E719
   const [l0, l1] = WD.len, [a0, a1] = WD.alpha, [w0, w1] = WD.width, [f0, f1] = WD.flake; ctx.lineCap = 'round'; ctx.strokeStyle = C.marks.rain; for (let i = 0, n = many(K.rain); i < n; i++) { const m = DROPS[i], v = fallV(Math.min(WX.rain.dMax, WX.rain.dMin - Math.log(ONE - m.q) / lam)), len = l0 + l1 * m.d; m.y += v * px * go; wrap(m, len); // E379
-    ctx.globalAlpha = a0 + a1 * m.d; ctx.lineWidth = w0 + w1 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x + (K.wind / v) * len, m.y + len); ctx.stroke(); }
+    ctx.globalAlpha = a0 + a1 * m.d; ctx.lineWidth = w0 + w1 * m.d; ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(m.x, m.y + len); ctx.stroke(); } // E1000
   ctx.fillStyle = C.marks.flake; ctx.globalAlpha = WD.snow; for (let i = 0, n = many(K.snowing); i < n; i++) { const m = DROPS[i], z = f0 + f1 * m.d; m.y += (WX.snow.slow + (WX.snow.fast - WX.snow.slow) * m.d) * px * go; m.x += Math.sin(now + i) * m.d * px * go; wrap(m, z); ctx.fillRect(m.x, m.y, z, z); } ctx.globalAlpha = ONE; // E380
   const BS = D.strike.bolt; for (const b of K.bolts) { // E141
     const age = wallT() - b.w, a = boltEnv(b, age), rr = NS_rng((b.seed * BS.seed) | ONE), [x1, y1] = toScreen(b.vx, b.vy), main = []; let x = x1 + (rr() - DRW.half) * BS.lead, y = Math.min(ZERO, y1 - BS.top); main.push([x, y]);

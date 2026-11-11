@@ -375,6 +375,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E140** over everything: what falls, the strikes, the flash, the night, the white of low visibilit
 - **E719** rain and snow are drawn on the glass, as Mid's: the biggest drop crosses the screen at gla
 - **E379** rain: Marshall–Palmer sizes at the rate (λ = N0 R^exp), each drop falling at its size's sp
+- **E1000** a raindrop falls straight down, drop by drop: the wind left the game (Albert, Nov 4), but 
 - **E380** snow: flakes falling slow to fast by size, carried by the wind and swaying
 - **E141** SoRen's bolt: a channel from the top of the sky to the ground with a fork or two, three st
 - **E142** the channel wanders but leans home to its foot
@@ -593,6 +594,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
 - **E403** the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up op
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
+- **E1001** the Market sells and buys by the lot at the going price (D270, D271); the Workshop is set  · D270 (N195) · D271 (N34, N195) · D273 (N195)
+- **E999** the Relations and Misfits rows work: each row shows your stance with them (Foe red, Neutra
 - **E845** the book: Welcome back mid-match (Resume, New game), paused
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
 - **E188** sound on or off
@@ -650,6 +653,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
+- **E1002** a side's row: Yield! demands its surrender (it becomes your vassal when beaten badly enoug · D283 (N198, N199)
 - **E840** the stances: a people's name over two columns, then its four boxes (gift or bribe, war, te
 - **E971** the top row holds what two rows held (Albert, Nov 10 18:27): a cell named two keys joined 
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
