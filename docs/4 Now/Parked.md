@@ -712,3 +712,9 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - "Build another" is gone from the one-off buildings (only the twelve with the Repeat tick offer it). [2026-11-10 14:30]
 - The old torch flicker (two sines at 11 and 7.3 rad/s on the game clock) replaced by QCV; the bolt's fixed 0.45 s fade replaced by the strokes. [2026-11-10 14:30]
 - Open for later: two campfires can light at one big berry patch (each burns where no fire is within 3.5 m); a ring of fires is fine at night but may look busy. [2026-11-10 14:30]
+
+## Cut in N23 (Nov 11) [2026-11-11 05:45]
+- One sprite a tree kind and zoom, its size applied when drawn (Gemini audit 2): tried and measured; panning fell from 43 to 16 fps headless, as each tree is then drawn shrunk from a bigger picture. Not built. The cache kept by last use is in instead. [2026-11-11 05:45]
+- Fewer catch-up steps a frame (Gemini audit 2's death spiral): not needed; a frame already counts at most 0.1 s (D343 cap), 3 steps at 30 a second, so the 6-step limit is never reached. [2026-11-11 05:45]
+- Known failures found in N23's run, there in N22 too, not fixed here: t-n15 (the torch check: one of six) and t-sight (two of five checks). [2026-11-11 05:45]
+

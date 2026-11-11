@@ -4819,3 +4819,25 @@ Albert, Nov 10 20:02 "Sure": the page opened with ?fps shows the Pace meter (fps
 Albert, Nov 10 22:47: "Go for them all"
 Opened: code:index.html, code:econ.js, code:combat.js, book:measure, book:comments, book:rules, book:citations, tool:test.py
 Load draws the ground once, and filled ground shapes are not closed (a load 11.7 s to 2.6 s headless); a felled tree opens reach and lowers the tops locally (BUG-01, 02; full recompute matches); famine counts food within 75 m of a side's own food drop-offs (BUG-06); healers heal villagers (BUG-10); bows reach farther downhill (BUG-08); Raiders age with 3 soldiers (age 1 at minute 7, was 8); hidden people show a dashed, double ring, idle villagers' glow and dim, silhouettes gone; resolution steps to 3/4 then 1/2 at draw levels 3 and 4; every untouched tree is painted once into one sliding woods sheet, trees drawn live only over a person or thing behind them (the N21 woods chunks had cut trees at chunk edges and thrashed their budget). Found and fixed on the way: DRW.half was dropped from the draw book mid-build and broke the lights. Headless at 3x: about 50 fps (N21: 23-29). Tests: t-n22 holds; t-n15, t-n16, t-n18-t-n21, t-ground hold (t-n18b's hidden villager moved deeper behind the Hall, t-n20 counts six fallen within 240 s); smoke 6/6. Sealed on branch n11, not published to live.
+
+## N23: Gemini audit 2's fixes and the tree in front of a building · 2026-11-11 05:29
+Albert, Nov 11 05:05: "Build n23 as we are planned"
+Opened: code:index.html, book:comments, book:measure, book:rules, book:citations, tool:test.py
+MODIFIED (14):
+- book:citations:N320 · added
+- book:comments:E148 · 136 → 147 bytes
+- book:comments:E605 · 341 → 464 bytes
+- book:comments:E606 · 133 → 332 bytes
+- book:comments:E689 · 135 → 274 bytes
+- book:comments:E988 · 276 → 463 bytes
+- book:measure:D332 · 167 → 370 bytes
+- book:rules:X89 · added
+- code:index.html#floor-7-display · 16,872 → 16,879 bytes
+- code:index.html#the-door · 17,346 → 17,346 bytes
+- code:index.html#the-things-drawn-each-frame-back-to-fr · 5,960 → 5,997 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 28,535 → 28,489 bytes
+- code:index.html#the-woods-cache · 5,771 → 5,901 bytes
+- tool:test.py · 279,504 → 281,599 bytes
+LOCKED (2497 of 2511): byte for byte as sealed, 1,286,752 bytes
+Tests: t-n23 holds; t-n15-t-n22, t-ground, t-save hold except t-n15 and t-sight, which fail as in N22 (logged in Parked); smoke 6/6. Side by side N21 v N22: same sharpness; a tree in front of a building was drawn behind it (N22), fixed. Headless 3x: about 45 fps panning and zooming, as N22; a full sight rebuild 4 ms (no longer every beat while anything is built), a save 31 ms (now a minute apart, was 10 s). Tried and cut: one sprite a tree kind (panning 43 to 16 fps). Sealed on branch n11, not published to live
+Inventory: 2511 items sealed · 2381 book entries · 94 laws · 319 citations, 33 still to open · 0 known

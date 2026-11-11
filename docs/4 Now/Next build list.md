@@ -422,3 +422,8 @@ Preview: `frankenstein-refresh/preview-n17/`. Gate PASS, smoke 6/6 (the match sm
 - Next: the speed audit (Albert 18:56, 18:59: the game is too slow on his phone; find the most expensive things on a frame). [2026-11-10 19:17]
 - N21 speed built (Albert 19:22 "do 2-5"): mist+fog one sheet, no double drawing and no redraw of a still paused screen, 4,470 forest trees cached (was 120), silhouettes one mask a person. Smoke's match check passes for the first time since Nov 7. Not done: #1 lower resolution when slow, #6 AI less often. [2026-11-10 19:46]
 - N22 built (Albert 22:47 "Go for them all"): Gemini BUG-01, 02, 04, 06, 07, 08, 10 fixed; dashed ring; resolution steps; woods one sliding sheet. About 50 fps headless at 3x. Open: the unwired features (Market, Mint, Workshop, Caravan routes, Mercenaries, Envoys, Gifts, Diplomacy stances): show or cut, one by one. [2026-11-10 23:32]
+
+## N23 (Albert, Nov 11 05:05 "Build n23 as we are planned") [2026-11-11 05:45]
+- Built: the side-by-side check of N21 against N22 (sharpness the same; it found a tree in front of a building drawn behind it, a N22 bug, fixed: buildings now join the check for trees drawn live); the sprite cache kept by last use with a running pixel total; sight from finished buildings only (a site no longer rebuilds the whole map's sight every beat, 4 ms headless each); a save a minute (31 ms headless each, was every 10 s); shedding times the whole frame. [2026-11-11 05:45]
+- Open: t-n15 and t-sight fail as in N22; the unwired features (show or cut); the location choice; Albert's ?fps phone screenshot. [2026-11-11 05:45]
+

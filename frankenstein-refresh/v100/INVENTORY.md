@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,485 | 596,875 | 597,023 |
-| Books | 2379 | 0 | 709,839 | 710,746 |
+| Game code | 31 | 3,485 | 597,003 | 597,151 |
+| Books | 2381 | 0 | 711,392 | 712,299 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,934 | 313,265 | 313,510 |
+| Tools | 5 | 1,946 | 315,360 | 315,605 |
 
 ## The trades (code)
 
@@ -32,12 +32,12 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
 | index.html#floor-5-movables | 150 | 20,114 | 20,118 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,956 | 5,960 | 90 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,993 | 5,997 | 90 |
 | index.html#floor-6-climate | 172 | 30,246 | 30,258 | 126 |
-| index.html#floor-7-display | 77 | 16,868 | 16,872 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,531 | 28,535 | 0 |
+| index.html#floor-7-display | 77 | 16,875 | 16,879 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,485 | 28,489 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 5,767 | 5,771 | 24 |
+| index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,514 | 9,518 | 54 |
 | menu.js | 533 | 109,168 | 109,212 | 526 |
 | econ.js | 593 | 109,419 | 109,419 | 72 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 318 | 76,898 |
+| citations | 319 | 77,196 |
 | colours | 32 | 8,966 |
-| comments | 942 | 169,827 |
+| comments | 942 | 170,486 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 164,451 |
-| rules | 86 | 32,713 |
+| measure | 335 | 164,654 |
+| rules | 87 | 33,127 |
 | screen | 25 | 11,058 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -164,5 +164,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
 | X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
 | X88 | t-n22 | page | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless |
+| X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the whole frame is timed for shedding |
 
-2509 items sealed · 2379 book entries · 94 laws · 318 citations, 33 still to open · 0 known
+2511 items sealed · 2381 book entries · 94 laws · 319 citations, 33 still to open · 0 known

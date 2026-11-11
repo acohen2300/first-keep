@@ -2,7 +2,7 @@
 BOOK("comments", {
  "E687": {"text": "past the lane beside a building, the next ring a pace further out, as many rings as the most people need (Mid's spot further out): every paid unit stands somewhere"},
  "E688": {"text": "a computer's soldier holding a choke whose time is up, or sent to help an ally and still there D285's stay s, goes back to the pool for the next wave (Mid's state 'home', 17-ai and assist)"},
- "E689": {"text": "the tops are made again when a building is added, removed or raised further: a site counts at its built share of its height"},
+ "E689": {"text": "the tops are made again when a building is finished or lost: a building blocks sight only once it stands finished (N23, Gemini audit 2: a site counted at its built share, so while anything was being built anywhere the whole map's tops were made again every beat)"},
  "E690": {"text": "the dice can tell and set where they are, so a save opened rolls on as it would have"},
  "E691": {"text": "a captive is taken alive: gone from the field with no corpse, no killer and no blow to anyone's nerve; who aimed at it looks again"},
  "E693": {"text": "the arguments the cells point at are made again with each render, so the table holds only what is on the screen"},
@@ -250,7 +250,7 @@ BOOK("comments", {
  "E145": {"text": "Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made · Why ground that is always mud (KI2), slow to cross, never built on · How count D114, lakes picked by the dice"},
  "E146": {"text": "Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no fog of war; the land is always drawn). Every tick of D117 each side's eyes, its units and finished buildings, look at every other side's unit and building: seen when within the eye's range (QAL) and the line clears (QAM); the computers by the same rule (QAN)"},
  "E147": {"text": "a thing's height: a building's from its look (D312), a person's from D117"},
- "E148": {"text": "each tile's top: the ground, a standing tree's height, a building's; worked out again when a thing is felled, lost or raised"},
+ "E148": {"text": "each tile's top: the ground, a standing tree's height, a finished building's; worked out again when a thing is felled, lost or finished"},
  "E149": {"text": "the line of sight (QAM): from the eye's height to the target's top, tile by tile along the grid line (Bresenham), its own footprints aside; blocked where a tile's top stands above the line"},
  "E150": {"text": "QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown away from the sun; the sun rises on the right, stands over the bottom of the screen at noon (the camera looks north), sets on the left"},
  "E151": {"text": "left at sunrise, up at noon, right at sunset"},
@@ -695,8 +695,8 @@ BOOK("comments", {
  "E600": {"text": "a thing's range (QAL): the least of the horizon from its eye, the eye's range in this light (a lantern gives a building part of the dark back) and what the weather lets anyone see (QK)"},
  "E603": {"text": "another side's building shows only while your people see it"},
  "E604": {"text": "the player's Reduce motion, read from the phone; the draw budget's level; still: is motion off, by the setting or by load (Mid's lessMotion, DRAW, still)"},
- "E605": {"text": "a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, then half the pixels) and climbs back when fast again (Mid's shed); the drawing alone is timed, against shares of the frame's real interval at the rate it runs, not a fixed 12 ms (SoRen's numbers were for 60 frames a second; Albert, Nov 9)"},
- "E606": {"text": "a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so the phone gets the memory back"},
+ "E605": {"text": "a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, then half the pixels) and climbs back when fast again (Mid's shed); the whole frame is timed, the world's steps and the drawing (N23, Gemini audit 2: with the drawing alone timed, a phone slow in its steps never shed), against shares of the frame's real interval at the rate it runs, not a fixed 12 ms (SoRen's numbers were for 60 frames a second; Albert, Nov 9)"},
+ "E606": {"text": "a cache held to a budget of pixels, its size kept as a running total: the least lately used go first (a picture used is moved to the back), their canvases emptied at once so the phone gets the memory back (N23, Gemini audit 2: the first made had gone first, so pictures in use every frame were thrown out and made again)"},
  "E607": {"text": "the camera glides on a critically damped spring (QAW): to a point, Home or the small map's tap; a finger takes over; still means a jump (Mid's spring, camGo, camStop)"},
  "E608": {"text": "Follow keeps the picked units in the middle until they are gone or a finger moves the map (Mid's followCam)"},
  "E609": {"text": "fire's colour from its temperature (QF, a black body), its life in the rain (an open flame dims, a covered one keeps), its glow fading as 1/r² (QAU) and the flame itself, leaning with the wind (Mid's kelvinRGB, flameLife, glow, flame)"},
@@ -939,7 +939,7 @@ BOOK("comments", {
  "E985": {"text": "a person counts as hidden by what is drawn in front of him only if that thing has ink at the middle of his figure, not merely a box that meets his: each sprite's ink is read once and kept"},
  "E986": {"text": "the picture's resolution steps down with the draw level, three quarters then half, and back up as frames come quickly again (Albert, Nov 10 22:47: lower resolution when the frame rate drops)"},
  "E987": {"text": "every untouched tree is baked into the woods' cached picture (Albert, Nov 10 21:08-21:10, option B); a tree leaves it at its first cut, so the cache never shows a tree smaller or gone; a tree with trees a forest step away all round is inner and casts no shadow of its own (the woods' own shade)"},
- "E988": {"text": "the trees standing in front of a person this frame, whose ink covers the middle of his figure, are drawn again over him in their place in the order, so depth stays right while the rest of the forest comes from the cache; a burning tree is drawn live for its flames"},
+ "E988": {"text": "the trees standing in front of a person, a thing or a building this frame (lower on the screen, their pictures overlapping, looked for cover tiles all round its footprint, as the board is turned) are drawn again over it in their place in the order, so depth stays right while the rest of the forest comes from the cache; a burning tree is drawn live for its flames (N23: buildings had been left out, so a tree in front of the hall was drawn behind it)"},
  "E951": {"text": "a lightning flash is three to five return strokes about 60 ms apart (CIGR\u00c9 TB 549), each re-lighting the bolt and whiting the sky by its nearness; timed on the wall clock, so at triple speed it is as startling as at one (Albert, Nov 10, N17 #15)"},
  "E952": {"text": "a lake keeps off the trade roads' stops, as it keeps off another lake: a stop is a place on dry land where caravans meet, so the water is laid round it (Albert, Nov 10, audit item 4: on the test map two stops fell in lakes and the roads had 6 of 8)"}
 });

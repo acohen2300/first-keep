@@ -411,8 +411,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N220, N247, N248) · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219) · QAN (N43, N44, N220)
 - **E980** the map's tops are worked out again in full only when a building or a find goes, not a tre
 - **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N220, N247, N248)
-- **E689** the tops are made again when a building is added, removed or raised further: a site counts
-- **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
+- **E689** the tops are made again when a building is finished or lost: a building blocks sight only  · N23
+- **E148** each tile's top: the ground, a standing tree's height, a finished building's; worked out a
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
 - **E868** the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL
 - **E979** a felled tree lowers the top of its own tile and its sight cell only, and the sight caches
@@ -451,9 +451,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
 - **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
-- **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
+- **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras,  · N23
 - **E986** the picture's resolution steps down with the draw level, three quarters then half, and bac
-- **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
+- **E606** a cache held to a budget of pixels, its size kept as a running total: the least lately use · N23
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
 - **E609** fire's colour from its temperature (QF, a black body), its life in the rain (an open flame · QF (N4, N5, N54) · QAU (N54)
@@ -508,7 +508,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E157** each chunk's box in the view frame, with room above for the trees' height
 - **E158** the woods' picture: every untouched tree in a chunk on or near the screen, back to front, 
 - **E159** the woods' sheet slides with the camera and is painted again only past its margin, on a zo
-- **E988** the trees standing in front of a person this frame, whose ink covers the middle of his fig
+- **E988** the trees standing in front of a person, a thing or a building this frame (lower on the sc · N23
 - **E766** the ring at a unit's feet, full and bright: green picked, blue working, yellow idle (yours · C24 (N145)
 - **E855** a picked unit: the green ring at its feet, thick and glowing
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)

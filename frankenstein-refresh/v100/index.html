@@ -391,7 +391,7 @@ function work() { for (let n = D.work.slices; n-- && TASKS.length; ) { const t =
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
 let paused = false; const resting = () => paused || !!fire('rest'), pause = (on = !paused) => { paused = on; dirty(); }; // E695
 const sim = (dt) => { climate(dt); step(dt); fire('tick', dt); work(); look(dt); }, vAt = (u) => (u.lvx == null ? [u.vx, u.vy] : [u.lvx + (u.vx - u.lvx) * DRAW.alpha, u.lvy + (u.vy - u.lvy) * DRAW.alpha]); // E715
-function loop(now) { const wall = (now - last) / 1000; if (wall >= DRW.slack / rate()) { const dt = paused ? null : Math.min(SIM.cap, wall || ZERO) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } const w1 = performance.now(); followCam(dt); const cs = [cam.x, cam.y, cam.z].join(); if (!resting() || want || cs !== camSeen) { camSeen = cs; draw(); } const w2 = performance.now(); shed(w2 - w1, wall); meter(wall, w1 - w0, w2 - w1); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
+function loop(now) { const wall = (now - last) / 1000; if (wall >= DRW.slack / rate()) { const dt = paused ? null : Math.min(SIM.cap, wall || ZERO) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } const w1 = performance.now(); followCam(dt); const cs = [cam.x, cam.y, cam.z].join(); if (!resting() || want || cs !== camSeen) { camSeen = cs; draw(); } const w2 = performance.now(); shed(w2 - w0, wall); meter(wall, w1 - w0, w2 - w1); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
 // E655
 const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\b/.test(location.search), seenErr = new Set(), BASE0 = {}; let fightT = null, failT = -Infinity;
 if (TEST) show.P = true; // E894
@@ -1206,9 +1206,9 @@ const artHigh = (c) => { const { data } = c.getContext('2d').getImageData(ZERO, 
 const FIG = () => ARTH.figure ?? (ARTH.figure = (D.upm * W.person.height) / artHigh(figure(SH[SHELLS.find((c) => SH[c].body === 'person' && TICKS[c].has('Gather'))].look, C.white, ZERO, null, ONE / dpr))); // E756
 const artOf = (kind) => ARTH[kind] ?? (ARTH[kind] = SH[KIND[kind].code].body ? (D.upm * W[SH[KIND[kind].code].body].height) / artHigh(nodeSprite(kind, ZERO, ONE / dpr)) : FIG()); // E757
 function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
-  const q = STEP ** Math.ceil(Math.log(s * dpr) / Math.log(STEP)), k = key + '@' + q; let c = SPR.get(k); if (c) return c; // E957
+  const q = STEP ** Math.ceil(Math.log(s * dpr) / Math.log(STEP)), k = key + '@' + q; let c = SPR.get(k); if (c) { SPR.delete(k); SPR.set(k, c); return c; } // E957
   c = document.createElement('canvas'); c.width = Math.ceil(W * q); c.height = Math.ceil(H * q); g = c.getContext('2d'); g.scale(q, q); g.translate(tx, ty); if (skew) g.transform(1, skew, 0, 1, 0, 0); g.lineJoin = 'round'; g.lineCap = 'round'; paint(); g = null;
-  c.ax = ax; c.ay = ay; c.q = q; SPR.set(k, c); fitCache(SPR, GC.sprites); return c;
+  c.ax = ax; c.ay = ay; c.q = q; SPR.set(k, c); fitCache(SPR, GC.sprites, c); return c;
 }
 const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // E119
@@ -1412,9 +1412,9 @@ function makeMarsh(roll) { // E145
 // ── Floor 7, display (E146)
 const EYE = D.sight, SEEN = new Map(), TOPS = new Float32Array(N * N), cellOf = (t) => fromBoard(t.bx, t.by).map((v) => Math.floor(v / D.tile)); let seeT = 0, topN = -1; on('gone', (t) => { if (t && t.kind && t.kind !== 'tree' && t.kind !== 'unit') topN = -1; }); // E980
 const tall = (t) => (B[t.code] ? LKO.h[SH[t.code].look] || null : EYE.body * D.upm); // E147
-const topKey = () => things.reduce((n, t) => n + (t.done ?? ONE), null); // E689
+const topKey = () => things.reduce((n, t) => n + +((t.done ?? ONE) >= ONE), null); // E689
 function tops() { topN = topKey(); for (let k = N * N; k--; ) TOPS[k] = H[k] + (treeAt(k) ? W[SH[KIND.tree.code].body].height * D.upm : null); // E148
-  for (const t of things) if (t.kind === 'bld') for (let j = t.j; j < t.j + t.n; j++) for (let i = t.i; i < t.i + t.n; i++) TOPS[j * N + i] = Math.max(TOPS[j * N + i], H[j * N + i] + tall(t) * Math.min(ONE, t.done ?? ONE)); }
+  for (const t of things) if (t.kind === 'bld') for (let j = t.j; j < t.j + t.n; j++) for (let i = t.i; i < t.i + t.n; i++) if ((t.done ?? ONE) >= ONE) TOPS[j * N + i] = Math.max(TOPS[j * N + i], H[j * N + i] + tall(t)); }
 function sees(e, t) { const P = [cellOf(e), H[tileAt(e.bx, e.by)] + stat(e.code, e.side, 'eye') * D.upm, e.n || ONE], Q = [cellOf(t), H[tileAt(t.bx, t.by)] + tall(t), t.n || ONE], key = ([[i, j]]) => j * N + i; // E149
   const [[a, z0, m0], [b, z1, m1]] = key(P) > key(Q) ? [Q, P] : [P, Q], n = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]));
   for (let s = Math.floor(m0 * DRW.half); s <= n - Math.floor(m1 * DRW.half); s++) { const f = s / n; if (TOPS[Math.round(a[1] + (b[1] - a[1]) * f) * N + Math.round(a[0] + (b[0] - a[0]) * f)] > z0 + (z1 - z0) * f) return false; } return true; }
@@ -1503,7 +1503,7 @@ function shed(work, secs) { const due = DRW.ms / rate(); DRAW.ema += (work - DRA
   if (DRAW.ema > DRW.slow * due && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
   else if (DRAW.ema < DRW.fast * due && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
   const res = DRW.res[Math.min(DRAW.lvl, DRW.res.length - ONE)]; if (res !== (show.res || ONE)) { show.res = res; resize(); } } // E986
-const area = (v) => (v.cv || v).width * (v.cv || v).height + (v.tint ? v.tint.width * v.tint.height : ZERO), used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; if (v.tint) v.tint.width = v.tint.height = null; } } // E606
+const area = (v) => (v.cv || v).width * (v.cv || v).height + (v.tint ? v.tint.width * v.tint.height : ZERO); function fitCache(M, most, v = null) { M.px = (M.px || ZERO) + (v ? area(v) : ZERO); for (const [k, o] of M) { if (M.px <= most || M.size <= ONE) break; M.px -= area(o); M.delete(k); const c = o.cv || o; c.width = c.height = null; if (o.tint) o.tint.width = o.tint.height = null; } } // E606
 // E607
 const spring = (x, v, to, w, dt) => { const e = Math.exp(-w * dt), d = x - to, t = (v + w * d) * dt; return [to + (d + t) * e, (v - w * t) * e]; };
 function camStop() { cam.tx = cam.ty = undefined; cam.vx = cam.vy = null; }
@@ -1695,10 +1695,10 @@ function paintWoods() { const s = cam.z, M = D.landCache.margin, T = []; for (le
   T.sort((a, b) => a.vy - b.vy); for (const t of T) { const [x, y] = toScreen(t.vx, t.vy), z = s * treeZ(t); blit(nodeSprite(t.kind, t.v, z), x, y, z); } }
 const drawWoods = () => slideSheet(WOODSH, [DEEPV, Math.floor((yt() / D.season) * TREE.stages.length), treeLook(ZERO)].join(), paintWoods); // E159
 const COVER = new Set(), TMAP = { tv: -ONE, m: new Map() }, treeZ = (t) => artOf(t.kind) * t.size * (LEFT + GROW * Math.min(ONE, t.amount / KIND[t.kind].amount)); // E988
-function covers(s) { if (TMAP.tv !== TV) { TMAP.tv = TV; TMAP.m.clear(); for (const t of things) if (t.deep) TMAP.m.set(t.k, t); } const W = D.woods, F = s * FIG();
-  const live = [...units.filter((u) => !u.inside && (u.side === ME || inSight(u))).map((u) => [u, vAt(u), () => unitSprite(u, F), F]), ...things.filter((t) => !t.deep && t.kind !== 'bld' && t.kind !== 'tree').map((t) => [t, [t.vx, t.vy], () => nodeSprite(t.kind, t.v, s * artOf(t.kind) * t.size), s * artOf(t.kind) * t.size])];
-  for (const [u, v, spr, f] of live) { const [x, y] = toScreen(...v); if (x < ZERO || y < ZERO || x > cw || y > ch) continue; const b = boxOf(spr(), x, y, f), [bx, by, bw, bh] = b, i = u.k % N, j = (u.k - i) / N;
-    for (let dj = ZERO; dj <= W.cover; dj++) for (let di = -W.side; di <= W.side; di++) { const t = TMAP.m.get((j + dj) * N + i + di); if (!t || COVER.has(t) || !(t.vy > u.vy)) continue; const [tx, ty] = toScreen(t.vx, t.vy), z = s * treeZ(t), sp = nodeSprite(t.kind, t.v, z), o = boxOf(sp, tx, ty, z); if (meets(b, o) && inkAt(sp, o, bx + bw * DRW.half, by + bh * DRW.half)) COVER.add(t); } } }
+function covers(s) { if (TMAP.tv !== TV) { TMAP.tv = TV; TMAP.m.clear(); for (const t of things) if (t.deep) TMAP.m.set(t.k, t); } const W = D.woods, F = s * FIG(), at = (k) => [k % N, Math.floor(k / N), ONE];
+  const live = [...units.filter((u) => !u.inside && (u.side === ME || inSight(u))).map((u) => [u, vAt(u), () => unitSprite(u, F), F, at(u.k)]), ...things.filter((t) => !t.deep && t.kind !== 'tree').map((t) => (t.kind === 'bld' ? [t, [t.vx, t.vy], () => bldSprite(t.code, t.col, s, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), s, [t.i, t.j, t.n]] : [t, [t.vx, t.vy], () => nodeSprite(t.kind, t.v, s * artOf(t.kind) * t.size), s * artOf(t.kind) * t.size, at(t.k)]))];
+  for (const [u, v, spr, f, [i, j, n]] of live) { const [x, y] = toScreen(...v), b0 = boxOf(spr(), x, y, f), [bx, by, bw, bh] = b0; if (bx > cw || by > ch || bx + bw < ZERO || by + bh < ZERO) continue;
+    for (let jj = j - W.cover; jj < j + n + W.cover; jj++) for (let ii = i - W.cover; ii < i + n + W.cover; ii++) { const t = TMAP.m.get(jj * N + ii); if (!t || COVER.has(t) || !(t.vy > u.vy)) continue; const [tx, ty] = toScreen(t.vx, t.vy), z = s * treeZ(t); if (meets(b0, boxOf(nodeSprite(t.kind, t.v, z), tx, ty, z))) COVER.add(t); } } }
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u) || u.veil))) return; const [x, y] = toScreen(...vAt(u)); if (x < -m || x > cw + m || y < -m || y > ch + m) return;

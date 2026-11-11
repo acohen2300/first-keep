@@ -391,6 +391,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N316 |  | Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubled to 240 for now, the world t | opened |
 | N317 |  | Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 (\Go for all\: nerve, the rallied, m | opened |
 | N318 |  | Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 19:22: \I would do 2-5 and let' | opened |
+| N320 |  | Albert, Nov 11, 2026, 05:05 \Build n23 as we are planned\: Gemini audit 2's fixes (the sprite cache kept by last use, sight from finished bu | opened |
 | N319 |  | Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 \Go for them all\ on Gemini's audit fixes  | opened |
 
 ## colours
@@ -436,7 +437,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 |---|---|---|---|
 | E687 |  | past the lane beside a building, the next ring a pace further out, as many rings as the most people need (Mid's spot further out): every pai |  |
 | E688 |  | a computer's soldier holding a choke whose time is up, or sent to help an ally and still there D285's stay s, goes back to the pool for the  |  |
-| E689 |  | the tops are made again when a building is added, removed or raised further: a site counts at its built share of its height |  |
+| E689 |  | the tops are made again when a building is finished or lost: a building blocks sight only once it stands finished (N23, Gemini audit 2: a si |  |
 | E690 |  | the dice can tell and set where they are, so a save opened rolls on as it would have |  |
 | E691 |  | a captive is taken alive: gone from the field with no corpse, no killer and no blow to anyone's nerve; who aimed at it looks again |  |
 | E693 |  | the arguments the cells point at are made again with each render, so the table holds only what is on the screen |  |
@@ -684,7 +685,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E145 |  | Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the land D115 out from the water · When the map is made |  |
 | E146 |  | Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no fog of war; the land is always drawn). Every tick |  |
 | E147 |  | a thing's height: a building's from its look (D312), a person's from D117 |  |
-| E148 |  | each tile's top: the ground, a standing tree's height, a building's; worked out again when a thing is felled, lost or raised |  |
+| E148 |  | each tile's top: the ground, a standing tree's height, a finished building's; worked out again when a thing is felled, lost or finished |  |
 | E149 |  | the line of sight (QAM): from the eye's height to the target's top, tile by tile along the grid line (Bresenham), its own footprints aside;  |  |
 | E150 |  | QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown away from the sun; the sun rises on the right, stand |  |
 | E151 |  | left at sunrise, up at noon, right at sunset |  |
@@ -1130,7 +1131,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E603 |  | another side's building shows only while your people see it |  |
 | E604 |  | the player's Reduce motion, read from the phone; the draw budget's level; still: is motion off, by the setting or by load (Mid's lessMotion, |  |
 | E605 |  | a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, then half the pixels) and climbs back when fast ag |  |
-| E606 |  | a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so the phone gets the memory back |  |
+| E606 |  | a cache held to a budget of pixels, its size kept as a running total: the least lately used go first (a picture used is moved to the back),  |  |
 | E607 |  | the camera glides on a critically damped spring (QAW): to a point, Home or the small map's tap; a finger takes over; still means a jump (Mid |  |
 | E608 |  | Follow keeps the picked units in the middle until they are gone or a finger moves the map (Mid's followCam) |  |
 | E609 |  | fire's colour from its temperature (QF, a black body), its life in the rain (an open flame dims, a covered one keeps), its glow fading as 1/ |  |
@@ -1373,7 +1374,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E985 |  | a person counts as hidden by what is drawn in front of him only if that thing has ink at the middle of his figure, not merely a box that mee |  |
 | E986 |  | the picture's resolution steps down with the draw level, three quarters then half, and back up as frames come quickly again (Albert, Nov 10  |  |
 | E987 |  | every untouched tree is baked into the woods' cached picture (Albert, Nov 10 21:08-21:10, option B); a tree leaves it at its first cut, so t |  |
-| E988 |  | the trees standing in front of a person this frame, whose ink covers the middle of his figure, are drawn again over him in their place in th |  |
+| E988 |  | the trees standing in front of a person, a thing or a building this frame (lower on the screen, their pictures overlapping, looked for cover |  |
 | E951 |  | a lightning flash is three to five return strokes about 60 ms apart (CIGRÉ TB 549), each re-lighting the bolt and whiting the sky by its nea |  |
 | E952 |  | a lake keeps off the trade roads' stops, as it keeps off another lake: a stop is a place on dry land where caravans meet, so the water is la |  |
 
@@ -1733,7 +1734,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D336 | a quarry's stone a second, to its one worker, never running out (Mid's quarry) | 0.45 | N235 |
 | D338 | the longest a frame may take on the new-game screen with the world running, in ms (the A1 speed test: a frame of 50 ms is a stutter the eye sees; at the game's 30 frames a second a frame has 33 ms) | 50 | N236 |
 | D339 | the slow work (a computer's turn) is done in slices from one queue, each in turn, at most slices a frame, each resuming where it stopped; counted in slices, not ms, so the same seed plays the same game on any machine (t-same); a turn is about 40 slices of a few ms, so 12 keep a frame's share of the turns under a 60 Hz frame of 16.7 ms with room for drawing and the step (QCR) | {slices: 12} | N236; N237 |
-| D332 | the save beat: every 10 s (Mid's SAVE_EVERY), phase 5 frames, off the other beats' frames | [10, 5] | N230 |
+| D332 | the save beat: every 60 s, phase 5 frames, off the other beats' frames (N23, Gemini audit 2: a save writes about 565 KB, a hitch every 10 s on a phone; the game also saves when the app is left or the phone locked, so a minute is the most a crash can lose) (was 10 s, Mid's SAVE_EVERY) | [60, 5] | N230; N320 |
 | D333 | the test field (?test, Mid's testField): Mid's seed, every store, the age and the War Council's ladder; you and one rival at war, each army in rows of a kind at its distance down the road from your Town Center, a row and a file apart; never saved | {seed: 11, store: 5000, age: 2, techs: [engage, command, formations], army: [[150, [[UM1, 10], [UM2, 8], [UM10, 4], [UM5, 2]]], [750, [[UM1, | N229 |
 | D334 | the buttons always on the play screen, at most (Mid's UI_BUDGET): a new control replaces one | 33 | N230 |
 | D340 | the draw rate at rest (SoRen's tick: 50 ms a frame live, 150 ms idle, 250 ms dark): paused, behind a full-screen page or card, or with nothing moving, the world steps and draws idle frames a second; hidden, dark | {idle: 15, dark: 4} | N238 |
@@ -1852,6 +1853,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X86 | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 | {stage: page} | N317 |
 | X87 | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once | {stage: page} | N318 |
 | X88 | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless | {stage: page} | N319 |
+| X89 | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the whole frame is timed for shedding | {stage: page} | N320 |
 
 ## screen
 
