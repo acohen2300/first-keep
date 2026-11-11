@@ -317,6 +317,7 @@ BOOK("citations", {
  "N316": {"text": "Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubled to 240 for now, the world twice the area in whole tiles, per-day values kept per minute; \"Yes yes\" to six items", "opened": true, "kind": "design"},
  "N317": {"text": "Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 (\"Go for all\": nerve, the rallied, more storms, trees, the top row, all at once)", "opened": true, "kind": "design"},
  "N318": {"text": "Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 19:22: \"I would do 2-5 and let's see what happens\"", "opened": true, "kind": "design"},
+ "N321": {"text": "Albert, Nov 11, 2026, 05:50: the pace meter showed off screen on his phone: \"Center it\"", "opened": true, "kind": "design"},
  "N320": {"text": "Albert, Nov 11, 2026, 05:05 \"Build n23 as we are planned\": Gemini audit 2's fixes (the sprite cache kept by last use, sight from finished buildings only, a save a minute, the whole frame timed) and the side-by-side check of N21 against N22", "opened": true, "kind": "design"},
  "N319": {"text": "Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 \"Go for them all\" on Gemini's audit fixes (BUG-01, 02, 04, 06, 07, 08, 10) with the dashed ring, lower resolution when slow and the scenery cache", "opened": true, "kind": "design"}
 });
