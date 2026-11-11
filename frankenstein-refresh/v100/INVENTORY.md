@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,485 | 597,048 | 597,196 (+45) |
-| Books | 2382 | 0 | 711,602 | 712,509 (+75) |
+| Game code | 31 | 3,485 | 597,042 | 597,190 (-6) |
+| Books | 2382 | 0 | 711,687 | 712,594 (+85) |
 | Laws | 94 | 0 | 20,111 | 20,649 |
 | Tools | 5 | 1,946 | 315,360 | 315,605 |
 
@@ -35,7 +35,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,993 | 5,997 | 90 |
 | index.html#floor-6-climate | 172 | 30,246 | 30,258 | 126 |
 | index.html#floor-7-display | 77 | 16,875 | 16,879 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,530 | 28,534 (+45) | 0 |
+| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,524 | 28,528 (-6) | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,514 | 9,518 | 54 |
@@ -56,7 +56,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | comments | 942 | 170,486 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 164,729 |
+| measure | 335 | 164,814 |
 | rules | 87 | 33,127 |
 | screen | 25 | 11,058 |
 | shells | 110 | 23,521 |

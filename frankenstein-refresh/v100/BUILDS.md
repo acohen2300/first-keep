@@ -4852,3 +4852,13 @@ MODIFIED (3):
 LOCKED (2509 of 2512): byte for byte as sealed, 1,616,928 bytes
 Tests: gate passes; the meter seen centred headless. Sealed on n11
 Inventory: 2512 items sealed · 2382 book entries · 94 laws · 320 citations, 33 still to open · 0 known
+
+## N23c: the pace meter under the message line, centred · 2026-11-11 05:56
+Albert, Nov 11 05:56: "just under the second bar, where it was, just to the center"
+Opened: code:index.html, book:measure
+MODIFIED (2):
+- book:measure:D349 · 362 → 447 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 28,534 → 28,528 bytes
+LOCKED (2510 of 2512): byte for byte as sealed, 1,617,063 bytes
+Tests: gate passes; the meter seen centred under the message line headless. Sealed on n11
+Inventory: 2512 items sealed · 2382 book entries · 94 laws · 320 citations, 33 still to open · 0 known
