@@ -355,7 +355,7 @@ function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; 
   for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); scarX.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }
 // ── The view (E63)
 const canvas = document.getElementById('map'); let ctx = canvas.getContext('2d');
-const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), P: false, G: false, Z: false, T: true, B: true, U: true, K: true, V: true, fast: false }; // E64
+const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), P: /[?&]fps\b/.test(location.search), G: false, Z: false, T: true, B: true, U: true, K: true, V: true, fast: false }; // E64
 let cw, ch, dpr, zmin, zmax = D.open.most / (W.person.height * D.upm), want = true, camSeen = '';
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
