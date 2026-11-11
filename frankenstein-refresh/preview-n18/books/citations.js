@@ -316,5 +316,6 @@ BOOK("citations", {
  "N315": {"text": "Albert, Nov 10, 2026, 16:54 \"Sure\" on build 3 of N18 and 16:55 \"A is fine for now\" (the aimer mock): #15 a plain aimer, #22 zoom weird and sticky, #23 the save that would not open", "opened": true, "kind": "design"},
  "N316": {"text": "Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubled to 240 for now, the world twice the area in whole tiles, per-day values kept per minute; \"Yes yes\" to six items", "opened": true, "kind": "design"},
  "N317": {"text": "Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 (\"Go for all\": nerve, the rallied, more storms, trees, the top row, all at once)", "opened": true, "kind": "design"},
- "N318": {"text": "Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 19:22: \"I would do 2-5 and let's see what happens\"", "opened": true, "kind": "design"}
+ "N318": {"text": "Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 19:22: \"I would do 2-5 and let's see what happens\"", "opened": true, "kind": "design"},
+ "N319": {"text": "Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 \"Go for them all\" on Gemini's audit fixes (BUG-01, 02, 04, 06, 07, 08, 10) with the dashed ring, lower resolution when slow and the scenery cache", "opened": true, "kind": "design"}
 });
