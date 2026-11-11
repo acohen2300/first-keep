@@ -35,7 +35,7 @@ async def main(b):
     scr = await ev("fromBook('screen')")
     ok('t-version', await ev("document.title === 'First Keep v' + FK.D.version"))
     ok('t-top', await ev("[document.querySelectorAll('.topbar .strip').length, document.querySelectorAll('.topbar .strip .cell').length]") == [1, len(scr['top'])])
-    shown = await ev("(() => { MENU.S.tab = 'Build'; const out = {}; for (const g of Object.keys(MENU.SCR.tabs)) { MENU.S.group = g; MENU.render(true); MENU.S.allB = true; MENU.render(true); const all = document.querySelectorAll('#panel .frame [data-v^=pick], #panel .frame [data-v^=later]').length; MENU.S.allB = false; MENU.render(true); out[g] = [document.getElementById('panel').offsetHeight, all, [...document.querySelectorAll('#panel .tabs .cell')].map((c) => c.textContent).join(), document.querySelectorAll('#panel .frame > *').length]; } return out; })()")   # E853: Show all lists the whole tab; E898: shut, the grid still keeps its six slots
+    shown = await ev("(() => { MENU.S.tab = 'Build'; const out = {}; for (const g of Object.keys(MENU.SCR.tabs)) { MENU.S.group = g; FK.SIDES[0].age = FK.D.ages.length - 1; MENU.render(true); const all = document.querySelectorAll('#panel .frame [data-v^=pick], #panel .frame [data-v^=later]').length; FK.SIDES[0].age = 0; MENU.render(true); out[g] = [document.getElementById('panel').offsetHeight, all, [...document.querySelectorAll('#panel .tabs .cell')].map((c) => c.textContent).join(), document.querySelectorAll('#panel .frame > *').length]; } return out; })()")   # E853: the last age shows the whole tab (Show all cut, N24); E898: shut, the grid still keeps its six slots
     ok('t-tabs', all(v[1] == len(scr['tabs'][g]) and v[2] == ','.join(scr['tabs']) and v[3] == len(scr['tabs'][g]) for g, v in shown.items()), shown)
     pages = {t: 'Tall' in v.get('ticks', []) for t, v in scr.items() if isinstance(v, dict) and 'ticks' in v}; size = "(() => { MENU.S.tab = '%s'; MENU.render(true); const p = document.getElementById('panel'); return [p.offsetHeight, p.style.height]; })()"
     heights = {t: await ev(size % t) for t in pages}
@@ -1356,14 +1356,14 @@ async def land(b):
     got = tables + played + b_ + [v['amt'], v['ways'][0] > 0 and not v['ways'][1], v['land'] in M['lands']['rows'], not errs]
     ok('t-land', all(got), [got, v['corner'], v['pocket'], expect, v['woods'], v['ring'], v['more'], v['ways'][1][:5], {k: v['scen'][k] for k in v['scen']} if not all(played) else '', errs[:2], err[-400:]])
 # F38: the save, the safety net and the test tools
-SAVEJS = r"""(async () => { const D = FK.D, SV = D.save, ME = D.players[0], foe = D.players[1], out = {}, mine = () => Object.keys(localStorage).filter((k) => k.startsWith(SV.key + location.pathname + '.') && !k.endsWith('.' + SV.now)), newest = () => SV.key + location.pathname + '.' + localStorage.getItem(SV.key + location.pathname + '.' + SV.now); MENU.S.opt.scen = 0; FK.reset(); $run(30); for (const k of Object.keys(localStorage)) if (k.startsWith(SV.key)) localStorage.removeItem(k);
+SAVEJS = r"""(async () => { const D = FK.D, SV = D.save, ME = D.players[0], foe = D.players[1], out = {}, mine = () => [...FK.store.keys()].filter((k) => k.startsWith(SV.key + location.pathname + '.') && !k.endsWith('.' + SV.now)), newest = () => SV.key + location.pathname + '.' + FK.store.get(SV.key + location.pathname + '.' + SV.now); MENU.S.opt.scen = 0; FK.reset(); $run(30); for (const k of [...FK.store.keys()]) if (k.startsWith(SV.key)) FK.store.delete(k);
   const sig = () => ({ u: FK.units().map((u) => [u.code, u.side, u.k, u.hp, u.load || 0, u.target ? FK.things().indexOf(u.target) + ':' + FK.units().indexOf(u.target) : null]), t: FK.things().map((t) => [t.kind, t.code, t.k, t.amount, t.done, t.hp, t.gone]),
     s: FK.SIDES.map((s) => [s.age, JSON.stringify(s.store), [...s.techs].join()]), K: [FK.K.t, FK.K.temp, FK.K.sky], occ: FK.OCC.join(''), war: D.players.map((p) => WAR.stance(ME, p)), bell: ECON.bell(), mail: MENU.mail.length });
   WAR.treaty(ME, foe, 'war'); const a = FK.units().find((u) => u.side === ME), e = FK.units().find((u) => u.side === foe); a.target = e; FK.save(); out.held = mine().length === 0;
   FK.K.t += SV.fight + 1; FK.save(); out.late = mine().length === 1; a.target = null; for (let i = 0; i < SV.slots + 1; i++) FK.save(true); out.bak = mine().length === SV.slots;
-  const before = sig(), text = localStorage.getItem(newest()), S = JSON.parse(text); out.keys = Object.keys(S); out.bytes = text.length; FK.resume(FK.readSave()); const after = sig();
+  const before = sig(), text = FK.store.get(newest()), S = JSON.parse(text); out.keys = Object.keys(S); out.bytes = text.length; FK.resume(FK.readSave()); const after = sig();
   out.same = Object.keys(before).filter((k) => JSON.stringify(before[k]) !== JSON.stringify(after[k])); $run(5); out.runs = FK.K.t > after.K[0];
-  localStorage.setItem(newest(), '{broken'); const got = FK.readSave(); const h0 = history.length; FK.restart(); FK.restart(); out.aside = [got && got.seed === S.seed, history.length === h0, location.hash.length > 1];
+  FK.store.set(newest(), '{broken'); const got = FK.readSave(); const h0 = history.length; FK.restart(); FK.restart(); out.aside = [SV.slots > 1 ? got && got.seed === S.seed : got === null, history.length === h0, location.hash.length > 1];
   let threw = 0; FK.on('tick', () => { if (!threw++) throw new Error('t-save: one frame'); }); const t0 = FK.K.t; await new Promise((r) => setTimeout(r, 1500)); out.fault = [threw >= 2, FK.K.t > t0];
   const n0 = (MENU.TAPS.people || [0])[0]; MENU.act('people'); out.taps = (MENU.TAPS.people || [0])[0] === n0 + 1;
   $run(130); const L = JSON.parse(MENU.logText()); out.log = [L.rows.length >= 2, L.rows.every((r) => r.s.length === D.players.length), L.seed === FK.seed()];
@@ -1373,7 +1373,7 @@ FIELDJS = r"""(() => { const D = FK.D, F = D.testField, [ME, foe] = D.players, s
 async def saving(b):
     pg, errs = await fresh(b); v = await pg.evaluate(SAVEJS); await pg.close(); M = MEASURE; src = open(os.path.join(HERE, '../mid/src/34-save.js')).read()
     pg = await b.new_page(); fe = []; pg.on('pageerror', lambda e: fe.append(str(e))); await pg.goto('file://' + os.path.join(HERE, 'index.html') + '?test'); await pg.wait_for_timeout(1500); f = await pg.evaluate(FIELDJS); await pg.close()
-    cx = await b.new_context(); pg = await cx.new_page(); await pg.goto(URL); await pg.wait_for_timeout(1200); await pg.evaluate("(() => { FK.K.t = 4321; FK.save(true); })()"); await pg.close()   # one browser context: its pages share the phone's storage
+    cx = await b.new_context(); pg = await cx.new_page(); await pg.goto(URL); await pg.wait_for_timeout(1200); await pg.evaluate("(async () => { FK.K.t = 4321; await FK.save(true); })()"); await pg.close()   # one browser context: its pages share the phone's storage
     pg = await cx.new_page(); re_ = []; pg.on('pageerror', lambda e: re_.append(str(e))); await pg.goto('file://' + os.path.join(HERE, 'index.html')); await pg.wait_for_timeout(2500); back = await pg.evaluate("[FK.seed(), FK.K.t, MENU.S.tab]"); await cx.close()
     # the save beat left Mid's SAVE_EVERY (10 s) for a minute in N23 (D332, N320)
     m, err = frozen('basics units blds tech tuning', "return box([basics, units, blds, tech, tuning, 'var OUT = { every: SAVE_EVERY, ui: UI_BUDGET };']);"); m = m or {}
@@ -1560,7 +1560,7 @@ N23JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  FK.cam.x = bl.vx; FK.cam.y = bl.vy; FK.cam.z = 2; FK.dirty(); await W(500); const s = FK.cam.z, [x, y] = FK.toScreen(bl.vx, bl.vy), bb = boxOf(bldSprite(bl.code, bl.col, s, ...levelOf(bl), true, FK.SIDES[0].civ), x, y, s);
  const front = FK.things().filter((t) => t.deep && t.vy > bl.vy && Math.hypot(t.bx - bl.bx, t.by - bl.by) < 60 && meets(bb, ((tx, ty, z) => boxOf(nodeSprite(t.kind, t.v, z), tx, ty, z))(...FK.toScreen(t.vx, t.vy), s * treeZ(t)))); o.front = front.length > 0 && front.every((t) => COVER.has(t));
  const a = nodeSprite('stone', 0, 1.01), b2 = nodeSprite('stone', 1, 1.01); nodeSprite('stone', 0, 1.01); o.lru = [...SPR.values()].at(-1) === a && [...SPR.values()].at(-2) === b2; o.px = Math.abs(SPR.px - [...SPR.values()].reduce((n, c) => n + c.width * c.height, 0)) < 1;
- o.save = FK.D.saveBeat[0] === 60; o.shed = String(loop).includes('shed(w2 - w0'); return o; })()"""
+ o.save = FK.D.saveBeat[0] === 60; o.shed = String(loop).includes('shed(w2 - w1'); return o; })()"""
 async def n23(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N23JS); await pg.close()
     ok('t-n23', all(v.values()) and not errs, [v, errs[:2]])
@@ -1578,6 +1578,21 @@ N24JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
 async def n24(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N24JS); await pg.close()
     ok('t-n24', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
+N24BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); MENU.S.tab = null; MENU.render(true); const D = FK.D, h = FK.seatOf(0), st = FK.SIDES[0].store;
+ o.sharp = nodeSprite('stone', 0, 3).q === nodeSprite('stone', 0, D.sharp).q && nodeSprite('stone', 0, 1).q < nodeSprite('stone', 0, D.sharp).q;
+ await FK.save(true); const got = await new Promise((ok) => { const r = indexedDB.open(D.save.db); r.onsuccess = () => { const q = r.result.transaction(D.save.store).objectStore(D.save.store).getAllKeys(); q.onsuccess = () => ok(q.result); }; r.onerror = () => ok(null); });
+ o.save = !!got && got.length === 2 && got.every((k) => FK.store.has(k)) && Object.keys(localStorage).every((k) => !k.startsWith(D.save.key)) && D.save.slots === 1;
+ new BroadcastChannel(D.save.key + location.pathname).postMessage('another'); await W(200); o.tab = !TAB.mine && FK.paused(); TAB.mine = true; FK.pause(false);
+ o.farm = Math.abs(FK.stat('BCL1', 0, 'rate') - D.farmRate) < 1e-9 && D.farmRate === 0.5;
+ o.gold = FK.things().filter((t) => t.kind === 'gold' && FK.dist(t, h) / D.tile < 40).length >= D.pocket.home.gold[0] && D.forage.hold.gold === 4;
+ Object.assign(st, { wood: 200, gold: 20 }); const p = MENU.price({ wood: 100, gold: 50 }); o.price = p.includes('>100w<') && p.includes('>50g<') && (p.match(/<span/g) || []).length === 2;
+ MENU.S.tab = 'Stores'; MENU.render(true); const rows = document.querySelectorAll('#panel .tb tr').length; MENU.S.tab = 'Score'; MENU.render(true); const cols = document.querySelectorAll('#panel .tb tr:first-child th').length; o.cards = rows === 6 && cols === D.players.length + 1;
+ MENU.S.tab = null; MENU.render(true); o.topTaps = [...document.querySelectorAll('.topbar [data-v]')].some((b) => b.dataset.v === 'tab|Stores') && [...document.querySelectorAll('.topbar [data-v]')].some((b) => b.dataset.v === 'tab|Score');
+ Object.assign(st, { food: 9000, wood: 9000, gold: 9000, stone: 9000 }); h.q = []; FK.dirty(); await W(1300); o.mark = MENU.ready().includes(h);
+ FK.SIDES[0].age = 0; MENU.S.tab = 'Build'; MENU.S.group = Object.keys(MENU.SCR.tabs).find((g) => MENU.SCR.tabs[g].includes('BCL4')); MENU.render(true); const has = () => !!document.querySelector('#panel [data-v^="pick|BCL4|"]'), q0 = has(); FK.SIDES[0].age = 2; MENU.render(true); o.byAge = !q0 && has() && !document.querySelector('#panel [data-v^="allB"]'); return o; })()"""
+async def n24b(b):
+    pg, errs = await fresh(b); v = await pg.evaluate(N24BJS); await pg.close()
+    ok('t-n24b', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
 GROUNDJS = r"""(() => { MENU.act('start'); FK.fog(false); return true; })()"""
 GROUNDJS2 = r"""(() => { const N = FK.N, H = FK.H, L = FK.D.land, c = FK.ctx, [cw, ch] = FK.size(), dpr = c.canvas.width / cw, out = { water: [0, 0], land: [0, 0] };
  for (let k = 0; k < N * N; k += 7) { const [bx, by] = FK.tileMid(k), [x, y] = FK.toScreen(...FK.toView(bx, by, Math.max(0, H[k]))); if (x < 20 || y < 120 || x > cw - 20 || y > ch - 240) continue;
@@ -1610,7 +1625,7 @@ async def n16(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N16JS); await pg.close()
     got = [v['block'][:3] == ['qstep', 'qbuild', 'qrally'], v['army'] == ['qsend', 'qsend', 'qsend', 'qstep'], v['groups'] == 6, v['go'], not errs]
     ok('t-n16', all(got), [got, v, errs[:2]])
-PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

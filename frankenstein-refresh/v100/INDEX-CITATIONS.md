@@ -418,8 +418,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N316** Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubl → X85
 - **N317** Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 ("Go f → X86
 - **N318** Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 1 → X87
-- **N322** Albert, Nov 11, 2026, 09:28-09:52 (N24): "The fix is go to where I tap. Period."; selection kept; the clock to → D369, X90
+- **N322** Albert, Nov 11, 2026, 09:28-09:52 (N24): "The fix is go to where I tap. Period."; selection kept; the clock to → D62, D136, D195, D369, D370, D371, X91, X90, J49
 - **N323** (to open) Fritsch, F. N. and Carlson, R. E. (1980), Monotone piecewise cubic interpolation, SIAM Journal on Numerical An → D369
+- **N324** British Agricultural Revolution, Wikipedia, table: crop yield net of seed, bushels/acre: wheat 8.71 (1250-1299 → D136
 - **N321** Albert, Nov 11, 2026, 05:50: the pace meter showed off screen on his phone: "Center it" → D349
 - **N320** Albert, Nov 11, 2026, 05:05 "Build n23 as we are planned": Gemini audit 2's fixes (the sprite cache kept by la → D332, X89
 - **N319** Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 "Go for them → X88

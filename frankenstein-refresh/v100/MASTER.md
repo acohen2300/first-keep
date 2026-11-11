@@ -76,7 +76,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N256, N242, N304) · D63 (N228, N242) · D65 (N228, N231, N242, N304)
+- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N322, N256, N242, N304) · D63 (N228, N242) · D65 (N228, N231, N242, N304)
 - **E711** the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and  · QCS (N242)
 - **E43** what stands on each tile, and the shells themselves
 - **E709** the buildings as their own list, a derived index of things rebuilt only when things change
@@ -169,6 +169,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
 - **E695** at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, · D340 (N238)
 - **E715** the loop as Mid's (41-boot frame): the world steps at a fixed rate (D343) however the fram · D343 (N112)
+- **E998** shedding (fewer drops, then 30 fps, then a lower resolution) is timed on the drawing alone
 - **E655** The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save
 - **E894** with ?test the frame meter shows from the start (its only door, the Yard, left the Paused  · N6
 - **E656** each kind of error logged once; a second kind holds the save (the last good one stands) an
@@ -177,6 +178,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E681** a plain record held in two places (a war order, a camp, an ambush) is saved once, tagged o
 - **E658** a save opened: the places turned back into the things and units, the Maps, Sets and Infini · D331 (N230, N302)
 - **E660** saves roll through D331's slots, one set per build folder, so live and a preview never sha · D331 (N230, N302)
+- **E993** the save lives in the phone's IndexedDB (hundreds of MB, the browser's own big store), mir
+- **E994** an old save left in localStorage moves to IndexedDB once, and every First Keep key there i
+- **E995** the newest tab owns the save: a tab told another has opened pauses and stops saving, so tw
 - **E659** the save waits while you fight, at most D331's fight; a failed save says so once in D331's · D331 (N230, N302)
 - **E661** the game opened from a save: the fresh map from its seed, then the lists, the sides and th
 - **E696** the screen stays awake while a match runs; let go when paused, at rest or hidden; a browse
@@ -577,7 +581,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E850** a ring is the box's outline: the box drops its own border so the ring sits on the edge, on
 - **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
 - **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
-- **E926** a Build cell you can't pay for says what you are short of each store, coloured red at noth · N17
+- **E926** a price shows in full, each store its own colour: red at nothing, white as you near it, li
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
@@ -623,9 +627,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
-- **E853** the Build menu: the open tab's buildings a side can build, the rest behind Show all; it op
+- **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
+- **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E847** Help: the earlier messages, newest first; the latest stays in the help line beneath
 - **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
@@ -687,6 +692,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E433** a tile on the board (the floor gives -1 off it)
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
 - **E431** the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picki
+- **E997** a book over each of your finished, idle buildings with research you can start now, looked 
 - **E969** the quick action's aimer: on the aim step a plain white ring with four ticks and a dot sit
 - **E432** the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, 
 - **E359** the town is told what food, the seasons and the flock do, in the Words book's news
@@ -761,9 +767,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
 - **E327** of the buildings that can take an order, the one with the shortest line (Mid's shortest)
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept
-- **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N164, N166)
+- **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N322, N164, N166)
 - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
-- **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N164, N166) · D137 (N114) · D197 (N164)
+- **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N322, N164, N166) · D137 (N114) · D197 (N164)
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o

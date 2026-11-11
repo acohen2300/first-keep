@@ -4876,3 +4876,17 @@ Opened: code:index.html, code:menu.js, code:combat.js, code:econ.js, book:words,
 - #13 a computer's side sees in a plain circle (E992); you keep the rays through woods and hills. Headless, minute 29: 43% of logic was ray casting.
 - #14 the per-order food cost cut (orderCost, D213, E350; Parked with the marching-effort idea waiting for Albert's look at its numbers).
 Tests: gate passes; t-n24 (X90) passes, its plant (the old chase limit) fails it; t-n18, t-n19, t-n20, t-n23 pass; t-sight fails 2 of 5 as in N22; t-war and t-orders throw KeyError ('hit', 'wheel') on the untouched N23c code too (harness faults, known). Sealed on n11.
+
+## N24 build 2: saves, zoom, prices, the Stores and Score cards, the book mark, the Build menu by age, gold, farms, sharp again · 2026-11-11 11:20
+Albert, Nov 11 09:28-09:52 (#5 "Let's try it", #6, #7, #16 the starting idea, #17 "Do both", #18-#20 yes, the Build menu by age, "Go build"); 10:40 his screenshots: "Why blurry for me?"
+Opened: code:index.html, code:menu.js, code:econ.js, book:words, book:measure, book:comments, book:citations, book:rules, book:screen, tool:test.py
+- #5 a figure is drawn no sharper past 2x zoom (D370): zoomed in, the sprite cache had filled and redrawn itself every frame. Check after Albert's test.
+- #6 #7 the save: one slot (D331) in IndexedDB, mirrored in memory (E993); an old localStorage save moves over once and every First Keep key there is cleared (E994); the newest tab owns the save, an older one pauses and says so (E995, J28 otherTab).
+- #16 the farm's base rate 0.4 → 0.5 (D136, N324). The farm research's sources are still Mid's design numbers (N160, N161): re-sourcing each from the record is the next research step.
+- #17 home gold piles 3 → 6 (D62) and a vein holds 4 at once, was 3 (D195): design numbers, Albert's.
+- #18 every price in full, each store red at nothing, white near, green once you have it (E926; was the shortfall only).
+- #19 the book over your idle buildings with research you can start (D371, E997).
+- #20 the Stores card (Have, In, Out, On it) and the Score card (each side), from the top bar's cells (J49, E996).
+- The Build menu shows your age's buildings only; Show all cut (E853, J44); the whole tree stays in All tech.
+- Blur: shedding timed on the drawing alone (E998); logic time had pushed his phone to half resolution (29 fps, logic 7.2 ms, draw 3.3 ms).
+Tests: gate passes; t-n24b (X91) passes, its plant (the Build menu unfiltered) fails it; t-n23 (its shed check moved to the drawing), t-n24, t-save (one slot: a damaged save opens nothing), t-tabs pass. The full run fails 23 tests; sampled on the untouched N23c code (t-food, t-gather, t-same, t-physics, t-kinds, t-war, t-orders) they fail there too: the hand-off's "2 known" understated it. Sorting them is open-list item B6.

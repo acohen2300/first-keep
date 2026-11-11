@@ -235,6 +235,12 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E990 | index.html#floor-6-climate | the clock reads the sun: the day's noon (D341) shows 12:00 (Albert, Nov 11) |
 | E991 | index.html#floor-6-climate | the light between the ramp's points: a cubic Hermite with Fritsch-Carlson slopes, flat at both ends, so dusk and dawn fade without a corner (D369) |
 | E992 | index.html#floor-7-display | a computer's side sees in a plain circle of its sight: it knows what is there, no rays through woods and hills (Albert, Nov 11; the late game spent 43% of its logic casting rays for four sides) |
+| E993 | index.html#the-door | the save lives in the phone's IndexedDB (hundreds of MB, the browser's own big store), mirrored in STORE so reading is instant; the small localStorage (about 5 MB for the whole site, shared by every folder) is no longer used (Albert, Nov 11: one save, kept) |
+| E994 | index.html#the-door | an old save left in localStorage moves to IndexedDB once, and every First Keep key there is cleared to free the site's small store |
+| E995 | index.html#the-door | the newest tab owns the save: a tab told another has opened pauses and stops saving, so two tabs never write over each other (Albert, Nov 11) |
+| E996 | menu.js | the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side's parts), opened from the top bar's stores and score (Base's; Albert, Nov 11) |
+| E997 | menu.js | a book over each of your finished, idle buildings with research you can start now, looked for once a second (Base's mark; Albert, Nov 11) |
+| E998 | index.html#the-door | shedding (fewer drops, then 30 fps, then a lower resolution) is timed on the drawing alone: logic time had pushed his phone to half resolution, a blurry picture that saves no logic (Albert's screenshots, Nov 11 10:07, 10:14: 29 fps, logic 7.2 ms, draw 3.3 ms) |
 | E124 | index.html#floor-6-climate | light by the sun's height, the twilights at −6, −12, −18 (SoRen's ramp, QD) |
 | E125 | index.html#floor-6-climate | QP the one first-order lag, x to its level L over τ: x(t) = L + (x0 − L) e^(−t/τ) (N16; Mid's relax: wetness here, and the market, nerve, healing, loyalty to come) |
 | E126 | index.html#floor-6-climate | QH the rain: a two-state chain, drawn once a game hour (a day's 24th): P(wet / dry) and P(wet / wet) are D102; a wet spell draws its intensity and the wind's sign once, from the rules' dice (QCL), a storm from D103. Snow falls instead when the air is at or under 1 °C (QI) |
@@ -829,7 +835,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E850 | menu.js | a ring is the box's outline: the box drops its own border so the ring sits on the edge, one line, never a second inside |
 | E851 | econ.js | what a side cannot build yet (age, research, a building it needs, a later age): the locks before the limit; the Build menu hides these |
 | E852 | econ.js | a building raised into another where it stands (the Gate's way over a wall): taken down, the new one's site laid in its place and paid; put back as it was when there is no room |
-| E853 | menu.js | the Build menu: the open tab's buildings a side can build, the rest behind Show all; it opens on the first tab |
+| E853 | menu.js | the Build menu: the open tab's buildings of your age and before; a later age's are gone until it comes (Show all cut, Albert Nov 11; the whole tree stays in All tech); it opens on the first tab |
 | E854 | menu.js | made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm |
 | E855 | index.html#the-woods-cache | a picked unit: the green ring at its feet, thick and glowing |
 | E856 | menu.js | a picked unit takes the next tap as its one order (a thing: it does that; the ground: it goes there), then the pick clears |
@@ -888,7 +894,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E923 | index.html#floor-3-non-movables | the water's distance from shore starts at the waterline itself: a water tile beside land takes the fraction of a tile to where the height crosses zero, and the distance spreads only through water; measured from the land tiles' middles it followed the turned grid's staircase, so the bands stepped (Albert, Nov 10, #5: the coast's sawtooth) |
 | E924 | index.html#drawn-once-in-the-view-frame | the marsh: each marsh tile draws a number from the seed; where it is over D366's tussock the tile is water, else a tussock of grass; the water's edge runs between the tiles' middles (marching squares) and goes in with the shallows, drawn after the grass's colour and blades, with their foam on its edge; so the marsh is smooth and dotted with tussocks, never the tile staircase (Albert, Nov 10, #9) |
 | E925 | menu.js | the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and the dangers are drawn from the day's own dice at the lot's odds, shown picked and locked, the same for everyone that day (Albert, Nov 10, #14) |
-| E926 | menu.js | a Build cell you can't pay for says what you are short of each store, coloured red at nothing to white as you near it, and light green once you can pay, as Base and Mid (Albert, Nov 10, #24: what you are short, not the word Short; N17 #13) |
+| E926 | menu.js | a price shows in full, each store its own colour: red at nothing, white as you near it, light green once you have it, as Mid's costCol (Albert, Nov 11: always the full cost, red to green; was the shortfall only) |
 | E927 | menu.js | the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the sides |
 | E928 | index.html#floor-6-climate | the time of day as hours and minutes, one home for the clock and the ribbon |
 | E929 | index.html#the-view-s-eyes-lights-and-stage | a villager walking home with a load carries it on the back, a bundle in its store's colour (Albert, Nov 10, #35) |
