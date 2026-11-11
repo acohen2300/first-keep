@@ -405,7 +405,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N303** USDA NRCS Conservation Practice Standard, Pond (Code 378), 2022: embankment side slopes two horizontal to one  → D32
 - **N304** Albert, Nov 10, 2026, 10:00 (N13 notebook answers, yes yes 10:16): #1 the grass pattern, #2 and #3 lakes' slop → D32, D62, D65, D70, D366, X79
 - **N305** (to open) A. Hurwitz (1891), Ueber die angenaeherte Darstellung der Irrationalzahlen durch rationale Brueche: the golden → D366
-- **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, C36, D367, X80, X81, SN6, SN39, J48
+- **N306** Albert, Nov 10, 2026, 10:00 and 10:12 (N13 notebook answers) and 11:32 ('Just do it all'): builds 2 to 4. Menu → C22, C36, D367, X80, X81, SN6, J48
 - **N307** Albert, Nov 10, 2026, 12:26 (N17: his N15 notes answered on the N15 Answer Sheet) and 12:38 ("Build N17 yes ye → QCV, SC47, C34, C35, D113, D317, X78, SN40, HA3, HX6, J36
 - **N308** Base (preview 49) and Mid, the cost line: costCol(fr) = grad(fr >= 1 ? 0.55 : fr - 1), red at nothing, white n → C34
 - **N309** Xia, X. and Zhang, P., Flickering of buoyant diffusion flames: a vortex dynamics revisit, arXiv:1803.10400 (20 → QCV, D317
@@ -416,6 +416,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N314** Albert, Nov 10, 2026, 14:47-15:30 (his N17 notebook page and the fire talk: a big bright campfire by a drop-of → X83
 - **N315** Albert, Nov 10, 2026, 16:54 "Sure" on build 3 of N18 and 16:55 "A is fine for now" (the aimer mock): #15 a pla → X84, P49
 - **N316** Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubl → X85
+- **N317** Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 ("Go f → X86
 
 ## Named exceptions
 

@@ -629,9 +629,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
 - **E840** the stances: a people's name over two columns, then its four boxes (gift or bribe, war, te
+- **E971** the top row holds what two rows held (Albert, Nov 10 18:27): a cell named two keys joined 
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
-- **E927** the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the si · SN39 (N306)
+- **E927** the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the si
 - **E842** a card hanging under its top button: centred under the button, held inside the screen
 - **E841** the small cards are two columns of the mold wide: the width read from the bar's own width,
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
@@ -903,6 +904,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E394** idle soldiers form up at the building that trained them, one block per squad, else one blo
 - **E239** a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; ou · QAI (N76, N188) · QP (N16) · QAO (N45)
 - **E809** a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure) · D354 (N275, N276, N277)
+- **E970** a soldier whose rout has run its time comes back to the fight: he turns on the nearest foe
 - **E395** a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own p · D231 (N188, N76, N16)
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16

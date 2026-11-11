@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,476 | 593,351 | 593,499 |
-| Books | 2356 | 0 | 700,644 | 701,554 |
+| Game code | 31 | 3,477 | 593,375 | 593,523 |
+| Books | 2359 | 0 | 702,397 | 703,304 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,912 | 309,929 | 310,174 |
+| Tools | 5 | 1,921 | 311,356 | 311,601 |
 
 ## The trades (code)
 
@@ -39,9 +39,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 40 | 4,618 | 4,622 | 38 |
 | index.html#touch | 53 | 9,515 | 9,519 | 54 |
-| menu.js | 532 | 109,067 | 109,111 | 526 |
+| menu.js | 533 | 109,168 | 109,212 | 526 |
 | econ.js | 593 | 109,146 | 109,146 | 72 |
-| combat.js | 355 | 58,927 | 58,927 | 84 |
+| combat.js | 355 | 58,850 | 58,850 | 84 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -51,14 +51,14 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 315 | 76,135 |
+| citations | 316 | 76,378 |
 | colours | 32 | 8,966 |
-| comments | 924 | 164,193 |
+| comments | 926 | 164,869 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 162,200 |
-| rules | 83 | 31,790 |
-| screen | 26 | 11,169 |
+| measure | 335 | 162,932 |
+| rules | 84 | 32,050 |
+| screen | 25 | 11,058 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
@@ -161,5 +161,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X83 | t-n18b | page | N18 build 2, Albert's N17 notes: People's ring recedes while a villager trains; a line said while another shows waits its turn; soldiers trained while a rally flag stands are dressed into one formation there; at night a campfire burns by a drop-off where villagers work and the army's standard carries a torch; no figure is clipped by its box (the horse's head); three blade tiles; a rock's sprite is cached at or above its size; a person behind a building shows through it |
 | X84 | t-n18c | page | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
 | X85 | t-n19 | page | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side |
+| X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
 
-2486 items sealed · 2356 book entries · 94 laws · 315 citations, 33 still to open · 0 known
+2489 items sealed · 2359 book entries · 94 laws · 316 citations, 33 still to open · 0 known

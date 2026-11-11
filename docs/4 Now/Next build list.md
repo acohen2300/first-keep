@@ -418,3 +418,5 @@ Preview: `frankenstein-refresh/preview-n17/`. Gate PASS, smoke 6/6 (the match sm
 - Built: day 240 s and season 360 s, the economy kept per minute; played land 216 to 306 tiles a side (area 2.007x), counts and forest trees doubled; lightning through the whole storm (storms themselves are rare: 0-90 s of storm in a 15-minute spring game, 0-5 strikes). [2026-11-10 18:45]
 - Nerve, measured, waiting on Albert: 10 v 10 swordsmen, first rout at 7.8 s with 1 dead a side (5%); after 60 s the fight stalls because the rallied go idle. [2026-11-10 18:45]
 - Asked, waiting: #7 a lot more trees to block out big sections; the two top rows into one (resources sharing a cell, season as an icon with the clock, rank and score sharing). [2026-11-10 18:45]
+- N20 built (Albert 18:55 "Go for all"): nerve (no shake from blows, losses shared by the group, the rallied return), storms from 0.6, trees 3x, one top row of nine. [2026-11-10 19:17]
+- Next: the speed audit (Albert 18:56, 18:59: the game is too slow on his phone; find the most expensive things on a frame). [2026-11-10 19:17]
