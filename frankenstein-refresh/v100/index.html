@@ -85,7 +85,7 @@ function depthAt(bx, by) { // E20
   const [wander, e] = coast(side, pos);
   return [Math.min(dx, dy) - wander, e];
 }
-function makeGround(sd) {
+function makeGround(sd, saved = false) {
   seed = sd; const roll = dice(sd); coast = makeCoast(roll); BRIM.fill(ZERO); LAKER.fill(ZERO);
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
     const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), [depth, e] = depthAt(bx, by), run = D.beach + (D.cliff - D.beach) * e;
@@ -100,7 +100,7 @@ function makeGround(sd) {
     for (let a = 0; a < round.length; ) { let b = a + 1; while (b < round.length && round[b][0] - round[b - 1][0] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += round[q][0]; for (let q = a; q < b; q++) CH[round[q][1]] = sum / (b - a); a = b; }
   }
   makeThings(roll); makeBuildings(); makeMarsh(roll); makeShore();
-  renderGround();
+  if (!saved) renderGround(); // E976
   document.getElementById('seed').textContent = 'map ' + sd;
 }
 
@@ -260,7 +260,7 @@ let ground, gw, gh, ox, oy; const maskFlood = document.createElement('canvas'), 
 class PB { constructor() { this.s = []; this.c = null; } moveTo(x, y) { this.c = [x, y]; this.s.push(this.c); } lineTo(x, y) { this.c.push(x, y); } closePath() { this.c.z = ONE; } } // E911
 class Rec extends PB { constructor() { super(); this.L = new Map(); this.ix = new Map(); this.ph = 'top'; this.fillStyle = this.strokeStyle = null; this.lineWidth = ONE; this.lineCap = 'butt'; } beginPath() { this.s = []; } fill(p = this) { this.put('f', this.fillStyle, p.s); } stroke(p = this) { this.put('s', this.strokeStyle, p.s); } // E912
   put(k, st, s) { const L = this.L.get(this.ph) || this.L.set(this.ph, []).get(this.ph), key = k + st + (k === 's' ? this.lineWidth + this.lineCap : ''), o = this.ix.get(this.ph + key), c = s.map((a) => Object.assign(a.slice(), { z: a.z })); if (o && o.key === key) o.s.push(...c); else { const n = { key, k, st, lw: this.lineWidth, cap: this.lineCap, s: c }; L.push(n); this.ix.set(this.ph + key, n); } } // E920
-  done() { return [...this.L.values()].flat().map(({ k, st, lw, cap, s }) => { const p = new Path2D(); for (let a of s) { if (a.length < (ONE + ONE) * (ONE + ONE)) continue; if (k === 'f') { let ar = ZERO; for (let i = ZERO; i < a.length; i += ONE + ONE) { const j = (i + ONE + ONE) % a.length; ar += a[i] * a[j + ONE] - a[j] * a[i + ONE]; } if (ar < ZERO) { const r = []; for (let i = a.length - (ONE + ONE); i >= ZERO; i -= ONE + ONE) r.push(a[i], a[i + ONE]); a = Object.assign(r, { z: ONE }); } } p.moveTo(a[ZERO], a[ONE]); for (let i = ONE + ONE; i < a.length; i += ONE + ONE) p.lineTo(a[i], a[i + ONE]); if (k === 'f' || a.z) p.closePath(); } return { k, st, lw, cap, p }; }); } }
+  done() { return [...this.L.values()].flat().map(({ k, st, lw, cap, s }) => { const p = new Path2D(); for (let a of s) { if (a.length < (ONE + ONE) * (ONE + ONE)) continue; if (k === 'f') { let ar = ZERO; for (let i = ZERO; i < a.length; i += ONE + ONE) { const j = (i + ONE + ONE) % a.length; ar += a[i] * a[j + ONE] - a[j] * a[i + ONE]; } if (ar < ZERO) { const r = []; for (let i = a.length - (ONE + ONE); i >= ZERO; i -= ONE + ONE) r.push(a[i], a[i + ONE]); a = Object.assign(r, { z: ONE }); } } p.moveTo(a[ZERO], a[ONE]); for (let i = ONE + ONE; i < a.length; i += ONE + ONE) p.lineTo(a[i], a[i + ONE]); if (k !== 'f' && a.z) p.closePath(); } return { k, st, lw, cap, p }; }); } } // E977
 let GOPS = null, REEDS = [], GRASSP = null, LEVELP = null, LEVELE = null; const BLADES = [], CLOUD = { c: document.createElement('canvas') }; // E913
 function bladeTile(B, A0) { const A = STEP ** Math.ceil(Math.log(A0) / Math.log(STEP)), TT = TILT * TILT, tw = Math.max(PL.blade.least, Math.round(B.S * A)), th = Math.max(PL.blade.least, Math.round(B.S * TT * A)), key = tw + 'x' + th; if (B.key === key) return B.pat; B.key = key; const t = document.createElement('canvas'), q = t.getContext('2d'); t.width = tw; t.height = th; // E914
   for (const [u, v, len, lean, dark] of B.marks) { q.fillStyle = PC.blades[dark ? ZERO : ONE]; const x = u * tw, y = v * th, L = len * TT * A * PL.blade.tall, w = PL.blade.w * A, dx = lean * A; for (const [ox2, oy2] of [[ZERO, ZERO], [ZERO, th], [tw, ZERO], [-tw, ZERO]]) { q.beginPath(); q.moveTo(x + ox2 - w, y + oy2); q.lineTo(x + ox2 + dx, y + oy2 - L); q.lineTo(x + ox2 + w, y + oy2); q.fill(); } }
@@ -360,7 +360,7 @@ let cw, ch, dpr, zmin, zmax = D.open.most / (W.person.height * D.upm), want = tr
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
 function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
-function resize() { const [w0, h0] = [cw, ch]; dpr = Math.min(2, devicePixelRatio || 1) * DRW.half ** !!show.half; cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; if (cw !== w0 || ch !== h0) fit(); dirty(); } // E698
+function resize() { const [w0, h0] = [cw, ch]; dpr = Math.min(2, devicePixelRatio || 1) * (show.res || ONE); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; if (cw !== w0 || ch !== h0) fit(); dirty(); } // E698
 function dirty() { want = true; } // E973
 // ── The door (E65)
 const HOOK = { tick: [], draw: [], over: [], tap: [], start: [], begin: [], save: [], load: [], spawn: [], gone: [], event: [], shut: [], hide: [], own: [], press: [], hold: [], drag: [], drop: [], say: [], rest: [], cracking: [], fell: [], drown: [] }; // E66
@@ -422,7 +422,7 @@ let saveWhy = ''; const openSave = (k) => { try { const t = localStorage.getItem
 function readSave() { for (const k of slotKeys()) { const S = openSave(k); if (S) return S; } return null; }
 function load(R) { WALKV++; TV++; const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
   for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v; VIS.clear(); CAST.clear(); EXPL.clear(); MEM.clear(); topN = -ONE; if (S.fog) { FOGON = S.fog.on; for (const [s, cs] of S.fog.exp) { const X = expOf(s); for (const c of cs) X[c] = ONE; } for (const [s, m] of S.fog.mem) MEM.set(s, m); } // E879
-  GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = null; WOODS.clear(); for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
+  GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = null; DEEPV++; for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
 let wakeL = null, wakeP = false; const wakeOn = async (on) => { if (wakeP) return; try { if (on && !wakeL && navigator.wakeLock) { wakeP = true; wakeL = await navigator.wakeLock.request('screen'); } else if (!on && wakeL) { const w = wakeL; wakeL = null; await w.release(); } } catch (e) { wakeL = null; } wakeP = false; }; // E696
 on('tick', () => { if (every(D.saveBeat)) save(); wakeOn(!document.hidden && !resting()); }); addEventListener('pagehide', () => save(true)); document.addEventListener('visibilitychange', () => { if (document.hidden) { save(true); wakeOn(false); } });
 const newSheet = () => { const c = document.createElement('canvas'); return { c, x: c.getContext('2d'), key: '', t: -Infinity, cx: -Infinity, cy: -Infinity }; }, LANDS = newSheet(), FOGS = newSheet(); // E893
@@ -1079,7 +1079,8 @@ function reach(side) { const h = things.find((t) => t.side === side && has(t, 'S
   const key = [WALKV, K.iceOn, K.flood > K.t, h && h.i, stat('', side, 'flood'), ...[...GATES.values()].map((s) => fire('shut', s, who))].join(), r = REACH.get(side); if (r && r.key === key) return r.set;
   const seen = new Uint8Array(N * N), Q = []; if (h) stamp(h.bx, h.by, h.n * D.tile, (k) => { if (!seen[k] && walkable(k, who)) { seen[k] = true; Q.push(k); } });
   for (const k of Q) around(k, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who);
-  const set = { has: (k) => !!seen[k] }; REACH.set(side, { key, set }); return set; }
+  const set = { has: (k) => !!seen[k] }; REACH.set(side, { key, set, seen, who }); return set; }
+function opened(k) { for (const r of REACH.values()) { const { seen, who } = r; if (seen[k] || !walkable(k, who)) continue; let joined = false; around(k, (q) => { joined = joined || !!seen[q]; }, who); if (!joined) continue; const Q = [k]; seen[k] = true; for (const p of Q) around(p, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who); } } // E978
 const reached = (side, b, bx, by) => { const R = reach(side); let hit = false; stamp(bx, by, (b.n + BAND) * D.tile, (k) => { hit = hit || (R.has(k) && byB(b)(k)); }); return hit; };
 const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k - i) / N + 0.5) * D.tile); };
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
@@ -1115,7 +1116,7 @@ function spotFor(u, c) { // E301
   return best;
 }
 function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.y))) return false; u.path.pop(); u.path.push([s.x, s.y]); u.spot = s; return true; } // E302
-function take(t, n) { t.amount -= n; if (t.amount <= 0) { OCC[t.k] = 0; WALKV++; things.splice(things.indexOf(t), 1); TV++; if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
+function take(t, n) { t.amount -= n; if (t.deep && t.amount > ZERO) wake(t); if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); TV++; opened(t.k); if (t.kind === 'tree' && topN >= ZERO) cutTop(t.k); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
 function stride(u, [tx, ty], dt, near = 0) { // E100
   if (u.stuck > K.t) return false; if (SIDES[u.side]) RUTS[rutAt(u.k)] += dt * tread(u); const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy); u.ux = d && dx / d; const g = footing(u, tileAt(tx, ty)), beat = Math.floor(u.t / SLIP.every); // E363
   if (!g.ice) u.wary = false; else if (beat !== u.tread) { u.tread = beat; const on = rng() < g.ice; if (!u.wary && g.need > (on ? g.on : g.ground)) { u.stuck = K.t + SLIP.secs; u.wary = on; if (u.side === ME && !(K.told > K.t - SLIP.tell)) { K.told = K.t; fire('event', 'slip', u); } return false; } } // E362
@@ -1409,7 +1410,7 @@ function makeMarsh(roll) { // E145
   for (const L of picks) stamp(L.x, L.y, L.r * (1 + D.shore) + D.marshW, (k) => { if (H[k] > 0 && H[k] <= D.land && OCC[k] === 0 && !FOR[k]) MARSH[k] = 1; });
 }
 // ── Floor 7, display (E146)
-const EYE = D.sight, SEEN = new Map(), TOPS = new Float32Array(N * N), cellOf = (t) => fromBoard(t.bx, t.by).map((v) => Math.floor(v / D.tile)); let seeT = 0, topN = -1; on('gone', () => { topN = -1; });
+const EYE = D.sight, SEEN = new Map(), TOPS = new Float32Array(N * N), cellOf = (t) => fromBoard(t.bx, t.by).map((v) => Math.floor(v / D.tile)); let seeT = 0, topN = -1; on('gone', (t) => { if (t && t.kind && t.kind !== 'tree' && t.kind !== 'unit') topN = -1; }); // E980
 const tall = (t) => (B[t.code] ? LKO.h[SH[t.code].look] || null : EYE.body * D.upm); // E147
 const topKey = () => things.reduce((n, t) => n + (t.done ?? ONE), null); // E689
 function tops() { topN = topKey(); for (let k = N * N; k--; ) TOPS[k] = H[k] + (treeAt(k) ? W[SH[KIND.tree.code].body].height * D.upm : null); // E148
@@ -1418,6 +1419,8 @@ function sees(e, t) { const P = [cellOf(e), H[tileAt(e.bx, e.by)] + stat(e.code,
   const [[a, z0, m0], [b, z1, m1]] = key(P) > key(Q) ? [Q, P] : [P, Q], n = Math.max(Math.abs(b[0] - a[0]), Math.abs(b[1] - a[1]));
   for (let s = Math.floor(m0 * DRW.half); s <= n - Math.floor(m1 * DRW.half); s++) { const f = s / n; if (TOPS[Math.round(a[1] + (b[1] - a[1]) * f) * N + Math.round(a[0] + (b[0] - a[0]) * f)] > z0 + (z1 - z0) * f) return false; } return true; }
 const VIS = new Map(), EXPL = new Map(), CAST = new Map(), MEM = new Map(), FOGW = D.fogwar, SCELL = FOGW.cell, NC_ = Math.ceil(N / SCELL), CTOP = new Float32Array(NC_ * NC_), CGND = new Float32Array(NC_ * NC_), CWOOD = new Float32Array(NC_ * NC_), CTRUNK = new Float32Array(NC_ * NC_), visOf = (s) => VIS.get(s) || VIS.set(s, new Uint16Array(NC_ * NC_)).get(s), expOf = (s) => EXPL.get(s) || EXPL.set(s, new Uint8Array(NC_ * NC_)).get(s), memOf = (s) => MEM.get(s) || MEM.set(s, new Set()).get(s), cellK = (k) => Math.floor(Math.floor(k / N) / SCELL) * NC_ + Math.floor((k % N) / SCELL); let FOGON = true; // E868
+function cutTop(k) { TOPS[k] = H[k]; const i0 = (k % N) - ((k % N) % SCELL), j0 = Math.floor(k / N) - (Math.floor(k / N) % SCELL), c = cellK(k); CTOP[c] = CTRUNK[c] = -Infinity; CGND[c] = CWOOD[c] = ZERO; // E979
+  for (let j = j0; j < Math.min(N, j0 + SCELL); j++) for (let i = i0; i < Math.min(N, i0 + SCELL); i++) { const q = j * N + i, w = !!FOR[q]; CWOOD[c] += +w / (SCELL * SCELL); if (w) CTRUNK[c] = Math.max(CTRUNK[c], H[q]); else CTOP[c] = Math.max(CTOP[c], TOPS[q]); CGND[c] += H[q] / (SCELL * SCELL); } topN -= ONE; TOPV++; }
 function cellTops() { CTOP.fill(-Infinity); CGND.fill(ZERO); CWOOD.fill(ZERO); CTRUNK.fill(-Infinity); for (let k = ZERO; k < N * N; k++) { const c = cellK(k), w = !!FOR[k]; CWOOD[c] += +w / (SCELL * SCELL); if (w) CTRUNK[c] = Math.max(CTRUNK[c], H[k]); else CTOP[c] = Math.max(CTOP[c], TOPS[k]); CGND[c] += H[k] / (SCELL * SCELL); } } // E878
 function cast(e, r) { const k0 = tileAt(e.bx, e.by), c0 = cellK(k0), ci = c0 % NC_, cj = (c0 - ci) / NC_, R = r / D.tile / SCELL, z0 = (H[k0] ?? ZERO) + stat(e.code, e.side, 'eye') * D.upm, body = EYE.body * D.upm, out = new Set([c0]), rays = Math.ceil(FOGW.rays * Math.PI * Math.min(R, NC_)); // E869
   const tree = W[SH[KIND.tree.code].body].height * D.upm, k = D.woods.stems * D.woods.trunk * SCELL * D.tile / D.upm, keep = Math.log(FOGW.see);
@@ -1441,12 +1444,11 @@ function drawMist() { const L = D.fogLayer, X = MISTC.getContext('2d'), I = X.cr
   for (let c = ZERO, p = ZERO; c < NC_ * NC_; c++, p += A + ONE) { const deep = Math.max(ZERO, top - CGND[c]) / D.upm, path = Math.min(deep, camH); d.set(ink, p); d[p + A] = Math.round((ONE - Math.exp((-K.beta * path) / L.km)) * D.meadow.opaque); } X.putImageData(I, ZERO, ZERO);
   const T = D.tile * SCELL, M = D.landCache.margin, [x0, y0] = S(ZERO, ZERO, D.land), [x1, y1] = S(NC_ * T, ZERO, D.land), [x2, y2] = S(ZERO, NC_ * T, D.land); ctx.save(); ctx.setTransform(dpr * (x1 - x0) / NC_, dpr * (y1 - y0) / NC_, dpr * (x2 - x0) / NC_, dpr * (y2 - y0) / NC_, dpr * (x0 + M), dpr * (y0 + M)); ctx.imageSmoothingEnabled = true; ctx.drawImage(MISTC, ZERO, ZERO); ctx.restore(); }
 const FLAT = new WeakMap(), flat = (sp, col) => { let m = FLAT.get(sp); if (!m) FLAT.set(sp, (m = new Map())); let c = m.get(col); if (!c) { c = Object.assign(document.createElement('canvas'), { width: sp.width, height: sp.height, q: sp.q, ax: sp.ax, ay: sp.ay }); const x = c.getContext('2d'); x.drawImage(sp, ZERO, ZERO); x.globalCompositeOperation = 'source-in'; x.fillStyle = col; x.fillRect(ZERO, ZERO, c.width, c.height); m.set(col, c); } return c; }; // E947
-const MINE = [], HID = [], HIDC = document.createElement('canvas'), boxOf = (c, x, y, z) => [x - c.ax * z, y - c.ay * z, (c.width * z) / c.q, (c.height * z) / c.q], meets = ([ax, ay, aw, ah], [bx, by, bw, bh]) => ax < bx + bw && bx < ax + aw && ay < by + bh && by < ay + ah; // E958
-const hides = (c, x, y, z) => { if (!MINE.length) return; const o = boxOf(c, x, y, z); for (const m of MINE) { m.b = m.b || boxOf(unitSprite(m.u, m.z), m.x, m.y, m.z); if (meets(m.b, o)) HID.push([m, c, o]); } };
-function drawHidden() { const x = HIDC.getContext('2d'), by1 = new Map(); for (const [m, c, o] of HID) { if (!by1.has(m)) by1.set(m, []); by1.get(m).push([c, o]); }
-  for (const [m, L] of by1) { const [bx, by, bw, bh] = m.b; if (bw * dpr < ONE || bh * dpr < ONE) continue; const pw = Math.ceil(bw * dpr), ph = Math.ceil(bh * dpr); fitScratch(HIDC, pw, ph); x.save(); x.setTransform(dpr, ZERO, ZERO, dpr, ZERO, ZERO); x.beginPath(); x.rect(ZERO, ZERO, bw, bh); x.clip();
-    for (const [c, [ox, oy, ow, oh]] of L) if (c.width && c.height) x.drawImage(c, ox - bx, oy - by, ow, oh); x.globalCompositeOperation = 'source-in'; x.drawImage(flat(unitSprite(m.u, m.z), SIDES[ME].col), ZERO, ZERO, bw, bh); x.restore(); ctx.globalAlpha = D.woods.sil; ctx.drawImage(HIDC, ZERO, ZERO, pw, ph, bx, by, bw, bh); ctx.globalAlpha = ONE; } } // E959
-function drawUnder() { drawHidden(); const W = D.woods; ctx.save(); ctx.lineWidth = DRS.foot; ctx.globalAlpha = W.sil; for (const u of units) { if (u.side !== ME || u.inside || !inWoods(u.k)) continue; const [x, y] = toScreen(u.vx, u.vy); if (x < ZERO || y < ZERO || x > cw || y > ch) continue; blit(flat(unitSprite(u, cam.z * FIG()), SIDES[ME].col), x, y, cam.z * FIG()); ctx.globalAlpha = ONE; ctx.strokeStyle = SIDES[ME].col; ctx.beginPath(); ctx.ellipse(x, y, W.ring * cam.z, W.ring * cam.z * DRW.half, ZERO, ZERO, Math.PI * (ONE + ONE)); ctx.stroke(); ctx.globalAlpha = W.sil; } ctx.restore(); } // E897
+const MINE = [], HID = [], boxOf = (c, x, y, z) => [x - c.ax * z, y - c.ay * z, (c.width * z) / c.q, (c.height * z) / c.q], meets = ([ax, ay, aw, ah], [bx, by, bw, bh]) => ax < bx + bw && bx < ax + aw && ay < by + bh && by < ay + ah; // E958
+const ALPHA = new WeakMap(), inkAt = (c, [ox, oy, ow, oh], px, py) => { if (!c.width || !c.height) return false; let A = ALPHA.get(c); if (!A) { A = c.getContext('2d').getImageData(ZERO, ZERO, c.width, c.height).data; ALPHA.set(c, A); } const i = Math.floor(((px - ox) / ow) * c.width), j = Math.floor(((py - oy) / oh) * c.height); return i >= ZERO && j >= ZERO && i < c.width && j < c.height && A[(j * c.width + i) * (ONE + ONE + ONE + ONE) + ONE + ONE + ONE] > ZERO; }; // E985
+const hides = (c, x, y, z) => { if (!MINE.length) return; const o = boxOf(c, x, y, z); for (const m of MINE) { m.b = m.b || boxOf(unitSprite(m.u, m.z), m.x, m.y, m.z); const [bx, by, bw, bh] = m.b; if (meets(m.b, o) && inkAt(c, o, bx + bw * DRW.half, by + bh * DRW.half)) HID.push([m, c, o]); } };
+function drawUnder() { const W = D.woods, hid = new Set(HID.map(([m]) => m.u)), beat = (performance.now() / ONE / W.pulse) % ONE; ctx.save(); ctx.lineWidth = DRS.foot * W.thick; ctx.setLineDash(W.dash.map((v) => v * cam.z)); ctx.strokeStyle = SIDES[ME].col; // E984
+  for (const u of units) { if (u.side !== ME || u.inside || !(hid.has(u) || inWoods(u.k))) continue; const [x, y] = toScreen(u.vx, u.vy); if (x < ZERO || y < ZERO || x > cw || y > ch) continue; ctx.globalAlpha = u.job === 'idle' && !ECON.soldier(u.code) ? W.low + (ONE - W.low) * (ONE - Math.cos(beat * Math.PI * (ONE + ONE))) * DRW.half : ONE; ctx.beginPath(); ctx.ellipse(x, y, W.ring * cam.z, W.ring * cam.z * DRW.half, ZERO, ZERO, Math.PI * (ONE + ONE)); ctx.stroke(); } ctx.restore(); } // E897
 let FOGV = ZERO; function fogPaint() { FOGV++; const V = visOf(ME), X = expOf(ME), d = FOGI.data, ink = hexRGB(C.fogwar), A = ink.length, dark = Math.round(FOGW.dark * D.meadow.opaque), dim = Math.round(FOGW.seen * D.meadow.opaque); for (let k = ZERO, p = ZERO; k < NC_ * NC_; k++, p += A + ONE) { d.set(ink, p); d[p + A] = !FOGON || V[k] ? ZERO : X[k] ? dim : dark; } FOGX.putImageData(FOGI, ZERO, ZERO); }
 function drawFog() { const T = D.tile * SCELL, M = D.landCache.margin, [x0, y0] = S(ZERO, ZERO, D.land), [x1, y1] = S(NC_ * T, ZERO, D.land), [x2, y2] = S(ZERO, NC_ * T, D.land); ctx.save(); ctx.setTransform(dpr * (x1 - x0) / NC_, dpr * (y1 - y0) / NC_, dpr * (x2 - x0) / NC_, dpr * (y2 - y0) / NC_, dpr * (x0 + M), dpr * (y0 + M)); ctx.imageSmoothingEnabled = true; ctx.drawImage(FOGC, ZERO, ZERO); ctx.restore(); }
 const FAM = D.familiar, FAMC = Math.ceil(N / FAM.cell), FAMT = new Map(), famCell = (k) => Math.floor(k / N / FAM.cell) * FAMC + Math.floor((k % N) / FAM.cell), famOf = (s) => FAMT.get(s) || FAMT.set(s, new Float32Array(FAMC * FAMC).fill(-Infinity)).get(s); // E810
@@ -1463,7 +1465,7 @@ function drawShadows(s) { // E152
     ctx.fill(); }
   for (const u of units) { if (u.inside || !inSight(u)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18, f = s * FIG();
     ctx.beginPath(); ctx.ellipse(x + (dx * h * f) / 2, y + (dy * h * f) / 2, Math.max(4 * f, (Math.hypot(dx, dy) * h * f) / 2), 2.5 * f, Math.atan2(dy, dx), 0, 7); ctx.fill(); }
-  const [tr, or] = DRS.shade.r; if (DRAW.lvl < DRW.lv.shadows) { ctx.beginPath(); for (const t of things) { const h = t.kind !== 'bld' && !t.deep && PDR.nodeH[(KIND[t.kind] || {}).look]; if (!h) continue; const [x, y] = toScreen(t.vx, t.vy), r = (treeAt(t.k) ? tr : or) * s * t.size * artOf(t.kind), L = Math.hypot(dx, dy) * h * s * artOf(t.kind); if (x < -L || x > cw + L || y < -L || y > ch + L) continue; // E623
+  const [tr, or] = DRS.shade.r; if (DRAW.lvl < DRW.lv.shadows) { ctx.beginPath(); for (const t of things) { const h = t.kind !== 'bld' && !t.inner && PDR.nodeH[(KIND[t.kind] || {}).look]; if (!h) continue; const [x, y] = toScreen(t.vx, t.vy), r = (treeAt(t.k) ? tr : or) * s * t.size * artOf(t.kind), L = Math.hypot(dx, dy) * h * s * artOf(t.kind); if (x < -L || x > cw + L || y < -L || y > ch + L) continue; // E623
     ctx.moveTo(x + r, y); ctx.ellipse(x + (L / Math.hypot(dx, dy)) * dx * DRS.shade.lean, y + (L / Math.hypot(dx, dy)) * dy * DRS.shade.lean, L * DRS.shade.lean + r, Math.max(r * DRS.shade.wide, r * TILT), Math.atan2(dy, dx), -Math.PI, Math.PI); } ctx.fill(); }
   ctx.restore();
 }
@@ -1500,7 +1502,7 @@ function meter(wall, sim, drawn) { if (!(wall > null)) return; const k = Math.mi
 function shed(work, secs) { const due = DRW.ms / rate(); DRAW.ema += (work - DRAW.ema) * Math.min(ONE, secs / DRW.tau); const was = DRAW.lvl; // E605
   if (DRAW.ema > DRW.slow * due && DRAW.lvl < DRW.top) { DRAW.fast = null; if ((DRAW.slow += secs) > DRW.shed) { DRAW.lvl++; DRAW.slow = DRAW.ema = null; } }
   else if (DRAW.ema < DRW.fast * due && DRAW.lvl > null) { DRAW.slow = null; if ((DRAW.fast += secs) > DRW.climb) { DRAW.lvl--; DRAW.fast = DRAW.ema = null; } } else DRAW.slow = DRAW.fast = null;
-  if ((was >= DRW.top) !== (DRAW.lvl >= DRW.top)) { show.half = DRAW.lvl >= DRW.top; resize(); } }
+  const res = DRW.res[Math.min(DRAW.lvl, DRW.res.length - ONE)]; if (res !== (show.res || ONE)) { show.res = res; resize(); } } // E986
 const area = (v) => (v.cv || v).width * (v.cv || v).height + (v.tint ? v.tint.width * v.tint.height : ZERO), used = (M) => { let px = null; for (const v of M.values()) px += area(v); return px; }; function fitCache(M, most) { let px = used(M); for (const [k, v] of M) { if (px <= most || M.size <= ONE) break; px -= area(v); M.delete(k); const c = v.cv || v; c.width = c.height = null; if (v.tint) v.tint.width = v.tint.height = null; } } // E606
 // E607
 const spring = (x, v, to, w, dt) => { const e = Math.exp(-w * dt), d = x - to, t = (v + w * d) * dt; return [to + (d + t) * e, (v - w * t) * e]; };
@@ -1676,37 +1678,37 @@ function flowers(z) { // E803
       else { const rr = (F.r[ZERO] + s * F.r[ONE]) * z, [petal, eye] = MDC.flowers[b.kind]; add(ONE, petal, px, py, rr, rr); add(ONE + ONE, eye, px, py, rr * F.eye, rr * F.eye); } } }
   for (const m of L) for (const [col, p] of m) { ctx.fillStyle = col; ctx.fill(p); } }
 // ── The woods cache (E154)
-const CS = 32, NC = Math.ceil(N / CS), WOODS = new Map(), DEEP = Array.from({ length: NC * NC }, () => []); // E155
+const CS = 32, NC = Math.ceil(N / CS), DEEP = Array.from({ length: NC * NC }, () => []), WOODSH = newSheet(); let DEEPV = ZERO; // E155
 const chunkOf = (k) => Math.floor((k % N) / CS) + Math.floor(k / N / CS) * NC;
 const treeAt = (k) => OCC[k] === 1 && FOR[k];
 const DS = Math.ceil(D.forest.step / D.tile), treeBy = (i, j) => { for (let b = -ONE; b <= ONE; b++) for (let a = -ONE; a <= ONE; a++) { const x = i + a, y = j + b; if (x >= ZERO && y >= ZERO && x < N && y < N && treeAt(y * N + x)) return true; } return false; }; // E972
-function deepen(t) { const i = t.k % N, j = (t.k - i) / N; if (i < DS + ONE || j < DS + ONE || i >= N - DS - ONE || j >= N - DS - ONE) return; for (const [dx, dy] of D.ways) if (!treeBy(i + dx * DS, j + dy * DS)) return; t.deep = true; DEEP[chunkOf(t.k)].push(t); }
+function deepen(t) { const i = t.k % N, j = (t.k - i) / N; t.inner = i > DS && j > DS && i < N - DS - ONE && j < N - DS - ONE && D.ways.every(([dx, dy]) => treeBy(i + dx * DS, j + dy * DS)); // E987
+  t.full = t.full ?? t.amount; if (t.amount >= t.full) { t.deep = true; DEEP[chunkOf(t.k)].push(t); DEEPV++; } }
 function wake(t) { // E156
-  const c = chunkOf(t.k); for (const k of WOODS.keys()) if (k.startsWith(c + '@')) WOODS.delete(k);
+  const c = chunkOf(t.k); DEEPV++;
   if (t.deep) { t.deep = false; DEEP[c].splice(DEEP[c].indexOf(t), 1); }
-  const i = t.k % N, j = (t.k - i) / N; for (const q of things) if (q.deep && Math.abs((q.k % N) - i) <= DS + ONE && Math.abs(Math.floor(q.k / N) - j) <= DS + ONE) { q.deep = false; const d = DEEP[chunkOf(q.k)]; d.splice(d.indexOf(q), 1); for (const k of WOODS.keys()) if (k.startsWith(chunkOf(q.k) + '@')) WOODS.delete(k); }
+  const i = t.k % N, j = (t.k - i) / N; for (const q of things) if (q.inner && Math.abs((q.k % N) - i) <= DS + ONE && Math.abs(Math.floor(q.k / N) - j) <= DS + ONE) q.inner = false;
 }
 const BOX = Array.from({ length: NC * NC }, (_, c) => { const ci = c % NC, cj = (c - ci) / NC, pts = []; for (const [x, y] of [[ci, cj], [ci + 1, cj], [ci, cj + 1], [ci + 1, cj + 1]]) pts.push(V(x * CS * D.tile, y * CS * D.tile, D.land));
-  return [Math.min(...pts.map((p) => p[0])) - 12, Math.min(...pts.map((p) => p[1])) - 30, Math.max(...pts.map((p) => p[0])) + 12, Math.max(...pts.map((p) => p[1])) + 6]; }); // E157
-function woodsChunk(c, q) { // E158
-  const key = c + '@' + q + '@' + Math.floor(yt() / D.season * TREE.stages.length) + treeLook(ZERO); let w = WOODS.get(key); if (w) { WOODS.delete(key); WOODS.set(key, w); return w; } // E159
-  const [x0, y0, x1, y1] = BOX[c], cv = document.createElement('canvas'); cv.width = Math.ceil((x1 - x0) * q); cv.height = Math.ceil((y1 - y0) * q); const g2 = cv.getContext('2d');
-  for (const t of DEEP[c]) blit(nodeSprite(t.kind, t.v, (q * t.size * artOf(t.kind)) / dpr), (t.vx - x0) * q, (t.vy - y0) * q, q * t.size * artOf(t.kind), g2);
-  w = { cv, q }; WOODS.set(key, w); fitCache(WOODS, GC.woods); return w;
-}
-function drawWoods(s) { const q = STEP ** Math.round(Math.log(s * dpr) / Math.log(STEP));
-  for (let c = 0; c < NC * NC; c++) { if (!DEEP[c].length) continue; const [x0, y0, x1, y1] = BOX[c], [x, y] = toScreen(x0, y0), ww = (x1 - x0) * s, hh = (y1 - y0) * s; if (x > cw || y > ch || x + ww < 0 || y + hh < 0) continue; ctx.drawImage(woodsChunk(c, q).cv, x, y, ww, hh); }
-}
+  const [sd, up, dn] = D.woods.box; return [Math.min(...pts.map((p) => p[0])) - sd, Math.min(...pts.map((p) => p[1])) - up, Math.max(...pts.map((p) => p[0])) + sd, Math.max(...pts.map((p) => p[1])) + dn]; }); // E157
+function paintWoods() { const s = cam.z, M = D.landCache.margin, T = []; for (let c = ZERO; c < NC * NC; c++) { if (!DEEP[c].length) continue; const [x0, y0, x1, y1] = BOX[c], [x, y] = toScreen(x0, y0), [X, Y] = toScreen(x1, y1); if (x > cw + M || y > ch + M || X < -M || Y < -M) continue; T.push(...DEEP[c]); } // E158
+  T.sort((a, b) => a.vy - b.vy); for (const t of T) { const [x, y] = toScreen(t.vx, t.vy), z = s * treeZ(t); blit(nodeSprite(t.kind, t.v, z), x, y, z); } }
+const drawWoods = () => slideSheet(WOODSH, [DEEPV, Math.floor((yt() / D.season) * TREE.stages.length), treeLook(ZERO)].join(), paintWoods); // E159
+const COVER = new Set(), TMAP = { tv: -ONE, m: new Map() }, treeZ = (t) => artOf(t.kind) * t.size * (LEFT + GROW * Math.min(ONE, t.amount / KIND[t.kind].amount)); // E988
+function covers(s) { if (TMAP.tv !== TV) { TMAP.tv = TV; TMAP.m.clear(); for (const t of things) if (t.deep) TMAP.m.set(t.k, t); } const W = D.woods, F = s * FIG();
+  const live = [...units.filter((u) => !u.inside && (u.side === ME || inSight(u))).map((u) => [u, vAt(u), () => unitSprite(u, F), F]), ...things.filter((t) => !t.deep && t.kind !== 'bld' && t.kind !== 'tree').map((t) => [t, [t.vx, t.vy], () => nodeSprite(t.kind, t.v, s * artOf(t.kind) * t.size), s * artOf(t.kind) * t.size])];
+  for (const [u, v, spr, f] of live) { const [x, y] = toScreen(...v); if (x < ZERO || y < ZERO || x > cw || y > ch) continue; const b = boxOf(spr(), x, y, f), [bx, by, bw, bh] = b, i = u.k % N, j = (u.k - i) / N;
+    for (let dj = ZERO; dj <= W.cover; dj++) for (let di = -W.side; di <= W.side; di++) { const t = TMAP.m.get((j + dj) * N + i + di); if (!t || COVER.has(t) || !(t.vy > u.vy)) continue; const [tx, ty] = toScreen(t.vx, t.vy), z = s * treeZ(t), sp = nodeSprite(t.kind, t.v, z), o = boxOf(sp, tx, ty, z); if (meets(b, o) && inkAt(sp, o, bx + bw * DRW.half, by + bh * DRW.half)) COVER.add(t); } } }
 function drawThings() {
   const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
   const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u) || u.veil))) return; const [x, y] = toScreen(...vAt(u)); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
     if (!dots) { const R = C.foot; ctx.strokeStyle = pick.includes(u) || (u.go && u.path) ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : u.job === 'idle' && !moving(u) ? R.idle : R.work; const on = pick.includes(u); ctx.lineWidth = on ? DRS.pick : DRS.foot; ctx.shadowColor = R.pick; ctx.shadowBlur = on ? DRS.glow : ZERO; ctx.beginPath(); ctx.ellipse(x, y, DRS.ring * s * FIG(), DRS.ring * DRW.half * s * FIG(), ZERO, ZERO, Math.PI * (ONE + ONE)); ctx.stroke(); ctx.shadowBlur = ZERO; } // E766
     // E855
     if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else { drawUnit(u, x, y, s * FIG()); if (u.side === ME && !inWoods(u.k)) MINE.push({ u, x, y, z: s * FIG() }); } }; // E160
-  MINE.length = HID.length = ZERO; if (!dots) { drawWoods(s); drawShadows(s); }
+  MINE.length = HID.length = ZERO; COVER.clear(); if (!dots) { drawWoods(); drawShadows(s); covers(s); }
   for (const t of things) {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
-    if (t.deep && !dots) continue;
+    if (t.deep && !dots && !COVER.has(t) && !K.burn.has(t)) continue;
     const [x, y] = toScreen(t.vx, t.vy); if (x < -m || x > cw + m || y < -m || y > ch + m) continue;
     if (t.kind === 'bld') { if (!show.B || fire('hide', t)) continue; if (has(t, 'Trap')) { if (!dots) trapArt(x, y, s, t); continue; } drawBld(t, x, y, s, dots); if (!dots && t.done >= ONE) hides(bldSprite(t.code, t.col, s, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), x, y, s); }
     else if (!show.T) continue;
@@ -1754,7 +1756,7 @@ on('draw', (c) => { if (!press || press.moved) return; const f = (performance.no
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); camStop(); keepOn(); dirty(); }, { passive: false });
 // E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start(sd, S = null) { playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; WOODS.clear(); for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today()); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
+function start(sd, S = null) { playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; DEEPV++; for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today(), !!S); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
 const boot = () => { for (const [n, k] of (TEST ? [] : slotKeys()).entries()) { const S = openSave(k); if (!S) continue; try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); if (n) fire('say', WS.older.replace('{why}', saveWhy || WS.saveGone)); return; } catch (e) { saveWhy = String(e.message || e).split('\n')[ZERO]; fault(e); } } start(TEST ? D.testField.seed : null); }; // E662
 addEventListener('resize', resize);
 window.FK = { inWoods, woodsLine: (a, t) => { const [i0, j0] = cellOf(a), [i1, j1] = cellOf(t), n = Math.max(Math.abs(i1 - i0), Math.abs(j1 - j0), ONE); let w = ZERO; for (let s = ZERO; s <= n; s++) if (inWoods(Math.round(j0 + ((j1 - j0) * s) / n) * N + Math.round(i0 + ((i1 - i0) * s) / n))) w++; return (w * Math.hypot(i1 - i0, j1 - j0) * D.tile) / (n + ONE) / D.upm; }, fog: (on) => { FOGON = on; VIS.clear(); CAST.clear(); fogPaint(); }, fogOn: () => FOGON, visOf, expOf, bars, headOf, fam, exposure, clearIce, iceReport, iceOf, year, onIce, thick, evKnob, statRow, TK, glance, look, sightOf, lux, tops, TOPS, camGo, camStop, followCam, spring, lightsOf, kelvinRGB, FLAME_RGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), celebrate, RIPS, mini: () => MINI, miniBox, miniAt, mapFont, tag, DRAW, still, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, nightOf, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, clearSave, pack, unpack, fault, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, massOf, groundAt, iced, B, U, K, KIND, SIDES, OCC, H, DEP, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, fit, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, nextTo, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, take, vanish, drop, guard, rowOf, put, hz, level, levelMul, events, evOn, bolt, edgeSpot, wildSpot, EVS, findNear, stat, learn, keysOf, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, sprite, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,

@@ -43,6 +43,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E19** marsh (TW1): always wet (KI1)
 - **E20** the way in from the coast at a board point, and the coast's cliffness there
 - **E21** the drawn corners (QBE): at every grid corner the tiles round it are sorted by height and  · QBE (N64)
+- **E976** loading a save makes the ground's shape from its seed but does not draw it: load draws it 
 
 ## index.html#floor-2-terrain
 
@@ -109,6 +110,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E911** a path kept as lists of points, so a run of one colour can be joined into one shape
 - **E912** the ground is recorded once per map as shapes, not painted into a picture: each run of one
 - **E920** the shapes are kept by layer (tiles, faces, reeds, then each band's contours) and by colou
+- **E977** a filled shape needs no closing stroke, a fill closes itself; only a stroked shape that wa
 - **E913** the ground's shapes, the grass's one shape (the season's colour and the blades' bed), the 
 - **E914** a blade tile drawn at the screen's own pixels for the zoom in hand, thin triangles in the 
 - **E967** the grass blades' tiles are made at the next step up the √2 ladder of the zoom and stretch · N17
@@ -262,6 +264,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E90** most: the tiles it may open before giving up
 - **E452** the danger map's home on the walking grid (econ draws it) and each side's reach, cached by
 - **E453** the tiles a side's people can walk to: one flood fill over the walking grid (a queue, a ty · E91
+- **E978** a tile that opens (a tree felled, a rock mined out) joins each side's reach where it touch
 - **E92** a unit on a tile; its stand wanders in the tile (D82) · D82 (N112)
 - **E93** a path of one tile (already there) walks to its middle: no step past the end
 - **E94** to a tile
@@ -406,11 +409,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#floor-7-display
 
 - **E146** Floor 7, display (layer 140): what each side sees, now and nothing else (Albert, Nov 6: no · D117 (N41, N215, N216, N217, N218, N220, N247, N248) · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219) · QAN (N43, N44, N220)
+- **E980** the map's tops are worked out again in full only when a building or a find goes, not a tre
 - **E147** a thing's height: a building's from its look (D312), a person's from D117 · D312 (N208, N41) · D117 (N41, N215, N216, N217, N218, N220, N247, N248)
 - **E689** the tops are made again when a building is added, removed or raised further: a site counts
 - **E148** each tile's top: the ground, a standing tree's height, a building's; worked out again when
 - **E149** the line of sight (QAM): from the eye's height to the target's top, tile by tile along the · QAM (N42, N219)
 - **E868** the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL
+- **E979** a felled tree lowers the top of its own tile and its sight cell only, and the sight caches
 - **E878** a sight cell's woods: how much of it is wood and its ground under the trees, so a ray thro
 - **E869** an eye's tiles: every tile in its reach whose ground, a body high, its line clears over th
 - **E870** seen now: a unit whose tile is in sight; a building any of whose corners is
@@ -419,7 +424,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E896** the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above i
 - **E947** your people under the canopy drawn as a flat ghost in your side's colour, the figure's out · N17
 - **E958** your people behind a tree or a building show through it as a silhouette, as Age of Empires · N17
-- **E959** each pair is drawn once the frame's things are down: the person's figure in your colour, c
+- **E985** a person counts as hidden by what is drawn in front of him only if that thing has ink at t
+- **E984** your hidden people, under the canopy or behind a tree or building drawn after them, show a
 - **E897** your own people under the canopy drawn as a ring over the trees, so you see who is inside
 - **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
 - **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
@@ -446,6 +452,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras, 
+- **E986** the picture's resolution steps down with the draw level, three quarters then half, and bac
 - **E606** a cache held to a budget of pixels: the oldest go first, their canvases emptied at once so
 - **E607** the camera glides on a critically damped spring (QAW): to a point, Home or the small map's · QAW (N57)
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
@@ -496,10 +503,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E154** The woods cache: the deep trees (eight tree neighbours) are painted once per chunk of the 
 - **E155** chunks of CS × CS tiles
 - **E972** a tree deep in a forest is one with a tree in each of the eight directions a forest step a
+- **E987** every untouched tree is baked into the woods' cached picture (Albert, Nov 10 21:08-21:10, 
 - **E156** a tree cut: its chunk is stale, and its neighbours stand at an edge now
 - **E157** each chunk's box in the view frame, with room above for the trees' height
-- **E158** the chunk's deep trees on one canvas
-- **E159** a hit moves to the back: the oldest goes first
+- **E158** the woods' picture: every untouched tree in a chunk on or near the screen, back to front, 
+- **E159** the woods' sheet slides with the camera and is painted again only past its margin, on a zo
+- **E988** the trees standing in front of a person this frame, whose ink covers the middle of his fig
 - **E766** the ring at a unit's feet, full and bright: green picked, blue working, yellow idle (yours · C24 (N145)
 - **E855** a picked unit: the green ring at its feet, thick and glowing
 - **E160** a wounded one sways about its feet (QBS) · QBS (N77, N78, N80)
@@ -766,6 +775,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
 - **E944** minus on a job acts at once: the villager drops what it carries and stands idle, so the co · N17
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
+- **E981** food in reach is food a side can carry home: a find or prey within the hunger book's reach
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
 - **E350** an order of yours costs its soldiers' meals for D213's seconds, never more than the store  · D213 (N170) · E806
 - **E351** the year's work: everyone eats; a field's soil wears while worked and rests back, never un · QAA (N29)
@@ -914,6 +924,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
 - **E936** your soldiers leave a wild animal alone unless it is after one of yours or you sent them a
 - **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40)
+- **E983** a bow's reach from a height: the arrow's flight (its drag and gravity, QAJ) at the speed t · QAJ (N39, N40)
 - **E409** the orders' shared measures: a point of a tile, the tile of a point, the length between, a
 - **E410** the walk over the straight line (Mid's routeK): the way by A* (QBL), its steps summed, hel · QBL (N74) · D247 (N190)
 - **E411** a group's order you can follow (Mid's march): its tile, label, start and walk ratio; each 
@@ -947,6 +958,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E467** a student stands still; a spy keeps to its own work; a priest converts when sent, else pri
 - **E468** walk with the army: to the nearest soldier of the side out, a few paces behind it (Mid's f
 - **E469** a priest beside a foe for D265's time turns it; walking off lets the spell fade; with no r · D265 (N194)
+- **E982** a healer heals everyone of its side within its reach, villagers too, as Age of Empires II'
 - **E470** the wounded heal by the best healer of their side in reach, a hospital or a medic, not the · QP (N16)
 - **E471** a shooting building watches for spies within its sight of one, more with research (Mid's w
 - **E472** a spy is unseen unless a foe's soldier or watching building is near; by a foe's building i

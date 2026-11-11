@@ -179,7 +179,7 @@ function assign(side, y, n) { const vs = villagersOf(side);
 // E348
 const SAY = fromBook('words').say, eats = (u) => (FK.stat(u.code, u.side, 'eat') * D.upkeep * (ONE + D.exposure.ration * FK.exposure(u.code, u.side))) / D.day, hungerOf = (side) => (bell - ((SIDES[side] || {}).famine ?? bell) >= D.hunger.days * D.day ? D.hunger.work : 1);
 const docked = (side, t) => !FK.has(t, 'Catch') || FK.blds().some((b) => b.side === side && FK.has(b, 'Shore') && up(b) && Math.abs(b.bx - t.bx) < D.fish.near && Math.abs(b.by - t.by) < D.fish.near);
-const inReach = (side) => findsOf('food').some((t) => (t.kind !== 'bld' || t.side === side) && docked(side, t)) || units().some((u) => FK.has(u, 'Prey'));
+const inReach = (side) => { const R = D.hunger.reach * D.upm, drops = FK.blds().filter((b) => b.side === side && up(b) && (([, , , , y]) => (y || []).includes('food'))(FK.B[b.code])), near = (t) => drops.some((b) => Math.hypot(b.bx - t.bx, b.by - t.by) < R); return findsOf('food').some((t) => (t.kind !== 'bld' || t.side === side) && docked(side, t) && near(t)) || units().some((u) => FK.has(u, 'Prey') && near(u)); }; // E981
 const fromFind = (u) => FK.has(u, 'Gather') && u.target && !u.target.gone && (jobOf(u) === 'food' || FK.has(u.target, 'Prey')) && !FK.has(u.target, 'Flock'); // E349
 function upkeep(dt) { for (const side of D.players) { const s = SIDES[side]; let need = 0;
   for (const u of units()) if (u.side === side) { const e = eats(u) * dt; if (!fromFind(u)) need += e - camped(u, e); else if (KIND[u.target.kind]) FK.take(u.target, Math.min(u.target.amount, e)); }

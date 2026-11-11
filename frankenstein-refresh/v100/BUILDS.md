@@ -4814,3 +4814,8 @@ Mist and fog one sheet; dirty() no longer queues a second drawing, and a resting
 
 ## N21b: ?fps · 2026-11-10 20:03
 Albert, Nov 10 20:02 "Sure": the page opened with ?fps shows the Pace meter (fps, logic ms, draw ms). Sealed on n11.
+
+## N22: Gemini audit fixes, the dashed ring, lower resolution when slow, the woods one sheet · 2026-11-10 23:32
+Albert, Nov 10 22:47: "Go for them all"
+Opened: code:index.html, code:econ.js, code:combat.js, book:measure, book:comments, book:rules, book:citations, tool:test.py
+Load draws the ground once, and filled ground shapes are not closed (a load 11.7 s to 2.6 s headless); a felled tree opens reach and lowers the tops locally (BUG-01, 02; full recompute matches); famine counts food within 75 m of a side's own food drop-offs (BUG-06); healers heal villagers (BUG-10); bows reach farther downhill (BUG-08); Raiders age with 3 soldiers (age 1 at minute 7, was 8); hidden people show a dashed, double ring, idle villagers' glow and dim, silhouettes gone; resolution steps to 3/4 then 1/2 at draw levels 3 and 4; every untouched tree is painted once into one sliding woods sheet, trees drawn live only over a person or thing behind them (the N21 woods chunks had cut trees at chunk edges and thrashed their budget). Found and fixed on the way: DRW.half was dropped from the draw book mid-build and broke the lights. Headless at 3x: about 50 fps (N21: 23-29). Tests: t-n22 holds; t-n15, t-n16, t-n18-t-n21, t-ground hold (t-n18b's hidden villager moved deeper behind the Hall, t-n20 counts six fallen within 240 s); smoke 6/6. Sealed on branch n11, not published to live.

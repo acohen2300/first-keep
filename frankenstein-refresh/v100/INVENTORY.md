@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,481 | 594,394 | 594,542 |
-| Books | 2365 | 0 | 704,296 | 705,203 |
+| Game code | 31 | 3,485 | 596,875 | 597,023 |
+| Books | 2379 | 0 | 709,839 | 710,746 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,926 | 312,317 | 312,562 |
+| Tools | 5 | 1,934 | 313,265 | 313,510 |
 
 ## The trades (code)
 
@@ -18,30 +18,30 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
-| index.html#the-ground | 28 | 1,914 | 1,918 | 38 |
+| index.html#the-ground | 28 | 1,949 | 1,953 | 38 |
 | index.html#floor-2-terrain | 84 | 9,478 | 9,482 | 115 |
 | index.html#floor-3-non-movables | 67 | 9,797 | 9,801 | 54 |
-| index.html#drawn-once-in-the-view-frame | 98 | 19,098 | 19,102 | 92 |
-| index.html#the-view | 9 | 1,074 | 1,078 | 13 |
-| index.html#the-door | 100 | 17,348 | 17,352 | 63 |
+| index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
+| index.html#the-view | 9 | 1,068 | 1,072 | 13 |
+| index.html#the-door | 100 | 17,342 | 17,346 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 149 | 19,647 | 19,651 | 78 |
+| index.html#floor-5-movables | 150 | 20,114 | 20,118 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,956 | 5,960 | 90 |
 | index.html#floor-6-climate | 172 | 30,246 | 30,258 | 126 |
-| index.html#floor-7-display | 76 | 16,415 | 16,419 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,494 | 28,498 | 0 |
+| index.html#floor-7-display | 77 | 16,868 | 16,872 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,531 | 28,535 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 4,935 | 4,939 | 32 |
-| index.html#touch | 53 | 9,515 | 9,519 | 54 |
+| index.html#the-woods-cache | 41 | 5,767 | 5,771 | 24 |
+| index.html#touch | 53 | 9,514 | 9,518 | 54 |
 | menu.js | 533 | 109,168 | 109,212 | 526 |
-| econ.js | 593 | 109,146 | 109,146 | 72 |
-| combat.js | 355 | 58,850 | 58,850 | 84 |
+| econ.js | 593 | 109,419 | 109,419 | 72 |
+| combat.js | 357 | 59,239 | 59,239 | 83 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 317 | 76,596 |
+| citations | 318 | 76,898 |
 | colours | 32 | 8,966 |
-| comments | 930 | 166,360 |
+| comments | 942 | 169,827 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 162,932 |
-| rules | 85 | 32,305 |
+| measure | 335 | 164,451 |
+| rules | 86 | 32,713 |
 | screen | 25 | 11,058 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -163,5 +163,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X85 | t-n19 | page | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side |
 | X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
 | X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
+| X88 | t-n22 | page | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless |
 
-2495 items sealed · 2365 book entries · 94 laws · 317 citations, 33 still to open · 0 known
+2509 items sealed · 2379 book entries · 94 laws · 318 citations, 33 still to open · 0 known
