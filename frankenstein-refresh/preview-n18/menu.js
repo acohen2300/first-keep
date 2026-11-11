@@ -121,6 +121,7 @@ const MUSTER = { tech: 'Needs Muster', none: 'Nothing missing', at: 'Needs a War
 const council = (t) => (own(t) && FK.has(t, 'Squad') ? row(...WA.squads.map((n, i) => vcell('squad', i, null, '', WAR.SQ.sel === i)), vcell('muster')) + row(...classes().map((c) => `<div class="pairs">${vcell('plan', c, '')}${vcell('plan', c, 'up')}</div>`)) : ''); // E405
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u), vils = () => { const P = FK.picked(); return P.length && P.every(isVil) ? P : []; }, sqLab = (icon, word) => `<span class="t">${icon}</span>${word}`; // E819
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
+const barSaid = (k, act) => { const P = FK.picked().filter(isSoldier); if (act(P) !== false) toast(WD.bar.said[k].replace('{n}', P.length)); }; // E989
 const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null; };
 const trainer = (c) => ECON.lineFor(ME, c), P = D.place, line = (c) => FK.SH[c].ticks.includes('Line'), walled = (c) => line(c) || FK.SH[c].ticks.includes('Gate'); // E332
 const count = (c) => FK.blds().filter((t) => t.side === ME && t.code === c).length, picked = (c) => S.ghost && S.ghost.code === c;
@@ -183,7 +184,7 @@ const VERBS = {
     if (!m) return toast(WO.late); WAR.reinforce(p.go, m); toast(WO.reinforce.replace('{n}', p.go.length).replace('{m}', m.name).replace('{list}', waveLine(p))); } },
   move: { label: (c) => { const [, a] = WO.direct[c], w = WAR.directWait(c); return `${a}${w ? `<small>${w}s</small>` : ''}`; }, whyNot: () => '', run: (c) => WAR.direct(c, S.aim) },
   qstep: { label: (a) => sqLab(SVG[{ army: 'attack', squad: 'squad', more: 'more' }[a]], WQK[a === 'army' ? 'attack' : a]), whyNot: (a) => (a === 'army' && !WAR.sendable().length ? WO.none : a === 'squad' && !WAR.knows(ME, 'command') ? WQK.noSquad : ''), run: (a) => { S.qa.step = a; } }, // E857
-  qsend: { label: (a) => `${WQK[a]}<small>${share(a).length}</small>`, whyNot: (a) => (share(a).length ? '' : WO.none), run: (a) => { S.qa.step = 'aim'; S.qa.go = (q) => { const U = share(a); if (WAR.order(U, null, q.k)) ECON.orderCost(ME, U); }; } }, // E858
+  qsend: { label: (a) => `${WQK[a]}<small>${share(a).length}</small>`, whyNot: (a) => (share(a).length ? '' : WO.none), run: (a) => { S.qa.step = 'aim'; S.qa.go = (q) => { WAR.order(share(a), null, q.k); }; } }, // E858
   qsquad: { label: (i) => `${WA.squads[i]}<small>${WAR.squad(i).length}</small>`, whyNot: (i) => (WAR.squad(i).length ? '' : WO.none), run: (i) => { S.qa.step = 'aim'; S.qa.go = (q) => WAR.send(i, q.k); } },
   qaim: { label: () => sqLab(SVG.yard, WQK.aim), whyNot: () => '', run: () => { const q = S.qa; S.qa = null; if (q && q.go) q.go(q); } },
   qgroup: { label: (g) => g, whyNot: () => '', run: (g) => { S.at = S.qa; S.group = g; hintAt(S.qa.k); S.qa.step = 'blds'; } },
@@ -193,9 +194,10 @@ const VERBS = {
   unq: { label: () => '', whyNot: () => '', run: (i, at) => { const b = QB[Number(at)]; if (b) ECON.unqueue(b, Number(i)); } }, // E932
   helpers: { label: () => WD.place.helper, whyNot: () => (ECON.villagersOf(ME).length ? '' : 'No villagers'), run: (t) => ECON.autoBuilder(ME, t) }, // E933
   cancel: { label: () => WD.place.cancel, whyNot: () => '', run: () => VERBS.close.run() },
-  chargeP: { label: () => WD.bar.charge, whyNot: () => WAR.chargeWhy(FK.picked().filter(isSoldier)), run: () => WAR.charge(FK.picked().filter(isSoldier)) },
-  fallBackP: { label: () => WD.bar.fallBack, whyNot: () => '', run: () => WAR.fallBack(FK.picked().filter(isSoldier)) },
-  holdP: { label: () => WD.bar.hold, whyNot: () => '', run: () => { for (const u of FK.picked().filter(isSoldier)) Object.assign(u, { path: null, goal: u.k, job: 'hold', target: null, ord: null }); } },
+  chargeP: { label: () => WD.bar.charge, whyNot: () => WAR.chargeWhy(FK.picked().filter(isSoldier)), run: () => barSaid('charge', WAR.charge) },
+  fallBackP: { label: () => WD.bar.fallBack, whyNot: () => '', run: () => barSaid('fallBack', WAR.fallBack) },
+  holdP: { label: () => WD.bar.hold, whyNot: () => '', run: () => barSaid('hold', (P) => { for (const u of P) Object.assign(u, { path: null, goal: u.k, job: 'hold', target: null, ord: null }); }) },
+  recallP: { label: () => WD.bar.recall, whyNot: () => '', run: () => barSaid('recall', WAR.homeAll) }, // E989
   hunt3: { label: () => WD.bar.hunt3, whyNot: (t) => VERBS.hunt.whyNot(t), run: (t) => { for (let i = WD.bar.hunters; i--; ) ECON.hunt(ME, t); } },
   home: { label: () => `<span class="t">${SVG.garrison}</span>${WD.bar.home}`, whyNot: () => '', run: () => { const h = FK.seatOf(ME); if (h) { FK.cam.follow = false; FK.camGo(h.vx, h.vy); } } },
   unpick: { label: () => SVG.close, whyNot: () => '', run: () => { FK.select(null); S.more = false; FK.dirty(); } },
@@ -219,8 +221,8 @@ const VERBS = {
   send: { label: () => 'Send one', whyNot: (t) => (!ECON.villagersOf(ME).some((v) => v.job === 'idle' || v.job === 'wait') ? 'No idle villager' : ''), run: (t) => { const u = ECON.villagersOf(ME).filter((v) => v.job === 'idle' || v.job === 'wait').sort((a, b) => FK.dist(a, t) - FK.dist(b, t))[0]; ECON.gatherAt(u, t); } },
   raise: { label: (t) => (t.done < 1 ? 'Raise' : `Repair${price(ECON.repairCost(t))}`), whyNot: (t) => (!isVil(FK.sel()) ? 'Pick a villager' : t.done >= 1 && t.hp >= t.hpMax - D.repair.within ? 'Not hurt' : ''), run: (t) => ECON.buildAt(FK.sel(), t) },
   scrap: { label: (t) => (t.done < 1 ? 'Cancel site' : 'Demolish'), whyNot: (t) => (FK.has(t, 'Seat') && t.done >= 1 ? 'The hall stays' : ''), run: (t) => { toast(`${B[t.code][0]} ${t.done < D.refund.first ? 'cancelled' : 'taken down'}: ${costText(ECON.refund(t))} back`); ECON.cancel(t); S.subject = null; } },
-  fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => { ECON.orderCost(ME, [FK.sel()]); WAR.fight(FK.sel(), t, true); } },
-  here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: (t) => { ECON.orderCost(ME, WAR.armyOf(ME)); WAR.attack(ME, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k); } },
+  fight: { label: () => 'Attack this', whyNot: (t) => (!isSoldier(FK.sel()) ? 'Pick a soldier' : ''), run: (t) => WAR.fight(FK.sel(), t, true) },
+  here: { label: () => 'Soldiers here', whyNot: (t) => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: (t) => { WAR.attack(ME, t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k); } },
   hunt: { label: () => 'Hunt', whyNot: () => (!ECON.villagersOf(ME).length ? 'No villagers' : ''), run: (t) => toast(ECON.hunt(ME, t) ? TELL.hunt : TELL.hands) }, // E357
   replant: { label: (t) => `Replant${price(ECON.replantCost(t))}`, whyNot: (t) => { const w = ECON.replantWhy(ME, t); return w === 'cost' ? `Needs ${costText(ECON.replantCost(t))}` : w; }, run: (t) => ECON.replant(ME, t) },
   replantAll: { label: () => 'Replant all', whyNot: () => '', run: (t) => { const n = ECON.replantAll(ME, t); toast(n ? TELL.replanted.replace('{n}', n) : TELL.broke); } },
@@ -296,7 +298,7 @@ function cardText(r) { const t = S.subject; if (S.ghost) return `<p>${ghostSay(S
 const tab = (t, label, icon, cls = '') => cell(`<span class="t">${SVG[icon]}</span>${label}`, `ic ${cls} ${S.tab === t ? 'on' : ''}`, ['tab', t]);
 const offScreen = () => { const h = FK.seatOf(ME); if (!h) return false; const [x, y] = FK.toScreen(h.vx, h.vy), [w, hh] = FK.size(); return x < ZERO || y < ZERO || x > w || y > hh; }; // E736
 const rank = (card) => { if (S.tab || card || S.ghost) return ''; const P = FK.picked(), A = P.filter(isSoldier), W = P.filter((u) => u.kind === 'unit' && !own(u) && !SIDES[u.side]); const bar = (n, cells) => `<div class="rankbar">${row(span(ORDER.length, cell(WD.bar.picked.replace('{n}', n), 'title')), vcell('unpick'))}<div class="cells" style="--n:${cells.length}">${cells.join('')}</div></div>`;
-  if (A.length && !S.war) return bar(A.length, [vcell('chargeP'), vcell('fallBackP'), vcell('holdP'), vcell('recall'), vcell('follow', null, null, 'ic', FK.cam.follow)]); // E733
+  if (A.length && !S.war) return bar(A.length, [vcell('chargeP'), vcell('fallBackP'), vcell('holdP'), vcell('recallP'), vcell('follow', null, null, 'ic', FK.cam.follow)]); // E733
   if (W.length) return bar(W.length, [vcell('hunt', key(W[ZERO])), vcell('hunt3', key(W[ZERO])), vcell('follow', null, null, 'ic', FK.cam.follow)]); return row(offScreen() ? vcell('home', null, null, 'ic') : '<i></i>', ...ORDER.slice([ORDER].length).map(() => '<i></i>'), S.war ? vcell('war', null, null, 'ic warx').replace('</button>', `${SVG.close}</button>`) : vcell('war', null, null, 'ic red')); }; // E724
 const base = (r) => S.war ? warBase() : row(vcell('people', null, null, `ic ${ECON.jobs(ME).idle ? 'blue' : ''}`).replace('</button>', `${hall() && hall().q && hall().q.length ? rk('green', 'run', QB.push(hall()) - ONE) : ''}</button>`), ...ORDER.map((y) => vcell('yield', y, null, 'ic', r.rally === y))) // E704
   + row(tab('Build', 'Build', 'build').replace('</button>', `${siteBar()}</button>`), ...ORDER.map((y) => `<div class="pairs">${vcell('job', y, -1)}${vcell('job', y, 1)}</div>`));
@@ -398,7 +400,7 @@ function heard(k, u, px, py) {
   const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
   if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); return ['open', t]; } return ['tap']; }
   if (u && own(u)) { pickToggle(u); return ['pick', u]; }
-  const P = FK.picked().filter(own); if (P.length) { const sent = !!t || onB(k); if (sent) { const sol = P.filter(isSoldier); if (WAR.order(P, t, k)) ECON.orderCost(ME, sol); askIce(P, t, k); } S.more = false; FK.select(null); render(true); return [sent ? 'order' : 'tap', t]; } // E856
+  const P = FK.picked().filter(own); if (P.length) { const sent = !!t || onB(k); if (sent) { WAR.order(P, t, k); askIce(P, t, k); } render(true); return [sent ? 'order' : 'tap', t]; } // E856
   if (!t) { const O = ordAt(px, py); if (O) FK.select(units().filter((v) => v.ord === O)); else if (onB(k)) { S.qa = { k, px, py }; S.eat = true; } S.subject = null; render(true); return ['tap']; }
   if (t.kind === 'bld' && own(t) && !ECON.replantWhy(ME, t)) { ECON.replant(ME, t); return ['place', t]; }
   if (t.kind === 'unit') FK.select(t); else { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; } render(true); return [t.kind === 'unit' ? 'pick' : 'tap', t];

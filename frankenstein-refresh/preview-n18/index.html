@@ -391,7 +391,7 @@ function work() { for (let n = D.work.slices; n-- && TASKS.length; ) { const t =
 const every = ([secs, ph]) => Math.floor((K.t - ph / D.fps) / secs) > Math.floor((K.t0 - ph / D.fps) / secs); // E67
 let paused = false; const resting = () => paused || !!fire('rest'), pause = (on = !paused) => { paused = on; dirty(); }; // E695
 const sim = (dt) => { climate(dt); step(dt); fire('tick', dt); work(); look(dt); }, vAt = (u) => (u.lvx == null ? [u.vx, u.vy] : [u.lvx + (u.vx - u.lvx) * DRAW.alpha, u.lvy + (u.vy - u.lvy) * DRAW.alpha]); // E715
-function loop(now) { const wall = (now - last) / 1000; if (wall >= DRW.slack / rate()) { const dt = paused ? null : Math.min(SIM.cap, wall || ZERO) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } const w1 = performance.now(); followCam(dt); const cs = [cam.x, cam.y, cam.z].join(); if (!resting() || want || cs !== camSeen) { camSeen = cs; draw(); } const w2 = performance.now(); shed(w2 - w0, wall); meter(wall, w1 - w0, w2 - w1); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
+function loop(now) { const wall = (now - last) / 1000; if (wall >= DRW.slack / rate()) { const dt = paused ? null : Math.min(SIM.cap, wall || ZERO) * (show.fast ? D.fast : show.speed); last = now; frameDt = dt; if (!document.hidden) try { const w0 = performance.now(); if (!paused) { const DT = ONE / SIM.hz; acc += dt; let n = null; while (acc >= DT && n < SIM.catchup) { sim(DT); acc -= DT; n++; } if (n >= SIM.catchup) acc = null; DRAW.alpha = clamp(acc / DT, null, ONE); } const w1 = performance.now(); followCam(dt); const cs = [cam.x, cam.y, cam.z].join(); if (!resting() || want || cs !== camSeen) { camSeen = cs; draw(); meter(wall, w1 - w0, performance.now() - w1); } const w2 = performance.now(); shed(w2 - w0, wall); } catch (e) { fault(e); } } requestAnimationFrame(loop); }
 // E655
 const SV = D.save, TG = SV.tags, WS = fromBook('words').start, TEST = /[?&]test\b/.test(location.search), seenErr = new Set(), BASE0 = {}; let fightT = null, failT = -Infinity;
 if (TEST) show.P = true; // E894
@@ -1242,13 +1242,15 @@ const K = { ev: {}, t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 
 const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
 const yt = () => K.t + D.startIn * D.season; // E862
 const season = () => Math.floor(yt() / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
-const hhmm = () => { const [h, m] = D.clock; return String(Math.floor(dayPhase() * h)).padStart(String(h).length, '0') + ':' + String(Math.floor((dayPhase() * h * m) % m)).padStart(String(m).length, '0'); }; // E928
+const sunPhase = () => (dayPhase() - D.noon + ONE + (ONE + ONE) ** -ONE) % ONE; // E990
+const hhmm = () => { const [h, m] = D.clock; return String(Math.floor(sunPhase() * h)).padStart(String(h).length, '0') + ':' + String(Math.floor((sunPhase() * h * m) % m)).padStart(String(m).length, '0'); }; // E928
 // E123
 function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - D.noon) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
   K.moonAlt = alt(dec * Math.cos(f), Hh + f); K.moonLit = (1 - Math.cos(f)) / 2; return alt(dec, Hh); } // E551
 const MO = D.moon, moonPhase = () => (K.t / D.day / MO.month) % 1, nightOf = () => clamp(-K.alt / MO.twilight, 0, 1);
-const RAMP = [[-18, 0.18], [-12, 0.3], [-6, 0.45], [0, 0.62], [6, 0.85], [20, 1]]; // E124
-function lightAt(a) { if (a <= RAMP[0][0]) return RAMP[0][1]; for (let i = 1; i < RAMP.length; i++) if (a <= RAMP[i][0]) { const [a0, l0] = RAMP[i - 1], [a1, l1] = RAMP[i]; return l0 + ((l1 - l0) * (a - a0)) / (a1 - a0); } return 1; }
+const RAMP = D.ramp, slopes = () => { const d = RAMP.slice(ONE).map(([a, l], i) => (l - RAMP[i][ONE]) / (a - RAMP[i][ZERO])); return RAMP.map((_, i) => (i && i < d.length && d[i - ONE] * d[i] > ZERO ? 2 / (ONE / d[i - ONE] + ONE / d[i]) : ZERO)); }; let RM = null; // E124
+function lightAt(a) { RM = RM || slopes(); const L = RAMP.length - ONE; if (a <= RAMP[ZERO][ZERO]) return RAMP[ZERO][ONE]; if (a >= RAMP[L][ZERO]) return RAMP[L][ONE]; let i = ONE; while (a > RAMP[i][ZERO]) i++; // E991
+  const [a0, l0] = RAMP[i - ONE], [a1, l1] = RAMP[i], h = a1 - a0, t = (a - a0) / h, t2 = t * t, t3 = t2 * t; return (2 * t3 - 3 * t2 + ONE) * l0 + (t3 - 2 * t2 + t) * h * RM[i - ONE] + (3 * t2 - 2 * t3) * l1 + (t3 - t2) * h * RM[i]; }
 // E125
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 const sheet = () => Math.sqrt(K.gfd / D.groundIce.fdd); // E365
@@ -1427,6 +1429,7 @@ function cast(e, r) { const k0 = tileAt(e.bx, e.by), c0 = cellK(k0), ci = c0 % N
   for (let a = ZERO; a < rays; a++) { const th = (a / rays) * Math.PI * (ONE + ONE), dx = Math.cos(th), dy = Math.sin(th); let top = -Infinity, last = c0, lost = -k * CWOOD[c0];
     for (let t = ONE; t <= R; t++) { const i = Math.round(ci + dx * t), j = Math.round(cj + dy * t); if (i < ZERO || j < ZERO || i >= NC_ || j >= NC_) break; const c = j * NC_ + i; if (c === last) continue; last = c; const L = t * SCELL * D.tile;
       const under = CWOOD[c] > ZERO && z0 < CTRUNK[c] + tree; if (under) lost -= k * CWOOD[c]; if (lost < keep) break; if ((CGND[c] + body - z0) / L >= top) out.add(c); top = Math.max(top, (CTOP[c] - z0) / L, under ? -Infinity : (CTRUNK[c] + tree - z0) / L); if ((CGND[c] - z0) / L > top + FOGW.wall) break; } } return [...out]; }
+const circle = (e, r) => { const c0 = cellK(tileAt(e.bx, e.by)), ci = c0 % NC_, cj = (c0 - ci) / NC_, R = r / D.tile / SCELL, n = Math.ceil(R), out = []; for (let j = Math.max(ZERO, cj - n); j <= Math.min(NC_ - ONE, cj + n); j++) for (let i = Math.max(ZERO, ci - n); i <= Math.min(NC_ - ONE, ci + n); i++) if (Math.hypot(i - ci, j - cj) <= R) out.push(j * NC_ + i); return out; }; // E992
 const seenNow = (t, s) => { const V = visOf(s); if (t.kind !== 'bld') return V[cellK(tileAt(t.bx, t.by))] > ZERO; for (const [i, j] of [[t.i, t.j], [t.i + t.n - ONE, t.j], [t.i, t.j + t.n - ONE], [t.i + t.n - ONE, t.j + t.n - ONE]]) if (V[cellK(j * N + i)] > ZERO) return true; return false; }; // E870
 const rimSeen = (e, r, V, own) => { const k0 = tileAt(e.bx, e.by), c0 = cellK(k0), ci = c0 % NC_, cj = (c0 - ci) / NC_, R = Math.min(r / D.tile / SCELL, NC_); for (let a = ZERO; a < FOGW.rim; a++) { const th = (a / FOGW.rim) * Math.PI * (ONE + ONE), i = clamp(Math.round(ci + Math.cos(th) * R), ZERO, NC_ - ONE), j = clamp(Math.round(cj + Math.sin(th) * R), ZERO, NC_ - ONE), c = j * NC_ + i; if (V[c] - (own && own.has(c) ? ONE : ZERO) <= ZERO) return false; } return true; }; // E877
 let TOPV = ZERO; function look(dt) { seeT -= dt; const beat = seeT <= ZERO; if (beat && topN !== topKey()) { tops(); cellTops(); TOPV++; } const all = units.filter((u) => !u.inside).concat(things.filter((t) => t.kind === 'bld')); // E146
@@ -1434,7 +1437,7 @@ let TOPV = ZERO; function look(dt) { seeT -= dt; const beat = seeT <= ZERO; if (
     for (const e of all) { if (e.side !== s || e.done < ONE || e.hp <= ZERO) continue; live.add(e); const r = sightOf(e), k = tileAt(e.bx, e.by), key = `${cellK(k)}|${Math.round(r / D.tile / SCELL)}|${Math.round(stat(e.code, e.side, 'eye'))}|${TOPV}`, c = C.get(e);
       if (c && c.key === key) { if (!c.skip) byCell.set(key, e); continue; } const twin = byCell.get(key), drop = () => { if (c && !c.skip) for (const q of c.tiles) V[q]--; };
       if (twin || (c && rimSeen(e, r, V, c.skip ? null : new Set(c.tiles)))) { drop(); C.set(e, { key, tiles: [], skip: true }); continue; }
-      drop(); const tiles = cast(e, r); for (const q of tiles) { V[q]++; X[q] = ONE; } C.set(e, { key, tiles }); byCell.set(key, e); }
+      drop(); const tiles = s === ME ? cast(e, r) : circle(e, r); for (const q of tiles) { V[q]++; X[q] = ONE; } C.set(e, { key, tiles }); byCell.set(key, e); }
     for (const [e, c] of C) if (!live.has(e)) { if (!c.skip) for (const q of c.tiles) V[q]--; C.delete(e); } }
   if (!beat) return; seeT = EYE.tick; fogPaint();
   for (const s of D.players) { const S = new Set(), M = memOf(s), T = famOf(s); for (const e of all) if (e.side === s) T[famCell(tileAt(e.bx, e.by))] = K.t; for (const t of all) if (SIDES[t.side] && t.side !== s && (!FOGON || seenNow(t, s))) { S.add(t); if (t.kind === 'bld' && !M.has(t)) { M.add(t); if (s === ME && t.done >= ONE) wear(t); } } SEEN.set(s, S); } }
