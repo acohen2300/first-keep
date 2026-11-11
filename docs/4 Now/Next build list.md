@@ -420,3 +420,4 @@ Preview: `frankenstein-refresh/preview-n17/`. Gate PASS, smoke 6/6 (the match sm
 - Asked, waiting: #7 a lot more trees to block out big sections; the two top rows into one (resources sharing a cell, season as an icon with the clock, rank and score sharing). [2026-11-10 18:45]
 - N20 built (Albert 18:55 "Go for all"): nerve (no shake from blows, losses shared by the group, the rallied return), storms from 0.6, trees 3x, one top row of nine. [2026-11-10 19:17]
 - Next: the speed audit (Albert 18:56, 18:59: the game is too slow on his phone; find the most expensive things on a frame). [2026-11-10 19:17]
+- N21 speed built (Albert 19:22 "do 2-5"): mist+fog one sheet, no double drawing and no redraw of a still paused screen, 4,470 forest trees cached (was 120), silhouettes one mask a person. Smoke's match check passes for the first time since Nov 7. Not done: #1 lower resolution when slow, #6 AI less often. [2026-11-10 19:46]

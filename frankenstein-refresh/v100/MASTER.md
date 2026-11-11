@@ -148,6 +148,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E63** The view (layer 140): one camera, drag to pan, pinch or wheel to zoom; the overlays are dr
 - **E64** one flag a layer code (the panel, floor 8) and Fast
 - **E698** a draw-level change redraws the canvas at its new sharpness; only a real change of the win
+- **E973** asking for a fresh picture marks the frame wanted; the loop draws every frame while the ga
 
 ## index.html#the-door
 
@@ -182,6 +183,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E968** while a pinch moves, the land sheet is stretched to the new zoom instead of drawn again; o · N17
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
 - **E880** the land kept while the camera holds still: one copy drawn back instead of the ground, the
+- **E975** the mist and the fog of war share one sheet, the mist painted under the fog, so the screen
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)
 - **E70** Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the groun · D3 (N112)
 
@@ -458,6 +460,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E962** a campfire after dark by a drop-off where two or more of a side gather and bring their loa · N17
 - **E963** the lights add a torch on each army's standard, its glow at the standard's foot and its fl
 - **E965** one scratch canvas for the fire's highlights
+- **E974** the scratch canvas for silhouettes and firelight only grows, and each use clears the corne
 - **E966** firelight on the side that faces it (Albert, Nov 10, N17 #8, the mock): each person and fi · N17
 - **E938** Lanterns (research) make the door torches brighter: light falls off as the square of dista
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
@@ -492,6 +495,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E154** The woods cache: the deep trees (eight tree neighbours) are painted once per chunk of the 
 - **E155** chunks of CS × CS tiles
+- **E972** a tree deep in a forest is one with a tree in each of the eight directions a forest step a
 - **E156** a tree cut: its chunk is stale, and its neighbours stand at an edge now
 - **E157** each chunk's box in the view frame, with room above for the trees' height
 - **E158** the chunk's deep trees on one canvas

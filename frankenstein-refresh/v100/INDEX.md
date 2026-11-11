@@ -390,6 +390,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N315 |  | Albert, Nov 10, 2026, 16:54 \Sure\ on build 3 of N18 and 16:55 \A is fine for now\ (the aimer mock): #15 a plain aimer, #22 zoom weird and s | opened |
 | N316 |  | Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubled to 240 for now, the world t | opened |
 | N317 |  | Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 (\Go for all\: nerve, the rallied, m | opened |
+| N318 |  | Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 19:22: \I would do 2-5 and let' | opened |
 
 ## colours
 
@@ -1356,6 +1357,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E969 |  | the quick action's aimer: on the aim step a plain white ring with four ticks and a dot sits on the tile the order will go to, and the one bo |  |
 | E970 |  | a soldier whose rout has run its time comes back to the fight: he turns on the nearest foe within the flee distance, or else walks back to h |  |
 | E971 |  | the top row holds what two rows held (Albert, Nov 10 18:27): a cell named two keys joined by / shows each on its own line, a store with its  |  |
+| E972 |  | a tree deep in a forest is one with a tree in each of the eight directions a forest step away (the forest is planted on a grid of D forest.s |  |
+| E973 |  | asking for a fresh picture marks the frame wanted; the loop draws every frame while the game runs, and while it rests (paused, a menu over i |  |
+| E974 |  | the scratch canvas for silhouettes and firelight only grows, and each use clears the corner it needs, instead of being resized for every fig |  |
+| E975 |  | the mist and the fog of war share one sheet, the mist painted under the fog, so the screen takes one large copy a frame for both instead of  |  |
 | E951 |  | a lightning flash is three to five return strokes about 60 ms apart (CIGRÉ TB 549), each re-lighting the bolt and whiting the sky by its nea |  |
 | E952 |  | a lake keeps off the trade roads' stops, as it keeps off another lake: a stop is a place on dry land where caravans meet, so the water is la |  |
 
@@ -1832,6 +1837,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X84 | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still | {stage: page} | N315 |
 | X85 | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side | {stage: page} | N316 |
 | X86 | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 | {stage: page} | N317 |
+| X87 | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once | {stage: page} | N318 |
 
 ## screen
 

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,477 | 593,375 | 593,523 |
-| Books | 2359 | 0 | 702,397 | 703,304 |
+| Game code | 31 | 3,481 | 594,366 | 594,514 |
+| Books | 2365 | 0 | 704,189 | 705,096 |
 | Laws | 94 | 0 | 20,111 | 20,649 |
-| Tools | 5 | 1,921 | 311,356 | 311,601 |
+| Tools | 5 | 1,926 | 312,317 | 312,562 |
 
 ## The trades (code)
 
@@ -22,8 +22,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-2-terrain | 84 | 9,478 | 9,482 | 115 |
 | index.html#floor-3-non-movables | 67 | 9,797 | 9,801 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,098 | 19,102 | 92 |
-| index.html#the-view | 9 | 1,075 | 1,079 | 13 |
-| index.html#the-door | 100 | 17,167 | 17,171 | 63 |
+| index.html#the-view | 9 | 1,046 | 1,050 | 13 |
+| index.html#the-door | 100 | 17,348 | 17,352 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -34,10 +34,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,956 | 5,960 | 90 |
 | index.html#floor-6-climate | 172 | 30,246 | 30,258 | 126 |
-| index.html#floor-7-display | 74 | 16,231 | 16,235 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 135 | 28,156 | 28,160 | 0 |
+| index.html#floor-7-display | 76 | 16,415 | 16,419 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,494 | 28,498 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 40 | 4,618 | 4,622 | 38 |
+| index.html#the-woods-cache | 41 | 4,935 | 4,939 | 32 |
 | index.html#touch | 53 | 9,515 | 9,519 | 54 |
 | menu.js | 533 | 109,168 | 109,212 | 526 |
 | econ.js | 593 | 109,146 | 109,146 | 72 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 316 | 76,378 |
+| citations | 317 | 76,596 |
 | colours | 32 | 8,966 |
-| comments | 926 | 164,869 |
+| comments | 930 | 166,253 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 335 | 162,932 |
-| rules | 84 | 32,050 |
+| rules | 85 | 32,305 |
 | screen | 25 | 11,058 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -162,5 +162,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X84 | t-n18c | page | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
 | X85 | t-n19 | page | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side |
 | X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
+| X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
 
-2489 items sealed · 2359 book entries · 94 laws · 316 citations, 33 still to open · 0 known
+2495 items sealed · 2365 book entries · 94 laws · 317 citations, 33 still to open · 0 known
