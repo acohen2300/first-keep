@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,485 | 597,003 | 597,151 |
-| Books | 2381 | 0 | 711,392 | 712,299 |
+| Game code | 31 | 3,485 | 597,048 | 597,196 (+45) |
+| Books | 2382 | 0 | 711,602 | 712,509 (+75) |
 | Laws | 94 | 0 | 20,111 | 20,649 |
 | Tools | 5 | 1,946 | 315,360 | 315,605 |
 
@@ -35,7 +35,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 5,993 | 5,997 | 90 |
 | index.html#floor-6-climate | 172 | 30,246 | 30,258 | 126 |
 | index.html#floor-7-display | 77 | 16,875 | 16,879 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,485 | 28,489 | 0 |
+| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,530 | 28,534 (+45) | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,514 | 9,518 | 54 |
@@ -51,12 +51,12 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 319 | 77,196 |
+| citations | 320 | 77,342 |
 | colours | 32 | 8,966 |
 | comments | 942 | 170,486 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 335 | 164,654 |
+| measure | 335 | 164,729 |
 | rules | 87 | 33,127 |
 | screen | 25 | 11,058 |
 | shells | 110 | 23,521 |
@@ -166,4 +166,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X88 | t-n22 | page | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless |
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the whole frame is timed for shedding |
 
-2511 items sealed · 2381 book entries · 94 laws · 319 citations, 33 still to open · 0 known
+2512 items sealed · 2382 book entries · 94 laws · 320 citations, 33 still to open · 0 known

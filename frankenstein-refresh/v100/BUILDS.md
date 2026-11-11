@@ -4841,3 +4841,14 @@ MODIFIED (14):
 LOCKED (2497 of 2511): byte for byte as sealed, 1,286,752 bytes
 Tests: t-n23 holds; t-n15-t-n22, t-ground, t-save hold except t-n15 and t-sight, which fail as in N22 (logged in Parked); smoke 6/6. Side by side N21 v N22: same sharpness; a tree in front of a building was drawn behind it (N22), fixed. Headless 3x: about 45 fps panning and zooming, as N22; a full sight rebuild 4 ms (no longer every beat while anything is built), a save 31 ms (now a minute apart, was 10 s). Tried and cut: one sprite a tree kind (panning 43 to 16 fps). Sealed on branch n11, not published to live
 Inventory: 2511 items sealed · 2381 book entries · 94 laws · 319 citations, 33 still to open · 0 known
+
+## N23b: the pace meter centred · 2026-11-11 05:50
+Albert, Nov 11 05:50: "It all shows off screen. Center it"
+Opened: code:index.html, book:measure, book:citations
+MODIFIED (3):
+- book:citations:N321 · added
+- book:measure:D349 · 287 → 362 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 28,489 → 28,534 bytes
+LOCKED (2509 of 2512): byte for byte as sealed, 1,616,928 bytes
+Tests: gate passes; the meter seen centred headless. Sealed on n11
+Inventory: 2512 items sealed · 2382 book entries · 94 laws · 320 citations, 33 still to open · 0 known

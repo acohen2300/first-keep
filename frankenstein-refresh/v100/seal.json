@@ -1519,6 +1519,11 @@
 "bytes": 287,
 "numbers": 0
 },
+"book:citations:N321": {
+"sha": "cfc12c8b97f8485a118b5aecb3bcc8881a71a72a045885298d4364d86cd7631d",
+"bytes": 135,
+"numbers": 0
+},
 "book:citations:N33": {
 "sha": "59255a1d15f3c653886665b6080df153826058d047e9bc749d66f6d5df99f021",
 "bytes": 64,
@@ -8200,8 +8205,8 @@
 "numbers": 0
 },
 "book:measure:D349": {
-"sha": "848f5352454ed28a2f716ac21e9b345785722d2cd01dd64f269765f3c82ab9f8",
-"bytes": 287,
+"sha": "9e859af96c38d673de0ce5827d377ec4de326abd190b745b4c0a67c7b620ebf1",
+"bytes": 362,
 "numbers": 0
 },
 "book:measure:D35": {
@@ -12035,8 +12040,8 @@
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
-"sha": "846c9b61182997770eb896314b59a5ded51383a39dd50eec2c9b78c485ea912a",
-"bytes": 28489,
+"sha": "8eabba3fe8c942dab310c19ab75c84fdfdf2b615fccb1f01ac26656ed396bce7",
+"bytes": 28534,
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
