@@ -4946,3 +4946,47 @@ Albert, Nov 10: "Once you tap that thing - the selection is gone"; Nov 12 06:26:
 Opened: code:menu.js, book:comments
 - Tap a villager, tap a thing or the ground: he takes the order and is no longer picked. Soldiers stay picked until the bar's ✕ (N24 #2). In a mixed pick the villagers drop out and the soldiers stay. N24 #2 had kept every pick, villagers included (E856 rewritten to say both).
 Tests: gate passes; headless: villager + tree → 0 picked, walking; soldier + villager + ground → the soldier alone stays picked.
+
+## N29: the list, first run (the freeze's largest cause, the meter's layers, the villager's ring, the marching ration) · 2026-11-12 07:59
+Albert, Nov 12 07:01-07:48: "I really just want my list done." "Do as much as you can without me. Please don't stop. Don't use helpers." "the villager tap flow wasn't fixed either even though it said it was in N28". The list is docs/4 Now/The List.md (built from Audit - Nov 12.md). Built by Claude alone, no helpers.
+- **The freeze, the largest cause found (E1036).** An idle soldier whose home spot could not be stood on searched the whole map for a way home every second and failed every time: at minute 9 of a four-side match 2,009 of 2,149 searches in two minutes failed, half of the rules' time. He now takes the nearest free tile as home, once. Measured, the same match: 10.7 ms a step to 5.0; minutes 5 to 14, 12-22 ms a step to 5-8.
+- **The meter's layers (E1035, J53).** With ?fps, a second line gives each drawing layer's ms (land, clouds, things, fog, marks, sky, lights): his phone's screenshot says which layer is slow.
+- **A late frame sheds (D321 lag).** A frame arriving later than twice its interval counts its lateness as work, so a phone whose graphics chip is the slow part lowers its load; before, only script time counted.
+- **The slower beats (list F4):** the danger map every 2 s (was 1); the computers' thinking 4 slices a step (was 12).
+- **The top bar's rings are measured only when the bar changes (list F3):** the idle menu beat read the layout four times a second.
+- **The villager's ring (list V1).** After his order a villager was no longer picked, but he kept the green picked ring while he walked (the ring was green for anyone with an order). Green now means picked, only.
+- **The crosshair waits for a spot (list E1, E2):** with Attack chosen and no spot tapped, no crosshair is drawn, so a dim Execute no longer sits beside what looked like a set target; its words ride on the map's dark pill.
+- **"The Raiders have fallen." (list C1).**
+- **A marching soldier eats 1.37 rations, not 3.3 (list C3; D224 marchDay, N328, Tharion 2005):** a field day against a garrison day. 120 soldiers on the march: 1,485 food a minute before, 617 now.
+- **Prep is cheaper and faster by its three techs (list C6; D375 techs, cut):** each of Fortified posts, Masonry, Architecture known takes a fifth off its price and time.
+Checked, no change: the night already follows the moon (wash 0.75 at new moon, 0.68 at a quarter, 0.49 under a high full moon: list C2); "Enemies at your town!" never shows in two places at once (list E3); pause and the ghost at screen centre re-tested (list B1, B2).
+Claude's own numbers, for Albert to play and change: D321 lag 2; D339 slices 4; D253 beat 2 s; D238 homeR 3 tiles; D375 cut 0.2.
+Built at 07:47 without a yes and taken out at 07:55: arm-then-engage with the army disarming (Parked in N29).
+Opened: code:index.html, code:menu.js, code:econ.js, code:combat.js, code:ai.js, book:measure, book:comments, book:rules, book:words, book:screen, book:colours, book:tech, book:citations, tool:test.py, tool:index.py
+MODIFIED (23):
+- book:citations:N328 · added
+- book:comments:E1032 · 422 → 634 bytes
+- book:comments:E1035 · added
+- book:comments:E1036 · added
+- book:comments:E432 · 136 → 427 bytes
+- book:measure:D224 · 824 → 1,260 bytes
+- book:measure:D238 · 887 → 1,059 bytes
+- book:measure:D253 · 913 → 1,021 bytes
+- book:measure:D321 · 1,216 → 1,564 bytes
+- book:measure:D339 · 505 → 690 bytes
+- book:measure:D349 · 481 → 849 bytes
+- book:measure:D375 · 1,140 → 1,578 bytes
+- book:rules:X96 · added
+- book:words:J13 · 947 → 1,176 bytes
+- book:words:J53 · added
+- code:combat.js · 64,043 → 64,286 bytes
+- code:econ.js · 115,317 → 115,410 bytes
+- code:index.html#the-door · 18,802 → 18,981 bytes
+- code:index.html#the-view-s-eyes-lights-and-stage · 28,789 → 29,221 bytes
+- code:index.html#the-woods-cache · 5,934 → 5,914 bytes
+- code:menu.js · 123,256 → 123,280 bytes
+- tool:index.py · 28,963 → 28,996 bytes
+- tool:test.py · 298,540 → 301,747 bytes
+LOCKED (2562 of 2585): byte for byte as sealed, 1,049,167 bytes
+Tests: t-n29 passes and fails on each of four planted bugs (the home search, the green ring, the top bar's reads, the crosshair); t-n24 to t-n27 pass; smoke 6/6. The full run was not made.
+Inventory: 2585 items sealed · 2455 book entries · 94 laws · 327 citations, 34 still to open · 0 known

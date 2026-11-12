@@ -1554,6 +1554,11 @@
 "bytes": 322,
 "numbers": 0
 },
+"book:citations:N328": {
+"sha": "2097b00871eec37a19a94908413f605dac27f9f21c40295ce4189a22977a159b",
+"bytes": 635,
+"numbers": 0
+},
 "book:citations:N33": {
 "sha": "59255a1d15f3c653886665b6080df153826058d047e9bc749d66f6d5df99f021",
 "bytes": 64,
@@ -2270,8 +2275,8 @@
 "numbers": 0
 },
 "book:comments:E1032": {
-"sha": "01f24ccae0df6dfaca22a3f02fb6e9add9833098a7e93ff2a992ee44653ff06c",
-"bytes": 422,
+"sha": "a40fe39a34d6d9228ce98a2dc9d4b223d4fd40c69e9c59b2134be62dc842d3e5",
+"bytes": 634,
 "numbers": 0
 },
 "book:comments:E1033": {
@@ -2282,6 +2287,16 @@
 "book:comments:E1034": {
 "sha": "904a2cec4e9f0b76d8b39a889e10ecb30c869dec5ae03938241faccbf08224c4",
 "bytes": 89,
+"numbers": 0
+},
+"book:comments:E1035": {
+"sha": "7c5f451a85f79a07108abfff64c901d304cd8574e5ea932696d89723c4fa01a1",
+"bytes": 269,
+"numbers": 0
+},
+"book:comments:E1036": {
+"sha": "c8e7140bfcaf3959e46b1c63fe7cbebaf0f53dbdc3d38df169ab70c0bc4d3e3b",
+"bytes": 486,
 "numbers": 0
 },
 "book:comments:E104": {
@@ -4055,8 +4070,8 @@
 "numbers": 0
 },
 "book:comments:E432": {
-"sha": "8c3e195845034f8c0ad04f7004349cfddcb57c2014edccb6a8e0f97e3d0a04c2",
-"bytes": 136,
+"sha": "25de626de2596e8343137c82b35d90267eaa2010fe28f6d64918bc07b8478871",
+"bytes": 427,
 "numbers": 0
 },
 "book:comments:E433": {
@@ -7770,8 +7785,8 @@
 "numbers": 0
 },
 "book:measure:D224": {
-"sha": "0358b7f21c97f8efbf4038f12f7e2f89f07f33d5082b51f39d89e28e2c6844d5",
-"bytes": 824,
+"sha": "f0f3b7f18f8f328acb35db8ee015db244ad7f874f8cb0750343f269c25b5062c",
+"bytes": 1260,
 "numbers": 0
 },
 "book:measure:D225": {
@@ -7845,8 +7860,8 @@
 "numbers": 0
 },
 "book:measure:D238": {
-"sha": "37074c2d0e183048fef0ed4c436f9b0aacdf546d5e5e7e8e45bd73d3762021ab",
-"bytes": 887,
+"sha": "ffe015cb146c4d764351700f85b6bb679fb194ea3445fde5408fe62bd8ac1bd3",
+"bytes": 1059,
 "numbers": 0
 },
 "book:measure:D239": {
@@ -7930,8 +7945,8 @@
 "numbers": 0
 },
 "book:measure:D253": {
-"sha": "1569740e1310fb4fe29c14bb05e6770eaa20243b6df0dbf330e1e5170128b4c8",
-"bytes": 913,
+"sha": "9b2631ba471040a59cf160b760fb4ad2801de05e9b7d2543de23769963f3fe3f",
+"bytes": 1021,
 "numbers": 0
 },
 "book:measure:D254": {
@@ -8305,8 +8320,8 @@
 "numbers": 0
 },
 "book:measure:D321": {
-"sha": "a11aeb87915d3b0bfa19aeda9754ea7ffd216e49af5c21056c7191cdea851236",
-"bytes": 1216,
+"sha": "70a1ea1ca1ffd44fae0ba9405506da2059b972e520e02bb2c2158cdd2751a145",
+"bytes": 1564,
 "numbers": 0
 },
 "book:measure:D322": {
@@ -8395,8 +8410,8 @@
 "numbers": 0
 },
 "book:measure:D339": {
-"sha": "0a7ba119fb7f5e375f411f28a5b672091224852a0c6f3dafa7c00a51fa532946",
-"bytes": 505,
+"sha": "76cbaf5c161e88388e51b8289f7ba47d0c5dcc39e1f684001c43e05653aa9681",
+"bytes": 690,
 "numbers": 0
 },
 "book:measure:D34": {
@@ -8450,8 +8465,8 @@
 "numbers": 0
 },
 "book:measure:D349": {
-"sha": "a14307e2d4882b0cc53654c1ff4d490a61f75d42e8f00c4fe3996ab9ef0142a2",
-"bytes": 481,
+"sha": "45d9b6ebbb0fd96b71fc5a2b77ff3b6846ff8d7754555618275ef65766db25db",
+"bytes": 849,
 "numbers": 0
 },
 "book:measure:D35": {
@@ -8590,8 +8605,8 @@
 "numbers": 0
 },
 "book:measure:D375": {
-"sha": "666d0c7ebca89c1ffa72db1cdd33dd08ad79040826cd83d30401167ed84cc259",
-"bytes": 1140,
+"sha": "17fc09b4be3e7e1be889c58a79e67bf51eef433cb10d0f51747974a026c61cd6",
+"bytes": 1578,
 "numbers": 0
 },
 "book:measure:D38": {
@@ -9352,6 +9367,11 @@
 "book:rules:X95": {
 "sha": "ef4c1df448ada0f8ad28a1d00acd670defc8b4a8ff663b2eeaede56ace707b4e",
 "bytes": 622,
+"numbers": 0
+},
+"book:rules:X96": {
+"sha": "0e6610956dc4e0c6debf85afa10e41748fc61a660a8e345781961bc72777aee7",
+"bytes": 505,
 "numbers": 0
 },
 "book:screen:SN1": {
@@ -12015,8 +12035,8 @@
 "numbers": 0
 },
 "book:words:J13": {
-"sha": "03c6f180dfd54cae4ac1c7c498b089599adfab2faaf4110f72ec11a71b5b04a6",
-"bytes": 947,
+"sha": "5a17ded70825d6fc8fb8c69f7c55e6f72dc16359e29da9c01a2c522de0459dc4",
+"bytes": 1176,
 "numbers": 0
 },
 "book:words:J14": {
@@ -12229,6 +12249,11 @@
 "bytes": 295,
 "numbers": 0
 },
+"book:words:J53": {
+"sha": "21ded03b3af779ebc051bf4b73f88474434207bddde946cf9a80f567e4d4f0be",
+"bytes": 211,
+"numbers": 0
+},
 "book:words:J6": {
 "sha": "5d3c373090eb4cb48194efd0b656d05de5735319f2dffeaad8784e2466fdf29d",
 "bytes": 187,
@@ -12255,13 +12280,13 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "6235ed2944ef98e0d8daec9c4e6c62657ea51f327d2d0c69a3c5a20348e09249",
-"bytes": 64043,
+"sha": "33b69fb214dcb19519276f681898d5f596df7ea21418ea2ff9709a989f24043a",
+"bytes": 64286,
 "numbers": 83
 },
 "code:econ.js": {
-"sha": "a87f347b6ee8384954972a9ae86a537b15d0c05e18b04d3dd4ddd695f78cafa6",
-"bytes": 115317,
+"sha": "f4285fb6623252be3855012469ed52411458f529e0e21b019ec321852fa962bc",
+"bytes": 115410,
 "numbers": 70
 },
 "code:index.html#b-the-buildings": {
@@ -12335,8 +12360,8 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "4a6f59b72c84722e05f72ac0e985b9acef400041db0b8dc0d10fdf09c0a7aa8e",
-"bytes": 18802,
+"sha": "15a02b6feecac4f0f3cf790ca8bd38a9e618113f88a853d06c7b451d914557f9",
+"bytes": 18981,
 "numbers": 63
 },
 "code:index.html#the-figures": {
@@ -12380,13 +12405,13 @@
 "numbers": 13
 },
 "code:index.html#the-view-s-eyes-lights-and-stage": {
-"sha": "a3eb1e999d4279d62c95ae24ee6e100da4925c2538228a2703d6128b38c1ef4a",
-"bytes": 28789,
+"sha": "304ebc4efea8100c0a7273db01b22ea0b4dfb62e1ad460c02acb1cc2ea3810fd",
+"bytes": 29221,
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
-"sha": "0194419dc44d9d216dfc533ef9d3fd7d73064ce3abbb414b0e644d6e3437b604",
-"bytes": 5934,
+"sha": "42b32ae18c44039e1e7172b0514aefe0410a5fd20618a6f45d09da933c2aa395",
+"bytes": 5914,
 "numbers": 24
 },
 "code:index.html#touch": {
@@ -12395,8 +12420,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "22031405ed74bc423494e33c0ebbcad1b1c224e5a5fa585c46ba294c80beba2e",
-"bytes": 123256,
+"sha": "cbba93725584394c1c6c32f7f5d44f802d148e497ebfb3ba0d7c76021485f2b4",
+"bytes": 123280,
 "numbers": 514
 },
 "code:sound.js": {
@@ -12875,8 +12900,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "b58f2e98f56990902eb701656db4d7736716316cd9075faf75f0b942775516c1",
-"bytes": 28963,
+"sha": "54c6c4527759c211240eb209ec0358c748d77dd0ed9cb35b1a115f7c52f6e9d4",
+"bytes": 28996,
 "numbers": 0
 },
 "tool:pages.yml": {
@@ -12895,8 +12920,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "cb4ad3fb0ee36d7e1439a9d7359e59036f0d5071b17fd5c5294eef26b722da7e",
-"bytes": 298540,
+"sha": "00843bedb1a249b75f10adf104f3bf16e3e35ab8ed41e57422d5a91a2c88e7a7",
+"bytes": 301747,
 "numbers": 0
 }
 }
