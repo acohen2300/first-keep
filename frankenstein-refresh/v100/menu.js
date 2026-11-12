@@ -351,7 +351,7 @@ const hang = (el, v) => { const b = topEl.querySelector(`[data-v^="${v}|"]`); if
 const w2 = () => { const n = SCR.mold.slots, k = SCR.wide.slots, g = SCR.mold.gap; document.documentElement.style.setProperty('--w2', `${(ui.clientWidth - (n - ONE) * g) / n * k + (k - ONE) * g}px`); }; // E841
 let acc = 0;
 function render(force) { if (!force && S.down) return; for (const k in ARGS) delete ARGS[k]; QB.length = ZERO; const r = read(); // E693
-  const tb = topbar(r); if (tb !== S.lastTop) { topEl.innerHTML = tb; S.lastTop = tb; } ringMount(topEl);
+  const tb = topbar(r), tbNew = tb !== S.lastTop; if (tbNew) { topEl.innerHTML = tb; S.lastTop = tb; } if (tbNew || force) ringMount(topEl);
   if (r.result) { S.tab = null; S.ghost = null; const you = r.result.winner === 0; $('card').className = 'on'; ui.classList.add('sheet'); $('card').innerHTML = `<h2>${EW.head[+!you]}</h2><p>${r.result.text}</p><div class="row">${vcell('new')}${vcell('copylog')}</div>`; $('panel').className = ''; return; }
   if (S.subject && (S.subject.kind === 'unit' ? units().indexOf(S.subject) < 0 : things().indexOf(S.subject) < 0)) S.subject = null;
   const html = page(r) + (S.tab ? `<button class="ihr ${S.helpOpen ? 'open' : ''}" data-v="${S.toastAt && S.tab !== 'Start' && S.tab !== 'Back' ? 'goAt' : 'tab|Help'}"><i class="chev" data-v="chev"></i>${S.toastAt && S.tab !== 'Start' && S.tab !== 'Back' ? `<b class="go">${WD.help.go}</b>` : ''}${rk(RS.verbs.help, 'lit')}${(S.tab === 'Start' ? civLine(civOf(S.opt.civ)) : S.tab === 'Back' ? WD.card.welcome : toastEl.textContent).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</button>` : ''), card = cardText(r), // E825

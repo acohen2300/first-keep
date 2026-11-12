@@ -218,7 +218,7 @@ for f, lines in PAGES.items():
     if CI: rule('pages', text(f) == t, f'{f} is not what the books say: written by hand, or not rebuilt')
     else: open(f, 'w').write(t)
 ran.add('pages')
-UNITS = {'tiles', 'seconds', 'ms', 'share', 'count', 'unset', 'none'}; unset = 0   # N27 (#2): every measured number carries its unit and its subject as book fields; a unit is set only where the code or the entry itself proves it, and the count still unset may only fall (X94)
+UNITS = {'tiles', 'seconds', 'ms', 'share', 'count', 'unset', 'none', 'pixels', 'per second', 'times'}; unset = 0   # N27 (#2): every measured number carries its unit and its subject as book fields; a unit is set only where the code or the entry itself proves it, and the count still unset may only fall (X94)
 def _num(v): return (not isinstance(v, bool)) and (isinstance(v, (int, float)) or (isinstance(v, list) and any(_num(x) for x in v)) or (isinstance(v, dict) and any(_num(x) for x in v.values())))
 for c, e in BOOKS['measure'].items():
     rule('units', 'unit' in e and bool(e.get('subject')), f'{c} has no unit or no subject field'); u, v = e.get('unit'), e['value']

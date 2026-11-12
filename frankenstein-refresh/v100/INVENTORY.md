@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,570 | 625,902 | 626,051 (+61) |
-| Books | 2450 | 0 | 758,948 | 759,872 (+255) |
+| Game code | 31 | 3,571 | 626,770 | 626,920 (+869) |
+| Books | 2453 | 0 | 761,095 | 762,019 (+1,181) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,056 | 333,530 | 333,775 |
+| Tools | 5 | 2,056 | 333,563 | 333,808 (+33) |
 
 ## The trades (code)
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 68 | 10,121 | 10,125 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 105 | 18,797 | 18,802 | 63 |
+| index.html#the-door | 105 | 18,976 | 18,981 (+179) | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -35,13 +35,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 168 | 30,102 | 30,114 | 113 |
 | index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 138 | 28,785 | 28,789 | 0 |
+| index.html#the-view-s-eyes-lights-and-stage | 139 | 29,216 | 29,221 (+432) | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 5,930 | 5,934 | 24 |
+| index.html#the-woods-cache | 41 | 5,910 | 5,914 (-20) | 24 |
 | index.html#touch | 53 | 9,672 | 9,676 | 54 |
-| menu.js | 569 | 123,212 | 123,256 (+61) | 514 |
+| menu.js | 569 | 123,247 | 123,291 (+35) | 514 |
 | econ.js | 615 | 115,317 | 115,317 | 70 |
-| combat.js | 374 | 64,043 | 64,043 | 83 |
+| combat.js | 374 | 64,286 | 64,286 (+243) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,10 +53,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 985 | 184,188 |
+| comments | 987 | 184,967 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 184,619 |
+| measure | 341 | 185,800 |
 | rules | 93 | 37,196 |
 | screen | 27 | 15,167 |
 | shells | 110 | 23,521 |
@@ -64,7 +64,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 51 | 100,196 |
+| words | 52 | 100,417 |
 
 ## The shells
 
@@ -172,4 +172,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X94 | units | gate | every measured number carries its unit and its subject as fields of its own entry, never as a comment in code (Decisions Nov 11, #2; Albert: "yes to a unit field on every number enforced by the gate"). subject is where the game reads it (world, economy, war, computers, screen, sound, shells), found by the gate's own reading of the code. A unit is set only where the code proves it (a number multiplied by the tile is in tiles; a number handed to every() is a beat in seconds) or the entry states it; nothing is guessed. N27 set 98 (proved from the code, stated in the entry, or Claude's own new numbers); unset counts the rest and may only fall |
 | X95 | t-n27 | page | N27: a tower shoots a foe beside it; a Mill and a Lumber camp offer their plot; two techs tapped are one green and one blue with their times and no queue row, and a tap on each cancels and pays back; a villager tapped onto a bush is focused on it; the Protect page holds Split, Lure, Seek and Prep; Prep boards the buildings, raises their health and shelters the villagers, the cell turns to Work, and Work takes the boards off and leaves them short; soldiers on a march eat more than standing; every measure carries a unit and a subject |
 
-2580 items sealed · 2450 book entries · 94 laws · 326 citations, 34 still to open · 0 known
+2583 items sealed · 2453 book entries · 94 laws · 326 citations, 34 still to open · 0 known

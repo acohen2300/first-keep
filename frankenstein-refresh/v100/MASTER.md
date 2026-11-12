@@ -463,6 +463,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E604** the player's Reduce motion, read from the phone; the draw budget's level; still: is motion
 - **E822** the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rat
 - **E770** the pace meter: frames a second and the ms a frame spends on logic and on drawing, average
+- **E1035** the pace meter's laps: with ?fps on, the time between one drawing layer's end and the next
 - **E605** a phone that falls behind sheds a level of drawing (tree shadows, then the moving extras,  · N23
 - **E986** the picture's resolution steps down with the draw level, three quarters then half, and bac
 - **E606** a cache held to a budget of pixels, its size kept as a running total: the least lately use · N23
@@ -963,6 +964,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
 - **E936** your soldiers leave a wild animal alone unless it is after one of yours or you sent them a
 - **E1020** my soldier left idle far from his post (past the yard, D-yard) holds where he stands and d
+- **E1036** an idle soldier walks home once: if his home spot cannot be stood on (built over, a tree, 
 - **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40)
 - **E983** a bow's reach from a height: the arrow's flight (its drag and gravity, QAJ) at the speed t · QAJ (N39, N40)
 - **E409** the orders' shared measures: a point of a tile, the tile of a point, the length between, a

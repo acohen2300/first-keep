@@ -1,5 +1,34 @@
 {
- "build": "",
- "agreed": "",
- "opens": []
+ "build": "N29: the list",
+ "agreed": "Albert, Nov 12 07:02-07:12: \"I really just want my list done.\" \"Do as much as you can without me. Please don't stop. Don't use helpers.\" The list: docs/4 Now/The List.md.",
+ "opens": [
+  "code:index.html",
+  "code:menu.js",
+  "code:econ.js",
+  "code:combat.js",
+  "code:ai.js",
+  "book:measure",
+  "book:comments",
+  "book:rules",
+  "book:words",
+  "book:screen",
+  "book:colours",
+  "book:tech",
+  "book:citations",
+  "tool:test.py",
+  "tool:index.py"
+ ],
+ "grow": {
+  "code:index.html#frames": 4000,
+  "code:index.html#the-door": 6000,
+  "code:index.html#the-view-s-eyes-lights-and-stage": 6000,
+  "code:index.html#the-things-drawn-each-frame-back-to-fro": 4000,
+  "code:index.html#floor-6-climate": 6000,
+  "code:index.html#floor-5-movables": 6000,
+  "code:index.html#floor-7-display": 4000,
+  "code:menu.js": 12000,
+  "code:econ.js": 12000,
+  "code:combat.js": 8000,
+  "code:ai.js": 4000
+ }
 }
