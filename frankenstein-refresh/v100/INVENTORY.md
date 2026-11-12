@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,585 | 630,481 | 630,631 (+3,629) |
-| Books | 2466 | 0 | 778,402 | 779,327 (+9,617) |
+| Game code | 31 | 3,586 | 630,609 | 630,759 |
+| Books | 2469 | 0 | 779,993 | 780,918 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,070 | 336,770 | 337,015 |
+| Tools | 5 | 2,096 | 343,269 | 343,514 |
 
 ## The trades (code)
 
@@ -23,25 +23,25 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 68 | 10,121 | 10,125 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 105 | 19,000 | 19,005 (+24) | 63 |
+| index.html#the-door | 105 | 19,000 | 19,005 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 155 | 21,431 | 21,435 (+560) | 78 |
+| index.html#floor-5-movables | 155 | 21,431 | 21,435 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
-| index.html#floor-6-climate | 169 | 30,459 | 30,471 (+357) | 113 |
+| index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
 | index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 139 | 29,216 | 29,221 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
-| index.html#touch | 54 | 10,120 | 10,124 (+448) | 54 |
-| menu.js | 574 | 124,781 | 124,825 (+1,545) | 514 |
-| econ.js | 616 | 115,819 | 115,819 (+409) | 70 |
-| combat.js | 376 | 64,572 | 64,572 (+286) | 83 |
+| index.html#touch | 54 | 10,120 | 10,124 | 54 |
+| menu.js | 575 | 124,909 | 124,953 | 514 |
+| econ.js | 616 | 115,819 | 115,819 | 70 |
+| combat.js | 376 | 64,572 | 64,572 | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,11 +53,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 327 | 80,537 |
 | colours | 33 | 9,517 |
-| comments | 996 | 188,384 |
+| comments | 998 | 188,969 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 342 | 196,616 |
-| rules | 94 | 37,711 |
+| rules | 95 | 38,751 |
 | screen | 28 | 16,615 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -165,12 +165,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
 | X88 | t-n22 | page | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless |
 | X91 | t-n24b | page | N24 build 2: a figure is no sharper past 2x zoom; the save is one slot in IndexedDB and nothing of First Keep is left in localStorage; a tab told another has opened pauses and stops saving; a farm makes D136 (0.5 a second); home gold has six piles, four to a vein; a price shows in full, each store its own colour; the Stores and Score cards open from the top bar; a building with research you can start shows the book; the Build menu shows only your age's buildings, no Show all |
-| X90 | t-n24 | page | N24 build 1: soldiers ordered at a far town find the whole way and go; the picked stay picked after an order; the picked bar's Recall sends only the picked, and says so; All hands runs; the clock reads 12:00 at the sun's noon; the light has no corner (flat ends, smooth knots, never falling as the sun rises); the meter is drawn only with a frame; a computer sees in a circle; an order costs no food |
-| X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
-| X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
+| X90 | t-n24 | page | N24 build 1: soldiers ordered at a far town find the whole way and go; the picked are let go after an order (Albert Nov 12 08:12: tap 2 makes tap 1 act, then deselects); the picked bar's Recall sends only the picked, and says so; All hands runs; the clock reads 12:00 at the sun's noon; the light has no corner (flat ends, smooth knots, never falling as the sun rises); the meter is drawn only with a frame; a computer sees in a circle; an order costs no food |
+| X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding unless a frame runs more than D321 lag times late (N29) (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
+| X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there (a foe that routs and is taken prisoner by them counts, and an archer is close within its own range: both are the rules, Nov 12) |
 | X93 | t-n26 | page | N26: the rules ask a list without the trees, and a step with thirty soldiers on the board costs at most half the frame's budget (D343); no wildfire in the game; the night hides at most two stops (D292); every lake has a walkable ford (D374); a tap on the ground moves the picked army at once, with Attack lit it only aims; a side whose ice cracks is ice-shy; a square past Z has a name; no side "has fallen"; the Market sells; a caravan takes a route; the stances are wired; People is red with no food; a hall falling does not throw |
 | X94 | units | gate | every measured number carries its unit and its subject as fields of its own entry, never as a comment in code (Decisions Nov 11, #2; Albert: "yes to a unit field on every number enforced by the gate"). subject is where the game reads it (world, economy, war, computers, screen, sound, shells), found by the gate's own reading of the code. A unit is set only where the code proves it (a number multiplied by the tile is in tiles; a number handed to every() is a beat in seconds) or the entry states it; nothing is guessed. N27 set 98 (proved from the code, stated in the entry, or Claude's own new numbers); unset counts the rest and may only fall |
 | X95 | t-n27 | page | N27: a tower shoots a foe beside it; a Mill and a Lumber camp offer their plot; two techs tapped are one green and one blue with their times and no queue row, and a tap on each cancels and pays back; a villager tapped onto a bush is focused on it; the Protect page holds Split, Lure, Seek and Prep; Prep boards the buildings, raises their health and shelters the villagers, the cell turns to Work, and Work takes the boards off and leaves them short; soldiers on a march eat more than standing; every measure carries a unit and a subject |
 | X96 | t-n29 | page | N29: an idle soldier whose home spot cannot be stood on searches for it once, not every second; a villager sent to a tree is no longer picked and wears no green ring; the pace meter times its seven drawing layers; an idle menu beat reads no layout in the top bar; the crosshair is not drawn until a spot is tapped; a rival's fall reads "The Raiders have fallen."; the slower beats and the marching day are in the books |
+| X97 | t-n30 | page | N30: with something picked the next tap is its order by the tap table (a villager onto a tree gathers, a soldier onto a foe attacks, a villager onto a foe fights, a soldier onto your tower garrisons, a tap on another of your units only lets go) and the pick lets go after; a find under the finger beats your own villagers standing on it; every job passes the job door and none is odd; a blow passes the health door with who struck; both ledger word sets are read; a world event's walkers go in legs; four escorts keep up with their caravan; Prep's techs cheapen it; played: Prep boards against a raid, a tower hurts a raider, Split, Lure and Seek move the villagers, a tech tapped at a Mill is learnt |
 
-2596 items sealed · 2466 book entries · 94 laws · 327 citations, 34 still to open · 0 known
+2599 items sealed · 2469 book entries · 94 laws · 327 citations, 34 still to open · 0 known

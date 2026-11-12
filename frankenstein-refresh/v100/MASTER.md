@@ -606,6 +606,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E403** the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up op
 - **E1004** who goes: All, Idle, a Class (Foot, Archers, Cavalry, Siege) or a Squad; choosing one pick
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
+- **E1048** the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a sq · N25
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
 - **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195) · D271 (N34, N195)
 - **E1045** a caravan's escort (Albert, Oct 27): its card has Escort +4 (the nearest idle soldiers of 
@@ -706,6 +707,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
 - **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
+- **E1047** one tap rule on the war page too: a tap on a villager (or any of yours that is not a soldi · N30
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 

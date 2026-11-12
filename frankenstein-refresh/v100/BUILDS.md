@@ -4990,3 +4990,138 @@ MODIFIED (23):
 LOCKED (2562 of 2585): byte for byte as sealed, 1,049,167 bytes
 Tests: t-n29 passes and fails on each of four planted bugs (the home search, the green ring, the top bar's reads, the crosshair); t-n24 to t-n27 pass; smoke 6/6. The full run was not made.
 Inventory: 2585 items sealed · 2455 book entries · 94 laws · 327 citations, 34 still to open · 0 known
+
+
+## N30: the tap table, one door for jobs and health, the caravan escort, units, played tests · 2026-11-12 10:58
+Albert, Nov 12 09:44-09:46: "Do as much as you can. Let's talk after. Don't stop and go to 14. Don't stop. Do 1-14". His tap rule, 08:12: "Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected." Built by Claude alone, no helpers.
+- **The tap table (SN43 tap, E1038).** One table of rows [who, what, action]: villager + find = gather, + prey = hunt, + site = build, + hurt = repair; soldier + foe = attack; any + ground = go; caravan + stop = route; and the others ruled. After the row acts, the pick is let go. Every order path (a tap, the war page's hand order) goes through it.
+- **The Controller keeps its group after Execute (E1048).** Its pads (All, a class, a squad) are the pick, not a tap, so Retreat and Defend still have soldiers. Found by t-n25.
+- **The villager's tap, both causes (E1040, D246).** While something is picked, another of your units takes the tap only within 12 px, and a nearer find wins; a finger may slip 10 px (was 6) and still be a tap. The war page no longer swallows a villager's tap (E1047).
+- **One door for jobs (E1041) and one for health (E1042).** A job is set only through its door and only to a job in D376's list; every strike goes through FK.harm, which notes who struck and when.
+- **Garrison through econ (E1039); cleanups (E1043):** combat's bar and menu's knows use the one home; the stores card reads J49 stores.
+- **Units:** about 463 measures now carry their unit from their own words; unset falls to 1,043.
+- **The world-event walker searches in legs (E1044, D308 leg):** its biggest search 105 ms to about 12.
+- **The caravan escort (E1045, E1046, D278).** The caravan card has Escort +4 and Release. Escorts keep up, and the caravan waits when one falls behind. Measured: 2 of 3 caravans alive and 6,420 gold in 12 minutes, against 0 of 3 and 0 without.
+MODIFIED (120):
+- book:comments:E1038 · added
+- book:comments:E1039 · added
+- book:comments:E1040 · added
+- book:comments:E1041 · added
+- book:comments:E1042 · added
+- book:comments:E1043 · added
+- book:comments:E1044 · added
+- book:comments:E1045 · added
+- book:comments:E1046 · added
+- book:comments:E1047 · added
+- book:comments:E1048 · added
+- book:comments:E856
+- book:measure:D113
+- book:measure:D117
+- book:measure:D123
+- book:measure:D124
+- book:measure:D125
+- book:measure:D139
+- book:measure:D165
+- book:measure:D197
+- book:measure:D199
+- book:measure:D200
+- book:measure:D203
+- book:measure:D205
+- book:measure:D206
+- book:measure:D207
+- book:measure:D208
+- book:measure:D209
+- book:measure:D214
+- book:measure:D221
+- book:measure:D222
+- book:measure:D224
+- book:measure:D229
+- book:measure:D231
+- book:measure:D232
+- book:measure:D236
+- book:measure:D238
+- book:measure:D241
+- book:measure:D244
+- book:measure:D245
+- book:measure:D246
+- book:measure:D247
+- book:measure:D248
+- book:measure:D249
+- book:measure:D250
+- book:measure:D251
+- book:measure:D252
+- book:measure:D253
+- book:measure:D254
+- book:measure:D255
+- book:measure:D258
+- book:measure:D259
+- book:measure:D261
+- book:measure:D262
+- book:measure:D264
+- book:measure:D265
+- book:measure:D266
+- book:measure:D267
+- book:measure:D271
+- book:measure:D278
+- book:measure:D279
+- book:measure:D280
+- book:measure:D281
+- book:measure:D282
+- book:measure:D283
+- book:measure:D289
+- book:measure:D290
+- book:measure:D291
+- book:measure:D293
+- book:measure:D294
+- book:measure:D295
+- book:measure:D296
+- book:measure:D297
+- book:measure:D298
+- book:measure:D305
+- book:measure:D306
+- book:measure:D307
+- book:measure:D308
+- book:measure:D310
+- book:measure:D311
+- book:measure:D314
+- book:measure:D315
+- book:measure:D317
+- book:measure:D319
+- book:measure:D320
+- book:measure:D321
+- book:measure:D322
+- book:measure:D323
+- book:measure:D324
+- book:measure:D325
+- book:measure:D331
+- book:measure:D348
+- book:measure:D350
+- book:measure:D351
+- book:measure:D355
+- book:measure:D356
+- book:measure:D360
+- book:measure:D361
+- book:measure:D363
+- book:measure:D366
+- book:measure:D371
+- book:measure:D372
+- book:measure:D376 · added
+- book:rules:X89
+- book:rules:X90
+- book:rules:X92
+- book:rules:X94
+- book:rules:X97 · added
+- book:screen:SN43 · added
+- book:words:J12
+- book:words:J49
+- book:words:J51
+- code:combat.js
+- code:econ.js
+- code:index.html#floor-5-movables
+- code:index.html#floor-6-climate
+- code:index.html#the-door
+- code:index.html#touch
+- code:menu.js
+- tool:test.py
+Tests: t-n30 passes and fails on each of three planted bugs (the deselect, the finger, the convoy); t-n23, t-n24, t-n25 brought to the rules (Failing tests - Nov 12.md); the full run: 22 fail against N29's 25, none new (t-ledger, t-n23, t-n25 now pass).
+Inventory: 2599 items sealed · 2469 book entries · 94 laws · 327 citations
