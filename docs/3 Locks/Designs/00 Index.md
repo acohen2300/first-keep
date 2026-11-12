@@ -8,3 +8,4 @@ One file per locked screen or card, each linking its pictures (`mockups/`) and i
 4. `04 Market.md` [2026-11-01 07:45]
 5. `05 Type rules.md` [2026-11-01 07:45]
 6. `06 Mail.md` [2026-11-01 07:45]
+7. `07 Controller.md` [2026-11-11 20:45]

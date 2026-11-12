@@ -1593,6 +1593,37 @@ N24BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, m
 async def n24b(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N24BJS); await pg.close()
     ok('t-n24b', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
+N25JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => [...document.querySelectorAll(s)];
+ MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, S = MENU.S, mine = () => FK.units().filter((u) => u.side === 0 && WAR.armyOf(0).includes(u));
+ o.peace = document.getElementById('base').className === 'jobs' && q('.ctop .dot').length === 2 && !q('.pad').length;
+ let n = 0; $ring(h, 4, 14, (i, j) => { const k = j * N + i; if (FK.walkable(k) && n < 12) { FK.spawn(['UM1', 'UM6', 'UM2'][n % 3], 0, k, Math.random); n++; } return n >= 12; });
+ const A = WAR.armyOf(0); o.spawned = A.length === 12;
+ MENU.act('war'); o.open = S.war && q('.pad').length === 3 && FK.picked().length === 12 && !q('.exec.go').length && document.getElementById('base').className === 'ctlw';
+ const cls = FK.SH[A[1].code].class; MENU.act('cwho', 'class', cls); o.cls = FK.picked().length > 0 && FK.picked().length < 12 && FK.picked().every((u) => FK.SH[u.code].class === cls);
+ MENU.act('cwho', 'all'); o.all = FK.picked().length === 12; MENU.act('cpage', 'squad'); o.squadDim = !!q('.pad [data-v^="cpage|squad"].dim').length || !!q('.pad .dim[data-v^="cpage|squad"]').length;
+ const R = FK.reach(0), LAND = [...Array(N * N).keys()].filter((k) => R.has(k)), far = LAND.filter((k) => { const d = Math.hypot(k % N - h.i, Math.floor(k / N) - h.j); return d > 22 && d < 30; })[0];
+ MENU.act('cact', 'attack'); o.lit = S.ctl.act === 'attack' && !q('.exec.go').length; const p0 = A.map((u) => u.k).join();
+ FK.fire('tap', far, null, 0, 0); o.aimed = S.ctl.spot === true && q('.exec.go').length === 1 && A.every((u) => u.job !== 'march');
+ let full = 0, walks = 0; const fp = FK.findPath, wt = FK.walkTo, CY = FK.D.convoy; FK.findPath = (a, b, c, most, w) => { if (most == null || most > CY.tries) full++; return fp(a, b, c, most, w); }; FK.walkTo = (...a) => { walks++; return wt(...a); };
+ const t0 = performance.now(); MENU.act('cexec'); const ms = performance.now() - t0; FK.findPath = fp; FK.walkTo = wt;
+ o.oneRoute = full === 1 && walks === 0; o.sent = A.every((u) => u.job === 'march') && S.ctl.act === null; Object.assign(info, { full, walks, ms: Math.round(ms) });
+ $run(40); const near = A.filter((u) => Math.hypot(u.k % N - far % N, Math.floor(u.k / N) - Math.floor(far / N)) <= 8).length; o.arrive = near === 12; info.near = near;
+ let wet = -1; for (let k = 0; k < N * N && wet < 0; k++) if (!FK.walkable(k) && !R.has(k) && WAR.landK(k) !== k) wet = k; const t1 = performance.now(); MENU.act('cact', 'attack'); FK.fire('tap', wet, null, 0, 0); MENU.act('cexec'); o.wet = performance.now() - t1 < 80;
+ MENU.act('cact', 'defend'); o.noAttack = true;
+ MENU.act('cact', 'retreat'); o.retreat = A.every((u) => u.job === 'rout' || u.job === 'idle');
+ MENU.act('cnav', 'hide'); o.hide = !q('.pad').length; MENU.act('cnav', 'hide'); o.show = q('.pad').length === 3;
+ MENU.act('cpage', 'orders'); o.orders = q('.pad [data-v^="dial|"]').length >= 3 || q('.pad').length === 3; MENU.act('cnav', 'back'); o.back = S.ctl.page === null;
+ MENU.act('war'); o.close = !S.war && !FK.picked().some((u) => A.includes(u)) && document.getElementById('base').className === 'jobs';
+ $run(30); const u = A[0]; FK.fire('tap', u.k, u, 0, 0); o.tapOne = S.war && S.ctl.who === 'picked' && FK.picked().length === 1 && FK.picked()[0] === u;
+ const k2 = LAND.filter((k) => { const d = Math.hypot(k % N - h.i, Math.floor(k / N) - h.j); return d > 10 && d < 14; })[0]; FK.fire('tap', k2, null, 0, 0); o.tapThere = u.job === 'march' && A.slice(1).every((v) => v.job !== 'march');
+ MENU.act('war'); MENU.act('war'); $run(20); const v = FK.units().find((x) => x.side === 0 && !A.includes(x)), e = FK.spawn('UM1', 1, $ring({ i: v.k % N, j: Math.floor(v.k / N) }, 2, 9, (i, j) => (FK.walkable(j * N + i) ? j * N + i : null)), Math.random); WAR.fight(e, v);
+ MENU.act('cwho', 'all'); const live = A.filter((x) => FK.units().includes(x)); MENU.act('cact', 'defend'); o.defend = live.length > 0 && live.every((x) => x.job === 'fight' && x.target === e); info.live = live.length;
+ MENU.act('cact', 'retreat'); MENU.act('cact', 'attack'); FK.fire('tap', e.k, e, 0, 0); o.aimFoe = S.aim.t === e && S.ctl.spot === true; MENU.act('cexec'); o.attackFoe = live.every((x) => x.job === 'fight' && x.target === e);
+ e.hp = e.hpMax = 5000; $run(25); const dd = live.map((x) => Math.hypot(x.k % N - e.k % N, Math.floor(x.k / N) - Math.floor(e.k / N))); info.close = dd.filter((d) => d <= 6).length; info.jobs = live.filter((x) => x.job === 'fight' && x.target === e).length; info.odd = live.map((x, n) => [n, x.job, x.target === e, Math.round(dd[n]), x.code, !!x.path, x.stance || '', x.temper || '']).filter((r) => r[1] !== 'fight' || r[3] > 6); o.fought = e.hp < 5000 && info.jobs === live.length && info.close === live.length; MENU.act('war');
+ return [o, info]; })()"""
+async def n25(b):
+    pg, errs = await fresh(b); v, info = await pg.evaluate(N25JS); await pg.close()
+    ok('t-n25', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
 GROUNDJS = r"""(() => { MENU.act('start'); FK.fog(false); return true; })()"""
 GROUNDJS2 = r"""(() => { const N = FK.N, H = FK.H, L = FK.D.land, c = FK.ctx, [cw, ch] = FK.size(), dpr = c.canvas.width / cw, out = { water: [0, 0], land: [0, 0] };
  for (let k = 0; k < N * N; k += 7) { const [bx, by] = FK.tileMid(k), [x, y] = FK.toScreen(...FK.toView(bx, by, Math.max(0, H[k]))); if (x < 20 || y < 120 || x > cw - 20 || y > ch - 240) continue;
@@ -1625,7 +1656,7 @@ async def n16(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N16JS); await pg.close()
     got = [v['block'][:3] == ['qstep', 'qbuild', 'qrally'], v['army'] == ['qsend', 'qsend', 'qsend', 'qstep'], v['groups'] == 6, v['go'], not errs]
     ok('t-n16', all(got), [got, v, errs[:2]])
-PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

@@ -2,6 +2,12 @@
 
 **A new chat starts here.** Read this file, then the top of `Next build list.md` ("OPEN: the one list"); everything below that heading in the list is the record. Albert's standing rules live in Claude's memory too. Then wait for his go.
 
+## Newest first: N25, the Controller (Nov 11, 20:55) [2026-11-11 20:55]
+- **Branch `n25-controller`** (from `n11` at N24 build 2), sealed, permit empty, gate passes. Preview: `frankenstein-refresh/preview-n25/` on `main`. `n11` itself is untouched; Albert has not played N25 yet, so it is not merged. [2026-11-11 20:55]
+- What it is: `frankenstein-refresh/v100/BUILDS.md`, N25. The design: `docs/3 Locks/Designs/07 Controller.md`. What it displaced and what was agreed but not built: `docs/4 Now/Parked.md`, "Parked in N25". [2026-11-11 20:55]
+- The agreed list still to build (23 items and the bug traces): `docs/4 Now/Decisions - Nov 11.md`. [2026-11-11 20:55]
+- `n24-build3` stays parked; Albert said no to two things in it (rain straight down, debasing at the Mint). [2026-11-11 20:55]
+
 ## Where it stands
 - **Preview:** https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n17/ (N11 to N17 and the N17 audit). Source: branch `n11`, sealed Nov 10 (BUILDS.md: every item locked, permit empty). Live v100 (`main`) untouched since N10b. [2026-11-10 14:20]
 - **Publishing a preview:** `publish.py` pushes to `main`, which is live; for a preview, seal on `n11` by hand (append BUILDS.md, `index.py --seal`, clear the permit) and copy the game files into `frankenstein-refresh/preview-nNN/` on `main`. Going live is Albert's call only. [2026-11-10 14:20]

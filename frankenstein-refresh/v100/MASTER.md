@@ -489,7 +489,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E619** a figure in motion: the woodcutter's lean into its tree (the view's own memory), the step'
 - **E929** a villager walking home with a load carries it on the back, a bundle in its store's colour
 - **E620** the small map: the ground, the fog, buildings you know (a seat is a star), units you see, 
-- **E731** the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map 
+- **E731** the Controller's parts (Albert Nov 11, N325): its words J50, its sizes SN41, its thin icon · N325 · J50 (N325) · SN41 (N325) · SN42 (N325) · C37 (N325) · N25
 - **E747** the mirage's dots on the small map, in the colour of what is coming
 
 ## index.html#the-ground-s-soil-and-paper
@@ -540,7 +540,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## menu.js
 
-- **E731** the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map 
+- **E731** the Controller's parts (Albert Nov 11, N325): its words J50, its sizes SN41, its thin icon · N325 · J50 (N325) · SN41 (N325) · SN42 (N325) · C37 (N325) · N25
 - **E168** First Keep v100 · menu.js (floor 8): everything on the glass. Lives alone; it reads the wo
 - **E169** Its shape lives in the Screen book (books/screen.js): the mold, the Build tabs, the card's
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
@@ -592,6 +592,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E184** read: the one window onto the world the glass draws from
 - **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
 - **E403** the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up op
+- **E1004** who goes: All, Idle, a Class (Foot, Archers, Cavalry, Siege) or a Squad; choosing one pick
+- **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
 - **E845** the book: Welcome back mid-match (Resume, New game), paused
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
@@ -643,10 +645,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
 - **E736** the Home button stands at the rank's left whenever the Town Center is off the screen, and 
-- **E733** the bars for what is picked, as Base's selection bar (the Nov 7 re-read, items 32 and 34):
 - **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
+- **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25
+- **E1003** picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller wi
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
@@ -684,6 +687,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
 - **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
+- **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
 - **E856** a picked unit takes the next tap as its one order (a thing: it does that; the ground: it g
@@ -917,6 +921,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E390** a soldier at home keeps to its yard: within D235 of its post or of its Town Center (Mid's  · D235 (N188)
 - **E236** a side's wave in the field: its soldiers at the start, so nerve can be read (QBQ) · QBQ (N76)
 - **E237** to a tile, or near one that cannot be stood on (a building's); no way there, it strikes a 
+- **E999** one route for a whole order (Albert Nov 11, N325: 'clean up how army is controlled wholly' · N325 · D372 (N325) · N25
+- **E1000** the route of an order: the soldier nearest the middle of the group finds the way once; eac · D372 (N325)
+- **E1001** a tap the army cannot reach (water, a cliff top, inside a wall) is moved to the nearest gr · D372 (N325) · J50 (N325)
 - **E391** a foe building in the way is struck (Mid's findBlocker)
 - **E493** guards (Mid's escortPick, guardsOf): soldiers told to escort a caravan or garrison a stop 
 - **E372** the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps t
@@ -941,6 +948,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E413** the obvious order for what is picked (Mid's order, Albert Nov 2): a foe is fought, a beast
 - **E946** an order you give marks each unit sent: its foot ring stays green from the order until its · N17
 - **E475** a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else 
+- **E1002** Defend (Albert Nov 11, N325: 'Defend goes right to the attack', no spot to pick): of the f · N325 · D373 (N325)
 - **E414** missions: a mission's soldiers, the hostile soldiers a group sees near it, and the chance  · QAF (N35)
 - **E415** each beat: every order's centre, count, fight and time left, arrived once all have stopped
 - **E416** Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshai

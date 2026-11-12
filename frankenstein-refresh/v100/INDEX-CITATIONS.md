@@ -424,6 +424,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N321** Albert, Nov 11, 2026, 05:50: the pace meter showed off screen on his phone: "Center it" → D349
 - **N320** Albert, Nov 11, 2026, 05:05 "Build n23 as we are planned": Gemini audit 2's fixes (the sprite cache kept by la → D332, X89
 - **N319** Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 "Go for them → X88
+- **N325** Albert, Nov 11, 2026, 16:15-20:02, in chat: the Controller (three pads of four, one box each with inset divide → C37, D372, D373, X92, SN41, SN42, J50
 
 ## Named exceptions
 

@@ -1539,6 +1539,11 @@
 "bytes": 372,
 "numbers": 0
 },
+"book:citations:N325": {
+"sha": "f8a8e5b48902aac3095bcb86cd58689feb81126441d121cc18009969c8b6b135",
+"bytes": 462,
+"numbers": 0
+},
 "book:citations:N33": {
 "sha": "59255a1d15f3c653886665b6080df153826058d047e9bc749d66f6d5df99f021",
 "bytes": 64,
@@ -2039,6 +2044,11 @@
 "bytes": 208,
 "numbers": 0
 },
+"book:colours:C37": {
+"sha": "7226807f8de9d546285aa7cd0d1a4a81626fddca542194fe4c1e72056c339c71",
+"bytes": 541,
+"numbers": 0
+},
 "book:colours:C4": {
 "sha": "38da16e1b5e937778820c4fa2bdf0cd6a8ef4796ea44fe4c673ee13ddfa1d320",
 "bytes": 82,
@@ -2077,6 +2087,41 @@
 "book:comments:E100": {
 "sha": "07c23a74b140057f5a101d387b53b6d63191bac1aed13606bd233e9116df4349",
 "bytes": 124,
+"numbers": 0
+},
+"book:comments:E1000": {
+"sha": "4f0a7382b8675d71bc98bc63610d3bf06ae7c9c6759db165bee55d9f418b4da0",
+"bytes": 318,
+"numbers": 0
+},
+"book:comments:E1001": {
+"sha": "dcf2f881506d5d491cf50bac10b27659e3ea57f3a9632f112d14f0fade97f22f",
+"bytes": 244,
+"numbers": 0
+},
+"book:comments:E1002": {
+"sha": "1ad4525316021811922a8262534c7aff0c663591372782203a146908de4b3972",
+"bytes": 449,
+"numbers": 0
+},
+"book:comments:E1003": {
+"sha": "665b5d28be69d9f4a24274d0457c424bcd6c90fd506d16756e7534667fe7ce97",
+"bytes": 233,
+"numbers": 0
+},
+"book:comments:E1004": {
+"sha": "0dd4dd2ea527cf3c380700399a482fec274c45b533442cfe567b4fb33c8d3f7f",
+"bytes": 298,
+"numbers": 0
+},
+"book:comments:E1005": {
+"sha": "e48b8ff73d82fdd63aa9f95e4829158c3eecb25ab2427cd1c386316abc523f3f",
+"bytes": 211,
+"numbers": 0
+},
+"book:comments:E1006": {
+"sha": "2e36c10a3f284356a2e9bbc8d1542813a937fbfaa1fe2603587398305f30ba16",
+"bytes": 335,
 "numbers": 0
 },
 "book:comments:E101": {
@@ -5485,8 +5530,8 @@
 "numbers": 0
 },
 "book:comments:E731": {
-"sha": "94a9dd768e1a67b66b821c5587dc4c94c8c26bdcd13d2ef123810340db588595",
-"bytes": 286,
+"sha": "a2c15e1f55f8aad2c2fadb4cb9189078fc5797007019d64b6a02ac434e1a4f91",
+"bytes": 358,
 "numbers": 0
 },
 "book:comments:E732": {
@@ -5495,8 +5540,8 @@
 "numbers": 0
 },
 "book:comments:E733": {
-"sha": "d0ee575369b02fe8df817017a2376aef02e6ffa30ea5c7783d48115bd5e674b8",
-"bytes": 239,
+"sha": "5ba4f59c92d9bf06186f49b74f2ee986edbb79337ad4578fc6758fea2cc7bd25",
+"bytes": 463,
 "numbers": 0
 },
 "book:comments:E734": {
@@ -6817,6 +6862,11 @@
 "book:comments:E998": {
 "sha": "7bb604cff57ed78c5dd6da444626372d0c3916ad1685ad02341a1c33b6b93ee4",
 "bytes": 271,
+"numbers": 0
+},
+"book:comments:E999": {
+"sha": "13be5d4d718b44397fb07d2ff01609810da57213eb7e2f902f0af46d97b1ed11",
+"bytes": 374,
 "numbers": 0
 },
 "book:ground:G10": {
@@ -8384,6 +8434,16 @@
 "bytes": 443,
 "numbers": 0
 },
+"book:measure:D372": {
+"sha": "e54fa585e7d5a82c5898f9e6d627bc3165b924356fe38d275f5a0d3265847b5f",
+"bytes": 699,
+"numbers": 0
+},
+"book:measure:D373": {
+"sha": "f0e7dca2bb37e85f18429d28fee2b0bc9c2c65b1ccc0bce33a8778593fc7f9a3",
+"bytes": 286,
+"numbers": 0
+},
 "book:measure:D38": {
 "sha": "07485010f84c359c9175c07223049031aa0e2d8edd4df47f99c0d28ef03b24dc",
 "bytes": 85,
@@ -9124,6 +9184,11 @@
 "bytes": 565,
 "numbers": 0
 },
+"book:rules:X92": {
+"sha": "fe28431b6f800f92d6269d49423f5eb19bb45892bb0ef8b7be349de8fb3541b2",
+"bytes": 882,
+"numbers": 0
+},
 "book:screen:SN1": {
 "sha": "186d3a5d2e8147201f56c24ac2ba525b66e6a3fff1d4f5a68cdc76cdd75ef277",
 "bytes": 561,
@@ -9237,6 +9302,16 @@
 "book:screen:SN40": {
 "sha": "93cf6b82ea613d4104260597ac14eebfc16379bfbbb535e6f03c2326ce42bd23",
 "bytes": 312,
+"numbers": 0
+},
+"book:screen:SN41": {
+"sha": "441f305ad6195fb74e8ceaeb1679a947330bc7323c53cd9e7434425c928fab17",
+"bytes": 808,
+"numbers": 0
+},
+"book:screen:SN42": {
+"sha": "7da3c8f7858d0a1e763bd3913e5874b366180c69148960332ed38b55f1828eb1",
+"bytes": 2782,
 "numbers": 0
 },
 "book:screen:SN5": {
@@ -11974,6 +12049,11 @@
 "bytes": 381,
 "numbers": 0
 },
+"book:words:J50": {
+"sha": "95e80db6384a2010f94257386532dff99fdc937506f5105f87c3552843f4c50c",
+"bytes": 1068,
+"numbers": 0
+},
 "book:words:J6": {
 "sha": "5d3c373090eb4cb48194efd0b656d05de5735319f2dffeaad8784e2466fdf29d",
 "bytes": 187,
@@ -12000,8 +12080,8 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "b2e08338be546b6a39791c5574cf73a8e11f6f828c52e6a21dbd2e5055069033",
-"bytes": 59192,
+"sha": "3597f360fbb0e51bfe873b470c29b4d0ba845104e89bdb4a625eb4346afac438",
+"bytes": 61896,
 "numbers": 83
 },
 "code:econ.js": {
@@ -12140,8 +12220,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "2f38e7bef59b4ed604d34d0bb1b3c5d02ccf964b243abead224ff9d63d7e9a34",
-"bytes": 111388,
+"sha": "7391d1d4b2770f1a0c97d44b9caf83a37c98f450ea1d50e8ae11032750138d6a",
+"bytes": 119198,
 "numbers": 523
 },
 "code:sound.js": {
@@ -12640,8 +12720,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "c9ab38722484aa7bb9fd95c6a87cab5d58ce699868823e44c82b4d7be837ba20",
-"bytes": 286722,
+"sha": "c34102a06e51753b2421b78d017a9bd0b191e96f3192a2817b6defaa9eb9e384",
+"bytes": 291820,
 "numbers": 0
 }
 }

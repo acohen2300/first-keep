@@ -397,6 +397,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N321 |  | Albert, Nov 11, 2026, 05:50: the pace meter showed off screen on his phone: \Center it\ | opened |
 | N320 |  | Albert, Nov 11, 2026, 05:05 \Build n23 as we are planned\: Gemini audit 2's fixes (the sprite cache kept by last use, sight from finished bu | opened |
 | N319 |  | Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 \Go for them all\ on Gemini's audit fixes  | opened |
+| N325 |  | Albert, Nov 11, 2026, 16:15-20:02, in chat: the Controller (three pads of four, one box each with inset dividers, small round buttons over t | opened |
 
 ## colours
 
@@ -434,6 +435,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C34 | the cost line on one ramp, as Base and Mid: short of it, red at nothing to white as you near it; enough, white the enough share of the way to green (Albert, Nov 10, N17 #13) | {enough: 0.55} | N308; N307 |
 | C35 | the three lines of a lightning bolt, glow, mid and core, and the glow at its foot (Base and Mid; Albert, Nov 10, N17 #15) | {lines: [170,200,255, 210,228,255, 255,255,255], foot: 220,235,255} | N145; N307 |
 | C36 | how much of a colour stays when it is dimmed or made faint, per cent of the mix (moved from the code in the N17 audit) | {dim: 80, faint: 35} | N306 |
+| C37 | the Controller's pads, each its zone's colour at four fifths so a little of the board shows and the colour stays true over any ground (town brown, command blue, war red); the round buttons' glass and edge; a pad's inset dividers; Execute once an order is ready; a pad's dark edge (Albert, Nov 11 19:46-19:56) | {brown: #33241acc, blue: #222e42cc, red: #a3262acc, glass: #ece5d329, edge: #ece5d36b, line: #ece5d34d, go: #2f7a4cd9, ink: #00000066} | N325 |
 
 ## comments
 
@@ -524,9 +526,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E736 |  | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |  |
 | E735 |  | the hammer carries the receding brown ring for every site going up (the mean of their progress; Albert, Nov 10, #21: the Build button is the |  |
 | E734 |  | a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job  |  |
-| E733 |  | the bars for what is picked, as Base's selection bar (the Nov 7 re-read, items 32 and 34): villagers get the yields, Build and Follow; soldi |  |
+| E733 |  | the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitting over the pads. Left: Home (back to the hall), B |  |
 | E732 |  | the Mail door on the top bar with its unread count opens the Mail card: the messages newest first, each with its group, a tap on one with a  |  |
-| E731 |  | the war station's middle is the small map, as Base's: tap to jump, drag to sweep; the map is drawn on the canvas inside the box the menu mea |  |
+| E731 |  | the Controller's parts (Albert Nov 11, N325): its words J50, its sizes SN41, its thin icons SN42, its tints C37; 'soldiers' are the picked t |  |
 | E730 |  | the Build card as Base's: opening it reads the middle of the view and opens the tab of what fits there, marked blue with Fits here; a second |  |
 | E729 |  | the sky's washes (the dusk glow, the night blue, fog, rime, the flash, the visibility veil) are composed into one colour and laid in one pas |  |
 | E728 |  | a close bolt startles as Mid's did: the picture whites to its flash (D113 flash), the ground shakes (the jolt, D113 shake), the thunder foll |  |
@@ -1390,6 +1392,14 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E988 |  | the trees standing in front of a person, a thing or a building this frame (lower on the screen, their pictures overlapping, looked for cover |  |
 | E951 |  | a lightning flash is three to five return strokes about 60 ms apart (CIGRÉ TB 549), each re-lighting the bolt and whiting the sky by its nea |  |
 | E952 |  | a lake keeps off the trade roads' stops, as it keeps off another lake: a stop is a place on dry land where caravans meet, so the water is la |  |
+| E999 |  | one route for a whole order (Albert Nov 11, N325: 'clean up how army is controlled wholly'): a soldier told to march is set on a path it is  |  |
+| E1000 |  | the route of an order: the soldier nearest the middle of the group finds the way once; each other soldier walks a short way onto that route  |  |
+| E1001 |  | a tap the army cannot reach (water, a cliff top, inside a wall) is moved to the nearest ground it can reach within D372 snap tiles, so the o |  |
+| E1002 |  | Defend (Albert Nov 11, N325: 'Defend goes right to the attack', no spot to pick): of the foes now striking what is mine, the one striking th |  |
+| E1003 |  | picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller with exactly those picked ('who' is 'picked'): Alber |  |
+| E1004 |  | who goes: All, Idle, a Class (Foot, Archers, Cavalry, Siege) or a Squad; choosing one picks those soldiers on the board, so the rings show w |  |
+| E1005 |  | what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends the picked home at once; Defend goes at once (E1002 |  |
+| E1006 |  | a tap on the board while the Controller is open: on my own soldier it picks or lets go; with soldiers picked by hand and no action lit, the  |  |
 
 ## ground
 
@@ -1777,6 +1787,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D370 | the zoom past which a figure is not drawn sharper, only bigger: zoomed in to 3x the sprite cache filled and redrew itself every frame (1,183 new canvases in 3 s, 3-12 fps on his phone); at 2x the same view ran 26-39 fps headless (Albert, Nov 11: try it, check after his test) | 2 | N322 |
 | D371 | the book over a building with research you can start now (Base's mark, Albert's screenshot Nov 11): looked for every second; a disc r px at zoom 1 lifted px over the health bar's place, a red ring px; the open book page × r wide, tall × r high each side of the spine, its spine dipped dip | {every: 1, r: 9, lift: 6, ring: 2, page: 0.5, tall: 0.4, dip: 0.25} | N322 |
 | D368 | the clock on the top ribbon: hours in a day and minutes in an hour (moved from the code in the N17 audit) | [24, 60] | N311 |
+| D372 | a group marches on one route (measured Nov 11: twenty picked soldiers each searched the whole way at every tap, a step stalled up to 104 ms, a tap on water 215 ms): the soldier nearest the group's middle finds the way once; another within near tiles of that way joins it by a search of at most tries tiles and leaves it for its own place the same way; one farther off searches for itself, stagger s after the one before it, most s at the latest; an order onto ground no one can walk to goes to the nearest tile they can, within snap tiles (design numbers, Claude's) | {near: 12, tries: 600, stagger: 0.05, most: 2, snap: 8} | N325 |
+| D373 | Defend answers the foe striking what is worth most: your hall, then your people, a building, a soldier (the order Claude proposed Nov 11 15:39; the numbers only rank them) | {seat: 4, folk: 3, bld: 2, soldier: 1} | N325 |
 
 ## rules
 
@@ -1871,6 +1883,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X91 | N24 build 2: a figure is no sharper past 2x zoom; the save is one slot in IndexedDB and nothing of First Keep is left in localStorage; a tab told another has opened pauses and stops saving; a farm makes D136 (0.5 a second); home gold has six piles, four to a vein; a price shows in full, each store its own colour; the Stores and Score cards open from the top bar; a building with research you can start shows the book; the Build menu shows only your age's buildings, no Show all | {stage: page} | N322 |
 | X90 | N24 build 1: soldiers ordered at a far town find the whole way and go; the picked stay picked after an order; the picked bar's Recall sends only the picked, and says so; All hands runs; the clock reads 12:00 at the sun's noon; the light has no corner (flat ends, smooth knots, never falling as the sun rises); the meter is drawn only with a frame; a computer sees in a circle; an order costs no food | {stage: page} | N322 |
 | X89 | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) | {stage: page} | N320 |
+| X92 | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there | {stage: page} | N325 |
 
 ## screen
 
@@ -1901,6 +1914,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN34 | made from a building's own card, not the Build menu: a Dwelling raised to an Apartment (a house adding a floor), a Tree farm planted from the Lumber camp (Albert, Nov 9 18:29) | {BR1: BR2, BI2: BCL2} | N287 |
 | SN35 | the menus' sizes in px, once (item 1, the stray sweep: every size typed in menu.js's style comes here): hair a 1 px line; edge a 2 px border; r a box's corner, rc a card's, rq the quick square's, rb a bar's; icon an icon's side; glyph the − / + signs; pad a small gap inside a box; side the inset of a bar and the card text; tpad a title's left inset; vpad and hpad a card's padding; bar a progress bar's height; strip a strip row's height; none the safe-area fallback; caps the title's letter spacing in em (the values as they were typed, now named) | {hair: 1, edge: 2, r: 6, rc: 9, rq: 8, rb: 2, icon: 18, glyph: 18, pad: 4, side: 12, tpad: 14, vpad: 8, hpad: 10, bar: 3, strip: 30, none: 0 | N283; N287 |
 | SN40 | the New Game sheet: each row's label span in slots, its choices taking the rest of the six (Daily first, Albert, Nov 10, N17 #2; moved from the code in the N17 audit) | {daily: 4, civ: 0, diff: 3, len: 2, scen: 2, tension: 4, fog: 4} | N307 |
+| SN41 | the Controller (replaces the 14-box sheet of Nov 9): three pads, each two slots of the mold wide and two high, one box with dividers inset as the villager's square; over them a row of round glass buttons dot px across, their icons glyph px, their touch reaching hit px past the edge, the glass blurred blur px; Execute a pill exec px wide; a pad's icons icon px in a line stroke wide; half and full are the shares a divider sits at and spans; a button that cannot act keeps dim of its ink; the icons' frames (box; War's own, warW as wide as high) | {dot: 28, glyph: 14, hit: -8, blur: 7, icon: 18, stroke: 1.5, half: 50, full: 100, dim: 0.45, exec: 80, box: 0 0 24 24, warBox: -1.8 1.8 27. | N325 |
+| SN42 | the Controller's icons: one thin line, one size, no picture used twice; War is Albert's shield over crossed straight swords (Nov 11 14:49-15:18: curved top, swords at 39 degrees), drawn solid | {home: <path d=\M4 11l8-7 8 7v9H4z\/><path d=\M10 20v-5h4v5\/>, people: <circle cx=\12\ cy=\8\ r=\3.5\/><path d=\M5 20a7 7 0 0 1 14 0\/>, bu | N325 |
 
 ## shells
 
@@ -2480,4 +2495,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J46 | the Start page's Fog of war row (Albert, Nov 9 item 6, 19:37: it should have been there) | {label: Fog of war, on: On, off: Off} | N287 |
 | J47 | the crossing card when the way runs through woods (Albert, Nov 9 19:59) | {title: Through the woods?, lead: The woods slow the march and break the line: arrows are lost in the trunks, and every man fights his own f | N287 |
 | J48 | the Daily challenge: its row's label, why the dangers can't be tapped while it is on (Albert, Nov 10, #14), and the ordinals for rank in the Top Info Ribbon (#20) | {label: Daily, set: Today's challenge sets this., ranks: [1st, 2nd, 3rd, 4th], idle: idle, army: army} | N306 |
+| J50 | the Controller's words: its twelve buttons, the pages behind Protect, Orders, Class and Squad, Execute, why a button cannot act, and what it says once it has (Albert, Nov 11) | {pads: {people: People, garrison: Garrison, build: Build, protect: Protect, defend: Defend, attack: Attack, orders: Orders, retreat: Retreat | N325 |
 

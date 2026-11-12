@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,499 | 601,294 | 601,442 |
-| Books | 2399 | 0 | 717,887 | 718,806 |
+| Game code | 31 | 3,525 | 611,808 | 611,956 |
+| Books | 2415 | 0 | 728,172 | 729,092 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 1,975 | 320,483 | 320,728 |
+| Tools | 5 | 2,006 | 325,581 | 325,826 |
 
 ## The trades (code)
 
@@ -39,9 +39,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,640 | 9,644 | 54 |
-| menu.js | 540 | 111,344 | 111,388 | 523 |
+| menu.js | 556 | 119,154 | 119,198 | 523 |
 | econ.js | 592 | 109,168 | 109,168 | 72 |
-| combat.js | 357 | 59,192 | 59,192 | 83 |
+| combat.js | 367 | 61,896 | 61,896 | 83 |
 | ai.js | 171 | 27,330 | 27,330 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 323 | 78,443 |
-| colours | 32 | 8,966 |
-| comments | 951 | 172,186 |
+| citations | 324 | 78,916 |
+| colours | 33 | 9,517 |
+| comments | 959 | 175,039 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 337 | 166,384 |
-| rules | 89 | 34,285 |
-| screen | 25 | 11,058 |
+| measure | 339 | 167,391 |
+| rules | 90 | 35,177 |
+| screen | 27 | 14,670 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 48 | 97,804 |
+| words | 49 | 98,885 |
 
 ## The shells
 
@@ -167,5 +167,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X91 | t-n24b | page | N24 build 2: a figure is no sharper past 2x zoom; the save is one slot in IndexedDB and nothing of First Keep is left in localStorage; a tab told another has opened pauses and stops saving; a farm makes D136 (0.5 a second); home gold has six piles, four to a vein; a price shows in full, each store its own colour; the Stores and Score cards open from the top bar; a building with research you can start shows the book; the Build menu shows only your age's buildings, no Show all |
 | X90 | t-n24 | page | N24 build 1: soldiers ordered at a far town find the whole way and go; the picked stay picked after an order; the picked bar's Recall sends only the picked, and says so; All hands runs; the clock reads 12:00 at the sun's noon; the light has no corner (flat ends, smooth knots, never falling as the sun rises); the meter is drawn only with a frame; a computer sees in a circle; an order costs no food |
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
+| X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
 
-2529 items sealed · 2399 book entries · 94 laws · 323 citations, 34 still to open · 0 known
+2545 items sealed · 2415 book entries · 94 laws · 324 citations, 34 still to open · 0 known

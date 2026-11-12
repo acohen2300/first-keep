@@ -719,3 +719,15 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - Known failures found in N23's run, there in N22 too, not fixed here: t-n15 (the torch check: one of six) and t-sight (two of five checks). [2026-11-11 05:45]
 
 - Cut in N24 (Albert, Nov 11 09:28): the per-order food cost (Mid's ORDER, D213 30 s of meals, orderCost, E350): about 450 food a tap at 120 soldiers, and real armies ate by the day, not by the order. Its successor waits for Albert's look at the numbers: marching eats more by effort (Pandolf's walk term over standing, 1 + ηV² ≈ 3.3× at 1.52 m/s), which would cost a 6-minute raid of 50 foot about 3,500 food. [2026-11-11 10:20]
+
+## Parked in N25, the Controller (Nov 11) [2026-11-11 20:45]
+- The war page's small map (tap to jump, drag to sweep): the three pads take its place; Albert, Nov 11: "No map is fine." The drawing code (drawMini) is still there and draws nothing without its box. [2026-11-11 20:45]
+- The quick-train row on the war page (one tile a soldier kind): no button now. Train from the building's card, as in peace. The verbs (mid, kind) are still in the code with no button. [2026-11-11 20:45]
+- The picked-soldiers bar (Charge, Fall back, Hold, Recall, Follow): picking soldiers now opens the Controller. Charge, Fall back and Hold are on the Orders page; Recall is Retreat. Follow-the-camera for soldiers has no button (it stays for a picked wild animal). [2026-11-11 20:45]
+- The Field page: Attack-all, Rally, Reinforce, All home. Attack and Retreat on the blue pad replace Attack-all and All home. Rally (meet here) and Reinforce have no button; their code (verbs rally, reinforce) is still there. [2026-11-11 20:45]
+- The Direct page's Ambush and the third direct (Riders charge): no button. Wall and Loose are on the Orders page; Charge covers riders. [2026-11-11 20:45]
+- The old Squad and Set up pages: now the Squad page (Alpha, Bravo, Charlie, Set up) and the Orders page (Temper, Form, Intent). [2026-11-11 20:45]
+- Home showed only when the hall was off screen; it now always shows (Albert: Home top left snaps back to the Town Center). [2026-11-11 20:45]
+- Agreed for the Controller and NOT built in N25: Protect's Split, Lure and Seek (the Protect page has Gather, All hands, Work, which exist); Prep (boarding up); the draining ring for time to arrive on the Controller; the red fade on People when food is short. [2026-11-11 20:45]
+- Agreed on Nov 11 and NOT built in N25: all 23 items of `docs/4 Now/Decisions - Nov 11.md` and its bug traces. N25 is the Controller and the army's routing only. [2026-11-11 20:45]
+- Open, found in N25's testing: t-n17's gatherers-hold-their-spots check failed 3 runs in 8 while two full test runs were going on the same machine; to re-run on a quiet machine before trusting either way. [2026-11-11 20:45]
