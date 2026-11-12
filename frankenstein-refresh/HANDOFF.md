@@ -1,6 +1,12 @@
-# First Keep: hand-off (Nov 12, 2026, 09:20) [2026-11-12 09:20]
+# First Keep: hand-off (Nov 12, 2026, 11:05) [2026-11-12 11:05]
 
 Read this first in a fresh chat. Older hand-offs follow below, kept for the record. [2026-11-12 09:20]
+
+## N30 sealed (Nov 12 11:05) [2026-11-12 11:05]
+- N30 is sealed and live: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n30/ . Branch `n29-the-list`, commit ffb5d92. [2026-11-12 11:05]
+- Built: the tap table (SN43, deselect after; the Controller's Execute keeps its group), the villager's tap causes, the job and health doors, garrison and cleanups, 463 units, the world-event walker in legs, the caravan escort. See BUILDS.md N30 and The List. [2026-11-12 11:05]
+- Full run: 22 old tests fail, the same ones as N29, none new. Listed in `docs/4 Now/Failing tests - Nov 12.md`; not started (each needs a read). [2026-11-12 11:05]
+- Waiting on Albert: rings A or B; row 5 (a villager onto his own building); bush pickers, stone piles, gold miners; nerve; the Winner button and villagers-disappearing details; side row, blur, refund, location; a `?fps` screenshot late in a game; picks from mockups/n30. [2026-11-12 11:05]
 
 ## Where things stand [2026-11-12 09:20]
 - **The one list is `docs/4 Now/The List.md`.** Every report to Albert is that page. A line is DONE only with its proof beside it. Work it top down, in his order; do not regroup it. [2026-11-12 09:20]
