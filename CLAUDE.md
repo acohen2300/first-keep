@@ -58,6 +58,21 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 - Mid: depth and features. A test checks that each Mid feature exists in v100 and works.
 - v100's books: every number. A test checks a number against its book; the book cites the ruling. A number that differs from Mid with no ruling behind it is drift (a bug).
 
+## 8c. How a fix works (P2a, Nov 12: the first build in three days that worked first time)
+1. Albert's spec first, in his words, in `docs/3 Locks/Designs/` (talk mode, one question at a time, short).
+2. Tests from the spec before any code: each check fails on today's code.
+3. One build: permit opens only what it changes, `grow` for size; book entries (comments E-code, words, citations N-code, rules X-code) for every new line.
+4. Run the new test, then the full suite on a frozen copy against a baseline run (`/tmp`), so nothing silently breaks. Old checks that contradict a new ruling are moved to the ruling, said in BUILDS.md.
+5. Seal: BUILDS.md entry, `index.py --seal`, clear permit.json, commit, push the branch; a preview copy on `main` (`frankenstein-refresh/preview-nNN/`, the game files and books only). Never live.
+6. Report: numbered done / not done.
+- Traps met: a fast second tap on the same thing is a double tap (`S.tap`); clear it in tests. A find with no free spot refuses the tap now: aim tests at free finds. `own(u)` is true for buildings too.
+
+## 8d. Taking over (another chat or agent)
+- Read this file, then `docs/4 Now/Handoff.md`, then `The List.md` sections 7-8. Nothing else until a task needs it.
+- Clone: `git clone --depth 1 -b n29-the-list https://github.com/acohen2300/first-keep`; tests need `frankenstein-refresh/mid` and `clean` beside `v100`.
+- Gate: `cd frankenstein-refresh/v100 && python3 index.py`. Tests: `python3 test.py --only t-p2,...` (headless Chrome; the full run takes about 25 minutes: run it in the background on a copy).
+- Albert plays on his phone; his play is proof. Ask him for `?fps` screenshots for speed.
+
 ## 9. The 12 core values (check every item, in order)
 1. Fair? 2. Follows our logic and rules? 3. A real-life solution (nature, science, history, another game)? 4. Real math, its source, where it lives? 5. Science? 6. Purpose? 7. Function? 8. One home?
 9. Has a source (math, science, physics, a real-life anchor)? 10. Improves detail, quality and play? 11. Solves a problem, or built for fun? 12. Saves code?

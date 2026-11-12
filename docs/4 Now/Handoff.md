@@ -1,4 +1,4 @@
-# First Keep: hand-off (Nov 12, 2026, 15:45)
+# First Keep: hand-off (Nov 12, 2026, 17:45)
 
 Rules: `CLAUDE.md` (the one start). Open list: `The List.md`. Order and audit: `The Plan.md`.
 
@@ -33,6 +33,10 @@ Days of play, patch, play built fixes on fixes. Found on Nov 12:
 3. P2, the job door, with Focus and the bug traces.
 4. Menu check (G2) and rings (P4).
 5. The rest of The List.
+
+## Now
+- P2a works (Albert played it). Working on P2b: the card mock in `mockups/p2b/`, for his pick. Then H3 (snow freeze), P2c.
+- How a fix works, and how to take over: `CLAUDE.md` 8c and 8d.
 
 ## Waiting on Albert (about 12 calls)
 Row 5 (V4), the three ring decisions (D1), four rebalance numbers (D4), nerve (E7), caravans (C5), mock picks (D5), and G15. Give him one quick-answer page, 1–3 lines an item, not one at a time in chat.
