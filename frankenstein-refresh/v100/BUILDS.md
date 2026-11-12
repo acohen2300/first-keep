@@ -5132,5 +5132,5 @@ Albert, Nov 12 11:32-11:33, after placing a house with a villager picked on N30:
 - **One let-go (letGo, E1050).** After every order given to what you picked, the pick ends: a tap by the tap table, placing a building, a card's attack or route, the answer to the ice question. Placing a building had kept her picked and sent only one picked villager; now every picked villager goes to build it by the tap table's site row.
 - Kept picked on purpose: the Controller's Execute (E1048) and a card's Stop.
 MODIFIED: code:menu.js, book:comments:E1050, book:citations:N329, book:rules:X98, tool:test.py.
-Tests: t-n31 passes and fails with the old place line planted; t-n24, t-n25, t-n27, t-n30 pass; t-n29 passes but its homeOnce check fails about 1 run in 4 (a timing count, seen with N30's code too; not touched here).
+Tests: t-n31 passes and fails with the old place line planted; t-n24, t-n25, t-n27, t-n30 pass; t-n29 passes but its homeOnce check fails now and then (5 of 24 runs on N31; 0 of 8 on N30, so N31 is not cleared of it). It counts a rival soldier's home searches, which N31 does not touch; cause not found yet.
 Inventory: 2602 items sealed.
