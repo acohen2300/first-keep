@@ -92,6 +92,7 @@ const block = (u) => { const b = foeBld(u, FL.melee); if (b) fight(u, b); }; // 
 function recall(side) { waves[side] = null; homeAll(orders(side)); }
 const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { const room = t && D.trade.guard - guardsOf(t).length; S.filter((u) => armed(u) && u.esc !== t).filter((u, i) => !t || i < room).forEach((u) => Object.assign(u, { esc: t, home: t })); }; // E493
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
+FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= ZERO) { const G = guardsOf(c).filter(alive); c.convoy = G.length > ZERO && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046
 function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
 function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; dress(army, k); if (side === ME) FK.fire('event', 'march', army[0]); return army.length; }
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
@@ -143,6 +144,7 @@ function brain(u, dt, look) { // E396
   if (t && u.target !== t) { if (u.job !== 'fight') u.was = u.job === 'idle' ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
   else if (!t && u.job === 'fight') { u.target = null; u.path = null; if (u.was != null) march(u, u.was); else u.job = 'idle'; u.was = null; }
   else if (u.job === 'march' && !u.path) { if (u.goal == null || nearK(u.k, u.goal, FK.walkable(u.goal) ? 1 : 4)) u.job = 'hold'; else if (due(u.rp)) { u.rp = D.repath; if (!FK.go(u, u.goal)) u.job = 'hold'; } }
+  else if (u.esc && alive(u.esc) && !u.path && gap(u, u.esc) > D.trade.near * D.trade.keepUp && due(u.rp)) { u.rp = D.repath; if (u.job === 'hold') u.job = 'idle'; FK.go(u, FK.tileAt(u.esc.bx, u.esc.by)); } // E1046
   else if (u.job === 'idle' && u.side === ME && u.home && !u.path && gap(u, u.home) > D.yard) Object.assign(u, { job: 'hold', goal: u.k }); // E1020
   else if (u.job === 'idle' && u.home && !u.path && gap(u, u.home) > AR.near && due(u.rp)) { u.rp = D.repath; const hk = FK.tileAt(u.home.bx, u.home.by); if (FK.walkable(hk) && FK.go(u, hk)) { u.path.pop(); u.path.push([u.home.bx, u.home.by]); u.then = 'idle'; } else if (FK.walkTo(u, (q) => FK.walkable(q) && nearK(q, hk, AR.homeR), hk)) { const [bx, by] = FK.tileMid(u.path.at(-1)); u.home = { bx, by }; u.then = 'idle'; } else u.home = { bx: u.bx, by: u.by }; } // E1036
   return false; }

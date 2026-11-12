@@ -400,6 +400,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E569** an event comes only in its season, or in the rain; never the same twice running
 - **E741** an event's knobs (damage, speed) while it runs, and how far through it is
 - **E570** a Poisson wait with a floor: least plus −(mean − least) ln U (QM) · QM (N12)
+- **E1044** a world event's walker goes in legs (D events leg): each leg is a short search toward the 
 - **E571** what each event does when it starts, each second it runs and when it ends (Mid's EV)
 - **E743** the mirage: an army seen on the small map ahead of your Town Center toward the middle, tol
 - **E744** the circus crosses the land like the wagon; a villager near a performer is cheered and gat
@@ -607,6 +608,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
 - **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195) · D271 (N34, N195)
+- **E1045** a caravan's escort (Albert, Oct 27): its card has Escort +4 (the nearest idle soldiers of 
 - **E1023** a caravan takes a trade route two ways: Trade route on its card sends it to the nearest tr
 - **E1024** the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Frien · N24
 - **E845** the book: Welcome back mid-match (Resume, New game), paused
@@ -955,6 +957,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1001** a tap the army cannot reach (water, a cliff top, inside a wall) is moved to the nearest gr · D372 (N325) · J50 (N325)
 - **E391** a foe building in the way is struck (Mid's findBlocker)
 - **E493** guards (Mid's escortPick, guardsOf): soldiers told to escort a caravan or garrison a stop 
+- **E1046** the convoy: an escort that falls behind walks back to its caravan, and the caravan waits w · N30
 - **E372** the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps t
 - **E392** a group dressed into its shape at a tile (Mid's formUp): facing from home to there, the sq
 - **E407** the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, 

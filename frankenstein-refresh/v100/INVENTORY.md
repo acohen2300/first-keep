@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,579 | 629,006 | 629,156 (+2,154) |
-| Books | 2463 | 0 | 768,476 | 769,399 (+484) |
+| Game code | 31 | 3,585 | 630,481 | 630,631 (+3,629) |
+| Books | 2466 | 0 | 778,402 | 779,327 (+9,617) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,070 | 336,770 | 337,015 |
 
@@ -33,15 +33,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-5-movables | 155 | 21,431 | 21,435 (+560) | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
-| index.html#floor-6-climate | 168 | 30,138 | 30,150 (+36) | 113 |
+| index.html#floor-6-climate | 169 | 30,459 | 30,471 (+357) | 113 |
 | index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 139 | 29,216 | 29,221 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,120 | 10,124 (+448) | 54 |
-| menu.js | 571 | 124,072 | 124,116 (+836) | 514 |
+| menu.js | 574 | 124,781 | 124,825 (+1,545) | 514 |
 | econ.js | 616 | 115,819 | 115,819 (+409) | 70 |
-| combat.js | 374 | 64,127 | 64,127 (-159) | 83 |
+| combat.js | 376 | 64,572 | 64,572 (+286) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,10 +53,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 327 | 80,537 |
 | colours | 33 | 9,517 |
-| comments | 993 | 187,553 |
+| comments | 996 | 188,384 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 342 | 187,668 |
+| measure | 342 | 196,616 |
 | rules | 94 | 37,711 |
 | screen | 28 | 16,615 |
 | shells | 110 | 23,521 |
@@ -64,7 +64,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 52 | 100,845 |
+| words | 52 | 101,026 |
 
 ## The shells
 
@@ -173,4 +173,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X95 | t-n27 | page | N27: a tower shoots a foe beside it; a Mill and a Lumber camp offer their plot; two techs tapped are one green and one blue with their times and no queue row, and a tap on each cancels and pays back; a villager tapped onto a bush is focused on it; the Protect page holds Split, Lure, Seek and Prep; Prep boards the buildings, raises their health and shelters the villagers, the cell turns to Work, and Work takes the boards off and leaves them short; soldiers on a march eat more than standing; every measure carries a unit and a subject |
 | X96 | t-n29 | page | N29: an idle soldier whose home spot cannot be stood on searches for it once, not every second; a villager sent to a tree is no longer picked and wears no green ring; the pace meter times its seven drawing layers; an idle menu beat reads no layout in the top bar; the crosshair is not drawn until a spot is tapped; a rival's fall reads "The Raiders have fallen."; the slower beats and the marching day are in the books |
 
-2593 items sealed · 2463 book entries · 94 laws · 327 citations, 34 still to open · 0 known
+2596 items sealed · 2466 book entries · 94 laws · 327 citations, 34 still to open · 0 known

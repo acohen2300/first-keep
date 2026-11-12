@@ -1358,7 +1358,8 @@ const canEv = (k) => !(ER[k].season && !ER[k].season.includes(season())) && !(ER
 const evKnob = (k) => (K.ev.cur && ER[K.ev.cur.kind][k]) || ONE, evPart = () => clamp((K.t - K.ev.cur.t0) / (K.ev.cur.until - K.ev.cur.t0), null, ONE); // E741
 function pickEv(roll) { const can = Object.keys(ER).filter(canEv); let k = can[Math.floor(roll() * can.length)]; if (k === K.ev.last && can.some((c) => c !== k)) k = can[-~can.indexOf(k) % can.length]; return k; }
 const wait = (roll, mean, least) => least - (mean - least) * Math.log1p(-roll()); // E570
-function walker(code, a, b, s) { const j = (p) => near1(s ? p.map((v) => v + between(rng, [-s, s]) * D.tile) : p, s || J.edge), k = j(a); if (!~k) return null; const u = spawn(code, -1, k, rng), g = j(b); if (!~g || !go(u, g)) { vanish(u); return null; } return Object.assign(u, { then: 'walk', herd: true, to: g }); }
+function walker(code, a, b, s) { const j = (p) => near1(s ? p.map((v) => v + between(rng, [-s, s]) * D.tile) : p, s || J.edge), k = j(a); if (!~k) return null; const u = spawn(code, -1, k, rng), g = j(b); if (!~g) { vanish(u); return null; } Object.assign(u, { then: 'walk', herd: true, to: g }); if (!leg(u)) { vanish(u); return null; } return u; } // E1044
+function leg(u) { const [gx, gy] = tileMid(u.to), d = Math.hypot(gx - u.bx, gy - u.by), L = EV.leg * D.tile; if (d <= L) return go(u, u.to); const f = L / d, k = near1([u.bx + (gx - u.bx) * f, u.by + (gy - u.by) * f], J.edge); return ~k && go(u, k); }
 const EVS = { // E571
   stampede: { start(e) { const R = ER.stampede, a = edgeSpot(); e.units = Array.from({ length: R.n }, () => walker(R.herd, a, far(a), R.spread)).filter(Boolean); },
     end(e) { for (const u of e.units) { const [x, y] = tileMid(u.to); if (!u.gone && Math.hypot(x - u.bx, y - u.by) < ER.stampede.gone * D.tile) vanish(u); } } },
@@ -1385,7 +1386,7 @@ function events(roll = rng) { const V = K.ev; if (V.next == null) V.next = K.t +
   if (V.cur) { V.cur.s = -~V.cur.s; const f = EVS[V.cur.kind]; if (f.tick) f.tick(V.cur); if (K.t >= V.cur.until) { if (f.end) f.end(V.cur); V.cur = null; V.next = K.t + wait(roll, EV.mean, EV.min); } }
   else if (!V.warned && K.t >= V.next - EV.warn) { V.warned = pickEv(roll); const [warn] = WL.events[V.warned]; fire('say', warn); }
   else if (V.warned && K.t >= V.next) { const k = V.warned; V.warned = null; if (!canEv(k)) V.next = K.t + EV.retry; else { const e = (V.cur = { kind: k, t0: K.t, until: K.t + (ER[k].secs || FLD.secs) }); V.last = k; if (EVS[k].start) EVS[k].start(e); if (!EVS[k].says) fire('say', WL.events[k][ONE].replace('{n}', J.joins[ER.wagon.code]), WL.why[k]); } }
-  horde(roll); arrivals(); for (const u of units.filter((u) => u.herd && !u.path)) vanish(u); }
+  horde(roll); arrivals(); for (const u of units.filter((u) => u.herd && !u.path)) if (u.k === u.to || !leg(u)) vanish(u); }
 function horde(roll) { const H = HZD.horde, W = WL.horde, seat = things.find((t) => t.side === ME && has(t, 'Seat')); if (!hz('horde') || K.horde === false) return; // E574
   if (!K.horde) { K.horde = { at: wait(roll, H.mean, H.min), said: null }; return; } const left = K.horde.at - K.t;
   H.warn.forEach((w, i) => { if (~~K.horde.said <= i && left <= w * D.season) { K.horde.said = -~i; fire('say', W[i]); } }); if (left > null) return;

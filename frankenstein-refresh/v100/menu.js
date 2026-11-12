@@ -175,6 +175,8 @@ const VERBS = {
   buy: { label: (y) => `${WT_.buy} ${NAME[y] || y}<small>${ECON.buyPrice(ME, y)}g</small>`, whyNot: (y) => (SIDES[ME].store.gold >= ECON.buyPrice(ME, y) ? '' : WT_.gold), run: (y) => ECON.marketTrade(ME, y, 'buys') },
   make: { label: (y) => `${WT_.make} ${y}`, whyNot: () => '', run: (y, t) => ECON.setMake(t, y) },
   hire: { label: () => WT_.hire, whyNot: (t) => ECON.hireWhy(ME, t), run: (t) => ECON.hire(ME, t) },
+  escort: { label: (c) => `${WT_.escort}<small>${WAR.guardsOf(c).length}/${D.trade.guard}</small>`, whyNot: (c) => (WAR.guardsOf(c).length >= D.trade.guard ? WT_.escortFull : !escorts(c).length ? WT_.noEscort : ''), run: (c) => { const S = escorts(c).slice(ZERO, D.trade.escort); WAR.guard(S, c); toast(WT_.escorted.replace('{n}', S.length)); } }, // E1045
+  release: { label: () => WT_.release, whyNot: (c) => (WAR.guardsOf(c).length ? '' : WT_.noGuard), run: (c) => { WAR.guard(WAR.guardsOf(c), null); } },
   route: { label: () => WT_.route, whyNot: (c) => (nearStop(c) ? '' : WT_.noStop), run: (c) => { const f = nearStop(c); ECON.setRoute(c, f, true, false); toast(WT_.routed.replace('{at}', coord(f.bx, f.by))); } }, // E1023
   stance: { label: (k) => WS.labels[k], whyNot: (k, q) => (k === 'gift' ? WT_.later : k === 'bribe' ? ECON.giftWhy(ME, D.regard.giftStep, q) : ECON.relWhy(ME, q, WS.want[k])), run: (k, q) => { const ok = k === 'bribe' ? ECON.giveGift(ME, D.regard.giftStep, q) : ECON.setRel(ME, q, WS.want[k]); if (!ok) toast(VERBS.stance.whyNot(k, q) || WS.not); } }, // E1024
   book: { label: () => SVG.book, whyNot: () => (S.game ? '' : WS.noGame), run: () => { S.prev = S.tab; S.tab = 'Back'; S.subject = null; FK.pause(true); } }, // E845
@@ -308,7 +310,7 @@ const ROWS = { // E199
   load: (t) => `<p>${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}</p>`,
   store: (t) => `<p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p>`,
   flock: (t) => `<p>${t.sheep} sheep</p>`, // E358
-  trade: (t) => (!own(t) ? '' : t.kind === 'unit' ? `<p>${t.route ? WT_.onRoute.replace('{at}', coord(t.route.to.bx, t.route.to.by)) : ECON.allyMarket(ME, t) ? WT_.toAlly : WT_.idle}</p>${row(span(SCR.wide.slots, vcell('route', key(t), null, 'two')))}` : t.done >= ONE ? row(...D.market.sells.filter((y) => D.market.buys.includes(y) || SIDES[ME].store[y] > ZERO).map((y) => vcell('sell', y)), ...D.market.buys.map((y) => vcell('buy', y))) : ''), // E1022
+  trade: (t) => (!own(t) ? '' : t.kind === 'unit' ? `<p>${t.route ? WT_.onRoute.replace('{at}', coord(t.route.to.bx, t.route.to.by)) : ECON.allyMarket(ME, t) ? WT_.toAlly : WT_.idle}</p>${row(span(SCR.wide.slots, vcell('route', key(t), null, 'two')), vcell('escort', key(t)), vcell('release', key(t)))}` : t.done >= ONE ? row(...D.market.sells.filter((y) => D.market.buys.includes(y) || SIDES[ME].store[y] > ZERO).map((y) => vcell('sell', y)), ...D.market.buys.map((y) => vcell('buy', y))) : ''), // E1022
   make: (t) => (own(t) && t.done >= ONE ? row(...Object.keys(D.makes[t.code] || {}).filter((y) => y !== 'gold').map((y) => vcell('make', y, key(t), '', t.make === y || (!t.make && y === Object.keys(D.makes[t.code])[ZERO])))) : ''),
   hire: (t) => (FK.rowOf(t) && FK.rowOf(t).hire ? row(vcell('hire', key(t))) : ''),
   plot: (t) => (own(t) && t.done >= ONE && !FK.has(t, 'Seat') ? row(...FK.bought('Field').filter((c) => (FK.SH[t.code].drop || []).includes(FK.SH[c].yield)).map((c) => vcell('pick', c, null, 'two'))) : ''), // E1028
@@ -343,6 +345,7 @@ const sitesOf = () => FK.blds().filter((t) => t.side === ME && t.done < ONE), si
 // E202
 // E203
 const PEOPLE = { Relations: ['Raiders', 'Rivals', 'Fortress'], Misfits: ['Natives', 'Outlaws', 'Bandits', 'Robbers'] };
+const escorts = (c) => WAR.armyOf(ME).filter((u) => u.job === 'idle' && !u.esc && !u.inside).sort((a, b) => FK.dist(a, c) - FK.dist(b, c)); // E1045
 const nearStop = (c) => ECON.stops().filter((f) => !(f.owner != null && f.owner !== ME && WAR.atWar(ME, f.owner))).reduce((a, b) => (!a || FK.dist(b, c) < FK.dist(a, c) ? b : a), null), WT_ = WD.trading, SB_ = fromBook('sides'), whoOf = (t, n, i) => (t === 'Relations' ? D.players[i + ONE] : Object.keys(SB_.names).find((g) => SB_.names[g] === n)), standCol = { war: 'var(--rr)', peace: 'var(--rw)', ally: 'var(--rg)' }; // E1024
 const stances = (t) => `<div class="frame f6">${PEOPLE[t].map((n, i) => { const q = whoOf(t, n, i), st = WAR.stance(ME, q); return `<span class="lab two-l" style="grid-column:span ${SCR.wide.slots}">${n}<br><span style="color:${standCol[st]}">${SB_.words[st]}</span></span>${WS.sets[t].map((k) => vcell('stance', k, q)).join('')}`; }).join('')}</div>`; // E840
 // E971
