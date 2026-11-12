@@ -1,3 +1,16 @@
+# First Keep: hand-off (Nov 12, 2026, 03:30) [2026-11-12 03:30]
+
+Read this first in a fresh chat. The Nov 11 hand-off follows below, kept for the record. [2026-11-12 03:30]
+
+## Where things stand [2026-11-12 03:30]
+- Code: branch `n26-playable` (off `n25-controller`, off `n11`), folder `frankenstein-refresh/v100/`. Last build N26, see `v100/BUILDS.md`. Albert won his first game by conquest on N25 (Nov 11, 184:53) and listed what ruined it (N326): the freeze, the night, ice, runaways, no trade, food. [2026-11-12 03:30]
+- N26 measured: the rules 8.2 ms a step → 3.0 (360 people, test machine). Drawing in rain, snow and night was cut in work but cannot be measured here (no graphics chip): Albert's phone with `?fps` is the proof. [2026-11-12 03:30]
+- Test rig notes: `MENU.act('start')` rolls a random seed (stub `Math.random` for a repeatable map); a building has no `.k` (use `j * N + i`); `FK.fire('tap', k, thing, 0, 0)` is a tap. Headless frame rates say nothing about a phone. [2026-11-12 03:30]
+- Still owed (Decisions - Nov 11): ready group 2, 3, 4, 7, 9, 11, 12, 15-19, Protect's Split, Lure, Seek; mock group 6, 8, 20, 21, 23, elite looks, battle noise; the food and resource rebalance with #10; Prep; bug traces (Winner button, tower not shooting, villagers disappearing). #14 waits for his phone's numbers. Open calls are in `docs/4 Now/Parked.md` ("Parked in N26"). [2026-11-12 03:30]
+- Rules as before: list first as Problem / Idea, his yes yes, build only that; Claude alone, no helpers; concise; cite the math; cuts to Parked. [2026-11-12 03:30]
+
+---
+
 # First Keep: hand-off (Nov 11, 2026, 07:50) [2026-11-11 07:50]
 
 Read this first in a fresh chat. It replaces the Nov 7 hand-off (now in `docs/6 Records/Old hand-offs/`). [2026-11-11 07:50]

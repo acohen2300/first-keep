@@ -1333,7 +1333,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E923 |  | the water's distance from shore starts at the waterline itself: a water tile beside land takes the fraction of a tile to where the height cr |  |
 | E924 |  | the marsh: each marsh tile draws a number from the seed; where it is over D366's tussock the tile is water, else a tussock of grass; the wat |  |
 | E925 |  | the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and the dangers are drawn from the day's own dice at  |  |
-| E926 |  | a price shows in full, each store its own colour: red at nothing, white as you near it, light green once you have it, as Mid's costCol (Albe |  |
+| E926 |  | a price is one line in one colour, by the store you are shortest of: red at nothing, white near, green once you can pay all of it; the store |  |
 | E927 |  | the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the sides |  |
 | E928 |  | the time of day as hours and minutes, one home for the clock and the ribbon |  |
 | E929 |  | a villager walking home with a load carries it on the back, a bundle in its store's colour (Albert, Nov 10, #35) |  |
@@ -1418,6 +1418,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1022 |  | the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set to cloth or beer, a mercenary camp is hired from i |  |
 | E1023 |  | a caravan takes a trade route two ways: Trade route on its card sends it to the nearest trade stop not held by a foe (the safest; measured N |  |
 | E1024 |  | the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Friend green); War, Terms and Ally go through setRel (a |  |
+| E1025 |  | no food for a villager: the People icon wears the cannot-afford fade, red at nothing to white as the food comes (Decisions Nov 11, #22: red  |  |
 
 ## ground
 
@@ -1903,6 +1904,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X90 | N24 build 1: soldiers ordered at a far town find the whole way and go; the picked stay picked after an order; the picked bar's Recall sends only the picked, and says so; All hands runs; the clock reads 12:00 at the sun's noon; the light has no corner (flat ends, smooth knots, never falling as the sun rises); the meter is drawn only with a frame; a computer sees in a circle; an order costs no food | {stage: page} | N322 |
 | X89 | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) | {stage: page} | N320 |
 | X92 | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there | {stage: page} | N325 |
+| X93 | N26: the rules ask a list without the trees, and a step with thirty soldiers on the board costs at most half the frame's budget (D343); no wildfire in the game; the night hides at most two stops (D292); every lake has a walkable ford (D374); a tap on the ground moves the picked army at once, with Attack lit it only aims; a side whose ice cracks is ice-shy; a square past Z has a name; no side "has fallen"; the Market sells; a caravan takes a route; the stances are wired; People is red with no food; a hall falling does not throw | {stage: page} | N326 |
 
 ## screen
 
@@ -2513,7 +2515,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J45 | the quick action's words: four boxes a step, a square (Albert, Nov 9 19:37) | {attack: Attack, build: Build, squad: Squad, more: More, all: All, half: ½, quarter: ¼, idle: Idle, rally: Rally, villager: Villager, rallyS | N287; N288 |
 | J46 | the Start page's Fog of war row (Albert, Nov 9 item 6, 19:37: it should have been there) | {label: Fog of war, on: On, off: Off} | N287 |
 | J47 | the crossing card when the way runs through woods (Albert, Nov 9 19:59) | {title: Through the woods?, lead: The woods slow the march and break the line: arrows are lost in the trunks, and every man fights his own f | N287 |
-| J48 | the Daily challenge: its row's label, why the dangers can't be tapped while it is on (Albert, Nov 10, #14), and the ordinals for rank in the Top Info Ribbon (#20) | {label: Daily, set: Today's challenge sets this., ranks: [1st, 2nd, 3rd, 4th], idle: idle, army: army} | N306 |
+| J48 | the Daily challenge: its row's label, why the dangers can't be tapped while it is on (Albert, Nov 10, #14), and the ordinals for rank in the Top Info Ribbon (#20) | {label: Daily Challenge, set: Today's challenge sets this., ranks: [1st, 2nd, 3rd, 4th], idle: idle, army: army} | N306 |
 | J50 | the Controller's words: its twelve buttons, the pages behind Protect, Orders, Class and Squad, Execute, why a button cannot act, and what it says once it has (Albert, Nov 11) | {pads: {people: People, garrison: Garrison, build: Build, protect: Protect, defend: Defend, attack: Attack, orders: Orders, retreat: Retreat | N325 |
 | J51 | the Market's Sell and Buy, the Workshop's Make, a camp's Hire, a caravan's route and why it stands idle (Audit D, Albert Nov 11 09:52: show it all; Nov 11 22:48: "There are no trade routes") | {sell: Sell, buy: Buy, short: Needs {n} to sell, gold: Not enough gold, make: Make, hire: Hire, route: Trade route, routed: Caravan set on t | N322; N326 |
 

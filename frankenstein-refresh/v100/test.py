@@ -1624,6 +1624,29 @@ N25JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) 
 async def n25(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N25JS); await pg.close()
     ok('t-n25', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
+N26JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms));
+ MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, D = FK.D, S = MENU.S, st = FK.SIDES[0].store;
+ o.restList = FK.rest().length * 4 < FK.things().length && FK.rest().every((t) => !FK.WOODS.has(t.kind));
+ o.noWildfire = !('wildfire' in FK.EVS) && !('wildfire' in D.events.rows);
+ o.dayForNight = D.moon.stops === 2;
+ let ford = 0, walk = 0; const u0 = FK.units().find((u) => u.side === 0); for (let k = 0; k < N * N; k++) if (FK.H[k] === -D.wade * D.lakeFord.deep) { ford++; walk += FK.walkable(k, u0); } info.ford = [ford, walk]; o.lakeFord = ford > 0 && walk >= ford * 0.9;
+ let n = 0; $ring(h, 4, 16, (i, j) => { const k = j * N + i; if (FK.walkable(k) && n < 30) { FK.spawn(['UM1', 'UM6', 'UM2'][n % 3], 0, k, Math.random); n++; } return n >= 30; });
+ const A = WAR.armyOf(0); $run(2);
+ let best = Infinity; for (let b = 0; b < 3; b++) { const t0 = performance.now(); for (let i = 0; i < 300; i++) FK.sim(1 / 30); best = Math.min(best, (performance.now() - t0) / 300); } info.stepMs = +best.toFixed(2); o.budget = best <= D.step.budget / 2;
+ MENU.act('war'); MENU.act('cwho', 'all'); const far = $ring(h, 20, 40, (i, j) => (FK.walkable(j * N + i, A[0]) && FK.reach(0).has(j * N + i) ? j * N + i : 0)); FK.fire('tap', far, null, 0, 0); $run(1); o.tapMoves = A.every((u) => u.job === 'march');
+ MENU.act('cact', 'attack'); const far2 = $ring(h, 24, 44, (i, j) => (FK.walkable(j * N + i, A[0]) && j * N + i !== far ? j * N + i : 0)); for (const u of A) u.goalWas = u.goal; FK.fire('tap', far2, null, 0, 0); o.aimWaits = S.ctl.spot === true && A.every((u) => u.goal === u.goalWas); MENU.act('war');
+ FK.fire('cracking', A[0].k, true, new Set([0])); o.iceShy = A.every((u) => u.shy > FK.K.t);
+ o.squares = /^[A-Z]{1,2}\d+$/.test(MENU.coord(FK.B1 - 5, FK.B0 + 5)) && /^[A-Z]\d+$/.test(MENU.coord(FK.B0 + 5, FK.B0 + 5)); info.sq = MENU.coord(FK.B1 - 5, FK.B0 + 5);
+ o.fell = !/\{side\} has fallen/.test(JSON.stringify(BOOKS.words));
+ $rich(0); const mk = $put(Object.keys(FK.SH).find((c) => FK.SH[c].name === 'Market'), 0, 8, 40, true); const g0 = st.gold, w0 = st.wood; o.sell = !!mk && MENU.act('sell', 'wood') && st.gold > g0 && st.wood < w0;
+ const cv = FK.spawn(Object.keys(FK.U).find((c) => FK.has({ code: c }, 'Trade')), 0, A[0].k, Math.random); o.route = MENU.act('route', cv) && !!cv.route && cv.route.to.kind !== 'bld';
+ o.stances = MENU.VERBS.stance.whyNot('war', 1) !== 'Not built yet';
+ st.food = 0; MENU.render(true); o.peopleRed = /color:/.test((document.querySelector('[data-v^="people"] .t') || {}).outerHTML || '');
+ FK.unbuild(FK.seatOf(2)); let threw = null; try { $run(6); } catch (e) { threw = String(e); } o.hallFalls = threw === null; info.threw = threw;
+ return [o, info]; })()"""
+async def n26(b):
+    pg, errs = await fresh(b); v, info = await pg.evaluate(N26JS); await pg.close()
+    ok('t-n26', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
 GROUNDJS = r"""(() => { MENU.act('start'); FK.fog(false); return true; })()"""
 GROUNDJS2 = r"""(() => { const N = FK.N, H = FK.H, L = FK.D.land, c = FK.ctx, [cw, ch] = FK.size(), dpr = c.canvas.width / cw, out = { water: [0, 0], land: [0, 0] };
  for (let k = 0; k < N * N; k += 7) { const [bx, by] = FK.tileMid(k), [x, y] = FK.toScreen(...FK.toView(bx, by, Math.max(0, H[k]))); if (x < 20 || y < 120 || x > cw - 20 || y > ch - 240) continue;
@@ -1656,7 +1679,7 @@ async def n16(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N16JS); await pg.close()
     got = [v['block'][:3] == ['qstep', 'qbuild', 'qrally'], v['army'] == ['qsend', 'qsend', 'qsend', 'qstep'], v['groups'] == 6, v['go'], not errs]
     ok('t-n16', all(got), [got, v, errs[:2]])
-PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

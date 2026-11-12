@@ -743,3 +743,8 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
       K.burn = new Set([...next].slice(null, R.most)); if (!K.burn.size) e.until = K.t; }, end() { K.burn.clear(); } },
 ```
 - Its row in D308: `"wildfire": {"secs": 60, "spread": 0.2, "r": 3.2, "burn": 0.12, "most": 20, "season": [1, 2], "keep": 30, "bld": 4}, ` [2026-11-11 23:50]
+- Parked in N26, kept from the parked build 3 and NOT brought in: rain falling straight (refused Nov 11), the Mint's debasing (refused Nov 11), Yield! and the vassal row of Tribute, Levy, Release (the side row is still his call). A side's Gift says "Not built yet": the rules have a gift to a group, none to a side. [2026-11-12 03:30]
+- Open, found in N26's testing: a caravan sent to the nearest trade stop (148 tiles off on the test map) was killed on the road with no gold home; the stops stand mid-map and a lone caravan does not survive. Albert to decide: an escort by default, stops nearer home, or leave it as the risk. [2026-11-12 03:30]
+- Open, found in N26's testing: the words book has two entries with the key `ledger`; the later one wins silently. To look at when the words book is next opened. [2026-11-12 03:30]
+- Open: a world event that sends a walker across the map searches its whole way in one step (105 ms on the test machine): a hitch, not a freeze. [2026-11-12 03:30]
+- Open: nerve. A group breaks at 30% lost (D-breakAt) and comes back from a rout at 0.6 nerve (D-nerve after), so it breaks again sooner; the cold lowers the ceiling (D-exposure). N26 did not change these numbers; the walking home and dropping out it found were bugs, not nerve. Albert to play and say whether they still run too soon. [2026-11-12 03:30]

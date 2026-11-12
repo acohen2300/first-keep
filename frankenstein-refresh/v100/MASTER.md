@@ -586,7 +586,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E850** a ring is the box's outline: the box drops its own border so the ring sits on the edge, on
 - **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
 - **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
-- **E926** a price shows in full, each store its own colour: red at nothing, white as you near it, li
+- **E926** a price is one line in one colour, by the store you are shortest of: red at nothing, white · N24
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
@@ -610,6 +610,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E189** a cell for what is drawn but not yet built: Albert's reminder
 - **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the St
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
+- **E1025** no food for a villager: the People icon wears the cannot-afford fade, red at nothing to wh
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17
 - **E192** tap picks, slide places the ghost, tap again builds
