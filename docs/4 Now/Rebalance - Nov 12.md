@@ -38,3 +38,11 @@ Promised Nov 11 "as numbers in the morning", not delivered then. Measured Nov 12
 2. **Problem:** stone is capped by 3 home piles of 3. **Idea:** 5 home piles (as gold went 3 to 6 on Nov 11), or 4 workers a pile. [2026-11-12 08:10]
 3. **Problem:** gold arrives late (E6). In the measure above it is not the ground, it is workers: the Jobs row starts with nobody on gold. **Idea:** to be measured first: at what minute a normal opening first has 100 gold, against when the first gold price comes up. Not measured yet. [2026-11-12 08:10]
 4. **Problem:** trade pays nothing because a lone caravan dies on the road (list C5). See The List. [2026-11-12 08:10]
+
+## Gold timing (list E6, measured Nov 12 10:10) [2026-11-12 10:10]
+The three computers, seed 777, a normal 15-minute game (it ended at the bell): gold held / villagers mining. [2026-11-12 10:10]
+- Every side starts with 200 gold and spends it on the age-up to Bronze (Bronze costs 300 food, 100 wood: no gold) and on early units. [2026-11-12 10:10]
+- **First miners: minute 4 to 7.** Before that, nobody mines gold. [2026-11-12 10:10]
+- **Gold first needed in quantity: Classical, 200 gold** (minute 7 to 11 for the computers). Then Medieval 500, Gunpowder 900, and soldiers at 25 to 250 each. [2026-11-12 10:10]
+- With 3 to 4 miners a computer climbs from about 30 to 350 gold in 3 minutes (about 100 a minute, 25 a miner), then spends it at once. [2026-11-12 10:10]
+- **Reading:** gold comes late because nobody is sent to it until the Bronze age is under way, and 3 to 4 miners are all a 6-pile home allows a computer to use before it builds a mining camp. It is the number of miners, not the ground. For Albert: the same decision as the gold vein miners (4) and the home piles (6), plus whether the jobs row should start one villager on gold. [2026-11-12 10:10]
