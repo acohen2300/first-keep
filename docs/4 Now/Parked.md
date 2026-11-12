@@ -731,3 +731,15 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - Agreed for the Controller and NOT built in N25: Protect's Split, Lure and Seek (the Protect page has Gather, All hands, Work, which exist); Prep (boarding up); the draining ring for time to arrive on the Controller; the red fade on People when food is short. [2026-11-11 20:45]
 - Agreed on Nov 11 and NOT built in N25: all 23 items of `docs/4 Now/Decisions - Nov 11.md` and its bug traces. N25 is the Controller and the army's routing only. [2026-11-11 20:45]
 - Open, found in N25's testing: t-n17's gatherers-hold-their-spots check failed 3 runs in 8 while two full test runs were going on the same machine; to re-run on a quiet machine before trusting either way. [2026-11-11 20:45]
+
+## Parked in N26 (Nov 11-12) [2026-11-11 23:50]
+- Wildfires, cut whole (Albert, Nov 11 23:43: "Kill wild fires I want them out and parked"). The event (index.html EVS.wildfire), its numbers (D308 row) and its words (J19, J20) are out. Found the same night: its start compared every tree with every map item (69 million checks, a 4.6 s freeze on the test machine). To bring back, the code as it stood with that fixed: [2026-11-11 23:50]
+```
+  wildfire: { start(e) { const R = ER.wildfire, seats = blds().filter((b) => has(b, 'Seat')), T = things.filter((t) => WOODS.has(t.kind) && t.amount > null && !seats.some((s) => dist(s, t) < R.keep * D.tile)), t = T[Math.floor(rng() * T.length)]; K.burn = new Set(t ? [t] : []); e.at = t; },
+    tick(e) { const R = ER.wildfire; if (K.wetHour) { e.until = K.t; return; } const next = new Set(), fm = ECON.fireMul(); // E1009
+      for (const n of K.burn) { if (n.gone) continue; const a = Math.min(n.amount, KIND.tree.amount * R.burn); if (n.amount > a) next.add(n); else if (scarX) blot(n.vx + ox, n.vy + oy, ...SC.strike, SCAR.burn); take(n, a);
+        woodsNear(n.bx, n.by, R.r * D.tile, (m) => { if (m.amount > null && !K.burn.has(m) && !next.has(m) && dist(m, n) < R.r * D.tile && rng() < R.spread * fm) next.add(m); });
+        bldsNear(n.bx, n.by, R.bld * D.tile, (b) => { if (has(b, 'Burn') && b.done >= ONE) ECON.ignite(b, 'wildfire'); }); }
+      K.burn = new Set([...next].slice(null, R.most)); if (!K.burn.size) e.until = K.t; }, end() { K.burn.clear(); } },
+```
+- Its row in D308: `"wildfire": {"secs": 60, "spread": 0.2, "r": 3.2, "burn": 0.12, "most": 20, "season": [1, 2], "keep": 30, "bld": 4}, ` [2026-11-11 23:50]

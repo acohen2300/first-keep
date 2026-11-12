@@ -3,7 +3,7 @@
 window.AI = (() => {
 const { D, B, SIDES, N } = FK;
 // E170
-const things = FK.things, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
+const whole = FK.things, things = FK.rest, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
 const clock = SIDES.map(() => 0), rates = new Map(), mind = SIDES.map(() => ({})), of = (x) => x || 0, per = (side) => A.pers[A.pers.of[side]];
 const home = FK.seatOf, born = (h) => FK.trains(h.code)[0]; // E242
 const bought = FK.bought; // E243
@@ -75,7 +75,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
   if (t - of(m.siteT) >= AT.site) { m.siteT = t; for (const b of blds(side)) if (!up(b) && !ECON.wallish(b) && !vs.some((u) => u.target === b)) ECON.autoBuilder(side, b); }
   yield; const due = {}, flat = s.age >= AT.apart.age && ECON.canPay(side, AT.apart.cost) ? A.apartment : HOUSE; // E530
   if (!rising(side, HOUSE) && !rising(side, A.apartment) && ECON.popOf(side) >= ECON.popCap(side) - D.ai.homeAhead && ECON.popCap(side) < D.popMax && !put(flat, h, RG.home) && !ECON.canPay(side, D.cost[HOUSE])) ECON.addRes(due, D.cost[HOUSE]);
-  yield; for (const y of Y) if (jobs[y] >= AT.drop.crew && !rising(side, camps[y])) { yield; const f = things().filter((x) => x.kind !== 'bld' && pos(x.amount) && ECON.yieldOf(x) === y).reduce((a, b) => (!a || dist(b, h) < dist(a, h) ? b : a), null), d = f && FK.dropFor({ side, bx: f.bx, by: f.by }, y); if (f && !(d && dist(d, f) < AT.drop.near * D.tile)) put(camps[y], f, RG.drop); } // E531
+  yield; for (const y of Y) if (jobs[y] >= AT.drop.crew && !rising(side, camps[y])) { yield; const f = (y === WOOD ? whole() : things()).filter((x) => x.kind !== 'bld' && pos(x.amount) && ECON.yieldOf(x) === y).reduce((a, b) => (!a || dist(b, h) < dist(a, h) ? b : a), null), d = f && FK.dropFor({ side, bx: f.bx, by: f.by }, y); if (f && !(d && dist(d, f) < AT.drop.near * D.tile)) put(camps[y], f, RG.drop); } // E531
   yield; for (const [code, y] of Object.entries(A.plots)) { yield; if (ECON.capWhy(side, code) || rising(side, code) || count(side, code) * ECON.capOf({ kind: 'bld' }) >= jobs[y] || !plotPays(side, code)) continue; // E532
     const b = put(code, h, RG.plot); if (b) ECON.setMake(b, y); else if (!ECON.canPay(side, D.cost[code])) ECON.addRes(due, D.cost[code]); break; }
   yield; const [FIELD] = Object.keys(A.plots); if (count(side, FIELD) >= AT.mill && !count(side, camps[FOOD])) put(camps[FOOD], h, RG.mill);

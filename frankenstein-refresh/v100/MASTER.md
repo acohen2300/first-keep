@@ -64,6 +64,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E952** a lake keeps off the trade roads' stops, as it keeps off another lake: a stop is a place o
 - **E32** Rivers: Who the map · What one from each lake big enough, to the nearest free coast · Wher · QAZ (N60) · QBB (N62)
 - **E33** Fords (TC4): Who every river · What a shallow crossing · Where wherever a river crosses on · D33 (N112)
+- **E1018** every lake has a ford (D374): a shallow bed through its middle, toward the middle of the m · D374 (N326)
 - **E34** Hills (TR1): Who the map · What a few smooth rises · Where Z4, clear of water and roads ·  · D36 (N112) · D37 (N112) · D38 (N112)
 - **E35** Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 ·  · D34 (N112) · D35 (N112)
 - **E36** Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry l · D39 (N112) · D40 (N112) · D41 (N112) · QBE (N64) · D23 (N112)
@@ -80,6 +81,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E711** the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and  · QCS (N242)
 - **E43** what stands on each tile, and the shells themselves
 - **E709** the buildings as their own list, a derived index of things rebuilt only when things change
+- **E1007** the map's things that are not trees, kept as one list and remade only when a thing comes o · E709 · E1008 · E1014
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
@@ -268,6 +270,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E90** most: the tiles it may open before giving up
 - **E452** the danger map's home on the walking grid (econ draws it) and each side's reach, cached by
 - **E453** the tiles a side's people can walk to: one flood fill over the walking grid (a queue, a ty · E91
+- **E1014** what a side can walk to is kept through building changes for one slow beat (D-beats.slow):
 - **E978** a tile that opens (a tree felled, a rock mined out) joins each side's reach where it touch
 - **E92** a unit on a tile; its stand wanders in the tile (D82) · D82 (N112)
 - **E93** a path of one tile (already there) walks to its middle: no step past the end
@@ -298,6 +301,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te
 - **E104** every unit within r of from (a square), never itself
 - **E105** the buildings within r of (x, y) by their squares, a little beyond on the edges; refiled w
+- **E1012** the trees near a spot, by the buildings' grid (D186), remade at most once a second: a fell · D186 (N124)
 - **E106** the rules' dice and the looks', from the map's seed but not its stream
 - **E107** The villagers: Who every side · What D67 villagers · Where round its Town Center · When th · D67 (N112)
 - **E346** a boar near every Town Center, at the book's spot in each corner (Mid's boar)
@@ -465,6 +469,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E608** Follow keeps the picked units in the middle until they are gone or a finger moves the map 
 - **E609** fire's colour from its temperature (QF, a black body), its life in the rain (an open flame · QF (N4, N5, N54) · QAU (N54)
 - **E949** a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall cloc · QCV (N309, N307) · N17
+- **E1016** a light's glow painted once a kind and stamped at its size and the night's strength; befor
 - **E610** a flame's light on the ground: a disc fading to a quarter at half its reach, added to the 
 - **E714** the glow's gradient is the inverse-square law itself (QCU), sampled at falloff stops, inst · QCU (N246)
 - **E964** an open flame's white-hot core: a bloom at its heart the flame's own height across, laid o
@@ -474,7 +479,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E962** a campfire after dark by a drop-off where two or more of a side gather and bring their loa · N17
 - **E963** the lights add a torch on each army's standard, its glow at the standard's foot and its fl
 - **E965** one scratch canvas for the fire's highlights
-- **E974** the scratch canvas for silhouettes and firelight only grows, and each use clears the corne
+- **E1015** the fire-light rim of a figure or building, made once for its picture, the light's kind an
 - **E966** firelight on the side that faces it (Albert, Nov 10, N17 #8, the mock): each person and fi · N17
 - **E938** Lanterns (research) make the door torches brighter: light falls off as the square of dista
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
@@ -774,6 +779,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N322, N164, N166)
 - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
 - **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N322, N164, N166) · D137 (N114) · D197 (N164)
+- **E1013** wood is searched for near the worker, not across the map: within his search circle, double
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
@@ -791,11 +797,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
 - **E981** food in reach is food a side can carry home: a find or prey within the hunger book's reach
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
+- **E1011** whether food is within reach of a hungry side, asked once a second, and everyone fed in on
 - **E351** the year's work: everyone eats; a field's soil wears while worked and rests back, never un · QAA (N29)
 - **E352** each season's turn: food in store spoils (QAD); in spring fish regrow (QY), lambs come (QY · QAD (N32, N33) · QY (N27) · QZ (N28)
 - **E353** a cut-out plot is replanted at D222's share of its price and is full again; from a drop-of · D222 (N170)
 - **E354** send a hunter: the given villager, or the nearest idle one, else the nearest from other wo
 - **E224** a stroke of work (gathering or raising) faces its work and sounds on every other beat; the
+- **E1008** who works what, counted without walking the whole map: only the things worked last step ar
 - **E347** the gather beat: the field is worked now (its soil wears); a flock's food goes straight to
 - **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119, N195)
@@ -908,8 +916,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188) · D355 (N278, N279, N280)
 - **E875** in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L 
 - **E876** in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear
+- **E1019** a struck soldier is heard: his own within crowd tiles (D-nerve) who stand idle or hold wit
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
 - **E518** A blow on a shooter's stake, or on one of a wild group (its regard falls).
+- **E1017** ice-shy (Albert, Nov 11: "They see their comrades fall through the ice and they just conti · E1018
 - **E796** one who falls through the ice is lost, as any death, and leaves no body on the ice (under)
 - **E356** a building that falls pays its destroyer D233 of its price (Mid's plunderBld); game falls  · D233 (N188)
 - **E388** QAI a loss drains each soldier of its side within D231's lossR by 1 ÷ (D142 × n) (Mid's di · QAI (N76, N188) · D231 (N188, N76, N16) · D142 (N76)
@@ -960,6 +970,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E422** the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D2 · D252 (N190)
 - **E423** an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a fo
 - **E424** your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there,
+- **E1010** which villager a wild animal is fighting, gathered once a step; before, every villager sea
 - **E398** in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE),
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
 - **E399** the missiles in flight: a streak along the drag path, its tail D245's share of the flight · D245 (N188, N39, N40)

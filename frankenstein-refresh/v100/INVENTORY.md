@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,525 | 611,808 | 611,956 |
-| Books | 2415 | 0 | 728,172 | 729,092 |
+| Game code | 31 | 3,532 | 615,779 | 615,928 (+3,972) |
+| Books | 2429 | 0 | 732,332 | 733,252 (+426) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,006 | 325,581 | 325,826 |
+| Tools | 5 | 2,006 | 325,430 | 325,675 (-151) |
 
 ## The trades (code)
 
@@ -19,30 +19,30 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,949 | 1,953 | 38 |
-| index.html#floor-2-terrain | 84 | 9,478 | 9,482 | 115 |
-| index.html#floor-3-non-movables | 67 | 9,797 | 9,801 | 54 |
+| index.html#floor-2-terrain | 85 | 9,795 | 9,799 (+317) | 115 |
+| index.html#floor-3-non-movables | 68 | 10,121 | 10,125 (+324) | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 105 | 18,665 | 18,669 | 63 |
+| index.html#the-door | 105 | 18,789 | 18,794 (+125) | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 150 | 20,114 | 20,118 | 78 |
+| index.html#floor-5-movables | 151 | 20,871 | 20,875 (+757) | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
-| index.html#floor-6-climate | 174 | 30,737 | 30,749 | 115 |
-| index.html#floor-7-display | 78 | 17,290 | 17,294 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 136 | 28,524 | 28,528 | 0 |
+| index.html#floor-6-climate | 168 | 30,102 | 30,114 (-635) | 113 |
+| index.html#floor-7-display | 78 | 17,250 | 17,254 (-40) | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 138 | 28,785 | 28,789 (+261) | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
-| index.html#touch | 53 | 9,640 | 9,644 | 54 |
-| menu.js | 556 | 119,154 | 119,198 | 523 |
-| econ.js | 592 | 109,168 | 109,168 | 72 |
-| combat.js | 367 | 61,896 | 61,896 | 83 |
-| ai.js | 171 | 27,330 | 27,330 | 25 |
+| index.html#touch | 53 | 9,672 | 9,676 (+32) | 54 |
+| menu.js | 556 | 119,449 | 119,493 (+295) | 521 |
+| econ.js | 596 | 110,421 | 110,421 (+1,253) | 70 |
+| combat.js | 371 | 63,137 | 63,137 (+1,241) | 83 |
+| ai.js | 171 | 27,372 | 27,372 (+42) | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
 ## The books
@@ -51,12 +51,12 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 324 | 78,916 |
+| citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 959 | 175,039 |
+| comments | 970 | 177,487 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 339 | 167,391 |
+| measure | 340 | 168,460 |
 | rules | 90 | 35,177 |
 | screen | 27 | 14,670 |
 | shells | 110 | 23,521 |
@@ -64,7 +64,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 49 | 98,885 |
+| words | 49 | 98,719 |
 
 ## The shells
 
@@ -169,4 +169,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
 | X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
 
-2545 items sealed · 2415 book entries · 94 laws · 324 citations, 34 still to open · 0 known
+2559 items sealed · 2429 book entries · 94 laws · 326 citations, 34 still to open · 0 known
