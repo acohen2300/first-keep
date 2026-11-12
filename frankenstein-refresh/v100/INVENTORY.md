@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,550 | 621,013 | 621,162 (+1,872) |
-| Books | 2442 | 0 | 738,335 | 739,255 (+211) |
+| Game code | 31 | 3,554 | 621,922 | 622,071 (+2,781) |
+| Books | 2444 | 0 | 739,890 | 740,812 (+773) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,029 | 328,482 | 328,727 |
 
@@ -34,13 +34,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 168 | 30,102 | 30,114 | 113 |
-| index.html#floor-7-display | 80 | 17,658 | 17,662 (+408) | 54 |
+| index.html#floor-7-display | 80 | 17,660 | 17,664 (+410) | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 138 | 28,785 | 28,789 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,930 | 5,934 (+33) | 24 |
 | index.html#touch | 53 | 9,672 | 9,676 | 54 |
-| menu.js | 568 | 122,943 | 122,987 (+438) | 514 |
-| econ.js | 597 | 111,247 | 111,247 (+821) | 70 |
+| menu.js | 568 | 122,967 | 123,011 (+462) | 514 |
+| econ.js | 601 | 112,130 | 112,130 (+1,704) | 70 |
 | combat.js | 373 | 63,495 | 63,495 (+172) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -53,18 +53,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 981 | 181,968 |
+| comments | 983 | 182,987 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 340 | 168,460 |
+| measure | 340 | 168,485 |
 | rules | 91 | 35,806 |
-| screen | 27 | 14,738 |
+| screen | 27 | 15,088 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 50 | 99,688 |
+| words | 50 | 99,875 |
 
 ## The shells
 
@@ -170,4 +170,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
 | X93 | t-n26 | page | N26: the rules ask a list without the trees, and a step with thirty soldiers on the board costs at most half the frame's budget (D343); no wildfire in the game; the night hides at most two stops (D292); every lake has a walkable ford (D374); a tap on the ground moves the picked army at once, with Attack lit it only aims; a side whose ice cracks is ice-shy; a square past Z has a name; no side "has fallen"; the Market sells; a caravan takes a route; the stances are wired; People is red with no food; a hall falling does not throw |
 
-2572 items sealed · 2442 book entries · 94 laws · 326 citations, 34 still to open · 0 known
+2574 items sealed · 2444 book entries · 94 laws · 326 citations, 34 still to open · 0 known

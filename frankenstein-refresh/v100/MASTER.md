@@ -437,6 +437,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E958** your people behind a tree or a building show through it as a silhouette, as Age of Empires · N17
 - **E985** a person counts as hidden by what is drawn in front of him only if that thing has ink at t
 - **E984** your hidden people, under the canopy or behind a tree or building drawn after them, show a
+- **E897** your own people under the canopy drawn as a ring over the trees, so you see who is inside
+- **E1029** a find you can gather that stands behind trees shows its ring through them, dashed like yo · E984
 - **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
 - **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
 - **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219)
@@ -636,6 +638,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E849** a group's label over its boxes, in small capitals across the whole row (as the v80 card)
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
+- **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
@@ -800,6 +803,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
 - **E944** minus on a job acts at once: the villager drops what it carries and stands idle, so the co · N17
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
+- **E1032** an order's food is charged by the ground marched, not by the tap (Decisions Nov 11, #4; Al · D224 (N13, N173, N181, N185, N198)
 - **E981** food in reach is food a side can carry home: a find or prey within the hunger book's reach
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
 - **E1011** whether food is within reach of a hungry side, asked once a second, and everyone fed in on
@@ -822,6 +826,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
 - **E443** the Alarm's ranking (Mid's shelterRank, roomIn, fillRank, threatDir): buildings with room, · D255 (N192)
 - **E444** the Alarm (Mid's emgStart, townSquare, soldiersIn, villagersIn): its first order notes eac
+- **E1031** Protect's three (Decisions Nov 11; Albert: Protect is really a lure): each garrisons your 
 - **E445** the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see · D255 (N192)
 - **E446** a site nobody builds (F23, Albert's play test): one no villager of its side can reach says · D203 (N168)
 - **E447** a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost · D233 (N188) · D258 (N192)
