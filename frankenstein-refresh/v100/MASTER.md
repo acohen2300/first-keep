@@ -597,6 +597,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
 - **E1038** the tap table (SN43, Albert Nov 12 08:12-08:15): with something picked, the next tap is it · SN43 (N326)
+- **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · E1048
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and

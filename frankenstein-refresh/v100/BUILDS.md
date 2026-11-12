@@ -5125,3 +5125,12 @@ MODIFIED (120):
 - tool:test.py
 Tests: t-n30 passes and fails on each of three planted bugs (the deselect, the finger, the convoy); t-n23, t-n24, t-n25 brought to the rules (Failing tests - Nov 12.md); the full run: 22 fail against N29's 25, none new (t-ledger, t-n23, t-n25 now pass).
 Inventory: 2599 items sealed · 2469 book entries · 94 laws · 327 citations
+
+
+## N31: the pick is let go after every order, from one place · 2026-11-12 11:50
+Albert, Nov 12 11:32-11:33, after placing a house with a villager picked on N30: "As soon as I place that building I shouldn't have to deselect her"; "Touch a villager. Touch a thing. DESELECT." (N329)
+- **One let-go (letGo, E1050).** After every order given to what you picked, the pick ends: a tap by the tap table, placing a building, a card's attack or route, the answer to the ice question. Placing a building had kept her picked and sent only one picked villager; now every picked villager goes to build it by the tap table's site row.
+- Kept picked on purpose: the Controller's Execute (E1048) and a card's Stop.
+MODIFIED: code:menu.js, book:comments:E1050, book:citations:N329, book:rules:X98, tool:test.py.
+Tests: t-n31 passes and fails with the old place line planted; t-n24, t-n25, t-n27, t-n30 pass; t-n29 passes but its homeOnce check fails about 1 run in 4 (a timing count, seen with N30's code too; not touched here).
+Inventory: 2602 items sealed.

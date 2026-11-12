@@ -401,6 +401,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N326 |  | Albert, Nov 11, 2026, 22:14-23:56, in chat, after his first win by conquest on N25 (184:53): the phone ran hot and froze (\Biggest issue. Ru | opened |
 | N327 |  | Day for night, Wikipedia (opened Nov 12, 2026): a night scene shot by day is typically underexposed by about two stops with a blue tint adde | opened |
 | N328 |  | Tharion, Lieberman, Montain, Young, Baker-Fulco, Delany, Hoyt, Energy requirements of military personnel, Appetite 44 (2005) 47-65 (abstract | opened |
+| N329 |  | Albert, Nov 12, 2026, 08:12-11:33, in chat: \Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected.\ T | opened |
 
 ## colours
 
@@ -1442,6 +1443,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1046 |  | the convoy: an escort that falls behind walks back to its caravan, and the caravan waits while any of its escort is too far (D-trade keepUp, |  |
 | E1047 |  | one tap rule on the war page too: a tap on a villager (or any of yours that is not a soldier) picks it, and its next tap is its order by the |  |
 | E1048 |  | the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a squad) are the pick, not a tap, so Retreat and Defen |  |
+| E1050 |  | one place lets the pick go (letGo): after every order given to what you picked (a tap by the tap table, placing a building, a card's attack  |  |
 
 ## ground
 
@@ -1934,6 +1936,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X95 | N27: a tower shoots a foe beside it; a Mill and a Lumber camp offer their plot; two techs tapped are one green and one blue with their times and no queue row, and a tap on each cancels and pays back; a villager tapped onto a bush is focused on it; the Protect page holds Split, Lure, Seek and Prep; Prep boards the buildings, raises their health and shelters the villagers, the cell turns to Work, and Work takes the boards off and leaves them short; soldiers on a march eat more than standing; every measure carries a unit and a subject | {stage: page} | N326 |
 | X96 | N29: an idle soldier whose home spot cannot be stood on searches for it once, not every second; a villager sent to a tree is no longer picked and wears no green ring; the pace meter times its seven drawing layers; an idle menu beat reads no layout in the top bar; the crosshair is not drawn until a spot is tapped; a rival's fall reads "The Raiders have fallen."; the slower beats and the marching day are in the books | {stage: page} | N326 |
 | X97 | N30: with something picked the next tap is its order by the tap table (a villager onto a tree gathers, a soldier onto a foe attacks, a villager onto a foe fights, a soldier onto your tower garrisons, a tap on another of your units only lets go) and the pick lets go after; a find under the finger beats your own villagers standing on it; every job passes the job door and none is odd; a blow passes the health door with who struck; both ledger word sets are read; a world event's walkers go in legs; four escorts keep up with their caravan; Prep's techs cheapen it; played: Prep boards against a raid, a tower hurts a raider, Split, Lure and Seek move the villagers, a tech tapped at a Mill is learnt | {stage: page} | N326 |
+| X98 | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked | {stage: page} | N329 |
 
 ## screen
 

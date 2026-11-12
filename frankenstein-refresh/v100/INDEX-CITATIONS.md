@@ -428,6 +428,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N326** Albert, Nov 11, 2026, 22:14-23:56, in chat, after his first win by conquest on N25 (184:53): the phone ran hot → D374, D375, D376, X93, X94, X95, X96, X97, SN43, J51, J52
 - **N327** Day for night, Wikipedia (opened Nov 12, 2026): a night scene shot by day is typically underexposed by about t → D292
 - **N328** Tharion, Lieberman, Montain, Young, Baker-Fulco, Delany, Hoyt, Energy requirements of military personnel, Appe → D224
+- **N329** Albert, Nov 12, 2026, 08:12-11:33, in chat: "Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, a → X98
 
 ## Named exceptions
 
