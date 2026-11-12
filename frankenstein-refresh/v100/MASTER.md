@@ -702,7 +702,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
-- **E856** a picked unit takes the next tap as its one order (a thing: it does that; the ground: it g
+- **E856** a picked unit takes the next tap as its order (a thing: it does that; the ground: it goes  · N24
 - **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)

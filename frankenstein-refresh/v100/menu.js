@@ -430,7 +430,7 @@ function heard(k, u, px, py) {
   if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); return ['open', t]; } return ['tap']; }
   if (u && own(u)) { pickToggle(u); return ['pick', u]; }
   const P = FK.picked().filter(own), CV = P.filter((c) => FK.has(c, 'Trade')); if (CV.length && t && t.kind !== 'unit' && t.kind !== 'bld' && FK.has(t, 'Trade')) { for (const c of CV) ECON.setRoute(c, t, true, false); toast(WT_.routed.replace('{at}', coord(t.bx, t.by))); render(true); return ['route', t]; } // E1023
-  if (P.length) { const sent = !!t || onB(k); if (sent) { WAR.order(P, t, k); askIce(P, t, k); } render(true); return [sent ? 'order' : 'tap', t]; } // E856
+  if (P.length) { const sent = !!t || onB(k); if (sent) { WAR.order(P, t, k); askIce(P, t, k); if (!S.ice) FK.select(FK.picked().filter((v) => !isVil(v))); } render(true); return [sent ? 'order' : 'tap', t]; } // E856
   if (!t) { const O = ordAt(px, py); if (O) { FK.select(units().filter((v) => v.ord === O)); ctlPick(); } else if (onB(k)) { S.qa = { k, px, py }; S.eat = true; } S.subject = null; render(true); return ['tap']; }
   if (t.kind === 'bld' && own(t) && !ECON.replantWhy(ME, t)) { ECON.replant(ME, t); return ['place', t]; }
   if (t.kind === 'unit') FK.select(t); else { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; } render(true); return [t.kind === 'unit' ? 'pick' : 'tap', t];

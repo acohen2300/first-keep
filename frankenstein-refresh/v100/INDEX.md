@@ -1277,7 +1277,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E853 |  | the Build menu: the open tab's buildings of your age and before; a later age's are gone until it comes (Show all cut, Albert Nov 11; the who |  |
 | E854 |  | made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm |  |
 | E855 |  | a picked unit: the green ring at its feet, thick and glowing |  |
-| E856 |  | a picked unit takes the next tap as its one order (a thing: it does that; the ground: it goes there), then the pick clears |  |
+| E856 |  | a picked unit takes the next tap as its order (a thing: it does that; the ground: it goes there). A villager's pick ends with that one order |  |
 | E857 |  | the quick action: a tap on open ground opens a square of four, the first under the finger (Attack, Build, Squad, More); each step opens in t |  |
 | E858 |  | a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle only |  |
 | E859 |  | Build from the quick action: the Build menu opens on its first tab, the building's ghost starts at the spot |  |

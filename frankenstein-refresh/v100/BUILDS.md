@@ -4940,3 +4940,9 @@ Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, book:measur
 - **#3** checked, no change. **#7, #12, #15** found already built and tested. **#5, #13, #22** were in N26.
 Claude's own numbers, for Albert to play and change: D375 (time, cost, least, planks); D-alarm split 20 tiles and fan half a turn; the Prep/Work shared cell; the three new Controller icons (split, lure, seek, prep).
 Still owed: the mock group (6, 8, 20, 21, 23, elite looks, battle noise); #10 with the food and resource rebalance; the rest of #2's units; the bug traces not reproduced (Parked); #14 after his phone's numbers; #1 only if build 3 comes back.
+
+## N28: a villager's pick ends with its order · 2026-11-12 06:40
+Albert, Nov 10: "Once you tap that thing - the selection is gone"; Nov 12 06:26: "What happened to the tap a villager, tap something to do, the villager becomes untapped? Did you not fix that?"
+Opened: code:menu.js, book:comments
+- Tap a villager, tap a thing or the ground: he takes the order and is no longer picked. Soldiers stay picked until the bar's ✕ (N24 #2). In a mixed pick the villagers drop out and the soldiers stay. N24 #2 had kept every pick, villagers included (E856 rewritten to say both).
+Tests: gate passes; headless: villager + tree → 0 picked, walking; soldier + villager + ground → the soldier alone stays picked.
