@@ -22,6 +22,9 @@ Days of play, patch, play built fixes on fixes. Found on Nov 12:
 2. The 22 failing tests sorted, first pass: `Failing tests - Nov 12.md`. Group B needs Albert's call.
 3. Gate `proof` (X99) built, sealed (S3 in BUILDS.md), proven by planting bad lines. 16 DONE lines without real proof moved to BUILT.
 
+## Nov 12 16:45
+- Albert's call spec for villagers and army is written (`docs/3 Locks/Designs/08 ...`): P2's yardstick. The List section 7 holds his answers (the freeze is snow, H3).
+
 ## Next (CLAUDE.md section 6)
 1. Housekeeping: archive the other lists into The List, one working branch.
 2. Sort the 22 failing tests.

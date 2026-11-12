@@ -21,7 +21,7 @@ States: TODO · BUILT (no proof yet) · DONE (proof named) · BLOCKED (says on w
 - V1b BUILT (proof owed: no test shown to fail with the old line planted; Nov 12 15:30) (N30): the two causes in his 08:05 screenshot: a nearby villager stole the tap (now only within 12 px while something is picked, a nearer find wins) and a finger slip over 6 px cancelled the tap (now 10). Proof: t-n30 (finger). Needs his phone. [2026-11-12 11:00]
 - V2 BUILT (proof owed: no test shown to fail with the old line planted; Nov 12 15:30) (N30): the tap table, his 08:12 and 08:14 rule: villager + find = gather, soldier + foe = attack, any + ground = go, and the rows for build, repair, fight, garrison, caravan route; after the row, the pick is let go. The Controller's Execute keeps its group. Proof: t-n30 (deselect), t-n24, t-n25. [2026-11-12 11:00]
 - V3 BUILT (proof owed: no test shown to fail with the old line planted; Nov 12 15:30) (N31): placing a building with villagers picked sends them all to build it and lets them go; one let-go for every order. Proof: t-n31. His 11:46 screenshots were N30. [2026-11-12 11:58]
-- V4 WAITING ON ALBERT: row 5, a villager tapped onto your own building (today: deselects, no order, she idles). My suggestion: drop off, then back to her last job. [2026-11-12 11:58]
+- V4 ANSWERED (Nov 12 16:42): see `docs/3 Locks/Designs/08 The call - villagers and army.md` (own building: repair if damaged; garrison from the card). Was: row 5, a villager tapped onto your own building (today: deselects, no order, she idles). My suggestion: drop off, then back to her last job. [2026-11-12 11:58]
 - V1 DONE: the pick did end, but the villager kept the green "picked" ring while he walked to his order. Green now means picked only. Proof: t-n29 (ring), real-touch test (tap villager, tap tree: 0 picked, blue ring), fails with the old line planted. Needs his eye on the phone. [2026-11-12 08:40]
 
 ## 2. Built, not proven (B) [2026-11-12 07:15]
@@ -78,3 +78,13 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - G14 UNCHECKED: known faults of Nov 10: `t-walls` crashes; t-proof's plant no longer matches; the Garrison box is dim with no foe near. [2026-11-12 08:50]
 - G15 WAITING ON ALBERT since Nov 10 to 11: refund on cancel (he checks in his game); the GitHub Pages source setting; the side row (Yield! and the vassal row, or else); a gold vein's 4 miners (Claude's number); keep the blur fix or not; location (45°N, the civ's homeland, or picked). [2026-11-12 08:50]
 - G16 LATER, by his word (Nov 10, C): Choke and Bombard; help inside each card; the Guide; hunting modes; squads; the 52 Base differences; the Throne; the triage's "later" items. [2026-11-12 08:50]
+
+## 7. Albert's answers and the call spec (Nov 12 15:53-16:42) [2026-11-12 16:45]
+- P2's yardstick: `docs/3 Locks/Designs/08 The call - villagers and army.md` (villagers and army: the call, tap 2, Attention, Load, the card, Exit). Code that disagrees is replaced or deleted. TODO. [2026-11-12 16:45]
+- H1 TODO: mock the card (1-6 on top, 7-9 folded) and the Add task flow; Albert picks. [2026-11-12 16:45]
+- H2 LATER by his word: Mobile soldiers pulled from garrisons. [2026-11-12 16:45]
+- H3 TODO: the freeze is snow. His phone, snowing at night, about 50 people: 15-22 fps, logic 12-16 ms, draw 15-32 ms, land 9-19 ms; clear late game 57-58 fps, logic 2, land 0. Find why snow redraws the land and lifts logic, and solve the biggest costs first ("see what costs the most and solve those"). Unverified cause. [2026-11-12 16:45]
+- H4: sharpness: as sharp as possible (Albert). [2026-11-12 16:45]
+- H5 TODO: D10's Winner button: on the new game menu it does nothing. [2026-11-12 16:45]
+- H6 TODO, unverified: the Mill showed two researches green (running) at once; his Nov 11 rule is one green, the rest blue queued. [2026-11-12 16:45]
+- H7: the Nov 12 52-question list: answered 1-7 and 22-23; still open 8-9, 10-11, 13-20, 24-28, 30, 32-35, 41-42, 44-51. [2026-11-12 16:45]

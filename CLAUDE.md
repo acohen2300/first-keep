@@ -34,7 +34,7 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 1. Housekeeping: one list, one hand-off, one working branch.
 2. Sort the 22 failing tests (The List G5): stale or real bug. First pass done Nov 12 (`Failing tests - Nov 12.md`); group B waits on Albert's call.
 2b. Gates: `proof` (X99) is built. Still to build: the tap-test gate (needs a real-finger helper) and the door gate (with P2).
-3. P2, the job door (`The Plan.md`): one place sets a unit's job, target, path and what comes next. Fold in Focus as Albert's rule #17 ("stays on its job as a reasonable worker would"; today it is set on every tap and pinned to one find, E1027) and the open traces (builds a bit then stands, tree then idle, villagers disappearing).
+3. P2, the job door (`The Plan.md`), to the spec `docs/3 Locks/Designs/08 The call - villagers and army.md`: one place sets a unit's job, target, path and what comes next. Fold in Focus as Albert's rule #17 ("stays on its job as a reasonable worker would"; today it is set on every tap and pinned to one find, E1027) and the open traces (builds a bit then stands, tree then idle, villagers disappearing).
 4. Menu check against the kit (G2) and the ring standard (P4).
 5. The rest of The List.
 - No new features before step 3. Albert's play notes go on The List, not into builds.
