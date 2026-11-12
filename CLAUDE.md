@@ -53,6 +53,11 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 - Nothing goes live without Albert's word.
 - Nothing cut without logging it in `docs/4 Now/Parked.md`.
 
+## 8b. The three yardsticks (Albert, Nov 12 15:35: Base + Mid + v100 = the perfect game)
+- Base: play and design. The judge is Albert's play.
+- Mid: depth and features. A test checks that each Mid feature exists in v100 and works.
+- v100's books: every number. A test checks a number against its book; the book cites the ruling. A number that differs from Mid with no ruling behind it is drift (a bug).
+
 ## 9. The 12 core values (check every item, in order)
 1. Fair? 2. Follows our logic and rules? 3. A real-life solution (nature, science, history, another game)? 4. Real math, its source, where it lives? 5. Science? 6. Purpose? 7. Function? 8. One home?
 9. Has a source (math, science, physics, a real-life anchor)? 10. Improves detail, quality and play? 11. Solves a problem, or built for fun? 12. Saves code?

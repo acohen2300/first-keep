@@ -34,3 +34,5 @@ Run: 0 of 22 hold. Sorted by what fails; nothing in the game changed. [2026-11-1
 - t-physics `edge and hours` (hours: likely N19 slower days).
 - t-alarm `refused`, `told`; t-trade `stops`; t-realm `camp`, `ans`; t-wild `events`, `raid`; t-mind `plans`, `moon`, `ground`, `flood`: not read.
 - t-walls `crew`, `repair`, `refund`, `seal`, `rings`, `price`: most likely real; refund touches G15 (refund on cancel, open).
+
+**Albert's call on B (Nov 12 15:36, yes yes):** Mid stays the yardstick for features (exists and works); the books are the yardstick for numbers; a number that differs from Mid with no ruling is drift. Fix group A and B tests to this. [2026-11-12 15:36]
