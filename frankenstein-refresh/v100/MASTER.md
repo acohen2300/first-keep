@@ -592,6 +592,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
+- **E1037** arm, then engage (Albert, Nov 12 07:43: "tap something to activate, tap something else to  · N24
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
@@ -703,7 +704,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
-- **E856** a picked unit takes the next tap as its order (a thing: it does that; the ground: it goes  · N24
+- **E856** a picked unit takes the next tap as its order (a thing: it does that; the ground: it goes  · E1037
 - **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)
@@ -711,7 +712,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E431** the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picki
 - **E997** a book over each of your finished, idle buildings with research you can start now, looked 
 - **E969** the quick action's aimer: on the aim step a plain white ring with four ticks and a dot sit
-- **E432** the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, 
+- **E432** the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line,  · N29 · E1 · E2
 - **E359** the town is told what food, the seasons and the flock do, in the Words book's news
 - **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
 - **E635** the mail (Mid's say and tell, D323): a line shows a while unless it is quiet, the same lin · D323 (N223) · QCH (N223)

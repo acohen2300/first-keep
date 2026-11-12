@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,571 | 626,770 | 626,920 (+869) |
-| Books | 2453 | 0 | 761,095 | 762,019 (+1,181) |
+| Game code | 31 | 3,571 | 627,001 | 627,151 (+1,100) |
+| Books | 2454 | 0 | 762,288 | 763,210 (+1,526) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,056 | 333,563 | 333,808 (+33) |
 
@@ -39,8 +39,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 (-20) | 24 |
 | index.html#touch | 53 | 9,672 | 9,676 | 54 |
-| menu.js | 569 | 123,247 | 123,291 (+35) | 514 |
-| econ.js | 615 | 115,317 | 115,317 | 70 |
+| menu.js | 569 | 123,431 | 123,475 (+219) | 514 |
+| econ.js | 615 | 115,364 | 115,364 (+47) | 70 |
 | combat.js | 374 | 64,286 | 64,286 (+243) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -53,7 +53,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 987 | 184,967 |
+| comments | 988 | 185,941 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 185,800 |
@@ -64,7 +64,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 52 | 100,417 |
+| words | 52 | 100,642 |
 
 ## The shells
 
@@ -172,4 +172,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X94 | units | gate | every measured number carries its unit and its subject as fields of its own entry, never as a comment in code (Decisions Nov 11, #2; Albert: "yes to a unit field on every number enforced by the gate"). subject is where the game reads it (world, economy, war, computers, screen, sound, shells), found by the gate's own reading of the code. A unit is set only where the code proves it (a number multiplied by the tile is in tiles; a number handed to every() is a beat in seconds) or the entry states it; nothing is guessed. N27 set 98 (proved from the code, stated in the entry, or Claude's own new numbers); unset counts the rest and may only fall |
 | X95 | t-n27 | page | N27: a tower shoots a foe beside it; a Mill and a Lumber camp offer their plot; two techs tapped are one green and one blue with their times and no queue row, and a tap on each cancels and pays back; a villager tapped onto a bush is focused on it; the Protect page holds Split, Lure, Seek and Prep; Prep boards the buildings, raises their health and shelters the villagers, the cell turns to Work, and Work takes the boards off and leaves them short; soldiers on a march eat more than standing; every measure carries a unit and a subject |
 
-2583 items sealed · 2453 book entries · 94 laws · 326 citations, 34 still to open · 0 known
+2584 items sealed · 2454 book entries · 94 laws · 326 citations, 34 still to open · 0 known

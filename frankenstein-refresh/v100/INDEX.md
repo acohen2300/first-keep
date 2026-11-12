@@ -978,7 +978,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E429 |  | Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens the card; with yours picked a tap is the obvious o |  |
 | E430 |  | the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green yours, red a foe or a hostile near, blue an ally,  |  |
 | E431 |  | the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picking, a box picks yours in it |  |
-| E432 |  | the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, the cross, the time and the square |  |
+| E432 |  | the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line, the cross, the time and the square. (Nov 12, N29,  |  |
 | E433 |  | a tile on the board (the floor gives -1 off it) |  |
 | E434 |  | the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to half way, each ai.step tiles, the open width across |  |
 | E435 |  | the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foot, files deep across the narrowest gap on the road |  |
@@ -1277,7 +1277,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E853 |  | the Build menu: the open tab's buildings of your age and before; a later age's are gone until it comes (Show all cut, Albert Nov 11; the who |  |
 | E854 |  | made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm |  |
 | E855 |  | a picked unit: the green ring at its feet, thick and glowing |  |
-| E856 |  | a picked unit takes the next tap as its order (a thing: it does that; the ground: it goes there). A villager's pick ends with that one order |  |
+| E856 |  | a picked unit takes the next tap as its order (a thing: it does that; the ground: it goes there). Every pick ends with its one order (E1037) |  |
 | E857 |  | the quick action: a tap on open ground opens a square of four, the first under the finger (Attack, Build, Squad, More); each step opens in t |  |
 | E858 |  | a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle only |  |
 | E859 |  | Build from the quick action: the Build menu opens on its first tab, the building's ghost starts at the spot |  |
@@ -1430,6 +1430,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1034 |  | a boarded building shows its planks across its foot, one by one as they go on |  |
 | E1035 |  | the pace meter's laps: with ?fps on, the time between one drawing layer's end and the next is averaged a layer, and shown as the meter's sec |  |
 | E1036 |  | an idle soldier walks home once: if his home spot cannot be stood on (built over, a tree, water) he takes the free tile nearest it as home;  |  |
+| E1037 |  | arm, then engage (Albert, Nov 12 07:43: \tap something to activate, tap something else to engage and thus deactivate ... why can't units be  |  |
 
 ## ground
 
@@ -2496,7 +2497,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J10 | the army's words: the three squads (Mid's BN, the NATO names), the tempers, the shapes, the intents and the squad dials (Mid's TEMPER, FORM, INTENT) | {squads: [Alpha, Bravo, Charlie], all: Army, setup: Set up, mid: {train: [Train, train], squad: [Squad, squad], direct: [Direct, direct], fi | N188 |
 | J11 | orders you can follow, the quick action, the choke, the ambush and the War Director: what each says (Mid's 11-orders, 28-army-quick, 39-huddle words); a move is [its id, its cell, the event it sounds, what it says] | {marching: {n} marching: {at}., arrived: {n} arrived: {at}., lost: {m} is lost., losing: {m} is losing., nobody: {m}: nobody idle in it., no | N190 |
 | J12 | the Alarm's four orders (each a name and its icon), what it says, the danger's causes and the warnings (Mid's EMERGENCY, emgStart, emgStop, dangerWhy, watchHome) | {cells: {square: {name: Gather, icon: gather}, hands: {name: Garrison, icon: garrison}, shelter: {name: Shelter, icon: shelter}, split: {nam | N192 |
-| J13 | the end: the sides' names, a side's fall, the wonder, the bell and the score (Mid's judge, fall, finish, built) | {sides: [You, Raiders, Rivals, Fortress], fell: Your keep fell. You held out {t}., rivals: Every rival has fallen. {t}, wonder: [Your wonder | N192 |
+| J13 | the end: the sides' names, a side's fall, the wonder, the bell and the score (Mid's judge, fall, finish, built); (Nov 12, N29, list C1) a rival's fall reads "The Raiders have fallen." as promised Nov 11 ("{side} fell." was built instead); have for a plural name, has for a single one (the Fortress) | {sides: [You, Raiders, Rivals, Fortress], fell: Your keep fell. You held out {t}., rivals: Every rival has fallen. {t}, wonder: [Your wonder | N192 |
 | J14 | what Teach, prisoners, priests, Zeal and spies say (Mid's teachWhy, graduate, takePrisoner, payRansom, prisonersTick, priestTick, zealWhy, zeal, sabotage, intel) | {teach: {label: Teach, none: Nothing newer to learn., busy: Already learning., vets: Research Veterans at the Barracks., age: Needs the {age | N194 |
 | J15 | what trade says: the goods' names, a caravan's sale, its spice, an ally's pay, a venture sent, home or lost, the coin debased, a caravan robbed, and why a trade post will not stand (Mid's routeTick, caravanTick, venture, ventureTick, debase, robbed) | {goods: {wool: Wool, cloth: Cloth, beer: Beer, spice: Spice}, sold: A caravan sold {what} for {n} gold., reached: A caravan reached the stop | N195 |
 | J16 | what the war camp and the traps say (Mid's 38-camps and 38-natives words) | {why: {edge: Too near the edge of the map., water: A camp cannot stand in water., bld: A building stands there., find: A resource lies there | N198 |
