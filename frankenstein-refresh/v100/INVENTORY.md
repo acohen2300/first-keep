@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,592 | 631,844 | 631,994 |
-| Books | 2482 | 0 | 784,230 | 785,155 |
+| Game code | 31 | 3,618 | 637,570 | 637,732 |
+| Books | 2488 | 0 | 787,030 | 787,957 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,139 | 349,600 | 349,853 |
+| Tools | 5 | 2,155 | 352,552 | 352,805 |
 
 ## The trades (code)
 
@@ -23,14 +23,14 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 68 | 10,121 | 10,125 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 105 | 19,000 | 19,005 | 63 |
+| index.html#the-door | 105 | 19,010 | 19,015 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 155 | 21,431 | 21,435 | 78 |
+| index.html#floor-5-movables | 155 | 21,442 | 21,446 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
@@ -39,8 +39,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,120 | 10,124 | 54 |
-| menu.js | 578 | 125,385 | 125,429 | 514 |
-| econ.js | 618 | 116,508 | 116,508 | 70 |
+| menu.js | 602 | 130,622 | 130,678 | 514 |
+| econ.js | 620 | 116,976 | 116,976 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 330 | 81,729 |
+| citations | 331 | 81,997 |
 | colours | 33 | 9,517 |
-| comments | 1003 | 190,487 |
+| comments | 1006 | 191,339 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 342 | 196,616 |
-| rules | 99 | 40,175 |
-| screen | 28 | 16,640 |
+| rules | 100 | 40,556 |
+| screen | 28 | 16,654 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 53 | 101,249 |
+| words | 54 | 102,602 |
 
 ## The shells
 
@@ -177,5 +177,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X99 | proof | gate | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) |
 | X100 | t-p2 | page | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first |
 | X101 | door | code | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) |
+| X102 | t-p2b | page | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up |
 
-2612 items sealed · 2482 book entries · 94 laws · 330 citations, 34 still to open · 0 known
+2618 items sealed · 2488 book entries · 94 laws · 331 citations, 34 still to open · 0 known

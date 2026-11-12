@@ -638,6 +638,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E939** a message with a place shows Go on the blue info bar, at the top and in a menu's help line
 - **E838** the chevron's tap: open or close the help lines
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
+- **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and
+- **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
@@ -759,6 +761,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
+- **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
@@ -803,6 +806,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1013** wood is searched for near the worker, not across the map: within his search circle, double
 - **E1054** Load (Design 08): a villager sent to another kind of find with a load drops it off first (
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
+- **E1057** a unit's record for its card (Design 08): spans of what it gathered (merged while the kind
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
 - **E945** first placed, first built (Albert, Nov 10, N17 #4; AoE2's build queue): a site placed with · N17

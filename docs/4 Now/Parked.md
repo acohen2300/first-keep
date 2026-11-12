@@ -767,3 +767,4 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - Focus on every tap (E1027 as built Nov 11-12): every villager tapped onto a find was focused. Cut by Albert's Design 08: Focus is an Attention you choose. Code: `combat.js` order(), the two `v.focus =` lines. [2026-11-12 17:20]
 - Soldier + construction site = garrison (tap table SN43, N30): replaced by "Can't" (Design 08). [2026-11-12 17:20]
 - Tap another of your units while one is picked = nothing and let go (N30 row "any mine none"): replaced by "the call moves" (Design 08). [2026-11-12 17:20]
+- P2b: the card's old status line ("food", the load row) is hidden on your own units; the call row says it. [2026-11-12 19:00]

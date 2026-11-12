@@ -5152,3 +5152,12 @@ Albert, Nov 12 16:46: "Do it all. Go. Yes yes". Yardstick: `docs/3 Locks/Designs
 - Not in this build: Attention and Load have no buttons yet (the card is P2b), so in play Focus, Mobile and Destroy cannot be chosen yet. The ~30 direct "end of job" writes are not merged into one function (they already pass the job door). The two walkTo are two different jobs (to a tile, to a thing), not merged.
 MODIFIED: code:menu.js, code:econ.js, code:combat.js, book:screen:SN43, book:words:J54, book:comments:E1027, E1051-E1054, book:rules:X100, X101, book:citations:N331, tool:test.py, tool:index.py.
 Tests: t-p2 (11 checks) passes 3 of 3 runs and fails on the old code (it throws on the missing door export). Full suite against the run before this build: no rule went from pass to fail; t-n17 went fail to pass. t-n27 and t-n30 checks moved to Albert's new rules (focus only by Attention; tapping another unit moves the call). Gate `door` stops on a unit pushed without the door and on the job store touched in econ.js (both planted).
+
+## P2b: the card of the call (Design 08) · 2026-11-12 19:00
+Albert, Nov 12 17:52: "Keep it all closed for now for me. It's good enough. Go do it" (mock: `mockups/p2b/card.png`).
+- Calling one of your units opens its card (E1055): status and how many of yours do the same (Select the rest), Add task, Build, Cancel (hang up); folded rows Orders, Attention, Load (villagers), Group (New group), History, Statistics, and Exit (tap twice: the unit dies). A chevron opens one row, a minus closes it; all closed when the card opens. Rows are paired two to a line so the card stays about half the screen.
+- Add task (E1056): the card asks for the next task; taps on the map are queued until Done; when the unit's task ends (idle, or a build done) the next one is given through the tap table. New event `plan`.
+- The record (E1057): spans of what it gathered (merged while the kind stays), builds and idle spells; total gathered; food eaten; when it came (`born` at spawn).
+- The old "load" line is hidden on your own units (the call row says it).
+MODIFIED: code:menu.js, code:econ.js, code:index.html#floor-5-movables, code:index.html#the-door, book:screen:SN4, book:words:J55, book:comments:E1055-E1057, book:rules:X102, book:citations:N332, tool:test.py.
+Tests: t-p2b (13 checks) passes; t-p2, t-n24, t-n25, t-n27, t-n29, t-n30, t-n31 pass. Full suite against P2a: t-cards (the villager card's layout) and t-n30 (it tapped a tree that is now full and refused) moved to the new card and to a free tree; nothing else changed.

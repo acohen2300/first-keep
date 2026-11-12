@@ -404,6 +404,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N329 |  | Albert, Nov 12, 2026, 08:12-11:33, in chat: \Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected.\ T | opened |
 | N330 |  | Albert, Nov 12, 2026, 14:59-15:08, in chat: rules for the next chat, so it is competent and does not \tell me everything's a good idea and t | opened |
 | N331 |  | Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you say; tap 2 is the task; tap th | opened |
+| N332 |  | Albert, Nov 12, 2026, 17:48-17:52, on the card mock: \Make them folded collapsible menus. Chevron opens minus closes. One opens / one closes | opened |
 
 ## colours
 
@@ -1450,6 +1451,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1052 |  | the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldier sent to a site or a find, get a toast and stay c |  |
 | E1053 |  | Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to the find or post you send her to and, when it runs |  |
 | E1054 |  | Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at o |  |
+| E1055 |  | the unit card of the call (Design 08, P2b): a called unit's card opens with its status and how many of yours do the same (Select the rest),  |  |
+| E1056 |  | Add task (Design 08): the card asks for the next task; taps on the map are queued on the unit (plan) until Done; when the unit's task ends ( |  |
+| E1057 |  | a unit's record for its card (Design 08): spans of what it gathered (merged while the kind stays the same), builds and idle spells, the tota |  |
 
 ## ground
 
@@ -1946,6 +1950,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X99 | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) | {stage: gate} | N330 |
 | X100 | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first | {stage: page} | N331 |
 | X101 | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) | {stage: code} | N331 |
+| X102 | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up | {stage: page} | N332 |
 
 ## screen
 
@@ -1954,7 +1959,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN1 | (lnIcon: the icon beside a number in a two-line cell of the top row, Albert, Nov 10 18:27) the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6; the villager's square: one card of four boxes sq a side, no gaps, its dividers drawn inset from the card's edges, its icons sqIcon (Albert, Nov 8 21:42: a square; Nov 9 08:02-08:18: 44, one card, inset dividers, icons 14) | {lnIcon: 13, slots: 6, slot: 44, gap: 6, sq: 44, sqIcon: 14, inset: 9} | N133; N283 |
 | SN2 | the Build tabs: six of two rows of three (each cell two slots wide), Dwelling first, top left; the Courthouse in Defence (it trains spies and shoots only spies) (Albert, Nov 9 18:29-18:33; replaces Base's order of up to nine) | {Home: [BR1, BTC1, BCR2, BP4, BP6, BP7], Resources: [BCL1, BI1, BI2, BI3, BCL4, BCL3], Military: [BM1, BM2, BM3, BM4, BI9, BI7], Defence: [B | N134; N287 |
 | SN3 | (N6, Albert Nov 9 18:29: the Abatis, a field defence, cut for players as caltrops and stakes were on Nov 8; the Apartment and the Tree farm made from a card, SN34) buildings not on the Build menu: the Throne is the map's; the camp tents and the Depot (the camp's store, a forward base; Albert, Nov 8 19:22) come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the traps (the pit, the net, the stakes, the caltrops) are the Natives' booby traps and nobody else's (Albert, Nov 8 19:12: no laid defences for players; they wait with the Natives) | [BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL2] | N135; N172; N198; N287 |
-| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [trade, Trade], [make, Make], [hire, null], [plot, Drop-of | N136; N170; N194 |
+| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [call, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [trade, Trade], [make, Make], [hire, null],  | N136; N170; N194 |
 | SN5 | (Albert, Nov 10 18:27: the two top rows in the footprint of the top one: stores share a cell two to a cell, the season an icon beside the clock with the time left under it, people with idle and army, rank over score; one row of nine) the top ribbon: the five stores, sound, pause, the Mail door with its unread count (Base; Albert, Nov 7 20:48: all Base — the small map lives in the war station's middle, not here) | [food/wood, stone/gold, iron/age, when, folk, rank/score, mute, pause, mail] | N137; N241 |
 | SN6 | readings with no row: the second top row was cut, each waited for its new home; all now in the Top Info Ribbon (SN39, Nov 10) | [] | N138; N306 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |
@@ -2563,4 +2568,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J52 | Prep's words | {started: Prep: everyone boards up., short: Not enough wood or stone to board every building., off: The boards come off. Back to work., earl | N326 |
 | J53 | the pace meter's second line: the drawing layers, in the order they are drawn (N29) | [land, clouds, things, fog, marks, sky, lights] | N208 |
 | J54 | the call's toasts (Design 08): a spot already full; a soldier sent to a site or a find | {full: Full: see closest alt., cant: Can't do that.} | N331 |
+| J55 | the unit card of the call (Design 08, P2b): status, group, orders, attention, load, history, statistics, exit | {idle: Idle, doing: {food: Gathering: food, wood: Gathering: wood, gold: Gathering: gold, stone: Gathering: stone, iron: Gathering: iron, bu | N332 |
 

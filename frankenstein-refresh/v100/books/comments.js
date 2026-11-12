@@ -1002,5 +1002,8 @@ BOOK("comments", {
  "E1051": {"text": "the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the pick ends, it carries on); a tap on another of yours moves the call to it; with New Group (More) a tap adds or drops one"},
  "E1052": {"text": "the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldier sent to a site or a find, get a toast and stay called; everyone else in the order goes"},
  "E1053": {"text": "Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to the find or post you send her to and, when it runs out, sends her to the Town Center to wait; Mobile is first picked by + and by a site needing a builder, Focus last"},
- "E1054": {"text": "Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at once (Destroy)"}
+ "E1054": {"text": "Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at once (Destroy)"},
+ "E1055": {"text": "the unit card of the call (Design 08, P2b): a called unit's card opens with its status and how many of yours do the same (Select the rest), Add task, Build and Cancel; under them folded rows Orders, Attention, Load (villagers), Group, History, Statistics and Exit. A chevron opens one row, a minus closes it; one open at a time, all closed when the card opens (Albert, Nov 12 17:52)"},
+ "E1056": {"text": "Add task (Design 08): the card asks for the next task; taps on the map are queued on the unit (plan) until Done; when the unit's task ends (idle, or a build done) the next queued task is given through the tap table"},
+ "E1057": {"text": "a unit's record for its card (Design 08): spans of what it gathered (merged while the kind stays the same), builds and idle spells, the total it gathered, what it ate, and when it came"}
 });

@@ -35,7 +35,7 @@ Days of play, patch, play built fixes on fixes. Found on Nov 12:
 5. The rest of The List.
 
 ## Now
-- P2a works (Albert played it). Working on P2b: the card mock in `mockups/p2b/`, for his pick. Then H3 (snow freeze), P2c.
+- P2b built (preview-n33), his play owed. Next: H3 (snow freeze), P2c. Was: P2a works (Albert played it). P2b: the card mock in `mockups/p2b/`, for his pick. Then H3 (snow freeze), P2c.
 - How a fix works, and how to take over: `CLAUDE.md` 8c and 8d.
 
 ## Waiting on Albert (about 12 calls)

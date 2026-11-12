@@ -92,7 +92,7 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 
 ## 8. P2 (Nov 12 17:45) [2026-11-12 17:45]
 - P2a DONE (Albert played it, Nov 12 17:39: "It works! First time in three days"): the call per Design 08 (hang up, the call moves, New Group, Full and Can't toasts, Focus only by Attention, Focus to the Town Center, Mobile first, Drop/Destroy). Proof: t-p2, fails with the old code planted (BUILDS.md P2a). [2026-11-12 17:45]
-- P2b TODO: the card (Status, Group with Select the rest, Orders with Add task, Attention and Load buttons, Build, Cancel, History, Statistics, Exit two-tap); mock first (H1). Until then Focus, Mobile and Destroy cannot be chosen in play. [2026-11-12 17:45]
+- P2b BUILT (Nov 12 19:00, BUILDS.md P2b; t-p2b passes; his play owed): the card (Status, Group with Select the rest, Orders with Add task, Attention and Load buttons, Build, Cancel, History, Statistics, Exit two-tap); mock first (H1). Until then Focus, Mobile and Destroy cannot be chosen in play. [2026-11-12 17:45]
 - P2c TODO: merge the ~30 direct end-of-job writes into one "end" (back to last job, else idle), per Design 08 after a build. [2026-11-12 17:45]
 - Gate door (X101) DONE: proof: planted a unit pushed without the door and the job store touched in econ.js; both stop the gate. [2026-11-12 17:45]
 - NEXT (Albert Nov 12 17:40): P2b mock first (the card). Then H3 the snow freeze, P2c. [2026-11-12 17:45]
