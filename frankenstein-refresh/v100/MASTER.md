@@ -437,7 +437,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E958** your people behind a tree or a building show through it as a silhouette, as Age of Empires · N17
 - **E985** a person counts as hidden by what is drawn in front of him only if that thing has ink at t
 - **E984** your hidden people, under the canopy or behind a tree or building drawn after them, show a
-- **E897** your own people under the canopy drawn as a ring over the trees, so you see who is inside
 - **E810** familiarity (D355): a cell is known to a side from the last time one of its eyes stood in  · D355 (N278, N279, N280)
 - **E811** a side's familiarity with a tile: one on its own ground (a finished building of its own wi · D355 (N278, N279, N280)
 - **E624** is a thing in a side's sight: its own, the land's and the wild's always; another side's on · QAL (N41, N215, N216, N217, N218, N220, N247, N248) · QAM (N42, N219)
@@ -637,7 +636,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E849** a group's label over its boxes, in small capitals across the whole row (as the v80 card)
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
-- **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
@@ -780,6 +778,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E769** a research's needs worked out once and kept: the Tech book does not change in play
 - **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
 - **E327** of the buildings that can take an order, the one with the shortest line (Mid's shortest)
+- **E1030** one schedule for everything that waits its turn in a building (Decisions Nov 11, #19): for
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept
 - **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N322, N164, N166)
 - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)

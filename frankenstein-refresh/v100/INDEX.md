@@ -1422,6 +1422,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1026 |  | a tower, Town Center or castle shoots: its reload timer starts at nothing (it was never set, so it counted down from not-a-number and never  |  |
 | E1027 |  | Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused on it (the F mark): he does not move on to a richer |  |
 | E1028 |  | every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill should offer a farm as Lumber offers a tree farm): the |  |
+| E1029 |  | a find you can gather that stands behind trees shows its ring through them, dashed like your hidden people's (E984) and in the find's own co |  |
+| E1030 |  | one schedule for everything that waits its turn in a building (Decisions Nov 11, #19): for each item its time until it starts and until it i |  |
 
 ## ground
 
