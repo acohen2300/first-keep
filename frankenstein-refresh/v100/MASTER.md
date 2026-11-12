@@ -806,7 +806,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
 - **E945** first placed, first built (Albert, Nov 10, N17 #4; AoE2's build queue): a site placed with · N17
-- **E1027** Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused o
+- **E1027** Focus (Decisions Nov 11, #17; Design 08, Nov 12): a villager is focused only when her Atte · E1053
 - **E322** back to the very find it left if it still stands, else the best of its yield, else idle (M
 - **E323** the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's 
 - **E861** a builder's next site: the first one laid, then the nearest (a wall line keeps to the near
@@ -921,7 +921,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## combat.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
-- **E1027** Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused o
+- **E1027** Focus (Decisions Nov 11, #17; Design 08, Nov 12): a villager is focused only when her Atte · E1053
 - **E1053** Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to 
 - **E227** First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), n · QBO (N69, N188) · QBT (N81, N82, N83, N18) · QAG (N36, N37, N188) · QAF (N35) · QAI (N76, N188) · QAO (N45) · QBQ (N76) · QAJ (N39, N40)
 - **E961** the standards drawn this frame, kept so the lights put a torch on each after dark (v80's f

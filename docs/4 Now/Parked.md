@@ -762,3 +762,8 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 ## Parked in N29 (Nov 12) [2026-11-12 07:55]
 - Arm, then engage: one rule for everything tapped (Albert, Nov 12 07:43: "Should tap something to activate, tap something else to engage and thus deactivate be an action that can be applied to tech? Queue? Spawn? Boxes, settings, etc? Why can't units be the same?"; 07:47: "The army should deselect. My rule states logic flaw is builder error."; 07:48: "that's not for right now"). Not built. Claude built it at 07:47 without a yes and took it back out at 07:55. When it is built: one place that disarms after any order (a villager's order, a caravan's route, an army's move, Execute, Defend, Retreat, Charge, Fall back, Hold, Recall), the Controller's who lets go with it, no exception for soldiers; N24 #2 (soldiers stay picked) is then withdrawn. [2026-11-12 07:55]
 - The one-home audit of behaviour (the outside audit of Nov 12 07:30: a unit's job set from 42 places, selection from 10, 7 callers of WAR.order): for after the list. [2026-11-12 07:55]
+
+## Cut in P2 (Nov 12, 2026) [2026-11-12 17:20]
+- Focus on every tap (E1027 as built Nov 11-12): every villager tapped onto a find was focused. Cut by Albert's Design 08: Focus is an Attention you choose. Code: `combat.js` order(), the two `v.focus =` lines. [2026-11-12 17:20]
+- Soldier + construction site = garrison (tap table SN43, N30): replaced by "Can't" (Design 08). [2026-11-12 17:20]
+- Tap another of your units while one is picked = nothing and let go (N30 row "any mine none"): replaced by "the call moves" (Design 08). [2026-11-12 17:20]

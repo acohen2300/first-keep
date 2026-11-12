@@ -25,6 +25,8 @@ Days of play, patch, play built fixes on fixes. Found on Nov 12:
 ## Nov 12 16:45
 - Albert's call spec for villagers and army is written (`docs/3 Locks/Designs/08 ...`): P2's yardstick. The List section 7 holds his answers (the freeze is snow, H3).
 
+## Nov 12 17:45: P2a built and sealed (BUILDS.md P2a); preview-n32 on main for Albert to play. Next: P2b (the card, mock first), P2c (one end of job).
+
 ## Next (CLAUDE.md section 6)
 1. Housekeeping: archive the other lists into The List, one working branch.
 2. Sort the 22 failing tests.

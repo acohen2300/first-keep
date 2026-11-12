@@ -225,6 +225,13 @@ for c, e in BOOKS['measure'].items():
     if isinstance(v, dict): rule('units', isinstance(u, dict) and all(k in v and x in UNITS for k, x in u.items()), f'{c} names a unit for a key it does not hold, or a unit not in the list'); unset += sum(1 for k, x in v.items() if _num(x) and k not in (u or {}))
     else: rule('units', u in UNITS, f'{c}: unit {u!r} is not in the list'); unset += u == 'unset'
 rule('units', unset <= RULES['units']['value']['unset'], f'{unset} numbers have no unit set; the rule allows {RULES['units']['value']['unset']}: set units, never raise the count')
+# ── 3b. The job door holds (X101, P2): only the door touches JB or defines job; every unit added passes jobDoor
+for f in CODE:
+    t = text(f)
+    for n, l in enumerate(t.split('\n'), 1):
+        if f != 'index.html' and re.search(r'\bJB\b|defineProperty\([^)]*[\'"]job[\'"]', l): rule('door', False, f'{f}:{n} touches the job store outside the door')
+        if re.search(r'\bunits\.(push|unshift)\(', l) and 'jobDoor(' not in l: rule('door', False, f'{f}:{n} adds a unit without the job door')
+rule('door', 'jobDoor(u); place(u); units.push(u)' in text('index.html') and 'units.forEach(jobDoor)' in text('index.html'), 'the job door is missing from spawn or load')
 # ── 4. The List: DONE only with proof (X99, Albert Nov 12 15:08, N330)
 LIST = text('../../docs/4 Now/The List.md') or ''; TESTS = {e['key'] for e in BOOKS['rules'].values() if e['value']['stage'] == 'page'}
 for m in re.finditer(r'(?m)^- ([A-Z]\d+b?) DONE(.*)$', LIST): rule('proof', 'nothing to build' in m.group(2) or ('planted' in m.group(2) and any(t in TESTS for t in re.findall(r'\bt-[a-z0-9-]+', m.group(2)))), f'The List {m.group(1)} is DONE without a test that fails with the old line planted')

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,592 | 631,844 | 631,994 (+1,103) |
-| Books | 2481 | 0 | 783,843 | 784,768 (+25) |
+| Game code | 31 | 3,592 | 631,844 | 631,994 |
+| Books | 2482 | 0 | 784,230 | 785,155 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,132 | 348,932 | 349,181 (+3,459) |
+| Tools | 5 | 2,139 | 349,600 | 349,853 |
 
 ## The trades (code)
 
@@ -39,9 +39,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,120 | 10,124 | 54 |
-| menu.js | 578 | 125,385 | 125,429 (+344) | 514 |
-| econ.js | 618 | 116,508 | 116,508 (+689) | 70 |
-| combat.js | 377 | 64,642 | 64,642 (+70) | 83 |
+| menu.js | 578 | 125,385 | 125,429 | 514 |
+| econ.js | 618 | 116,508 | 116,508 | 70 |
+| combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,11 +53,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 330 | 81,729 |
 | colours | 33 | 9,517 |
-| comments | 1003 | 190,362 |
+| comments | 1003 | 190,487 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 342 | 196,616 |
-| rules | 98 | 39,902 |
+| rules | 99 | 40,175 |
 | screen | 28 | 16,640 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -176,5 +176,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X98 | t-n31 | page | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked |
 | X99 | proof | gate | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) |
 | X100 | t-p2 | page | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first |
+| X101 | door | code | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) |
 
-2611 items sealed · 2481 book entries · 94 laws · 330 citations, 34 still to open · 0 known
+2612 items sealed · 2482 book entries · 94 laws · 330 citations, 34 still to open · 0 known

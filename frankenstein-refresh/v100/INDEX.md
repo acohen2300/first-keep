@@ -1424,7 +1424,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1024 |  | the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Friend green); War, Terms and Ally go through setRel (a |  |
 | E1025 |  | no food for a villager: the People icon wears the cannot-afford fade, red at nothing to white as the food comes (Decisions Nov 11, #22: red  |  |
 | E1026 |  | a tower, Town Center or castle shoots: its reach is measured from the tile it stands on. A building has no tile field, so its height over th |  |
-| E1027 |  | Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused on it (the F mark): he does not move on to a richer |  |
+| E1027 |  | Focus (Decisions Nov 11, #17; Design 08, Nov 12): a villager is focused only when her Attention is Focus (E1053), never by a tap alone (the  |  |
 | E1028 |  | every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill should offer a farm as Lumber offers a tree farm): the |  |
 | E1029 |  | a find you can gather that stands behind trees shows its ring through them, dashed like your hidden people's (E984) and in the find's own co |  |
 | E1030 |  | one schedule for everything that waits its turn in a building (Decisions Nov 11, #19): for each item its time until it starts and until it i |  |
@@ -1945,6 +1945,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X98 | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked | {stage: page} | N329 |
 | X99 | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) | {stage: gate} | N330 |
 | X100 | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first | {stage: page} | N331 |
+| X101 | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) | {stage: code} | N331 |
 
 ## screen
 

@@ -5141,3 +5141,14 @@ Albert, Nov 12 15:08: "Go go go yes yes yes" (steps 1-3 of CLAUDE.md, the gates)
 - The List: 16 DONE lines lacking that proof moved to BUILT, proof owed.
 MODIFIED: tool:index.py, book:rules:X99, book:citations:N330.
 Tests: the gate passes; with two bad lines planted in The List it stops on both, and on a test name that does not exist.
+
+## P2a: the call (Design 08) and the door gate · 2026-11-12 17:45
+Albert, Nov 12 16:46: "Do it all. Go. Yes yes". Yardstick: `docs/3 Locks/Designs/08 The call - villagers and army.md`.
+- The call (E1051): tap the called unit again to hang up; tap another of yours to move the call; with New Group (More) taps add or drop. A tap on your own building no longer picks it while someone is called.
+- Refusals (E1052, J54): a villager sent to a find with no free spot, and a soldier sent to a construction site or a find, get a toast ("Full: see closest alt." / "Can't do that.") and stay called; the tap table SN43 rows soldier+site and soldier+find are "cant".
+- Attention (E1053, E1027 rewritten): no tap focuses (cut: Focus on every tap). Focus only when a villager's Attention is Focus; a focused villager whose find runs out walks to the Town Center. Mobile is first picked by + and by a site needing a builder; Focus last.
+- Load (E1054): Destroy throws the load down and goes at once; Drop (default) carries it first.
+- Gate `door` (X101): no code but the door touches the job store or defines a job property; every unit added passes jobDoor (spawn and load). The job door itself was built in N30 (E1041).
+- Not in this build: Attention and Load have no buttons yet (the card is P2b), so in play Focus, Mobile and Destroy cannot be chosen yet. The ~30 direct "end of job" writes are not merged into one function (they already pass the job door). The two walkTo are two different jobs (to a tile, to a thing), not merged.
+MODIFIED: code:menu.js, code:econ.js, code:combat.js, book:screen:SN43, book:words:J54, book:comments:E1027, E1051-E1054, book:rules:X100, X101, book:citations:N331, tool:test.py, tool:index.py.
+Tests: t-p2 (11 checks) passes 3 of 3 runs and fails on the old code (it throws on the missing door export). Full suite against the run before this build: no rule went from pass to fail; t-n17 went fail to pass. t-n27 and t-n30 checks moved to Albert's new rules (focus only by Attention; tapping another unit moves the call). Gate `door` stops on a unit pushed without the door and on the job store touched in econ.js (both planted).

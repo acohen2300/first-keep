@@ -430,7 +430,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N328** Tharion, Lieberman, Montain, Young, Baker-Fulco, Delany, Hoyt, Energy requirements of military personnel, Appe → D224
 - **N329** Albert, Nov 12, 2026, 08:12-11:33, in chat: "Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, a → X98
 - **N330** Albert, Nov 12, 2026, 14:59-15:08, in chat: rules for the next chat, so it is competent and does not "tell me  → X99
-- **N331** Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you  → X100, J54
+- **N331** Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you  → X100, X101, J54
 
 ## Named exceptions
 

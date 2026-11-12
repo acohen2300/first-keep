@@ -1,23 +1,5 @@
 {
- "build": "P2a the call (Design 08)",
- "agreed": "Albert, Nov 12 16:46: \"Do it all. Go. Yes yes\"",
- "opens": [
-  "code:menu.js",
-  "code:econ.js",
-  "code:combat.js",
-  "book:screen:SN43",
-  "book:words:J54",
-  "book:comments:E1051",
-  "book:comments:E1052",
-  "book:comments:E1053",
-  "book:comments:E1054",
-  "book:rules:X100",
-  "book:citations:N331",
-  "tool:test.py"
- ],
- "grow": {
-  "code:menu.js": 800,
-  "code:econ.js": 1500,
-  "code:combat.js": 600
- }
+ "build": "",
+ "agreed": "",
+ "opens": []
 }
