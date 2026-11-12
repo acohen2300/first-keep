@@ -88,3 +88,4 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - H5 TODO: D10's Winner button: on the new game menu it does nothing. [2026-11-12 16:45]
 - H6 TODO, unverified: the Mill showed two researches green (running) at once; his Nov 11 rule is one green, the rest blue queued. [2026-11-12 16:45]
 - H7: the Nov 12 52-question list: answered 1-7 and 22-23; still open 8-9, 10-11, 13-20, 24-28, 30, 32-35, 41-42, 44-51. [2026-11-12 16:45]
+- H8 PART: P2 inventory written by script (`P2 inventory - Nov 12.md`): 88 lines writing job 77, target 40, then 33, path 26, focus 15 times. Next: mark each keep, merge or delete against Design 08. [2026-11-12 16:52]
