@@ -172,8 +172,9 @@ function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.
   if (theirs && SIDES[t.side] && !atWar(ME, t.side)) { say(WO.foeFirst); return null; }
   for (const v of vil) v.focus = null; // E1027
   if (theirs && t.kind === 'unit') { if (FK.has(t, 'Prey')) for (const v of vil) ECON.hunt(ME, t, v); }
-  else if (t && t.kind === 'bld') { for (const v of vil) if (!up(t) || t.hp < t.hpMax - D.repair.within) ECON.buildAt(v, t); else if (ECON.startWork(v, t)) v.focus = v.target; else walkTo(v, t); }
-  else if (t) for (const v of vil) { ECON.gatherAt(v, t); v.focus = t; } else for (const v of vil) walkTo(v, mid(k));
+  else if (t && t.kind === 'bld') { for (const v of vil) if (!up(t) || t.hp < t.hpMax - D.repair.within) ECON.buildAt(v, t); else if (ECON.startWork(v, t)) { if (v.att === 'focus') v.focus = v.target; } else walkTo(v, t); } // E1053
+  else if (t) for (const v of vil) { ECON.gatherAt(v, t); if (v.att === 'focus') v.focus = t; } // E1053
+  else for (const v of vil) walkTo(v, mid(k));
   for (const u of S.filter((v) => !armed(v) && troop(v))) { const at = theirs && t.kind === 'unit' && FK.has(u, 'Convert'), sab = theirs && t.kind === 'bld' && FK.has(u, 'Spy'); if (at || sab) Object.assign(u, { job: at ? 'convert' : 'sab', cv: t, tid: t, path: null }); else walkTo(u, t || mid(k)); } // E475
   for (const u of S.filter((v) => FK.has(v, 'Unpack'))) ECON.sendWagon(u, k ?? kOf(t));
   if (!sol.length) return null; if (!t) k = landK(k); const goal = t ? kOf(t) : k; let L = null;

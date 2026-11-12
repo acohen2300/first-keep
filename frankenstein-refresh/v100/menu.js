@@ -131,8 +131,9 @@ const council = (t) => (own(t) && FK.has(t, 'Squad') ? row(...WA.squads.map((n, 
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u), vils = () => { const P = FK.picked(); return P.length && P.every(isVil) ? P : []; }, sqLab = (icon, word) => `<span class="t">${icon}</span>${word}`; // E819
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.armed(u);
 const TAP = SCR.tap, tapWho = (u) => (isVil(u) ? 'villager' : isSoldier(u) ? 'soldier' : FK.has(u, 'Trade') ? 'caravan' : 'any'), whatOf = (t) => (!t ? 'ground' : t.kind === 'unit' ? (own(t) ? 'mine' : FK.has(t, 'Prey') ? 'prey' : 'foe') : t.kind === 'bld' ? (!own(t) ? 'foe' : t.done < ONE ? 'site' : t.hp < t.hpMax ? 'hurt' : 'own') : FK.has(t, 'Trade') ? 'stop' : 'find'), rowFor = (u, t) => (TAP.rows.find(([w, x]) => (w === tapWho(u) || w === 'any') && x === whatOf(t)) || []).at(-ONE) || 'none'; // E1038
-function tapDo(P, t, k, keep) { const by = {}; for (const u of P) (by[rowFor(u, t)] ||= []).push(u); const W = [...(by.gather || []), ...(by.hunt || []), ...(by.build || []), ...(by.repair || []), ...(by.work || []), ...(by.attack || []), ...(by.go || [])]; // E1038
-  if (W.length) WAR.order(W, t, k); if (by.fight) for (const u of by.fight) WAR.fight(u, t, true); if (by.garrison) ECON.garrison(by.garrison, t); if (by.route) { for (const c of by.route) ECON.setRoute(c, t, true, false); toast(WT_.routed.replace('{at}', coord(t.bx, t.by))); } askIce(W, t, k); if (!S.ice && !keep) letGo(); return Object.keys(by); }
+function tapDo(P, t, k, keep) { const by = {}; for (const u of P) (by[rowFor(u, t)] ||= []).push(u); const stay = [...(by.cant || []), ...(by.gather || []).filter((u) => ECON.isFull(u, t))]; if (stay.length) { by.gather = (by.gather || []).filter((u) => !stay.includes(u)); toast(by.cant ? WD.call.cant : WD.call.full); } // E1052
+  const W = [...(by.gather || []), ...(by.hunt || []), ...(by.build || []), ...(by.repair || []), ...(by.work || []), ...(by.attack || []), ...(by.go || [])]; // E1038
+  if (W.length) WAR.order(W, t, k); if (by.fight) for (const u of by.fight) WAR.fight(u, t, true); if (by.garrison) ECON.garrison(by.garrison, t); if (by.route) { for (const c of by.route) ECON.setRoute(c, t, true, false); toast(WT_.routed.replace('{at}', coord(t.bx, t.by))); } askIce(W, t, k); if (!S.ice && !keep) { letGo(); if (stay.length) FK.select(stay); } return Object.keys(by); } // E1052
 const letGo = () => { FK.select(null); S.more = false; Object.assign(S.ctl, { who: null, arg: null }); WAR.SQ.sel = null; }; // E1050
 const barSaid = (k, act) => { const P = FK.picked().filter(isSoldier); if (act(P) !== false) toast(WD.bar.said[k].replace('{n}', P.length)); }; // E989
 const hall = () => { const h = FK.seatOf(ME); return h && h.done >= 1 ? h : null; };
@@ -436,7 +437,7 @@ function heard(k, u, px, py) {
   if (S.tab === 'Build' && !u && onB(k) && !under(k)) { hintAt(k); render(true); return ['tap']; } // E341
   const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
   if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); return ['open', t]; } return ['tap']; }
-  if (u && own(u) && (S.more || !FK.picked().length || FK.picked().includes(u))) { pickToggle(u); return ['pick', u]; } // E1038
+  if (u && own(u) && (u.kind === 'unit' || !FK.picked().length || FK.picked().includes(u))) { pickToggle(u); return ['pick', u]; } // E1051
   const P = FK.picked().filter(own); if (P.length) { const sent = !!t || onB(k); if (sent) tapDo(P, t, k); render(true); return [sent ? 'order' : 'tap', t]; } // E856
   if (!t) { const O = ordAt(px, py); if (O) { FK.select(units().filter((v) => v.ord === O)); ctlPick(); } else if (onB(k)) { S.qa = { k, px, py }; S.eat = true; } S.subject = null; render(true); return ['tap']; }
   if (t.kind === 'bld' && own(t) && !ECON.replantWhy(ME, t)) { ECON.replant(ME, t); return ['place', t]; }
@@ -446,7 +447,8 @@ function askIce(P, t, k) { const U = P.filter((u) => u.path && u.path.some((q) =
 FK.on('cracking', (k, mine) => { if (!mine) return; const [x, y] = FK.toScreen(...FK.toView(...FK.tileMid(k), ZERO)); S.crack = { px: x, py: y, t: FK.K.t }; say(WI.crack); render(true); }); // E795
 FK.on('fell', (n) => say(WI.fell.replace('{n}', n)));
 FK.on('tick', () => { if (S.crack && FK.K.t - S.crack.t > CR.show && !units().some((u) => u.side === ME && FK.onIce(u))) { S.crack = null; render(true); } });
-function pickToggle(u) { const P = FK.picked(); FK.select(S.more ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : [u]); S.subject = null; ctlPick(); render(true); }
+function pickToggle(u) { const P = FK.picked(); FK.select(S.more ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : P.length === ONE && P.includes(u) ? null : [u]); // E1051
+  S.subject = null; ctlPick(); render(true); }
 const ordAt = (px, py) => { let best = null, bd = TO.ord; for (const O of WAR.ORD) { const d = O.n ? Math.hypot(...onMap(O.k).map((v, n) => v - [px, py][n])) : Infinity; if (d < bd) [best, bd] = [O, d]; } return best; };
 const boardAt = (px, py) => { const [bx, by] = FK.tileMid(tileK(px, py)); return { bx, by }; }, aimK = () => (!S.aim ? null : S.aim.t ? FK.tileAt(S.aim.t.bx, S.aim.t.by) : S.aim.k), toolSet = () => { const P = FK.picked().filter(isSoldier); return P.length ? P : WAR.sendable(); };
 const onB = (k) => k !== -1; // E433

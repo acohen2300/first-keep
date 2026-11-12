@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,587 | 630,741 | 630,891 |
-| Books | 2474 | 0 | 781,816 | 782,741 |
+| Game code | 31 | 3,592 | 631,844 | 631,994 (+1,103) |
+| Books | 2481 | 0 | 783,843 | 784,768 (+25) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,112 | 345,473 | 345,722 |
+| Tools | 5 | 2,132 | 348,932 | 349,181 (+3,459) |
 
 ## The trades (code)
 
@@ -39,9 +39,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,120 | 10,124 | 54 |
-| menu.js | 576 | 125,041 | 125,085 | 514 |
-| econ.js | 616 | 115,819 | 115,819 | 70 |
-| combat.js | 376 | 64,572 | 64,572 | 83 |
+| menu.js | 578 | 125,385 | 125,429 (+344) | 514 |
+| econ.js | 618 | 116,508 | 116,508 (+689) | 70 |
+| combat.js | 377 | 64,642 | 64,642 (+70) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 329 | 81,238 |
+| citations | 330 | 81,729 |
 | colours | 33 | 9,517 |
-| comments | 999 | 189,470 |
+| comments | 1003 | 190,362 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 342 | 196,616 |
-| rules | 97 | 39,426 |
-| screen | 28 | 16,615 |
+| rules | 98 | 39,902 |
+| screen | 28 | 16,640 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 52 | 101,026 |
+| words | 53 | 101,249 |
 
 ## The shells
 
@@ -175,5 +175,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X97 | t-n30 | page | N30: with something picked the next tap is its order by the tap table (a villager onto a tree gathers, a soldier onto a foe attacks, a villager onto a foe fights, a soldier onto your tower garrisons, a tap on another of your units only lets go) and the pick lets go after; a find under the finger beats your own villagers standing on it; every job passes the job door and none is odd; a blow passes the health door with who struck; both ledger word sets are read; a world event's walkers go in legs; four escorts keep up with their caravan; Prep's techs cheapen it; played: Prep boards against a raid, a tower hurts a raider, Split, Lure and Seek move the villagers, a tech tapped at a Mill is learnt |
 | X98 | t-n31 | page | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked |
 | X99 | proof | gate | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) |
+| X100 | t-p2 | page | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first |
 
-2604 items sealed · 2474 book entries · 94 laws · 329 citations, 34 still to open · 0 known
+2611 items sealed · 2481 book entries · 94 laws · 330 citations, 34 still to open · 0 known

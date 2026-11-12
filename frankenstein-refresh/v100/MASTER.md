@@ -597,6 +597,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
 - **E1038** the tap table (SN43, Albert Nov 12 08:12-08:15): with something picked, the next tap is it · SN43 (N326)
+- **E1052** the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldie
 - **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · E1048
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
@@ -712,6 +713,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
+- **E1051** the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the  · N331
 - **E856** a picked unit takes the next tap as its order, by the tap table (E1038, SN43). While the i · E1038 · SN43 (N326)
 - **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
@@ -799,6 +801,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
 - **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N322, N164, N166) · D137 (N114) · D197 (N164)
 - **E1013** wood is searched for near the worker, not across the map: within his search circle, double
+- **E1054** Load (Design 08): a villager sent to another kind of find with a load drops it off first (
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
@@ -813,6 +816,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E309** builders who finish a place of work take it up (Mid's startWork): a field if nobody works 
 - **E310** a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds i
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
+- **E1053** Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to 
 - **E944** minus on a job acts at once: the villager drops what it carries and stands idle, so the co · N17
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
 - **E1032** an order's food is charged by the ground marched, not by the tap (Decisions Nov 11, #4; Al · D224 (N13, N173, N181, N185, N198, N328) · N29
@@ -918,6 +922,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E1027** Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused o
+- **E1053** Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to 
 - **E227** First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), n · QBO (N69, N188) · QBT (N81, N82, N83, N18) · QAG (N36, N37, N188) · QAF (N35) · QAI (N76, N188) · QAO (N45) · QBQ (N76) · QAJ (N39, N40)
 - **E961** the standards drawn this frame, kept so the lights put a torch on each after dark (v80's f
 - **E406** the orders, missions and the War Director's measures and words; the groups on the march (O

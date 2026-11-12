@@ -403,6 +403,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N328 |  | Tharion, Lieberman, Montain, Young, Baker-Fulco, Delany, Hoyt, Energy requirements of military personnel, Appetite 44 (2005) 47-65 (abstract | opened |
 | N329 |  | Albert, Nov 12, 2026, 08:12-11:33, in chat: \Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected.\ T | opened |
 | N330 |  | Albert, Nov 12, 2026, 14:59-15:08, in chat: rules for the next chat, so it is competent and does not \tell me everything's a good idea and t | opened |
+| N331 |  | Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you say; tap 2 is the task; tap th | opened |
 
 ## colours
 
@@ -1445,6 +1446,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1047 |  | one tap rule on the war page too: a tap on a villager (or any of yours that is not a soldier) picks it, and its next tap is its order by the |  |
 | E1048 |  | the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a squad) are the pick, not a tap, so Retreat and Defen |  |
 | E1050 |  | one place lets the pick go (letGo): after every order given to what you picked (a tap by the tap table, placing a building, a card's attack  |  |
+| E1051 |  | the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the pick ends, it carries on); a tap on another of you |  |
+| E1052 |  | the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldier sent to a site or a find, get a toast and stay c |  |
+| E1053 |  | Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to the find or post you send her to and, when it runs |  |
+| E1054 |  | Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at o |  |
 
 ## ground
 
@@ -1939,6 +1944,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X97 | N30: with something picked the next tap is its order by the tap table (a villager onto a tree gathers, a soldier onto a foe attacks, a villager onto a foe fights, a soldier onto your tower garrisons, a tap on another of your units only lets go) and the pick lets go after; a find under the finger beats your own villagers standing on it; every job passes the job door and none is odd; a blow passes the health door with who struck; both ledger word sets are read; a world event's walkers go in legs; four escorts keep up with their caravan; Prep's techs cheapen it; played: Prep boards against a raid, a tower hurts a raider, Split, Lure and Seek move the villagers, a tech tapped at a Mill is learnt | {stage: page} | N326 |
 | X98 | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked | {stage: page} | N329 |
 | X99 | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) | {stage: gate} | N330 |
+| X100 | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first | {stage: page} | N331 |
 
 ## screen
 
@@ -2555,4 +2561,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J51 | the Market's Sell and Buy, the Workshop's Make, a camp's Hire, a caravan's route and why it stands idle (Audit D, Albert Nov 11 09:52: show it all; Nov 11 22:48: "There are no trade routes") | {sell: Sell, buy: Buy, short: Needs {n} to sell, gold: Not enough gold, make: Make, hire: Hire, route: Trade route, routed: Caravan set on t | N322; N326 |
 | J52 | Prep's words | {started: Prep: everyone boards up., short: Not enough wood or stone to board every building., off: The boards come off. Back to work., earl | N326 |
 | J53 | the pace meter's second line: the drawing layers, in the order they are drawn (N29) | [land, clouds, things, fog, marks, sky, lights] | N208 |
+| J54 | the call's toasts (Design 08): a spot already full; a soldier sent to a site or a find | {full: Full: see closest alt., cant: Can't do that.} | N331 |
 
