@@ -71,6 +71,7 @@ function chaseCrown(side, put) { const s = SIDES[side], has = (c) => blds(side, 
   if (per(side).crown === 'wellbeing') FK.ticked('Care').some((c) => FK.aged(c, side) && !has(c) && ECON.canPay(side, D.cost[c]) && put(c));
   if (ECON.opened() && ECON.nextAge(side) === D.age.hidden && !s.aging) ECON.ageUp(side);
   if (s.age === D.age.hidden) { const [lab] = last.map((c) => T[c].value.at); if (!has(lab)) put(lab); else last.some((c) => ECON.research(side, c)); } }
+function* whileHome(side, gen) { while (home(side) && !gen.next().done) yield; } // E1021
 function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side), m = mind[side]; if (!h || !P) return; const R = s.store, vs = ECON.villagersOf(side), armyN = WAR.armyOf(side).length, t = FK.K.t, put = (code, at, [r0, r1]) => raise(side, code, at.bx, at.by, r0, r1), jobs = ECON.jobs(side), vil = born(h);
   if (t - of(m.siteT) >= AT.site) { m.siteT = t; for (const b of blds(side)) if (!up(b) && !ECON.wallish(b) && !vs.some((u) => u.target === b)) ECON.autoBuilder(side, b); }
   yield; const due = {}, flat = s.age >= AT.apart.age && ECON.canPay(side, AT.apart.cost) ? A.apartment : HOUSE; // E530
@@ -164,7 +165,7 @@ const level = () => { DF = A.diff[MENU.S.game.diff]; };
 FK.on('begin', () => { level(); const them = D.players.filter((s) => s !== ME); them.forEach((s, i) => { clock[s] = (DF.react * i) / them.length; }); for (const side of D.players) { if (side === ME) continue; const h = home(side); if (!h) continue; for (const code of A.start) { const [r0, r1] = RG.start, at = spot(code, h.bx, h.by, r0, side, r1); if (!at) continue; const t = ECON.site(side, code, ...at); if (t) { t.done = D.rising.done; t.hp = t.hpMax; FK.wear(t); } } } }); // E712
 FK.on('start', () => { rates.clear(); rings.clear(); // E683
   claimT.clear(); helped.clear(); league = null; mind.forEach((_, i) => { mind[i] = {}; }); });
-FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] -= DF.react; FK.task('think' + side, thinking(side)); } } });
+FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] -= DF.react; FK.task('think' + side, whileHome(side, thinking(side))); } } });
 FK.on('save', (X) => { X.ai = { clock, rings, claimT, helped, league, mind }; }); // E668
 FK.on('load', ({ ai: M }) => { league = M.league; const keep = { clock, rings, claimT, helped, mind }; for (const k in keep) FK.refill(keep[k], M[k]); rates.clear(); level(); });
 return { think: (side) => FK.finish(thinking(side)), mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim };

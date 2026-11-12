@@ -949,6 +949,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
 - **E936** your soldiers leave a wild animal alone unless it is after one of yours or you sent them a
+- **E1020** my soldier left idle far from his post (past the yard, D-yard) holds where he stands and d
 - **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40)
 - **E983** a bow's reach from a height: the arrow's flight (its drag and gravity, QAJ) at the speed t · QAJ (N39, N40)
 - **E409** the orders' shared measures: a point of a tile, the tile of a point, the length between, a
@@ -1025,6 +1026,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E528** the counter (QCN, Mid's bestCounter): among the soldiers it can train now, the best answer · QCN (N202)
 - **E529** a computer's turn, every D304 react s (Mid's think), in Mid's order: a site nobody raises, · D304 (N202)
 - **E649** a computer chases its crown (Mid's chaseCrown): the wellbeing chaser builds each place of 
+- **E1021** a computer thinks in slices across steps (E684): its hall can fall between two slices, and · E684
 - **E530** shelter before it is needed: a Home (an Apartment once it can) when the people come within · D152 (N202)
 - **E531** a drop-off where D291's crew work a yield whose nearest find stands far from one · D291 (N202)
 - **E532** the shift to plots: one at a time, never more than the hands on its yield, when it beats t

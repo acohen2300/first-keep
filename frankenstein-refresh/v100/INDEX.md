@@ -1413,6 +1413,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1017 |  | ice-shy (Albert, Nov 11: \They see their comrades fall through the ice and they just continue\): when ice cracks under a side or one of its  |  |
 | E1018 |  | every lake has a ford (D374): a shallow bed through its middle, toward the middle of the map, laid without the dice so a map's other rolls a |  |
 | E1019 |  | a struck soldier is heard: his own within crowd tiles (D-nerve) who stand idle or hold with no foe, and are not told to hold, turn on the at |  |
+| E1020 |  | my soldier left idle far from his post (past the yard, D-yard) holds where he stands and does not walk home alone (Albert, Nov 10: soldiers  |  |
+| E1021 |  | a computer thinks in slices across steps (E684): its hall can fall between two slices, and the next slice then asked a hall that was gone fo |  |
 
 ## ground
 
