@@ -5,9 +5,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 31 | 3,587 | 630,741 | 630,891 |
-| Books | 2472 | 0 | 781,192 | 782,117 |
+| Books | 2474 | 0 | 781,816 | 782,741 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,108 | 344,805 | 345,050 |
+| Tools | 5 | 2,112 | 345,473 | 345,722 |
 
 ## The trades (code)
 
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 328 | 80,924 |
+| citations | 329 | 81,238 |
 | colours | 33 | 9,517 |
 | comments | 999 | 189,470 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 342 | 196,616 |
-| rules | 96 | 39,095 |
+| rules | 97 | 39,426 |
 | screen | 28 | 16,615 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -174,5 +174,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X96 | t-n29 | page | N29: an idle soldier whose home spot cannot be stood on searches for it once, not every second; a villager sent to a tree is no longer picked and wears no green ring; the pace meter times its seven drawing layers; an idle menu beat reads no layout in the top bar; the crosshair is not drawn until a spot is tapped; a rival's fall reads "The Raiders have fallen."; the slower beats and the marching day are in the books |
 | X97 | t-n30 | page | N30: with something picked the next tap is its order by the tap table (a villager onto a tree gathers, a soldier onto a foe attacks, a villager onto a foe fights, a soldier onto your tower garrisons, a tap on another of your units only lets go) and the pick lets go after; a find under the finger beats your own villagers standing on it; every job passes the job door and none is odd; a blow passes the health door with who struck; both ledger word sets are read; a world event's walkers go in legs; four escorts keep up with their caravan; Prep's techs cheapen it; played: Prep boards against a raid, a tower hurts a raider, Split, Lure and Seek move the villagers, a tech tapped at a Mill is learnt |
 | X98 | t-n31 | page | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked |
+| X99 | proof | gate | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) |
 
-2602 items sealed · 2472 book entries · 94 laws · 328 citations, 34 still to open · 0 known
+2604 items sealed · 2474 book entries · 94 laws · 329 citations, 34 still to open · 0 known

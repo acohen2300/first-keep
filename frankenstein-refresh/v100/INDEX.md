@@ -402,6 +402,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N327 |  | Day for night, Wikipedia (opened Nov 12, 2026): a night scene shot by day is typically underexposed by about two stops with a blue tint adde | opened |
 | N328 |  | Tharion, Lieberman, Montain, Young, Baker-Fulco, Delany, Hoyt, Energy requirements of military personnel, Appetite 44 (2005) 47-65 (abstract | opened |
 | N329 |  | Albert, Nov 12, 2026, 08:12-11:33, in chat: \Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected.\ T | opened |
+| N330 |  | Albert, Nov 12, 2026, 14:59-15:08, in chat: rules for the next chat, so it is competent and does not \tell me everything's a good idea and t | opened |
 
 ## colours
 
@@ -1937,6 +1938,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X96 | N29: an idle soldier whose home spot cannot be stood on searches for it once, not every second; a villager sent to a tree is no longer picked and wears no green ring; the pace meter times its seven drawing layers; an idle menu beat reads no layout in the top bar; the crosshair is not drawn until a spot is tapped; a rival's fall reads "The Raiders have fallen."; the slower beats and the marching day are in the books | {stage: page} | N326 |
 | X97 | N30: with something picked the next tap is its order by the tap table (a villager onto a tree gathers, a soldier onto a foe attacks, a villager onto a foe fights, a soldier onto your tower garrisons, a tap on another of your units only lets go) and the pick lets go after; a find under the finger beats your own villagers standing on it; every job passes the job door and none is odd; a blow passes the health door with who struck; both ledger word sets are read; a world event's walkers go in legs; four escorts keep up with their caravan; Prep's techs cheapen it; played: Prep boards against a raid, a tower hurts a raider, Split, Lure and Seek move the villagers, a tech tapped at a Mill is learnt | {stage: page} | N326 |
 | X98 | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked | {stage: page} | N329 |
+| X99 | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) | {stage: gate} | N330 |
 
 ## screen
 

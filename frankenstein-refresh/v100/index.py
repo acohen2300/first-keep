@@ -225,6 +225,10 @@ for c, e in BOOKS['measure'].items():
     if isinstance(v, dict): rule('units', isinstance(u, dict) and all(k in v and x in UNITS for k, x in u.items()), f'{c} names a unit for a key it does not hold, or a unit not in the list'); unset += sum(1 for k, x in v.items() if _num(x) and k not in (u or {}))
     else: rule('units', u in UNITS, f'{c}: unit {u!r} is not in the list'); unset += u == 'unset'
 rule('units', unset <= RULES['units']['value']['unset'], f'{unset} numbers have no unit set; the rule allows {RULES['units']['value']['unset']}: set units, never raise the count')
+# ── 4. The List: DONE only with proof (X99, Albert Nov 12 15:08, N330)
+LIST = text('../../docs/4 Now/The List.md') or ''; TESTS = {e['key'] for e in BOOKS['rules'].values() if e['value']['stage'] == 'page'}
+for m in re.finditer(r'(?m)^- ([A-Z]\d+b?) DONE(.*)$', LIST): rule('proof', 'nothing to build' in m.group(2) or ('planted' in m.group(2) and any(t in TESTS for t in re.findall(r'\bt-[a-z0-9-]+', m.group(2)))), f'The List {m.group(1)} is DONE without a test that fails with the old line planted')
+for t in sorted(set(re.findall(r'\bt-[a-z0-9]+(?:-[a-z0-9]+)*', LIST)) - TESTS): rule('proof', False, f'The List names {t}, which is not a test in the rules book')
 for k, e in RULES.items():
     if e['value']['stage'] not in ('page', 'survey'): rule('rules', k in ran, f'rule {k} is in the book but nothing runs it')
 print(f'{PERMIT["build"] or "no permit"} · opens {len(OPEN)}/10 · {sum(len(es) for es in BOOKS.values())} entries, {len(LAWS)} laws, {len(N)} citations')

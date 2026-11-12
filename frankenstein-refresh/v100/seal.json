@@ -1569,6 +1569,11 @@
 "bytes": 64,
 "numbers": 0
 },
+"book:citations:N330": {
+"sha": "89514b897c089552410a41fc2c619cc2a697b21a92f054f85d0cec9713da1b62",
+"bytes": 303,
+"numbers": 0
+},
 "book:citations:N34": {
 "sha": "99a525dbd5757df8013c765a400f44ef9455b2ea8b378311e2808f895ecf325d",
 "bytes": 86,
@@ -9454,6 +9459,11 @@
 "bytes": 334,
 "numbers": 0
 },
+"book:rules:X99": {
+"sha": "9eff9755cc17f05030c782c77cffeedfb6fb7f45792d882c70f015fd0ac752ab",
+"bytes": 321,
+"numbers": 0
+},
 "book:screen:SN1": {
 "sha": "186d3a5d2e8147201f56c24ac2ba525b66e6a3fff1d4f5a68cdc76cdd75ef277",
 "bytes": 561,
@@ -12985,8 +12995,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "54c6c4527759c211240eb209ec0358c748d77dd0ed9cb35b1a115f7c52f6e9d4",
-"bytes": 28996,
+"sha": "ba2f8c1c59cc9c762a310fed8c998cb233d15bcc42f3db748514c9305890ee02",
+"bytes": 29668,
 "numbers": 0
 },
 "tool:pages.yml": {

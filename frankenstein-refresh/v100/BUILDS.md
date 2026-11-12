@@ -5134,3 +5134,10 @@ Albert, Nov 12 11:32-11:33, after placing a house with a villager picked on N30:
 MODIFIED: code:menu.js, book:comments:E1050, book:citations:N329, book:rules:X98, tool:test.py.
 Tests: t-n31 passes and fails with the old place line planted; t-n24, t-n25, t-n27, t-n30 pass; t-n29 passes but its homeOnce check fails now and then (5 of 24 runs on N31; 0 of 8 on N30, so N31 is not cleared of it). It counts a rival soldier's home searches, which N31 does not touch; cause not found yet.
 Inventory: 2602 items sealed.
+
+## S3: the proof gate · 2026-11-12 15:35
+Albert, Nov 12 15:08: "Go go go yes yes yes" (steps 1-3 of CLAUDE.md, the gates).
+- Gate rule `proof` (X99, N330): The List holds no DONE without a test named in the rules book that fails with the old line planted, or "nothing to build"; every test The List names must exist.
+- The List: 16 DONE lines lacking that proof moved to BUILT, proof owed.
+MODIFIED: tool:index.py, book:rules:X99, book:citations:N330.
+Tests: the gate passes; with two bad lines planted in The List it stops on both, and on a test name that does not exist.

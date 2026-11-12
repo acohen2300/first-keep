@@ -32,7 +32,8 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 
 ## 6. Order (until step 3 is done)
 1. Housekeeping: one list, one hand-off, one working branch.
-2. Sort the 22 failing tests (The List G5): stale or real bug.
+2. Sort the 22 failing tests (The List G5): stale or real bug. First pass done Nov 12 (`Failing tests - Nov 12.md`); group B waits on Albert's call.
+2b. Gates: `proof` (X99) is built. Still to build: the tap-test gate (needs a real-finger helper) and the door gate (with P2).
 3. P2, the job door (`The Plan.md`): one place sets a unit's job, target, path and what comes next. Fold in Focus as Albert's rule #17 ("stays on its job as a reasonable worker would"; today it is set on every tap and pinned to one find, E1027) and the open traces (builds a bit then stands, tree then idle, villagers disappearing).
 4. Menu check against the kit (G2) and the ring standard (P4).
 5. The rest of The List.
@@ -42,6 +43,10 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 - Concise: lists, no prose, one screen where possible.
 - Never paste code into chat. Search first, read only the lines needed.
 - Warn Albert early, before the chat compacts. Update the repo (The List, Handoff) before every hand-off.
+
+## 7b. Gates
+- A rule a script can check goes in the gate (`index.py`), not only in this file.
+- `proof` (X99): The List holds no DONE without a test that fails with the old line planted.
 
 ## 8. Never
 - No helpers, agents or subagents: Claude does all reading, building and mocking itself.
