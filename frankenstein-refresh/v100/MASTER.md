@@ -600,6 +600,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1004** who goes: All, Idle, a Class (Foot, Archers, Cavalry, Siege) or a Squad; choosing one pick
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
+- **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195) · D271 (N34, N195)
+- **E1023** a caravan takes a trade route two ways: Trade route on its card sends it to the nearest tr
+- **E1024** the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Frien · N24
 - **E845** the book: Welcome back mid-match (Resume, New game), paused
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
 - **E188** sound on or off

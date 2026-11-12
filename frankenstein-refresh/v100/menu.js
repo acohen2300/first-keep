@@ -168,7 +168,12 @@ const VERBS = {
   mid: { label: (m) => { const [word, icon] = WA.mid[m]; return `<span class="t">${SVG[icon]}</span>${word}`; }, whyNot: () => '', run: (m) => { S.mid = S.mid === m ? 'map' : m; } },
   kind: { label: (c) => `<span class="t">${SVG[FK.kinds(FK.SH[c].class).map((k) => FK.SH[k].look).find((l) => SVG[l])]}</span>${FK.rankName(c, ME)}`, whyNot: (c) => { const b = trainer(c); return !FK.aged(c, ME) ? aging(c) : !b ? `Build a ${B[Object.keys(D.trains).find((x) => FK.trains(x, ME).includes(c))][0]}` : VERBS.train.whyNot(c, b); }, run: (c) => ECON.queue(trainer(c), c) }, // E186
   htab: { label: (t) => t, whyNot: () => '', run: (t) => { S.htab = t; if (WS.sets[t]) toast(WS.help); } },
-  stance: { label: (k) => WS.labels[k], whyNot: () => 'Not built yet', run: () => {} },
+  sell: { label: (y) => `${WT_.sell} ${NAME[y] || y}<small>+${ECON.sellPrice(ME, y)}g</small>`, whyNot: (y) => (SIDES[ME].store[y] >= ECON.lot(y) ? '' : WT_.short.replace('{n}', ECON.lot(y))), run: (y) => ECON.marketTrade(ME, y, 'sells') }, // E1022
+  buy: { label: (y) => `${WT_.buy} ${NAME[y] || y}<small>${ECON.buyPrice(ME, y)}g</small>`, whyNot: (y) => (SIDES[ME].store.gold >= ECON.buyPrice(ME, y) ? '' : WT_.gold), run: (y) => ECON.marketTrade(ME, y, 'buys') },
+  make: { label: (y) => `${WT_.make} ${y}`, whyNot: () => '', run: (y, t) => ECON.setMake(t, y) },
+  hire: { label: () => WT_.hire, whyNot: (t) => ECON.hireWhy(ME, t), run: (t) => ECON.hire(ME, t) },
+  route: { label: () => WT_.route, whyNot: (c) => (nearStop(c) ? '' : WT_.noStop), run: (c) => { const f = nearStop(c); ECON.setRoute(c, f, true, false); toast(WT_.routed.replace('{at}', coord(f.bx, f.by))); } }, // E1023
+  stance: { label: (k) => WS.labels[k], whyNot: (k, q) => (k === 'gift' ? WT_.later : k === 'bribe' ? ECON.giftWhy(ME, D.regard.giftStep, q) : ECON.relWhy(ME, q, WS.want[k])), run: (k, q) => { const ok = k === 'bribe' ? ECON.giveGift(ME, D.regard.giftStep, q) : ECON.setRel(ME, q, WS.want[k]); if (!ok) toast(VERBS.stance.whyNot(k, q) || WS.not); } }, // E1024
   book: { label: () => SVG.book, whyNot: () => (S.game ? '' : WS.noGame), run: () => { S.prev = S.tab; S.tab = 'Back'; S.subject = null; FK.pause(true); } }, // E845
   info: { label: () => SVG.book, whyNot: () => '', run: () => { S.info = !S.info; } },
   vol: { label: (c, ic) => `${ic ? `<span class="t">${SVG[FK.HB.mix.icons[c]]}</span>` : FK.HB.mix.names[c]} <small>${SOUND.mix(c)}</small>`, whyNot: () => '', run: (c) => SOUND.step(c) }, // E187
@@ -298,6 +303,9 @@ const ROWS = { // E199
   load: (t) => `<p>${ECON.jobOf(t) || t.job}${t.load ? `, carrying ${Math.floor(t.load)}` : ''}</p>`,
   store: (t) => `<p>${Math.floor(t.amount)} ${ECON.yieldOf(t)} left</p>`,
   flock: (t) => `<p>${t.sheep} sheep</p>`, // E358
+  trade: (t) => (!own(t) ? '' : t.kind === 'unit' ? `<p>${t.route ? WT_.onRoute.replace('{at}', coord(t.route.to.bx, t.route.to.by)) : ECON.allyMarket(ME, t) ? WT_.toAlly : WT_.idle}</p>${row(span(SCR.wide.slots, vcell('route', key(t), null, 'two')))}` : t.done >= ONE ? row(...D.market.sells.filter((y) => D.market.buys.includes(y) || SIDES[ME].store[y] > ZERO).map((y) => vcell('sell', y)), ...D.market.buys.map((y) => vcell('buy', y))) : ''), // E1022
+  make: (t) => (own(t) && t.done >= ONE ? row(...Object.keys(D.makes[t.code] || {}).filter((y) => y !== 'gold').map((y) => vcell('make', y, key(t), '', t.make === y || (!t.make && y === Object.keys(D.makes[t.code])[ZERO])))) : ''),
+  hire: (t) => (FK.rowOf(t) && FK.rowOf(t).hire ? row(vcell('hire', key(t))) : ''),
   queue: (t) => (own(t) && t.q && t.q.length ? row(...queue6(((at) => t.q.map((c, i) => [ECON.nameOf(c), i ? (at += ECON.timeOf(t.side, c)) : at]))(t.qt), ONE - t.qt / ECON.timeOf(t.side, t.q[ZERO]), Math.max(0, t.q.length - SCR.mold.slots + 1), t)) : ''),
   train: (t) => (own(t) && t.done >= 1 ? row(lbl(WD.card.train), ...FK.trains(t.code, t.side).map((c) => span(SCR.wide.slots, vcell('train', c, key(t), 'two'))), t.q && t.q.length ? span(SCR.wide.slots, vcell('untrain', key(t), null, 'two')) : '') : ''),
   tech: (t) => (own(t) && t.done >= 1 ? row(lbl(WD.card.research), ...[FK.has(t, 'Seat') ? vcell('ageUp', null, null, 'two', !!read().aging) : '', ...lines(t).filter(Boolean).map((c) => vcell('research', c, null, 'two', S.arm === c)), vcell('later', 'All tech', null, 'two')].filter(Boolean).map((c) => span(SCR.wide.slots, c))) : ''), // E738
@@ -329,7 +337,8 @@ const sitesOf = () => FK.blds().filter((t) => t.side === ME && t.done < ONE), si
 // E202
 // E203
 const PEOPLE = { Relations: ['Raiders', 'Rivals', 'Fortress'], Misfits: ['Natives', 'Outlaws', 'Bandits', 'Robbers'] };
-const stances = (t) => `<div class="frame f6">${PEOPLE[t].map((n) => `<span class="lab two-l" style="grid-column:span ${SCR.wide.slots}">${n}<br><span style="color:var(--rr)">${WS.foe}</span></span>${WS.sets[t].map((k) => vcell('stance', k)).join('')}`).join('')}</div>`; // E840
+const nearStop = (c) => ECON.stops().filter((f) => !(f.owner != null && f.owner !== ME && WAR.atWar(ME, f.owner))).reduce((a, b) => (!a || FK.dist(b, c) < FK.dist(a, c) ? b : a), null), WT_ = WD.trading, SB_ = fromBook('sides'), whoOf = (t, n, i) => (t === 'Relations' ? D.players[i + ONE] : Object.keys(SB_.names).find((g) => SB_.names[g] === n)), standCol = { war: 'var(--rr)', peace: 'var(--rw)', ally: 'var(--rg)' }; // E1024
+const stances = (t) => `<div class="frame f6">${PEOPLE[t].map((n, i) => { const q = whoOf(t, n, i), st = WAR.stance(ME, q); return `<span class="lab two-l" style="grid-column:span ${SCR.wide.slots}">${n}<br><span style="color:${standCol[st]}">${SB_.words[st]}</span></span>${WS.sets[t].map((k) => vcell('stance', k, q)).join('')}`; }).join('')}</div>`; // E840
 // E971
 const TOPCELL = { when: (r) => cell(`<span class="ln">${SVG[FK.seasonName().toLowerCase()]}${RIB.hour()}</span><span class="ln">${RIB.bell(r)}</span>`, 'two2'), folk: (r) => cell(`<span class="ln">${SVG.people}${RIB.people(r)}</span><span class="ln">${SVG.work}${r.jobs.idle} ${SVG.war}${r.army}</span>`, 'two2'), mute: () => vcell('mute'), pause: () => vcell('pause', null, null, '', FK.paused()), mail: () => vcell('mail', null, null, 'ic', S.tab === 'Mail') }; // E701
 const topbar = (r) => `<div class="strip big" style="--n:${SCR.top.length}">${SCR.top.map((c) => (TOPCELL[c] ? TOPCELL[c](r) : cell(c.split('|').map((p) => `<span class="ln">${p in r.store ? `${SVG[p]}${fmt(r.store[p])}` : RIB[p](r)}</span>`).join(''), 'two2', ['tab', c.includes('score') ? 'Score' : 'Stores']))).join('')}</div>`; // E204
@@ -417,7 +426,8 @@ function heard(k, u, px, py) {
   const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null) || null, now = performance.now(), L = S.tap, dbl = L && L.key === t && now - L.t < TO.dbl && (t || Math.hypot(px - L.px, py - L.py) < TO.slop); S.tap = { key: t, t: now, px, py }; // E429
   if (dbl) { if (t) { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; render(true); return ['open', t]; } return ['tap']; }
   if (u && own(u)) { pickToggle(u); return ['pick', u]; }
-  const P = FK.picked().filter(own); if (P.length) { const sent = !!t || onB(k); if (sent) { WAR.order(P, t, k); askIce(P, t, k); } render(true); return [sent ? 'order' : 'tap', t]; } // E856
+  const P = FK.picked().filter(own), CV = P.filter((c) => FK.has(c, 'Trade')); if (CV.length && t && t.kind !== 'unit' && t.kind !== 'bld' && FK.has(t, 'Trade')) { for (const c of CV) ECON.setRoute(c, t, true, false); toast(WT_.routed.replace('{at}', coord(t.bx, t.by))); render(true); return ['route', t]; } // E1023
+  if (P.length) { const sent = !!t || onB(k); if (sent) { WAR.order(P, t, k); askIce(P, t, k); } render(true); return [sent ? 'order' : 'tap', t]; } // E856
   if (!t) { const O = ordAt(px, py); if (O) { FK.select(units().filter((v) => v.ord === O)); ctlPick(); } else if (onB(k)) { S.qa = { k, px, py }; S.eat = true; } S.subject = null; render(true); return ['tap']; }
   if (t.kind === 'bld' && own(t) && !ECON.replantWhy(ME, t)) { ECON.replant(ME, t); return ['place', t]; }
   if (t.kind === 'unit') FK.select(t); else { FK.select(null); S.subject = t; if (own(t) && FK.has(t, 'Seat')) S.tab = 'Hall'; } render(true); return [t.kind === 'unit' ? 'pick' : 'tap', t];

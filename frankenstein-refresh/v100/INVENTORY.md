@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,534 | 616,072 | 616,221 (+4,265) |
-| Books | 2431 | 0 | 733,024 | 733,944 (+426) |
+| Game code | 31 | 3,544 | 618,813 | 618,962 (+7,006) |
+| Books | 2435 | 0 | 735,141 | 736,061 (+556) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,006 | 325,430 | 325,675 (-151) |
 
@@ -23,7 +23,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 68 | 10,121 | 10,125 (+324) | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 105 | 18,789 | 18,794 (+125) | 63 |
+| index.html#the-door | 105 | 18,797 | 18,802 (+133) | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -39,8 +39,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,672 | 9,676 (+32) | 54 |
-| menu.js | 556 | 119,449 | 119,493 (+295) | 521 |
-| econ.js | 596 | 110,421 | 110,421 (+1,253) | 70 |
+| menu.js | 566 | 122,177 | 122,221 (+3,023) | 521 |
+| econ.js | 596 | 110,426 | 110,426 (+1,258) | 70 |
 | combat.js | 372 | 63,323 | 63,323 (+1,427) | 83 |
 | ai.js | 172 | 27,479 | 27,479 (+149) | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -53,18 +53,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 972 | 178,203 |
+| comments | 975 | 179,353 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 340 | 168,460 |
 | rules | 90 | 35,177 |
-| screen | 27 | 14,670 |
+| screen | 27 | 14,718 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 49 | 98,719 |
+| words | 50 | 99,678 |
 
 ## The shells
 
@@ -169,4 +169,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
 | X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
 
-2561 items sealed · 2431 book entries · 94 laws · 326 citations, 34 still to open · 0 known
+2565 items sealed · 2435 book entries · 94 laws · 326 citations, 34 still to open · 0 known
