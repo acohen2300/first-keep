@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,570 | 625,841 | 625,990 (+6,700) |
-| Books | 2450 | 0 | 758,655 | 759,577 (+15,851) |
+| Game code | 31 | 3,570 | 625,841 | 625,990 |
+| Books | 2450 | 0 | 758,695 | 759,617 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,056 | 333,481 | 333,726 (+4,999) |
+| Tools | 5 | 2,056 | 333,530 | 333,775 |
 
 ## The trades (code)
 
@@ -34,14 +34,14 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 168 | 30,102 | 30,114 | 113 |
-| index.html#floor-7-display | 80 | 17,660 | 17,664 (+410) | 54 |
+| index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 138 | 28,785 | 28,789 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 5,930 | 5,934 (+33) | 24 |
+| index.html#the-woods-cache | 41 | 5,930 | 5,934 | 24 |
 | index.html#touch | 53 | 9,672 | 9,676 | 54 |
-| menu.js | 569 | 123,151 | 123,195 (+646) | 514 |
-| econ.js | 615 | 115,317 | 115,317 (+4,891) | 70 |
-| combat.js | 374 | 64,043 | 64,043 (+720) | 83 |
+| menu.js | 569 | 123,151 | 123,195 | 514 |
+| econ.js | 615 | 115,317 | 115,317 | 70 |
+| combat.js | 374 | 64,043 | 64,043 | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,7 +53,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 985 | 183,893 |
+| comments | 985 | 183,933 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 184,619 |

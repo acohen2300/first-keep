@@ -1419,7 +1419,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1023 |  | a caravan takes a trade route two ways: Trade route on its card sends it to the nearest trade stop not held by a foe (the safest; measured N |  |
 | E1024 |  | the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Friend green); War, Terms and Ally go through setRel (a |  |
 | E1025 |  | no food for a villager: the People icon wears the cannot-afford fade, red at nothing to white as the food comes (Decisions Nov 11, #22: red  |  |
-| E1026 |  | a tower, Town Center or castle shoots: its reload timer starts at nothing (it was never set, so it counted down from not-a-number and never  |  |
+| E1026 |  | a tower, Town Center or castle shoots: its reach is measured from the tile it stands on. A building has no tile field, so its height over th |  |
 | E1027 |  | Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused on it (the F mark): he does not move on to a richer |  |
 | E1028 |  | every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill should offer a farm as Lumber offers a tree farm): the |  |
 | E1029 |  | a find you can gather that stands behind trees shows its ring through them, dashed like your hidden people's (E984) and in the find's own co |  |

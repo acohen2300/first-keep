@@ -984,7 +984,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E422** the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D2 · D252 (N190)
 - **E423** an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a fo
 - **E424** your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there,
-- **E1026** a tower, Town Center or castle shoots: its reload timer starts at nothing (it was never se
+- **E1026** a tower, Town Center or castle shoots: its reach is measured from the tile it stands on. A
 - **E1010** which villager a wild animal is fighting, gathered once a step; before, every villager sea
 - **E398** in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE),
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th

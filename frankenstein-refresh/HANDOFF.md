@@ -1,3 +1,15 @@
+# First Keep: hand-off (Nov 12, 2026, 07:00) [2026-11-12 07:00]
+
+Read this first in a fresh chat. Older hand-offs follow below, kept for the record. [2026-11-12 07:00]
+
+## Where things stand [2026-11-12 07:00]
+- Code: branch `n27-ready` (off `n26-playable`), folder `frankenstein-refresh/v100/`. Last build N27, sealed; see `v100/BUILDS.md`. Preview: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n27/ (`?fps` for the meter). [2026-11-12 07:00]
+- Albert's rule, Nov 12: "Do it all = Do it all. It doesn't mean do what you want." (root `CLAUDE.md`). Build the whole agreed list in one run; do not stop at a report or split it. [2026-11-12 07:00]
+- Tests: the full run fails the same set as N26 (Mid-frozen comparisons and older test rot), none new; t-n26 and t-n27 pass, t-n27 fails on its plant (the tower's tile). t-research was updated for #18 (tech is no longer in the queue row). Run the full suite once, at the end. [2026-11-12 07:00]
+- Still owed: the mock group (6, 8, 20, 21, 23, elite looks, battle noise); #10 with the food and resource rebalance; the rest of #2's units (1,506 unset, rule X94); bug traces not reproduced; #14 after his phone's numbers. Open calls: `docs/4 Now/Parked.md`, "Parked in N26" and "Parked in N27". [2026-11-12 07:00]
+
+---
+
 # First Keep: hand-off (Nov 12, 2026, 03:30) [2026-11-12 03:30]
 
 Read this first in a fresh chat. The Nov 11 hand-off follows below, kept for the record. [2026-11-12 03:30]

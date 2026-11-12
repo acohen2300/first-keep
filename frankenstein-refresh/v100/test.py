@@ -281,7 +281,7 @@ async def research(b):
     got = [bool(mid) and len(v['out']) == len(mid['out']) and close(steps(v['out']), steps(mid['out'])) and all(waits) and len(waits) == 6,
            bool(mid) and all(v[k] == mid[k] for k in ('line', 'next', 'needs', 'queued')),
            [y[3] for y in v['out'] if y[0] == 'tech'] == ['', '', 'need', '', 'busy', 'age', '', '', 'need', 'known'] and close(v['out'][7][5], 18 * 0.95) and v['out'][-3][7] == MEASURE['carry'] + 3 and v['out'][-3][8] == 1,
-           [[c for c in q if c] for q in x['hall']] == [[nm.get('tally')], [nm.get('age'), SHELLS['UV']['name']]] and x['train'] and x['aged'][1] == first[1] and len(x['held']) > 300 and all(x['held']),
+           [[c for c in q if c] for q in x['hall']] == [[], [nm.get('age'), SHELLS['UV']['name']]] and x['train'] and x['aged'][1] == first[1] and len(x['held']) > 300 and all(x['held']),
            f"{first[0]} age" in x['start'][0] and f"{first[1]}s to rise" in x['start'][1] and 'Classical age' in x['bronze'][0],
            x['gun'][:3] == ['Last age', mid.get('gun', [0])[0], 1] and x['gun'][3] and x['gun'][4], abs(x['z1'] - (PK['home']['bush'][1] * PK['home']['bush'][0] * PK['rich'] * PK['homeRich'] * PK['findSize']['bush'] + mid.get('z1food', 0) + PK['back']['vils'] * MEASURE['cost']['UV']['food'])) < 1e-9, not errs]   # G1: the pocket's food is Mid's (QCS): the home bushes × rich × homeRich × the find's size, plus the price of age and six villagers (was QBJ's buys and margin)
     ok('t-research', all(got), [got, v['out'], mid.get('out'), x, errs[:2], err[-400:]])
@@ -1650,7 +1650,7 @@ async def n26(b):
 N27JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms));
  MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, D = FK.D, S = MENU.S, st = FK.SIDES[0].store, card = document.getElementById('card'); $rich(0);
  const V = () => FK.units().filter((u) => u.side === 0 && FK.has(u, 'Gather')), mine = () => FK.blds().filter((b) => b.side === 0);
- const tw = $put('BW3', 0, 10, 40, true), e = FK.seatOf(1) ? 1 : 2, w = $ring(tw, 3, 8, (i, j) => (FK.walkable(j * N + i) ? j * N + i : 0)), foe = FK.spawn('UM1', e, w, Math.random), hp0 = foe.hp; $run(8); o.towerShoots = foe.hp < hp0 || !!foe.gone; if (!foe.gone) WAR.die(foe);
+ const tw = $put('BW3', 0, 10, 40, true), e = FK.seatOf(1) ? 1 : 2, w = $ring(tw, 3, 8, (i, j) => (FK.walkable(j * N + i) ? j * N + i : 0)), foe = FK.spawn('UM1', e, w, Math.random), hp0 = foe.hp; $run(8); o.towerShoots = Number.isFinite(tw.cd) && Number.isFinite(WAR.reachOf(tw)) && (foe.hp < hp0 || !!foe.gone); if (!foe.gone) WAR.die(foe);
  const mill = $put('BI1', 0, 8, 40, true), lum = $put('BI2', 0, 8, 40, true); S.subject = mill; MENU.render(true); o.plot = !!card.querySelector('[data-v^="pick|BCL1"]'); S.subject = lum; MENU.render(true); o.plot = o.plot && !!card.querySelector('[data-v^="pick|BCL2"]');
  S.subject = mill; MENU.render(true); const tiles = () => [...card.querySelectorAll('[data-v^="research|"]')].map((x) => [x.dataset.v.split('|')[1], (x.querySelector('.rk') || { dataset: {} }).dataset.ring, x.innerText]), T = tiles().filter((t) => !MENU.VERBS.research.whyNot(t[0])), f0 = st.food;
  MENU.act('research', T[0][0]); MENU.act('research', T[1][0]); MENU.render(true); const A = tiles(), a0 = A.find((t) => t[0] === T[0][0]), a1 = A.find((t) => t[0] === T[1][0]); info.tiles = [a0, a1];

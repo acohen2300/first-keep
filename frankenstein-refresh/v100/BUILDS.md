@@ -4923,3 +4923,20 @@ Opened: code:index.html, code:econ.js, code:combat.js, code:ai.js, code:menu.js,
 **Small:** a square past column Z has a name (the aimer's NaN: the map grew to 31 squares, the letters stopped at 26); "{side} fell."; one message line while a menu is open; top-bar cells take the width their words need (Gunpowder); Daily Challenge (#5); a price fades as one line, the missing store underlined (#13); People red with no food (#22).
 Claude's own numbers, for Albert to play and change: D343 budget 12 ms; D374 (reach 1.5, wide 0.5, deep 0.25); D-rim dirs 8; D-drops bands 3; the ice-shy season; the 10-tile hearing (D-nerve crowd, reused); the yard (D-yard 32, reused) past which an idle soldier holds.
 Not built, still owed: the rest of the ready group (2, 3, 4, 7, 9, 11, 12, 15-19, Protect's Split, Lure, Seek), the mock group (6, 8, 20, 21, 23, elite looks, battle noise), the food and resource rebalance with #10, Prep, a gift to a side, the remaining bug traces (Winner button, tower not shooting, villagers disappearing). #14 the sharpness cap stays until his phone's numbers are in.
+
+## N27: the ready group, Prep, and towers that shoot · 2026-11-12 06:10
+Albert, Nov 12 05:10: "Do the next build"; 05:13: "Do it all = Do it all. It doesn't mean do what you want."; 05:27: yes to Prep. Built by Claude alone, no helpers.
+Opened: code:index.html, code:econ.js, code:combat.js, code:menu.js, book:measure, book:comments, book:rules, book:words, book:screen, tool:test.py, tool:index.py, tool:ship.py
+- **Towers shoot (E1026).** A tower's reach was measured from a tile field a building does not have, so it came out not-a-number and nothing was ever in reach: no tower, Town Center or castle had ever fired. Now they do, for every side. (Claude first blamed the reload timer too; a planted test showed that alone had not stopped it.)
+- **#16 the builder rule (E324):** queued sites, then the building's own work, then the next site, then the last resource building he raised in that run, then his old job, else idle.
+- **#17 Focus (E1027):** a villager you tap onto a find or post stays on it, is picked last to build or to leave by the jobs row, and returns to it after sheltering.
+- **#11 every drop-off offers its plot (E1028):** Farm (and Pasture) at a Mill, Tree farm at a Lumber camp, on the card; the ghost does the placing.
+- **#9 hidden finds (E1029):** a find you can gather that stands behind trees shows its ring through them in its own colour.
+- **#18, #19 tech without the queue, on one schedule (E1030):** tap as many tiles as you like; waiting is blue with the time until it starts, running is green and draining with the time until done; a tap cancels and pays back; the queue row keeps people and the age. No cap on waiting techs.
+- **Protect's Split, Lure, Seek (E1031):** each garrisons, and the overflow scatters, runs to what shoots, or runs to what trains soldiers.
+- **Prep (E1033, E1034, D375):** every villager boards up the nearest buildings (+50% timber, +100% stone), then shelters inside; Work takes the boards off. Prep and Work share one cell of the Protect page.
+- **#4 order food by ground marched (E1032):** a marching soldier eats 1 + walk × v² / stand of his ration (Pandolf, D224): 3.3 times at 1.52 m/s, while he walks.
+- **#2 unit and subject as book fields (X94):** every measure entry has both; subject is read from the code; a unit is set only where proven (98), the rest counted unset (1,506), and the gate lets the count only fall. They do not ship.
+- **#3** checked, no change. **#7, #12, #15** found already built and tested. **#5, #13, #22** were in N26.
+Claude's own numbers, for Albert to play and change: D375 (time, cost, least, planks); D-alarm split 20 tiles and fan half a turn; the Prep/Work shared cell; the three new Controller icons (split, lure, seek, prep).
+Still owed: the mock group (6, 8, 20, 21, 23, elite looks, battle noise); #10 with the food and resource rebalance; the rest of #2's units; the bug traces not reproduced (Parked); #14 after his phone's numbers; #1 only if build 3 comes back.

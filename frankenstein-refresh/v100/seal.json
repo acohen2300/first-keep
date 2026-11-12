@@ -2234,9 +2234,54 @@
 "bytes": 173,
 "numbers": 0
 },
+"book:comments:E1026": {
+"sha": "0345b3616bf6be397448223a1a24e88f88479e983d16748e5078eae39908cf99",
+"bytes": 408,
+"numbers": 0
+},
+"book:comments:E1027": {
+"sha": "de1bb37054b9ace38c052722beead7ab276085377aca4e27a0b461694bb4d17c",
+"bytes": 354,
+"numbers": 0
+},
+"book:comments:E1028": {
+"sha": "4a6a61895e14344e6304d59fe34232da4e7d90e77b066b2e3483c03ad95210a7",
+"bytes": 337,
+"numbers": 0
+},
+"book:comments:E1029": {
+"sha": "38527adf11378f3e99cc7687a43487dce620b7a7c15317dab96c4fd35a36c98b",
+"bytes": 386,
+"numbers": 0
+},
 "book:comments:E103": {
 "sha": "1ec101dc149c6a54494b41fe6703af731394cf410117f890450124fcefecab76",
 "bytes": 182,
+"numbers": 0
+},
+"book:comments:E1030": {
+"sha": "20fe2c91f039ac409cb27e8675b257374e5fe253fff3db87bf51466ade3d9597",
+"bytes": 655,
+"numbers": 0
+},
+"book:comments:E1031": {
+"sha": "217b8cf66cdfb2b36f23fd22272b2c68e3b57861bef224a26e1cab9af6054237",
+"bytes": 573,
+"numbers": 0
+},
+"book:comments:E1032": {
+"sha": "01f24ccae0df6dfaca22a3f02fb6e9add9833098a7e93ff2a992ee44653ff06c",
+"bytes": 422,
+"numbers": 0
+},
+"book:comments:E1033": {
+"sha": "902ab07dd13b9b7f5a1246b384f0bc54498eab5d9efa58211225e61d5b221aa0",
+"bytes": 793,
+"numbers": 0
+},
+"book:comments:E1034": {
+"sha": "904a2cec4e9f0b76d8b39a889e10ecb30c869dec5ae03938241faccbf08224c4",
+"bytes": 89,
 "numbers": 0
 },
 "book:comments:E104": {
@@ -3420,8 +3465,8 @@
 "numbers": 0
 },
 "book:comments:E324": {
-"sha": "22b147f655c3b66de87b0959392d6ed92bd8e70f1854097e0c3827c6d42c1eea",
-"bytes": 155,
+"sha": "0a3e8635b13065e2ecc208159442e7b55c16cd9f021dd75b841c76a7563b8db8",
+"bytes": 344,
 "numbers": 0
 },
 "book:comments:E325": {
@@ -7140,1703 +7185,1708 @@
 "numbers": 0
 },
 "book:measure:D1": {
-"sha": "b064dbae1c94ed3b6d89d41497dd45b59e0c87d18a7b46b64050aacc9c54297e",
-"bytes": 170,
-"numbers": 0
-},
-"book:measure:D10": {
-"sha": "387605c4c582276baae5916f30cc7f2ef7abaf0de2b417dd6f7138204189819e",
-"bytes": 90,
-"numbers": 0
-},
-"book:measure:D100": {
-"sha": "ebab8d9c7faaea3951e0900683f1cb6ba84625e215e6f8e92162be084f38ccbd",
-"bytes": 123,
-"numbers": 0
-},
-"book:measure:D101": {
-"sha": "d29501af754df693522a59ce1ff3ca0b73be853aeb1fa90dfcfd8490077162a3",
-"bytes": 84,
-"numbers": 0
-},
-"book:measure:D102": {
-"sha": "70b544158d1dea4d907b8949306a9eb26fbdf8cb625d1134ebd24971108e512f",
-"bytes": 116,
-"numbers": 0
-},
-"book:measure:D103": {
-"sha": "eba40c5cb34b5b98f3082b6a0a23b6d0d7016f74748a711687972a5f4539b34e",
-"bytes": 351,
-"numbers": 0
-},
-"book:measure:D104": {
-"sha": "178b02e901488f38086d3c4bb9315a376b1b09bd5d4dd9fe472ad9958eee6520",
-"bytes": 88,
-"numbers": 0
-},
-"book:measure:D105": {
-"sha": "3ead9ff41f3670d81021f0dc87ccb54ec3ff615aa3a09e8869683d20939988ed",
-"bytes": 83,
-"numbers": 0
-},
-"book:measure:D106": {
-"sha": "dce3e82aed5413d7478544550551906fbdb85abe93581f010bc9cbc770fc57fe",
-"bytes": 129,
-"numbers": 0
-},
-"book:measure:D107": {
-"sha": "0f8dcad1a0698b3c749979cdec0f42c09f03ffcde19c94b57b6c9fbe870051ef",
-"bytes": 102,
-"numbers": 0
-},
-"book:measure:D108": {
-"sha": "c84dee725a89da45d73b58da0874808f80eb003c93a5a871b402edde4ab63966",
-"bytes": 89,
-"numbers": 0
-},
-"book:measure:D11": {
-"sha": "2a67ad66ca405ba13995ac9bb3b0e2bf018699205a50dd119b370c0e116071a9",
-"bytes": 88,
-"numbers": 0
-},
-"book:measure:D112": {
-"sha": "302ed54b5724d1c73cffe3b072ff687c7e86cefa29e9fbebadc358c71d950009",
-"bytes": 94,
-"numbers": 0
-},
-"book:measure:D113": {
-"sha": "4baa0350dd153aaaef57862c014256fe65ca534e6cd2b4327dc84dc034e7a59e",
-"bytes": 2107,
-"numbers": 0
-},
-"book:measure:D114": {
-"sha": "f9586a1a9ba6c25824f17d85af965f148edbb199beeecf49b0ea224babb5daec",
-"bytes": 182,
-"numbers": 0
-},
-"book:measure:D115": {
-"sha": "23d38245c17bccefb4f37d443bb9a1df55bb8bfb71afd292627300e57472d5f8",
-"bytes": 86,
-"numbers": 0
-},
-"book:measure:D116": {
-"sha": "dc8a89b51b2872e13488b883807305a53c610e14a3a643dd6daf76eb355acb77",
-"bytes": 85,
-"numbers": 0
-},
-"book:measure:D117": {
-"sha": "506b7ed69a6f3808616d8d028ed2407e8ec762fd3a37d1b986e9ff5986cb0d5e",
-"bytes": 1481,
-"numbers": 0
-},
-"book:measure:D12": {
-"sha": "858fd3abcdda76e799b107bcad48389575853c8f06ab76c9c2f58ae54c30f2c0",
-"bytes": 75,
-"numbers": 0
-},
-"book:measure:D120": {
-"sha": "b6e933fd90bf0a0dfbcb3be9e9c460a7a8ab0bed66b4ee3947af413623259d04",
-"bytes": 112,
-"numbers": 0
-},
-"book:measure:D122": {
-"sha": "31f199e16e1a04be1737b326a80d66a6c68df6afe356eba864c1fd7505638054",
-"bytes": 348,
-"numbers": 0
-},
-"book:measure:D123": {
-"sha": "2b1b982a3e9e7c534c567e1670b17dd59835320a692e476ae6737cf890e5205c",
-"bytes": 2837,
-"numbers": 0
-},
-"book:measure:D124": {
-"sha": "36f473a360f03961aaf2f32b8b7d8453f7808e7444399fcc42a9eeb1aff50ef0",
-"bytes": 515,
-"numbers": 0
-},
-"book:measure:D125": {
-"sha": "94f46149d9e071fa8f97bf55384b69c76e5e702da6a9d3114208547844a35c67",
-"bytes": 798,
-"numbers": 0
-},
-"book:measure:D126": {
-"sha": "bb3473be1740e4f6b5a89218543fe09fbbac54809dcd6e51a2791df208ace3a2",
-"bytes": 105,
-"numbers": 0
-},
-"book:measure:D127": {
-"sha": "50e600b4a8ab0ad6b5b414e2660b0a016ed048cb586a3091c00ba305f2406a3c",
-"bytes": 163,
-"numbers": 0
-},
-"book:measure:D128": {
-"sha": "7ccee9314c3057230481bd7cdd03b8a0ba467c052fb1e7c8ae3585487ea3a0b1",
-"bytes": 142,
-"numbers": 0
-},
-"book:measure:D129": {
-"sha": "4680f7ffa61d6e2e501727e378a8001e927dba9a46bbfb06a482f7f8a5d70103",
-"bytes": 520,
-"numbers": 0
-},
-"book:measure:D13": {
-"sha": "48ead344663e5c27faa5edd805e2974717e91a73ae252b26aad9087c7e7f22ea",
-"bytes": 101,
-"numbers": 0
-},
-"book:measure:D130": {
-"sha": "6ffc2c7a4eb901f179f42fc80522b7ea4397f525068d80260d5b6205d8d33e49",
-"bytes": 188,
-"numbers": 0
-},
-"book:measure:D131": {
-"sha": "1f02c94bc416118f0786a80b987c3ec6364abda79b8613f89003a22324b30e3f",
-"bytes": 340,
-"numbers": 0
-},
-"book:measure:D132": {
-"sha": "c003754bd18f201195576afa46d5c01f3804f925e577f5f445c93450de051080",
-"bytes": 143,
-"numbers": 0
-},
-"book:measure:D133": {
-"sha": "49cf4cfd5c9fad12def477ac76781da835dfefbc2dd4518e3cc8a3c54aee9c05",
-"bytes": 589,
-"numbers": 0
-},
-"book:measure:D134": {
-"sha": "2ec1887194308637e19fdbc512ed42cabef6460aa346ea91bf546995034b6334",
-"bytes": 78,
-"numbers": 0
-},
-"book:measure:D135": {
-"sha": "94a4f2a789e4efb2a5c3555a5ea8aebbca3e457697e6aa1d233b85b99983d96b",
-"bytes": 138,
-"numbers": 0
-},
-"book:measure:D136": {
-"sha": "6897832bc579aa9692c0d480fd876c3812cd41ca7756c29ffd617b9b9e37c940",
-"bytes": 396,
-"numbers": 0
-},
-"book:measure:D137": {
-"sha": "3edab1f77eb2c1c0e153927d0c2009ff3017477a4c90fbc6bacb3f0b71530083",
-"bytes": 111,
-"numbers": 0
-},
-"book:measure:D138": {
-"sha": "8000f0b4e92c2213eb8b12fc9c18de8df970298223f3068ed28e12db8a7c8ca3",
-"bytes": 5059,
-"numbers": 0
-},
-"book:measure:D139": {
-"sha": "85539e2fa0a8175f17998d3469c5b9305e60a2d22443f7ecf6254587b196c31e",
-"bytes": 1402,
-"numbers": 0
-},
-"book:measure:D14": {
-"sha": "350475ffa2cc0e29b5a9c6fc340a54fc0aee9c18b70c76c039d62f1097ee4772",
-"bytes": 160,
-"numbers": 0
-},
-"book:measure:D141": {
-"sha": "94a86436f5117e993382c0649609de82626220a7e88051a3cff670b92517e032",
-"bytes": 140,
-"numbers": 0
-},
-"book:measure:D142": {
-"sha": "7ba22268f13bb154bc77dba8759803f259846d2278b920cc366bdf3ddc137c77",
-"bytes": 195,
-"numbers": 0
-},
-"book:measure:D143": {
-"sha": "d3c8ccb63253612366691882709a811590eb27e2a9b287454ad15010f439d81b",
-"bytes": 828,
-"numbers": 0
-},
-"book:measure:D144": {
-"sha": "8348d96c861c7562ac080ca6b6cbc02e8e38f90944af27733de7217696ff35bf",
-"bytes": 102,
-"numbers": 0
-},
-"book:measure:D145": {
-"sha": "554efaa4b13fb2d5c95f85dfdbe221e912fb82d4d6068476ae5dc59dc1d17f4e",
-"bytes": 101,
-"numbers": 0
-},
-"book:measure:D146": {
-"sha": "6d0112176c14cc7ec438cc50a39da866b79aed3503d053baa7b81e3521c7cc7b",
-"bytes": 94,
-"numbers": 0
-},
-"book:measure:D147": {
-"sha": "2f39c6f0463fc3921463060325f273c38d17866c2bb1e96c070d22f01feb4196",
-"bytes": 96,
-"numbers": 0
-},
-"book:measure:D148": {
-"sha": "fad218096c9e2a5e0c06577ba7bd5aecbdc4c30f23e04c22eecb52a181d7f5d3",
-"bytes": 110,
-"numbers": 0
-},
-"book:measure:D15": {
-"sha": "d3039ca334342bb0a621888f00e1e8897e3d1e1a4080930f3a3653eece49502d",
-"bytes": 176,
-"numbers": 0
-},
-"book:measure:D152": {
-"sha": "043ecaababf13fc4fe68576b33447da5bf80cd6cc203016e0c0812f902ae339a",
-"bytes": 195,
-"numbers": 0
-},
-"book:measure:D157": {
-"sha": "dfdc885624b80f13b2975727b39cd30d14c8f9e4c1fe930bf39d1d50ba3ebc11",
-"bytes": 99,
-"numbers": 0
-},
-"book:measure:D16": {
-"sha": "fba1c4c0012fb7f03269e9ec476dd0b475032d997022295852e361c9ffd6eb16",
-"bytes": 101,
-"numbers": 0
-},
-"book:measure:D162": {
-"sha": "89390e7f33e79a38265912f596b30dee9a9d6523448b39243b494c4d773bda82",
-"bytes": 96,
-"numbers": 0
-},
-"book:measure:D163": {
-"sha": "658252aea0273b06512bebabf32f6b21f0c915e36177bab5f0c783880d57a648",
-"bytes": 85,
-"numbers": 0
-},
-"book:measure:D164": {
-"sha": "eae906ceff2548c673e50e7c90f2cbb384a8db3e78c1d8207f494d7b57bf30d4",
-"bytes": 512,
-"numbers": 0
-},
-"book:measure:D165": {
-"sha": "fa28c3cf6e9c5428953551b39956a1b355b86ea662d58d46f2a84666acf030bb",
-"bytes": 531,
-"numbers": 0
-},
-"book:measure:D166": {
-"sha": "8cd67063e99a8a21098096b4ace9a31488a6f91d31f7a3ebb70b38bfd06e2259",
-"bytes": 202,
-"numbers": 0
-},
-"book:measure:D167": {
-"sha": "2d19083cde9ed92c8265dcf7b758c439cf459bdaee3ba0aac88d39860c30e0b2",
-"bytes": 179,
-"numbers": 0
-},
-"book:measure:D168": {
-"sha": "1b6bec164a1b2b6625f4b0e9f072897c3bd04a89fed2ac503ace64b3630c93ed",
-"bytes": 94,
-"numbers": 0
-},
-"book:measure:D169": {
-"sha": "86a603cc739adb32f574023a5ab11df7cd982f5861038e82a2c8212d3c6afc7e",
-"bytes": 208,
-"numbers": 0
-},
-"book:measure:D17": {
-"sha": "d5718289715eb242ebfa588fdf66e203e8f293d656369f63575fe59e1fd42d9d",
-"bytes": 87,
-"numbers": 0
-},
-"book:measure:D170": {
-"sha": "0ce81a221d136cf10dbb111059a92f49325567c279fe2d84a5160689a5dd7d73",
-"bytes": 92,
-"numbers": 0
-},
-"book:measure:D171": {
-"sha": "244fe6fc71f7aa267a452fa9ffda5cd4d5bbc4f975c2fd06647f71c04e356f5b",
-"bytes": 125,
-"numbers": 0
-},
-"book:measure:D172": {
-"sha": "dfc4ba4157af74cbfbe4759ebc34f1f72a5ec2a93b68db89b6c3124c14ce147d",
-"bytes": 259,
-"numbers": 0
-},
-"book:measure:D173": {
-"sha": "bb41429039bc6ba4c09cfc6adef83f82e574b99bcbe4c828f5925cde2065f982",
-"bytes": 115,
-"numbers": 0
-},
-"book:measure:D176": {
-"sha": "0b3cf02fee841b9ff7971e748e050d4ce72fb8233326040966226ae0dd564f13",
-"bytes": 226,
-"numbers": 0
-},
-"book:measure:D177": {
-"sha": "f655b1b14b30fe5eeafff239153a0a71e49b35e03543a849b60d2d86d36105db",
-"bytes": 159,
-"numbers": 0
-},
-"book:measure:D178": {
-"sha": "906d2dc3f56ce3b992cc1fc03c34967ecce335a572ecc5f95585c899d6a1d0cf",
-"bytes": 515,
-"numbers": 0
-},
-"book:measure:D18": {
-"sha": "4aaeeb02a70bfb1f20d9552bcd5ba6b5160bd0c8e8b8f7e6764407a1990edd08",
-"bytes": 102,
-"numbers": 0
-},
-"book:measure:D180": {
-"sha": "886ea2cfb4cbffa5e0014d349734f0435082dae8ddd58df051bf8b67c7357e5c",
-"bytes": 225,
-"numbers": 0
-},
-"book:measure:D181": {
-"sha": "b9df891916d4f5cffc2c492aa09c8249db9a55f69b2c406c0012669e95be0a36",
-"bytes": 270,
-"numbers": 0
-},
-"book:measure:D182": {
-"sha": "ed1b5f8ecbcdf987aa69a5b2e44533e6037d9dba8967e82d726d2517ebe87397",
-"bytes": 186,
-"numbers": 0
-},
-"book:measure:D183": {
-"sha": "add26fffbd7a2db325b5141be5ea6b1ddbe75b3926599ce97ccea9f9e1ca03f0",
-"bytes": 125,
-"numbers": 0
-},
-"book:measure:D184": {
-"sha": "4623ee8c8be6fbab26dbd3f97173efb06648d8a785cb4c6dffb9b582bb7e049b",
-"bytes": 126,
-"numbers": 0
-},
-"book:measure:D185": {
-"sha": "720f482d0b48d0d633f5be69bb33e9997bd1bd0fe7a6f4a8827a4f85a49d034c",
-"bytes": 176,
-"numbers": 0
-},
-"book:measure:D186": {
-"sha": "9de9ba062607fdd890c4747de80df7292d0d0ceae0a58b06c79280fdae72bcc2",
-"bytes": 110,
-"numbers": 0
-},
-"book:measure:D187": {
-"sha": "872265d38d0fab3779e56838789b0e3e52aec2bd5a0231cda18c666d0b269f29",
-"bytes": 175,
-"numbers": 0
-},
-"book:measure:D188": {
-"sha": "70b2ae616c0d4404e2efa904c53f9cbd4508724f7386164e53dc9098c38b7d6a",
+"sha": "601cec956c07f4b0fa1430d3eb3f9b38b2a772d96ae0164089057572673d1043",
 "bytes": 209,
 "numbers": 0
 },
-"book:measure:D189": {
-"sha": "d0910f604b00a8922900eb2e42a3633663940bdfd58bfc7629e4858dc0092a75",
-"bytes": 334,
+"book:measure:D10": {
+"sha": "9b4abf2af41b88fa0fac680164f9bb8ef3d26cca35a20e7e58aa7588219e7ee7",
+"bytes": 130,
 "numbers": 0
 },
-"book:measure:D19": {
-"sha": "7e062770a3ff36a198b087ca276d5cc6d5f912c80c8539e7dfcde0ffa35f4bae",
-"bytes": 99,
+"book:measure:D100": {
+"sha": "355a6c4a9460f2db7ea5ed199d738050060c296a3522c22b161a793e22fc8acd",
+"bytes": 162,
 "numbers": 0
 },
-"book:measure:D190": {
-"sha": "855db0e4edba76cd8a079d3f12ac68a86da95f3b413d0c57fb8805eb1326658c",
-"bytes": 139,
+"book:measure:D101": {
+"sha": "ec6d29b1751ea4ee641986fe65fcb3e33bed82faf316a2a562fbf18986dccb4d",
+"bytes": 123,
 "numbers": 0
 },
-"book:measure:D191": {
-"sha": "98440c45df2b9a1b803f52995dbdf21ab0590cb24fb4e51b70ebe5ff09fd3634",
-"bytes": 254,
-"numbers": 0
-},
-"book:measure:D192": {
-"sha": "a97b3adec9bbeb6ba89199eb6e11326c5ed494b59e2d312a8f6fd588c39f31f5",
-"bytes": 140,
-"numbers": 0
-},
-"book:measure:D193": {
-"sha": "86412d003f5fedb1969c0de49386b37e4ff6a6ee8e70857a58328267a85a19b3",
-"bytes": 348,
-"numbers": 0
-},
-"book:measure:D194": {
-"sha": "1b9c67fb167ed52ede04374f8d3b3bd9f3afb301921be51769cbc1f8f4ab7f97",
-"bytes": 136,
-"numbers": 0
-},
-"book:measure:D195": {
-"sha": "2e2aafd7c05ffaf2e50a20292fffd2f74d04309b7b5a50eea3b2954e0a303d02",
-"bytes": 511,
-"numbers": 0
-},
-"book:measure:D196": {
-"sha": "19b6164e7abb3c3c0c20db736e247870a2219f61ecee0f7c673fd46a490ceb98",
-"bytes": 571,
-"numbers": 0
-},
-"book:measure:D197": {
-"sha": "7a3fd8462a7cd5c9aa2b4f14525bdcef5c75b2048da9806b1f5c684f88acdcf1",
-"bytes": 296,
-"numbers": 0
-},
-"book:measure:D198": {
-"sha": "a4a5969fe266071d0bb204b50cf0e1fa6001903d804ff858220dff21ee6564c7",
-"bytes": 192,
-"numbers": 0
-},
-"book:measure:D199": {
-"sha": "a7387f1b8d007755ccbca0bd2718eff97bf8c9f66284c8bd3d07ef15c4c7b754",
-"bytes": 1180,
-"numbers": 0
-},
-"book:measure:D2": {
-"sha": "ff27d2e5680a365d778ddb027c2a8e17e30981e601f43d39ab1c47332b577649",
-"bytes": 295,
-"numbers": 0
-},
-"book:measure:D20": {
-"sha": "e541479005941a758139636507a6955ed1671375d4894d14320d6f0b86e6d845",
-"bytes": 146,
-"numbers": 0
-},
-"book:measure:D200": {
-"sha": "a0cf432c7fecde34d82145fe975ed4ca48bb7fa90ec4e0c852d3152e786a7637",
-"bytes": 515,
-"numbers": 0
-},
-"book:measure:D201": {
-"sha": "5fb7420fe984dfda7af21f3e72c07307352446ddc20ecc63105ff41a3419b11f",
-"bytes": 265,
-"numbers": 0
-},
-"book:measure:D202": {
-"sha": "0d391e2970262c7f80a6985e11526dc758f3f000e42aa78fa72ffb53fef34da4",
-"bytes": 277,
-"numbers": 0
-},
-"book:measure:D203": {
-"sha": "8bec2834cf066411ec067c4b0073cde4e0fa69535cf2302ba7f10885718b9bdb",
-"bytes": 345,
-"numbers": 0
-},
-"book:measure:D204": {
-"sha": "001d835afa3c7691d83990eeba84c864bb31cdc52a715780b705d4c52b7ba7e8",
-"bytes": 255,
-"numbers": 0
-},
-"book:measure:D205": {
-"sha": "fa0ef4fb7e34562af2da07eab3b0efe67594b15d946136b511276ebba4c3709f",
-"bytes": 213,
-"numbers": 0
-},
-"book:measure:D206": {
-"sha": "7311ecddbf9a08b01fb3df7099e8a0e5cf227d9b566b54f408c716fd8773b557",
-"bytes": 1637,
-"numbers": 0
-},
-"book:measure:D207": {
-"sha": "5fc2c3b4e3e43076132e4ed658189a73e3136856d1f4aba86ee6c65ba59c7219",
-"bytes": 252,
-"numbers": 0
-},
-"book:measure:D208": {
-"sha": "1f16a7a5bfd571f6987641e8907cce07fbee9b44fface4b225e3122ac07003b3",
-"bytes": 510,
-"numbers": 0
-},
-"book:measure:D209": {
-"sha": "c5f94b085317e1ca8cd647c03b81a6f8fb667eed87da489e4b8a3fd2729d48b3",
-"bytes": 628,
-"numbers": 0
-},
-"book:measure:D21": {
-"sha": "792ef2d1c39ac9baeee0adcd65238d995da77ed63218c01fb518e6b476193cea",
-"bytes": 180,
-"numbers": 0
-},
-"book:measure:D210": {
-"sha": "efb875b27cfbf0b112a4d227aa2776604f620267b5de1e854e66d07e018d10b2",
-"bytes": 176,
-"numbers": 0
-},
-"book:measure:D211": {
-"sha": "a3309b13cf8eaf27cfe672417bd9195bbb72e72c6ef47cc63edbf55710dcaee8",
-"bytes": 264,
-"numbers": 0
-},
-"book:measure:D212": {
-"sha": "6f99e2458b3ebab827f36e443f4cd3b8429ea0542f9d883b940037be0a51a6f1",
-"bytes": 688,
-"numbers": 0
-},
-"book:measure:D214": {
-"sha": "748d3f959379bf4026c3e9f67e994967806f8f6ebfb7dc3c806c17f6d58925a7",
-"bytes": 448,
-"numbers": 0
-},
-"book:measure:D215": {
-"sha": "4bc2dbd24814cd321f8ecde88c75889cd2ea1fe470503c6ea86d9c30587df42c",
-"bytes": 374,
-"numbers": 0
-},
-"book:measure:D216": {
-"sha": "ca16dd23bb062c783b350a9f294f9a05414cb29fa91a7ab23316ec4fad9e56e7",
-"bytes": 163,
-"numbers": 0
-},
-"book:measure:D217": {
-"sha": "fd247130884bfcb070f7ccad8721eba87aa492e40ca06a94dfa36773541d7e82",
-"bytes": 398,
-"numbers": 0
-},
-"book:measure:D218": {
-"sha": "cf541de3dd503f404ac9e13d4b21e8e3346ce36f8e7ea80ce222ddbe51b4ca3f",
-"bytes": 510,
-"numbers": 0
-},
-"book:measure:D219": {
-"sha": "4dfeec9c4c290ee416c9de679c9b3759e869146f6fa79e8126b5b717e4347700",
-"bytes": 652,
-"numbers": 0
-},
-"book:measure:D22": {
-"sha": "5ebed5f2e5b990619707e413eac96a951897bfb7170bc26a52a36f3a766dbd82",
-"bytes": 116,
-"numbers": 0
-},
-"book:measure:D220": {
-"sha": "9a70d88fb2241b6051ee425fc9de6c7cb15ce5b704f396b538ac045c10349d20",
-"bytes": 166,
-"numbers": 0
-},
-"book:measure:D221": {
-"sha": "7b9ba171c7f72a91247661b4fa5491784e2a48ebb4945f2d373473b201d01c5b",
-"bytes": 156,
-"numbers": 0
-},
-"book:measure:D222": {
-"sha": "e20e53d180bfa30c0e9fea8c0633df2d3c45624074b5195d983170f678c56a03",
-"bytes": 409,
-"numbers": 0
-},
-"book:measure:D223": {
-"sha": "1e2a967d2207f0176068186f0a241bd32b44f14d165f909b7952380d888588b8",
-"bytes": 256,
-"numbers": 0
-},
-"book:measure:D224": {
-"sha": "1c4ab5cf1667000d6a32be8ccbb323eae10943bc2053746d5e672f16840f9e95",
-"bytes": 779,
-"numbers": 0
-},
-"book:measure:D225": {
-"sha": "23d7f39247644c5457d0ec7d4eb7b20021b1ee919bcf61103fc562a1e1c81749",
-"bytes": 324,
-"numbers": 0
-},
-"book:measure:D226": {
-"sha": "f349d24f515025619c39ef61c00db4eaaffd19439dfb7725a771589fe3a701e5",
-"bytes": 198,
-"numbers": 0
-},
-"book:measure:D227": {
-"sha": "8afbbdfa89ade68c5fe267aca335e7e1625ad9464ba9a1bbe931dc6c19a24af1",
-"bytes": 133,
-"numbers": 0
-},
-"book:measure:D228": {
-"sha": "0aab50f45ed6699228d6b9f62f2a87a8ce0478c2c3bd1189fae3f95a5ebd04f5",
-"bytes": 196,
-"numbers": 0
-},
-"book:measure:D229": {
-"sha": "f624f18cbaaf0f9ee367584330df3ed86e455e39576663fdd90834db7e2d4e01",
-"bytes": 2872,
-"numbers": 0
-},
-"book:measure:D23": {
-"sha": "2b9b6f04b005d5d52535e853e28f01d92305e870d775b71cfb23c4a7f614e56e",
-"bytes": 104,
-"numbers": 0
-},
-"book:measure:D230": {
-"sha": "fe717fb5d5e6a11b4ecea583d082be10a4ebf51e76d0bfe74438b5131c1262cd",
-"bytes": 193,
-"numbers": 0
-},
-"book:measure:D231": {
-"sha": "a8603054a1a1156a457debc4393f8f5cef61e055b76117c24fca4f0274ac4230",
-"bytes": 1387,
-"numbers": 0
-},
-"book:measure:D232": {
-"sha": "e2090506113eb830ea0330f9205c452e976b1e338e83716e412fd35650301df9",
-"bytes": 398,
-"numbers": 0
-},
-"book:measure:D233": {
-"sha": "907b8d562b070808d2bd583cabcb528f97b15319d9cddf257e0685dc4a63b632",
-"bytes": 154,
-"numbers": 0
-},
-"book:measure:D234": {
-"sha": "e212060f55e7111f636773e1ee273450f4c9fc75cbc57a96782254e6364848db",
-"bytes": 221,
-"numbers": 0
-},
-"book:measure:D235": {
-"sha": "e35516f75bc195606753eb860e93029ac739133fd941c7f6a5881f1ca59894ac",
-"bytes": 160,
-"numbers": 0
-},
-"book:measure:D236": {
-"sha": "34e21baf2ff2922ff570b96aef5381ae5b5a097ea1f928f8f05ef14a89275337",
-"bytes": 203,
-"numbers": 0
-},
-"book:measure:D237": {
-"sha": "2203cebd087f4a1449622492cb200bd7d9aafe6789538f7dff542ff2bbd48c5c",
-"bytes": 196,
-"numbers": 0
-},
-"book:measure:D238": {
-"sha": "a763514fd67467e635f3ab38672b1e19f2174275ebfc4ff1f7d3d1b6fa62eb08",
-"bytes": 839,
-"numbers": 0
-},
-"book:measure:D239": {
-"sha": "bee9d432d31f417077bc2568cb57540524e59788269e02f7bb58ecfa1ff32223",
-"bytes": 2226,
-"numbers": 0
-},
-"book:measure:D24": {
-"sha": "c94b6cd93ce0b9663b6e2d4fac7db41c8374733769af2e10f12ee94c2b55c31a",
-"bytes": 103,
-"numbers": 0
-},
-"book:measure:D240": {
-"sha": "a72ab5f49dc83914633deb7dc435a913035932a135d3731cfa493277921123e9",
-"bytes": 684,
-"numbers": 0
-},
-"book:measure:D241": {
-"sha": "247a48631da9ba99d6b988217b7da3100ccbf0a514cd83370aad38abe0155c48",
-"bytes": 489,
-"numbers": 0
-},
-"book:measure:D242": {
-"sha": "6efcb9b37ecb4e2ce2dc61ca487cbfae5af1dcec94406460ed46592ec4210760",
-"bytes": 578,
-"numbers": 0
-},
-"book:measure:D243": {
-"sha": "6f77b91edadd6dcef5f8fb478f4ad1293c01d7985f05dc2c5b61c687727e5d33",
-"bytes": 311,
-"numbers": 0
-},
-"book:measure:D244": {
-"sha": "ca491f85a2fc5400026095334f7fdc19a81b327b793f8db3a38c38226fcf4a22",
-"bytes": 250,
-"numbers": 0
-},
-"book:measure:D245": {
-"sha": "e29a2e080d6a9812335c00cddcaba25e052a0490da71a04ac65797580412812b",
-"bytes": 351,
-"numbers": 0
-},
-"book:measure:D246": {
-"sha": "b2bfbcbf666ded0aba6e200c1ee1a008eb75f9a1661b50cd29b9344277504b2a",
-"bytes": 1008,
-"numbers": 0
-},
-"book:measure:D247": {
-"sha": "627fb15b5cb205c355a9bbcc554b8cb7aea931387551216f1817ecfab1584240",
-"bytes": 1050,
-"numbers": 0
-},
-"book:measure:D248": {
-"sha": "721282eb37665e49a6ea8f4179ed9cf54fcb9f226f27d8643f50eeb01a93376b",
-"bytes": 737,
-"numbers": 0
-},
-"book:measure:D249": {
-"sha": "f8e23427eb72314a530be45b91a2a8802935bd9ef61160759233664bbe6afb72",
-"bytes": 403,
-"numbers": 0
-},
-"book:measure:D25": {
-"sha": "4e5b9eb9e3b1c4b15aa19f03d8f74ccb997d4af29ba4f7a67978a86dae7694d2",
-"bytes": 184,
-"numbers": 0
-},
-"book:measure:D250": {
-"sha": "5213597553c1718a97f1918f82ae4e2953726229b40dd39b74777c36efac46c8",
-"bytes": 288,
-"numbers": 0
-},
-"book:measure:D251": {
-"sha": "7cc1da074d8865246ac30f017828ee9711be7718cdde53a0c6da2968b917a916",
-"bytes": 591,
-"numbers": 0
-},
-"book:measure:D252": {
-"sha": "414aac9129a75a4397ee6806c7444a8bd370acbb5bedb4997130aa5ded070377",
-"bytes": 396,
-"numbers": 0
-},
-"book:measure:D253": {
-"sha": "d88c51841be537a41239a867948a66fd74d1dd38f02f78b5a6d8f8e0eec5d975",
-"bytes": 800,
-"numbers": 0
-},
-"book:measure:D254": {
-"sha": "b82109b640f489dd0026120589b282acc72d770a3e6aea6c26cad044a9b91383",
-"bytes": 527,
-"numbers": 0
-},
-"book:measure:D255": {
-"sha": "88c083527745191ce5aaca885eebe836d23cd037f6d49a4b8f7dc65d3519157f",
-"bytes": 903,
-"numbers": 0
-},
-"book:measure:D256": {
-"sha": "cecd9aa3328f68618c11b5165ec213e891bf31be69943a77f4b00938be07c42e",
-"bytes": 231,
-"numbers": 0
-},
-"book:measure:D257": {
-"sha": "238eee98e57076bef93f2de254ccd0bc6db58a742bca51767c9ea4b352e7705a",
-"bytes": 161,
-"numbers": 0
-},
-"book:measure:D258": {
-"sha": "72a53010fed1aebcf187c506c705f110dbd94bb30df2c5d9a291e88ff9090993",
-"bytes": 417,
-"numbers": 0
-},
-"book:measure:D259": {
-"sha": "95b579e0de646e8fe36fc79d53274bd5bd3b56dad836b294d7110d3230e513d9",
-"bytes": 197,
-"numbers": 0
-},
-"book:measure:D26": {
-"sha": "1a438686d642b5c59a70460721ad749e22c3f98ec607f6dd3ca261294638ead4",
-"bytes": 92,
-"numbers": 0
-},
-"book:measure:D260": {
-"sha": "f4e5c35eb2fcf773862e384568afecc988613835cb59f04afdb43b3b157b48a1",
-"bytes": 214,
-"numbers": 0
-},
-"book:measure:D261": {
-"sha": "5ae20210204d15a492785252707741e1f43bdcd7698a57add335f15988291c1e",
-"bytes": 648,
-"numbers": 0
-},
-"book:measure:D262": {
-"sha": "95cf6aeabe5383eeb0b6bb49d7fb37bbb3976911d82ca2c2ac5ac9cca0715454",
-"bytes": 330,
-"numbers": 0
-},
-"book:measure:D263": {
-"sha": "4d6739d1a88875bc1e89b1f6ae0072c036e427056315f8c6eb3e19db51042752",
-"bytes": 447,
-"numbers": 0
-},
-"book:measure:D264": {
-"sha": "e73b57efae91470483e31dd5dbed0efaf429638638411ca8d1b9668f601cd851",
-"bytes": 361,
-"numbers": 0
-},
-"book:measure:D265": {
-"sha": "c6765a17a8c8af34f3c457b77f5b0decac47351a59dc413b0169ee5959137cfc",
-"bytes": 244,
-"numbers": 0
-},
-"book:measure:D266": {
-"sha": "815e6fb3e4d331236daf20fdaafc54dc4527ae01a983bf14d06ea8e83033a2d3",
-"bytes": 375,
-"numbers": 0
-},
-"book:measure:D267": {
-"sha": "dcc84a5cf9fc840ec2eb484b905f892823dcbc8b26d77c32a33861e75b86cdc7",
-"bytes": 1098,
-"numbers": 0
-},
-"book:measure:D268": {
-"sha": "9e5c442fe9aab99913974c9c36600e8165689960cfa82d342b3105d70b70df28",
-"bytes": 407,
-"numbers": 0
-},
-"book:measure:D269": {
-"sha": "fa7490400f24edb608d3e0a2368c5dcb868a32274e4198e985e0f5763032b530",
-"bytes": 270,
-"numbers": 0
-},
-"book:measure:D27": {
-"sha": "02395893c735a280898465106990c69021b6031b1293cd311e25b660971e0616",
-"bytes": 101,
-"numbers": 0
-},
-"book:measure:D270": {
-"sha": "c2bd0c077eca20ac8b265790add4a1f695cd6ba3513e635befd0984a5042f576",
-"bytes": 723,
-"numbers": 0
-},
-"book:measure:D271": {
-"sha": "43d735719c848762aa94484f5b1798142e5e92e2024bb5bb7c0b295ee8771eb5",
-"bytes": 680,
-"numbers": 0
-},
-"book:measure:D272": {
-"sha": "bae9bc31968d1ad8db36c837672502790f0245e5f1be85971153bf7cc486000a",
-"bytes": 385,
-"numbers": 0
-},
-"book:measure:D273": {
-"sha": "ec1116701623c24977c476d9365af5577876c6810370251138967d0dd2c4fa9c",
-"bytes": 265,
-"numbers": 0
-},
-"book:measure:D274": {
-"sha": "6f1e40f37f4223a21ee004936648a70169c719158ecd313bbac6fb7cac5802ae",
-"bytes": 358,
-"numbers": 0
-},
-"book:measure:D275": {
-"sha": "0624f9f8e917c319ed340a1703f0365487f47a904ab348f9ecc32d3ee29a67f7",
-"bytes": 201,
-"numbers": 0
-},
-"book:measure:D276": {
-"sha": "fe9a66f1a305798e33b6dda7e9c8a2a00c61ab0bb798aa8952e760bf815398d5",
-"bytes": 474,
-"numbers": 0
-},
-"book:measure:D277": {
-"sha": "325c8d260bce0fdb8315e780f789ffcc85ea529d71c8a31a6033393057fab401",
-"bytes": 386,
-"numbers": 0
-},
-"book:measure:D278": {
-"sha": "a11c4e789ef2eb1c10ea921724fe3d147b0037278e0cf0f307c77f1e97a8f4ea",
-"bytes": 1585,
-"numbers": 0
-},
-"book:measure:D279": {
-"sha": "fb8d17d9634b5c7dd3d6df5c7ecb49e3ea062e061248dd7e1284365520ceff05",
-"bytes": 1915,
-"numbers": 0
-},
-"book:measure:D28": {
-"sha": "b0d628c1cd30fa0c2ac7d61246e07a8cf5d09883a7943c1fc9f452b1a14f988d",
-"bytes": 113,
-"numbers": 0
-},
-"book:measure:D280": {
-"sha": "19b098e8475968691e43999e69f8fc287e7f2b7c401b6cbba52ea68d4b8ca262",
-"bytes": 1005,
-"numbers": 0
-},
-"book:measure:D281": {
-"sha": "dd5a7cc01de89c24d08ce57d73168d47819e972fdc2e8d1834ec695b32275553",
-"bytes": 868,
-"numbers": 0
-},
-"book:measure:D282": {
-"sha": "2f0eaabd3f7f3e0673f52d46a40d45881f2f945f4ec5112625f5fc57587ce8bf",
-"bytes": 866,
-"numbers": 0
-},
-"book:measure:D283": {
-"sha": "81de13406cbf72f271868bb546745b615caa72d52971a7255b28e988f4641ff0",
-"bytes": 2594,
-"numbers": 0
-},
-"book:measure:D284": {
-"sha": "a9c0d97135315fe62477d990d92eadba0d88946c6d5866b012723da96d6d1709",
-"bytes": 399,
-"numbers": 0
-},
-"book:measure:D285": {
-"sha": "82348c206f8b07606756277f84933226b2703fcc012f82c666971a087b257f3b",
-"bytes": 802,
-"numbers": 0
-},
-"book:measure:D286": {
-"sha": "12020cebc952c9239a03aed32b17f8d63096b72db566e80a57a764a7e1b74988",
-"bytes": 200,
-"numbers": 0
-},
-"book:measure:D287": {
-"sha": "0dafcac9a57dcf1f3d4630df0fd205a42f88abca6486192b9a97f9ceca00b543",
-"bytes": 1181,
-"numbers": 0
-},
-"book:measure:D288": {
-"sha": "2e17af772a14ee10a3d1d7877bf0b47f8bcef5f10a7a57ce03cd42909414f651",
-"bytes": 469,
-"numbers": 0
-},
-"book:measure:D289": {
-"sha": "47c7709a322ab6090e79c27d479dff5efdc2b63a443e949f3365f8d859cc68d0",
-"bytes": 663,
-"numbers": 0
-},
-"book:measure:D29": {
-"sha": "caf43ee438f501fa1f0803c748837f3b2021f1fcc05dc7d2ff20cd778347850e",
-"bytes": 88,
-"numbers": 0
-},
-"book:measure:D290": {
-"sha": "0f11c04971944ce1765b91061e4c35cbab9a41ab129e93decea669202740c6fb",
-"bytes": 250,
-"numbers": 0
-},
-"book:measure:D291": {
-"sha": "e72fe0e1fda6b0b76323f8ea9ef7e63164edc96420f317f693d52922c5368658",
-"bytes": 3183,
-"numbers": 0
-},
-"book:measure:D292": {
-"sha": "a0ac8aff7976f9381942ff3ad21f14e5c2e2ef76118bb364ddc9420fa04215de",
-"bytes": 888,
-"numbers": 0
-},
-"book:measure:D293": {
-"sha": "43837f7f6929b29b4cdda2929ffbf97313d56d2ecf777d9cbb11e458e603ed7a",
-"bytes": 273,
-"numbers": 0
-},
-"book:measure:D294": {
-"sha": "a6787a91ed7090e7d3404f527de3ef54db549b23ba13450c8bde2fbb8a091bbd",
-"bytes": 698,
-"numbers": 0
-},
-"book:measure:D295": {
-"sha": "ac5575bda3c63f62fa839badbc64fad88ff8eae71ea78a6fa27501eb01513559",
-"bytes": 561,
-"numbers": 0
-},
-"book:measure:D296": {
-"sha": "18e308c7f665e68966adbce7966f2c17f67c212c63f18ef3e698d5ff94b97a34",
-"bytes": 1156,
-"numbers": 0
-},
-"book:measure:D297": {
-"sha": "488f8e3d0cfae7ea59a69c12c3bf53764a7a3027a4fa7cfa109d243909f0d55e",
-"bytes": 394,
-"numbers": 0
-},
-"book:measure:D298": {
-"sha": "48c2473e1beb7adb62a09c1415103667f8e1d0c00bed3b890fda7ba3733cb03d",
-"bytes": 385,
-"numbers": 0
-},
-"book:measure:D299": {
-"sha": "6bfe7b845a9b10c940ed7cae61840ee75258530a271156ab8e4726320d4f758e",
-"bytes": 617,
-"numbers": 0
-},
-"book:measure:D3": {
-"sha": "4fc8c9ffdefc5042bd1ed041f8c5bc1cd4dc38d96c1e4c49961482be7eb24547",
-"bytes": 139,
-"numbers": 0
-},
-"book:measure:D30": {
-"sha": "6a182061f7d4f6205966642617b8ad36ea1fbc2f92a624457b0bd5c25380fde1",
-"bytes": 125,
-"numbers": 0
-},
-"book:measure:D300": {
-"sha": "9b14c779478483e08e5c67d317cf56e0c70dba30ea73a23a9b19f0380b39cb08",
-"bytes": 371,
-"numbers": 0
-},
-"book:measure:D301": {
-"sha": "c629bcdfc5ac31478fc81f3bad52a7e191b28f3e990a672d5a73b201d6b9bc82",
-"bytes": 171,
-"numbers": 0
-},
-"book:measure:D302": {
-"sha": "3bf930c8e50c3aaf77393349414e8d2b433a15a2e8f59438005b6521f41bd9b5",
-"bytes": 201,
-"numbers": 0
-},
-"book:measure:D303": {
-"sha": "8b8b1f1e32c4dd3cccb265b801344231cf9ac50d26986db1a5b045569140a351",
-"bytes": 4126,
-"numbers": 0
-},
-"book:measure:D304": {
-"sha": "f977bd2541b22c9ca2283fb16aa6ea6d1f1435237979550ece174bb2b11382a4",
-"bytes": 876,
-"numbers": 0
-},
-"book:measure:D305": {
-"sha": "ef4e75e1364199763c14f3bae8136ab781516b2de7203d6066a0a9bed8f23e6c",
-"bytes": 2648,
-"numbers": 0
-},
-"book:measure:D306": {
-"sha": "ea71eedf38400d709140174b0081d996f508a010315be81660896bc3a9fa1060",
-"bytes": 532,
-"numbers": 0
-},
-"book:measure:D307": {
-"sha": "094a3e617106c7b0aa14a532f6ad007300aa920453c52a93e9a2f79f7b1fef85",
-"bytes": 1078,
-"numbers": 0
-},
-"book:measure:D308": {
-"sha": "091764e4aab637dec667651edc2184c47675221f543ac11666e00e4b9f59104a",
-"bytes": 3083,
-"numbers": 0
-},
-"book:measure:D309": {
-"sha": "1f1b60484002e989d9dedcce26602361c2ff57a5269f234826f0195aebe5a8f2",
-"bytes": 803,
-"numbers": 0
-},
-"book:measure:D31": {
-"sha": "a9232882a8aafafef3683bfb17bf3cea5df1bda0032e81deda32b9436bdf73b8",
-"bytes": 92,
-"numbers": 0
-},
-"book:measure:D310": {
-"sha": "5f3e47d4a5d12c7ca0ae47fb3a00d779927c86d495b3a12b94f5a6c1e713936a",
-"bytes": 1664,
-"numbers": 0
-},
-"book:measure:D311": {
-"sha": "550b9dd26c3555fc8040e51dcc64709bf0dc52dc5461b06d34f556b8127b6151",
-"bytes": 1493,
-"numbers": 0
-},
-"book:measure:D312": {
-"sha": "6a7c0854db6a44c0e4753c74259aca2b4856cd3f303359958202df4022574c6a",
-"bytes": 918,
-"numbers": 0
-},
-"book:measure:D314": {
-"sha": "b72ada93f7ea77dd872b9a8d55220572d0ce63602747faae86aa50b48c486670",
-"bytes": 620,
-"numbers": 0
-},
-"book:measure:D315": {
-"sha": "bc429d29c213b23c61b2261a6c33fa1b9a8dbf68260ee362b1cee8e3c5aab5ff",
-"bytes": 517,
-"numbers": 0
-},
-"book:measure:D316": {
-"sha": "c1332a75e2b062a7744dfaa1ddc75817e317d69102795e5483f316e439efa0c7",
-"bytes": 540,
-"numbers": 0
-},
-"book:measure:D317": {
-"sha": "fe841f56cd8137eda82ad96398a4eea18aec5ff137370fd449b15709522ea17e",
-"bytes": 3133,
-"numbers": 0
-},
-"book:measure:D318": {
-"sha": "fcbe2ac257324c2957613ef0c3e6806a9120f41e4cc80b81879ca217bcb231fe",
-"bytes": 576,
-"numbers": 0
-},
-"book:measure:D319": {
-"sha": "a74295bf962e2e61f98bd6008b9519379c4ae6c09864bdeb0c650d32171a6512",
-"bytes": 919,
-"numbers": 0
-},
-"book:measure:D32": {
-"sha": "755e620d4dcf8b13b8e4a955763a79882f211444bf20810f8a91d077fe435699",
-"bytes": 621,
-"numbers": 0
-},
-"book:measure:D320": {
-"sha": "7c99d282cd79f794db9b047febcedca5cedd9aac0bc9bb5aedc94b40b63fb3d1",
-"bytes": 2435,
-"numbers": 0
-},
-"book:measure:D321": {
-"sha": "da0f48e80c808800a18ae5bd51bed7cb4370841c578970b50a912b5f2c0bfa25",
-"bytes": 1182,
-"numbers": 0
-},
-"book:measure:D322": {
-"sha": "78df4f50b75cede48dd844ad959d5629402040bdf69610f5abc918eb539b6074",
-"bytes": 684,
-"numbers": 0
-},
-"book:measure:D323": {
-"sha": "d3ed9cb96c4022b54ef34730702da4ff51996d894e5467e945cbba105a01b725",
-"bytes": 362,
-"numbers": 0
-},
-"book:measure:D324": {
-"sha": "13f1b20c69a4cafc629da6bded25102e413a9ca5528f697d3336b60f76a68074",
-"bytes": 829,
-"numbers": 0
-},
-"book:measure:D325": {
-"sha": "7724b90ae241baf528792f20d3fe2d4576260d4247785960c62447983dc659ae",
-"bytes": 850,
-"numbers": 0
-},
-"book:measure:D327": {
-"sha": "a3c3a7b287a8d3e69b1226ba800880c68776964281310becb15f71a666c0b1a1",
-"bytes": 185,
-"numbers": 0
-},
-"book:measure:D328": {
-"sha": "7eac511c531084063bbdae2a1c4f1d6a4c27040228f4cace1dffd9bd69145d4f",
-"bytes": 160,
-"numbers": 0
-},
-"book:measure:D329": {
-"sha": "dbc6309870ba3ebaa02f536fa1032ab5c5b5461e423f736fb6a8dc64647a1e84",
-"bytes": 784,
-"numbers": 0
-},
-"book:measure:D33": {
-"sha": "418ddead6cbb731aa0461ae221e3b491bd91282995f7dccc36b9ef47d76469ce",
-"bytes": 84,
-"numbers": 0
-},
-"book:measure:D330": {
-"sha": "e50e0e07d199bd5303b1ce18b2e19055a38fe52662dfcb8ab456f8fb5a5e6f69",
-"bytes": 982,
-"numbers": 0
-},
-"book:measure:D331": {
-"sha": "d4d96f4f2dcfb7d7aad34c2b3758c84d910a939b0f88afd224cca4ca2e4d8a7f",
-"bytes": 842,
-"numbers": 0
-},
-"book:measure:D332": {
-"sha": "5cd4db99fa46e06b3a2ad16a8dd9313d7377fb63f80cb913adfdb5f65303802e",
-"bytes": 370,
-"numbers": 0
-},
-"book:measure:D333": {
-"sha": "4cb3fb62ba0ab46e8f0935e63c1f605daaa8c66d55769d246eb40bc4dd871db2",
-"bytes": 540,
-"numbers": 0
-},
-"book:measure:D334": {
-"sha": "ebdd7ad2d6a3d96b4b87156db82e6cc57e4a8265b1a52306beb1338ea97adc6b",
-"bytes": 159,
-"numbers": 0
-},
-"book:measure:D335": {
-"sha": "f9c3b59ca1d890122f75f0e141d3be9989527a6c6de9173bb1286cdc3966d46a",
-"bytes": 211,
-"numbers": 0
-},
-"book:measure:D336": {
-"sha": "5a60859b4c3cdc8451d5a60015d03a4b1c321c68d33fd7c6bb7beab7b3153e69",
+"book:measure:D102": {
+"sha": "a76e2d9abb9d3ffd93b0854a7e10899a760071f36855e08ac9efd446574422c9",
 "bytes": 155,
 "numbers": 0
 },
-"book:measure:D337": {
-"sha": "8fe8cbbf47b3cb1319afa51dcc5a5b7392b5238ef4329b569191f0a994ae6cf9",
-"bytes": 151,
+"book:measure:D103": {
+"sha": "9943d54dbafb5fd83e64152bd476a7616213077401c600601e57fe16b82f1cf3",
+"bytes": 390,
 "numbers": 0
 },
-"book:measure:D338": {
-"sha": "f510af49960ed1eedcb34aa21fadb5c12983724c670ea5b9193f80d2c1c4d4bb",
-"bytes": 271,
+"book:measure:D104": {
+"sha": "978aeab76255f3d7670fcf695c954e13585796570ae1d8d8276fd3c064c98bf6",
+"bytes": 127,
 "numbers": 0
 },
-"book:measure:D339": {
-"sha": "a7bff4986f301270c59070323718a6005199b0c2631db51c8c301bac166efaca",
-"bytes": 471,
+"book:measure:D105": {
+"sha": "f1a019d3f590cb3c4186317c3538ed63194aa0d1c2091bcd748fbee82ca612e6",
+"bytes": 122,
 "numbers": 0
 },
-"book:measure:D34": {
-"sha": "1db9ceb306ce489778a6dcc81354ec3e0ce93f6565626145ff2fbf61a06fc0ff",
-"bytes": 91,
+"book:measure:D106": {
+"sha": "269b58810d2ee7427123af0bc6787ed6178d63ff55d99bcaf6783126b80c39a3",
+"bytes": 163,
 "numbers": 0
 },
-"book:measure:D340": {
-"sha": "70d9b2083e2cee430140d0ad29ae0ff0d0a5383fdd02053f2ef595b34500536f",
-"bytes": 301,
-"numbers": 0
-},
-"book:measure:D341": {
-"sha": "dfe768bbfa29dbd9d5fef5b166e7eacd3ac11584d49e6b0a6f2b9fba3cfba219",
-"bytes": 303,
-"numbers": 0
-},
-"book:measure:D342": {
-"sha": "8065fde8eefbf8b66531ecc0fd7b72edeb7c59a90e877a60d1257e80d362952f",
-"bytes": 412,
-"numbers": 0
-},
-"book:measure:D343": {
-"sha": "4b937d3d0e0760cdb9e0412c39dab3a44cf414b34cf71fbcbebd1b17927b8bb1",
-"bytes": 714,
-"numbers": 0
-},
-"book:measure:D344": {
-"sha": "60ed554672440552df831e72723dc06d86082bf4f008114f93a81f48a398fc99",
-"bytes": 148,
-"numbers": 0
-},
-"book:measure:D345": {
-"sha": "a16785c114495dbf9fe78bf374c1f0233599d633d2fdc74db5e7328026165295",
-"bytes": 1266,
-"numbers": 0
-},
-"book:measure:D346": {
-"sha": "da284aa0b09e55163babae5ec9f8d8ec3466d033cb44d66fe996bc5fcfd6b6bc",
-"bytes": 263,
-"numbers": 0
-},
-"book:measure:D347": {
-"sha": "f9fe0427cdb11954164d13d8dc36af0bab3fe07775eca025df637e9362fa869d",
-"bytes": 273,
-"numbers": 0
-},
-"book:measure:D348": {
-"sha": "c4fee7b9d8a7accce33d0e402d8e52b112d1359a5723237bfcfc1d72e97dfb41",
-"bytes": 1700,
-"numbers": 0
-},
-"book:measure:D349": {
-"sha": "9352760874b66a86f29b41baa37e4d178f2090de7b393a114d0fe730e857dbd7",
-"bytes": 447,
-"numbers": 0
-},
-"book:measure:D35": {
-"sha": "ef0e3c083d99a8033e393f7db284c27b995cb4f035ea0ba15357485844fa2259",
-"bytes": 90,
-"numbers": 0
-},
-"book:measure:D350": {
-"sha": "94b1d9fb7839404cf535dc93b50b48071c1ce8694e34d9cd507b04d37cf296e7",
-"bytes": 2238,
-"numbers": 0
-},
-"book:measure:D351": {
-"sha": "9a0b42e15354746ad12c3ac0799ffac812dfbdf221816ddf3fb0403ef993096b",
-"bytes": 1133,
-"numbers": 0
-},
-"book:measure:D352": {
-"sha": "828af75e920ec459dcc7c6470174e735aff89aa2ef46ced854dc7ba9ad255a5b",
-"bytes": 226,
-"numbers": 0
-},
-"book:measure:D353": {
-"sha": "ab1287a259dfa0e2ce3890ff671c76765f26c4ab4c7804bc5a875c9b90c9a39f",
-"bytes": 1077,
-"numbers": 0
-},
-"book:measure:D354": {
-"sha": "9ddc31f253d84d7d7e5720b69bf0305547909f9095ed0e3d3a7722c307d70489",
-"bytes": 832,
-"numbers": 0
-},
-"book:measure:D355": {
-"sha": "fe168f4d7827480a82f841468aa3e2aa3fbcb63bdfad8ff9d8c37fe844bf88b7",
-"bytes": 873,
-"numbers": 0
-},
-"book:measure:D356": {
-"sha": "ae1c19733a3269dfcd30bd18b0929fcfe97b650ca94cdfe5a04a5066b360a995",
-"bytes": 256,
-"numbers": 0
-},
-"book:measure:D357": {
-"sha": "d6be806bb4d05dfcd94e8e3d2dc5df75395bd6e582841384ecc3930a4cd5b5fe",
-"bytes": 230,
-"numbers": 0
-},
-"book:measure:D358": {
-"sha": "ea0e657e0442c47b7fb91b15a59b617bf0d42de23a7cec4e76360ddb6eb66400",
-"bytes": 279,
-"numbers": 0
-},
-"book:measure:D359": {
-"sha": "c94e51425fc4efed1a3f8c6d59968ce129b2a847c0f4f25a75ba923379a91190",
-"bytes": 306,
-"numbers": 0
-},
-"book:measure:D36": {
-"sha": "fc4204a8ad79b26646b1626e03a6c8b4be8916b630959425dfbb8b9ddca236f3",
-"bytes": 183,
-"numbers": 0
-},
-"book:measure:D360": {
-"sha": "cd9e9d387cf0360db6c104d7ac08c42a612726f0b23607818a1f30fb46f728e2",
-"bytes": 2006,
-"numbers": 0
-},
-"book:measure:D361": {
-"sha": "e4c9127bfff0b7d56be6cca470bb0c6faa82b365a6a6ffc0561e6b7e348f0ee5",
-"bytes": 1177,
-"numbers": 0
-},
-"book:measure:D362": {
-"sha": "67a435c425fcd4409ba119b0b7a7bfe08344a0e4fb9864fe509850ec2a224d5a",
-"bytes": 885,
-"numbers": 0
-},
-"book:measure:D363": {
-"sha": "f3a1a546a7889fa9ed7cf71c38f8e5e20df595fd039da2830489203fe3437644",
-"bytes": 962,
-"numbers": 0
-},
-"book:measure:D365": {
-"sha": "5245aecd671cef507f94088f22cb5c5142586363cb2a35ff87aa44ad7340f40a",
-"bytes": 134,
-"numbers": 0
-},
-"book:measure:D366": {
-"sha": "80020697d4a2b54e97c0670634469bd07c096b607d3fe075996ded98c92930bb",
-"bytes": 2966,
-"numbers": 0
-},
-"book:measure:D367": {
-"sha": "87218520a67c3f88ce86d4a11a27d88522e834f28eb00ef1d639c7237e81ff49",
-"bytes": 292,
-"numbers": 0
-},
-"book:measure:D368": {
-"sha": "1aa071a13f84c646ef3709e9bdd61059b6ed57a2bbf7ddb63ee61f30536d3b03",
-"bytes": 181,
-"numbers": 0
-},
-"book:measure:D369": {
-"sha": "f33d75b3ac56d5f97750b81768a2ff908df88dd3c1e56c977646802fda0c1e68",
-"bytes": 426,
-"numbers": 0
-},
-"book:measure:D37": {
-"sha": "f0a495e613cf1919c8048912fe0e6d0333c6fd61e7ef7e0482102558ac1854e1",
-"bytes": 92,
-"numbers": 0
-},
-"book:measure:D370": {
-"sha": "326214c856f8954fd401a51fa13186ed78ca1ac57907d2f77223bd47d726082f",
-"bytes": 344,
-"numbers": 0
-},
-"book:measure:D371": {
-"sha": "f0ebf7ac813a635af0c8b5e7ccd3520724d3184eede8985b543c4531d46054d9",
-"bytes": 443,
-"numbers": 0
-},
-"book:measure:D372": {
-"sha": "e54fa585e7d5a82c5898f9e6d627bc3165b924356fe38d275f5a0d3265847b5f",
-"bytes": 699,
-"numbers": 0
-},
-"book:measure:D373": {
-"sha": "f0e7dca2bb37e85f18429d28fee2b0bc9c2c65b1ccc0bce33a8778593fc7f9a3",
-"bytes": 286,
-"numbers": 0
-},
-"book:measure:D374": {
-"sha": "1e9e1eb0a33bef27f84813ac92fc1d0405e382f4a9c0b78b42ac4f8d68c29e28",
-"bytes": 579,
-"numbers": 0
-},
-"book:measure:D38": {
-"sha": "07485010f84c359c9175c07223049031aa0e2d8edd4df47f99c0d28ef03b24dc",
-"bytes": 85,
-"numbers": 0
-},
-"book:measure:D39": {
-"sha": "170dfd65357cea28bbdb96b3d533c159258145110730b404ee7a7ceb1fb8b6c6",
-"bytes": 184,
-"numbers": 0
-},
-"book:measure:D40": {
-"sha": "2bba71367f74240cf7a494a44497c1baefa6169e957083be09e24e763c97ebb8",
-"bytes": 91,
-"numbers": 0
-},
-"book:measure:D41": {
-"sha": "7e94a44e65b92358ca52bc122e57acecc7f055de277423589e41b2fe1d160f40",
-"bytes": 85,
-"numbers": 0
-},
-"book:measure:D42": {
-"sha": "b93cce5ea61749a5144f42e9a8235665755761ab5c3a5899e02d55fbc1f2f955",
-"bytes": 189,
-"numbers": 0
-},
-"book:measure:D43": {
-"sha": "a9e82c7998e917d606d287b34ea7edcef2645f2cd64175c081254cb81ddcc3d1",
-"bytes": 94,
-"numbers": 0
-},
-"book:measure:D44": {
-"sha": "9a525a9572c2dd5557dd8ba9f5bd7acc6367a2e7753497d5785ecb7fdf8c1db9",
-"bytes": 94,
-"numbers": 0
-},
-"book:measure:D45": {
-"sha": "229d96bd63e62764a1ba01bea4500b6b5cd47678d1210dc7e7ab9d9cd926a4ef",
-"bytes": 99,
-"numbers": 0
-},
-"book:measure:D46": {
-"sha": "b9a17ce3680e3cc9dcc59ba10444ea316b178ca49c84fbff8a7b026b5255e7cd",
-"bytes": 94,
-"numbers": 0
-},
-"book:measure:D47": {
-"sha": "7bded5992b814363ebd26ca6ee8296195b8403ab87dbd3257852c86d275702d8",
-"bytes": 93,
-"numbers": 0
-},
-"book:measure:D48": {
-"sha": "a48ed117221f99c7294ab90c3432b248177420f8f039a1a83c77f5f610d16317",
-"bytes": 100,
-"numbers": 0
-},
-"book:measure:D50": {
-"sha": "0aa1795352ec70892f0c959406cff030d37ea5b50ad1b092c3de46e92af5232e",
-"bytes": 119,
-"numbers": 0
-},
-"book:measure:D51": {
-"sha": "1d0466e45bed2fe2edf90ab974c468571590554134d05fdf753d4d01637754ad",
-"bytes": 119,
-"numbers": 0
-},
-"book:measure:D52": {
-"sha": "e71cc3dab099e276685467e40b23419114a8f259600fccc71ec345d901ee0460",
-"bytes": 92,
-"numbers": 0
-},
-"book:measure:D53": {
-"sha": "6464eec7394b60ba4201544096996f2e0a953d9dc9de4fa76490c631225085ac",
-"bytes": 87,
-"numbers": 0
-},
-"book:measure:D54": {
-"sha": "365da20829094086fe7cfdd9aaed66b07b917d0a1631d5f7407dd4fa723b4171",
-"bytes": 87,
-"numbers": 0
-},
-"book:measure:D55": {
-"sha": "99c0c2c2990bc27cf6d4504a0c81a93f4f49d73bece797a2a672365e117f453d",
-"bytes": 85,
-"numbers": 0
-},
-"book:measure:D56": {
-"sha": "d3c946271d6bbd0ef1e4793df710fef86b58eaa70164c8d2e444e4196fb7a3b1",
-"bytes": 87,
-"numbers": 0
-},
-"book:measure:D57": {
-"sha": "a3d1ad566567af9950bf2d4f78789099106ad0fed630198bcc6cf1a1fbc897df",
-"bytes": 86,
-"numbers": 0
-},
-"book:measure:D58": {
-"sha": "7814bd47742623453b114e39de4c2c0568f3389eb25715caa80eecdf9b09ec55",
-"bytes": 89,
-"numbers": 0
-},
-"book:measure:D59": {
-"sha": "bcb544c1309974907d1bb26df47d2e44507508facbf1d789785893d2f5b86c61",
-"bytes": 91,
-"numbers": 0
-},
-"book:measure:D60": {
-"sha": "6a91731143ff6f0ad3d78cf309d51e45ef7a2aeb45eb3d8c90ebf0977c6c6154",
-"bytes": 92,
-"numbers": 0
-},
-"book:measure:D62": {
-"sha": "502d33bcfca4fd731fef3357d7a5edd47eca255e5f9accbdd438d87909075b5a",
-"bytes": 968,
-"numbers": 0
-},
-"book:measure:D63": {
-"sha": "266c5f61a59cd66cf03a8de1c64fe715b0578e4a6ffda25f033153828dcf660f",
-"bytes": 198,
-"numbers": 0
-},
-"book:measure:D64": {
-"sha": "d2ab169fa4578d287cdfec374ab2edfad7896d5ef77e12a6a90246effd620116",
+"book:measure:D107": {
+"sha": "c89a3c3ef30353403bd464c786a75df9f679e9f1f5017f754093c09ae1735256",
 "bytes": 141,
 "numbers": 0
 },
-"book:measure:D65": {
-"sha": "9547ea2364175e030e5e2c9f06d47a9ae30b6ded925b93ed7ef211a50a0a5352",
-"bytes": 805,
+"book:measure:D108": {
+"sha": "9ad4b6b726af19850a82bc63f0b5b2282a2fd1603ccf99bc42bec56420ce3e97",
+"bytes": 128,
 "numbers": 0
 },
-"book:measure:D66": {
-"sha": "ff96167d1fe2c1afec06e371864f81aef19a1cb7de10c05d49f16d0553cfd7d5",
-"bytes": 271,
+"book:measure:D11": {
+"sha": "9a7d61068a21d2f2d01bbc42754c4788d6efc866447e76d080cf153c891ab51e",
+"bytes": 125,
 "numbers": 0
 },
-"book:measure:D67": {
-"sha": "282a93503f147780c3f4026944f36f39d2035bbda04c871386a253580f885364",
-"bytes": 90,
+"book:measure:D112": {
+"sha": "803c6764466c5106d7adfdb40a0b81f5aeef21dd65c960375647d203ddcc8cb2",
+"bytes": 133,
 "numbers": 0
 },
-"book:measure:D7": {
-"sha": "02ec24bc2d0034384903c0a27e80dec497f51083a851e708eac53ba10d2839e9",
-"bytes": 101,
+"book:measure:D113": {
+"sha": "a00fc67616486820dad7202c3d5ffd983fc0704a809dbb624ddc6242cee71e8d",
+"bytes": 2141,
 "numbers": 0
 },
-"book:measure:D70": {
-"sha": "a58fd84d8a4e4e235c91e48a9a07957f7d7e482e74f99a4f9b0ce3961c4d55e5",
-"bytes": 876,
+"book:measure:D114": {
+"sha": "45220914c96bca5a57717067b85ebca2cfb9debcf57b833bbdef3f021e67db90",
+"bytes": 221,
 "numbers": 0
 },
-"book:measure:D73": {
-"sha": "f4215fabdeecc840966b32e24a634f86d3ae56333cdcac2ace49e5aa14a35814",
-"bytes": 90,
+"book:measure:D115": {
+"sha": "ad10a6eab2f8ae72b77ae8844547f50ed184cccf7a1c510fd6b32c17cb6cd474",
+"bytes": 125,
 "numbers": 0
 },
-"book:measure:D74": {
-"sha": "12b8992e89966249cdb2f048cb7a0898bb26e21c145aba2f133590c5a12a4621",
-"bytes": 87,
+"book:measure:D116": {
+"sha": "bed8d80abd96fa19a32960acc36ebdf3270c93b26defd1ae3923ea2a0613f5b7",
+"bytes": 134,
 "numbers": 0
 },
-"book:measure:D75": {
-"sha": "c0f67d3c857b90d35a7b3f1c5314fefeefdfdac7f03f20089a5c6578acac2206",
-"bytes": 85,
+"book:measure:D117": {
+"sha": "3cc7c1e3c853e55117909b9583ffd490f9fef2768c901243e2181a737590c68f",
+"bytes": 1515,
 "numbers": 0
 },
-"book:measure:D76": {
-"sha": "7f34a58329570e19c855a972cdee7c7384e313170f69a18472d8eefb135c8750",
-"bytes": 185,
+"book:measure:D12": {
+"sha": "428f728d455a817a505a391d0650b4a4cd2a6636cb1a152e47bf0ee508bc2b52",
+"bytes": 155,
 "numbers": 0
 },
-"book:measure:D77": {
-"sha": "cadba3134df2fdd21211c3ae4ca03bd26ce2b4ca05726e23c8954292529062b5",
-"bytes": 88,
+"book:measure:D120": {
+"sha": "9e3ad0d0f4690e6027860edd975318e17441b47f6baa9806fa667b1540fb4520",
+"bytes": 151,
 "numbers": 0
 },
-"book:measure:D78": {
-"sha": "a3946785eb9519dd1c9100d14f5880450f648c3bae70f4f8126891881830532b",
-"bytes": 79,
+"book:measure:D122": {
+"sha": "e19e520721283d555f20a194e328dba8a57c823b8645b9709e606feb5b3a00d9",
+"bytes": 428,
 "numbers": 0
 },
-"book:measure:D79": {
-"sha": "8c60d4458ba8fd3833acec979059cf2bed0e4db68e8948b0cb2111b9369d0574",
-"bytes": 89,
+"book:measure:D123": {
+"sha": "b4d1530033734c661b1829979eb6b28da35dc11df2b898723c9e90c65eb0c3fd",
+"bytes": 2912,
 "numbers": 0
 },
-"book:measure:D8": {
-"sha": "38c7dc35b835da53355cffe923c3592ce989d86998dc600372516a3e25cc2756",
-"bytes": 99,
+"book:measure:D124": {
+"sha": "c66abf213b58c3b393acf7834223e0d9b061122867d30b51d9a6bc2a094c2ba3",
+"bytes": 583,
 "numbers": 0
 },
-"book:measure:D80": {
-"sha": "48583bfb61ae3991990debfd297ef131d23e91127f222dc15e46b74876e4e3b6",
-"bytes": 87,
+"book:measure:D125": {
+"sha": "92af17deddf5078e9706acb18cea7d434431ed087617adf1360e6eb514da7692",
+"bytes": 853,
 "numbers": 0
 },
-"book:measure:D81": {
-"sha": "fef135bf4395ab8f915e4a7ea71e7548f696bad324c10583eac6dee19fffb77d",
-"bytes": 87,
+"book:measure:D126": {
+"sha": "a45756b891ec2cc90e6479e5eba3d60d6757127bd238830d3d68758749e4a00e",
+"bytes": 146,
 "numbers": 0
 },
-"book:measure:D82": {
-"sha": "0815ea975db6c5d99a01625f3d231c6e45e98afb62e6b6d4443848b2b3fa7d4c",
-"bytes": 108,
+"book:measure:D127": {
+"sha": "070d431736381d8f3267f40927299106c2c78beb87ff08d6f527a3a0d343707d",
+"bytes": 207,
 "numbers": 0
 },
-"book:measure:D83": {
-"sha": "61abd45b889ea6feefaf70e8d16812c94bce3f9663fd89d6ffa19542c55a64bb",
+"book:measure:D128": {
+"sha": "10fd87a3bea2c49127b44642f514200e75c1cf91fde98ceabf4f87801fe7ba82",
+"bytes": 205,
+"numbers": 0
+},
+"book:measure:D129": {
+"sha": "0ac918e58f4016eafa06c9c7cded2abbad1138206c14ac309c7ff76fb6aaa852",
+"bytes": 588,
+"numbers": 0
+},
+"book:measure:D13": {
+"sha": "c1b0e8d77a7bb4a7836ee0b9a035dad01749cdaaef35d4a354f557c4d35340fc",
+"bytes": 150,
+"numbers": 0
+},
+"book:measure:D130": {
+"sha": "fc61c0edd48e2b32f98375fd610c83dff1a6aeb260c9a1b1e80048755e6925c7",
+"bytes": 254,
+"numbers": 0
+},
+"book:measure:D131": {
+"sha": "63d29e6d6f6ab186c7464c42f50138ea07e3f580b6b31ed4a19a9a5ccd9aff37",
+"bytes": 391,
+"numbers": 0
+},
+"book:measure:D132": {
+"sha": "09e6fb0b10b0de0e7230609de20acc1660ca7d287a6a262593ea4bb921c0f8e7",
+"bytes": 191,
+"numbers": 0
+},
+"book:measure:D133": {
+"sha": "5f9b64409383ea69bdb4d781b6e98acc3e6b982a9da51b1ad48ecabbebcbac8d",
+"bytes": 657,
+"numbers": 0
+},
+"book:measure:D134": {
+"sha": "8da2154151e4542c0f353b0abd33a15c796e6a58e6345975a83d3649bb9b6194",
+"bytes": 129,
+"numbers": 0
+},
+"book:measure:D135": {
+"sha": "08a796935d0f350be809df793024deabbaf380a6b83bef517eb5a36c3fec513b",
+"bytes": 174,
+"numbers": 0
+},
+"book:measure:D136": {
+"sha": "d5a047b366ba4a957b2745b6e0f97b7b4f2a243b5a8cf10b42b6ea094b65fb0f",
+"bytes": 436,
+"numbers": 0
+},
+"book:measure:D137": {
+"sha": "a16dfc13932694fa0a99cd750090f0fe762209e9f4634100effd3458ff624d80",
+"bytes": 152,
+"numbers": 0
+},
+"book:measure:D138": {
+"sha": "e8fdbaa981028c48d78ecdfc77d43188200eb84377dc47bedc55f43df2f4404c",
+"bytes": 5093,
+"numbers": 0
+},
+"book:measure:D139": {
+"sha": "86238b874eaef5341223069fdfba9b7b7a871a54889b902b1a59144294f8d1c8",
+"bytes": 1436,
+"numbers": 0
+},
+"book:measure:D14": {
+"sha": "c76a26d5df8501f362acd3a59b6f5a035984c25a46996d7053b98b89afc4e147",
+"bytes": 199,
+"numbers": 0
+},
+"book:measure:D141": {
+"sha": "f554321ac960595b39b4c300bf9dee36058eb1bc9e8962f9a27f3e0e2ac3e6e8",
+"bytes": 177,
+"numbers": 0
+},
+"book:measure:D142": {
+"sha": "369da7dd7bbddddc50d5f154682d8c0a6036d52baa88b7aad4aada445267c7ed",
+"bytes": 232,
+"numbers": 0
+},
+"book:measure:D143": {
+"sha": "1228015897de1e930c995dc7590822c518825f8b0ec051f3993d02973a12d448",
+"bytes": 880,
+"numbers": 0
+},
+"book:measure:D144": {
+"sha": "0c72401316c94dba67c7370f85c26a2f7983de507d05388e95b239ddc732668a",
+"bytes": 141,
+"numbers": 0
+},
+"book:measure:D145": {
+"sha": "ba4f471f92b599d242712dd794f3c1718d0111e3d4ce84e80969cb7b3a53107f",
+"bytes": 149,
+"numbers": 0
+},
+"book:measure:D146": {
+"sha": "5585585fbd5a0509d957c8a5dfd65cfec94952d73efa54683c0fae7dfdf3ec95",
+"bytes": 131,
+"numbers": 0
+},
+"book:measure:D147": {
+"sha": "c60c7a6f96b73b69978f74de61ea7976c5b90eb84b8cc70daa3e98247b0918b5",
+"bytes": 133,
+"numbers": 0
+},
+"book:measure:D148": {
+"sha": "80fabc8ab7f25844d3842badd6dd9ad36baf35b79e30ddff950cdb15af7fbf2e",
+"bytes": 147,
+"numbers": 0
+},
+"book:measure:D15": {
+"sha": "8577836b760115c9b428eb10921e96e7ce2b2c2d1ef3f06fe7b28573843f51e1",
+"bytes": 215,
+"numbers": 0
+},
+"book:measure:D152": {
+"sha": "06e7aa6885e1abbe5967b2ca0ebee5c20df5b116bca75c623f6a54c4951a8446",
+"bytes": 238,
+"numbers": 0
+},
+"book:measure:D157": {
+"sha": "1019b90a62df9e6591b9c684a4c3079fa18426e484a5aa728b6be4263ab84aff",
+"bytes": 142,
+"numbers": 0
+},
+"book:measure:D16": {
+"sha": "d671a39118e4edf568f484c91952c89b7cf24fa1187336901070949e223446d3",
+"bytes": 140,
+"numbers": 0
+},
+"book:measure:D162": {
+"sha": "5f31533479a6c1778d864c38c1846d5dc7d133aeb3f6412962fa807c438dfb52",
+"bytes": 136,
+"numbers": 0
+},
+"book:measure:D163": {
+"sha": "4ecf94f2a10fb7745536d3687d7137bd5076a90602b37ccf9d8e61960cede774",
+"bytes": 125,
+"numbers": 0
+},
+"book:measure:D164": {
+"sha": "e6c9c4cf897062832e33b22177575e6890734e95fa4acca64014ebc556c8a3d7",
+"bytes": 546,
+"numbers": 0
+},
+"book:measure:D165": {
+"sha": "402c78586d5e3b540df1ede6a85c1a3858b5b51c5db84a3a8529b47a80329600",
+"bytes": 575,
+"numbers": 0
+},
+"book:measure:D166": {
+"sha": "ccc181918d0f0868f28fb51ecf3b96c259a2bcc43379ae01f522b1457ea83600",
+"bytes": 236,
+"numbers": 0
+},
+"book:measure:D167": {
+"sha": "55d366593d671a8d32c0764ac0c8bca4a7c1d9aa17cc694468bcc15b9fee1abe",
+"bytes": 218,
+"numbers": 0
+},
+"book:measure:D168": {
+"sha": "574a0d984183db640daa1f32cfa10e450c370233c39c2e65d3d8627b48c93dea",
+"bytes": 140,
+"numbers": 0
+},
+"book:measure:D169": {
+"sha": "6f01a9a39dccca9d7c06557317b36feb5543f03b246ae1cbb1fa9b1e51b68ce1",
+"bytes": 243,
+"numbers": 0
+},
+"book:measure:D17": {
+"sha": "ca44441950e8c6b6073e3eae0188c390cbf3593e3557a882955d72c1f3aef6a2",
+"bytes": 126,
+"numbers": 0
+},
+"book:measure:D170": {
+"sha": "48960f11bbfd5fd87e43a29e3ef8dc19cbaded60b178e9327d57304aa86e5877",
 "bytes": 132,
 "numbers": 0
 },
-"book:measure:D84": {
-"sha": "655a819b29d371472df4626b71a536d3c8177fdf74088c093aa1f37fd74e4e12",
-"bytes": 247,
+"book:measure:D171": {
+"sha": "6e79a6f1d52e0c31257fd4236a5b4bd79fd0ee6eeb77c1b1843509295ea60abd",
+"bytes": 164,
 "numbers": 0
 },
-"book:measure:D85": {
-"sha": "55abc9adcc1dd28fea69bcd92fa51a002ebece55afae4ebda2c21e2e5145c2e1",
-"bytes": 446,
+"book:measure:D172": {
+"sha": "6e59a6468002103e5e78ff1c557fe57ecd76e40ecf41cbd930942eecee96367b",
+"bytes": 304,
 "numbers": 0
 },
-"book:measure:D86": {
-"sha": "0c8955b027c78ec6ea4c123fedeff8c73b4061970f11d678aab61793fb812dce",
-"bytes": 961,
+"book:measure:D173": {
+"sha": "8d2edfb21a42acbb1919bc482542ca84b2e17e97592a68ce4b40950dfd4924ff",
+"bytes": 158,
 "numbers": 0
 },
-"book:measure:D87": {
-"sha": "fa361313bcbc6c8ca8c4ed910dff2d1fe5a7348655d66635eb99ada42b697261",
-"bytes": 76,
+"book:measure:D176": {
+"sha": "4faf34a18dfa0ca649295fa2499ee3160a527e5512645c35e0d57cc685305d4a",
+"bytes": 266,
 "numbers": 0
 },
-"book:measure:D88": {
-"sha": "70d8442ddaadd1992b430f22cec6e4e6171027a29666fccfe7dfdcfb3b00ebaa",
-"bytes": 259,
+"book:measure:D177": {
+"sha": "0b5002d27e1cd2a93867667cfb0384f99582f3b0643d6556655273fa3dd9c5d5",
+"bytes": 196,
 "numbers": 0
 },
-"book:measure:D89": {
-"sha": "63c85d58aee4399161b7f0145e8e74d5362dd3335537177f97328048d4f66684",
-"bytes": 90,
+"book:measure:D178": {
+"sha": "73f7c9ccd2a2f0d1ed7315947413686114e9b62f982e92a4b24f71b7ac58e911",
+"bytes": 550,
 "numbers": 0
 },
-"book:measure:D9": {
-"sha": "be861f492cbf8dad64f9357d8ded9216a6f0f5486626cc47626996bf3582e00b",
-"bytes": 94,
+"book:measure:D18": {
+"sha": "9be55823c1e949580b6c02b33b0b96abb95fba22d870d20adc70e367dab2576e",
+"bytes": 141,
 "numbers": 0
 },
-"book:measure:D90": {
-"sha": "139c67971dbfc75b73b94d0f406ae71c5d03601da280f1a5138febc86051f045",
+"book:measure:D180": {
+"sha": "a849f7d8e31f69eb7059d39334db2d26ac078572c810f98e43314213bc3527a8",
+"bytes": 264,
+"numbers": 0
+},
+"book:measure:D181": {
+"sha": "bb5004364f7320ed1e5fcda1c17199282b8210b2392323945c536925a3375ab0",
+"bytes": 308,
+"numbers": 0
+},
+"book:measure:D182": {
+"sha": "71b69c1eb99bf61b1a8c6dcedb5b132223b091f3fada5e669113502fe2d5dc0b",
+"bytes": 258,
+"numbers": 0
+},
+"book:measure:D183": {
+"sha": "74dc5b328bbe3d99ddf0cb37d5b319e37efedf8957c0f0bd5b004aea2a458a1f",
+"bytes": 168,
+"numbers": 0
+},
+"book:measure:D184": {
+"sha": "e8fd92298658ce2b3b8cceeba885127f5e67a17cab372ad877e90dbf7c79c77f",
+"bytes": 165,
+"numbers": 0
+},
+"book:measure:D185": {
+"sha": "c89188222acfd25555beedb6e991afacb13a752163896757ae8a9f658b7531db",
+"bytes": 215,
+"numbers": 0
+},
+"book:measure:D186": {
+"sha": "13648118d5d8cb14c1a47916c8bb5c4e8068db4c970cd70234e4f7d7ea89114a",
+"bytes": 149,
+"numbers": 0
+},
+"book:measure:D187": {
+"sha": "4716bead119edfb762652bbcb8f8c9820d6ab1f0654d8b09f2fc1d0c9823623b",
+"bytes": 214,
+"numbers": 0
+},
+"book:measure:D188": {
+"sha": "809317719e180f29f1dfcd611f153ce569ebf8e854c40f24442874b83f26ac64",
+"bytes": 265,
+"numbers": 0
+},
+"book:measure:D189": {
+"sha": "40a77958a55fcd91aaf1c9f5f014611b36991dbd6d637c528d544e643e18316f",
+"bytes": 380,
+"numbers": 0
+},
+"book:measure:D19": {
+"sha": "83157edbbdfe85fd699ac4f8101cb7522a3feb6ccf2b2d22e077f40faae8b56b",
+"bytes": 139,
+"numbers": 0
+},
+"book:measure:D190": {
+"sha": "4be72eb829e518734d3846e5129da9c043a3930ccb505a1dcaeae77a9ab12685",
 "bytes": 179,
 "numbers": 0
 },
-"book:measure:D91": {
-"sha": "6d28eb3f061a04787301eefcee213f90e2c2b3c5cad78524a37733a461df625a",
-"bytes": 79,
-"numbers": 0
-},
-"book:measure:D92": {
-"sha": "8d73fc0626c3bddb91caa24330ad95386d7db1c674ee3e08cdeedd9fa6c97987",
-"bytes": 84,
-"numbers": 0
-},
-"book:measure:D93": {
-"sha": "e3a59d8abbbad91a4ddc31e867e78c15adcd837becbd1b30e811d4af9e6fe741",
-"bytes": 79,
-"numbers": 0
-},
-"book:measure:D94": {
-"sha": "1c4119c18572d119ad2cf4b7ff9d4ebbfc711fb2084f0eade7b1df120fb1d57d",
-"bytes": 88,
-"numbers": 0
-},
-"book:measure:D95": {
-"sha": "7f09dd235d8a83cbaca6d558beb81a2f2e076f7d37a9d3fc7fd67b61f4462edf",
-"bytes": 79,
-"numbers": 0
-},
-"book:measure:D96": {
-"sha": "dc525b38e6af3e036b60eea3a422ef3c3e42582e338b3d611bd50956428e571d",
+"book:measure:D191": {
+"sha": "5c9e7ceb4509e71aa0bd25120091bff64e5b67b24fe7153237589e5fd48caaf6",
 "bytes": 289,
 "numbers": 0
 },
-"book:measure:D97": {
-"sha": "bc9bb3de84159582e44e14071cb06ed01c9ff34f8075c1bd1187e60576ddf389",
-"bytes": 81,
+"book:measure:D192": {
+"sha": "a92f4331eb17817de79dd672adfd25eeac6c244360272bdfe5d663da25c60608",
+"bytes": 177,
 "numbers": 0
 },
-"book:measure:D98": {
-"sha": "5c3df0bd37ea50581539433dffa8afc16cb0d688bbf21ee814264bed0a32f50b",
+"book:measure:D193": {
+"sha": "62c503b76b6e2b845afc80a8e97bb6dffb7b97734eecaef4a6ed9543da928d8a",
+"bytes": 380,
+"numbers": 0
+},
+"book:measure:D194": {
+"sha": "202c9097371d9dd46e575ba0f44194abde029062c62dbbbb4272faa5683ab732",
+"bytes": 173,
+"numbers": 0
+},
+"book:measure:D195": {
+"sha": "43858ffa297950f1cc95010723d8aeb6291bcb41658296f1cfd6f19799f0858c",
+"bytes": 547,
+"numbers": 0
+},
+"book:measure:D196": {
+"sha": "d2520a8fb96e145d0a9eab52b0eba15963b9d6503905b56c9841d0408c51682e",
+"bytes": 605,
+"numbers": 0
+},
+"book:measure:D197": {
+"sha": "bf3048c09d4501f9511bd790e0b85c1fea421d1a03f6e01ceb3285eb0530420a",
+"bytes": 332,
+"numbers": 0
+},
+"book:measure:D198": {
+"sha": "e5e9a51965815f75c439887ea6a076869bcb620071898e7b9ad0b291be984ad3",
+"bytes": 252,
+"numbers": 0
+},
+"book:measure:D199": {
+"sha": "e8d4f5617e652012e7e9b3b0856f72824db385760027d0eff5e86ef0b25919dc",
+"bytes": 1214,
+"numbers": 0
+},
+"book:measure:D2": {
+"sha": "456376c9d91ddee22d36537ec22d48340c340ef7e95f379a3f66415d783d9fe0",
+"bytes": 355,
+"numbers": 0
+},
+"book:measure:D20": {
+"sha": "f8797a2ca00533c5b8bcce93fa3d20f3444685ca1ea8f1b3d1141df2329ae920",
+"bytes": 208,
+"numbers": 0
+},
+"book:measure:D200": {
+"sha": "d3f75e1616836ac0e6a86fe1e45b2e64516528442293457d7d34218d0b13a438",
+"bytes": 561,
+"numbers": 0
+},
+"book:measure:D201": {
+"sha": "f63b2c105e6d465233cc0c570608669c470966a67a8482c37f4066fe8c1ee01f",
+"bytes": 318,
+"numbers": 0
+},
+"book:measure:D202": {
+"sha": "d82ac292505b22894e1776bb172aa36692c5707860a2f7c001fc734f13df2ac6",
+"bytes": 323,
+"numbers": 0
+},
+"book:measure:D203": {
+"sha": "4c38222bd7d3b78168c1965cc3e94b68041c51c5928a93dc370e9908ce3fdc67",
+"bytes": 381,
+"numbers": 0
+},
+"book:measure:D204": {
+"sha": "af27d93121c4e7656060ef86821531cc1faf1390b0a325310c0ebf1dc0f37ea8",
+"bytes": 304,
+"numbers": 0
+},
+"book:measure:D205": {
+"sha": "d9c40f4f8f830b2d014438ecd351160ae6d1c5aeb6c1c9883657d9a896b2e66a",
+"bytes": 249,
+"numbers": 0
+},
+"book:measure:D206": {
+"sha": "3dd473de2f805e999256ad630fe4500ea23675ff41c5cce70590833d27e45877",
+"bytes": 1720,
+"numbers": 0
+},
+"book:measure:D207": {
+"sha": "80aa64514d492c926caea0e688507365680f67dfe3fe6c94cca135212881b0be",
+"bytes": 298,
+"numbers": 0
+},
+"book:measure:D208": {
+"sha": "befc5c49080cc30b825621eee3662db235f9aaa55cc9b6be50ef30d261c3806b",
+"bytes": 548,
+"numbers": 0
+},
+"book:measure:D209": {
+"sha": "7f9f2668cb7d241c4de864205f189c70a45ad3c92e7119799b67e2cb49ee1912",
+"bytes": 693,
+"numbers": 0
+},
+"book:measure:D21": {
+"sha": "f23a32bdd47578b005c24bf32cdc2fcffed29b7b63d0cada2fb658cda07e22a1",
+"bytes": 239,
+"numbers": 0
+},
+"book:measure:D210": {
+"sha": "9096f74c5a7589018c6f59226ddcd8664cdd08b2f8969019e8001e54c2190ecf",
+"bytes": 212,
+"numbers": 0
+},
+"book:measure:D211": {
+"sha": "b7aaadc67cf2d8b9f15097692e97ef3fe6f7a3a7a5e7aa817fed4431ec96179e",
+"bytes": 299,
+"numbers": 0
+},
+"book:measure:D212": {
+"sha": "22c6ca0f58fc16a1de750733eadf67043a0f7b33e2dfbabffa23921cce1000d1",
+"bytes": 724,
+"numbers": 0
+},
+"book:measure:D214": {
+"sha": "be798d5774e793f11419f7c5c984d235a14634c8a737c29357032d2be238a125",
+"bytes": 506,
+"numbers": 0
+},
+"book:measure:D215": {
+"sha": "5eff13f1fc22b0f4432bb2236cd8fc894ed2d69762bea5c3d5055c3d3488ecf4",
+"bytes": 415,
+"numbers": 0
+},
+"book:measure:D216": {
+"sha": "a7f45c5e508e35c28fa5a1ee778f1a2fcd0080705ca2df5feaea46c451fa6bec",
+"bytes": 199,
+"numbers": 0
+},
+"book:measure:D217": {
+"sha": "6f59fa5089bb6cee650cda85c3af4fcfd04dee893ac27e8098a10edfc8ee5156",
+"bytes": 443,
+"numbers": 0
+},
+"book:measure:D218": {
+"sha": "974f2bdceba35663eef7760f5858f0cc303f0e0f569f2de956dd6384a2146e41",
+"bytes": 555,
+"numbers": 0
+},
+"book:measure:D219": {
+"sha": "89d5b439a6055cc13c594790680e7d849a8067d14f3b09ac33d509e9acfccf35",
+"bytes": 698,
+"numbers": 0
+},
+"book:measure:D22": {
+"sha": "8bdcd08c7a6cfa4a882292810c8a24e8303dbf4ca02a02c643db98913d142d24",
+"bytes": 166,
+"numbers": 0
+},
+"book:measure:D220": {
+"sha": "e7a120b2db10acc87f832aae4cf69f578d8c41969427d65be7541d6dd9d8e566",
+"bytes": 198,
+"numbers": 0
+},
+"book:measure:D221": {
+"sha": "a6ef1490e0a64f98117040db27ae50f69bf9d6e43332d0d0df55de69a15fb695",
+"bytes": 188,
+"numbers": 0
+},
+"book:measure:D222": {
+"sha": "2b89c0b99aa64348d7280720c4ca691630c7502a30b0e281ac919031aae239ac",
+"bytes": 445,
+"numbers": 0
+},
+"book:measure:D223": {
+"sha": "b67feab20a1a9e0696962d1a4d7150a1abd9caee469a3530c2b7833388d32c84",
+"bytes": 290,
+"numbers": 0
+},
+"book:measure:D224": {
+"sha": "0358b7f21c97f8efbf4038f12f7e2f89f07f33d5082b51f39d89e28e2c6844d5",
+"bytes": 824,
+"numbers": 0
+},
+"book:measure:D225": {
+"sha": "c360437d16f779eb14655cdab1fbbc5b5a88090844fc0b9fbf32c8a49ff2f576",
+"bytes": 358,
+"numbers": 0
+},
+"book:measure:D226": {
+"sha": "a339e46719ea7cb077190c4d5f03ac5510766ffe87c59441a1e76a1f8a0862e8",
+"bytes": 252,
+"numbers": 0
+},
+"book:measure:D227": {
+"sha": "c9c01c72a5d4d64b85a563f6629ea73876861fd18f5368c0cf20740ba3d03a8c",
+"bytes": 170,
+"numbers": 0
+},
+"book:measure:D228": {
+"sha": "682941d0a33da573c66fb090b6807fac1eda645867a9cfa8dd80c04c8748454e",
+"bytes": 235,
+"numbers": 0
+},
+"book:measure:D229": {
+"sha": "2c941c342d39c966280933527ed11ea24181d916d1e3449eed9c6580777987b0",
+"bytes": 2915,
+"numbers": 0
+},
+"book:measure:D23": {
+"sha": "6aa45ff5976e63b70b7b4ce38ef3d2ed937ceedd9ef0adc9bd48eb7666b0da66",
+"bytes": 143,
+"numbers": 0
+},
+"book:measure:D230": {
+"sha": "1a0d147166797be176eaadfe43724075fed4af4b62494291be40ad2603191571",
+"bytes": 234,
+"numbers": 0
+},
+"book:measure:D231": {
+"sha": "1e925e21c68e5d6cf95a70da5979ddb64110e0437e505f0944c29accb071eaa3",
+"bytes": 1481,
+"numbers": 0
+},
+"book:measure:D232": {
+"sha": "6141fca164b33b511b6ca7746748e6cc4d75797811dd849a7e8175f5b23daaf2",
+"bytes": 472,
+"numbers": 0
+},
+"book:measure:D233": {
+"sha": "b2d61431ec482b807d4e5a584e6ab92137261520ed091fc77eb1693af8426eeb",
+"bytes": 202,
+"numbers": 0
+},
+"book:measure:D234": {
+"sha": "4f499b2b15b838710ca8dd60a38f34faec81395a5be96f8c8f01a8672b975bc6",
+"bytes": 258,
+"numbers": 0
+},
+"book:measure:D235": {
+"sha": "b1bd79f93dfe1a55d3c1418f4e7c2d18db9bad87fd280a7f012ff0123d770455",
+"bytes": 197,
+"numbers": 0
+},
+"book:measure:D236": {
+"sha": "da2256c320f594ff9875e6d0a58082df58b13e91b9a5db80e6a6ec641c87daf4",
+"bytes": 250,
+"numbers": 0
+},
+"book:measure:D237": {
+"sha": "adf2165920d3148c35b53f002fe9e89b4a7168dff474308fbb6e3879fbc7abae",
+"bytes": 240,
+"numbers": 0
+},
+"book:measure:D238": {
+"sha": "37074c2d0e183048fef0ed4c436f9b0aacdf546d5e5e7e8e45bd73d3762021ab",
+"bytes": 887,
+"numbers": 0
+},
+"book:measure:D239": {
+"sha": "3a397692c3add44421d39ed21d07e28c9b104635650c3481096c63fba206b717",
+"bytes": 2288,
+"numbers": 0
+},
+"book:measure:D24": {
+"sha": "233f6d99d30e4d1e50573095c312cf174accd7dd1b95409958459ba5d3a396e8",
+"bytes": 142,
+"numbers": 0
+},
+"book:measure:D240": {
+"sha": "b0fb9fdf52ef2055f2e295c246b05fe47ccf0a8dd94e15d3524de9bc410b9251",
+"bytes": 716,
+"numbers": 0
+},
+"book:measure:D241": {
+"sha": "39557c3e3205a52ac8123b48d769b21c8c02b9d7a4ac1a79db817fc90178f617",
+"bytes": 535,
+"numbers": 0
+},
+"book:measure:D242": {
+"sha": "2373266884f36148f75f938ded9a526e319070c08290d9cfeab7788b17419ecd",
+"bytes": 612,
+"numbers": 0
+},
+"book:measure:D243": {
+"sha": "7ca90fe3adabb3a48884569eafeb158d1ae7bda75eb64b62b74af40490482e23",
+"bytes": 348,
+"numbers": 0
+},
+"book:measure:D244": {
+"sha": "edd24ef436f5afaa9df46e93d8fc81633ff6376bdd131cd95544b777d63219d9",
+"bytes": 286,
+"numbers": 0
+},
+"book:measure:D245": {
+"sha": "a6cf1a90d84b84a6603d3c4483e1f9f7e49fd7f74eaa41955e34a55d8274b239",
+"bytes": 383,
+"numbers": 0
+},
+"book:measure:D246": {
+"sha": "30c12c3218121214b0d2c0f6ea8207722c0c78cb94da896450d088be92c85e7d",
+"bytes": 1052,
+"numbers": 0
+},
+"book:measure:D247": {
+"sha": "1a1347ee76d47a60fdf916de23588685c8d23c37c206803b0aac14db29e602e7",
+"bytes": 1092,
+"numbers": 0
+},
+"book:measure:D248": {
+"sha": "380a6e266e65d96b277ef5dc5f095542a8a15f143fee4af638627e74b14761ba",
+"bytes": 769,
+"numbers": 0
+},
+"book:measure:D249": {
+"sha": "d15e8c15e84bd4a51730e632f39088595a4b9d40ed417b8af03a8f77f6d5b1c0",
+"bytes": 446,
+"numbers": 0
+},
+"book:measure:D25": {
+"sha": "9586c0cc6400b054504e1ff125f1173d683d11c9e9410c70f7921ea0f2a820ad",
+"bytes": 223,
+"numbers": 0
+},
+"book:measure:D250": {
+"sha": "abbdda62f6e2384e57c5fef5d97645bd775cd2778ab8401e87c0693338c0023e",
+"bytes": 335,
+"numbers": 0
+},
+"book:measure:D251": {
+"sha": "b11f816246f76b53fdfce90c45c51059b5af596eb8726efcac25b5a2801bf4bc",
+"bytes": 636,
+"numbers": 0
+},
+"book:measure:D252": {
+"sha": "32fdb12b082b3a0c2e6b10af90228d7a9cef98f7194b83f3748e9157f4d35663",
+"bytes": 428,
+"numbers": 0
+},
+"book:measure:D253": {
+"sha": "1569740e1310fb4fe29c14bb05e6770eaa20243b6df0dbf330e1e5170128b4c8",
+"bytes": 913,
+"numbers": 0
+},
+"book:measure:D254": {
+"sha": "430bc80a8a2a83af019b98553b0605e7ec489ea1b24fd0ae7008aed54ddf87e2",
+"bytes": 633,
+"numbers": 0
+},
+"book:measure:D255": {
+"sha": "07e220b1e0046c2dbbab58769ab862059b2a432fb7f33623ea09a32ee4e72281",
+"bytes": 1151,
+"numbers": 0
+},
+"book:measure:D256": {
+"sha": "f3935f424d34f6bcb3ae7e2fb1724e146754d79bbad6d12c36587174d1f8ac6a",
+"bytes": 265,
+"numbers": 0
+},
+"book:measure:D257": {
+"sha": "f09a58975d319f0990f506e4dd97fd9ecfc3c3a0fa34448fa4b465e030622186",
+"bytes": 202,
+"numbers": 0
+},
+"book:measure:D258": {
+"sha": "39c8512b932d5630a9c9f108ac8ff0be416c4c33972926f154620e30354bf4b0",
+"bytes": 462,
+"numbers": 0
+},
+"book:measure:D259": {
+"sha": "537befbb2eba1643030c119db8b0454c439c3a8cd92791614e406205396221e8",
+"bytes": 233,
+"numbers": 0
+},
+"book:measure:D26": {
+"sha": "ced6edffc6e6c0bbc5f5b59ab0554b772273650be180b688c8627e6f20cd72d7",
+"bytes": 131,
+"numbers": 0
+},
+"book:measure:D260": {
+"sha": "7684e070916d29c9341056569309cf4642336fe5fb5ec157d9290a9f6cafee30",
+"bytes": 250,
+"numbers": 0
+},
+"book:measure:D261": {
+"sha": "00bf2fd7f248ca69aafa8858783556cb6f7a0a3571fd822a37fc73d75cd30755",
+"bytes": 682,
+"numbers": 0
+},
+"book:measure:D262": {
+"sha": "dfa5db2b278c4915d5689d4611b744703f4dac6a0c2e06d5895f706edd9e0e38",
+"bytes": 364,
+"numbers": 0
+},
+"book:measure:D263": {
+"sha": "ec937ab293f20126330d2be3d08346cfece57b568ce7984d422ac68f9b0b37b6",
+"bytes": 483,
+"numbers": 0
+},
+"book:measure:D264": {
+"sha": "485602604ada4d698ad179f76dea3c446631fcff9ff18df8b2f6d041339dd166",
+"bytes": 404,
+"numbers": 0
+},
+"book:measure:D265": {
+"sha": "45017623d147143c897dabdf2686490896160d8efe82259d5ad7c831461a5854",
+"bytes": 276,
+"numbers": 0
+},
+"book:measure:D266": {
+"sha": "87938c869c265f86d1475dd3c7b97f576afe45148040c55797ec316dba8e130e",
+"bytes": 433,
+"numbers": 0
+},
+"book:measure:D267": {
+"sha": "598a61bf62f19e38cd8cdd0c8e3c3b508e614ec80ecd3baab14c3e6c5f56d65c",
+"bytes": 1144,
+"numbers": 0
+},
+"book:measure:D268": {
+"sha": "34dd2452348c7ce2f3960f131765de2d31ba45d348a42d78f964e0540f2cc1ba",
+"bytes": 450,
+"numbers": 0
+},
+"book:measure:D269": {
+"sha": "c88effe75028dd242fa2183a0f51eeae42f894af5274da73e0a45deb69ead401",
+"bytes": 331,
+"numbers": 0
+},
+"book:measure:D27": {
+"sha": "6ef36a18c59e90a57d5cc6576a510a9accc23acbe6a4deb24d504d52e7c31292",
+"bytes": 140,
+"numbers": 0
+},
+"book:measure:D270": {
+"sha": "d8d806e76761ca3988484bd999096a7d963580905c8b3d2c0ff6b5d1c6e8aea8",
+"bytes": 769,
+"numbers": 0
+},
+"book:measure:D271": {
+"sha": "c483197e7729f459bbfd1548d875869fb9e1c14a027d9d8163678381d5709900",
+"bytes": 716,
+"numbers": 0
+},
+"book:measure:D272": {
+"sha": "2be3e3354a0dcccd585a06ed41b48bac38b3d1b54df449b1d8581fe7082cd98b",
+"bytes": 421,
+"numbers": 0
+},
+"book:measure:D273": {
+"sha": "f6d6d685d0899c81a88f1fda673dfba8a6a31e51e7bf4be15dd4a1561b5892b3",
+"bytes": 301,
+"numbers": 0
+},
+"book:measure:D274": {
+"sha": "7e9b29a2379e7258b76a1ab3016c5c433d1a5778875b8d1ffcc61785a773de46",
+"bytes": 394,
+"numbers": 0
+},
+"book:measure:D275": {
+"sha": "b493d28b9cd87aec63e95bbb993ccbfe619905a2c8455efa7ffdf83b54e44c8e",
+"bytes": 237,
+"numbers": 0
+},
+"book:measure:D276": {
+"sha": "654277faa6e1dd72d06c5f113895bdedfa1aed24439b28e717b6647bef7d25af",
+"bytes": 533,
+"numbers": 0
+},
+"book:measure:D277": {
+"sha": "37769e1b93846d50370a32e95ab7fabfe86bd2ef240e7083dacdc9bc3b21282d",
+"bytes": 422,
+"numbers": 0
+},
+"book:measure:D278": {
+"sha": "c6653a60b5ef913c60ed0a764e7a2ad9a7276063c46dbbad8ca00cc3b5186787",
+"bytes": 1739,
+"numbers": 0
+},
+"book:measure:D279": {
+"sha": "49546cf3dde601b4b9d1ea9b5b5beb7eabc5fd4acae6fd9d5d2dddd5c7ead605",
+"bytes": 2065,
+"numbers": 0
+},
+"book:measure:D28": {
+"sha": "ef3fd64a801265bb42f95a88df5fb0168cbd7b06e88ba213b830436b6e2d52e1",
+"bytes": 152,
+"numbers": 0
+},
+"book:measure:D280": {
+"sha": "36d08bbf8ecbcfca56fceef56d0084fa05109e066ae0c2d06442bbb32797bfd1",
+"bytes": 1081,
+"numbers": 0
+},
+"book:measure:D281": {
+"sha": "ef876c9b7863a212f12782d7e1e0680462f1fbb702a80fddd66910e14a9ff02e",
+"bytes": 904,
+"numbers": 0
+},
+"book:measure:D282": {
+"sha": "53331675c15809993c1803ca34b1456dbe7f48cce8b0e204387f53b163d2e162",
+"bytes": 912,
+"numbers": 0
+},
+"book:measure:D283": {
+"sha": "6e0008fdbe9bc6db9236076e58077b95a6ac09088c5be3785af9152f08d762df",
+"bytes": 2661,
+"numbers": 0
+},
+"book:measure:D284": {
+"sha": "1a92064f76d67f85e4ba64abad353af14490b783095acf490d801c794aaee2ea",
+"bytes": 437,
+"numbers": 0
+},
+"book:measure:D285": {
+"sha": "2a44e48cbce52b16fcd25fa6afc133a2f1a78516382873a87747cc3fac2f6a37",
+"bytes": 840,
+"numbers": 0
+},
+"book:measure:D286": {
+"sha": "c3d45a2514e45dcf83a3865718c18ec419b2fb0e3e17cc16d9afaf24b1c6fcbe",
+"bytes": 236,
+"numbers": 0
+},
+"book:measure:D287": {
+"sha": "c9409b81412623ec40fe953a08e70469a9ade0a525b7525097f771d511f9461e",
+"bytes": 1217,
+"numbers": 0
+},
+"book:measure:D288": {
+"sha": "d830ac9c94ad57219fa6957312f0aead2e2f3d0ed816af8a4c6387241441d165",
+"bytes": 505,
+"numbers": 0
+},
+"book:measure:D289": {
+"sha": "591c4b8dd394d0f0787faa99a570062014066f611073c0d6ea8e2793c02ce6aa",
+"bytes": 698,
+"numbers": 0
+},
+"book:measure:D29": {
+"sha": "f1401f071432679e14c13dae10f34d94839bae61ad0d2567af3a0597bf268315",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D290": {
+"sha": "d29285d273d7fb235fb2e535c2942b92cf15f6f01dc05029a9107151f6e5e7ca",
+"bytes": 285,
+"numbers": 0
+},
+"book:measure:D291": {
+"sha": "705b1cf9c36018bf0782023077e7bc605ba773a16efb4a8942c062326eb79af6",
+"bytes": 3218,
+"numbers": 0
+},
+"book:measure:D292": {
+"sha": "f6412dd1caf756777ba66c871e92c3c90f3b6d5757be4d7c0113436a16fd6492",
+"bytes": 922,
+"numbers": 0
+},
+"book:measure:D293": {
+"sha": "60fe28755180fb149906685a101e15fc1797ff1b3c068f3b4bda4ed8668d089a",
+"bytes": 307,
+"numbers": 0
+},
+"book:measure:D294": {
+"sha": "48e192ad6abd79feefc5677ecaf9884941f8a7c5686cae72e231764bf326ce36",
+"bytes": 749,
+"numbers": 0
+},
+"book:measure:D295": {
+"sha": "e6af2c99369c9e552173aa3d41788f7e16e96a1d62724ef26ba3e201bff40292",
+"bytes": 630,
+"numbers": 0
+},
+"book:measure:D296": {
+"sha": "fe434c717c0c2ab6f4470c4c209cc87ea60fe221a6a5068c941a8ebf6c3a0074",
+"bytes": 1190,
+"numbers": 0
+},
+"book:measure:D297": {
+"sha": "8f9ab3a2ff2950d229b6afc7bed9b3668fef7718bdd051df872c71e40796226f",
+"bytes": 428,
+"numbers": 0
+},
+"book:measure:D298": {
+"sha": "95c7d06f998822d6d4d4f021a4e2197e31c8dd4351b4308b7d0d6a76b2a864cf",
+"bytes": 419,
+"numbers": 0
+},
+"book:measure:D299": {
+"sha": "52cf2b376735dac5769c80ebeebac2a1d20fa1ff10e0af2a45e08f1a87a5b337",
+"bytes": 651,
+"numbers": 0
+},
+"book:measure:D3": {
+"sha": "d3b61a042bac0e929878d8e38320ab4e0d0c88dcdb17d6c5f206ad16d4d49aca",
+"bytes": 178,
+"numbers": 0
+},
+"book:measure:D30": {
+"sha": "35d8ad828de723afe11c251b0b2de843990fc16fc71d0c78f8020229456b692e",
+"bytes": 164,
+"numbers": 0
+},
+"book:measure:D300": {
+"sha": "28842317de502c9a824a44ce38738781af30a4e16e078bd48befa9773f9ec249",
+"bytes": 406,
+"numbers": 0
+},
+"book:measure:D301": {
+"sha": "979e3d73ac5912b9b1b53afded2edc39d62a50ca4a652be933c7a874a3f430f8",
+"bytes": 210,
+"numbers": 0
+},
+"book:measure:D302": {
+"sha": "6785dcaca2acb8e5b90bbd103f521e97d2bd96f5e70528f6ad2429c3c4d52f58",
+"bytes": 240,
+"numbers": 0
+},
+"book:measure:D303": {
+"sha": "8bd87eed00dab4fe25a96bf8b607cecb9fb5fc419d448271d321849e94dc0aea",
+"bytes": 4158,
+"numbers": 0
+},
+"book:measure:D304": {
+"sha": "eb546b378f7e0dabeff62184c2a17860bbcebced55b91a8d78c50ddb70318f01",
+"bytes": 913,
+"numbers": 0
+},
+"book:measure:D305": {
+"sha": "776c082a9690f9fc61984662a2bfdce523ff4849cba1f88ad13834cb2744bee8",
+"bytes": 2778,
+"numbers": 0
+},
+"book:measure:D306": {
+"sha": "7af41ca4a39baa03adea65126d7b17a47f4db69ed74fe698b8b053affedb562a",
+"bytes": 621,
+"numbers": 0
+},
+"book:measure:D307": {
+"sha": "c1236fcfc06bc98eea1b5cf6fe66fa9e62163a4a00e904460615191b3c6900c6",
+"bytes": 1126,
+"numbers": 0
+},
+"book:measure:D308": {
+"sha": "5fd7404123669da44988ee2b191d4cc31d73380f73734b360f92d6b5758bb3e6",
+"bytes": 3145,
+"numbers": 0
+},
+"book:measure:D309": {
+"sha": "6ff1e70a3c48b4e1fd16db4888de6ed85a821db7d723138053edb44a671b3a11",
+"bytes": 847,
+"numbers": 0
+},
+"book:measure:D31": {
+"sha": "801930451c895badf725f22e8c243295bb88e9bc33a60499a96e4883cf2e23fc",
+"bytes": 131,
+"numbers": 0
+},
+"book:measure:D310": {
+"sha": "57920aebb1ab3a2efbd580a8d838c3e7acebb057b40317d5603ac8b5b5ea0a46",
+"bytes": 1725,
+"numbers": 0
+},
+"book:measure:D311": {
+"sha": "288f2a4ab9648ce2ff14cb4ec911f721e597063d4acd6e02d543410568e7335c",
+"bytes": 1561,
+"numbers": 0
+},
+"book:measure:D312": {
+"sha": "dd3b22eecf5bc2b2836b98a86b780414a32f44eab934b2a578e658878e8462f8",
+"bytes": 952,
+"numbers": 0
+},
+"book:measure:D314": {
+"sha": "1f6568a7459f035a25c0960965d8c25b22c45e18f58320acbad87afa735fcc76",
+"bytes": 654,
+"numbers": 0
+},
+"book:measure:D315": {
+"sha": "bb8304c730856752146877a065b86729dd0cb101e708d806dd889d488bce291a",
+"bytes": 551,
+"numbers": 0
+},
+"book:measure:D316": {
+"sha": "b2690f92926ab9450bcc29010427a7ede47ef008e2f4806eb481c2eca1d53300",
+"bytes": 574,
+"numbers": 0
+},
+"book:measure:D317": {
+"sha": "a0e168e3063c2494fbb5c96cfbb9d15e83e1dbd0051f80620a63b5cc9db5bbfb",
+"bytes": 3167,
+"numbers": 0
+},
+"book:measure:D318": {
+"sha": "579aba196755fb3cbe9e40399f400ea82152ced9d7c2993446d036ee21317197",
+"bytes": 610,
+"numbers": 0
+},
+"book:measure:D319": {
+"sha": "73ff0046ddeb602c6bbcd691af9366651f51184e2168a5184d0f917c6a1d3770",
+"bytes": 953,
+"numbers": 0
+},
+"book:measure:D32": {
+"sha": "7cf78ff777d43f3d454c4c339fd86cf7a7e7492a3a3af644b5da09d450a0ec67",
+"bytes": 660,
+"numbers": 0
+},
+"book:measure:D320": {
+"sha": "528150ec0bf5c481ac3e52183ab203c84e17980fa7db99477d093a35c9632e4d",
+"bytes": 2469,
+"numbers": 0
+},
+"book:measure:D321": {
+"sha": "a11aeb87915d3b0bfa19aeda9754ea7ffd216e49af5c21056c7191cdea851236",
+"bytes": 1216,
+"numbers": 0
+},
+"book:measure:D322": {
+"sha": "e2476d23911f56bd25823f31e3aaeb8a05c1a011b667c33ba0b51987643dec10",
+"bytes": 720,
+"numbers": 0
+},
+"book:measure:D323": {
+"sha": "e01b3ffaff31675338a77a0f15a5b8620037e8b94806bcd180fc4f1e7ea8ac84",
+"bytes": 397,
+"numbers": 0
+},
+"book:measure:D324": {
+"sha": "c0bf593f3366274824578f7b49a48847099cdc027ac15aa7f37c337f0dca7c98",
+"bytes": 864,
+"numbers": 0
+},
+"book:measure:D325": {
+"sha": "3587bf1a23d096735798431c8117016b51d64c824fdadd0362b8af5d5c5d742d",
+"bytes": 885,
+"numbers": 0
+},
+"book:measure:D327": {
+"sha": "cbad3d22afa186a41e0349dc516bd9a21891598740610bf5a88b4a39020c2fb2",
+"bytes": 238,
+"numbers": 0
+},
+"book:measure:D328": {
+"sha": "707aaee948e62c5c30941f1b1349468f1404d4754dee77ee23fdfdceea97e4a0",
+"bytes": 202,
+"numbers": 0
+},
+"book:measure:D329": {
+"sha": "e0f336b207c79c2d1a2baec02823ecaf4e5f325816163f5635739621ff0a260a",
+"bytes": 818,
+"numbers": 0
+},
+"book:measure:D33": {
+"sha": "0ccbf0b6ee9436a51510b374f4195c9ebdcab3d02fb3a4f703b4c609546f7679",
+"bytes": 123,
+"numbers": 0
+},
+"book:measure:D330": {
+"sha": "ec7958a089785ac4ae5181df747801398a87e893bb24f3fdbd6fbe226e036b81",
+"bytes": 1018,
+"numbers": 0
+},
+"book:measure:D331": {
+"sha": "428fa6b44f0c329df2cd9ced5e18528010f8236b048f56a46ec7e7a1247a4bb6",
+"bytes": 876,
+"numbers": 0
+},
+"book:measure:D332": {
+"sha": "b66b69f9cb8dc6cf6da1c4ec73884a57e0b98027ffc7786c1203b496a41e8ec1",
+"bytes": 411,
+"numbers": 0
+},
+"book:measure:D333": {
+"sha": "5b38681fdc3bf1364cc524b87f424c815fb811bb52a4c17396e8f354bb0565de",
+"bytes": 585,
+"numbers": 0
+},
+"book:measure:D334": {
+"sha": "7ded2173c687558bf087639993930c56d7020cb7c86c8f1c86d4a5e55bd093e3",
+"bytes": 199,
+"numbers": 0
+},
+"book:measure:D335": {
+"sha": "243af3027bbf7dccca496b0466eb5e30312d6148be98ecd7983780f13c1337f7",
+"bytes": 246,
+"numbers": 0
+},
+"book:measure:D336": {
+"sha": "870d50e24211b8816f1346995a8585f99619ad6418413199908092208ccdeacb",
+"bytes": 195,
+"numbers": 0
+},
+"book:measure:D337": {
+"sha": "e28bc8196975470e058d2c009634684dd9f7648b5480074bbdf444d5a882f17e",
+"bytes": 190,
+"numbers": 0
+},
+"book:measure:D338": {
+"sha": "f5308015f4a9e7e899c5ad222a7ef3a1f9389bed04a96dbb951376f21e889e63",
+"bytes": 308,
+"numbers": 0
+},
+"book:measure:D339": {
+"sha": "0a7ba119fb7f5e375f411f28a5b672091224852a0c6f3dafa7c00a51fa532946",
+"bytes": 505,
+"numbers": 0
+},
+"book:measure:D34": {
+"sha": "927c10149f178ca7f742e9128c9f50d2c5fa297bd09651b960719244cecb6aaa",
+"bytes": 130,
+"numbers": 0
+},
+"book:measure:D340": {
+"sha": "35ad306ebeb71caf915d57bcac908ba02b756c7071f0caccaf63cca15b5eb95b",
+"bytes": 335,
+"numbers": 0
+},
+"book:measure:D341": {
+"sha": "367e870e92e714dc898dc91d8721aeb51263e2c5494c32f2ca0d46b51ddeb364",
+"bytes": 342,
+"numbers": 0
+},
+"book:measure:D342": {
+"sha": "197fd298750c66d2a41886f898039b063f187d83ead5c0c75a174d7bcd1e8ffd",
+"bytes": 451,
+"numbers": 0
+},
+"book:measure:D343": {
+"sha": "f4388aa94fbf126299b31e85c3d273fa243125f58f637fcdc9b8c6646eef3665",
+"bytes": 815,
+"numbers": 0
+},
+"book:measure:D344": {
+"sha": "d029f48f8acc4a7769ccfd48522408697beb34a4bc3909ebc9aa80b9d8f8277c",
+"bytes": 197,
+"numbers": 0
+},
+"book:measure:D345": {
+"sha": "437e49b9c45da1c455d2139e13f281b5f2f5a03983188063eb53ca939c69d033",
+"bytes": 1300,
+"numbers": 0
+},
+"book:measure:D346": {
+"sha": "13aaa04f89da2ab9b0af6e310ccac6af3759e41a23a194bc140d363aecaed45a",
+"bytes": 325,
+"numbers": 0
+},
+"book:measure:D347": {
+"sha": "f6c0c7e2838e23c34d7764231395a649ec9477ed345c669e2b3b8077012815ff",
+"bytes": 312,
+"numbers": 0
+},
+"book:measure:D348": {
+"sha": "e4212ed8fcbf56037edef31aed5a843d54362c013804a94268d00c0f43cdba51",
+"bytes": 1734,
+"numbers": 0
+},
+"book:measure:D349": {
+"sha": "a14307e2d4882b0cc53654c1ff4d490a61f75d42e8f00c4fe3996ab9ef0142a2",
+"bytes": 481,
+"numbers": 0
+},
+"book:measure:D35": {
+"sha": "2a8fb315288d66b5d6f61fb5ef3ed916ef0a381c4c129016b1dcbc316303f590",
+"bytes": 129,
+"numbers": 0
+},
+"book:measure:D350": {
+"sha": "2f1d3784e8a403061ea5e119b3700d1fe0921d8d99dd7ea537e5e557eccc97fd",
+"bytes": 2287,
+"numbers": 0
+},
+"book:measure:D351": {
+"sha": "41aa335e565be5d29c556aeefe4fc974fd00a68f7143334eb7bd865d6be692e1",
+"bytes": 1193,
+"numbers": 0
+},
+"book:measure:D352": {
+"sha": "206a68597576a4bdbc8f97a9e57b0a9c23cbc0a09d7e4c88172f5d89aa5c048e",
+"bytes": 265,
+"numbers": 0
+},
+"book:measure:D353": {
+"sha": "0cd51f47ebb7db637cbffd51ab55961b4a8943b2ccc78c4c0cf11e99d8fb2dfc",
+"bytes": 1111,
+"numbers": 0
+},
+"book:measure:D354": {
+"sha": "50bbffdd7b3c8b01aa05b805105e98abeb7fb9d86b4c26b29d10281c7aa996ed",
+"bytes": 884,
+"numbers": 0
+},
+"book:measure:D355": {
+"sha": "97f2349c71e6767f75fc1aab6e57b569434d8dc1e85095ae916cd676b08a283b",
+"bytes": 929,
+"numbers": 0
+},
+"book:measure:D356": {
+"sha": "0af623f168bd3c239a6a2c6825b0a3a1fbe9086960bc2406c1e4b16e19fb5013",
+"bytes": 291,
+"numbers": 0
+},
+"book:measure:D357": {
+"sha": "8f19208004ec895f7327514e7118fa28bfcf2d87226ce0dc368991fa38618aa3",
+"bytes": 265,
+"numbers": 0
+},
+"book:measure:D358": {
+"sha": "1f1f35d91f4783b29bb993f7f55fce84c823557881e3f0298c387ab6b0a5e290",
+"bytes": 314,
+"numbers": 0
+},
+"book:measure:D359": {
+"sha": "c94fc0aaa823983f2e4028663d7e515df3d241fa08b044f8919dd01c1c532888",
+"bytes": 345,
+"numbers": 0
+},
+"book:measure:D36": {
+"sha": "25cd2745d5b9b77dc3549793b79107cd6232da1dac6155e806e4788986c3201d",
+"bytes": 222,
+"numbers": 0
+},
+"book:measure:D360": {
+"sha": "bb700153b9ca0e23ba5c133dfdd2afd4d1fd2ad261c3e8e87bd890be4653cdef",
+"bytes": 2057,
+"numbers": 0
+},
+"book:measure:D361": {
+"sha": "6a3f24d393f240663a4ff98311e911363a4bcc42b769146a2e26fe262c3fb90b",
+"bytes": 1211,
+"numbers": 0
+},
+"book:measure:D362": {
+"sha": "e1b3b486b6025f732f3d13fff5f17e09689151b836c0e8ab1bd8e69f6e197a50",
+"bytes": 919,
+"numbers": 0
+},
+"book:measure:D363": {
+"sha": "2aa42d9dc4c50ed9a02296a6943d17615f7bc0ac02494b05803c0f1b12348637",
+"bytes": 996,
+"numbers": 0
+},
+"book:measure:D365": {
+"sha": "487718f641fb3d3d6ee06393ee8bf6213a98df14066bdf23e4712abcff5e6f47",
+"bytes": 173,
+"numbers": 0
+},
+"book:measure:D366": {
+"sha": "bb155a2f859ed58b01d190ca00d93edd0213fc0978ca439e386409449eac7982",
+"bytes": 3000,
+"numbers": 0
+},
+"book:measure:D367": {
+"sha": "98c8f3985feb3991378d9a107e34d853ee5e2b3d6af9d2a7798d645d36df65a3",
+"bytes": 326,
+"numbers": 0
+},
+"book:measure:D368": {
+"sha": "4fb4a3b46467cf68e7af5fedc54d23890e0a4f6d47c4e7bc56ec16ecb7ef5280",
+"bytes": 220,
+"numbers": 0
+},
+"book:measure:D369": {
+"sha": "45f60d21cf9e3b5ae2f46a271b80f4a436e1441b00fb125fbd29ce78289de07e",
+"bytes": 465,
+"numbers": 0
+},
+"book:measure:D37": {
+"sha": "3798745d0528c64599d4d5e670ae4c10856bdfbde116fd6df927bf1f9d70ff72",
+"bytes": 131,
+"numbers": 0
+},
+"book:measure:D370": {
+"sha": "a6240b4bd84190c80a1d75d1043c2fe36b1f89cb7fa611c323c5275a0d5b97ac",
+"bytes": 383,
+"numbers": 0
+},
+"book:measure:D371": {
+"sha": "e3467dac47ca6a72d6c37da32681abda24bba543c1fc559e13c889f00d2cd8c4",
+"bytes": 478,
+"numbers": 0
+},
+"book:measure:D372": {
+"sha": "dca6faa334c076eb55f0d942e7cb6f7c351775846f2ff827027106970da8b9ce",
+"bytes": 731,
+"numbers": 0
+},
+"book:measure:D373": {
+"sha": "4ecb0563c6cb4dacf788fe06969b386aa87ff98bfc71d4b9a5d1492194ca2f61",
+"bytes": 318,
+"numbers": 0
+},
+"book:measure:D374": {
+"sha": "7d4ac7532bc5ef6c51efaa4958c5c6e7a28acb6d4a1b47b7e12e4a1c4e09e076",
+"bytes": 663,
+"numbers": 0
+},
+"book:measure:D375": {
+"sha": "666d0c7ebca89c1ffa72db1cdd33dd08ad79040826cd83d30401167ed84cc259",
+"bytes": 1140,
+"numbers": 0
+},
+"book:measure:D38": {
+"sha": "5d5c507a5ac46051a86f277abac0126e62ad483985e2779de2802709abb039a6",
+"bytes": 124,
+"numbers": 0
+},
+"book:measure:D39": {
+"sha": "2b7e2e425c1a6ae2aad62729c1beb3c8c312c1769a8010ee477fa61dca24f87e",
+"bytes": 223,
+"numbers": 0
+},
+"book:measure:D40": {
+"sha": "0f12cc8021d16ff092067930b76ca6d6c590f4829069b90a485c4c79d79d4211",
+"bytes": 130,
+"numbers": 0
+},
+"book:measure:D41": {
+"sha": "290003c2e6dcfc1b195ebc337e6a82af234e49836e212863ddba194f57ed450d",
+"bytes": 124,
+"numbers": 0
+},
+"book:measure:D42": {
+"sha": "b39fb6401caefed33db6bc0c5fe7d5c21395c6fe2a674861a85176e78ac61c67",
 "bytes": 228,
 "numbers": 0
 },
+"book:measure:D43": {
+"sha": "5c4a0f15526911b5e5a724df8ff402f4c8309746a155830e98891b13fa4173c9",
+"bytes": 133,
+"numbers": 0
+},
+"book:measure:D44": {
+"sha": "dd580b45611ab127fa086ecd154082787f0ae77bd99cc2d8593412e967dd913c",
+"bytes": 133,
+"numbers": 0
+},
+"book:measure:D45": {
+"sha": "2d665760cef679271ac4e66627724d327a01ae5c0417a8488971adc00a90f216",
+"bytes": 138,
+"numbers": 0
+},
+"book:measure:D46": {
+"sha": "8c915a63228467bbd24d4877103f551e5a930259b7cd15d99c4dc5109b331e36",
+"bytes": 133,
+"numbers": 0
+},
+"book:measure:D47": {
+"sha": "c10153880a5a98104fa54966d15d05fa9b9b44f37f2d362e6dd7ac0f6a33f1b9",
+"bytes": 132,
+"numbers": 0
+},
+"book:measure:D48": {
+"sha": "6e29625fe157a12b5b272fc50f82e4b04924634fc3e107dbb3957312a0d76194",
+"bytes": 140,
+"numbers": 0
+},
+"book:measure:D50": {
+"sha": "9d385cc7b5b523ecd83132fc287b1769f233b460585b90f71e2e8ee50d36eaec",
+"bytes": 159,
+"numbers": 0
+},
+"book:measure:D51": {
+"sha": "771267e10d5a1de481eb52b225b02fa37449eb46919b8b879488ddd1af0af6f5",
+"bytes": 158,
+"numbers": 0
+},
+"book:measure:D52": {
+"sha": "a928a026e223a9231a44dcbad0cbfcbf7007cce747bb2d09ccec08cd0d0a652b",
+"bytes": 131,
+"numbers": 0
+},
+"book:measure:D53": {
+"sha": "4f8b10ee3c711c15aa912821d1a3ccf2f96bab114472f3e9d2754323007b6e91",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D54": {
+"sha": "cf4ef0e5ffcfa1e7990dd2451f4e6a125abc3acd5cd3742b97d327c2e8d4e8f3",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D55": {
+"sha": "1fee026fd97faeac400f66f5840394ad50fee5d091923ab46b2a1b77599dfe60",
+"bytes": 125,
+"numbers": 0
+},
+"book:measure:D56": {
+"sha": "4c9324fad5c7e2210ebceb73e84b34933826e0cebbba5d95503d1c7de351d202",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D57": {
+"sha": "629d9910f24584e6f44d370c4391bd7bb3c0ae9e563a3462709496e4314f4d3c",
+"bytes": 126,
+"numbers": 0
+},
+"book:measure:D58": {
+"sha": "626865e987f0b04347c6dc5d59ee8f295edbb6a4f976abd6b726b5be4b390f99",
+"bytes": 129,
+"numbers": 0
+},
+"book:measure:D59": {
+"sha": "f29a569176c126ccb994c214932fbbcffe7539f7694063a25287abc5c63e482a",
+"bytes": 131,
+"numbers": 0
+},
+"book:measure:D60": {
+"sha": "63669aebe208ee1362adf6a8930cf962e74d3e3c05b4a24474864e7a7f9f5e81",
+"bytes": 132,
+"numbers": 0
+},
+"book:measure:D62": {
+"sha": "29d1b18d17ac372e9322e2575c141e93e2c5334790d82f78eae319b6a78883a7",
+"bytes": 1002,
+"numbers": 0
+},
+"book:measure:D63": {
+"sha": "f83aab968ec2149d98488f5f32957137f4d392780547f339d8f9094aa74f2270",
+"bytes": 233,
+"numbers": 0
+},
+"book:measure:D64": {
+"sha": "df94b164fe63703b487b1bd4c27db1686d1618e65bef14cc05d0d9ba8179b604",
+"bytes": 176,
+"numbers": 0
+},
+"book:measure:D65": {
+"sha": "8496f6e19a55652266c3a17f87ff573aad249d583d1a6b7874f8b972f2e5dfee",
+"bytes": 839,
+"numbers": 0
+},
+"book:measure:D66": {
+"sha": "3485388429c8d39c98c1dab0cf87447b5aabfa82542bcab98a4e10c7902ea7f2",
+"bytes": 306,
+"numbers": 0
+},
+"book:measure:D67": {
+"sha": "25e7483b93d1ccd7d36e4e51556063eddbcd3dc4e93b05c9fc6d95062e0f040d",
+"bytes": 140,
+"numbers": 0
+},
+"book:measure:D7": {
+"sha": "008a592dd7887231440b1a895d9398672f9ac06a02ccacf8f4cc69f137db1f25",
+"bytes": 140,
+"numbers": 0
+},
+"book:measure:D70": {
+"sha": "d5bb29f4d885c2cb06ac5431808877a117867f0dad66223c271a461dc78b1d0f",
+"bytes": 910,
+"numbers": 0
+},
+"book:measure:D73": {
+"sha": "9615f48b87758ab9ad0d4ddeab9159c522780aa9423f0e3647b9bde266d4c80b",
+"bytes": 130,
+"numbers": 0
+},
+"book:measure:D74": {
+"sha": "75e5204c7c61a3227c6c1ffe3fcd9139239129cbb1ebda8d8fc878502ce2753a",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D75": {
+"sha": "4d95bae07679e4998a57691325a193170eb9a2a59ab67d418e3534a90b0fe867",
+"bytes": 125,
+"numbers": 0
+},
+"book:measure:D76": {
+"sha": "f370abb661e6cb6e78bdc1bff25f4735f01944b75b41369247ad0850023670b6",
+"bytes": 224,
+"numbers": 0
+},
+"book:measure:D77": {
+"sha": "e99db1663a7d5eb469c87a41718d20f5d1a0d1ae1f567c154be030112a1b4a1f",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D78": {
+"sha": "0a6f8e37312323445d9a7a65df3c8730f0f71fb9481b22bba82e1b300ba7e093",
+"bytes": 119,
+"numbers": 0
+},
+"book:measure:D79": {
+"sha": "e488f4af868357ffa99ed3f5f820c1c382c520497533871d2b5b561b38ddb255",
+"bytes": 129,
+"numbers": 0
+},
+"book:measure:D8": {
+"sha": "866f70b0865bfe8b4cd8616ef026beedfb9fdf9adb35eee371d0f20a9abc70c3",
+"bytes": 139,
+"numbers": 0
+},
+"book:measure:D80": {
+"sha": "91e81e28930390a5004c55c2fc89afb04dbecaf5e57439ae746ec029f04af320",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D81": {
+"sha": "9da171eae168bc09bbf27163ca7cc08801bbf394b2d141fd9ff3add3282175f0",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D82": {
+"sha": "4d3229cb442a2a490a8f8643b3d11bf850bc471ac3c28a72fa61a5d5fec62e35",
+"bytes": 147,
+"numbers": 0
+},
+"book:measure:D83": {
+"sha": "8bdfb2ea64a6684d88493bd04d3512ea8821cbe63b2d0935cf98670c6c60e9aa",
+"bytes": 171,
+"numbers": 0
+},
+"book:measure:D84": {
+"sha": "ce61f15b217d95b64454b2937acca384c17f1e8687ddc98c21e6bd6df850ec1d",
+"bytes": 286,
+"numbers": 0
+},
+"book:measure:D85": {
+"sha": "c1f0af4b2ce002950d4a25bf0d34a6fc7965c9a9b4b758d4002fa17af422aaa9",
+"bytes": 522,
+"numbers": 0
+},
+"book:measure:D86": {
+"sha": "fcb76443b14a8dc8211f488feb9f59c7c1dc23d724266f46f97bf370cabfdeb2",
+"bytes": 996,
+"numbers": 0
+},
+"book:measure:D87": {
+"sha": "4c1a399853556e9237a2f0b733e04c752d589aa85902aa0e13ba80a5a32b03b8",
+"bytes": 122,
+"numbers": 0
+},
+"book:measure:D88": {
+"sha": "85debeda6ee170cab1faa3310b2ba29c567152dfae799fb8a8694750a9078223",
+"bytes": 293,
+"numbers": 0
+},
+"book:measure:D89": {
+"sha": "11ed3ebaad5bb5e1f9dc96586b5de0e107a052c7f2e0a04877fa3949846c2315",
+"bytes": 129,
+"numbers": 0
+},
+"book:measure:D9": {
+"sha": "ec0b921d154f7197781cb172b52081e320db9aacf1d47fab55f82e978f1bbaf0",
+"bytes": 134,
+"numbers": 0
+},
+"book:measure:D90": {
+"sha": "cdaa52de2858597e7d61f273e574c52c82261335ef55491db1026044864abe85",
+"bytes": 219,
+"numbers": 0
+},
+"book:measure:D91": {
+"sha": "bc9b1165c8ca7e0760871d15fdd02f01195d9419c721d0673f86a1086af29eca",
+"bytes": 119,
+"numbers": 0
+},
+"book:measure:D92": {
+"sha": "ada71d98142068a1885fe9d31cd19a8713d2bcaab1e7e357fba7c59a9d3148bf",
+"bytes": 124,
+"numbers": 0
+},
+"book:measure:D93": {
+"sha": "4f030599201b4ad842cd9223454af6545921b2f4b3b9cbb3521c78ce484ec964",
+"bytes": 119,
+"numbers": 0
+},
+"book:measure:D94": {
+"sha": "2c55912624e045c2571ba2c2a3023b5178a584ea25aa6b64fd14a8e65052ebaa",
+"bytes": 127,
+"numbers": 0
+},
+"book:measure:D95": {
+"sha": "3fdf4fb3ef41fd00a72459e164af99ae85363c3a94b4ea10890bfa5411e06990",
+"bytes": 118,
+"numbers": 0
+},
+"book:measure:D96": {
+"sha": "c4ccba76ecc29d18e12ca0853379023669f357d6f1ebd43a1a596b4e18256423",
+"bytes": 328,
+"numbers": 0
+},
+"book:measure:D97": {
+"sha": "748ddecbe6fee7f1190653fc5b45a6aa3cb20fcb7a1ab3f0b2446e99604e3d9f",
+"bytes": 131,
+"numbers": 0
+},
+"book:measure:D98": {
+"sha": "104aca3ae79b6a7bfd9e21708b8750d3f2bab242bb4832f265d22070f5b298c1",
+"bytes": 267,
+"numbers": 0
+},
 "book:measure:D99": {
-"sha": "df8d78768d40f3f9948d6ad4c99d53180e4b413566cf5ef70ff9a02ad15e1bf5",
-"bytes": 84,
+"sha": "7443479f9f7e84a61d7f0778fdaa67d0965dc9635685630c9f832ec9f294cecc",
+"bytes": 123,
 "numbers": 0
 },
 "book:rules:X1": {
@@ -9294,6 +9344,16 @@
 "bytes": 619,
 "numbers": 0
 },
+"book:rules:X94": {
+"sha": "49adee48a8d3c373ff500017bee6abc64df46fa269d512a36a1b911ab325c036",
+"bytes": 748,
+"numbers": 0
+},
+"book:rules:X95": {
+"sha": "ef4c1df448ada0f8ad28a1d00acd670defc8b4a8ff663b2eeaede56ace707b4e",
+"bytes": 622,
+"numbers": 0
+},
 "book:screen:SN1": {
 "sha": "186d3a5d2e8147201f56c24ac2ba525b66e6a3fff1d4f5a68cdc76cdd75ef277",
 "bytes": 561,
@@ -9400,8 +9460,8 @@
 "numbers": 0
 },
 "book:screen:SN4": {
-"sha": "185726a1c4efa5dfe66207d92bb667ed3f4996c8ca3b96562b434b32addc77f8",
-"bytes": 513,
+"sha": "922fcec0b8b28c9871e5ac9c6c9a6df03c8d12bc123a554ddb197bef2d0b4371",
+"bytes": 535,
 "numbers": 0
 },
 "book:screen:SN40": {
@@ -9415,8 +9475,8 @@
 "numbers": 0
 },
 "book:screen:SN42": {
-"sha": "7da3c8f7858d0a1e763bd3913e5874b366180c69148960332ed38b55f1828eb1",
-"bytes": 2782,
+"sha": "2b56ba93b90aa87fdc373aa6307ec14791a2fe98400d03938d55f7bcf6a78362",
+"bytes": 3211,
 "numbers": 0
 },
 "book:screen:SN5": {
@@ -11950,8 +12010,8 @@
 "numbers": 0
 },
 "book:words:J12": {
-"sha": "414023a913bac5024d6af5e9cd5b2c865c6ec8803c4628be2b41c6771a912b9a",
-"bytes": 738,
+"sha": "be668d9373706d549247a29a3c10e6b2e27346c5374234e71c95985486432696",
+"bytes": 875,
 "numbers": 0
 },
 "book:words:J13": {
@@ -12155,13 +12215,18 @@
 "numbers": 0
 },
 "book:words:J50": {
-"sha": "95e80db6384a2010f94257386532dff99fdc937506f5105f87c3552843f4c50c",
-"bytes": 1068,
+"sha": "4937a5964738d28980cb9ace49c8a67080cca9be3c67aa87c446021c1a5b36c3",
+"bytes": 1134,
 "numbers": 0
 },
 "book:words:J51": {
 "sha": "140bf6d28aedd0a3154e3829477009b1d4496c45677c1c89f6deb264f94c6417",
 "bytes": 873,
+"numbers": 0
+},
+"book:words:J52": {
+"sha": "64a1e512c0b69f69a01eb8eb3612392f50df6ed19ab650329562506d5c394703",
+"bytes": 295,
 "numbers": 0
 },
 "book:words:J6": {
@@ -12190,13 +12255,13 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "796686d683f8521a0755a1c402745ee4d66b0eef4c3980cca0006d1648072f3f",
-"bytes": 63323,
+"sha": "6235ed2944ef98e0d8daec9c4e6c62657ea51f327d2d0c69a3c5a20348e09249",
+"bytes": 64043,
 "numbers": 83
 },
 "code:econ.js": {
-"sha": "b72638f6c82be92580101f7672fa2feeba96ac9db43c900a9129f24a49bc36ed",
-"bytes": 110426,
+"sha": "a87f347b6ee8384954972a9ae86a537b15d0c05e18b04d3dd4ddd695f78cafa6",
+"bytes": 115317,
 "numbers": 70
 },
 "code:index.html#b-the-buildings": {
@@ -12230,8 +12295,8 @@
 "numbers": 113
 },
 "code:index.html#floor-7-display": {
-"sha": "3a5a6337fb1310e3e80d7e0f7ff5b138d20e4dcbaa1f63676dc9d2afcb3369bc",
-"bytes": 17254,
+"sha": "1a2ea75c94c3f8f57fe95b6174dfec16e47c07d5cbefaf6e3c40c7e252a05146",
+"bytes": 17664,
 "numbers": 54
 },
 "code:index.html#frames": {
@@ -12320,8 +12385,8 @@
 "numbers": 0
 },
 "code:index.html#the-woods-cache": {
-"sha": "d4afd30b5fbcb24e9190aa3d1a25b36cd427c8e0eb7039591e8eff969e610809",
-"bytes": 5901,
+"sha": "0194419dc44d9d216dfc533ef9d3fd7d73064ce3abbb414b0e644d6e3437b604",
+"bytes": 5934,
 "numbers": 24
 },
 "code:index.html#touch": {
@@ -12330,9 +12395,9 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "d944bedb0de45c0bb5f25ebecd2d36209a0c267622d0b79075cf64c84c81c57d",
-"bytes": 122549,
-"numbers": 521
+"sha": "357658f98c710c3a7885cbf16c7cb23c631854755164a1b64fe3d42e5d48bad6",
+"bytes": 123195,
+"numbers": 514
 },
 "code:sound.js": {
 "sha": "9fdb036b24c4480bb510db2abce36c1c233dcef4e46c2bbfaec33da44ebe1f4d",
@@ -12810,8 +12875,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "139b2914464d296938fa579ce63f6c1ca984a895f85cf483e5a05e019f527256",
-"bytes": 27779,
+"sha": "b58f2e98f56990902eb701656db4d7736716316cd9075faf75f0b942775516c1",
+"bytes": 28963,
 "numbers": 0
 },
 "tool:pages.yml": {
@@ -12825,13 +12890,13 @@
 "numbers": 0
 },
 "tool:ship.py": {
-"sha": "391951a3af11f0c4a60cfb1e55cd5a23cc99f77b56d3010c783e83f27dde2b4b",
-"bytes": 2326,
+"sha": "a3a8c5e866881e3a7c7dfe6fde50ab8aa4da1c04f44e218b37cd04b463bf52cb",
+"bytes": 2371,
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "a61cd2c06c26052c7a2a96e26bff6f2edadb2141f9a0c20e8699ad0751927ad7",
-"bytes": 294721,
+"sha": "cb4ad3fb0ee36d7e1439a9d7359e59036f0d5071b17fd5c5294eef26b722da7e",
+"bytes": 298540,
 "numbers": 0
 }
 }
