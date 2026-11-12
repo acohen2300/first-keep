@@ -872,7 +872,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E321 |  | a new site gets the nearest free villager; with none free, your nearest worker is pulled off and goes back after, a computer's lowest earner |  |
 | E322 |  | back to the very find it left if it still stands, else the best of its yield, else idle (Mid's backToWork) |  |
 | E323 |  | the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's repairTick) |  |
-| E324 |  | a site finished: a drop-off or field puts its builder to work there, unless it was pulled off other work; else the next site, else back to w |  |
+| E324 |  | a builder done (Decisions Nov 11, #16): his queued sites first; then, if he raised this building, its own work (a camp's finds, a field's po |  |
 | E325 |  | mending, Mid's: three times the build time for a whole building, a quarter of its price paid as it goes; short of any part, it stops (QCK) |  |
 | E326 |  | a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the site's health rises with it |  |
 | E327 |  | of the buildings that can take an order, the one with the shortest line (Mid's shortest) |  |
@@ -1419,6 +1419,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1023 |  | a caravan takes a trade route two ways: Trade route on its card sends it to the nearest trade stop not held by a foe (the safest; measured N |  |
 | E1024 |  | the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Friend green); War, Terms and Ally go through setRel (a |  |
 | E1025 |  | no food for a villager: the People icon wears the cannot-afford fade, red at nothing to white as the food comes (Decisions Nov 11, #22: red  |  |
+| E1026 |  | a tower, Town Center or castle shoots: its reload timer starts at nothing (it was never set, so it counted down from not-a-number and never  |  |
+| E1027 |  | Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused on it (the F mark): he does not move on to a richer |  |
+| E1028 |  | every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill should offer a farm as Lumber offers a tree farm): the |  |
 
 ## ground
 
@@ -1913,7 +1916,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN1 | (lnIcon: the icon beside a number in a two-line cell of the top row, Albert, Nov 10 18:27) the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6; the villager's square: one card of four boxes sq a side, no gaps, its dividers drawn inset from the card's edges, its icons sqIcon (Albert, Nov 8 21:42: a square; Nov 9 08:02-08:18: 44, one card, inset dividers, icons 14) | {lnIcon: 13, slots: 6, slot: 44, gap: 6, sq: 44, sqIcon: 14, inset: 9} | N133; N283 |
 | SN2 | the Build tabs: six of two rows of three (each cell two slots wide), Dwelling first, top left; the Courthouse in Defence (it trains spies and shoots only spies) (Albert, Nov 9 18:29-18:33; replaces Base's order of up to nine) | {Home: [BR1, BTC1, BCR2, BP4, BP6, BP7], Resources: [BCL1, BI1, BI2, BI3, BCL4, BCL3], Military: [BM1, BM2, BM3, BM4, BI9, BI7], Defence: [B | N134; N287 |
 | SN3 | (N6, Albert Nov 9 18:29: the Abatis, a field defence, cut for players as caltrops and stakes were on Nov 8; the Apartment and the Tree farm made from a card, SN34) buildings not on the Build menu: the Throne is the map's; the camp tents and the Depot (the camp's store, a forward base; Albert, Nov 8 19:22) come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the traps (the pit, the net, the stakes, the caltrops) are the Natives' booby traps and nobody else's (Albert, Nov 8 19:12: no laid defences for players; they wait with the Natives) | [BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL2] | N135; N172; N198; N287 |
-| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [trade, Trade], [make, Make], [hire, null], [queue, null], | N136; N170; N194 |
+| SN4 | a card's rows, in order: a row shows when the subject ticks what it names (none: always); troops: Teach on a soldier, Zeal at the Temple, ransom at your hall, what a spy read at theirs | [[title, null], [health, Health], [load, Gather], [store, Yield], [flock, Flock], [trade, Trade], [make, Make], [hire, null], [plot, Drop-of | N136; N170; N194 |
 | SN5 | (Albert, Nov 10 18:27: the two top rows in the footprint of the top one: stores share a cell two to a cell, the season an icon beside the clock with the time left under it, people with idle and army, rank over score; one row of nine) the top ribbon: the five stores, sound, pause, the Mail door with its unread count (Base; Albert, Nov 7 20:48: all Base — the small map lives in the war station's middle, not here) | [food/wood, stone/gold, iron/age, when, folk, rank/score, mute, pause, mail] | N137; N241 |
 | SN6 | readings with no row: the second top row was cut, each waited for its new home; all now in the Top Info Ribbon (SN39, Nov 10) | [] | N138; N306 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |

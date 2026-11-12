@@ -649,6 +649,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
 - **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
 - **E358** a pasture's card counts its sheep
+- **E1028** every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill shou · E333
 - **E738** a building's research on its card: the next step of each of its lines, as Base's card (the
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
@@ -788,10 +789,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
 - **E945** first placed, first built (Albert, Nov 10, N17 #4; AoE2's build queue): a site placed with · N17
+- **E1027** Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused o
 - **E322** back to the very find it left if it still stands, else the best of its yield, else idle (M
 - **E323** the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's 
 - **E861** a builder's next site: the first one laid, then the nearest (a wall line keeps to the near
-- **E324** a site finished: a drop-off or field puts its builder to work there, unless it was pulled 
+- **E324** a builder done (Decisions Nov 11, #16): his queued sites first; then, if he raised this bu
 - **E325** mending, Mid's: three times the build time for a whole building, a quarter of its price pa · QCK (N168)
 - **E308** a lost find (Mid's decision 1): it delivers what it carries, then looks from where the fin · D197 (N164)
 - **E309** builders who finish a place of work take it up (Mid's startWork): a field if nobody works 
@@ -898,6 +900,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## combat.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E1027** Focus (Decisions Nov 11, #17): a villager you send to a find or a post by tap is focused o
 - **E227** First Keep v100 · combat.js (floor 10): health, the blow (QBO, QBT), the foe (QAG, QAF), n · QBO (N69, N188) · QBT (N81, N82, N83, N18) · QAG (N36, N37, N188) · QAF (N35) · QAI (N76, N188) · QAO (N45) · QBQ (N76) · QAJ (N39, N40)
 - **E961** the standards drawn this frame, kept so the lights put a torch on each after dark (v80's f
 - **E406** the orders, missions and the War Director's measures and words; the groups on the march (O
@@ -975,6 +978,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E422** the nearest cover (Mid's coverNear): an open tile with forest within D252 cover, within D2 · D252 (N190)
 - **E423** an ambush in place (Mid's ambushTick): once there it goes to ground (no foe sees it); a fo
 - **E424** your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there,
+- **E1026** a tower, Town Center or castle shoots: its reload timer starts at nothing (it was never se
 - **E1010** which villager a wild animal is fighting, gathered once a step; before, every villager sea
 - **E398** in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE),
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th

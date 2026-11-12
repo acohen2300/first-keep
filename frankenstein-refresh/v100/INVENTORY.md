@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,545 | 619,141 | 619,290 |
-| Books | 2437 | 0 | 736,024 | 736,944 |
+| Game code | 31 | 3,547 | 620,065 | 620,214 (+924) |
+| Books | 2440 | 0 | 737,294 | 738,214 (+211) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,029 | 328,482 | 328,727 |
 
@@ -39,9 +39,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,897 | 5,901 | 24 |
 | index.html#touch | 53 | 9,672 | 9,676 | 54 |
-| menu.js | 567 | 122,505 | 122,549 | 521 |
-| econ.js | 596 | 110,426 | 110,426 | 70 |
-| combat.js | 372 | 63,323 | 63,323 | 83 |
+| menu.js | 568 | 122,721 | 122,765 (+216) | 521 |
+| econ.js | 596 | 110,962 | 110,962 (+536) | 70 |
+| combat.js | 373 | 63,495 | 63,495 (+172) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,12 +53,12 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 976 | 179,619 |
+| comments | 979 | 180,903 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 340 | 168,460 |
 | rules | 91 | 35,806 |
-| screen | 27 | 14,718 |
+| screen | 27 | 14,738 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
@@ -170,4 +170,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
 | X93 | t-n26 | page | N26: the rules ask a list without the trees, and a step with thirty soldiers on the board costs at most half the frame's budget (D343); no wildfire in the game; the night hides at most two stops (D292); every lake has a walkable ford (D374); a tap on the ground moves the picked army at once, with Attack lit it only aims; a side whose ice cracks is ice-shy; a square past Z has a name; no side "has fallen"; the Market sells; a caravan takes a route; the stances are wired; People is red with no food; a hall falling does not throw |
 
-2567 items sealed · 2437 book entries · 94 laws · 326 citations, 34 still to open · 0 known
+2570 items sealed · 2440 book entries · 94 laws · 326 citations, 34 still to open · 0 known
