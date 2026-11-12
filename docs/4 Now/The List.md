@@ -1,6 +1,6 @@
 # The List: the one list, in Albert's order [2026-11-12 07:15]
 
-Built from `Audit - Nov 12.md` (sections B, C, D, E), Nov 12 07:15. Last brought up to date: Nov 12 11:00, build N30. Albert: "I really just want my list done." [2026-11-12 07:15]
+Built from `Audit - Nov 12.md` (sections B, C, D, E), Nov 12 07:15. Last brought up to date: Nov 12 11:58, build N31. Albert: "I really just want my list done." [2026-11-12 07:15]
 Rules of this page: one line an item. A line is DONE only with its proof beside it (a named test that passed, or Albert's own play). BUILT means in the code, proof still owed. Nothing leaves this page without a word. Every report to Albert is this page. [2026-11-12 07:15]
 
 States: TODO · BUILT (no proof yet) · DONE (proof named) · BLOCKED (says on what) [2026-11-12 07:15]
@@ -18,6 +18,8 @@ States: TODO · BUILT (no proof yet) · DONE (proof named) · BLOCKED (says on w
 ## 1b. The villager's tap (Albert, Nov 12 07:12) [2026-11-12 08:40]
 - V1b DONE (N30): the two causes in his 08:05 screenshot: a nearby villager stole the tap (now only within 12 px while something is picked, a nearer find wins) and a finger slip over 6 px cancelled the tap (now 10). Proof: t-n30 (finger). Needs his phone. [2026-11-12 11:00]
 - V2 DONE (N30): the tap table, his 08:12 and 08:14 rule: villager + find = gather, soldier + foe = attack, any + ground = go, and the rows for build, repair, fight, garrison, caravan route; after the row, the pick is let go. The Controller's Execute keeps its group. Proof: t-n30 (deselect), t-n24, t-n25. [2026-11-12 11:00]
+- V3 DONE (N31): placing a building with villagers picked sends them all to build it and lets them go; one let-go for every order. Proof: t-n31. His 11:46 screenshots were N30. [2026-11-12 11:58]
+- V4 WAITING ON ALBERT: row 5, a villager tapped onto your own building (today: deselects, no order, she idles). My suggestion: drop off, then back to her last job. [2026-11-12 11:58]
 - V1 DONE: the pick did end, but the villager kept the green "picked" ring while he walked to his order. Green now means picked only. Proof: t-n29 (ring), real-touch test (tap villager, tap tree: 0 picked, blue ring), fails with the old line planted. Needs his eye on the phone. [2026-11-12 08:40]
 
 ## 2. Built, not proven (B) [2026-11-12 07:15]
