@@ -12,7 +12,7 @@ def book(text):
     name, entries = m.group(1), json.loads(m.group(2))
     for e in entries.values():
         if isinstance(e, dict):
-            e.pop('cite', None); e.pop('law', None)
+            e.pop('cite', None); e.pop('law', None); e.pop('unit', None); e.pop('subject', None)
             if name not in SHOWN: e.pop('name', None)
     return f'BOOK("{name}",{json.dumps(entries, ensure_ascii=False, separators=(",", ":"))});'
 def page():

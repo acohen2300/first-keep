@@ -425,7 +425,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N320** Albert, Nov 11, 2026, 05:05 "Build n23 as we are planned": Gemini audit 2's fixes (the sprite cache kept by la → D332, X89
 - **N319** Albert, Nov 10, 2026, 20:03-21:10 (the dashed ring; still things not redrawn, option B) and 22:47 "Go for them → X88
 - **N325** Albert, Nov 11, 2026, 16:15-20:02, in chat: the Controller (three pads of four, one box each with inset divide → C37, D372, D373, X92, SN41, SN42, J50
-- **N326** Albert, Nov 11, 2026, 22:14-23:56, in chat, after his first win by conquest on N25 (184:53): the phone ran hot → D374, X93, J51
+- **N326** Albert, Nov 11, 2026, 22:14-23:56, in chat, after his first win by conquest on N25 (184:53): the phone ran hot → D374, X93, X94, J51
 - **N327** Day for night, Wikipedia (opened Nov 12, 2026): a night scene shot by day is typically underexposed by about t → D292
 
 ## Named exceptions

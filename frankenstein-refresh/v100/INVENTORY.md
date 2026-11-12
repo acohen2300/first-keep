@@ -5,9 +5,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 31 | 3,554 | 621,922 | 622,071 (+2,781) |
-| Books | 2444 | 0 | 739,890 | 740,812 (+773) |
+| Books | 2445 | 0 | 755,434 | 756,356 (+15,639) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,029 | 328,482 | 328,727 |
+| Tools | 5 | 2,036 | 329,693 | 329,938 (+1,211) |
 
 ## The trades (code)
 
@@ -56,8 +56,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | comments | 983 | 182,987 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 340 | 168,485 |
-| rules | 91 | 35,806 |
+| measure | 340 | 183,351 |
+| rules | 92 | 36,494 |
 | screen | 27 | 15,088 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -169,5 +169,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
 | X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
 | X93 | t-n26 | page | N26: the rules ask a list without the trees, and a step with thirty soldiers on the board costs at most half the frame's budget (D343); no wildfire in the game; the night hides at most two stops (D292); every lake has a walkable ford (D374); a tap on the ground moves the picked army at once, with Attack lit it only aims; a side whose ice cracks is ice-shy; a square past Z has a name; no side "has fallen"; the Market sells; a caravan takes a route; the stances are wired; People is red with no food; a hall falling does not throw |
+| X94 | units | gate | every measured number carries its unit and its subject as fields of its own entry, never as a comment in code (Decisions Nov 11, #2; Albert: "yes to a unit field on every number enforced by the gate"). subject is where the game reads it (world, economy, war, computers, screen, sound, shells), found by the gate's own reading of the code. A unit is set only where the code proves it (a number multiplied by the tile is in tiles; a number handed to every() is a beat in seconds) or the entry states it; nothing is guessed. N27 proved 81; unset counts the rest and may only fall |
 
-2574 items sealed · 2444 book entries · 94 laws · 326 citations, 34 still to open · 0 known
+2575 items sealed · 2445 book entries · 94 laws · 326 citations, 34 still to open · 0 known

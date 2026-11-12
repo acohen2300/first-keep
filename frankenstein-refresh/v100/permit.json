@@ -15,7 +15,8 @@
   "book:screen",
   "book:colours",
   "tool:test.py",
-  "tool:index.py"
+  "tool:index.py",
+  "tool:ship.py"
  ],
  "grow": {
   "code:ai.js": 20000,

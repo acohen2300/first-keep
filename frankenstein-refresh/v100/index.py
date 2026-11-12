@@ -218,6 +218,13 @@ for f, lines in PAGES.items():
     if CI: rule('pages', text(f) == t, f'{f} is not what the books say: written by hand, or not rebuilt')
     else: open(f, 'w').write(t)
 ran.add('pages')
+UNITS = {'tiles', 'seconds', 'ms', 'unset', 'none'}; unset = 0   # N27 (#2): every measured number carries its unit and its subject as book fields; a unit is set only where the code or the entry itself proves it, and the count still unset may only fall (X94)
+def _num(v): return (not isinstance(v, bool)) and (isinstance(v, (int, float)) or (isinstance(v, list) and any(_num(x) for x in v)) or (isinstance(v, dict) and any(_num(x) for x in v.values())))
+for c, e in BOOKS['measure'].items():
+    rule('units', 'unit' in e and bool(e.get('subject')), f'{c} has no unit or no subject field'); u, v = e.get('unit'), e['value']
+    if isinstance(v, dict): rule('units', isinstance(u, dict) and all(k in v and x in UNITS for k, x in u.items()), f'{c} names a unit for a key it does not hold, or a unit not in the list'); unset += sum(1 for k, x in v.items() if _num(x) and k not in (u or {}))
+    else: rule('units', u in UNITS, f'{c}: unit {u!r} is not in the list'); unset += u == 'unset'
+rule('units', unset <= RULES['units']['value']['unset'], f'{unset} numbers have no unit set; the rule allows {RULES['units']['value']['unset']}: set units, never raise the count')
 for k, e in RULES.items():
     if e['value']['stage'] not in ('page', 'survey'): rule('rules', k in ran, f'rule {k} is in the book but nothing runs it')
 print(f'{PERMIT["build"] or "no permit"} · opens {len(OPEN)}/10 · {sum(len(es) for es in BOOKS.values())} entries, {len(LAWS)} laws, {len(N)} citations')
