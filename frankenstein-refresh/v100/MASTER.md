@@ -272,7 +272,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E453** the tiles a side's people can walk to: one flood fill over the walking grid (a queue, a ty · E91
 - **E1014** what a side can walk to is kept through building changes for one slow beat (D-beats.slow):
 - **E978** a tile that opens (a tree felled, a rock mined out) joins each side's reach where it touch
+- **E1041** the job door: every unit's job is one property with one setter, so all of the code's write · N29 · P2 (N150, N176)
 - **E92** a unit on a tile; its stand wanders in the tile (D82) · D82 (N112)
+- **E1042** the health door: every loss of health (a blow, fire, sabotage, a charge's trample, a flood · P3 (N150, N176)
 - **E93** a path of one tile (already there) walks to its middle: no step past the end
 - **E94** to a tile
 - **E95** to a tile beside one
@@ -537,6 +539,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E865** a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens fo
 - **E164** what is under the finger: the tile at the land's height and the nearest unit it may see (y · D246 (N190)
 - **E725** the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turn
+- **E1040** what is under the finger while something is picked (E1038): another of your own units coun · E1038 · D246 (N190)
 - **E864** a tap anywhere on a building's drawn shape is the building: the front-most whose picture i
 - **E935** with someone picked, a tap near a resource takes it, so the target is bigger than its tile
 - **E426** the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)
@@ -592,6 +595,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
+- **E1038** the tap table (SN43, Albert Nov 12 08:12-08:15): with something picked, the next tap is it · SN43 (N326)
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
@@ -703,7 +707,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
-- **E856** a picked unit takes the next tap as its order (a thing: it does that; the ground: it goes  · N24
+- **E856** a picked unit takes the next tap as its order, by the tap table (E1038, SN43). While the i · E1038 · SN43 (N326)
 - **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)
@@ -827,6 +831,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E441** going inside (Mid's vilTick, stepOut): a unit sent to a building with room walks to it and
 - **E442** a villager's fright (Mid's vilTick, D254): soldiers near scare it, beasts or robbers when  · D254 (N192)
 - **E820** a villager told to take cover goes into the nearest building of yours with room, as fright
+- **E1039** garrison (the tap table's soldier + own building): each soldier goes inside up to the buil
 - **E443** the Alarm's ranking (Mid's shelterRank, roomIn, fillRank, threatDir): buildings with room, · D255 (N192)
 - **E444** the Alarm (Mid's emgStart, townSquare, soldiersIn, villagersIn): its first order notes eac
 - **E1031** Protect's three (Decisions Nov 11; Albert: Protect is really a lure): each garrisons your 
@@ -990,6 +995,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1010** which villager a wild animal is fighting, gathered once a step; before, every villager sea
 - **E398** in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE),
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
+- **E1043** one health bar: the war module draws its bars with the world's own (index.html bar), not a
 - **E1034** a boarded building shows its planks across its foot, one by one as they go on
 - **E399** the missiles in flight: a streak along the drag path, its tail D245's share of the flight · D245 (N188, N39, N40)
 - **E400** a blow's sparks (Mid's sparkDraw)

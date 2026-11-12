@@ -1,5 +1,6 @@
 {
- "build": "",
- "agreed": "",
- "opens": []
+ "build": "N30: the tap table, one door for jobs and health, cleanups, units, played tests, the world-event search, the caravan escort",
+ "agreed": "Albert, Nov 12 09:44-09:46: \"What can you do without me?\" then \"Do as much as you can. Let's talk after. Don't stop and go to 14. Don't stop. Do 1-14\" (the list of Nov 12 09:44: 8 the tap table with the rows already ruled on, gather, attack, go, build or repair, fight, garrison, caravan route, deselect after; 9 the job and health doors behind tests; 10 cleanups; 11 units; 12 played tests; 13 the world-event hitch; 14 the caravan escort). His rule, 08:12: \"Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected.\"",
+ "opens": ["code:index.html", "code:menu.js", "code:econ.js", "code:combat.js", "code:ai.js", "book:measure", "book:comments", "book:rules", "book:words", "book:screen", "book:citations", "tool:test.py", "tool:index.py"],
+ "grow": {"code:index.html#touch": 3000, "code:index.html#the-door": 3000, "code:index.html#floor-5-movables": 6000, "code:index.html#floor-6-climate": 3000, "code:index.html#the-view-s-eyes-lights-and-stage": 1000, "code:menu.js": 10000, "code:econ.js": 10000, "code:combat.js": 10000, "code:ai.js": 2000}
 }

@@ -55,7 +55,7 @@ function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) :
   if (t.kind === 'unit' && FK.inWoods(t.k)) { if (!melee) d *= Math.exp(-D.woods.stems * D.woods.trunk * FK.woodsLine(a, t)); // E875
     else { let n = ZERO; FK.unitsNear(t, FL.line * D.tile, (v) => { if (v.target === t && v.side === a.side && alive(v)) n++; }); d /= Math.max(ONE, n); } } // E876
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
-function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; t.hp -= d; t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (v.job === 'idle' || v.job === 'hold') && temperOf(v) !== AR.temper.hold && !tame(v, a) && enemies(v, a)) { v.was = v.job === 'idle' ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019
+function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (v.job === 'idle' || v.job === 'hold') && temperOf(v) !== AR.temper.hold && !tame(v, a) && enemies(v, a)) { v.was = v.job === 'idle' ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019
   sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
   if (u && SIDES[a.side] && !SIDES[t.side]) ECON.struck(a.side, groupOf(t)); // E518
   if (u) { FK.impact(a, t); if (ranged(a)) shot(a, t, W[FK.SH[a.code].body].height); if (!SIDES[t.side]) { t.aggro = a; if (t.job !== 'fight' && stat(t).atk) fight(t, a); } if (t.kind === 'bld') ECON.shot(a, t, d); }
@@ -266,7 +266,7 @@ FK.on('tick', (dt) => {
 });
 // E240
 FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size(), MK = ST.marks, [a0, a1] = MK.arc, B = MK.bar, at = (x, y, up = 0) => FK.toScreen(...FK.toView(x, y, Math.max(0, FK.H[FK.tileAt(x, y)]) + up));
-  const seen = (x, y, m) => x > -m && x < cw + m && y > -m && y < ch + m, bar = (x, y, w, f, col) => { ctx.save(); ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - half(w), y, w, B.h); ctx.restore(); ctx.fillStyle = col; ctx.fillRect(x - half(w), y, w * f, B.h); };
+  const seen = (x, y, m) => x > -m && x < cw + m && y > -m && y < ch + m, bar = FK.bar; // E1043
   const oval = (x, y, r, k, from = a0, to = a1) => { ctx.beginPath(); ctx.ellipse(x, y, r, r * k, a0, from, to); };
   for (const u of units()) if (u.hp != null && u.hp < u.hpMax && FK.inSight(u)) { const [x, y] = FK.toScreen(u.vx, u.vy), [w, up, m] = B.unit; if (seen(x, y, m)) bar(x, y - up * s, w * s, u.hp / u.hpMax, SIDES[u.side] ? SIDES[u.side].col : C.white); }
   for (const t of FK.blds()) if ((t.board || t.bp != null) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, , , m] = B.bld, W = t.n * w * s, n = D.prep.planks, f = t.board ? ONE : t.bp; if (!seen(x, y, m)) continue; ctx.save(); ctx.strokeStyle = C.pole; ctx.lineWidth = B.h; for (let i = ZERO; i < Math.ceil(n * f); i++) { const yy = y - (i + ONE) * B.h * (ONE + ONE) * s; ctx.beginPath(); ctx.moveTo(x - half(W), yy); ctx.lineTo(x + half(W), yy - B.h * s * (i % (ONE + ONE) ? ONE : -ONE)); ctx.stroke(); } ctx.restore(); } // E1034
@@ -314,7 +314,7 @@ function spy(u, look) { if (look) { u.veil = veilOf(u);
   if (u.side !== ME && look && u.job === 'idle') { let b = null; FK.bldsNear(u.bx, u.by, FK.sightOf(u), (t) => !!(SIDES[t.side] && atWar(u.side, t.side) && alive(t) && FK.inSight(t, u.side, u) && SA.how[t.code] && !guarded(t) && (b = t))); if (b) Object.assign(u, { job: 'sab', tid: b }); } // E473
   return true; }
 function sabotage(u, b) { const how = SA.how[b.code], W = TW.sab, name = FK.SH[b.code].name; if (!how) { u.job = 'idle'; return; } // E474
-  if (how === 'burn') { b.hp -= b.hpMax * SA.burn; if (!alive(b)) die(b, null); else ECON.ignite(b, 'sabotage'); } else { b.stall = K.t + SA.stall; const c = (b.q || []).shift(); if (c && D.ages.includes(c)) SIDES[b.side].aging = null; const [nx] = b.q || []; if (nx) b.qt = ECON.timeOf(b.side, nx); }
+  if (how === 'burn') { FK.harm(b, b.hpMax * SA.burn, 'sabotage'); if (!alive(b)) die(b, null); else ECON.ignite(b, 'sabotage'); } else { b.stall = K.t + SA.stall; const c = (b.q || []).shift(); if (c && D.ages.includes(c)) SIDES[b.side].aging = null; const [nx] = b.q || []; if (nx) b.qt = ECON.timeOf(b.side, nx); }
   if (b.side === ME) say(W[how], { at: MENU.coord(b.bx, b.by), name, n: SA.stall }); else if (u.side === ME) say(how === 'burn' ? W.didBurn : W.didStall, { name: name.toLowerCase() }); die(u, null); }
 // E582
 const FD = D.finds, RD = D.raids, JN = D.wayfarer, WW = fromBook('words').wild, ONE = D.count.one, ZERO = D.count.zero, raid = { hit: {} }, [L0, L1] = FD.leash, codeOf = (t) => (FK.KIND[t.kind] || {}).code, rowOf = FK.rowOf;
@@ -366,7 +366,7 @@ function spring(b, v, kind, E) { const horse = FK.SH[v.code].mount ? 'horse' : '
   if (E.hits) { if (K.t - (v.spikeT ?? -Infinity) < E.again) return; v.spikeT = K.t; b.hits = -~b.hits; b.seen[v.side] = true; if (b.hits >= E.hits) FK.unbuild(b); } else FK.unbuild(b);
   if (v.side === ME) say(CT.hit[kind], { name, lame: E.hits && E.stuck[horse] ? CT.lame : '' }); else if (b.side === ME) say(CT.caught, { what: CT.names[kind], name, side: fromBook('words').end.sides[v.side] });
   if (E.take) { if (FK.has(v, 'Gather') || (armed(v) && !E.take.not.includes(clsOf(v.code)))) ECON.takePrisoner(b.side, v); return; }
-  v.hp -= v.hpMax * E.hurt[horse]; v.hurtT = K.t; if ((E.stuck || {})[horse]) v.stuck = K.t + E.stuck[horse]; if (!alive(v)) die(v); }
+  FK.harm(v, v.hpMax * E.hurt[horse], b); v.hurtT = K.t; if ((E.stuck || {})[horse]) v.stuck = K.t + E.stuck[horse]; if (!alive(v)) die(v); }
 FK.on('save', (X) => { X.war = { waves, homeT, routSaid, ordT, ORD, MS, AT, rel, SQ, raid }; }); // E667
 FK.on('load', ({ war: W }) => { ({ homeT, routSaid, ordT } = W); const keep = { waves, ORD, MS, AT, rel, SQ, raid }; for (const k in keep) FK.refill(keep[k], W[k]); });
 const take = (t) => { for (const u of units()) if (u.target === t) u.target = null; FK.vanish(t); }; // E691

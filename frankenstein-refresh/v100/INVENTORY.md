@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,571 | 626,852 | 627,002 |
-| Books | 2455 | 0 | 763,840 | 764,765 |
+| Game code | 31 | 3,579 | 629,006 | 629,156 (+2,154) |
+| Books | 2463 | 0 | 768,476 | 769,399 (+484) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,070 | 336,770 | 337,015 |
 
@@ -23,25 +23,25 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#floor-3-non-movables | 68 | 10,121 | 10,125 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 105 | 18,976 | 18,981 | 63 |
+| index.html#the-door | 105 | 19,000 | 19,005 (+24) | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 151 | 20,871 | 20,875 | 78 |
+| index.html#floor-5-movables | 155 | 21,431 | 21,435 (+560) | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
-| index.html#floor-6-climate | 168 | 30,102 | 30,114 | 113 |
+| index.html#floor-6-climate | 168 | 30,138 | 30,150 (+36) | 113 |
 | index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 139 | 29,216 | 29,221 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
-| index.html#touch | 53 | 9,672 | 9,676 | 54 |
-| menu.js | 569 | 123,236 | 123,280 | 514 |
-| econ.js | 615 | 115,410 | 115,410 | 70 |
-| combat.js | 374 | 64,286 | 64,286 | 83 |
+| index.html#touch | 54 | 10,120 | 10,124 (+448) | 54 |
+| menu.js | 571 | 124,072 | 124,116 (+836) | 514 |
+| econ.js | 616 | 115,819 | 115,819 (+409) | 70 |
+| combat.js | 374 | 64,127 | 64,127 (-159) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,18 +53,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 327 | 80,537 |
 | colours | 33 | 9,517 |
-| comments | 987 | 185,470 |
+| comments | 993 | 187,553 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 186,674 |
+| measure | 342 | 187,668 |
 | rules | 94 | 37,711 |
-| screen | 27 | 15,167 |
+| screen | 28 | 16,615 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 52 | 100,642 |
+| words | 52 | 100,845 |
 
 ## The shells
 
@@ -173,4 +173,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X95 | t-n27 | page | N27: a tower shoots a foe beside it; a Mill and a Lumber camp offer their plot; two techs tapped are one green and one blue with their times and no queue row, and a tap on each cancels and pays back; a villager tapped onto a bush is focused on it; the Protect page holds Split, Lure, Seek and Prep; Prep boards the buildings, raises their health and shelters the villagers, the cell turns to Work, and Work takes the boards off and leaves them short; soldiers on a march eat more than standing; every measure carries a unit and a subject |
 | X96 | t-n29 | page | N29: an idle soldier whose home spot cannot be stood on searches for it once, not every second; a villager sent to a tree is no longer picked and wears no green ring; the pace meter times its seven drawing layers; an idle menu beat reads no layout in the top bar; the crosshair is not drawn until a spot is tapped; a rival's fall reads "The Raiders have fallen."; the slower beats and the marching day are in the books |
 
-2585 items sealed · 2455 book entries · 94 laws · 327 citations, 34 still to open · 0 known
+2593 items sealed · 2463 book entries · 94 laws · 327 citations, 34 still to open · 0 known
