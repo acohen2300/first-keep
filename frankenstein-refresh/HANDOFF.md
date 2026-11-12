@@ -1,3 +1,19 @@
+# First Keep: hand-off (Nov 12, 2026, 09:20) [2026-11-12 09:20]
+
+Read this first in a fresh chat. Older hand-offs follow below, kept for the record. [2026-11-12 09:20]
+
+## Where things stand [2026-11-12 09:20]
+- **The one list is `docs/4 Now/The List.md`.** Every report to Albert is that page. A line is DONE only with its proof beside it. Work it top down, in his order; do not regroup it. [2026-11-12 09:20]
+- Code: branch `n29-the-list` (off `n28-ready`), folder `frankenstein-refresh/v100/`. Last build N29, sealed; see `v100/BUILDS.md`. Preview: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n29/ (`?fps`: the meter's second line is each drawing layer's ms). [2026-11-12 09:20]
+- Waiting on Albert: his phone's `?fps` screenshot when it runs warm (list F6); his calls in `Rebalance - Nov 12.md` (4), `Rings - Nov 12.md` (3) and on caravans (list C5); a one-line symptom for each bug trace still open (Winner button, villagers disappearing, builds a bit then stands, tap tree then idle, small-map check). [2026-11-12 09:20]
+- Not started: list D2, D3, D5, D6, D7 (the visual group and its mock sheet), D8 (units on 1,506 numbers), D9 (fresh-eyes review), B3 (played scenarios for Prep, towers, Split, Lure, Seek, tech tiles), F5, E7. [2026-11-12 09:20]
+- Parked on his word (Nov 12 07:48, "not for right now"): arm-then-engage as one rule with the army disarming; the one-home audit of behaviour. Both in `docs/4 Now/Parked.md`, "Parked in N29". Do not build them unasked. [2026-11-12 09:20]
+- Tests: t-n29 passes and fails on four planted bugs; t-n24 to t-n27 pass; smoke 6/6. The full run was not made. t-n15 and t-sight still fail (list B4). [2026-11-12 09:20]
+- How to measure (scripts are not in the repo; rebuild as needed): logic by step with `FK.sim(1 / SIM.hz)` over a 15-minute four-side match with every side's stores topped up each minute; wrap `findPath` to count callers and failures; draw layers by flushing the canvas (`getImageData`) after each. Headless frame times say nothing about a phone. [2026-11-12 09:20]
+- Rules as before: Claude alone, no helpers; concise; cite the math; cuts to Parked; build only what is on the list. A question from Albert is a question, not an order to build. [2026-11-12 09:20]
+
+---
+
 # First Keep: hand-off (Nov 12, 2026, 07:00) [2026-11-12 07:00]
 
 Read this first in a fresh chat. Older hand-offs follow below, kept for the record. [2026-11-12 07:00]

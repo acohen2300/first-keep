@@ -22,7 +22,7 @@ States: TODO · BUILT (no proof yet) · DONE (proof named) · BLOCKED (says on w
 - B1 DONE: re-tested fresh. ×1 ×2 ×3 and New game sit under the pause button, the board is drawn while paused (40 of 40 sample points lit), the clock stops. Not yet in a named test. [2026-11-12 08:40]
 - B2 DONE: re-tested fresh. The ghost starts from screen centre and snaps to the suggested plot (in the test it landed 126 px from centre, on a free plot, placeable). Not yet in a named test. [2026-11-12 08:40]
 - B3 TODO: Prep, towers, Split, Lure, Seek, tech tiles: each run as a played scenario, not a unit check. [2026-11-12 07:15]
-- B4 TODO: the old failing tests (torches t-n15, one-way sight t-sight, the rest of the full run): each fixed or its bug fixed. [2026-11-12 07:15]
+- B4 PART: t-sight read. Two of its five checks fail: a computer sees through a tree (by his N24 #13: computers see in plain circles, so the test is out of date there), and in the test his own villager did not see a foe 12 tiles off even after the tree between was felled (real bug or test rig: not settled). t-n15 throws inside the test. Neither fixed. [2026-11-12 09:10]
 
 ## 3. Built differently from what was said (C) [2026-11-12 07:15]
 - C1 DONE: "The Raiders have fallen." ("The Fortress has fallen."). Proof: t-n29 (fallen). [2026-11-12 08:40]
@@ -33,7 +33,7 @@ States: TODO · BUILT (no proof yet) · DONE (proof named) · BLOCKED (says on w
 - C6 BUILT, no test yet: each of Fortified posts, Masonry, Architecture known takes a fifth off Prep's price and time (all three: about half). The fifth is my number (Architecture's own cut, reused). [2026-11-12 08:40]
 
 ## 4. Tracked, not done (D) [2026-11-12 07:15]
-- D1 TODO: #6, #23 the ring inventory and the one ring standard (six meanings). [2026-11-12 07:15]
+- D1 PART: the inventory is written (docs/4 Now/Rings - Nov 12.md) with four clashes found and three decisions for him. The one standard is not built: it needs his answers. [2026-11-12 09:10]
 - D2 TODO: #8 tech book icon, the two yellow lines, the building animation. [2026-11-12 07:15]
 - D3 TODO: #20 the villager's stops card; #21 every item card from the kit. [2026-11-12 07:15]
 - D4 PART: the numbers are written (docs/4 Now/Rebalance - Nov 12.md): measured income a worker a minute (food 13.9 on bushes, 30 on a farm; wood 17-21; gold 13.5-18; stone 12.5-16), what is near home, and 4 decisions for him. #10: a tree keeps 1 feller (Merz 1965); no per-face mining figure found; berry picking not searched. [2026-11-12 08:40]
@@ -50,6 +50,6 @@ States: TODO · BUILT (no proof yet) · DONE (proof named) · BLOCKED (says on w
 - E2 DONE: with Attack chosen and no spot tapped, no crosshair is drawn; it appears with the tap and Execute turns green. Proof: t-n29 (crosshairWaits), fails with the old line planted. [2026-11-12 08:40]
 - E3 DONE, nothing to build: tested with no menu, Build, Hall and the Controller open; the alert never shows in more than one place at once. [2026-11-12 08:40]
 - E4 PART: measured by layer here (see F1); the phone measure is F6. [2026-11-12 08:40]
-- E5 TODO: bug traces: tap tree then idle; small-map check; rings and taps inconsistent. [2026-11-12 07:15]
+- E5 PART: "rings and taps inconsistent" traced: picked green against the Raiders' green, working blue against his own side blue, selected green on the map and gold on buttons (Rings - Nov 12.md). "tap tree then idle" and "small-map check": TODO. [2026-11-12 09:10]
 - E6 PART: see Rebalance - Nov 12.md, decision 3. Not measured yet: the minute a normal opening first has 100 gold. [2026-11-12 08:40]
 - E7 TODO: nerve ("big babies"): the numbers that make them run. [2026-11-12 07:15]
