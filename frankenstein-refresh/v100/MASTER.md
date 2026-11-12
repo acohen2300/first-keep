@@ -608,6 +608,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
 - **E188** sound on or off
 - **E451** the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends
+- **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E189** a cell for what is drawn but not yet built: Albert's reminder
 - **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the St
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
@@ -745,6 +746,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## econ.js
 
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
@@ -986,6 +988,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1010** which villager a wild animal is fighting, gathered once a step; before, every villager sea
 - **E398** in reach: it faces its foe; a shooter reloading with a blade near steps back (Mid's KITE),
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
+- **E1034** a boarded building shows its planks across its foot, one by one as they go on
 - **E399** the missiles in flight: a streak along the drag path, its tail D245's share of the flight · D245 (N188, N39, N40)
 - **E400** a blow's sparks (Mid's sparkDraw)
 - **E960** an army's standard groups the soldiers of one order, one rally or one march (Albert, Nov 1 · N17

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,554 | 621,922 | 622,071 (+2,781) |
-| Books | 2445 | 0 | 755,434 | 756,356 (+15,639) |
+| Game code | 31 | 3,570 | 625,841 | 625,990 (+6,700) |
+| Books | 2450 | 0 | 758,655 | 759,577 (+15,851) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,036 | 329,693 | 329,938 (+1,211) |
+| Tools | 5 | 2,056 | 333,481 | 333,726 (+4,999) |
 
 ## The trades (code)
 
@@ -39,9 +39,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,930 | 5,934 (+33) | 24 |
 | index.html#touch | 53 | 9,672 | 9,676 | 54 |
-| menu.js | 568 | 122,967 | 123,011 (+462) | 514 |
-| econ.js | 601 | 112,130 | 112,130 (+1,704) | 70 |
-| combat.js | 373 | 63,495 | 63,495 (+172) | 83 |
+| menu.js | 569 | 123,151 | 123,195 (+646) | 514 |
+| econ.js | 615 | 115,317 | 115,317 (+4,891) | 70 |
+| combat.js | 374 | 64,043 | 64,043 (+720) | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
@@ -53,18 +53,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 52 | 15,461 |
 | citations | 326 | 79,891 |
 | colours | 33 | 9,517 |
-| comments | 983 | 182,987 |
+| comments | 985 | 183,893 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 340 | 183,351 |
-| rules | 92 | 36,494 |
-| screen | 27 | 15,088 |
+| measure | 341 | 184,619 |
+| rules | 93 | 37,196 |
+| screen | 27 | 15,167 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 50 | 99,875 |
+| words | 51 | 100,196 |
 
 ## The shells
 
@@ -169,6 +169,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X89 | t-n23 | page | N23: a building site does not change the map's tops and a finished one raises them; every untouched tree in front of a building and overlapping it is drawn live over it; a sprite used is moved to the back of the cache and the cache's pixel total is kept exactly; a save every 60 s; the drawing alone is timed for shedding (N24: logic time had dropped the picture to half resolution, which cannot speed logic) |
 | X92 | t-n25 | page | N25, the Controller (Albert Nov 11): in peace the bottom is the jobs box with Home and War above it; War opens three pads (brown people, blue actions, red who) and picks every soldier; a class picks only that class; squads are dimmed without Battalions; Attack lights, a tap on the map only aims, and nothing moves until Execute; an order to the ground is one whole-map route for the group and no soldier searches the map for himself; all twelve arrive; a tap on water is answered at once; Retreat sends them home; Hide and Back work; closing lets the soldiers go; a soldier tapped then the ground tapped is an order at once for him alone; Defend sends every free soldier at the foe striking a villager; a foe tapped and Executed is fought by all, and all are still fighting it when they get there |
 | X93 | t-n26 | page | N26: the rules ask a list without the trees, and a step with thirty soldiers on the board costs at most half the frame's budget (D343); no wildfire in the game; the night hides at most two stops (D292); every lake has a walkable ford (D374); a tap on the ground moves the picked army at once, with Attack lit it only aims; a side whose ice cracks is ice-shy; a square past Z has a name; no side "has fallen"; the Market sells; a caravan takes a route; the stances are wired; People is red with no food; a hall falling does not throw |
-| X94 | units | gate | every measured number carries its unit and its subject as fields of its own entry, never as a comment in code (Decisions Nov 11, #2; Albert: "yes to a unit field on every number enforced by the gate"). subject is where the game reads it (world, economy, war, computers, screen, sound, shells), found by the gate's own reading of the code. A unit is set only where the code proves it (a number multiplied by the tile is in tiles; a number handed to every() is a beat in seconds) or the entry states it; nothing is guessed. N27 proved 81; unset counts the rest and may only fall |
+| X94 | units | gate | every measured number carries its unit and its subject as fields of its own entry, never as a comment in code (Decisions Nov 11, #2; Albert: "yes to a unit field on every number enforced by the gate"). subject is where the game reads it (world, economy, war, computers, screen, sound, shells), found by the gate's own reading of the code. A unit is set only where the code proves it (a number multiplied by the tile is in tiles; a number handed to every() is a beat in seconds) or the entry states it; nothing is guessed. N27 set 98 (proved from the code, stated in the entry, or Claude's own new numbers); unset counts the rest and may only fall |
+| X95 | t-n27 | page | N27: a tower shoots a foe beside it; a Mill and a Lumber camp offer their plot; two techs tapped are one green and one blue with their times and no queue row, and a tap on each cancels and pays back; a villager tapped onto a bush is focused on it; the Protect page holds Split, Lure, Seek and Prep; Prep boards the buildings, raises their health and shelters the villagers, the cell turns to Work, and Work takes the boards off and leaves them short; soldiers on a march eat more than standing; every measure carries a unit and a subject |
 
-2575 items sealed · 2445 book entries · 94 laws · 326 citations, 34 still to open · 0 known
+2580 items sealed · 2450 book entries · 94 laws · 326 citations, 34 still to open · 0 known
