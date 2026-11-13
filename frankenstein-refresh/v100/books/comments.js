@@ -292,7 +292,7 @@ BOOK("comments", {
  "E178": {"text": "the base's columns, Albert's template"},
  "E179": {"text": "the base's icons: one 24-unit box each, line icons in the cell's colour, finds in their own"},
  "E180": {"text": "the resources in their colours (COLORS.md)"},
- "E181": {"text": "the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that is not here (the map's own paint excepted)"},
+ "E181": {"text": "the colours: the menus read every colour from the Colours book (C38 the menus' own, the rings, Gold (on) and gunmetal), set once on :root with the page behind the board; nothing below uses a colour that is not in the book (the map's and the brushes' own paint excepted, C header)"},
  "E182": {"text": "the glass's own state, nothing of the world's"},
  "E183": {"text": "60w 60f, as Albert's Build menu"},
  "E184": {"text": "read: the one window onto the world the glass draws from"},

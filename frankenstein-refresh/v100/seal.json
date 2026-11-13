@@ -1594,6 +1594,11 @@
 "bytes": 479,
 "numbers": 0
 },
+"book:citations:N336": {
+"sha": "0fa8e692ca734d5165e631a02cad745ab106559394fbf63c3371dc9178b311b0",
+"bytes": 213,
+"numbers": 0
+},
 "book:citations:N34": {
 "sha": "99a525dbd5757df8013c765a400f44ef9455b2ea8b378311e2808f895ecf325d",
 "bytes": 86,
@@ -2092,6 +2097,11 @@
 "book:colours:C37": {
 "sha": "7226807f8de9d546285aa7cd0d1a4a81626fddca542194fe4c1e72056c339c71",
 "bytes": 541,
+"numbers": 0
+},
+"book:colours:C38": {
+"sha": "816dbedeee0bcd416b6f3ce20ad559a2aa6b8f9703195dae97f1a2c01adb4442",
+"bytes": 818,
 "numbers": 0
 },
 "book:colours:C4": {
@@ -2860,8 +2870,8 @@
 "numbers": 0
 },
 "book:comments:E181": {
-"sha": "4d7ab1b8bd5de2282d83556d6cc936e7764bc4dabba80a96ff029bba8f542ce2",
-"bytes": 145,
+"sha": "fe4175b968184f8f3b811716b95b754b4121bb3fc4d41ccc46a177f97b8824f9",
+"bytes": 291,
 "numbers": 0
 },
 "book:comments:E182": {
@@ -9089,6 +9099,11 @@
 "bytes": 262,
 "numbers": 0
 },
+"book:rules:X106": {
+"sha": "54434ff3e12cde2f43ced9fa4e57f0bba4a693f6c3c28f4c6f62dbf7ad09c83f",
+"bytes": 225,
+"numbers": 0
+},
 "book:rules:X11": {
 "sha": "ca6e2ba3e6d514be1ce3a82f828248b4232e2f8850d3f86fc003874463cc3cfa",
 "bytes": 148,
@@ -12540,9 +12555,9 @@
 "numbers": 3
 },
 "code:index.html#page": {
-"sha": "5d70f1995f0d8ff7a04e4cd2e12b8fe4f252579b30a72154db2a26a52308b575",
-"bytes": 1874,
-"numbers": 11
+"sha": "5917294b0cd0987050e2426809b02bcf57dffd9389bc1ad98e75420d92e72f94",
+"bytes": 1855,
+"numbers": 5
 },
 "code:index.html#qbf-the-dice": {
 "sha": "ccb40df291c2f7b9f9f8692613de2b775838476a17be7e1e62d2d32d8ed67437",
@@ -12630,9 +12645,9 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "32337a5b0067afdc8877a7514afb371e626c2b66cba4330eb0a1dae2c60c050e",
-"bytes": 135843,
-"numbers": 514
+"sha": "b1bc1ddf03b13b1aa36662c853dbd099b6a13f96ab7e460e83c568351e9b5da7",
+"bytes": 135620,
+"numbers": 442
 },
 "code:sound.js": {
 "sha": "9fdb036b24c4480bb510db2abce36c1c233dcef4e46c2bbfaec33da44ebe1f4d",
@@ -13110,8 +13125,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "91b7db739253b7a02cd08d718f98776ca8b521bf9516e3b2838a69eb3a3f9655",
-"bytes": 30340,
+"sha": "225a4581ae70c91585d5480f4b1e931a0f6a17ad6eaae801b04c4c1834bd049a",
+"bytes": 30787,
 "numbers": 0
 },
 "tool:pages.yml": {
@@ -13130,8 +13145,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "8ab930e099e0feed9a7648add75d1f1d5ab8345c192d1a8884251393447821c5",
-"bytes": 319841,
+"sha": "17ec1b6bf8bf7177104545494742fe415a4e5aeeeef76bc547fe25f77815742f",
+"bytes": 320016,
 "numbers": 0
 }
 }

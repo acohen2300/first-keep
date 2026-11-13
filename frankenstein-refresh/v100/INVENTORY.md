@@ -4,16 +4,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,642 | 642,830 | 642,995 |
-| Books | 2497 | 0 | 791,839 | 792,784 |
+| Game code | 31 | 3,641 | 642,588 | 642,753 |
+| Books | 2500 | 0 | 793,241 | 794,186 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,180 | 356,194 | 356,453 |
+| Tools | 5 | 2,182 | 356,816 | 357,075 |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
-| index.html#page | 32 | 1,874 | 1,874 | 11 |
+| index.html#page | 32 | 1,855 | 1,855 | 5 |
 | index.html#frames | 13 | 1,111 | 1,111 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,150 | 10,154 | 54 |
-| menu.js | 625 | 135,784 | 135,843 | 514 |
+| menu.js | 624 | 135,561 | 135,620 | 442 |
 | econ.js | 620 | 116,976 | 116,976 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,479 | 27,479 | 25 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 333 | 83,123 |
-| colours | 33 | 9,517 |
-| comments | 1010 | 193,106 |
+| citations | 334 | 83,347 |
+| colours | 34 | 10,345 |
+| comments | 1010 | 193,252 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 342 | 196,625 |
-| rules | 102 | 41,276 |
+| rules | 103 | 41,512 |
 | screen | 28 | 17,478 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -180,5 +180,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X102 | t-p2b | page | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up |
 | X103 | t-p2c | page | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO |
 | X104 | t-freeze | page | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once |
+| X106 | hues | code | G1 (N336): a colour typed in the menus, the logic or the page style instead of read from the Colours book (the brushes' and figures' own paint excepted) |
 
-2627 items sealed · 2497 book entries · 94 laws · 333 citations, 34 still to open · 0 known
+2630 items sealed · 2500 book entries · 94 laws · 334 citations, 34 still to open · 0 known

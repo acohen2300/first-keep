@@ -9,7 +9,7 @@
 <script>if (navigator.serviceWorker) navigator.serviceWorker.register('sw.js').catch(() => {});</script>
 <style>
 :root { --ui: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif; --display: "IM Fell English SC", Georgia, serif; } /* the slot and the gap come from the Screen book (SN1), set by menu.js */
-html, body { margin: 0; height: 100%; background: #214a63; overflow: hidden; -webkit-user-select: none; user-select: none; touch-action: manipulation; font-family: var(--ui); font-weight: 600; font-size: 14px; color: #ece5d3; }
+html, body { margin: 0; height: 100%; overflow: hidden; -webkit-user-select: none; user-select: none; touch-action: manipulation; font-family: var(--ui); font-weight: 600; font-size: 14px; color: var(--rw); }
 canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: none; }
 #top { display: none; } /* the floors' own readout, kept for the tests; the glass (menu.js) is what is seen */
 </style>

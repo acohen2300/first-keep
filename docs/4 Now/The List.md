@@ -103,6 +103,6 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - H11 TODO: the late game overflows: after minute 60 his stores grew to 52k food, 73k wood, 56k gold with nothing to spend on (his Oct 28 rule: a thin margin that keeps scaling). [2026-11-13 01:10]
 - H12 TODO: his first three ages were slow (Age 1 at 15, 2 at 26, 3 at 41) against the Raiders (2 at 10, 4 at 24); the crunch from minute 23 to 47 (gold 26, food 42, wood 234). [2026-11-13 01:10]
 
-- P2-end HELD (Nov 13 night): load rule built, t-load passes, but t-n17 regresses (gatherers pushed); saved as `Held - P2-end load rule.patch`, not sealed. [2026-11-13]
+- P2-end HELD (Nov 13 night): load rule built, its test (in the patch) passes, but t-n17 regresses (gatherers pushed); saved as `Held - P2-end load rule.patch`, not sealed. [2026-11-13]
 - H3 snow logic: not reproduced; logic is the sim budget being hit at low fps (`Night - Nov 13.md` 5). [2026-11-13]
 - G1 REPORTED: 26 loose colours in index.html + 16 in menu.js:47-48 outside the book. G2 not done. [2026-11-13]

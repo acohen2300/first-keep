@@ -154,6 +154,8 @@ for k, t in NOW.items():
 for e in EC: rule('comments', e in EUSE, f'{e} is in the Comments book but no code names it')
 for k, t in NOW.items():   # G1: the stats are read through FK.stat (and its row), never raw, outside the door that holds stat itself
     if k.startswith('code:') and k != 'code:index.html#the-door': rule('rawstats', not re.search(r'\bD\.stats\[|\bstats\[', t), f'{k} reads the raw stats table: ask FK.stat')
+for k, t in NOW.items():   # G1 (Albert, Nov 13): the menus and the logic hold no colour of their own; every colour lives in the Colours book (the brushes' and figures' own paint excepted, C header)
+    if k in ('code:index.html#page',) or (k.startswith('code:') and not k.startswith('code:index.html')): rule('hues', not re.search(r'#[0-9a-fA-F]{6}\b', t), f'{k} holds a colour of its own: ' + ', '.join(re.findall(r'#[0-9a-fA-F]{6}\b', t)[:4]))
 MEAS = book('measure'); TABLES = {'Health': MEAS['buildTime'], 'Research': {e['value']['at']: 1 for e in BOOKS['tech'].values() if e['value'].get('at')}, 'Spawn': MEAS['trains'], 'Field|Make': MEAS['ai.plots']}
 for need, tab in TABLES.items():   # G2: a shell a table names has the ticks that table's work asks of it
     for c in tab: rule('ticked', c not in BOOKS['shells'] or any(x in BOOKS['shells'][c]['ticks'] for x in need.split('|')), f'{c} is in a {need} table but does not tick {need}')

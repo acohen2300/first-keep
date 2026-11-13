@@ -407,6 +407,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N332 |  | Albert, Nov 12, 2026, 17:48-17:52, on the card mock: \Make them folded collapsible menus. Chevron opens minus closes. One opens / one closes | opened |
 | N333 |  | Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit (skull, two taps), Restart (r | opened |
 | N334 |  | Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game 57-58 fps and land 0 (screens | opened |
+| N336 |  | Albert, Nov 13, 2026, 06:49-06:53: \Agreed on colors\ (the menus' loose colours into the Colours book, the near twin merged), \Sure. As long | opened |
 
 ## colours
 
@@ -445,6 +446,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | C35 | the three lines of a lightning bolt, glow, mid and core, and the glow at its foot (Base and Mid; Albert, Nov 10, N17 #15) | {lines: [170,200,255, 210,228,255, 255,255,255], foot: 220,235,255} | N145; N307 |
 | C36 | how much of a colour stays when it is dimmed or made faint, per cent of the mix (moved from the code in the N17 audit) | {dim: 80, faint: 35} | N306 |
 | C37 | the Controller's pads, each its zone's colour at four fifths so a little of the board shows and the colour stays true over any ground (town brown, command blue, war red); the round buttons' glass and edge; a pad's inset dividers; Execute once an order is ready; a pad's dark edge (Albert, Nov 11 19:46-19:56) | {brown: #33241acc, blue: #222e42cc, red: #a3262acc, glass: #ece5d329, edge: #ece5d36b, line: #ece5d34d, go: #2f7a4cd9, ink: #00000066} | N325 |
+| C38 | the menus' own colours (moved from menu.js and the page style, G1, Albert Nov 13): browns b1-b3, steels s1 and s3, the gold fill f1-f2, ink, the five resources, the five ages, and the page behind the board. The ring colours, the gold (on) and the steel s2 are not here: the menus take them from Ring blue, green, red, white, Gold (on) and gunmetal (s2 was #2a3038, gunmetal #2c3238: one colour, one home) | {b1: #2a1d13, b2: #33241a, b3: #6b5230, s1: #1e2329, s3: #4d5a68, f1: #f2d27a, f2: #b8862e, ink: #2a1c10, food: #e0708a, wood: #c08a58, ston | N336 |
 
 ## comments
 
@@ -742,7 +744,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E178 |  | the base's columns, Albert's template |  |
 | E179 |  | the base's icons: one 24-unit box each, line icons in the cell's colour, finds in their own |  |
 | E180 |  | the resources in their colours (COLORS.md) |  |
-| E181 |  | the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that is not here (the map's own paint excepted) |  |
+| E181 |  | the colours: the menus read every colour from the Colours book (C38 the menus' own, the rings, Gold (on) and gunmetal), set once on :root wi |  |
 | E182 |  | the glass's own state, nothing of the world's |  |
 | E183 |  | 60w 60f, as Albert's Build menu |  |
 | E184 |  | read: the one window onto the world the glass draws from |  |
@@ -1959,6 +1961,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X102 | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up | {stage: page} | N332 |
 | X103 | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO | {stage: page} | N333 |
 | X104 | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once | {stage: page} | N334 |
+| X106 | G1 (N336): a colour typed in the menus, the logic or the page style instead of read from the Colours book (the brushes' and figures' own paint excepted) | {stage: code} | N336 |
 
 ## screen
 

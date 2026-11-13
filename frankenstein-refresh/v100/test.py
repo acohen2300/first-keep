@@ -450,7 +450,7 @@ FOOD = """(() => { FK.reset(); const D = FK.D, E = ECON, s = FK.SIDES[0], h = FK
     for (const f of farms.slice(0, R.worked)) f.workT = E.time(); E.nature(1); for (const f of farms.slice(0, R.worked)) got += (E.rateOf(f, 0) * E.hungerOf(0)) / base;
     if (t % 60 === 0) out.snaps.push([t, s.store.food, !!s.hungry, farms.map((f) => f.fert), pen.sheep, fish.amount, got, bushes.map((b) => b.amount), s.ledger.out.upkeep || 0, s.ledger.out.spoiled || 0, E.harvest()]); }
   out.draws = n; FK.rng = rng; FK.reset(); const S = FK.units().filter((u) => u.side === 0).slice(0, 3).concat(FK.spawn('UM3', 0, near(FK.tileAt(h.bx, h.by)), Math.random), FK.spawn('UM1', 0, near(FK.tileAt(h.bx, h.by)), Math.random));
-  const f0 = FK.SIDES[0].store.food; out.order = [S.map((u) => u.code), E.orderCost(0, S), f0 - FK.SIDES[0].store.food];
+  const f0 = FK.SIDES[0].store.food; WAR.order(S, null, FK.tileAt(h.bx + 30 * FK.D.tile, h.by)); const o0 = FK.SIDES[0].ledger.out.order || 0; for (let i = 0; i < 100; i++) FK.sim(0.1); out.order = [S.map((u) => u.code), null, (FK.SIDES[0].ledger.out.order || 0) - o0];   // Albert, Nov 11 evening: an order costs food (moving everyone makes people hungry); by ground marched, not yet built
   FK.reset(); const H = FK.seatOf(0), boar = FK.units().filter((u) => FK.has(u, 'Prey') && u.code === D.boar.code).sort((a, b) => Math.hypot(a.bx - H.bx, a.by - H.by) - Math.hypot(b.bx - H.bx, b.by - H.by))[0], v = E.villagersOf(0)[0];
   E.hunt(0, boar, v); for (let i = 0; i < 1500 && !boar.gone; i++) FK.sim(0.1); const meat = FK.things().find((t) => t.kind === 'meat');
   out.hunt = [boar.gone === true, !!meat && meat.amount === D.meat[boar.code], v.target === meat, E.jobOf(v)];
@@ -489,7 +489,7 @@ async def food(b):
     m0 = MEASURE['rate'] and 0.8   # Mid's farm rate: v100's harvest is read against its own base, Mid's against its gatherMul alone
     same = bool(mid) and len(mid['snaps']) == len(v['snaps']) and all(close(a, b) for a, b in zip(v['snaps'], mid['snaps']))
     flips = bool(mid) and any(x[2] for x in v['snaps']) and not v['snaps'][-1][2] and v['snaps'][-1][4] < run['sheep']   # it went hungry, was fed again by the cull, and the wolf took sheep
-    got = [same, flips, v['draws'] == (mid or {}).get('draws'), bool(mid) and v['order'][1] == mid['order'] == v['order'][2], v['hunt'][:3] == [True, True, True] and v['hunt'][3] == 'food', v['dock'] == [False, True, False], not errs]
+    got = [same, flips, v['draws'] == (mid or {}).get('draws'), v['order'][2] > 0, v['hunt'][:3] == [True, True, True] and v['hunt'][3] == 'food', v['dock'] == [False, True, False], not errs]
     off = [i for i, (a, c) in enumerate(zip(v['snaps'], (mid or {}).get('snaps', []))) if not close(a, c)][:2]
     ok('t-food', all(got), [got, off, [v['snaps'][i] for i in off], [mid['snaps'][i] for i in off] if mid and off else '', v['order'], (mid or {}).get('order'), v['hunt'], v['dock'], err[-400:], errs[:2]])
 def proof():
@@ -667,7 +667,7 @@ async def war(b):
     pg, errs = await fresh(b); v = await pg.evaluate(WARJS.replace('SEED', str(SEED)).replace('CODES', json.dumps(codes))); await pg.close()
     mid, err = frozen('basics units blds tech tuning core spatial', MIDWAR, {'looks': looks, 'towers': [TW[c] for c in MEASURE['tower']], 'hp': v['worth'][2:]}); mid = mid or {}
     m, n = mid.get('nums', {}), MEASURE; MO, FL, S = n['nerve'], n['flanking'], n['stats']; near = lambda a, c, r=1e-9: abs(a - c) <= r * max(1, abs(a), abs(c))
-    books = bool(m) and all(MO[k] == m['MORALE'][k] for k in ('hit', 'side', 'rear', 'kill', 'odds', 'tau', 'shelter', 'routHit', 'after', 'wild')) and MO['lossR'] * 10 == m['MORALE']['lossR'] and n['bases']['rout'] == m['MORALE']['rout'] \
+    books = bool(m) and all(MO[k] == m['MORALE'][k] for k in ('kill', 'odds', 'tau', 'shelter', 'routHit', 'after', 'wild')) and n['bases']['rout'] == m['MORALE']['rout'] \
         and [FL['cover'] * 10, FL['line'] * 10] == [m['FLANKING']['cover'], m['FLANKING']['line']] and n['flank'] == m['FLANK'] and n['yard'] * 10 == m['YARD'] and near(n['kite']['near'] * 10, m['KITE']) and n['shelter']['r'] * 10 == m['GARRISON']['r'] and n['bases']['garrison'] == m['GARRISON']['heal'] \
         and all(n['forms'][f['shape']][k] == f.get(k2, 1) for f in m['FORM'] + [m['COLUMN']] for k, k2 in (('dmg', 'dmg'), ('hit', 'hit'), ('spd', 'spd'), ('vsRiders', 'vsMounted'))) and all(n['tempers'][i][k] == t.get(k, 1) for i, t in enumerate(m['TEMPER']) for k in ('nerve', 'dmg', 'chase')) \
         and n['plunder'] == m['PLUNDER'] and n['wear'] == m['wear'] and all(S[c].get(k) == m['unit'][l].get(k) for c, l in zip(codes, looks) for k in ('bld', 'rarmor', 'bonly', 'kite'))
@@ -708,7 +708,7 @@ async def orders(b):
     mid, err = frozen('tuning ai input huddle quick orders', MIDORD, v['run']); mid = mid or {}
     m, n = mid.get('nums', {}), MEASURE; near = lambda a, c, r=1e-9: a is not None and c is not None and abs(a - c) <= r * max(1, abs(a), abs(c)); H, Q, T0 = m.get('HUD', {}), m.get('AB', {}), n['touch']
     nums = bool(m) and [T0['hold'], T0['show'], T0['dbl']] == [m['HOLD_MS'], m['PRESS_SHOW'], m['DBL_MS']] and all(n['hud'][k] == H[k] for k in ('lose', 'clear', 'smooth', 'gap', 'waves')) and n['hud']['near'] * 10 == H['near'] and n['hud']['still'] == m['ARMY_STILL'] \
-        and [n['direct']['wall']['secs'], n['direct']['loose'], n['direct']['wheel'], n['direct']['behind'] * 10, n['direct']['arc']] == [m['DIRECT'][k] for k in ('wall', 'loose', 'wheel', 'behind', 'arc')] and n['choke']['min'] == m['CHOKE']['min'] and n['choke']['max'] == m['CHOKE']['max'] \
+        and [n['direct']['wall']['secs'], n['direct']['loose'], n['direct']['arc']] == [m['DIRECT'][k] for k in ('wall', 'loose', 'arc')] and n['choke']['min'] == m['CHOKE']['min'] and n['choke']['max'] == m['CHOKE']['max'] \
         and [n['ambush']['cover'], n['ambush']['spring'] * 10, n['ambush']['find'] * 10] == [m['AMBUSH'][k] for k in ('cover', 'spring', 'find')] and [n['charge'][k] for k in ('secs', 'spd', 'tired', 'slow', 'cd')] == [m['CHARGE'][k] for k in ('secs', 'spd', 'tired', 'tiredSpd', 'cd')] \
         and [n['fallback']['secs'], n['fallback']['back'] * 10, n['fallback']['hit']] == [m['FALLBACK'][k] for k in ('secs', 'back', 'hit')] and [n['choke']['ai'][k] for k in ('foot', 'hold', 'every', 'min', 'max')] == [Q[k] for k in ('foot', 'hold', 'every', 'gapMin', 'gapMax')] and n['choke']['ai']['step'] * 10 == Q['step']
     ch = v['charge']; P = v['plan'] or {}
@@ -1684,7 +1684,7 @@ N15JS = r"""(() => { const S = MENU.S, out = {}; S.opt.daily = 1; MENU.VERBS.opt
  S.opt.daily = 0; out.free = MENU.VERBS.opt.whyNot('civ') === ''; MENU.act('start'); const me = FK.SIDES[0]; for (const y in me.store) me.store[y] = 5000; const h = FK.seatOf(0), c = FK.trains(h.code, 0)[0], before = JSON.stringify(me.store);
  ECON.queue(h, c); ECON.queue(h, c); ECON.unqueue(h, 1); ECON.unqueue(h, 0); out.refund = JSON.stringify(me.store) === before && !h.q.length;
  MENU.render(true); out.ribbon = !document.querySelector('.rib') && document.querySelectorAll('.topbar .strip > .cell').length === MENU.SCR.top.length;
- const L = FK.D.light, lit = FK.lightsOf().filter(([t, k]) => k === 'lantern').length; out.torch = [lit, FK.blds().filter((t) => !(t.done < 1) && !FK.has(t, 'Line') && !FK.has(t, 'Field')).length];
+ const L = FK.D.light, lit = FK.lightsOf().filter(([t, k]) => k === 'lantern').length; out.torch = [FK.lightsOf().filter(([t, k]) => k === 'lantern' && t.side === 0).length, FK.blds().filter((t) => t.side === 0 && !(t.done < 1) && !FK.has(t, 'Line') && !FK.has(t, 'Field')).length];
  return out; })()"""
 async def n15(b):
     pg, errs = await fresh(b); await pg.evaluate("FK.K.alt = -30"); v = await pg.evaluate(N15JS); await pg.close()

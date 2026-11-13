@@ -567,7 +567,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E179** the base's icons: one 24-unit box each, line icons in the cell's colour, finds in their ow
 - **E180** the resources in their colours (COLORS.md)
 - **E819** the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes
-- **E181** the colours: COLORS.md, one name each, set once on :root; nothing below uses a colour that
+- **E181** the colours: the menus read every colour from the Colours book (C38 the menus' own, the ri · C38 (N336)
 - **E839** a font from the type rule: its weight and size, in the face named
 - **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287)
 - **E826** the help line under the top ribbon carries its words in a span and a white ring (Info Help
