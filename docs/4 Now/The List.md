@@ -106,7 +106,7 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - P2-end HELD (Nov 13 night): load rule built, its test (in the patch) passes, but t-n17 regresses (gatherers pushed); saved as `Held - P2-end load rule.patch`, not sealed. [2026-11-13]
 - H3 snow logic: not reproduced; logic is the sim budget being hit at low fps (`Night - Nov 13.md` 5). [2026-11-13]
 - G1 REPORTED: 26 loose colours in index.html + 16 in menu.js:47-48 outside the book. G2 not done. [2026-11-13]
-- G1 DONE (Nov 13): menu colours in the Colours book (C38), gate rule `hues` stops with a planted colour; menus pixel-identical. Sealed dbcc9fe. [2026-11-13]
+- G1 BUILT (Nov 13; gate-proven, no page test): menu colours in the Colours book (C38), gate rule `hues` stops with a planted colour; menus pixel-identical. Sealed dbcc9fe. [2026-11-13]
 - G5A (Nov 13): t-n15 passes; t-orders, t-war, t-food, t-walls run; t-gather still throws. Details `Day - Nov 13.md` section 4. [2026-11-13]
 - H10 HELD (Nov 13): five versions tried; v4 grows and fights but still hungry; hunger only ends by starving the army = food balance. Needs Albert's call. `Held - H10 v4 computer economy.patch`. [2026-11-13]
 - P2-end bump FOUND (Nov 13): walkers shove gatherers in `collide`; the load rule is not the cause. Idea: a gatherer at her spot does not move. Needs Albert's yes. [2026-11-13]
