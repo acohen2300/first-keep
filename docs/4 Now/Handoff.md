@@ -35,6 +35,7 @@ Days of play, patch, play built fixes on fixes. Found on Nov 12:
 5. The rest of The List.
 
 ## Now
+- Nov 13 day: report `Day - Nov 13.md`. G1 sealed (dbcc9fe). H10 and P2-end held as patches, waiting on Albert. G5B not started.
 - P2c built (preview-n34): the villager Controller; his play owed. P2b built (preview-n33). Next: H3 (snow freeze), P2c. Was: P2a works (Albert played it). P2b: the card mock in `mockups/p2b/`, for his pick. Then H3 (snow freeze), P2c.
 - How a fix works, and how to take over: `CLAUDE.md` 8c and 8d.
 

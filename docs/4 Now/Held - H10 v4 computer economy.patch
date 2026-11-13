@@ -1,0 +1,28 @@
+--- a/frankenstein-refresh/v100/ai.js	2026-11-13 02:01:20.000000000 -0500
++++ b/frankenstein-refresh/v100/ai.js	2026-11-13 07:46:48.135872483 -0500
+@@ -88,6 +88,7 @@
+   for (const y of Y) { rateFrom(side, y); yield; } const grow = ECON.popOf(side) < D.popMax && Math.max(...Y.map((y) => rateFrom(side, y))) * left() > ECON.sumCost(FK.stat(vil, side, 'cost')), eat = total(units().filter((u) => u.side === side), ECON.eats), draw = { [FOOD]: eat }; // E534
+   if (grow && (!saving || R[FOOD] >= of(need[FOOD]) + AT.spare)) { if (lineOf(h) < AT.line) ECON.queue(h, vil); const each = ECON.addRes(ECON.addRes({}, FK.stat(vil, side, 'cost')), D.cost[HOUSE], 1 / Math.max(1, of(FK.stat(HOUSE, side, 'room'))));
+     for (const [y, c] of Object.entries(each)) draw[y] = of(draw[y]) + c / ECON.timeOf(side, vil); }
++  if (inArmy(side) < aim(side)) { const w = mind[side].want || A.troops[0]; for (const [y, c] of Object.entries(FK.stat(w, side, 'cost') || {})) draw[y] = of(draw[y]) + c / ECON.timeOf(side, w); } // E1062
+   yield; const scout = kindOf('Scout'); if (!saving && !mine(side, is(scout)) && t > AT.scout.at && R[FOOD] > AT.scout.food) train(side, scout);
+   const [[BAR]] = P.build, lines = A.lines.flatMap((c) => ready(side, c)); // E535
+   yield; for (const [code, age, n, army, stock] of P.build) { if (s.age >= age && count(side, code) < n && armyN >= army && (!stock || ECON.canPay(side, stock)) && (!saving || code === BAR) && put(code, h, RG.build)) break; yield; }
+@@ -107,7 +108,7 @@
+   if (!saving && !P.techs.some((k) => TK[k] && ECON.research(side, firstNeed(side, TK[k]) || TK[k])) && !((m.n = of(m.n) + 1) % AT.research)) for (const c of Object.keys(BOOKS.tech)) { if (ECON.research(side, c)) break; yield; } // E538
+   yield; if (!saving && WAR.knows(side, 'muster') && inArmy(side) + AT.muster <= aim(side)) { const want = (m.want = bestCounter(side)); if (want) ECON.muster(side, { [want]: AT.muster }); }
+   if (!saving && inArmy(side) < aim(side) && vs.length >= P.early) { const want = (m.want = bestCounter(side)); if (want) train(side, want); }
+-  yield; const goal = goalOf(side, P, saving), all = ECON.addRes({ ...(goal ? goal.cost : {}) }, due), plan = needOf(side, vs, all, draw), famine = famineNear(side, plan, eat); // E539
++  yield; const goal = goalOf(side, P, saving), all = ECON.addRes({ ...(goal ? goal.cost : {}) }, due), plan = needOf(side, vs, all, draw), famine = famineNear(side, plan, draw[FOOD]); // E1063 // E539
+   const order = Y.filter((y) => plan[y].t || (famine && y === FOOD)).sort((a, b) => (famine && (b === FOOD) - (a === FOOD)) || plan[b].t - plan[a].t), [first] = order, idle = vs.find((v) => v.job === 'idle'); Object.assign(m, { goal: goal && goal.what, need: first || null, plan });
+   yield; const move = (u, y) => { const f = u && ECON.bestFind(u, y); if (f) ECON.gatherAt(u, f); }, giver = (y) => vs.find((v) => ECON.jobOf(v) === y && of(v.load) < AT.carry && !(ECON.posted(v) && FK.has(v.target, 'Make')));
+   if (first) { const tb = famine && first === FOOD ? Infinity : plan[first].t; if (idle) move(idle, first);
+@@ -116,7 +117,7 @@
+       if (d) move(giver(d), first); } }
+   else { const X = AT.mix, M0 = Object.fromEntries(Y.map((y, i) => [y, P.mix[i]])), M1 = s.age ? M0 : young(M0, X.stone), M = s.age < X.iron ? young(M1, X.early) : P.wonder ? Object.fromEntries(Y.map((y) => [y, M1[y] + X.wonder])) : M1; // E541
+     const all = total(Y, (y) => M[y]) || 1, [[top, gap], ...rest] = Y.map((y) => [y, (M[y] / all) * vs.length - plan[y].n]).sort((a, b) => b[1] - a[1]), [low] = rest.at(-1); if (idle) move(idle, top); else if (gap >= 1) move(giver(low), top); }
+-  yield; s.rally = first || FOOD; for (const v of vs) if (v.job === 'wait' && !v.target) { yield; const by = (r) => { const f = ECON.bestFind(v, r); return of(f && ECON.forage(v, f, FK.dropFor(v, r))); }, y = order.find((r) => ECON.bestFind(v, r)) || Y.slice().sort((a, b) => by(b) - by(a)).find(by); if (y) move(v, y); } // E542
++  yield; s.rally = first || FOOD; for (const v of vs) if ((v.job === 'wait' && (!v.target || v.lost)) || v.job === 'idle') { yield; const by = (r) => { const f = ECON.bestFind(v, r); return of(f && ECON.forage(v, f, FK.dropFor(v, r))); }, y = order.find((r) => ECON.bestFind(v, r)) || Y.slice().sort((a, b) => by(b) - by(a)).find(by); if (y) move(v, y); } // E542
+   yield; for (const u of WAR.armyOf(side)) if (u.job === 'hold' && ((u.drill && u.drill.until <= FK.K.t) || (u.helpT != null && FK.K.t - u.mvT > DP.help.stay))) Object.assign(u, { job: 'idle', drill: null, goal: null, helpT: null }); // E688
+   if (P.bold < AT.never) decideWar(side, P); if (!WAR.waves[side]) chokeClaim(side, D.players.find((p) => WAR.atWar(side, p) && home(p)));
+   yield; if (P.diplo) diplomacy(side, P); allyDuty(side); }
