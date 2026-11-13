@@ -129,3 +129,4 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - L1 BUILT (Nov 13; gate-proven): Design 09 the laws; gate rule `ecs` (309 name-asks, 7 dead ticks, may only fall; stops a planted one). Steps 3-8 in Design 09 are the way back in. [2026-11-13]
 - Albert, Nov 13 17:24-17:36 (design, talk; not built): the shell form: one questionnaire for everything; answers are 1, 0 or an index, nothing typed; the string defines the thing, the sum gives tiers, a slot groups shells for a law. Saved in Design 09. [2026-11-13]
 - Design 10 (Nov 13): the shell form redone for review (three kinds; nine sections; kept/added/removed; apply by slices). Waits on Albert. [2026-11-13]
+- Paper test of the shell form (Nov 13): `Paper test - shell form - Nov 13.md`. The form holds; code-only answers are States, Governed by, Place, life's end; the lake has no identity. Correction: the tap rule has a book home (SN43). [2026-11-13]
