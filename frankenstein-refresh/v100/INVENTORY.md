@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,641 | 642,588 | 642,753 |
-| Books | 2500 | 0 | 793,241 | 794,186 |
+| Game code | 31 | 3,641 | 642,622 | 642,787 |
+| Books | 2502 | 0 | 793,953 | 794,898 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,182 | 356,816 | 357,075 |
+| Tools | 5 | 2,188 | 357,492 | 357,751 |
 
 ## The trades (code)
 
@@ -42,7 +42,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | menu.js | 624 | 135,561 | 135,620 | 442 |
 | econ.js | 620 | 116,976 | 116,976 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
-| ai.js | 172 | 27,479 | 27,479 | 25 |
+| ai.js | 172 | 27,513 | 27,513 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
 
 ## The books
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 334 | 83,347 |
+| citations | 335 | 83,715 |
 | colours | 34 | 10,345 |
-| comments | 1010 | 193,252 |
+| comments | 1010 | 193,371 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 342 | 196,625 |
-| rules | 103 | 41,512 |
+| rules | 104 | 41,759 |
 | screen | 28 | 17,478 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -181,5 +181,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X103 | t-p2c | page | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO |
 | X104 | t-freeze | page | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once |
 | X106 | hues | code | G1 (N336): a colour typed in the menus, the logic or the page style instead of read from the Colours book (the brushes' and figures' own paint excepted) |
+| X107 | t-idle | page | a computer leaves no villager standing (N337): one waiting on a find she lost, one waiting with no find and one idle are all sent to work in one turn of its mind |
 
-2630 items sealed · 2500 book entries · 94 laws · 334 citations, 34 still to open · 0 known
+2632 items sealed · 2502 book entries · 94 laws · 335 citations, 34 still to open · 0 known

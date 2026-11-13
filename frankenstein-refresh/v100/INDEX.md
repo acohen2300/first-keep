@@ -408,6 +408,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N333 |  | Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit (skull, two taps), Restart (r | opened |
 | N334 |  | Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game 57-58 fps and land 0 (screens | opened |
 | N336 |  | Albert, Nov 13, 2026, 06:49-06:53: \Agreed on colors\ (the menus' loose colours into the Colours book, the near twin merged), \Sure. As long | opened |
+| N337 |  | Albert, Nov 13, 2026, 08:26-08:34: H10 waits until play is right for him, but the computers' idle villagers are a plain bug: \1. Sure\ (meas | opened |
 
 ## colours
 
@@ -1095,7 +1096,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E539 |  | the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yield with the longest time to afford it (food first w |  |
 | E540 |  | a hand moves to the bottleneck from a yield the goal does not need whose store does not then run out, or from one whose time stays under the |  |
 | E541 |  | with nothing short, the personality's mix: no stone and less gold in the Stone age, no iron before the Classical, a Wonder-builder a little  |  |
-| E542 |  | a waiting villager goes to the first yield in need it can find work for, else the one paying most; then the war and the relations |  |
+| E542 |  | every waiting or idle villager goes to the first yield in need it can find work for, else the one paying most (Nov 13, N337: one who lost he |  |
 | E543 |  | the computers' economy (Mid's aiEconomy, without surplus selling, Albert 11:16 (5)): staff an idle shop, ventures with gold to spare over th |  |
 | E544 |  | the war (Mid's decideWar, QAF): a wave out is judged by its progress (D289): a blow or a step nearer; it charges once on contact, and goes h |  |
 | E545 |  | the wave sets out, its guard kept home; a few riders go for the foe's nearest drop-off to draw the defence apart; you are told when it is yo |  |
@@ -1962,6 +1963,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X103 | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO | {stage: page} | N333 |
 | X104 | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once | {stage: page} | N334 |
 | X106 | G1 (N336): a colour typed in the menus, the logic or the page style instead of read from the Colours book (the brushes' and figures' own paint excepted) | {stage: code} | N336 |
+| X107 | a computer leaves no villager standing (N337): one waiting on a find she lost, one waiting with no find and one idle are all sent to work in one turn of its mind | {stage: page} | N337 |
 
 ## screen
 

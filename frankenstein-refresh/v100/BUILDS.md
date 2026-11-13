@@ -5186,3 +5186,9 @@ Albert, Nov 13 06:49-06:53: "Agreed on colors"; "Sure. As long as we do it prope
 - G5A, test fixes only (no game code): t-n15 counted every side's buildings for door lanterns, but the fog (N13) hides the rivals' lights: now your own (passes). t-orders: the Director's wheel and behind were cut with its taps (B28, Albert Nov 8 20:33): dropped from the Mid check (runs; 3 checks fail, to sort). t-war: the nerve ruling (Albert Nov 10 18:55) cut Mid's hit, side, rear and lossR: dropped (runs; 1 check fails, to sort). t-food: orderCost was cut in N24 #14, but Albert ruled Nov 11 evening that an order costs food (by ground marched, not built): the check is now that ruling, its own ledger line `order` (fails until built). t-gather still throws (a find's `way` is gone; needs a read). t-walls no longer throws.
 MODIFIED: code:menu.js, code:index.html#page, book:colours:C38, book:citations:N336, book:comments:E181, book:rules:X106, tool:index.py, tool:test.py.
 Tests: every menu screenshot before and after differs by at most 2 in 255 on any pixel (s2's merge); t-cards, t-n18, t-n18b, t-n31, t-p2c pass; t-n15 passes; gate passes and stops with a planted colour.
+
+## H10a: the computers leave no villager standing · 2026-11-13 09:00
+Albert, Nov 13 08:34: "1. Sure" (the idle bug only; the rest of H10 waits until play is right for him).
+- A computer's turn skipped a waiting villager who still named the find she had lost (`v.target` set), and moved one idle villager a turn; at minute 50 the Raiders had 43 of 108 standing. Now every waiting or idle villager is sent to the yield in need each turn (E542).
+MODIFIED: code:ai.js, book:comments:E542, book:citations:N337, book:rules:X107, tool:test.py.
+Tests: t-idle passes and fails with the old line planted (the one waiting on a lost find stays waiting). t-pace, t-research, t-foe, t-troops, t-effects pass before and after.

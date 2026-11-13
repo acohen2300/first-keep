@@ -1082,7 +1082,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E539** the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yiel · QCM (N24, N202)
 - **E540** a hand moves to the bottleneck from a yield the goal does not need whose store does not th
 - **E541** with nothing short, the personality's mix: no stone and less gold in the Stone age, no iro
-- **E542** a waiting villager goes to the first yield in need it can find work for, else the one payi
+- **E542** every waiting or idle villager goes to the first yield in need it can find work for, else  · N337
 - **E688** a computer's soldier holding a choke whose time is up, or sent to help an ally and still t · D285 (N198, N199, N202)
 - **E543** the computers' economy (Mid's aiEconomy, without surplus selling, Albert 11:16 (5)): staff
 - **E544** the war (Mid's decideWar, QAF): a wave out is judged by its progress (D289): a blow or a s · QAF (N35) · D289 (N202)

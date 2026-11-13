@@ -116,7 +116,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
       if (d) move(giver(d), first); } }
   else { const X = AT.mix, M0 = Object.fromEntries(Y.map((y, i) => [y, P.mix[i]])), M1 = s.age ? M0 : young(M0, X.stone), M = s.age < X.iron ? young(M1, X.early) : P.wonder ? Object.fromEntries(Y.map((y) => [y, M1[y] + X.wonder])) : M1; // E541
     const all = total(Y, (y) => M[y]) || 1, [[top, gap], ...rest] = Y.map((y) => [y, (M[y] / all) * vs.length - plan[y].n]).sort((a, b) => b[1] - a[1]), [low] = rest.at(-1); if (idle) move(idle, top); else if (gap >= 1) move(giver(low), top); }
-  yield; s.rally = first || FOOD; for (const v of vs) if (v.job === 'wait' && !v.target) { yield; const by = (r) => { const f = ECON.bestFind(v, r); return of(f && ECON.forage(v, f, FK.dropFor(v, r))); }, y = order.find((r) => ECON.bestFind(v, r)) || Y.slice().sort((a, b) => by(b) - by(a)).find(by); if (y) move(v, y); } // E542
+  yield; s.rally = first || FOOD; for (const v of vs) if ((v.job === 'wait' && (!v.target || v.lost)) || v.job === 'idle') { yield; const by = (r) => { const f = ECON.bestFind(v, r); return of(f && ECON.forage(v, f, FK.dropFor(v, r))); }, y = order.find((r) => ECON.bestFind(v, r)) || Y.slice().sort((a, b) => by(b) - by(a)).find(by); if (y) move(v, y); } // E542
   yield; for (const u of WAR.armyOf(side)) if (u.job === 'hold' && ((u.drill && u.drill.until <= FK.K.t) || (u.helpT != null && FK.K.t - u.mvT > DP.help.stay))) Object.assign(u, { job: 'idle', drill: null, goal: null, helpT: null }); // E688
   if (P.bold < AT.never) decideWar(side, P); if (!WAR.waves[side]) chokeClaim(side, D.players.find((p) => WAR.atWar(side, p) && home(p)));
   yield; if (P.diplo) diplomacy(side, P); allyDuty(side); }

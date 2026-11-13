@@ -647,7 +647,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E539 | ai.js | the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yield with the longest time to afford it (food first when the famine runway is short) |
 | E540 | ai.js | a hand moves to the bottleneck from a yield the goal does not need whose store does not then run out, or from one whose time stays under the bottleneck's after the move |
 | E541 | ai.js | with nothing short, the personality's mix: no stone and less gold in the Stone age, no iron before the Classical, a Wonder-builder a little of everything |
-| E542 | ai.js | a waiting villager goes to the first yield in need it can find work for, else the one paying most; then the war and the relations |
+| E542 | ai.js | every waiting or idle villager goes to the first yield in need it can find work for, else the one paying most (Nov 13, N337: one who lost her find and found none nearby, or stood idle, was skipped and stood for ever); then the war and the relations |
 | E543 | ai.js | the computers' economy (Mid's aiEconomy, without surplus selling, Albert 11:16 (5)): staff an idle shop, ventures with gold to spare over the age, trade posts on free stops, a Market, a Pasture, a workshop (the Raiders brew), caravans and their routes |
 | E544 | ai.js | the war (Mid's decideWar, QAF): a wave out is judged by its progress (D289): a blow or a step nearer; it charges once on contact, and goes home beaten or stalled; at home, the foe whose odds, bent by the opportunist's eye, best clear the personality's nerve |
 | E545 | ai.js | the wave sets out, its guard kept home; a few riders go for the foe's nearest drop-off to draw the defence apart; you are told when it is you |
