@@ -35,6 +35,7 @@ Days of play, patch, play built fixes on fixes. Found on Nov 12:
 5. The rest of The List.
 
 ## Now
+- Nov 13 12:30: S5 sealed; preview-n37 on main. Albert's standing word (09:39): rulings are a go, do not ask again; only the menu grammar is done together. Next: the OPEN checks in `Tests - Nov 13.md`, then G5B. Commits now carry Co-Authored-By: Claude Fable 5.2.
 - Nov 13 midday: sealed G1, H10a, S4 (+P2-end), G5b; preview-n36 on main. Tests sorted in `Tests - Nov 13.md`; next: trace the OPEN checks, then G5B. Menus wait on the grammar spec (Albert: tap area 44, drawn box smaller, tight).
 - Nov 13 day: report `Day - Nov 13.md`. G1 sealed (dbcc9fe). H10 and P2-end held as patches, waiting on Albert. G5B not started.
 - P2c built (preview-n34): the villager Controller; his play owed. P2b built (preview-n33). Next: H3 (snow freeze), P2c. Was: P2a works (Albert played it). P2b: the card mock in `mockups/p2b/`, for his pick. Then H3 (snow freeze), P2c.

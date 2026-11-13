@@ -69,6 +69,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC45 | wooden or thatched: it catches fire from lightning in a summer storm, a spark, a shot, sabotage or a wildfire, burns down unless its villagers put it out, and lights its wooden neighbours (D310) | {by: econ.js fire, index.html (drawn, struck), law: [QT, QU], needs: [], may: []} | N206; N21; N22 |
 | SC46 | a place of care or recreation: counts toward the Wellbeing crown, and the wellbeing chaser builds it (Mid's CARE: Hospital, Temple, Baths, Theatre, Tavern) | {by: econ.js crowns, law: [], needs: [], may: []} | N222 |
 | SC47 | built more than once in a row: after placing it, the next one waits beside it to be placed (Build another); a building you raise once closes the placing (Albert, Nov 10, N17 #17) | {by: menu.js place, law: [], needs: [], may: []} | N307 |
+| SC48 | a worked building whose yield goes straight to the stores, with no carrying: what is dug stays in the yard (Albert, Nov 13 09:39, N342: finds on the ground are carried home; the Quarry, like the Mint, the Foundry and the Pasture, is not) | {by: econ.js, law: [], needs: [yield, rate], may: [amount]} | N342 |
 
 ## citations
 
@@ -411,6 +412,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N337 |  | Albert, Nov 13, 2026, 08:26-08:34: H10 waits until play is right for him, but the computers' idle villagers are a plain bug: \1. Sure\ (meas | opened |
 | N335 |  | Albert, Nov 13, 2026, 01:00-01:06: \Deposit / drop is stupid. We should just have logic. Focus is also stupid. That's plain logic also\; \1. | opened |
 | N338 |  | Albert, Nov 13, 2026, 08:26-08:34: \Villagers should have a buffer of a few pixels. And villager on a task, in a spot doing that task, shoul | opened |
+| N339 |  | Albert, Nov 13, 2026, 09:39: \somewhere in our system of modules, a priority list and a worker villager should have priority over a walking  | opened |
+| N340 |  | Albert, Nov 13, 2026, 09:41: \the Home pocket needs more resources ... more berries two or three times as much ... about two times as much G | opened |
+| N341 |  | Albert, Nov 13, 2026, 09:39: \you have to put the dock very far away from the water, which is stupid. It should go into the water or basical | opened |
+| N342 |  | Albert, Nov 13, 2026, 09:39: \the mint produces without anybody walking back and forth. The quarry should produce without anyone walking bac | opened |
+| N343 |  | Measured Nov 13, 2026, on the sealed S4 code: a villager posted to a Quarry kept the standing spot of her last place; each step pulled her t | opened |
 
 ## colours
 
@@ -1465,7 +1471,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1059 |  | the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with her; each choice you make is added (Food → Drop → |  |
 | E1060 |  | Jobs fine-tunes the next tap (Albert: \the village control is meant to fine tune\): with Hunt picked, a tap on a tree is refused with a toas |  |
 | E1061 |  | the ground picture repaints when what is on it changes (Albert's freeze fix, Nov 13, N334): the season colour, the snow step, the blooms, th |  |
-| E1065 |  | Albert, Nov 13 08:26 (N338): a villager at work (gathering or building, standing, not on a path) reads as immovable to anyone passing; the p |  |
+| E1065 |  | who gives way (D377 priority, Albert Nov 13 09:39, N339): each of two who meet has a level by what it is doing (at work 3, on the move 2, at |  |
+| E1066 |  | the exception to the levels (N339): after every pair is settled, anyone whose press (the summed levels of those she blocks who could not be  |  |
+| E1067 |  | fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 per), alternate banks, walked out from the middle |  |
+| E1068 |  | by water (N341): any water or marsh tile within r tiles of a footprint; a Shore building needs it, stands on the beach or in the shallows (n |  |
 
 ## ground
 
@@ -1573,7 +1582,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D58 | a ruin's stone | 200 | N112 |
 | D59 | a campfire's food | 100 | N112 |
 | D60 | a treasure's gold | 300 | N112 |
-| D62 | (Albert, Nov 11, N24 #17: home gold piles 3 → 6, so more can mine at once; a design number) the pocket as Mid laid it (QCS), its home piles half again (Albert, Nov 10, #7: more in Zone 1): zone 1 behind the Town Center holds the price of age (its index here) plus 6 villagers (D124 UV) and 5 houses (D123 BR1) in 2 bushes and 2 trees; the home finds, [piles, amount a pile] at Mid's RICH 2.5 and HOME.rich 1.18, each kind grown by FIND_SIZE (Albert, Nov 7 14:47: copy Mid; replaces the calculated one-age-up store of Nov 6); the home pocket's trees 12 → 14, 15% more (Albert, Nov 8 08:57) | {age: 1, back: {vils: 6, houses: 5, bushes: 2, trees: 2}, home: {bush: [8, 180], tree: [21, 120], gold: [6, 300], stone: [3, 300], iron: [3, | N322; N256; N242; N304 |
+| D62 | (Albert, Nov 13 09:41, N340: the home pocket holds more: berries two and a half times a bush (180 → 450), gold, stone and iron twice a pile (300 → 600), three times the trees (21 → 63); design numbers) (Albert, Nov 11, N24 #17: home gold piles 3 → 6, so more can mine at once; a design number) the pocket as Mid laid it (QCS), its home piles half again (Albert, Nov 10, #7: more in Zone 1): zone 1 behind the Town Center holds the price of age (its index here) plus 6 villagers (D124 UV) and 5 houses (D123 BR1) in 2 bushes and 2 trees; the home finds, [piles, amount a pile] at Mid's RICH 2.5 and HOME.rich 1.18, each kind grown by FIND_SIZE (Albert, Nov 7 14:47: copy Mid; replaces the calculated one-age-up store of Nov 6); the home pocket's trees 12 → 14, 15% more (Albert, Nov 8 08:57) | {age: 1, back: {vils: 6, houses: 5, bushes: 2, trees: 2}, home: {bush: [8, 450], tree: [63, 120], gold: [6, 600], stone: [3, 600], iron: [3, | N322; N256; N242; N304; N340 |
 | D63 | Z1 the pocket: no woods, open from edge to edge; Mid's pocket once, at D70's spots (QCS) | {trees: [0, 0], x: 1} | N228; N242 |
 | D64 | Z2 the town: no woods, no finds, open to build | {trees: [0, 0], x: 0} | N228 |
 | D65 | Z3 the transition (the player's Zone 2, the ring past home): its clusters half again bigger, the same number of spots (Albert, Nov 10, #8); the woods thicken from none at its inner edge to Z4's share at its outer edge (an ecotone), so it is more open than Z4; its finds laid by the Randomizer, the same in every corner, as Mid's wild finds, [piles, a pile's amount at RICH 2.5]: two bush patches of 7 x 180, groves of 20 and 14 x 120, a pair each of gold, stone and iron x 350, each pile then x FIND_SIZE and the land's amt (QCS) (Albert, Nov 6 16:01–16:03; Nov 7 14:47 copy Mid) | {trees: [0, 0.4], finds: {bush: [21, 450], tree: [51, 300], gold: [3, 875], stone: [3, 875], iron: [3, 875]}} | N228; N231; N242; N304 |
@@ -1707,7 +1716,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D215 | the year's harvest, rolled each spring: the first row whose upTo passes the roll gives the fields' m; one year in 20 fails (half), one in 6 is poor (30% less), the rest normal (Mid's HARVEST, its chances summed) | [{upTo: 0.05, m: 0.5}, {upTo: 0.21666666666666667, m: 0.7}, {upTo: 1, m: 1}] | N170 |
 | D216 | each season's field yield, spring to winter (Mid's SEASONS) | {farm: [1, 1.1, 1.25, 0.4]} | N170 |
 | D217 | (Albert, Nov 10 18:22: the day doubled, the economy kept per minute: the year doubled, so the share a year is 1 − 0.95², the same spoiling a minute) food in store spoils this share a year, taken at each season's turn; a loss of say or more is told (Mid's SPOIL; the FAO's 2 to 10%) | {year: 0.0975, say: 20} | N32; N33; N170 |
-| D218 | fish: a spot every per of a lake's radius, inset into the water from its shore, each holding amt × the radius ÷ r0 (Mid's 350 × its RICH 2.5); they regrow each spring at r a year toward that (QY), and are worked only within near of a finished dock of the side; a dock stands within shore of a lake past its beach (Mid's FISH, DOCKR, lakeGap) | {amt: 875, r0: 60, r: 0.5, per: 10, inset: 8, near: 150, shore: 70} | N27; N28; N170 |
+| D218 | fish: a spot every per of a lake's radius, inset into the water from its shore, each holding amt × the radius ÷ r0 (Mid's 350 × its RICH 2.5); they regrow each spring at r a year toward that (QY), and are worked only within near of a finished dock of the side; a dock stands at the water's edge: water or marsh within shore tiles of it, on the beach or in the shallows, by any lake, river or stream (Albert, Nov 13 09:39, N341; was within 70 units of a lake past its beach, Mid's DOCKR); rivers and streams hold fish too, a spot every 2π × per along the bank (the lakes' own spacing), each 4 × its half-width × amt ÷ r0 (the lakes' fish per area of water) | {amt: 875, r0: 60, r: 0.5, per: 10, inset: 8, near: 150, shore: 1} | N27; N28; N170; N341 |
 | D219 | a pasture's flock: start sheep, at most max; lambs each spring at lambs toward max (QY); a tended flock is culled to hold (half the most) each spring for mutton food a sheep (QZ); its shepherd takes milk food a second a sheep; a wolf or bear within wolf takes up to take sheep a season (Mid's pasture, LAMBS, FLOCK, MUTTON); a tended flock is shorn each spring, fleece wool a sheep, into the store (Mid's FLEECE) | {start: 6, max: 12, lambs: 0.6, milk: 0.03, mutton: 100, wolf: 260, take: 2, takers: [MW4, MW6], hold: 6, fleece: 7} | N27; N28; N170; N195 |
 | D220 | the food game gives when it falls (Mid's meat × its RICH 2.5) | {MW3: 500, MW7: 850, MW8: 1000} | N170 |
 | D221 | a villager's javelin strikes game at blow times its blow (Mid's huntTick) | {blow: 5} | N170 |
@@ -1858,6 +1867,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D373 | Defend answers the foe striking what is worth most: your hall, then your people, a building, a soldier (the order Claude proposed Nov 11 15:39; the numbers only rank them) | {seat: 4, folk: 3, bld: 2, soldier: 1} | N325 |
 | D375 | Prep (Albert, Nov 11, talk; yes Nov 12 05:27): every villager boards up the nearest building. add: the health boarding adds, as a share of the building's own, +50% for timber and +100% for stone (Albert's). back: unboarding before any attack has landed near the town leaves the building short by this share of what boarding added, to be repaired (Albert: "unboarding takes away half of what boarding added"; "they have to unboard and then repair"); after an attack has landed the boards just come off. Claude's numbers, never set by Albert: time, boarding as a share of the building's own building time, stone twice timber; cost, a share of the building's wood (timber) or stone (stone) price; least, the seconds for a building with no build time; planks, how many are drawn; (Nov 12, N29, list C6; Albert, Nov 11: "Existing techs (Fortified posts, Masonry, Architecture) make it cheaper and faster") each of techs that is known takes cut off Prep's price and off its time, one after another (all three: 0.8³ = 0.51, about half). cut is Architecture's own 0.2 (O60), reused; Claude's choice of number, for Albert to play and change | {add: {wood: 0.5, stone: 1}, back: 0.5, time: {wood: 0.25, stone: 0.5}, cost: {wood: 0.2, stone: 0.3}, least: 30, planks: 4, techs: [fortpos | N326 |
 | D376 | every job a unit may hold (N30, the job door E1041): a job not in this list is recorded as odd the moment it is set, and the test fails on it | [idle, walk, gather, carry, back, wait, build, repair, raise, board, school, inside, shelter, march, hold, fight, rout, follow, scout, sab,  | N326 |
+| D377 | who gives way when two people meet (Albert, Nov 13 09:39, N339): each has a level by what it is doing: at work (standing at a task: gathering, building, holding a post) 3, on the move (anyone on a path, and anyone fighting: soldiers closing on one foe must be able to press in together, t-n25) 2, at rest (idle, waiting) 1. The lower gives way and takes the whole push; equals part by their mass (QCJ). The exception: when those a higher one blocks cannot be moved aside (a building, a wall, water, trees, a find: any ground that cannot be walked), their levels add up, and once the sum passes hers she gives way | {work: 3, move: 2, rest: 1, working: [gather, build, hold], resting: [idle, wait]} | N339 |
 
 ## rules
 
@@ -1969,6 +1979,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X107 | a computer leaves no villager standing (N337): one waiting on a find she lost, one waiting with no find and one idle are all sent to work in one turn of its mind | {stage: page} | N337 |
 | X105 | the load rule (N335): carrying food and sent to wood with a drop-off on her way, she takes the food home first; sent to wood away from any drop-off, she drops it and goes | {stage: page} | N335 |
 | X108 | a villager at work is immovable to a passer (N338): a gatherer at her bush stays put while an idle villager standing inside her space is pushed clear; the space is a body apart (D196, 0.6 m) | {stage: page} | N338 |
+| X109 | who gives way (N339, D377): a walker meeting an idler moves him and is not moved; a soldier holding his post, hemmed by three resting passers who cannot be moved, holds (3 does not pass his 3); by four he gives way; the levels are 3, 2, 1 | {stage: page} | N339 |
+| X110 | the Quarry's stone goes straight to the stores (N342): its worker never carries, and stone comes in at no less than four fifths of the quarry's rate | {stage: page} | N342 |
+| X111 | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile | {stage: page} | N341 |
 
 ## screen
 
@@ -2032,7 +2045,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BCL1 | Farm | [Field, Health, Soil, Repeat] | N144; N170 |
 | BCL2 | Tree farm | [Field, Health, Repeat] | N144; N170 |
 | BCL3 | Pasture | [Field, Health, Flock] | N144; N170 |
-| BCL4 | Quarry | [Field, Health, Research, Repeat] | N144; N235 |
+| BCL4 | Quarry | [Field, Health, Research, Repeat, Store] | N144; N235; N342 |
 | BCT1 | Trade post | [Post, Shoot, Health, Research] | N144; N195 |
 | BCT2 | Dock | [Drop-off, Health, Shore, Burn, Research] | N144; N170; N206 |
 | BP1 | School | [Teach, Health, Research] | N144; N194 |

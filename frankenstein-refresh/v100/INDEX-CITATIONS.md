@@ -37,7 +37,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QCA** Effects → N154, N155, N156, N176, N185 · used by SC15, D199, D228, D234, D239, D354, X47, X50, X54, X55, X56, X69, X70, O1, O2, O3, O4, O5, O6, O7, O8, O9, O10, O11, O12, O13, O14, O15, O16, O17, O18, O19, O20, O21, O22, O23, O24, O25, O26, O27, O28, O29, O30, O31, O32, O33, O34, O35, O36, O37, O38, O39, O40, O41, O42, O43, O44, O45, O46, O47, O48, O49, O50, O51, O52, O53, O54, O55, O56, O57, O58, O59, O208, O60, O209, O61, O62, O63, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, O80, O200, O81, O82, O83, O84, O85, O86, O87, O88, O89, O90, O91, O92, O93, O94, O95, O96, O97, O98, O99, O100, O101, O102, O103, O104, O105, O106, O107, O108, O109, O110, O111, O112, O113, O114, O115, O116, O117, O118, O119, O120, O121, O122, O123, O124, O125, O126, O127, O128, O129, O130, O131, O132, O133, O134, O135, O136, O137, O138, O139, O140, O141, O142, O143, O144, O145, O148, O149, O151, O260, O261, O152, O153, O154, O155, O156, O157, O158, O159, O160, O161, O162, O163, O164, O165, O166, O167, O168, O169, O170, O171, O172, O173, O174, O175, O176, O177, O178, O179, O180, O181, O182, O183, O184, O185, O186, O187, O188, O189, O190, O191, O192, O193, O194, O195, O196, O197, O198, O223, O224, O225, O226, O199, O201, O202, O205, O206, O207, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, O227, O228, O229, O230, O231, O232, O233, O234, O235, O236, O237, O238, O239, O240, O241, O242, O243, O244, O245, O246, O247, O248, O249, O250, O251, O252, O253, O254, O255, O256, O257, O258, O259
 - **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, D247, D355, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
-- **QCJ** Separation → N163, N167 · used by D196, X51
+- **QCJ** Separation → N163, N167 · used by D196, D377, X51
 - **QCK** Mending → N168 · used by SC5, D201, X52
 - **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214 · used by D103, D229, X56, X68
 - **QCE** Trade pay → N195, N197 · used by SC19, D278
@@ -438,6 +438,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N337** Albert, Nov 13, 2026, 08:26-08:34: H10 waits until play is right for him, but the computers' idle villagers ar → X107
 - **N335** Albert, Nov 13, 2026, 01:00-01:06: "Deposit / drop is stupid. We should just have logic. Focus is also stupid. → X105
 - **N338** Albert, Nov 13, 2026, 08:26-08:34: "Villagers should have a buffer of a few pixels. And villager on a task, in → D196, X108
+- **N339** Albert, Nov 13, 2026, 09:39: "somewhere in our system of modules, a priority list and a worker villager should → D377, X109
+- **N340** Albert, Nov 13, 2026, 09:41: "the Home pocket needs more resources ... more berries two or three times as much → D62
+- **N341** Albert, Nov 13, 2026, 09:39: "you have to put the dock very far away from the water, which is stupid. It shoul → D218, X111
+- **N342** Albert, Nov 13, 2026, 09:39: "the mint produces without anybody walking back and forth. The quarry should prod → SC48, X110, BCL4
+- **N343** Measured Nov 13, 2026, on the sealed S4 code: a villager posted to a Quarry kept the standing spot of her last → unused
 
 ## Named exceptions
 

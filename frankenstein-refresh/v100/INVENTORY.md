@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,643 | 643,055 | 643,220 |
-| Books | 2507 | 0 | 796,288 | 797,233 |
+| Game code | 31 | 3,648 | 644,564 | 644,729 |
+| Books | 2520 | 0 | 802,588 | 803,549 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,204 | 359,612 | 359,871 |
+| Tools | 5 | 2,233 | 365,391 | 365,650 |
 
 ## The trades (code)
 
@@ -18,9 +18,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
-| index.html#the-ground | 28 | 1,949 | 1,953 | 38 |
-| index.html#floor-2-terrain | 85 | 9,795 | 9,799 | 115 |
-| index.html#floor-3-non-movables | 68 | 10,121 | 10,125 | 54 |
+| index.html#the-ground | 28 | 1,959 | 1,963 | 38 |
+| index.html#floor-2-terrain | 85 | 9,863 | 9,867 | 115 |
+| index.html#floor-3-non-movables | 71 | 10,850 | 10,854 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
@@ -30,7 +30,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 157 | 21,770 | 21,774 | 78 |
+| index.html#floor-5-movables | 158 | 22,072 | 22,076 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
@@ -40,7 +40,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,150 | 10,154 | 54 |
 | menu.js | 624 | 135,561 | 135,620 | 442 |
-| econ.js | 620 | 117,081 | 117,081 | 70 |
+| econ.js | 621 | 117,481 | 117,481 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -50,21 +50,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 52 | 15,461 |
-| citations | 337 | 84,806 |
+| capabilities | 53 | 15,852 |
+| citations | 342 | 87,383 |
 | colours | 34 | 10,345 |
-| comments | 1011 | 194,031 |
+| comments | 1014 | 195,180 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 342 | 196,731 |
-| rules | 106 | 42,293 |
+| measure | 343 | 198,170 |
+| rules | 109 | 43,124 |
 | screen | 28 | 17,478 |
-| shells | 110 | 23,521 |
+| shells | 110 | 23,538 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 55 | 103,085 |
+| words | 55 | 103,143 |
 
 ## The shells
 
@@ -184,5 +184,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X107 | t-idle | page | a computer leaves no villager standing (N337): one waiting on a find she lost, one waiting with no find and one idle are all sent to work in one turn of its mind |
 | X105 | t-load | page | the load rule (N335): carrying food and sent to wood with a drop-off on her way, she takes the food home first; sent to wood away from any drop-off, she drops it and goes |
 | X108 | t-buffer | page | a villager at work is immovable to a passer (N338): a gatherer at her bush stays put while an idle villager standing inside her space is pushed clear; the space is a body apart (D196, 0.6 m) |
+| X109 | t-rank | page | who gives way (N339, D377): a walker meeting an idler moves him and is not moved; a soldier holding his post, hemmed by three resting passers who cannot be moved, holds (3 does not pass his 3); by four he gives way; the levels are 3, 2, 1 |
+| X110 | t-store | page | the Quarry's stone goes straight to the stores (N342): its worker never carries, and stone comes in at no less than four fifths of the quarry's rate |
+| X111 | t-dock | page | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile |
 
-2637 items sealed · 2507 book entries · 94 laws · 337 citations, 34 still to open · 0 known
+2650 items sealed · 2520 book entries · 94 laws · 342 citations, 34 still to open · 0 known

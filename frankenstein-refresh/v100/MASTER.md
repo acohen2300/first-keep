@@ -77,7 +77,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N322, N256, N242, N304) · D63 (N228, N242) · D65 (N228, N231, N242, N304)
+- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N322, N256, N242, N304, N340) · D63 (N228, N242) · D65 (N228, N231, N242, N304)
 - **E711** the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and  · QCS (N242)
 - **E43** what stands on each tile, and the shells themselves
 - **E709** the buildings as their own list, a derived index of things rebuilt only when things change
@@ -94,7 +94,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
-- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170)
+- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170, N341)
+- **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N27, N28, N170, N341)
 - **E50** drawn back to front
 - **E652** The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by wo · QCQ (N229, N233)
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
@@ -300,7 +301,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
 - **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
 - **E807** QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, so · QCJ (N163, N167) · D242 (N188, N273)
-- **E1065** Albert, Nov 13 08:26 (N338): a villager at work (gathering or building, standing, not on a · N338
+- **E1065** who gives way (D377 priority, Albert Nov 13 09:39, N339): each of two who meet has a level · D377 (N339) · N339
+- **E1066** the exception to the levels (N339): after every pair is settled, anyone whose press (the s · N339
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
 - **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te
 - **E104** every unit within r of from (a square), never itself
@@ -785,6 +787,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E734** a yield's first age is the earliest age of anything that costs it (units, buildings, resea
 - **E851** what a side cannot build yet (age, research, a building it needs, a later age): the locks 
 - **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198)
+- **E1068** by water (N341): any water or marsh tile within r tiles of a footprint; a Shore building n · N341
 - **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · E686
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
 - **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
@@ -810,7 +813,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N322, N164, N166) · D137 (N114) · D197 (N164)
 - **E1013** wood is searched for near the worker, not across the map: within his search circle, double
 - **E1054** the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carryi · N335 · E1054
-- **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
+- **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114) · N343
 - **E1057** a unit's record for its card (Design 08): spans of what it gathered (merged while the kind
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o

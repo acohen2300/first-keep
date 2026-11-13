@@ -38,3 +38,12 @@ Full run: 59 tests ran; 21 fail. Verdicts: STALE = a ruling changed the standard
 ## Next
 1. Trace every OPEN check (about 14).
 2. G5B: each MID check becomes ruling + outcome; a number with no ruling behind it is drift.
+
+## Update, Nov 13 12:30 (S5)
+- t-a1 quarry: REAL, fixed. A villager sent to work a building kept her old standing spot and walked back and forth: farms, quarries, mints all worked under half their time. t-a1 passes.
+- t-land pocket: STALE test, fixed (the Z1 spots moved on Nov 8-10; the test still looked inside the old ring). Passes. Z2-no-woods: OPEN, about ten small trees a corner in a line 520-600 units out.
+- t-food order: my G5A check was wrong. Orders cost food by the march ration (1.37 x); the check now tests that and passes. Its other three are MID.
+- t-trade stops: REAL lead: 6 trade stops on the map, the book says 8 (two missing on route 1). Not fixed.
+- t-sight los: STALE half (N24 #13, computers see in circles); mini OPEN.
+- t-n25 fought: flaky under load before; now steady (fighting is priority 2).
+- Still OPEN, not traced: t-alarm (refused, told), t-orders (3), t-physics (edge and hours), t-same (wet), t-mind (moon, flood), t-realm (camp), t-sight (mini), t-gather (broken). MID checks (28): G5B, not started.

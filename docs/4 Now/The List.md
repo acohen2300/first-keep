@@ -116,3 +116,7 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - Albert, Nov 13 08:34 (menus, ruling): no giant menus; the tap area is 44, the drawn box can be smaller; tighten as much as possible. [2026-11-13]
 - S4 DONE (Nov 13): a body apart (0.6 m, FHWA/Fruin), workers immovable to passers; 10 spots a find (was 7). t-buffer passes and fails with the old push or the old pace planted. [2026-11-13]
 - G5 deep dig (Nov 13): `Tests - Nov 13.md`. 21 fail; gate proof stage was dead (fixed, G5b); 28 of ~45 failing checks are equals-Mid (to G5B); ~14 OPEN to trace; t-gather BROKEN. [2026-11-13]
+- S5 DONE (Nov 13): priority levels (t-rank), dock at any water's edge and river fish (t-dock), Quarry straight to the stores and the standing-spot bug (t-store); each test fails with its old line planted. Home pocket richer (BUILT: Albert's play). [2026-11-13]
+- REAL BUG fixed in S5: workers of every building walked back and forth and worked under half the time (stale standing spot). Likely behind "food is so hard" and "full farms could not feed the town". Albert's play to confirm. [2026-11-13]
+- OPEN from the test dig: 6 of 8 trade stops laid; ~10 small trees a corner in Z2; the checks listed in `Tests - Nov 13.md`; G5B (28 equals-Mid checks). [2026-11-13]
+- Albert, Nov 13 09:39: the menu grammar is the one thing to do together; everything else ruled is a go without asking again. [2026-11-13]
