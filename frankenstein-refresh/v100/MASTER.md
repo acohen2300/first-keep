@@ -597,6 +597,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
 - **E1038** the tap table (SN43, Albert Nov 12 08:12-08:15): with something picked, the next tap is it · SN43 (N326)
+- **E1060** Jobs fine-tunes the next tap (Albert: "the village control is meant to fine tune"): with H
 - **E1052** the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldie
 - **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · E1048
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
@@ -638,6 +639,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E939** a message with a place shows Go on the blue info bar, at the top and in a menu's help line
 - **E838** the chevron's tap: open or close the help lines
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
+- **E1058** the villager Controller (Design 08 section 8, N333): a called villager (or a group of them · N333
+- **E1059** the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with
 - **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and
 - **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th

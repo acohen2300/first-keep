@@ -59,3 +59,13 @@ The yardstick for P2 (the job door). Anything in the code that disagrees with th
 ## 7. Open, Claude to mock
 - The card's size: 1-6 on top, 7-9 folded under (Albert unsure).
 - The Add task flow on the card.
+
+## 8. The villager Controller (Albert, Nov 12 19:31-22:00; replaces the card for villagers)
+- The card takes up too much screen; the villager gets the war Controller's mold. Pads read clockwise (one thumb).
+- Top: Home · Exit (skull, two taps) · Restart (resets the choices) · the pill · Hide · ✕ (back, else hang up) · War.
+- Brown: People → Garrison → Log (History and Stats) → Build.
+- Blue, picks only: Deposit → Drop → Focus → Mobile.
+- Red: Group (all on her spot, counter) → Stop → Jobs (opens Gather → Help build → Hunt → Repair in the middle) → Order (adds a job).
+- The pill: "Gathering: food · 5", then the choices as made: Food → Drop → Focus → 5 → GO.
+- To drop one from a group: tap her on the map. No camera follow (off for testing). Health above a hurt villager, as the army.
+- The soldier version: later.

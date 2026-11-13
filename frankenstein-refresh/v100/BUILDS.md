@@ -5161,3 +5161,13 @@ Albert, Nov 12 17:52: "Keep it all closed for now for me. It's good enough. Go d
 - The old "load" line is hidden on your own units (the call row says it).
 MODIFIED: code:menu.js, code:econ.js, code:index.html#floor-5-movables, code:index.html#the-door, book:screen:SN4, book:words:J55, book:comments:E1055-E1057, book:rules:X102, book:citations:N332, tool:test.py.
 Tests: t-p2b (13 checks) passes; t-p2, t-n24, t-n25, t-n27, t-n29, t-n30, t-n31 pass. Full suite against P2a: t-cards (the villager card's layout) and t-n30 (it tapped a tree that is now full and refused) moved to the new card and to a free tree; nothing else changed.
+
+## P2c: the villager Controller (Design 08 section 8) · 2026-11-12 23:00
+Albert, Nov 12 22:00: "Yes yes." (mock `mockups/p2c/ctl.png` v7 and the talk after it).
+- Calling a villager (or a group) shows the war Controller's mold, not the card (E1058). Pads clockwise for one thumb: brown People, Garrison (nearest of your buildings that holds people), Log (the card with History open), Build; blue picks only: Deposit, Drop, Focus, Mobile (a lit one tapped again goes back to Normal); red Group (everyone on her spot, counter), Stop, Jobs (opens Gather, Help build, Hunt, Repair in the middle), Order (queue the next tap). Top: Home, Exit (skull, two taps), Restart (puts back her settings and clears the choices), the pill, Hide, ✕ (back a page, else hang up), War.
+- The pill (E1059): "Gathering: food · 5" until a choice, then the choices in order ending in GO (the last three kept); tapping it ends the call.
+- Jobs fine-tunes the next tap (E1060): a tap that does not match the job is refused with a toast and she stays called.
+- The P2b card stays for soldiers and for Log; a villager's call no longer opens it.
+- Not built: a health bar above a hurt villager (the army's bar was not found in the code: unverified that it exists). No camera follow (Albert: off for testing).
+MODIFIED: code:menu.js, book:screen:SN42 (icons), book:words:J56, book:comments:E1058-E1060, book:rules:X103, book:citations:N333, tool:test.py.
+Tests: t-p2c (12 checks) passes 3 of 3; t-p2b moved to open the card as Log does. Full suite against P2b: no rule went from pass to fail.

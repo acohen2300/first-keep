@@ -768,3 +768,4 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - Soldier + construction site = garrison (tap table SN43, N30): replaced by "Can't" (Design 08). [2026-11-12 17:20]
 - Tap another of your units while one is picked = nothing and let go (N30 row "any mine none"): replaced by "the call moves" (Design 08). [2026-11-12 17:20]
 - P2b: the card's old status line ("food", the load row) is hidden on your own units; the call row says it. [2026-11-12 19:00]
+- P2c: calling a villager no longer opens the P2b card (Albert: too much screen); the card stays for soldiers and for Log. [2026-11-12 23:00]

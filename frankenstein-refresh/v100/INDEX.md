@@ -405,6 +405,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N330 |  | Albert, Nov 12, 2026, 14:59-15:08, in chat: rules for the next chat, so it is competent and does not \tell me everything's a good idea and t | opened |
 | N331 |  | Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you say; tap 2 is the task; tap th | opened |
 | N332 |  | Albert, Nov 12, 2026, 17:48-17:52, on the card mock: \Make them folded collapsible menus. Chevron opens minus closes. One opens / one closes | opened |
+| N333 |  | Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit (skull, two taps), Restart (r | opened |
 
 ## colours
 
@@ -1454,6 +1455,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1055 |  | the unit card of the call (Design 08, P2b): a called unit's card opens with its status and how many of yours do the same (Select the rest),  |  |
 | E1056 |  | Add task (Design 08): the card asks for the next task; taps on the map are queued on the unit (plan) until Done; when the unit's task ends ( |  |
 | E1057 |  | a unit's record for its card (Design 08): spans of what it gathered (merged while the kind stays the same), builds and idle spells, the tota |  |
+| E1058 |  | the villager Controller (Design 08 section 8, N333): a called villager (or a group of them) takes the war Controller's mold. Pads read clock |  |
+| E1059 |  | the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with her; each choice you make is added (Food → Drop → |  |
+| E1060 |  | Jobs fine-tunes the next tap (Albert: \the village control is meant to fine tune\): with Hunt picked, a tap on a tree is refused with a toas |  |
 
 ## ground
 
@@ -1951,6 +1955,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X100 | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first | {stage: page} | N331 |
 | X101 | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) | {stage: code} | N331 |
 | X102 | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up | {stage: page} | N332 |
+| X103 | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO | {stage: page} | N333 |
 
 ## screen
 
@@ -1982,7 +1987,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN35 | the menus' sizes in px, once (item 1, the stray sweep: every size typed in menu.js's style comes here): hair a 1 px line; edge a 2 px border; r a box's corner, rc a card's, rq the quick square's, rb a bar's; icon an icon's side; glyph the − / + signs; pad a small gap inside a box; side the inset of a bar and the card text; tpad a title's left inset; vpad and hpad a card's padding; bar a progress bar's height; strip a strip row's height; none the safe-area fallback; caps the title's letter spacing in em (the values as they were typed, now named) | {hair: 1, edge: 2, r: 6, rc: 9, rq: 8, rb: 2, icon: 18, glyph: 18, pad: 4, side: 12, tpad: 14, vpad: 8, hpad: 10, bar: 3, strip: 30, none: 0 | N283; N287 |
 | SN40 | the New Game sheet: each row's label span in slots, its choices taking the rest of the six (Daily first, Albert, Nov 10, N17 #2; moved from the code in the N17 audit) | {daily: 4, civ: 0, diff: 3, len: 2, scen: 2, tension: 4, fog: 4} | N307 |
 | SN41 | the Controller (replaces the 14-box sheet of Nov 9): three pads, each two slots of the mold wide and two high, one box with dividers inset as the villager's square; over them a row of round glass buttons dot px across, their icons glyph px, their touch reaching hit px past the edge, the glass blurred blur px; Execute a pill exec px wide; a pad's icons icon px in a line stroke wide; half and full are the shares a divider sits at and spans; a button that cannot act keeps dim of its ink; the icons' frames (box; War's own, warW as wide as high) | {dot: 28, glyph: 14, hit: -8, blur: 7, icon: 18, stroke: 1.5, half: 50, full: 100, dim: 0.45, exec: 80, box: 0 0 24 24, warBox: -1.8 1.8 27. | N325 |
-| SN42 | the Controller's icons: one thin line, one size, no picture used twice; War is Albert's shield over crossed straight swords (Nov 11 14:49-15:18: curved top, swords at 39 degrees), drawn solid | {home: <path d=\M4 11l8-7 8 7v9H4z\/><path d=\M10 20v-5h4v5\/>, people: <circle cx=\12\ cy=\8\ r=\3.5\/><path d=\M5 20a7 7 0 0 1 14 0\/>, bu | N325 |
+| SN42 | the Controller's icons: one thin line, one size, no picture used twice; War is Albert's shield over crossed straight swords (Nov 11 14:49-15:18: curved top, swords at 39 degrees), drawn solid | {skull: <circle cx='12' cy='10' r='6'/><circle cx='9.7' cy='9.5' r='1.2'/><circle cx='14.3' cy='9.5' r='1.2'/><path d='M10 16v2M14 16v2M4 18 | N325 |
 | SN43 | the tap table (Albert, Nov 12 08:12-08:15: "If X, then Y"; "Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected"): each row is [what is picked, what was tapped, what it does], read top down, the first row that fits wins, so a villager row comes before an any row. What is picked: villager, soldier, caravan, or any (every other unit). What was tapped: foe (a unit or building of a side at war, or a wild beast that fights), prey (a beast that is hunted), find (something to gather), site (your building not finished), hurt (your building that needs repair), own (your finished building), stop (a trade stop), mine (another of your units), ground (nothing). After any row, everything picked lets go (after). Rows 'work' and 'own' for a villager keep today's behaviour until Albert rules on row 5 (shelter or nothing) | {rows: [[villager, find, gather], [villager, prey, hunt], [villager, foe, fight], [villager, site, build], [villager, hurt, repair], [villag | N326 |
 
 ## shells
@@ -2569,4 +2574,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J53 | the pace meter's second line: the drawing layers, in the order they are drawn (N29) | [land, clouds, things, fog, marks, sky, lights] | N208 |
 | J54 | the call's toasts (Design 08): a spot already full; a soldier sent to a site or a find | {full: Full: see closest alt., cant: Can't do that.} | N331 |
 | J55 | the unit card of the call (Design 08, P2b): status, group, orders, attention, load, history, statistics, exit | {idle: Idle, doing: {food: Gathering: food, wood: Gathering: wood, gold: Gathering: gold, stone: Gathering: stone, iron: Gathering: iron, bu | N332 |
+| J56 | the villager Controller (Design 08 section 8): pad words and the pill | {log: Log, deposit: Deposit, drop: Drop, focus: Focus, mobile: Mobile, group: Group, stop: Stop, jobs: Jobs, order: Order, gather: Gather, h | N333 |
 

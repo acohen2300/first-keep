@@ -96,3 +96,4 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - P2c TODO: merge the ~30 direct end-of-job writes into one "end" (back to last job, else idle), per Design 08 after a build. [2026-11-12 17:45]
 - Gate door (X101) DONE: proof: planted a unit pushed without the door and the job store touched in econ.js; both stop the gate. [2026-11-12 17:45]
 - NEXT (Albert Nov 12 17:40): P2b mock first (the card). Then H3 the snow freeze, P2c. [2026-11-12 17:45]
+- P2c BUILT (Nov 12 23:00, BUILDS.md P2c; t-p2c passes; his play owed): the villager Controller (Design 08 section 8). Open: health bar above a hurt villager; the soldier version; P2-end (one end of job, was P2c on Nov 12 17:45). [2026-11-12 23:00]
