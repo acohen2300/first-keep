@@ -1153,9 +1153,11 @@ function collide() { // E304
   for (const a of units) unitsNear(a, SP, (b) => { if (b.ix < a.ix || a.inside || b.inside) return; const dx = b.bx - a.bx, dy = b.by - a.by, d = Math.hypot(dx, dy), g = a.ix + b.ix; if (d >= SP) return;
     const [nx, ny] = d ? [dx / d, dy / d] : [Math.cos(g), Math.sin(g)], px = nx - PASS * ny, py = ny + PASS * nx, ma = massOf(a.code), mb = massOf(b.code), o = (SP - d) / (ma + mb);
     if (forming(a) && forming(b)) { const soft = (SP - d) * FORM.soft, [y, s] = FORM.yield.indexOf(SH[a.code].class) <= FORM.yield.indexOf(SH[b.code].class) ? [a, -ONE] : [b, ONE]; shove(y, px * soft * s, py * soft * s); return; } // E807
+    const wa = working(a), wb = working(b), all = o * (ma + mb); if (wa !== wb) { const s = wa ? ONE : -ONE, [m, w] = wa ? [b, a] : [a, b]; if (!shove(m, s * px * all, s * py * all)) shove(w, -s * px * all, -s * py * all); return; } // E1065
     const fa = shove(a, -px * o * mb, -py * o * mb), fb = shove(b, px * o * ma, py * o * ma); if (!fa) shove(b, px * o * mb, py * o * mb); if (!fb) shove(a, -px * o * ma, -py * o * ma); });
 }
 const FORM = D.forming, forming = (u) => !!(u.drill && !u.drill.held && u.job === 'march');
+const working = (u) => !u.path && (u.job === 'gather' || u.job === 'build'); // E1065
 const shove = (u, x, y) => walkable(tileAt(u.bx + x, u.by + y), u) && ((u.bx += x), (u.by += y), place(u), (u.shoved = true));
 // E103
 const cellKey = (cx, cy) => cy * N * D.tile + cx, file = (g, size, t) => { const c = cellKey(Math.floor(t.bx / size), Math.floor(t.by / size)); // E767

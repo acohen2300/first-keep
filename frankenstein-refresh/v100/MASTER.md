@@ -282,11 +282,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E96** the one distance and the one nearest search; the drop-off for a yield is the side's neares
 - **E97** to a tile along a building's edge (the ring of tiles round it, byB)
 - **E296** the walked length (QBL) from a tile to beside a building: a straight step one tile, a diag · QBL (N74)
-- **E297** QCI standing spots: everyone stands on a spot of its own a pace (D196) apart. A point's sp · QCI (N165) · D196 (N164, N165, N166, N167) · D128 (N176)
-- **E298** a find's working ring (Mid's WORK_R, D196): as many spots as fit a pace apart round it, ⌊2 · D196 (N164, N165, N166, N167) · D169 (N112)
+- **E297** QCI standing spots: everyone stands on a spot of its own a pace (D196) apart. A point's sp · QCI (N165) · D196 (N164, N165, N166, N167, N338) · D128 (N176)
+- **E298** a find's working ring (Mid's WORK_R, D196): as many spots as fit a pace apart round it, ⌊2 · D196 (N164, N165, N166, N167, N338) · D169 (N112)
 - **E299** spot i of c: round a find on its ring; round a building on its outline, the lane of tiles 
 - **E687** past the lane beside a building, the next ring a pace further out, as many rings as the mo
-- **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167) · N166 · N17
+- **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167, N338) · N166 · N17
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
 - **E98** a find used up is gone; its tile is free again
@@ -295,11 +295,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E362** QR each second on ice: the step lands on the ice with the chance of its cover, else on the · QR (N179, N178, N174, N18)
 - **E101** metres walked, which turn the stride (QBU); its speed now, which a blow carries (QBT) · QBU (N79) · QBT (N81, N82, N83, N18)
 - **E99** one tick for every unit
-- **E303** a path's last point is reached within near-enough (D196), any point within a pace when the · D196 (N164, N165, N166, N167)
+- **E303** a path's last point is reached within near-enough (D196), any point within a pace when the · D196 (N164, N165, N166, N167, N338)
 - **E312** nudged off its spot, it gives way while pushed and steps back once the crowd lets go: no t
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
 - **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
 - **E807** QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, so · QCJ (N163, N167) · D242 (N188, N273)
+- **E1065** Albert, Nov 13 08:26 (N338): a villager at work (gathering or building, standing, not on a · N338
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
 - **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te
 - **E104** every unit within r of from (a square), never itself
@@ -808,7 +809,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
 - **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N322, N164, N166) · D137 (N114) · D197 (N164)
 - **E1013** wood is searched for near the worker, not across the map: within his search circle, double
-- **E1054** Load (Design 08): a villager sent to another kind of find with a load drops it off first (
+- **E1054** the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carryi · N335 · E1054
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
 - **E1057** a unit's record for its card (Design 08): spans of what it gathered (merged while the kind
 - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it

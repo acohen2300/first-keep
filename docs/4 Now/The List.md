@@ -103,7 +103,7 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - H11 TODO: the late game overflows: after minute 60 his stores grew to 52k food, 73k wood, 56k gold with nothing to spend on (his Oct 28 rule: a thin margin that keeps scaling). [2026-11-13 01:10]
 - H12 TODO: his first three ages were slow (Age 1 at 15, 2 at 26, 3 at 41) against the Raiders (2 at 10, 4 at 24); the crunch from minute 23 to 47 (gold 26, food 42, wood 234). [2026-11-13 01:10]
 
-- P2-end HELD (Nov 13 night): load rule built, its test (in the patch) passes, but t-n17 regresses (gatherers pushed); saved as `Held - P2-end load rule.patch`, not sealed. [2026-11-13]
+- P2-end DONE (Nov 13, S4: t-load passes, fails with the old rule planted; was HELD): load rule built, its test (in the patch) passes, but t-n17 regresses (gatherers pushed); saved as `Held - P2-end load rule.patch`, not sealed. [2026-11-13]
 - H3 snow logic: not reproduced; logic is the sim budget being hit at low fps (`Night - Nov 13.md` 5). [2026-11-13]
 - G1 REPORTED: 26 loose colours in index.html + 16 in menu.js:47-48 outside the book. G2 not done. [2026-11-13]
 - G1 BUILT (Nov 13; gate-proven, no page test): menu colours in the Colours book (C38), gate rule `hues` stops with a planted colour; menus pixel-identical. Sealed dbcc9fe. [2026-11-13]
@@ -114,3 +114,4 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - Albert, Nov 13 08:26 (rulings, not a go): (1) H10 waits: the computer can't be expected to thrive while play isn't right for him. (2) Villagers keep a small buffer; a villager working at her spot reads as immovable to travellers (working only, not walking or idle, so tight corridors don't trap anyone). (3) Menus redone from a menu grammar and a design and style intent, which become the new mold; if the modular idea doesn't fit cleanly, the logic is wrong, not the menu. (4) QC stays, but not outdated QC; a failing test may be a real gap from our standards, not a stale test. [2026-11-13]
 - H10a DONE (Nov 13): computers leave no villager standing; t-idle passes and fails with the old line planted. [2026-11-13]
 - Albert, Nov 13 08:34 (menus, ruling): no giant menus; the tap area is 44, the drawn box can be smaller; tighten as much as possible. [2026-11-13]
+- S4 DONE (Nov 13): a body apart (0.6 m, FHWA/Fruin), workers immovable to passers; 10 spots a find (was 7). t-buffer passes and fails with the old push or the old pace planted. [2026-11-13]

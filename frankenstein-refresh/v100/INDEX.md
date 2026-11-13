@@ -409,6 +409,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N334 |  | Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game 57-58 fps and land 0 (screens | opened |
 | N336 |  | Albert, Nov 13, 2026, 06:49-06:53: \Agreed on colors\ (the menus' loose colours into the Colours book, the near twin merged), \Sure. As long | opened |
 | N337 |  | Albert, Nov 13, 2026, 08:26-08:34: H10 waits until play is right for him, but the computers' idle villagers are a plain bug: \1. Sure\ (meas | opened |
+| N335 |  | Albert, Nov 13, 2026, 01:00-01:06: \Deposit / drop is stupid. We should just have logic. Focus is also stupid. That's plain logic also\; \1. | opened |
+| N338 |  | Albert, Nov 13, 2026, 08:26-08:34: \Villagers should have a buffer of a few pixels. And villager on a task, in a spot doing that task, shoul | opened |
 
 ## colours
 
@@ -1455,7 +1457,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1051 |  | the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the pick ends, it carries on); a tap on another of you |  |
 | E1052 |  | the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldier sent to a site or a find, get a toast and stay c |  |
 | E1053 |  | Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to the find or post you send her to and, when it runs |  |
-| E1054 |  | Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at o |  |
+| E1054 |  | the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carrying takes the load home first only when its drop-of |  |
 | E1055 |  | the unit card of the call (Design 08, P2b): a called unit's card opens with its status and how many of yours do the same (Select the rest),  |  |
 | E1056 |  | Add task (Design 08): the card asks for the next task; taps on the map are queued on the unit (plan) until Done; when the unit's task ends ( |  |
 | E1057 |  | a unit's record for its card (Design 08): spans of what it gathered (merged while the kind stays the same), builds and idle spells, the tota |  |
@@ -1463,6 +1465,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1059 |  | the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with her; each choice you make is added (Food → Drop → |  |
 | E1060 |  | Jobs fine-tunes the next tap (Albert: \the village control is meant to fine tune\): with Hunt picked, a tap on a tree is refused with a toas |  |
 | E1061 |  | the ground picture repaints when what is on it changes (Albert's freeze fix, Nov 13, N334): the season colour, the snow step, the blooms, th |  |
+| E1065 |  | Albert, Nov 13 08:26 (N338): a villager at work (gathering or building, standing, not on a path) reads as immovable to anyone passing; the p |  |
 
 ## ground
 
@@ -1683,7 +1686,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D193 | the odds: a unit's power is its health × its blow ÷ per; who counters whom is weighed over the first look of each army, held between lo and hi; a building-only kind counts bonly of its power (Mid's unitPower) | {per: 6, look: 10, lo: 0.6, hi: 1.6, bonly: 0.3} | N157; N188 |
 | D194 | a unit's power counts at least this blow (Mid's unitPower) | 1 | N157 |
 | D195 | (Albert, Nov 11, N24 #17: a gold vein holds 4 at once, was 3; a design number) the forager: a field (or a tree begun) counts as life loads; how many a find holds before they crowd (QX); the finds one works at a time: a tree one feller, a field one worker (the Open style) | {life: 20, hold: {tree: 1, bush: 2, fish: 2, stone: 3, gold: 4, iron: 3, carcass: 2, other: 2}, cap: {tree: 1, bld: 1}} | N322; N164; N166 |
-| D196 | standing, in metres: a pace apart (3 ft), near enough a spot to stand on it (a quarter pace), the ring a find is worked from (Mid's WORK_R); the lattice's rings, pack × √(D128) and spare more, its second axis at 60° (hex, QCI); two who meet part with pass as much again to the side, each to its right, so they slip by (QCJ) | {apart: 0.9144, arrive: 0.2286, work: {fish: 1.495, other: 1.035}, pack: 0.525, spare: 2, hex: [0.5, 0.866025], pass: 0.5} | N164; N165; N166; N167 |
+| D196 | standing, in metres: a body apart (0.6 m, the long side of the standing body ellipse, 0.5 by 0.6 m: FHWA after Fruin, N338; was a pace, 3 ft), near enough a spot to stand on it (a quarter pace), the ring a find is worked from (Mid's WORK_R); the lattice's rings, pack × √(D128) and spare more, its second axis at 60° (hex, QCI); two who meet part with pass as much again to the side, each to its right, so they slip by (QCJ) | {apart: 0.6, arrive: 0.2286, work: {fish: 1.495, other: 1.035}, pack: 0.525, spare: 2, hex: [0.5, 0.866025], pass: 0.5} | N164; N165; N166; N167; N338 |
 | D197 | a worker whose find is gone looks from metres, widening by grow over tau seconds (Mid's REACH ÷ 2 and × 1.5), waits at its drop-off and looks again every again seconds | {from: 14.95, grow: 44.86, tau: 20, again: 2} | N164 |
 | D198 | the eight ways from a tile, the four straight first | [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [1, -1], [-1, 1], [-1, -1]] | N74 |
 | D199 | how many of a building a side may have, by age (Stone to Gunpowder; a later age keeps the last), research adding to each (Forest law, QCA); null: no limit; the Town Center counts the ones past the seat (Mid's cap, its town's for a second one); (N30) unit count: buildings allowed | {BTC1: [0, 0, 1, 2, 2], BTC2: [0, 0, 0, 1, 2], BTC5: null, BTC6: null, BTC7: null, BTC8: null, BR1: null, BR2: null, BCR1: [1], BCR2: [1], B | N168; N198 |
@@ -1964,6 +1967,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X104 | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once | {stage: page} | N334 |
 | X106 | G1 (N336): a colour typed in the menus, the logic or the page style instead of read from the Colours book (the brushes' and figures' own paint excepted) | {stage: code} | N336 |
 | X107 | a computer leaves no villager standing (N337): one waiting on a find she lost, one waiting with no find and one idle are all sent to work in one turn of its mind | {stage: page} | N337 |
+| X105 | the load rule (N335): carrying food and sent to wood with a drop-off on her way, she takes the food home first; sent to wood away from any drop-off, she drops it and goes | {stage: page} | N335 |
+| X108 | a villager at work is immovable to a passer (N338): a gatherer at her bush stays put while an idle villager standing inside her space is pushed clear; the space is a body apart (D196, 0.6 m) | {stage: page} | N338 |
 
 ## screen
 

@@ -436,6 +436,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N334** Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game → D363, X104
 - **N336** Albert, Nov 13, 2026, 06:49-06:53: "Agreed on colors" (the menus' loose colours into the Colours book, the nea → C38, X106
 - **N337** Albert, Nov 13, 2026, 08:26-08:34: H10 waits until play is right for him, but the computers' idle villagers ar → X107
+- **N335** Albert, Nov 13, 2026, 01:00-01:06: "Deposit / drop is stupid. We should just have logic. Focus is also stupid. → X105
+- **N338** Albert, Nov 13, 2026, 08:26-08:34: "Villagers should have a buffer of a few pixels. And villager on a task, in → D196, X108
 
 ## Named exceptions
 

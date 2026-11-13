@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,641 | 642,622 | 642,787 |
-| Books | 2502 | 0 | 793,953 | 794,898 |
+| Game code | 31 | 3,643 | 643,055 | 643,220 |
+| Books | 2507 | 0 | 796,288 | 797,233 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,188 | 357,492 | 357,751 |
+| Tools | 5 | 2,204 | 359,537 | 359,796 |
 
 ## The trades (code)
 
@@ -30,7 +30,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
-| index.html#floor-5-movables | 155 | 21,442 | 21,446 | 78 |
+| index.html#floor-5-movables | 157 | 21,770 | 21,774 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
@@ -40,7 +40,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,150 | 10,154 | 54 |
 | menu.js | 624 | 135,561 | 135,620 | 442 |
-| econ.js | 620 | 116,976 | 116,976 | 70 |
+| econ.js | 620 | 117,081 | 117,081 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 335 | 83,715 |
+| citations | 337 | 84,806 |
 | colours | 34 | 10,345 |
-| comments | 1010 | 193,371 |
+| comments | 1011 | 194,031 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 342 | 196,625 |
-| rules | 104 | 41,759 |
+| measure | 342 | 196,731 |
+| rules | 106 | 42,293 |
 | screen | 28 | 17,478 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -182,5 +182,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X104 | t-freeze | page | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once |
 | X106 | hues | code | G1 (N336): a colour typed in the menus, the logic or the page style instead of read from the Colours book (the brushes' and figures' own paint excepted) |
 | X107 | t-idle | page | a computer leaves no villager standing (N337): one waiting on a find she lost, one waiting with no find and one idle are all sent to work in one turn of its mind |
+| X105 | t-load | page | the load rule (N335): carrying food and sent to wood with a drop-off on her way, she takes the food home first; sent to wood away from any drop-off, she drops it and goes |
+| X108 | t-buffer | page | a villager at work is immovable to a passer (N338): a gatherer at her bush stays put while an idle villager standing inside her space is pushed clear; the space is a body apart (D196, 0.6 m) |
 
-2632 items sealed · 2502 book entries · 94 laws · 335 citations, 34 still to open · 0 known
+2637 items sealed · 2507 book entries · 94 laws · 337 citations, 34 still to open · 0 known
