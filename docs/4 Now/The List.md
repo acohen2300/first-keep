@@ -97,3 +97,8 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - Gate door (X101) DONE: proof: planted a unit pushed without the door and the job store touched in econ.js; both stop the gate. [2026-11-12 17:45]
 - NEXT (Albert Nov 12 17:40): P2b mock first (the card). Then H3 the snow freeze, P2c. [2026-11-12 17:45]
 - P2c BUILT (Nov 12 23:00, BUILDS.md P2c; t-p2c passes; his play owed): the villager Controller (Design 08 section 8). Open: health bar above a hurt villager; the soldier version; P2-end (one end of job, was P2c on Nov 12 17:45). [2026-11-12 23:00]
+- H9 TODO (Albert Nov 12 23:16, "Sure"): a resource's number turns red in the top bar while its Out beats its In (the jobs row shows heads, not net; he only learns it on the Stores card). [2026-11-12 23:16]
+- H3 PART: F8 built (Nov 13 01:10): the ground no longer repaints every second (t-freeze; fails with the 1 s timer back). Owed: his phone in snow (`?fps`), and the logic cost in snow (12-16 ms on his phone; not reproduced headless). [2026-11-13 01:10]
+- H10 TODO (his 118-minute win, Nov 13 00:32 log): the computers' economies stall and starve (Rivals' gold frozen at 1,818 from minute 30 to 37; Fortress 12-17 villagers all game, food near zero). [2026-11-13 01:10]
+- H11 TODO: the late game overflows: after minute 60 his stores grew to 52k food, 73k wood, 56k gold with nothing to spend on (his Oct 28 rule: a thin margin that keeps scaling). [2026-11-13 01:10]
+- H12 TODO: his first three ages were slow (Age 1 at 15, 2 at 26, 3 at 41) against the Raiders (2 at 10, 4 at 24); the crunch from minute 23 to 47 (gold 26, food 42, wood 234). [2026-11-13 01:10]

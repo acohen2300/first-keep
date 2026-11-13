@@ -1589,6 +1589,11 @@
 "bytes": 625,
 "numbers": 0
 },
+"book:citations:N334": {
+"sha": "487257a010828964bded8b511abe1bc92fa33ae6471e4c7af0305710aba3a0fa",
+"bytes": 479,
+"numbers": 0
+},
 "book:citations:N34": {
 "sha": "99a525dbd5757df8013c765a400f44ef9455b2ea8b378311e2808f895ecf325d",
 "bytes": 86,
@@ -2447,6 +2452,11 @@
 "book:comments:E1060": {
 "sha": "c16795d0f9158a0f8eea2a8a2666a4cd709f906160cc8aad551432515bdbd0fc",
 "bytes": 222,
+"numbers": 0
+},
+"book:comments:E1061": {
+"sha": "942c2170e1ae23f6269532b1cab4609d98b720afa9dc230f7eaa0fae65893db9",
+"bytes": 388,
 "numbers": 0
 },
 "book:comments:E107": {
@@ -8680,8 +8690,8 @@
 "numbers": 0
 },
 "book:measure:D363": {
-"sha": "877496074473103e3b52ee6ec5ee4cdf3af020619aca95551039f088c0c8c071",
-"bytes": 1042,
+"sha": "0bfde2c6e421f205c83f1285e23c5230c00fef57fb917f3e08b8cdc67e741f54",
+"bytes": 1051,
 "numbers": 0
 },
 "book:measure:D365": {
@@ -9072,6 +9082,11 @@
 "book:rules:X103": {
 "sha": "2e515f057e1d78d7bb7da5ff13415995d00b66a054c2a60e8112925c4b9ce38a",
 "bytes": 436,
+"numbers": 0
+},
+"book:rules:X104": {
+"sha": "bc662393fb1d84a1e7e45412ab7fe0fb2d3dfb7d5e5702d3569fd7454b224020",
+"bytes": 262,
 "numbers": 0
 },
 "book:rules:X11": {
@@ -12490,8 +12505,8 @@
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
-"sha": "3d5b98c20cafc2b7ec57bdf881ff9e70514e7fd110f7d6e018a4fb45868e1969",
-"bytes": 19110,
+"sha": "1142a8af64a5db7cbeba227db1949ff8ed8ff850f9e122ff1916baf143608ed8",
+"bytes": 19133,
 "numbers": 92
 },
 "code:index.html#floor-2-terrain": {
@@ -12555,8 +12570,8 @@
 "numbers": 17
 },
 "code:index.html#the-door": {
-"sha": "bd30ad0294ca6312e9f88083d0219edd00767eec972c10576a1726c7e27b30f6",
-"bytes": 19015,
+"sha": "360d3d7db7530a57b2c543c56adf59c915b841124b1eff743d88477bfcf2c5ab",
+"bytes": 19060,
 "numbers": 63
 },
 "code:index.html#the-figures": {
@@ -12610,8 +12625,8 @@
 "numbers": 24
 },
 "code:index.html#touch": {
-"sha": "e6dc19c0bc63ec6afd4e6351abb108c2daf88645296d76c0228f7005cd2edf1a",
-"bytes": 10124,
+"sha": "30dcaf00cc9dd34ea77bebe87cd5ce0004e0010947b5030dd907fc62b8b5e708",
+"bytes": 10154,
 "numbers": 54
 },
 "code:menu.js": {
@@ -13115,8 +13130,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "0b73dc51d3978de979913393d072efa5aac7df3abe2e0601ecfa36fe897b7478",
-"bytes": 319111,
+"sha": "8ab930e099e0feed9a7648add75d1f1d5ab8345c192d1a8884251393447821c5",
+"bytes": 319841,
 "numbers": 0
 }
 }

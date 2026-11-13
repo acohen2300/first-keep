@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,641 | 642,732 | 642,897 |
-| Books | 2494 | 0 | 790,701 | 791,646 |
+| Game code | 31 | 3,642 | 642,830 | 642,995 |
+| Books | 2497 | 0 | 791,839 | 792,784 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,172 | 355,464 | 355,723 |
+| Tools | 5 | 2,180 | 356,194 | 356,453 |
 
 ## The trades (code)
 
@@ -21,9 +21,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground | 28 | 1,949 | 1,953 | 38 |
 | index.html#floor-2-terrain | 85 | 9,795 | 9,799 | 115 |
 | index.html#floor-3-non-movables | 68 | 10,121 | 10,125 | 54 |
-| index.html#drawn-once-in-the-view-frame | 98 | 19,106 | 19,110 | 92 |
+| index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
-| index.html#the-door | 105 | 19,010 | 19,015 | 63 |
+| index.html#the-door | 106 | 19,055 | 19,060 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
 | index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
@@ -38,7 +38,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 139 | 29,216 | 29,221 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
-| index.html#touch | 54 | 10,120 | 10,124 | 54 |
+| index.html#touch | 54 | 10,150 | 10,154 | 54 |
 | menu.js | 625 | 135,784 | 135,843 | 514 |
 | econ.js | 620 | 116,976 | 116,976 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 52 | 15,461 |
-| citations | 332 | 82,633 |
+| citations | 333 | 83,123 |
 | colours | 33 | 9,517 |
-| comments | 1009 | 192,706 |
+| comments | 1010 | 193,106 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 342 | 196,616 |
-| rules | 101 | 41,003 |
+| measure | 342 | 196,625 |
+| rules | 102 | 41,276 |
 | screen | 28 | 17,478 |
 | shells | 110 | 23,521 |
 | sides | 7 | 1,869 |
@@ -179,5 +179,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X101 | door | code | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) |
 | X102 | t-p2b | page | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up |
 | X103 | t-p2c | page | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO |
+| X104 | t-freeze | page | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once |
 
-2624 items sealed · 2494 book entries · 94 laws · 332 citations, 34 still to open · 0 known
+2627 items sealed · 2497 book entries · 94 laws · 333 citations, 34 still to open · 0 known

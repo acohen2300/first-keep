@@ -433,6 +433,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N331** Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you  → X100, X101, J54
 - **N332** Albert, Nov 12, 2026, 17:48-17:52, on the card mock: "Make them folded collapsible menus. Chevron opens minus  → X102, J55
 - **N333** Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit → X103, J56
+- **N334** Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game → D363, X104
 
 ## Named exceptions
 

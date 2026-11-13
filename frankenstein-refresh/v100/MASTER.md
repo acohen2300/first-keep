@@ -190,6 +190,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E889** the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a n
 - **E968** while a pinch moves, the land sheet is stretched to the new zoom instead of drawn again; o · N17
 - **E68** the screen jolts with a heavy impact (QBT) · QBT (N81, N82, N83, N18)
+- **E1061** the ground picture repaints when what is on it changes (Albert's freeze fix, Nov 13, N334) · N334
 - **E880** the land kept while the camera holds still: one copy drawn back instead of the ground, the
 - **E975** the mist and the fog of war share one sheet, the mist painted under the fog, so the screen
 - **E69** the walking grid, at the land's height, clipped to the played ground: the coast's line bro · D7 (N112)

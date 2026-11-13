@@ -5171,3 +5171,10 @@ Albert, Nov 12 22:00: "Yes yes." (mock `mockups/p2c/ctl.png` v7 and the talk aft
 - Not built: a health bar above a hurt villager (the army's bar was not found in the code: unverified that it exists). No camera follow (Albert: off for testing).
 MODIFIED: code:menu.js, book:screen:SN42 (icons), book:words:J56, book:comments:E1058-E1060, book:rules:X103, book:citations:N333, tool:test.py.
 Tests: t-p2c (12 checks) passes 3 of 3; t-p2b moved to open the card as Log does. Full suite against P2b: no rule went from pass to fail.
+
+## F8: the ground repaints only when it changes · 2026-11-13 01:10
+Albert, Nov 13 00:38: "Yea yea yea do 1 and 2" (the freeze, H3).
+- The ground picture repainted every second whatever happened (D363 landCache.ms 1000); with snow on the ground one repaint is costly (his phone: land 9-19 ms in snow, 0 clear). Now it repaints when its key changes (season colour, snow step, blooms, camera) or a scar is made (SCARV in the key); the timer is 10 s, for slow things the key does not see (flowers trodden). E1061.
+- FK.lands() counts repaints (for the test).
+MODIFIED: code:index.html (three sections), book:measure:D363, book:comments:E1061, book:rules:X104, book:citations:N334, tool:test.py.
+Tests: t-freeze passes (2 repaints in 5 s with snow, a scar repaints at once) and fails with the 1 s timer planted back (6 repaints). Headless frames with snow: slow frames 150 ms before, 67 ms with the timer off. t-p2, t-p2c, t-n29, t-n31, t-cards pass; t-same fails as before this build (G5).
