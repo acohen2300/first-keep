@@ -5200,3 +5200,10 @@ Albert, Nov 13 08:26-08:34: "villager on a task, in a spot doing that task, shou
 - The load rule (E1054, N335, X105, held since the night of Nov 13): sent to another kind of work while carrying, she takes the load home only when its drop-off is on her way; otherwise she drops it and goes. Its regression (t-n17, gatherers pushed) was the push above, not the rule.
 MODIFIED: code:index.html#floor-5-movables, code:econ.js, book:measure:D196, book:comments:E1054, book:comments:E1065, book:citations:N335, book:citations:N338, book:rules:X105, book:rules:X108, tool:test.py.
 Tests: t-buffer passes and fails with either plant (the old push, the old pace); t-load passes; t-n17 passes (failed with the load rule before this build). Full suite against the sealed H10a code: no rule went from pass to fail; t-buffer and t-load added; t-n29 passed (it failed on the old run: its homeOnce check is flaky). Both runs stop at the plant stage (plant swallowed, G5).
+
+## G5b: the gate's own proof runs again; t-mind runs · 2026-11-13 11:00
+Albert, Nov 13 08:34: "4. Dig into all the tests deeply ... QC has slipped to intolerable levels".
+- t-proof (X33), the check that the gate stops planted breaks, aimed its swallowed-code plant at a menu.js line that no longer exists; the assertion stopped every full run before the proof stage, so the gate's own proof has not run since that line changed (unverified since when). Aimed at a line that exists: all five plants are stopped by the gate (passes).
+- t-mind read `D.ruts.near`, gone with B24+B25 (wetness by the TWI); its dry tile was never found, the NaN broke Mid's replica and failed five checks at once. Dry is now past the flood's rise: the replica runs; plans and minds pass; books, moon, ground and flood still fail (to sort).
+MODIFIED: tool:test.py.
+Tests: t-proof and t-match pass; t-mind runs (4 of 7 fail, was 5 masked by one).

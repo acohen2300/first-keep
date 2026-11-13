@@ -115,3 +115,4 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - H10a DONE (Nov 13): computers leave no villager standing; t-idle passes and fails with the old line planted. [2026-11-13]
 - Albert, Nov 13 08:34 (menus, ruling): no giant menus; the tap area is 44, the drawn box can be smaller; tighten as much as possible. [2026-11-13]
 - S4 DONE (Nov 13): a body apart (0.6 m, FHWA/Fruin), workers immovable to passers; 10 spots a find (was 7). t-buffer passes and fails with the old push or the old pace planted. [2026-11-13]
+- G5 deep dig (Nov 13): `Tests - Nov 13.md`. 21 fail; gate proof stage was dead (fixed, G5b); 28 of ~45 failing checks are equals-Mid (to G5B); ~14 OPEN to trace; t-gather BROKEN. [2026-11-13]

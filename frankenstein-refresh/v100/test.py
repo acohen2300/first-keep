@@ -494,7 +494,7 @@ async def food(b):
     ok('t-food', all(got), [got, off, [v['snaps'][i] for i in off], [mid['snaps'][i] for i in off] if mid and off else '', v['order'], (mid or {}).get('order'), v['hunt'], v['dock'], err[-400:], errs[:2]])
 def proof():
     plants = {'home': ('books/angles.js', '"A3":', '"D1":'), 'needs': ('books/shells.js', '"ticks": ["Yield"]', '"ticks": ["Yeld"]'),
-              'names': ('menu.js', "FK.has(u, 'Gather') && own(u)", "u.code === 'UV' && own(u)"), 'swallowed': ('menu.js', 'S.htab = keepH; PANEL = h;', 'S.htab = keepH; // swallowed PANEL = h;'),
+              'names': ('menu.js', "FK.has(u, 'Gather') && own(u)", "u.code === 'UV' && own(u)"), 'swallowed': ('menu.js', 'S.tab = null; letGo();', 'S.tab = null; // swallowed letGo();'),
               'seals': ('CALCULATIONS.md', 'QA Sun height', 'QA Sun  height')}
     for key, (f, a, b) in plants.items():
         t = tempfile.mkdtemp(); shutil.copytree(HERE, t + '/v', ignore=shutil.ignore_patterns('*.png')); s = open(f'{t}/v/{f}').read()
@@ -974,7 +974,7 @@ MINDJS = r"""(() => { const D = FK.D, K = FK.K, out = {}, side = D.players[1], s
   FK.reset(); const us = FK.units(), u = ECON.villagersOf(0)[0]; us.splice(0, us.length, u); FK.RUTS.fill(0); const far = [8, -8, 8 * FK.N, -8 * FK.N].map((d) => u.k + d).find(FK.walkable); FK.go(u, far); let moved = 0;
   for (let i = 0; i < 200 && u.path; i++) { FK.step(0.1); moved += u.mps > 0; } out.wear = [FK.RUTS.reduce((a, b) => a + b, 0), moved * 0.1];
   FK.RUTS.fill(0); FK.RUTS[0] = 300; sim(25); out.heal = FK.RUTS[0];
-  const land = (ok) => { for (let k = 0; k < FK.N * FK.N; k++) if (FK.H[k] > 0 && FK.walkable(k) && ok(FK.BANK[k], k)) return k; return -1; }, kw = land((b) => b === 2), kd = land((b) => b > D.ruts.near + D.flood.rise);
+  const land = (ok) => { for (let k = 0; k < FK.N * FK.N; k++) if (FK.H[k] > 0 && FK.walkable(k) && ok(FK.BANK[k], k)) return k; return -1; }, kw = land((b) => b === 2), kd = land((b) => b > D.flood.rise);   // ruts.near went with B24+B25 (wetness by the TWI, Albert Nov 8): dry = past the flood's rise
   out.ruts = [0, 30, 150, 300, 900].map((n) => { FK.RUTS.fill(0); FK.RUTS[FK.rutAt(kw)] = n; FK.RUTS[FK.rutAt(kd)] = n; K.wet = 0.4; return [n, FK.rutOf(kw), FK.mudAt(kw), FK.mudAt(kd)]; });
   FK.reset(); FK.RUTS.fill(0); const i0 = kw % FK.N, j0 = (kw - i0) / FK.N, dry = land((b, k) => b > D.flood.rise + 1 && Math.abs((k % FK.N) - i0) < 12 && Math.abs(Math.floor(k / FK.N) - j0) < 12), w = FK.spawn(vil, 0, dry, FK.rng);
   const path = () => { const ok = FK.go(w, kw); w.path = null; return ok; }, home = Object.keys(D.cost).find((c) => FK.has({ code: c }, 'Line')), lev = $tk('levees');
