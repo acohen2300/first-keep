@@ -5,9 +5,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 31 | 3,648 | 644,564 | 644,729 |
-| Books | 2522 | 0 | 803,901 | 804,862 |
+| Books | 2524 | 0 | 805,043 | 806,004 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,233 | 365,624 | 365,883 |
+| Tools | 5 | 2,239 | 366,568 | 366,827 |
 
 ## The trades (code)
 
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 53 | 15,852 |
-| citations | 344 | 88,465 |
+| citations | 345 | 89,269 |
 | colours | 34 | 10,345 |
 | comments | 1014 | 195,180 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 343 | 198,423 |
-| rules | 109 | 43,124 |
+| rules | 110 | 43,484 |
 | screen | 28 | 17,478 |
 | shells | 110 | 23,538 |
 | sides | 7 | 1,869 |
@@ -187,5 +187,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X109 | t-rank | page | who gives way (N339, D377): a walker meeting an idler moves him and is not moved; a soldier holding his post, hemmed by three resting passers who cannot be moved, holds (3 does not pass his 3); by four he gives way; the levels are 3, 2, 1 |
 | X110 | t-store | page | the Quarry's stone goes straight to the stores (N342): its worker never carries, and stone comes in at no less than four fifths of the quarry's rate |
 | X111 | t-dock | page | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile |
+| X112 | ecs | code | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall |
 
-2652 items sealed · 2522 book entries · 94 laws · 344 citations, 34 still to open · 0 known
+2654 items sealed · 2524 book entries · 94 laws · 345 citations, 34 still to open · 0 known

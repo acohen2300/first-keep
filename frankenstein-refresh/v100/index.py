@@ -156,6 +156,12 @@ for k, t in NOW.items():   # G1: the stats are read through FK.stat (and its row
     if k.startswith('code:') and k != 'code:index.html#the-door': rule('rawstats', not re.search(r'\bD\.stats\[|\bstats\[', t), f'{k} reads the raw stats table: ask FK.stat')
 for k, t in NOW.items():   # G1 (Albert, Nov 13): the menus and the logic hold no colour of their own; every colour lives in the Colours book (the brushes' and figures' own paint excepted, C header)
     if k in ('code:index.html#page',) or (k.startswith('code:') and not k.startswith('code:index.html')): rule('hues', not re.search(r'#[0-9a-fA-F]{6}\b', t), f'{k} holds a colour of its own: ' + ', '.join(re.findall(r'#[0-9a-fA-F]{6}\b', t)[:4]))
+# X112 ecs (Albert, Nov 13 11:59, N346): everything is a shell, a tick, a state or a book; a law is written once for a tick. Code that asks a thing its name (its job, kind, civ or code) instead of its tick is drift, and so is a tick no law asks for: both counts may only fall
+LAWSRE = re.compile(r"\b(?:job|then|kind|civ|code)\s*[!=]==?\s*['\"]\w+['\"]"); JOINED = ''.join(text(f) for f in CODE)
+NAMED = len(LAWSRE.findall(JOINED)); DEAD = sorted(e['key'] for e in BOOKS['capabilities'].values() if not e['key'].startswith('layer') and e['key'] != 'shell' and f"'{e['key']}'" not in JOINED)
+ECSV = next(e['value'] for e in BOOKS['rules'].values() if e['key'] == 'ecs')
+rule('ecs', NAMED <= ECSV['named'], f"{NAMED} places ask a thing its name; the rule allows {ECSV['named']}: ask its tick, never raise the count")
+rule('ecs', len(DEAD) <= ECSV['dead'], f"{len(DEAD)} ticks no law asks for ({', '.join(DEAD)}); the rule allows {ECSV['dead']}")
 MEAS = book('measure'); TABLES = {'Health': MEAS['buildTime'], 'Research': {e['value']['at']: 1 for e in BOOKS['tech'].values() if e['value'].get('at')}, 'Spawn': MEAS['trains'], 'Field|Make': MEAS['ai.plots']}
 for need, tab in TABLES.items():   # G2: a shell a table names has the ticks that table's work asks of it
     for c in tab: rule('ticked', c not in BOOKS['shells'] or any(x in BOOKS['shells'][c]['ticks'] for x in need.split('|')), f'{c} is in a {need} table but does not tick {need}')

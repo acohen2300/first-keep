@@ -419,6 +419,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N343 |  | Measured Nov 13, 2026, on the sealed S4 code: a villager posted to a Quarry kept the standing spot of her last place; each step pulled her t | opened |
 | N344 |  | International Regulations for Preventing Collisions at Sea (COLREGs, IMO 1972), Rule 18, Responsibilities between vessels: a power-driven ve | opened |
 | N345 |  | Albert, Nov 13, 2026, 10:48-10:55: \Can we find a cheaper source?\; \1.23 is okay\. US Army (USARIEM, Natick, Jan 24, 2013): a typical servi | opened |
+| N346 |  | Albert, Nov 13, 2026, 11:24-11:59: \everything in the game ... would be considered a shell so like an empty vessel. Then to that shell we wo | opened |
 
 ## colours
 
@@ -1984,6 +1985,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X109 | who gives way (N339, D377): a walker meeting an idler moves him and is not moved; a soldier holding his post, hemmed by three resting passers who cannot be moved, holds (3 does not pass his 3); by four he gives way; the levels are 3, 2, 1 | {stage: page} | N339 |
 | X110 | the Quarry's stone goes straight to the stores (N342): its worker never carries, and stone comes in at no less than four fifths of the quarry's rate | {stage: page} | N342 |
 | X111 | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile | {stage: page} | N341 |
+| X112 | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall | {stage: code, named: 309, dead: 7} | N346 |
 
 ## screen
 

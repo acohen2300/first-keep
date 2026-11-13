@@ -445,6 +445,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N343** Measured Nov 13, 2026, on the sealed S4 code: a villager posted to a Quarry kept the standing spot of her last → unused
 - **N344** International Regulations for Preventing Collisions at Sea (COLREGs, IMO 1972), Rule 18, Responsibilities betw → D377
 - **N345** Albert, Nov 13, 2026, 10:48-10:55: "Can we find a cheaper source?"; "1.23 is okay". US Army (USARIEM, Natick,  → D224
+- **N346** Albert, Nov 13, 2026, 11:24-11:59: "everything in the game ... would be considered a shell so like an empty ve → X112
 
 ## Named exceptions
 

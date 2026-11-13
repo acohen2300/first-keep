@@ -44,6 +44,11 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 - Never paste code into chat. Search first, read only the lines needed.
 - Warn Albert early, before the chat compacts. Update the repo (The List, Handoff) before every hand-off.
 
+## 6b. The laws (Albert, Nov 13: Design 09)
+- Everything is a shell with ticks and states; a law is written once for a tick; what is not a shell is information in a book. Read `docs/3 Locks/Designs/09 The laws - shells, ticks, states, books.md` before building anything.
+- Never ask a thing its name in code (job, kind, civ, code): ask its tick. The gate's `ecs` count may only fall; every build lowers it or leaves it.
+- Albert, Nov 13 09:39: what he has ruled is a go; do not ask again. Only the menus are done together.
+
 ## 7b. Gates
 - A rule a script can check goes in the gate (`index.py`), not only in this file.
 - `proof` (X99): The List holds no DONE without a test that fails with the old line planted.

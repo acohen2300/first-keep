@@ -126,3 +126,4 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - S6 DONE (Nov 13): march ration 1.23 (t-n29 fails with 1.37 planted). [2026-11-13]
 - AUDIT (Nov 13): `Audit - shells - Nov 13.md`. Shells and ticks hold; jobs (121 typed comparisons), priority, civ names in art and 10 unused capabilities are outside the shell design. Proposal: a Jobs book carrying ticks and priority. Albert's call. [2026-11-13]
 - Albert, Nov 13 10:55 (questions): do orders cost gold in real wars; can the point system be used elsewhere and be ticks on shells; apply the military precedence levels. Answered in chat; no gold cost built. [2026-11-13]
+- L1 BUILT (Nov 13; gate-proven): Design 09 the laws; gate rule `ecs` (309 name-asks, 7 dead ticks, may only fall; stops a planted one). Steps 3-8 in Design 09 are the way back in. [2026-11-13]

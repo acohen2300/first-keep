@@ -5235,3 +5235,9 @@ Albert, Nov 13 10:55: "1.23 is okay".
 - D224 marchDay 1.37 → 1.23: a day of operations at its low end against a garrison day (4,000 / 3,250 kcal; N345). An army of 120 on the march eats 554 food a minute (was 617; 450 at home).
 MODIFIED: book:measure:D224, book:citations:N345, tool:test.py.
 Tests: t-n27 and t-n29 pass; t-n29 fails with 1.37 planted back.
+
+## L1: the laws page and the `ecs` ratchet · 2026-11-13 14:30
+Albert, Nov 13 11:24-11:59: everything is a shell with ticks; what is not a shell is information in a book; "how do we get everything back in? Give me the steps".
+- Design 09 (`docs/3 Locks/Designs/09 The laws ...`): shell, tick, state, law, book; the steps back in.
+- Gate rule X112 `ecs`: counts the places code asks a thing its name (job, kind, civ, code: 309) and the ticks no law asks for (7); neither may rise. Planted one `job === 'zzz'`: the gate stops at 310.
+MODIFIED: tool:index.py, book:rules:X112, book:citations:N346. No game code.
