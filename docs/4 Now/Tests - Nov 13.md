@@ -47,3 +47,7 @@ Full run: 59 tests ran; 21 fail. Verdicts: STALE = a ruling changed the standard
 - t-sight los: STALE half (N24 #13, computers see in circles); mini OPEN.
 - t-n25 fought: flaky under load before; now steady (fighting is priority 2).
 - Still OPEN, not traced: t-alarm (refused, told), t-orders (3), t-physics (edge and hours), t-same (wet), t-mind (moon, flood), t-realm (camp), t-sight (mini), t-gather (broken). MID checks (28): G5B, not started.
+
+## Update, Nov 13 13:30 (G5c)
+- Now passing: t-alarm (STALE: lake fords left no unreachable ground on a coarse sweep), t-orders (STALE: Design 08 taps; Choke parked), t-a1, t-n25.
+- 18 tests still fail. OPEN with leads: t-sight `felled` (player does not see past a felled tree at once) and `mini`; t-physics blizzard hours; t-same `wet`; t-mind `moon`, `flood`; t-realm `camp`; t-trade (6 of 8 stops); t-land (stray trees in Z2). BROKEN: t-gather (Mid replica reads a field that is gone). The rest are MID checks: G5B.

@@ -120,3 +120,6 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - REAL BUG fixed in S5: workers of every building walked back and forth and worked under half the time (stale standing spot). Likely behind "food is so hard" and "full farms could not feed the town". Albert's play to confirm. [2026-11-13]
 - OPEN from the test dig: 6 of 8 trade stops laid; ~10 small trees a corner in Z2; the checks listed in `Tests - Nov 13.md`; G5B (28 equals-Mid checks). [2026-11-13]
 - Albert, Nov 13 09:39: the menu grammar is the one thing to do together; everything else ruled is a go without asking again. [2026-11-13]
+- G5c (Nov 13): t-alarm and t-orders pass (stale tests moved to rulings). 18 tests still fail; leads in `Tests - Nov 13.md`. [2026-11-13]
+- OPEN (Albert, Nov 13 10:38): the Controller's Deposit/Drop and Focus/Mobile buttons and the card's Load fold contradict "just logic" (Nov 13 01:00); they go with the villager strip (mock `mockups/p2c/strip.png`, pill `pill.png`), which waits on his word. Menus are done together. [2026-11-13]
+- IDEA (Nov 13, from COLREGs Rule 18): a loaded carrier outranks an empty walker (constrained by her load). Not built; Albert's call. [2026-11-13]

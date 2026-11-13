@@ -5219,3 +5219,13 @@ Albert, Nov 13 09:39-09:41: "whatever I ruled on do that"; the priority list; th
 - Orders cost food: they do, by the march ration (a marching soldier eats D pace.marchDay 1.37 times his ration, charged as upkeep). The per-order fee was cut in N24 #14. t-food's order check now tests the march ration; my G5A check (a ledger line `order`) was wrong.
 MODIFIED: code:index.html (floor-5-movables, floor-2-terrain, floor-3-non-movables, the-ground), code:econ.js, book:measure:D377, D218, D62, book:capabilities:SC48, book:shells:BCL4, book:words:J9, book:comments:E222, E1065-E1068, book:citations:N339-N343, book:rules:X109-X111, tool:test.py.
 Tests: t-rank, t-store, t-dock pass; each fails with its plant (no press rule; no Store; the spot kept; no water rule). t-a1 passes (its quarry check was this bug). t-land: pocket re-aimed at the Z1 spots (the old 300-unit ring was stale since Nov 8-10) and passes; its Z2-no-woods check still fails (about ten small trees a corner in a line 520-600 units out: open). Full suite against S4: t-n25 went pass → fail, fixed by fighting at level 2 (passes 4 of 4); nothing else moved. Computers, 50 min: unchanged picture (one thrives, two hungry).
+
+## G5c: stale tests moved to their rulings; the sea rule cited for priority · 2026-11-13 13:30
+Albert, Nov 13 09:39 "Trace the checks"; 10:38 "Continue".
+- t-alarm `refused`, `told`: the test swept every seventh tile for ground no villager can reach; since the lake fords (E1018) almost none is left. It now looks at every tile: passes.
+- t-orders `one`, `two`: Design 08, the call (E1051): one tap calls your soldier, a tap on him again hangs up (was: one tap picks, two open the card). `choke` set aside: Choke is parked (Albert, Nov 9; Parked.md). Passes.
+- t-sight `tree`: a computer's side sees in a plain circle (N24 #13, E992), so the tree hides them from you, not you from them. Still fails on `felled` (the player does not see past a felled tree at once: open) and `mini`.
+- t-physics: the blizzard run now lasts the blizzard's hours of the longer day (N19); still fails (open).
+- D377 cites COLREGs Rule 18 (N344): the freer to manoeuvre gives way to the one held by her work.
+MODIFIED: tool:test.py, book:citations:N344, book:measure:D377.
+Tests: t-alarm, t-orders pass.

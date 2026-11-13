@@ -1649,6 +1649,11 @@
 "bytes": 459,
 "numbers": 0
 },
+"book:citations:N344": {
+"sha": "c142ab9ad5cb47a1ace1dd001c02c690874f339f7b4e029effa02a85bc5192ee",
+"bytes": 599,
+"numbers": 0
+},
 "book:citations:N35": {
 "sha": "8e767ac1570de48da34f9654889b7847d0c465ba09fc086dda8736d36a2dafc9",
 "bytes": 66,
@@ -8835,8 +8840,8 @@
 "numbers": 0
 },
 "book:measure:D377": {
-"sha": "5b443cf52ddb8d0e92767a87a3b16381f3a4209e4d493ca4611732e93b81e969",
-"bytes": 870,
+"sha": "ac3a92cc92089e98718fff843bfe35223b228dd3265b55d2fcc546c62b7156a7",
+"bytes": 983,
 "numbers": 0
 },
 "book:measure:D38": {
@@ -13245,8 +13250,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "5aab5fdd4a675b09a880c4b9013c1854a6a72ee135a6d2812ab48f01bb1cb89b",
-"bytes": 328591,
+"sha": "c6fa2151580c328aa7a5dd742fc107f71d8ad5b90a2e68df372ace3d66647ea7",
+"bytes": 328793,
 "numbers": 0
 }
 }

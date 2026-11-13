@@ -443,6 +443,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N341** Albert, Nov 13, 2026, 09:39: "you have to put the dock very far away from the water, which is stupid. It shoul → D218, X111
 - **N342** Albert, Nov 13, 2026, 09:39: "the mint produces without anybody walking back and forth. The quarry should prod → SC48, X110, BCL4
 - **N343** Measured Nov 13, 2026, on the sealed S4 code: a villager posted to a Quarry kept the standing spot of her last → unused
+- **N344** International Regulations for Preventing Collisions at Sea (COLREGs, IMO 1972), Rule 18, Responsibilities betw → D377
 
 ## Named exceptions
 

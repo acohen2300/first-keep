@@ -301,7 +301,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E102** wildlife wanders: after a Poisson wait (QM, mean D94) it walks to a free tile within D95 · QM (N12) · D94 (N112) · D95 (N112)
 - **E304** QCJ separation, neighbours only (the M3 grid): two closer than a pace part to a pace, each · QCJ (N163, N167) · QBT (N81, N82, N83, N18)
 - **E807** QCJ while two soldiers form up (D242): the one of lower precedence gives the whole way, so · QCJ (N163, N167) · D242 (N188, N273)
-- **E1065** who gives way (D377 priority, Albert Nov 13 09:39, N339): each of two who meet has a level · D377 (N339) · N339
+- **E1065** who gives way (D377 priority, Albert Nov 13 09:39, N339): each of two who meet has a level · D377 (N339, N344) · N339
 - **E1066** the exception to the levels (N339): after every pair is settled, anyone whose press (the s · N339
 - **E103** M3 the grids (a spatial hash): units by squares of D185, refiled after each step's walking · D185 (N123) · D186 (N124)
 - **E767** a grid cell's key is a number, row times the land's width plus column, not a string: no te
