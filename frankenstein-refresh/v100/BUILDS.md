@@ -5229,3 +5229,9 @@ Albert, Nov 13 09:39 "Trace the checks"; 10:38 "Continue".
 - D377 cites COLREGs Rule 18 (N344): the freer to manoeuvre gives way to the one held by her work.
 MODIFIED: tool:test.py, book:citations:N344, book:measure:D377.
 Tests: t-alarm, t-orders pass.
+
+## S6: the march ration 1.23 · 2026-11-13 14:00
+Albert, Nov 13 10:55: "1.23 is okay".
+- D224 marchDay 1.37 → 1.23: a day of operations at its low end against a garrison day (4,000 / 3,250 kcal; N345). An army of 120 on the march eats 554 food a minute (was 617; 450 at home).
+MODIFIED: book:measure:D224, book:citations:N345, tool:test.py.
+Tests: t-n27 and t-n29 pass; t-n29 fails with 1.37 planted back.

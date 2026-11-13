@@ -261,10 +261,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E785** who may step on ice: yours unless told to go around; the computer and the wild only where 
 - **E863** the woods: walkable for a person or a rider at the woods' pace (D360), never for engines o · D360 (N292, N294, N287)
 - **E874** a crossing is ice or woods: the same modes for both (single file, thin out, one at a time,
-- **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185, N198, N328) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
+- **E88** the pace's books (QCB): its states and Pandolf's coefficients (D224), the friction a step  · QCB (N13, N181, N19, N179, N185) · D224 (N13, N173, N181, N185, N198, N328, N345) · G9 (N179, N19, N173) · G10 (N174, N179, N173)
 - **E360** the ground under a walker as it steps toward the tile to (QN, QR): its mud (the marsh alwa · QN (N13) · QR (N179, N178, N174, N18) · D225 (N17, N173) · G9 (N179, N19, N173) · G8 (N107, N18, N178) · G10 (N174, N179, N173)
-- **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185, N198, N328) · QR (N179, N178, N174, N18)
-- **E374** the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v|v| (W1, by the m · QN (N13) · W1 (N108, N109, N110, N181) · D224 (N13, N173, N181, N185, N198, N328)
+- **E361** QCB the pace: Pandolf's cost of walking solved for the speed, its power set by the walker' · QCB (N13, N181, N19, N179, N185) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · QCA (N154, N155, N156, N176, N185) · D224 (N13, N173, N181, N185, N198, N328, N345) · QR (N179, N178, N174, N18)
+- **E374** the load, the ground's η (QN, research cuts), and the wind's drag ½ρCdA v|v| (W1, by the m · QN (N13) · W1 (N108, N109, N110, N181) · D224 (N13, N173, N181, N185, N198, N328, N345)
 - **E375** aV² + bV + c = 0: a the walking term, b the grade and the wind as a grade (100F ÷ g), c th
 - **E89** QBL A* over the tiles, the eight ways of D198, straight 1 and diagonal √2, the heuristic t · QBL (N74) · D198 (N74) · N74
 - **E91** the tiles one step from a tile, by the eight ways of D198, that a walker may step to (walk · D198 (N74)
@@ -831,7 +831,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1053** Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to 
 - **E944** minus on a job acts at once: the villager drops what it carries and stands idle, so the co · N17
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
-- **E1032** an order's food is charged by the ground marched, not by the tap (Decisions Nov 11, #4; Al · D224 (N13, N173, N181, N185, N198, N328) · N29
+- **E1032** an order's food is charged by the ground marched, not by the tap (Decisions Nov 11, #4; Al · D224 (N13, N173, N181, N185, N198, N328, N345) · N29
 - **E981** food in reach is food a side can carry home: a find or prey within the hunger book's reach
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
 - **E1011** whether food is within reach of a hungry side, asked once a second, and everyone fed in on
@@ -1046,7 +1046,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E586** one weighted draw: p = w_i / Σw (QAR) · QAR (N49)
 - **E587** now and then the robbers send a band from the camp nearest a side at a villager or caravan · D307 (N205)
 - **E588** a computer hires drifters it can pay for, and sends half its idle army at the nearest find
-- **E813** a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E · D224 (N13, N173, N181, N185, N198, N328) · E472
+- **E813** a scout set to Stealth (its card) goes on foot at D224's sneak and takes the spy's veil (E · D224 (N13, N173, N181, N185, N198, N328, N345) · E472
 - **E589** a scout left to itself goes for a find whose guards have fallen, else loops the land
 - **E519** Field traps (F25, Mid's trapsTick, trapShown): hidden from all but their side, its allies  · D280 (N198, N199)
 - **E520** A trap sprung: caltrops spike each walker once a while and wear flat; the others go off on

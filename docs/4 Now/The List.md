@@ -123,3 +123,6 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - G5c (Nov 13): t-alarm and t-orders pass (stale tests moved to rulings). 18 tests still fail; leads in `Tests - Nov 13.md`. [2026-11-13]
 - OPEN (Albert, Nov 13 10:38): the Controller's Deposit/Drop and Focus/Mobile buttons and the card's Load fold contradict "just logic" (Nov 13 01:00); they go with the villager strip (mock `mockups/p2c/strip.png`, pill `pill.png`), which waits on his word. Menus are done together. [2026-11-13]
 - IDEA (Nov 13, from COLREGs Rule 18): a loaded carrier outranks an empty walker (constrained by her load). Not built; Albert's call. [2026-11-13]
+- S6 DONE (Nov 13): march ration 1.23 (t-n29 fails with 1.37 planted). [2026-11-13]
+- AUDIT (Nov 13): `Audit - shells - Nov 13.md`. Shells and ticks hold; jobs (121 typed comparisons), priority, civ names in art and 10 unused capabilities are outside the shell design. Proposal: a Jobs book carrying ticks and priority. Albert's call. [2026-11-13]
+- Albert, Nov 13 10:55 (questions): do orders cost gold in real wars; can the point system be used elsewhere and be ticks on shells; apply the military precedence levels. Answered in chat; no gold cost built. [2026-11-13]

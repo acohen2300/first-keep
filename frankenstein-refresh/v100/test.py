@@ -1663,7 +1663,7 @@ N27JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) 
  o.boarded = bd.length >= 3 && bd.every((b) => b.hpMax > base.get(b)) && V().every((u) => u.inside || u.job === 'board' || u.job === 'walk'); MENU.render(true); o.workCell = !!document.querySelector('#base [data-v^="work|"]');
  ECON.allClear(); o.unboard = mine().every((b) => !b.board && b.hpMax === base.get(b)) && bd.every((b) => b.hp < b.hpMax); MENU.act('war');
  const U = []; $ring(h, 4, 16, (i, j) => { const k = j * N + i; if (FK.walkable(k) && U.length < 10) U.push(FK.spawn('UM1', 0, k, Math.random)); return U.length >= 10; }); st.food = 5000; $run(2); let f = st.food; $run(20); const stand = f - st.food;
- const far = $ring(h, 50, 80, (i, j) => (FK.walkable(j * N + i, U[0]) && FK.reach(0).has(j * N + i) ? j * N + i : 0)); WAR.order(U, null, far); $run(2); f = st.food; $run(20); info.eat = [+stand.toFixed(1), +(f - st.food).toFixed(1)]; o.marchEats = f - st.food > stand * 1.3;
+ const far = $ring(h, 50, 80, (i, j) => (FK.walkable(j * N + i, U[0]) && FK.reach(0).has(j * N + i) ? j * N + i : 0)); WAR.order(U, null, far); $run(2); f = st.food; $run(20); info.eat = [+stand.toFixed(1), +(f - st.food).toFixed(1)]; o.marchEats = f - st.food > stand * (1 + (D.pace.marchDay - 1) * 0.75);
  o.units = Object.values(BOOKS.measure).every((x) => 'unit' in x && x.subject && x.subject.length);
  return [o, info]; })()"""
 async def n27(b):
@@ -1710,7 +1710,7 @@ N29JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) 
  MENU.render(true); const d = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth'); let reads = 0; Object.defineProperty(HTMLElement.prototype, 'offsetWidth', { configurable: true, get() { if (this.closest && this.closest('.topbar')) reads++; return d.get.call(this); } }); for (let i = 0; i < 5; i++) MENU.render(); Object.defineProperty(HTMLElement.prototype, 'offsetWidth', d); info.reads = reads; o.topbarStill = reads === 0;
  const U = []; $ring(h, 4, 16, (i, j) => { const k = j * N + i; if (FK.walkable(k) && U.length < 4) U.push(FK.spawn('UM1', 0, k, Math.random)); return U.length >= 4; }); MENU.act('war'); MENU.act('cwho', 'all'); MENU.act('cact', 'attack'); MENU.render(true); const t0 = FK.tag; let tags = 0; FK.tag = (...a) => { tags++; return t0(...a); }; draw(); const before = tags; S.ctl.spot = true; draw(); FK.tag = t0; info.cross = [before, tags]; o.crosshairWaits = before === 0 && tags > 0; S.ctl.spot = false; MENU.act('war');
  const EW = fromBook('words').end; o.fallen = EW.fallen === 'The {side} {have} fallen.' && EW.have.join() === 'have,has';
- o.beats = D.work.slices === 4 && D.danger.beat[0] === 2 && D.pace.marchDay === 1.37 && D.prep.cut === 0.2;
+ o.beats = D.work.slices === 4 && D.danger.beat[0] === 2 && D.pace.marchDay === 1.23 && D.prep.cut === 0.2;
  return [o, info]; })()"""
 async def n29(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N29JS); await pg.close()
