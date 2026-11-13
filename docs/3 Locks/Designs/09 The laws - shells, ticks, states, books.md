@@ -30,3 +30,38 @@ Draft from Albert's words. Lines marked (?) are Claude's and wait for his word.
 6. Land and water as shells with layers.
 7. The 7 dead ticks: wired to a law or cut (logged in Parked).
 8. Each step: tests written against the law (not against Mid), the code and both counts smaller after than before, Albert's play.
+
+---
+
+# The shell form (Albert, Nov 13 17:24-17:36, stream of consciousness; his words, sorted, not yet built)
+
+"If everything is a shell: first thing is how do we define anything in the world?"
+
+## The questions (every shell answers every one)
+1. **Identity:** What is it called. What is its unique index number.
+2. **Form:** What is the shape. The mass. The colour. The height. The width. Sprite index number.
+3. **Place:** What layers does it live over. What layers live over it. Is it always visible.
+4. **Movement:** Does it move. Does it move on its own (self). Does it move from an action (caused by). Does it move from usage. How does it move. What direction does it move. In what dimensions can it move. In what direction does it grow. In what direction / dimension is it blocked from movement. What restricts movement: list restriction index.
+5. **Life:** Does it spawn. Who spawns it. How is it made. Does it always exist. Does it cease to exist. How does it cease to exist. What impacts its existence. In what way does its existence get impacted. Does it evolve.
+6. **Interaction:** What does it interact with. Is it tappable. Does it have a card. What layers does it impact. What shells does it impact in the first degree: list shell index. What shells does it impact in the second degree: list shell index.
+7. **Abilities:** Does it spawn others (spawn things). Does it have tech: tech index numbers. Does it act: action index numbers.
+8. **Governed by:** Math? (math index). Physics? (physics index). Friction? Gravity? Weather? Movement? Actions? What are the exceptions.
+
+## The answers (his rulings, 17:30-17:36)
+- An answer is points or an index. **Yes is 1 point. No is 0 points.** An index points into a book.
+- **No answers are typed.** A position holds a 1, a 0, or an index that exists. The only typing is inside a book, once.
+- "A string can define a thing by sequence. You can also add it up. You can also group by index."
+  - The sequence of 1s and 0s defines what the thing is.
+  - The sum gives tiers: "0-10 points get x, 11-20 points get y".
+  - "If you give the answers indexes and points you can group them by common attribute and apply ticks in groups."
+- "All the shells that have a 1 in slot 3 get a new math equation": a law names a slot; changing it changes every shell with a 1 there.
+
+## Claude's notes (not rulings; for Albert's word)
+- Slot numbers are permanent: new questions go on the end, a retired slot is left empty, never reused.
+- "Exceptions": his own rule says an exception means the logic is wrong. Either it means "not governed by X" (a 0, no slot needed) or it should become a new tick. Open.
+- Impacts by index go stale as shells are added: list by slot ("everything with a 1 in Burn"); let a script derive the second degree.
+- Every yes counts the same, so a whole-form sum measures how much a thing does, not its worth: for cost or priority, sum one section.
+- Missing from the list: its state now (working, walking, resting) and its priority.
+- Answers set by group; a shell states only where it differs from its group.
+- Test before building: fill the form for a berry bush, a villager, a lake, the Build menu and one research; where the form cannot describe one, the logic needs to be better.
+- Real-world models: Entity-Component-System archetypes (things with the same answers stored and run together); taxonomy by shared traits; points-costed units in tabletop war games.
