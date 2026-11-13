@@ -8,11 +8,11 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 - One list: `docs/4 Now/The List.md`. Every other list is archive.
 - Commits as `Albert <acohen2300@users.noreply.github.com>` with the session's `Co-Authored-By` and `Claude-Session` trailers. The repo is public.
 
-## 2. Changes
-- No change without "yes yes". Reading and checking are free.
-- Before building: a numbered list, one line an item, each with the core values (section 9) it meets or breaks.
+## 2. Changes (Albert, Nov 13 09:39; replaces the Nov 12 "yes yes for everything")
+- What Albert has ruled is a go: build it, do not ask again. Look in The List, the Designs and past chats before asking him anything.
+- New ideas of Claude's, and anything he has not ruled on, wait for his word. The menus are done together.
 - "Do it all" = the whole agreed list in that run: nothing added, nothing trimmed, not split. Stop only when done or truly blocked, and say which.
-- A question or ruling from Albert is not a go: answer it, put it on The List, carry on.
+- Never end a turn with ruled work left over to "next time" without saying why and what blocked it.
 
 ## 3. Honesty, checkable
 - Every claim about the code cites file and line. No citation: say "unverified".
@@ -30,14 +30,12 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 - Numbered: done / not done; for each not done, why and what is needed.
 - Generated from The List, never from memory.
 
-## 6. Order (until step 3 is done)
-1. Housekeeping: one list, one hand-off, one working branch.
-2. Sort the 22 failing tests (The List G5): stale or real bug. First pass done Nov 12 (`Failing tests - Nov 12.md`); group B waits on Albert's call.
-2b. Gates: `proof` (X99) is built. Still to build: the tap-test gate (needs a real-finger helper) and the door gate (with P2).
-3. P2, the job door (`The Plan.md`), to the spec `docs/3 Locks/Designs/08 The call - villagers and army.md`: one place sets a unit's job, target, path and what comes next. Fold in Focus as Albert's rule #17 ("stays on its job as a reasonable worker would"; today it is set on every tap and pinned to one find, E1027) and the open traces (builds a bit then stands, tree then idle, villagers disappearing).
-4. Menu check against the kit (G2) and the ring standard (P4).
-5. The rest of The List.
-- No new features before step 3. Albert's play notes go on The List, not into builds.
+## 6. Order (Albert, Nov 13: Design 09's steps)
+1. Read Design 09 (the laws). Every build is judged by it first.
+2. Design 09 step 3: jobs and states as ticks, with priority. Then steps 4-7.
+3. The failing tests (`docs/4 Now/Tests - Nov 13.md`) are rewritten against the laws as each step reaches them; real game faults found on the way are fixed at once.
+- Every build report gives the `ecs` counts before and after (places that ask by name; dead ticks) and the size of the game code before and after. A build that raises any of the three is not sealed.
+- Albert's play notes go on The List.
 
 ## 7. Compute
 - Concise: lists, no prose, one screen where possible.
