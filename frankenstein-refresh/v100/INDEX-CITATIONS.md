@@ -438,14 +438,14 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N337** Albert, Nov 13, 2026, 08:26-08:34: H10 waits until play is right for him, but the computers' idle villagers ar → X107
 - **N335** Albert, Nov 13, 2026, 01:00-01:06: "Deposit / drop is stupid. We should just have logic. Focus is also stupid. → X105
 - **N338** Albert, Nov 13, 2026, 08:26-08:34: "Villagers should have a buffer of a few pixels. And villager on a task, in → D196, X108
-- **N339** Albert, Nov 13, 2026, 09:39: "somewhere in our system of modules, a priority list and a worker villager should → D377, X109
+- **N339** Albert, Nov 13, 2026, 09:39: "somewhere in our system of modules, a priority list and a worker villager should → D377, D379, X109
 - **N340** Albert, Nov 13, 2026, 09:41: "the Home pocket needs more resources ... more berries two or three times as much → D62
 - **N341** Albert, Nov 13, 2026, 09:39: "you have to put the dock very far away from the water, which is stupid. It shoul → D218, X111
 - **N342** Albert, Nov 13, 2026, 09:39: "the mint produces without anybody walking back and forth. The quarry should prod → SC48, X110, BCL4
 - **N343** Measured Nov 13, 2026, on the sealed S4 code: a villager posted to a Quarry kept the standing spot of her last → unused
 - **N344** International Regulations for Preventing Collisions at Sea (COLREGs, IMO 1972), Rule 18, Responsibilities betw → D377
 - **N345** Albert, Nov 13, 2026, 10:48-10:55: "Can we find a cheaper source?"; "1.23 is okay". US Army (USARIEM, Natick,  → D224
-- **N346** Albert, Nov 13, 2026, 11:24-11:59: "everything in the game ... would be considered a shell so like an empty ve → X112
+- **N346** Albert, Nov 13, 2026, 11:24-11:59: "everything in the game ... would be considered a shell so like an empty ve → SC50, D379, X112
 - **N347** Albert's match log and screenshot, Nov 13, 2026 (185 minutes): the toast "Fallen star: 300 iron, 100 gold. ×20 → X113
 - **N348** Albert, Nov 13, 2026, 20:59, after playing preview n38: "There is a bug with the docks. I can't fish at all."  → unused
 - **N349** Albert, Nov 13, 2026, 22:21, after 149 minutes on preview n40: "When you get a call or leave and come back the → X114

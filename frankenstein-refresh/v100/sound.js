@@ -41,7 +41,7 @@ function play(name, where, delay = 0) {
   for (const [kind, ...a] of r.slice(1)) { if (kind === 'tone') a[3] *= v; else if (kind === 'hiss') a[1] *= v; else a[2] *= v; PART[kind](at, pan, ...a); }
 }
 FK.on('event', (name, t, u) => {
-  const s = name === 'work' ? t && t.kind !== 'bld' && SH[KIND[t.kind].code].sound : name === 'pick' ? t && SH[t.code].voice : HB.on[name];
+  const s = name === 'work' ? t && !FK.has(t, 'Plot') && SH[KIND[t.kind].code].sound : name === 'pick' ? t && SH[t.code].voice : HB.on[name];
   if (s) play(s, t || u);
   const ms = HB.haptic[name]; if (ms && navigator.vibrate && on) try { navigator.vibrate(ms); } catch (e) {}
 });

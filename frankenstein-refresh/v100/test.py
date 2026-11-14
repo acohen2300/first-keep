@@ -1682,8 +1682,8 @@ async def ground(b):
     await pg.wait_for_timeout(1000); w = await pg.evaluate(GROUNDJS2); await pg.close()
     share = lambda p: p[0] >= 20 and p[1] >= 0.9 * p[0]
     ok('t-ground', share(v['land']) and share(w['water']) and not errs, [v, w, errs[:2]])
-N15JS = r"""(() => { const S = MENU.S, out = {}; S.opt.daily = 1; MENU.VERBS.opt.run('civ', 0); const a = { ...S.opt }; out.daily = ['civ', 'diff', 'len', 'scen', 'fog'].every((k) => MENU.VERBS.opt.whyNot(k) !== '') && MENU.VERBS.opt.run('civ', 0) === undefined && ['civ', 'diff', 'len', 'scen', 'fog'].every((k) => S.opt[k] === a[k]);
- S.opt.daily = 0; out.free = MENU.VERBS.opt.whyNot('civ') === ''; MENU.act('start'); const me = FK.SIDES[0]; for (const y in me.store) me.store[y] = 5000; const h = FK.seatOf(0), c = FK.trains(h.code, 0)[0], before = JSON.stringify(me.store);
+N15JS = r"""(() => { const S = MENU.S, out = {}, o0 = { ...S.opt }; S.opt.daily = 1; MENU.VERBS.opt.run('civ', 0); const a = { ...S.opt }; out.daily = ['civ', 'diff', 'len', 'scen', 'fog'].every((k) => MENU.VERBS.opt.whyNot(k) !== '') && MENU.VERBS.opt.run('civ', 0) === undefined && ['civ', 'diff', 'len', 'scen', 'fog'].every((k) => S.opt[k] === a[k]);
+ S.opt.daily = 0; out.free = MENU.VERBS.opt.whyNot('civ') === ''; Object.assign(S.opt, o0); MENU.act('start'); const me = FK.SIDES[0]; for (const y in me.store) me.store[y] = 5000; const h = FK.seatOf(0), c = FK.trains(h.code, 0)[0], before = JSON.stringify(me.store);
  ECON.queue(h, c); ECON.queue(h, c); ECON.unqueue(h, 1); ECON.unqueue(h, 0); out.refund = JSON.stringify(me.store) === before && !h.q.length;
  MENU.render(true); out.ribbon = !document.querySelector('.rib') && document.querySelectorAll('.topbar .strip > .cell').length === MENU.SCR.top.length;
  const L = FK.D.light, lit = FK.lightsOf().filter(([t, k]) => k === 'lantern').length; out.torch = [FK.lightsOf().filter(([t, k]) => k === 'lantern' && t.side === 0).length, FK.blds().filter((t) => t.side === 0 && !(t.done < 1) && !FK.has(t, 'Line') && !FK.has(t, 'Field')).length];

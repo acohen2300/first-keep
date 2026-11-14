@@ -4,24 +4,24 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,665 | 651,905 | 652,072 |
-| Books | 2560 | 0 | 824,037 | 825,027 |
+| Game code | 31 | 3,665 | 650,981 | 651,148 |
+| Books | 2562 | 0 | 825,675 | 826,665 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,287 | 376,837 | 377,098 |
+| Tools | 5 | 2,287 | 376,882 | 377,143 |
 
 ## The trades (code)
 
 | Item | Lines | Characters | Bytes | Typed numbers |
 |---|---|---|---|---|
 | index.html#page | 32 | 1,855 | 1,855 | 5 |
-| index.html#frames | 13 | 1,111 | 1,111 | 3 |
+| index.html#frames | 13 | 1,174 | 1,174 | 3 |
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,959 | 1,963 | 38 |
 | index.html#floor-2-terrain | 85 | 9,863 | 9,867 | 115 |
-| index.html#floor-3-non-movables | 73 | 11,451 | 11,455 | 54 |
-| index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
+| index.html#floor-3-non-movables | 73 | 11,449 | 11,453 | 54 |
+| index.html#drawn-once-in-the-view-frame | 98 | 19,127 | 19,131 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
@@ -30,36 +30,36 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,564 | 1,568 | 20 |
-| index.html#floor-5-movables | 159 | 22,304 | 22,308 | 78 |
-| index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
+| index.html#floor-5-movables | 159 | 22,281 | 22,285 | 78 |
+| index.html#the-body-s-laws | 32 | 2,817 | 2,821 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
-| index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
-| index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 147 | 31,920 | 31,925 | 0 |
+| index.html#floor-6-climate | 169 | 30,452 | 30,464 | 113 |
+| index.html#floor-7-display | 80 | 17,649 | 17,653 | 54 |
+| index.html#the-view-s-eyes-lights-and-stage | 147 | 31,885 | 31,890 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 5,927 | 5,931 | 24 |
-| index.html#touch | 54 | 10,159 | 10,163 | 54 |
-| menu.js | 627 | 138,368 | 138,429 | 437 |
-| econ.js | 624 | 118,127 | 118,127 | 70 |
-| combat.js | 377 | 64,665 | 64,665 | 83 |
-| ai.js | 172 | 27,513 | 27,513 | 25 |
-| sound.js | 58 | 6,440 | 6,440 | 66 |
+| index.html#the-woods-cache | 41 | 5,923 | 5,927 | 24 |
+| index.html#touch | 54 | 10,162 | 10,166 | 54 |
+| menu.js | 627 | 138,166 | 138,227 | 437 |
+| econ.js | 624 | 117,690 | 117,690 | 70 |
+| combat.js | 377 | 64,405 | 64,405 | 83 |
+| ai.js | 172 | 27,506 | 27,506 | 25 |
+| sound.js | 58 | 6,442 | 6,442 | 66 |
 
 ## The books
 
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 54 | 16,195 |
+| capabilities | 55 | 16,532 |
 | citations | 359 | 95,617 |
 | colours | 34 | 10,345 |
 | comments | 1028 | 200,918 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 344 | 200,636 |
+| measure | 345 | 201,561 |
 | rules | 114 | 45,850 |
 | screen | 28 | 18,716 |
-| shells | 110 | 23,558 |
+| shells | 110 | 23,956 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
@@ -71,7 +71,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Layer | Shells | Ticking nothing yet |
 |---|---|---|
 | 100 | 17 | 0 |
-| 110 | 50 | 1 |
+| 110 | 50 | 0 |
 | 120 | 43 | 0 |
 
 ## The rules
@@ -193,4 +193,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X115 | t-n43 | page | N43 (N354-N358): the new game card opens on Difficulty, its names 12, its choices 14 at 600, the chosen one ringed in gold, Start at 18 naming the people, the people's two lines in full under their row, no help line below, an icon on every scenario and hazard; the sea holds fish of the book's amount along every coast; autumn's turn warns of winter; a soldier whose nerve is gone holds his ground; a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is |
 | X116 | t-n44 | page | N44 (N360, Parked Nov 14): the new game card has no Tension row; a building's card has no All tech button and its plot cell shows its words whole; a spy's card says how he is used; the war Controller's middle button reads who and how many until an order is chosen, then the order and what it still needs; a resource whose out beats its in is red in the top bar |
 
-2690 items sealed · 2560 book entries · 94 laws · 359 citations, 34 still to open · 0 known
+2692 items sealed · 2562 book entries · 94 laws · 359 citations, 34 still to open · 0 known

@@ -1,7 +1,7 @@
 'use strict';
 // E241
 window.AI = (() => {
-const { D, B, SIDES, N } = FK;
+const { D, B, SIDES, N, inState } = FK;
 // E170
 const whole = FK.things, things = FK.rest, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
 const clock = SIDES.map(() => 0), rates = new Map(), mind = SIDES.map(() => ({})), of = (x) => x || 0, per = (side) => A.pers[A.pers.of[side]];
@@ -16,7 +16,7 @@ let DF;
 function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);
   for (let r = rmin; r < rmax; r++) for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i += j === cj - r || j === cj + r ? 1 : 2 * r) if (ECON.canPlace(code, i, j, side, true)) return [i, j]; return null; }
 function raise(side, code, bx, by, rmin, rmax) { if (!ECON.canPay(side, D.cost[code] || {}) || ECON.capWhy(side, code)) return null; const at = spot(code, bx, by, rmin, side, rmax); // E686
-  if (!at) return null; const t = ECON.plan(side, code, ...at); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (u.job === 'idle' || u.job === 'wait' || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
+  if (!at) return null; const t = ECON.plan(side, code, ...at); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (inState(u, 'Rest') || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
 function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n * H, cj = h.j + h.n * H, mid = FK.MID / D.tile, base = Math.atan2(mid - cj, mid - ci), off = new Map(); let pi = null, pj = null; // E331
   const add = (i, j) => { const a = Math.atan2(j + H - cj, i + H - ci) - base; if (!off.has(j * N + i)) off.set(j * N + i, Math.abs(Math.atan2(Math.sin(a), Math.cos(a)))); };
   for (let s = -WP.steps; s <= WP.steps; s++) { const a = base + s * WP.step, i = Math.floor(ci + Math.cos(a) * R), j = Math.floor(cj + Math.sin(a) * R); if (pi !== null && i !== pi && j !== pj) add(i, pj); add(i, j); [pi, pj] = [i, j]; }
@@ -76,7 +76,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
   if (t - of(m.siteT) >= AT.site) { m.siteT = t; for (const b of blds(side)) if (!up(b) && !ECON.wallish(b) && !vs.some((u) => u.target === b)) ECON.autoBuilder(side, b); }
   yield; const due = {}, flat = s.age >= AT.apart.age && ECON.canPay(side, AT.apart.cost) ? A.apartment : HOUSE; // E530
   if (!rising(side, HOUSE) && !rising(side, A.apartment) && ECON.popOf(side) >= ECON.popCap(side) - D.ai.homeAhead && ECON.popCap(side) < D.popMax && !put(flat, h, RG.home) && !ECON.canPay(side, D.cost[HOUSE])) ECON.addRes(due, D.cost[HOUSE]);
-  yield; for (const y of Y) if (jobs[y] >= AT.drop.crew && !rising(side, camps[y])) { yield; const f = (y === WOOD ? whole() : things()).filter((x) => x.kind !== 'bld' && pos(x.amount) && ECON.yieldOf(x) === y).reduce((a, b) => (!a || dist(b, h) < dist(a, h) ? b : a), null), d = f && FK.dropFor({ side, bx: f.bx, by: f.by }, y); if (f && !(d && dist(d, f) < AT.drop.near * D.tile)) put(camps[y], f, RG.drop); } // E531
+  yield; for (const y of Y) if (jobs[y] >= AT.drop.crew && !rising(side, camps[y])) { yield; const f = (y === WOOD ? whole() : things()).filter((x) => !FK.has(x, 'Plot') && pos(x.amount) && ECON.yieldOf(x) === y).reduce((a, b) => (!a || dist(b, h) < dist(a, h) ? b : a), null), d = f && FK.dropFor({ side, bx: f.bx, by: f.by }, y); if (f && !(d && dist(d, f) < AT.drop.near * D.tile)) put(camps[y], f, RG.drop); } // E531
   yield; for (const [code, y] of Object.entries(A.plots)) { yield; if (ECON.capWhy(side, code) || rising(side, code) || count(side, code) * ECON.capOf({ kind: 'bld' }) >= jobs[y] || !plotPays(side, code)) continue; // E532
     const b = put(code, h, RG.plot); if (b) ECON.setMake(b, y); else if (!ECON.canPay(side, D.cost[code])) ECON.addRes(due, D.cost[code]); break; }
   yield; const [FIELD] = Object.keys(A.plots); if (count(side, FIELD) >= AT.mill && !count(side, camps[FOOD])) put(camps[FOOD], h, RG.mill);
@@ -134,7 +134,7 @@ function economy(side, P, h, saving, put) { const s = SIDES[side], R = s.store; 
 function decideWar(side, P) { const m = mind[side], w = WAR.waves[side], t = FK.K.t; m.cool = m.cool || {};
   if (w && w.S) { const out = w.S.filter((u) => !u.gone), [gx, gy] = FK.tileMid(w.k), d = out.length ? total(out, (u) => Math.hypot(u.bx - gx, u.by - gy)) / out.length : w.d;
     if (out.some((u) => u.job === 'fight' || t - of(u.hurtT) < WV.fight) || d < w.d - WV.step * D.tile) { w.d = Math.min(w.d, d); w.pt = t; }
-    if (!w.charged && out.some((u) => u.job === 'fight' && u.target && u.target.kind === 'unit')) { w.charged = true; WAR.charge(out); }
+    if (!w.charged && out.some((u) => u.job === 'fight' && u.target && FK.has(u.target, 'Walk'))) { w.charged = true; WAR.charge(out); }
     const stalled = t - w.pt > WV.stall; if (out.length < w.n0 * WV.broke || stalled) { WAR.recall(side); if (stalled && !w.bid) m.cool[w.to] = t + WV.cool; } return; }
   if (w) return; const Wd = things().find((b) => b.code === WONDER && up(b) && b.side !== side && WAR.atWar(side, b.side)), free = WAR.armyFree(side, 'rout').filter((u) => !u.goal && !u.drill && !u.esc);
   if (free.length < (Wd ? WV.wonder : P.waveMin + DF.wave)) return; const bold = P.bold + DF.bold, go = Wd ? free : free.slice(Math.floor(free.length * P.guard)); let best = null, bp = -Infinity;

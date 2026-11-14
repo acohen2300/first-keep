@@ -71,6 +71,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC47 | built more than once in a row: after placing it, the next one waits beside it to be placed (Build another); a building you raise once closes the placing (Albert, Nov 10, N17 #17) | {by: menu.js place, law: [], needs: [], may: []} | N307 |
 | SC48 | a worked building whose yield goes straight to the stores, with no carrying: what is dug stays in the yard (Albert, Nov 13 09:39, N342: finds on the ground are carried home; the Quarry, like the Mint, the Foundry and the Pasture, is not) | {by: econ.js, law: [], needs: [yield, rate], may: [amount]} | N342 |
 | SC49 | a find that grows back each spring toward its own full amount by the logistic law (QY) at D378's rate for its kind; one with a root is never removed: picked out it stands bare until spring (fish, bushes) | {by: econ.js, law: [QY], needs: [amount], may: []} | N353 |
+| SC50 | it stands on a plot of the board, of its size, and is raised there: every building. The laws ask this tick, not the name of a kind (Design 09: never ask a thing its name; Design 10 section C, Place) | {by: index.html, law: [], needs: [size], may: []} | N346 |
 
 ## citations
 
@@ -1899,8 +1900,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D373 | Defend answers the foe striking what is worth most: your hall, then your people, a building, a soldier (the order Claude proposed Nov 11 15:39; the numbers only rank them) | {seat: 4, folk: 3, bld: 2, soldier: 1} | N325 |
 | D375 | Prep (Albert, Nov 11, talk; yes Nov 12 05:27): every villager boards up the nearest building. add: the health boarding adds, as a share of the building's own, +50% for timber and +100% for stone (Albert's). back: unboarding before any attack has landed near the town leaves the building short by this share of what boarding added, to be repaired (Albert: "unboarding takes away half of what boarding added"; "they have to unboard and then repair"); after an attack has landed the boards just come off. Claude's numbers, never set by Albert: time, boarding as a share of the building's own building time, stone twice timber; cost, a share of the building's wood (timber) or stone (stone) price; least, the seconds for a building with no build time; planks, how many are drawn; (Nov 12, N29, list C6; Albert, Nov 11: "Existing techs (Fortified posts, Masonry, Architecture) make it cheaper and faster") each of techs that is known takes cut off Prep's price and off its time, one after another (all three: 0.8³ = 0.51, about half). cut is Architecture's own 0.2 (O60), reused; Claude's choice of number, for Albert to play and change | {add: {wood: 0.5, stone: 1}, back: 0.5, time: {wood: 0.25, stone: 0.5}, cost: {wood: 0.2, stone: 0.3}, least: 30, planks: 4, techs: [fortpos | N326 |
 | D376 | every job a unit may hold (N30, the job door E1041): a job not in this list is recorded as odd the moment it is set, and the test fails on it | [idle, walk, gather, carry, back, wait, build, repair, raise, board, school, inside, shelter, march, hold, fight, rout, follow, scout, sab,  | N326 |
-| D377 | who gives way when two people meet (Albert, Nov 13 09:39, N339): each has a level by what it is doing: at work (standing at a task: gathering, building, holding a post) 3, on the move (anyone on a path, and anyone fighting: soldiers closing on one foe must be able to press in together, t-n25) 2, at rest (idle, waiting) 1. The lower gives way and takes the whole push, as at sea the vessel freer to manoeuvre keeps clear of the one held by her work (COLREGs Rule 18, N344); equals part by their mass (QCJ). The exception: when those a higher one blocks cannot be moved aside (a building, a wall, water, trees, a find: any ground that cannot be walked), their levels add up, and once the sum passes hers she gives way. A walker carrying a load stands laden above an empty walker (Albert, Nov 13 22:21: yes): Rule 18 again, the vessel constrained by her draught is kept clear of by the freer one | {work: 3, move: 2, laden: 0.5, rest: 1, working: [gather, build, hold], resting: [idle, wait]} | N339; N344 |
+| D377 | (the states at work and at rest are D379's Work and Rest) who gives way when two people meet (Albert, Nov 13 09:39, N339): each has a level by what it is doing: at work (standing at a task: gathering, building, holding a post) 3, on the move (anyone on a path, and anyone fighting: soldiers closing on one foe must be able to press in together, t-n25) 2, at rest (idle, waiting) 1. The lower gives way and takes the whole push, as at sea the vessel freer to manoeuvre keeps clear of the one held by her work (COLREGs Rule 18, N344); equals part by their mass (QCJ). The exception: when those a higher one blocks cannot be moved aside (a building, a wall, water, trees, a find: any ground that cannot be walked), their levels add up, and once the sum passes hers she gives way. A walker carrying a load stands laden above an empty walker (Albert, Nov 13 22:21: yes): Rule 18 again, the vessel constrained by her draught is kept clear of by the freer one | {work: 3, move: 2, laden: 0.5, rest: 1} | N339; N344 |
 | D378 | what grows back each spring (the Regrow tick, QY: the logistic law, N + r × N × (1 − N ÷ K), K the find's own full amount): r a year by kind; root is the share of K that picking cannot take (a berry bush is a perennial shrub: the canes and roots stay and fruit again; fish have no root, so a spot fished out is gone). A bush picked bare rests until spring, comes back to about two thirds, and is full the spring after; one picked only to half is full the next spring (the largest sustained harvest is at half of K, Schaefer 1954) | {fish: {r: 0.5}, bush: {r: 2, root: 0.25}} | N353 |
+| D379 | the states a person can be in and the ticks each carries (Design 09 step 3, Design 10 section I; Albert, Nov 13: a state is a tick that switches on and off while playing, and a law is written once for a tick). Rest: free hands, the lowest right of way (D377). Work: standing at a task, the highest. Ready: a soldier standing free, at home or at his post, who can be sent or called. Ordered: a soldier going to or holding the place he was sent. Harvest: a gatherer at her find or carrying its load home. A law asks inState(person, tick), never the state's name; a state with no tick here is still asked by name, counted by the gate (X112) | {idle: [Rest, Ready], wait: [Rest], hold: [Work, Ready, Ordered], march: [Ordered], gather: [Work, Harvest], carry: [Harvest], build: [Work] | N346; N339 |
 
 ## rules
 
@@ -2015,7 +2017,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X109 | who gives way (N339, D377): a walker meeting an idler moves him and is not moved; a soldier holding his post, hemmed by three resting passers who cannot be moved, holds (3 does not pass his 3); by four he gives way; the levels are 3, 2, 1 | {stage: page} | N339 |
 | X110 | the Quarry's stone goes straight to the stores (N342): its worker never carries, and stone comes in at no less than four fifths of the quarry's rate | {stage: page} | N342 |
 | X111 | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile | {stage: page} | N341 |
-| X112 | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall | {stage: code, named: 309, dead: 7} | N346 |
+| X112 | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall | {stage: code, named: 149, dead: 7} | N346 |
 | X113 | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken | {stage: page} | N347 |
 | X114 | N42 (N349-N351): a bulk sale at the Market sells 1,000 wood in one tap for less than ten single lots; an untimed game shows no countdown under the clock and a standing wonder shows its own; after the page was hidden and the old sound player will not resume, the next tap makes a new one; a walker with a load is not pushed by an empty walker; a research cell shows what it gives; a bush picked out stays, bare, and is back past six tenths after the turn of spring; the workers' fire is three campfires across and every building has two torches | {stage: page} | N349; N350; N351; N352; N353 |
 | X115 | N43 (N354-N358): the new game card opens on Difficulty, its names 12, its choices 14 at 600, the chosen one ringed in gold, Start at 18 naming the people, the people's two lines in full under their row, no help line below, an icon on every scenario and hazard; the sea holds fish of the book's amount along every coast; autumn's turn warns of winter; a soldier whose nerve is gone holds his ground; a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is | {stage: page} | N354; N355; N357; N358; N359 |
@@ -2070,56 +2072,56 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | MG3 | Campfire | [Yield] | N144 |
 | MG4 | Treasure | [Yield, Take] | N144; N205 |
 | MT1 | Trade stop | [Trade] | N195 |
-| BTC1 | Town Center | [Seat, Drop-off, Spawn, Shoot, House, Research, Health, Shelter, Hold] | N144 |
-| BTC2 | Castle | [Shoot, Health, Shelter, Hold, Research] | N144; N235 |
-| BTC5 | Medical tent | [Heal, Health, Burn] | N144; N198; N206 |
-| BTC6 | Training tent | [Spawn, Health, Burn] | N144; N198; N206 |
-| BTC7 | Mess tent | [Shelter, Health, Burn] | N144; N198; N206 |
-| BTC8 | Camp tower | [Shoot, Health, Burn] | N144; N198; N206 |
-| BR1 | Dwelling | [House, Health, Burn, Research, Repeat] | N144; N206 |
-| BR2 | Apartment | [House, Health] | N144; N235 |
-| BCR1 | Market | [Trade, Spawn, Burn, Health, Research] | N144; N195; N206 |
-| BCR2 | Tavern | [Burn, Care, Health] | N144; N206 |
-| BCL1 | Farm | [Field, Health, Soil, Repeat] | N144; N170 |
-| BCL2 | Tree farm | [Field, Health, Repeat] | N144; N170 |
-| BCL3 | Pasture | [Field, Health, Flock] | N144; N170 |
-| BCL4 | Quarry | [Field, Health, Research, Repeat, Store] | N144; N235; N342 |
-| BCT1 | Trade post | [Post, Shoot, Health, Research] | N144; N195 |
-| BCT2 | Dock | [Drop-off, Health, Shore, Burn, Research] | N144; N170; N206 |
-| BP1 | School | [Teach, Health, Research] | N144; N194 |
-| BP2 | Library | [Health, Research] | N144 |
-| BP3 | Temple | [Spawn, Zeal, Care, Health, Research] | N144; N194 |
-| BP4 | Baths | [Care, Health] | N144 |
-| BP5 | Theatre | [Care, Health] | N144 |
-| BP6 | Hospital | [Spawn, Heal, Care, Health, Research] | N144; N194 |
-| BP7 | Aqueduct | [Health, Research] | N144 |
-| BP8 | Courthouse | [Spawn, Shoot, Health, Research] | N144; N194 |
-| BP9 | Hall | [Health, Research] | N144 |
-| BP10 | War Council | [Squad, Health, Research] | N144 |
-| BI1 | Mill | [Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
-| BI2 | Lumber camp | [Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
-| BI3 | Mining camp | [Drop-off, Health, Research, Repeat] | N144 |
-| BI4 | Store | [Health, Research] | N144 |
-| BI5 | Depot | [Drop-off, Supply, Health, Burn] | N144; N198; N206 |
-| BI6 | Mint | [Make, Health, Research, Repeat] | N144; N195 |
-| BI7 | Foundry | [Make, Health, Research, Repeat] | N144; N195 |
-| BI8 | Workshop | [Make, Burn, Health, Research] | N144; N195; N206 |
-| BI9 | Smith | [Health, Research] | N144 |
-| BM1 | Barracks | [Spawn, Health, Shelter, Burn, Research] | N144; N206 |
-| BM2 | Range | [Spawn, Health, Burn, Research] | N144; N206 |
-| BM3 | Stable | [Spawn, Health, Burn, Research] | N144; N206 |
-| BM4 | Siege workshop | [Spawn, Health, Research] | N144 |
-| BW1 | Wall | [Health, Line, Repeat] | N144 |
-| BW2 | Gate | [Health, Gate, Burn] | N144; N206 |
-| BW3 | Tower | [Shoot, Health, Hold, Research, Repeat] | N144 |
-| BW4 | Palisade | [Health, Line, Burn, Repeat] | N144; N206 |
-| BF5 | Abatis | [Health, Burn] | N144; N198; N206 |
-| BF1 | Pit | [Trap, Health] | N144; N198 |
-| BF2 | Net | [Trap, Health] | N144; N198 |
-| BF3 | Stakes | [Trap, Health] | N144; N198 |
-| BF4 | Caltrops | [Trap, Health] | N144; N198 |
-| BS1 | Throne | [] | N144 |
-| BS2 | Wonder | [Wonder, Health] | N144 |
+| BTC1 | Town Center | [Plot, Seat, Drop-off, Spawn, Shoot, House, Research, Health, Shelter, Hold] | N144 |
+| BTC2 | Castle | [Plot, Shoot, Health, Shelter, Hold, Research] | N144; N235 |
+| BTC5 | Medical tent | [Plot, Heal, Health, Burn] | N144; N198; N206 |
+| BTC6 | Training tent | [Plot, Spawn, Health, Burn] | N144; N198; N206 |
+| BTC7 | Mess tent | [Plot, Shelter, Health, Burn] | N144; N198; N206 |
+| BTC8 | Camp tower | [Plot, Shoot, Health, Burn] | N144; N198; N206 |
+| BR1 | Dwelling | [Plot, House, Health, Burn, Research, Repeat] | N144; N206 |
+| BR2 | Apartment | [Plot, House, Health] | N144; N235 |
+| BCR1 | Market | [Plot, Trade, Spawn, Burn, Health, Research] | N144; N195; N206 |
+| BCR2 | Tavern | [Plot, Burn, Care, Health] | N144; N206 |
+| BCL1 | Farm | [Plot, Field, Health, Soil, Repeat] | N144; N170 |
+| BCL2 | Tree farm | [Plot, Field, Health, Repeat] | N144; N170 |
+| BCL3 | Pasture | [Plot, Field, Health, Flock] | N144; N170 |
+| BCL4 | Quarry | [Plot, Field, Health, Research, Repeat, Store] | N144; N235; N342 |
+| BCT1 | Trade post | [Plot, Post, Shoot, Health, Research] | N144; N195 |
+| BCT2 | Dock | [Plot, Drop-off, Health, Shore, Burn, Research] | N144; N170; N206 |
+| BP1 | School | [Plot, Teach, Health, Research] | N144; N194 |
+| BP2 | Library | [Plot, Health, Research] | N144 |
+| BP3 | Temple | [Plot, Spawn, Zeal, Care, Health, Research] | N144; N194 |
+| BP4 | Baths | [Plot, Care, Health] | N144 |
+| BP5 | Theatre | [Plot, Care, Health] | N144 |
+| BP6 | Hospital | [Plot, Spawn, Heal, Care, Health, Research] | N144; N194 |
+| BP7 | Aqueduct | [Plot, Health, Research] | N144 |
+| BP8 | Courthouse | [Plot, Spawn, Shoot, Health, Research] | N144; N194 |
+| BP9 | Hall | [Plot, Health, Research] | N144 |
+| BP10 | War Council | [Plot, Squad, Health, Research] | N144 |
+| BI1 | Mill | [Plot, Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
+| BI2 | Lumber camp | [Plot, Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
+| BI3 | Mining camp | [Plot, Drop-off, Health, Research, Repeat] | N144 |
+| BI4 | Store | [Plot, Health, Research] | N144 |
+| BI5 | Depot | [Plot, Drop-off, Supply, Health, Burn] | N144; N198; N206 |
+| BI6 | Mint | [Plot, Make, Health, Research, Repeat] | N144; N195 |
+| BI7 | Foundry | [Plot, Make, Health, Research, Repeat] | N144; N195 |
+| BI8 | Workshop | [Plot, Make, Burn, Health, Research] | N144; N195; N206 |
+| BI9 | Smith | [Plot, Health, Research] | N144 |
+| BM1 | Barracks | [Plot, Spawn, Health, Shelter, Burn, Research] | N144; N206 |
+| BM2 | Range | [Plot, Spawn, Health, Burn, Research] | N144; N206 |
+| BM3 | Stable | [Plot, Spawn, Health, Burn, Research] | N144; N206 |
+| BM4 | Siege workshop | [Plot, Spawn, Health, Research] | N144 |
+| BW1 | Wall | [Plot, Health, Line, Repeat] | N144 |
+| BW2 | Gate | [Plot, Health, Gate, Burn] | N144; N206 |
+| BW3 | Tower | [Plot, Shoot, Health, Hold, Research, Repeat] | N144 |
+| BW4 | Palisade | [Plot, Health, Line, Burn, Repeat] | N144; N206 |
+| BF5 | Abatis | [Plot, Health, Burn] | N144; N198; N206 |
+| BF1 | Pit | [Plot, Trap, Health] | N144; N198 |
+| BF2 | Net | [Plot, Trap, Health] | N144; N198 |
+| BF3 | Stakes | [Plot, Trap, Health] | N144; N198 |
+| BF4 | Caltrops | [Plot, Trap, Health] | N144; N198 |
+| BS1 | Throne | [Plot] | N144 |
+| BS2 | Wonder | [Plot, Wonder, Health] | N144 |
 | UV | Villager | [Walk, Gather, Carry, Build, Repair, Fight, Health] | N144; N170 |
 | UM1 | Spearman | [Walk, Fight, Health] | N144; N170; N176 |
 | UM6 | Swordsman | [Walk, Fight, Health] | N144; N170; N176 |
