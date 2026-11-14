@@ -4,6 +4,7 @@ Built from `Audit - Nov 12.md` (sections B, C, D, E), Nov 12 07:15. Last brought
 Rules of this page: one line an item. A line is DONE only with its proof beside it (a named test that passed, or Albert's own play). BUILT means in the code, proof still owed. Nothing leaves this page without a word. Every report to Albert is this page. [2026-11-12 07:15]
 
 Housekeeping (Nov 12 15:20): this is the only list. Older lists moved to `docs/6 Records/Archive - lists to Nov 12/`. `Owed.md` (v80 line, read by old `tests/handoff.py`), `Next build list.md` (cited in the books) and `Field defences.md` (cited in code) stay in place but are archive. Working branch: `n29-the-list`; every other branch is archive. [2026-11-12 15:20]
+Housekeeping (Nov 14 00:40; Albert: "Tidy the repo"): a file named on this page that is no longer in `docs/4 Now` is in `docs/6 Records/Archive - lists to Nov 13/` (its README says what each was). Seven stray screenshots left `frankenstein-refresh/v100/`. [2026-11-14 00:40]
 
 States: TODO · BUILT (no proof yet) · DONE (proof named) · BLOCKED (says on what) [2026-11-12 07:15]
 
