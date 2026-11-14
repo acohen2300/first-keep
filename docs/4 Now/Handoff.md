@@ -12,10 +12,10 @@ Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 hold
 ## In N47 (on top of N46; Albert's go of Nov 14 10:16)
 - Z4 by the randomizer: woods from one field over the board, ten plain and six rich clearings, winding paths clearing to clearing, the corner-to-middle lanes grown over (to confirm with him), a tree holds four villagers. Pictures: `mockups/n47`.
 
-## Next builds, in his order (ruled, a go; The List section 10 has his words)
+## Next builds, in his order (ruled, a go: Albert, Nov 14 10:51 "then you can do all three"; The List section 10 has his words). Each its own preview.
 1. Dock + fish as one element: a longer dock from the bank into the water with a rich fish deposit at its end, worked like a farm; wild fish stay and set how rich it is; it shortens on narrow water. Precedent: Age of Empires II's Fish Trap. His number for the deposit is not ruled: propose it in the report.
 2. The mine shaft: a Gunpowder-age research on the Mine's Digging line (`books/tech.js` O28 "deep" is the line), worked-out gold and iron finds reopened as a shaft that produces in place, sold through the Market's 1,000 lot. The Digging line and worked-out finds have not been read in code yet.
-3. To design with him first: a Siege workshop unit that fells trees fast to cut a path, with villagers gathering the felled wood.
+3. The Pioneer (designed with him Nov 14 10:51 to 10:57; The List section 10 has his words and the research): a unit from the Siege workshop with one new tick, Fell; tap it, then a spot beyond the woods, and it fells a lane wide enough for an engine; a felled tree is the same tree lying down (it no longer blocks, keeps its 100 wood, D53); villagers told to follow it gather as it goes; lanes are permanent (his ruling); unlocked by age and by a research (his ruling). Proposed, to say in the report: five times a villager's speed (felling is about a fifth of the work on a tree), the Ram's age, a research "Pioneer corps" at the Siege workshop.
 The frozen-villager trace is OFF by his word (Nov 14 10:10): he tests first.
 
 ## In N46 (on top of n41)
