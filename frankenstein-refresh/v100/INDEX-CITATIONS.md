@@ -456,6 +456,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N357** Albert, Nov 13, 2026, 09:39: fish in all water; 22:21, after playing: "If we can't fish in the ocean, might as → D218, X115
 - **N359** Traced Nov 13, 2026, from a test that failed one run in five (t-dock) and from Albert's logs of villagers stan → X115
 - **N361** Traced Nov 14, 2026, from t-dock failing three runs in five on N43's own code and four in five on N46: of abou → X115
+- **N362** Albert, Nov 14, 2026, 09:59 to 10:16: "are the trees still being built by the randomizer? Because I find the t → D345, X117
+- **N363** Six rich clearings among four players is the number of pairs of four, C(4,2) = 6: one for each pair is the onl → D345, X117
+- **N364** Albert, Nov 14, 2026, 10:16: "a tree needs to hold more than 1 villager. Each tree should be 4 villagers." Fel → D195, X117
 
 ## Named exceptions
 

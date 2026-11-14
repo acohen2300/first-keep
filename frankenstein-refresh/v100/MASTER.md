@@ -70,7 +70,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E36** Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry l · D39 (N112) · D40 (N112) · D41 (N112) · QBE (N64) · D23 (N112)
 - **E37** Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads  · D42 (N112) · D45 (N112) · D44 (N112)
 - **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
-- **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N256, N249) · N249 · D50 (N112)
+- **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N256, N249, N362, N363) · N249 · D50 (N112)
+- **E1084** the woods' field reads the board's own coordinates (N362): one field over the whole land,  · N362
+- **E1085** a clearing, one randomized element of Z4 (N362, N363): a disc of flat land kept free of tr · N362 · N363
+- **E1086** a path, the other randomized element (N362, N363): a winding line kept free of trees, from · N362 · N363
 - **E39** the wood's edge keeps one tile from any slope or water
 
 ## index.html#floor-3-non-movables
@@ -87,6 +90,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
 - **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112, N258, N304) · D65 (N228, N231, N242, N304) · QBF (N65)
 - **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231, N242, N304)
+- **E1087** a rich clearing's deposits (N362): what the home pocket holds, without the trees (berries, · N362 · D62 (N322, N256, N242, N304, N340)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
@@ -817,9 +821,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E327** of the buildings that can take an order, the one with the shortest line (Mid's shortest)
 - **E1030** one schedule for everything that waits its turn in a building (Decisions Nov 11, #19): for
 - **E220** the jobs (SM Gather): a villager's job is the yield it works; counts are read, not kept
-- **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N322, N164, N166)
+- **E306** the forager (QV, QX): a find takes D195's cap (a tree one feller, a field one worker) or a · QV (N23, N24) · QX (N25, N26) · D195 (N364, N322, N164, N166)
 - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
-- **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N322, N164, N166) · D137 (N114) · D197 (N164)
+- **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N364, N322, N164, N166) · D137 (N114) · D197 (N164)
 - **E1013** wood is searched for near the worker, not across the map: within his search circle, double
 - **E1054** the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carryi · N335 · E1054
 - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114) · N343

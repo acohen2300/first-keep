@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,659 | 648,952 | 649,117 |
-| Books | 2548 | 0 | 816,256 | 817,227 |
+| Game code | 31 | 3,666 | 650,849 | 651,014 |
+| Books | 2556 | 0 | 821,245 | 822,216 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,266 | 372,264 | 372,525 |
+| Tools | 5 | 2,278 | 374,397 | 374,658 |
 
 ## The trades (code)
 
@@ -18,9 +18,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
-| index.html#the-ground | 28 | 1,959 | 1,963 | 38 |
-| index.html#floor-2-terrain | 85 | 9,863 | 9,867 | 115 |
-| index.html#floor-3-non-movables | 74 | 11,728 | 11,732 | 54 |
+| index.html#the-ground | 28 | 1,972 | 1,976 | 38 |
+| index.html#floor-2-terrain | 91 | 11,279 | 11,283 | 115 |
+| index.html#floor-3-non-movables | 75 | 12,174 | 12,178 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
@@ -38,7 +38,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 142 | 30,660 | 30,665 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
-| index.html#touch | 54 | 10,159 | 10,163 | 54 |
+| index.html#touch | 54 | 10,181 | 10,185 | 54 |
 | menu.js | 625 | 136,515 | 136,574 | 441 |
 | econ.js | 624 | 118,080 | 118,080 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 54 | 16,195 |
-| citations | 355 | 93,924 |
+| citations | 358 | 95,915 |
 | colours | 34 | 10,345 |
-| comments | 1022 | 199,001 |
+| comments | 1026 | 200,334 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 344 | 199,520 |
-| rules | 113 | 44,885 |
+| measure | 344 | 200,697 |
+| rules | 114 | 45,465 |
 | screen | 28 | 17,478 |
 | shells | 110 | 23,558 |
 | sides | 7 | 1,869 |
@@ -191,5 +191,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X113 | t-star | page | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken |
 | X114 | t-n42 | page | N46, from N42 (N349-N351): a bulk sale at the Market sells 1,000 wood in one tap for less than ten single lots; an untimed game shows no countdown under the clock and a standing wonder shows its own; after the page was hidden and the old sound player will not resume, the next tap makes a new one; a research cell shows what it gives; a bush picked out stays, bare, and is back past six tenths after the turn of spring |
 | X115 | t-n43 | page | N46, from N43 (N355, N357, N359): the sea holds fish of the book's amount along every coast and at least nine in ten of the fish by the coast have a place to stand (N361; under six in ten before); a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is |
+| X117 | t-n47 | page | N47 (N362-N364): Z4 by the randomizer: six rich clearings, one for every pair of homes, each with both homes of its pair no more than a third farther than the nearest home, each holding the home pocket's gold, stone, iron and berries and room for a Mill, a Mine and a Tower three times over; plain clearings beside them; no tree stands in a clearing; every clearing, the middle and every home are joined by ground free of trees; a tree holds four villagers and is full to a fifth |
 
-2678 items sealed · 2548 book entries · 94 laws · 355 citations, 34 still to open · 0 known
+2686 items sealed · 2556 book entries · 94 laws · 358 citations, 34 still to open · 0 known
