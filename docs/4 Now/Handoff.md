@@ -1,10 +1,10 @@
-# First Keep: hand-off (Nov 13, 2026, 22:50; the overnight run)
+# First Keep: hand-off (Nov 13, 2026, 22:43; the overnight run)
 
 Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 9 is tonight's go). Laws: `docs/3 Locks/Designs/09`.
 
 ## Where it stands
-- Code: `frankenstein-refresh/v100/`, branch `n29-the-list`. Last sealed build: see the top of `BUILDS.md` (N42 at 22:50).
-- Preview Albert plays: `frankenstein-refresh/preview-nNN/` on `main` (n42 at 22:50), published from a worktree of `main` (`git worktree add /tmp/mainwt main`; copy the game files and `books/`; `git push origin HEAD:main`).
+- Code: `frankenstein-refresh/v100/`, branch `n29-the-list`. Last sealed build: see the top of `BUILDS.md` (N42 at 22:39).
+- Preview Albert plays: `frankenstein-refresh/preview-nNN/` on `main` (n42 at 22:39), published from a worktree of `main` (`git worktree add /tmp/mainwt main`; copy the game files and `books/`; `git push origin HEAD:main`).
 - Live v100 on `main`: untouched. Going live is Albert's call only.
 
 ## Tonight (Albert, Nov 13 22:21 and 22:35; his words are on The List, section 9)
