@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,648 | 644,564 | 644,729 |
-| Books | 2524 | 0 | 805,043 | 806,004 |
+| Game code | 31 | 3,648 | 644,785 | 644,950 |
+| Books | 2524 | 0 | 805,210 | 806,171 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,239 | 366,568 | 366,827 |
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,150 | 10,154 | 54 |
-| menu.js | 624 | 135,561 | 135,620 | 442 |
+| menu.js | 624 | 135,782 | 135,841 | 442 |
 | econ.js | 621 | 117,481 | 117,481 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
@@ -53,7 +53,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 53 | 15,852 |
 | citations | 345 | 89,269 |
 | colours | 34 | 10,345 |
-| comments | 1014 | 195,180 |
+| comments | 1014 | 195,347 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 343 | 198,423 |

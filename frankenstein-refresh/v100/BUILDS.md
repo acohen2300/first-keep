@@ -5241,3 +5241,9 @@ Albert, Nov 13 11:24-11:59: everything is a shell with ticks; what is not a shel
 - Design 09 (`docs/3 Locks/Designs/09 The laws ...`): shell, tick, state, law, book; the steps back in.
 - Gate rule X112 `ecs`: counts the places code asks a thing its name (job, kind, civ, code: 309) and the ticks no law asks for (7); neither may rise. Planted one `job === 'zzz'`: the gate stops at 310.
 MODIFIED: tool:index.py, book:rules:X112, book:citations:N346. No game code.
+
+## S7: the match log carries your ledger · 2026-11-13 21:10
+Albert, Nov 4 (the match-log additions); Nov 13 (the 185-minute log: iron 3,477 → 106,000 in minutes 109-121 with no source named).
+- Each row of the match log adds `led`: your income and spending so far, by reason (gather, market, loot, tribute, trade, upkeep, units, research ...). A jump in the stores now names where it came from.
+MODIFIED: code:menu.js, book:comments:E671. ecs counts unchanged (309, 7); menu.js +260 characters.
+Tests: a probe row shows `led` ({"gather": 210}, {"upkeep": 7, "spoiled": 8}); t-n24 and t-n29 as before.

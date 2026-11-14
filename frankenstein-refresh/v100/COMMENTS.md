@@ -772,7 +772,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E668 | ai.js | the computers' part of the save: their clocks, plans and minds |
 | E669 | menu.js | the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the menu stays closed so the ghost and its guides are seen |
 | E670 | menu.js | The test tools (Mid's matchLog, copyLog, tapCount): the match log for Claude to read, tap counts kept on this phone |
-| E671 | menu.js | a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fell |
+| E671 | menu.js | a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fell; and your own ledger so far, in and out by reason (led), so a jump in the stores names its source (Albert, Nov 4: the match-log additions; Nov 13: the runaway income) |
 | E672 | menu.js | copied to the clipboard, or through a hidden box where the clipboard is refused |
 | E673 | menu.js | the menu's part of the save: the mail, the news, the options, the match log |
 | E674 | index.html#floor-3-non-movables | a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26 from home): it is laid only where the ring is open land, and the trees on the ring are cleared, as the pocket's grove is kept |

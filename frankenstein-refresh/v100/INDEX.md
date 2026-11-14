@@ -1232,7 +1232,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E668 |  | the computers' part of the save: their clocks, plans and minds |  |
 | E669 |  | the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the menu stays closed so the ghost and its guides are  |  |
 | E670 |  | The test tools (Mid's matchLog, copyLog, tapCount): the match log for Claude to read, tap counts kept on this phone |  |
-| E671 |  | a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fell |  |
+| E671 |  | a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fell; and your own ledger so far, in and out by reas |  |
 | E672 |  | copied to the clipboard, or through a hidden box where the clipboard is refused |  |
 | E673 |  | the menu's part of the save: the mail, the news, the options, the match log |  |
 | E674 |  | a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26 from home): it is laid only where the ring is ope |  |
