@@ -5247,3 +5247,10 @@ Albert, Nov 4 (the match-log additions); Nov 13 (the 185-minute log: iron 3,477 
 - Each row of the match log adds `led`: your income and spending so far, by reason (gather, market, loot, tribute, trade, upkeep, units, research ...). A jump in the stores now names where it came from.
 MODIFIED: code:menu.js, book:comments:E671. ecs counts unchanged (309, 7); menu.js +260 characters.
 Tests: a probe row shows `led` ({"gather": 210}, {"upkeep": 7, "spoiled": 8}); t-n24 and t-n29 as before.
+
+## S8: a find pays once; the match log counts villagers by work · 2026-11-13 21:20
+Albert, Nov 13 09:39 (trace and fix), 20:56 ("add the log to track villagers and what they are doing"); his 185-minute log and the toast "Fallen star: 300 iron, 100 gold. ×20".
+- REAL BUG (E590, N347): a taken find was marked with the taker's side; the player is side 0, which read as not taken, so a fallen star (and any find with a prize) paid the player again every beat a unit stood by it: 6,000 iron in ten seconds in the test; 100,000 iron in his game. Now marked taken. The computers (sides 1-3) were never affected.
+- The match log's rows add `vil`: how many of your villagers are at each kind of work (food, wood, stone, gold, iron, build, idle, wait, walk ...).
+MODIFIED: code:econ.js, code:menu.js, book:comments:E671, book:comments:E590, book:citations:N347, book:rules:X113, tool:test.py. ecs counts unchanged (309, 7).
+Tests: t-star passes (300 iron, 100 gold, once); with the old line planted it fails (6,000 iron). A probe row shows `vil` {"food": 5, "wood": 1}.

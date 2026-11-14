@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,648 | 644,785 | 644,950 |
-| Books | 2524 | 0 | 805,210 | 806,171 |
+| Game code | 31 | 3,648 | 644,903 | 645,068 |
+| Books | 2526 | 0 | 806,103 | 807,069 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,239 | 366,568 | 366,827 |
+| Tools | 5 | 2,244 | 367,380 | 367,639 |
 
 ## The trades (code)
 
@@ -39,8 +39,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,150 | 10,154 | 54 |
-| menu.js | 624 | 135,782 | 135,841 | 442 |
-| econ.js | 621 | 117,481 | 117,481 | 70 |
+| menu.js | 624 | 135,894 | 135,953 | 442 |
+| econ.js | 621 | 117,487 | 117,487 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
 | sound.js | 58 | 6,238 | 6,238 | 66 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 53 | 15,852 |
-| citations | 345 | 89,269 |
+| citations | 346 | 89,631 |
 | colours | 34 | 10,345 |
-| comments | 1014 | 195,347 |
+| comments | 1014 | 195,676 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 343 | 198,423 |
-| rules | 110 | 43,484 |
+| rules | 111 | 43,713 |
 | screen | 28 | 17,478 |
 | shells | 110 | 23,538 |
 | sides | 7 | 1,869 |
@@ -188,5 +188,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X110 | t-store | page | the Quarry's stone goes straight to the stores (N342): its worker never carries, and stone comes in at no less than four fifths of the quarry's rate |
 | X111 | t-dock | page | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile |
 | X112 | ecs | code | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall |
+| X113 | t-star | page | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken |
 
-2654 items sealed · 2524 book entries · 94 laws · 345 citations, 34 still to open · 0 known
+2656 items sealed · 2526 book entries · 94 laws · 346 citations, 34 still to open · 0 known

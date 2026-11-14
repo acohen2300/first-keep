@@ -898,7 +898,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E506** Why a side cannot take a stance toward another, or a group, now (Mid's relWhy, envoyWhy):  · D282 (N198, N199, N201)
 - **E507** An envoy rides from the Town Center to the court (its Town Center) or the group (its neare
 - **E508** The answer (Mid's judgeEnvoy): at war and not asked for peace, the envoy is killed; the pl
-- **E590** the finds: the first side to touch one whose guards have fallen takes what it holds; the r
+- **E590** the finds: the first side to touch one whose guards have fallen takes what it holds, once; · N347
 - **E591** drifters fight for whoever pays, with a unit of the payer beside them and room in the army
 - **E592** fire: the ground's dryness by Rothermel (QT), the t² fire's heat across a gap (QU), and a  · QT (N21) · QU (N22) · QM (N12)
 - **E593** a wooden building catches fire, and the nearest villagers of its side run with buckets (Mi

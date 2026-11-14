@@ -488,12 +488,12 @@ function sendHelp(f, pt, told) { const mine = WAR.armyOf(f).filter((u) => u.job 
 const FD = D.finds, WW = fromBook('words').wild, ONE = D.count.one, ZERO = D.count.zero, rowOf = FK.rowOf, list = (c) => Object.entries(c).map(([y, n]) => n + ' ' + y).join(fromBook('words').list.and);
 function finds() { for (const t of things()) { const F = rowOf(t); if (!F || !F.got || t.taken || t.gone || WAR.guardsLeft(t)) continue; let m = null;
     FK.unitsNear(t, FD.take * D.tile, (v) => { if (!m && SIDES[v.side] && !v.gone && v.hp > null && !v.inside && !FK.has(v, 'Envoy') && !FK.has(v, 'Trade') && dist(v, t) < FD.take * D.tile) m = v; }); if (!m) continue;
-    const o = m.side, s = SIDES[o], got = {}; for (const y in F.got) got[y] = Math.round(F.got[y]); t.taken = o; for (const y in got) earn(o, y, got[y], 'finds', false); let extra = '';
+    const o = m.side, s = SIDES[o], got = {}; for (const y in F.got) got[y] = Math.round(F.got[y]); t.taken = true; for (const y in got) earn(o, y, got[y], 'finds', false); let extra = '';
     const c = F.tech && Object.keys(T).find((c) => !s.techs.has(c) && T[c].value.age <= s.age && !T[c].value.rank && needsOf(c).every((n) => s.techs.has(n)) && !things().some((b) => b.side === o && (b.q || []).includes(c))); if (c) { learn(o, c); extra = WW.scroll.replace('{name}', T[c].name); }
     if (o === ME) tell(WW.took, { name: FK.SH[FK.KIND[t.kind].code].name, got: list(got), extra }); } }
 function hireWhy(o, t) { const H = t && (rowOf(t) || {}).hire, W = WW.hire; if (!H || t.taken || t.gone) return W.gone; if (!units().some((u) => u.side === o && !u.gone && !FK.has(u, 'Envoy') && dist(u, t) < FD.near * D.tile)) return W.near; // E591
   return popOf(o, soldier) + H.n > armyRoom(o) ? W.full : canPay(o, H.cost) ? '' : W.cost.replace('{cost}', list(H.cost)); }
-function hire(o, t) { if (hireWhy(o, t)) return false; const H = rowOf(t).hire; pay(o, H.cost, 'units'); t.taken = o;
+function hire(o, t) { if (hireWhy(o, t)) return false; const H = rowOf(t).hire; pay(o, H.cost, 'units'); t.taken = true;
   for (const v of units().slice()) if (v.find === t && !SIDES[v.side]) { const s = FK.spawn(H.unit, o, v.k, FK.rng); Object.assign(s, { bx: v.bx, by: v.by }); FK.place(s); FK.vanish(v); } if (o === ME) tell(WW.hire.done, { n: H.n }); return true; }
 // E592
 const FI = D.fire, HW = fromBook('words').harm, sq = (x) => x * x, eta = (r) => FI.eta.reduce((v, c, i) => v + c * r ** i, null), heat = (age, gap) => Math.min(FI.full, sq(age / FI.grow)) * sq(FI.near / (gap + FI.near)), chance = (rate, dt) => FK.rng() < -Math.expm1(-rate * dt);

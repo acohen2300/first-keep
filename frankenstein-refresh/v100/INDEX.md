@@ -420,6 +420,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N344 |  | International Regulations for Preventing Collisions at Sea (COLREGs, IMO 1972), Rule 18, Responsibilities between vessels: a power-driven ve | opened |
 | N345 |  | Albert, Nov 13, 2026, 10:48-10:55: \Can we find a cheaper source?\; \1.23 is okay\. US Army (USARIEM, Natick, Jan 24, 2013): a typical servi | opened |
 | N346 |  | Albert, Nov 13, 2026, 11:24-11:59: \everything in the game ... would be considered a shell so like an empty vessel. Then to that shell we wo | opened |
+| N347 |  | Albert's match log and screenshot, Nov 13, 2026 (185 minutes): the toast \Fallen star: 300 iron, 100 gold. ×20\; his iron 3,477 → 106,000 an | opened |
 
 ## colours
 
@@ -1155,7 +1156,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E587 |  | now and then the robbers send a band from the camp nearest a side at a villager or caravan of any side they can beat, drawn toward a load, a |  |
 | E588 |  | a computer hires drifters it can pay for, and sends half its idle army at the nearest find while nothing else is on; home when it is taken |  |
 | E589 |  | a scout left to itself goes for a find whose guards have fallen, else loops the land |  |
-| E590 |  | the finds: the first side to touch one whose guards have fallen takes what it holds; the ruins a free research of its age |  |
+| E590 |  | the finds: the first side to touch one whose guards have fallen takes what it holds, once; the ruins a free research of its age. A find take |  |
 | E591 |  | drifters fight for whoever pays, with a unit of the payer beside them and room in the army |  |
 | E592 |  | fire: the ground's dryness by Rothermel (QT), the t² fire's heat across a gap (QU), and a chance in a step from a rate (QM) |  |
 | E593 |  | a wooden building catches fire, and the nearest villagers of its side run with buckets (Mid's ignite) |  |
@@ -1986,6 +1987,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X110 | the Quarry's stone goes straight to the stores (N342): its worker never carries, and stone comes in at no less than four fifths of the quarry's rate | {stage: page} | N342 |
 | X111 | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile | {stage: page} | N341 |
 | X112 | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall | {stage: code, named: 309, dead: 7} | N346 |
+| X113 | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken | {stage: page} | N347 |
 
 ## screen
 
