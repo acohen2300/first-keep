@@ -27,7 +27,7 @@ BOOK("shells", {
  "BCL3": {"name": "Pasture", "layer": 110, "size": "D9", "style": "Open", "look": "pasture", "material": "timber", "ticks": ["Field", "Health", "Flock"], "yield": "food", "rate": "D219.milk", "cite": ["N144", "N170"]},
  "BCL4": {"name": "Quarry", "layer": 110, "size": "D9", "style": "Open", "look": "quarry", "material": "timber", "ticks": ["Field", "Health", "Research", "Repeat", "Store"], "yield": "stone", "rate": "D336", "cite": ["N144", "N235", "N342"]},
  "BCT1": {"name": "Trade post", "layer": 110, "size": "D8", "style": "Open", "look": "tpost", "material": "timber", "ticks": ["Post", "Shoot", "Health", "Research"], "cite": ["N144", "N195"]},
- "BCT2": {"name": "Dock", "layer": 110, "size": "D8", "style": "Open", "look": "dock", "material": "timber", "ticks": ["Drop-off", "Health", "Shore", "Burn", "Research"], "drop": ["food"], "cite": ["N144", "N170", "N206"]},
+ "BCT2": {"name": "Dock", "layer": 110, "size": "D8", "style": "Open", "look": "dock", "material": "timber", "ticks": ["Drop-off", "Health", "Shore", "Burn", "Research", "Field", "Regrow"], "drop": ["food"], "yield": "food", "rate": "D88.fish", "amount": "D218.amt", "cite": ["N144", "N170", "N206"]},
  "BP1": {"name": "School", "layer": 110, "size": "D9", "style": "Closed", "look": "school", "material": "timber", "ticks": ["Teach", "Health", "Research"], "cite": ["N144", "N194"]},
  "BP2": {"name": "Library", "layer": 110, "size": "D10", "style": "Closed", "look": "library", "material": "timber", "ticks": ["Health", "Research"], "cite": ["N144"]},
  "BP3": {"name": "Temple", "layer": 110, "size": "D10", "style": "Closed", "look": "temple", "material": "stone", "ticks": ["Spawn", "Zeal", "Care", "Health", "Research"], "cite": ["N144", "N194"]},

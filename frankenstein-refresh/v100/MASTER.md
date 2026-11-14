@@ -98,8 +98,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
-- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170, N341, N357)
-- **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N27, N28, N170, N341, N357)
+- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N365, N27, N28, N170, N341, N357)
+- **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N365, N27, N28, N170, N341, N357)
 - **E1083** a sea fish is laid only where someone can stand to catch it (N361): of the spot one step p · N361 · E2
 - **E1077** fish in the sea (N357): along each of the four coasts, every sea spacings, the walk goes f · N357
 - **E50** drawn back to front
@@ -297,7 +297,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167, N338) · N166 · N17
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
-- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N353) · N353
+- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N365, N353) · N353
 - **E98** a find used up is gone; its tile is free again
 - **E100** walking: toward the next point at the walker's pace (QCB) over the ground it steps onto; t · QCB (N13, N181, N19, N179, N185)
 - **E363** a slipped walker stands G10's seconds; which way it walks, for the wind · G10 (N174, N179, N173)
@@ -777,7 +777,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## econ.js
 
-- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N353) · N353
+- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N365, N353) · N353
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
@@ -838,6 +838,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E324** a builder done (Decisions Nov 11, #16): his queued sites first; then, if he raised this bu
 - **E325** mending, Mid's: three times the build time for a whole building, a quarter of its price pa · QCK (N168)
 - **E308** a lost find (Mid's decision 1): it delivers what it carries, then looks from where the fin · D197 (N164)
+- **E1089** the focus rule in one home (Albert, Nov 11: a focused unit stays on its job; its find gone · N364
 - **E309** builders who finish a place of work take it up (Mid's startWork): a field if nobody works 
 - **E310** a box over finds (Mid's boxCut): n villagers, idle first then the nearest, cut the finds i
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
@@ -845,6 +846,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E944** minus on a job acts at once: the villager drops what it carries and stands idle, so the co · N17
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
 - **E1032** an order's food is charged by the ground marched, not by the tap (Decisions Nov 11, #4; Al · D224 (N13, N173, N181, N185, N198, N328, N345) · N29
+- **E1088** dock + fish, one element (N365): the dock is worked like a farm (the Field tick: one worke · N365
 - **E981** food in reach is food a side can carry home: a find or prey within the hunger book's reach
 - **E349** everyone eats, every moment: a villager working food eats from its find, not the store (a 
 - **E1011** whether food is within reach of a hungry side, asked once a second, and everyone fed in on

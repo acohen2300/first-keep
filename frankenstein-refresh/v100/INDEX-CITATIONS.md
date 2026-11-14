@@ -459,6 +459,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N362** Albert, Nov 14, 2026, 09:59 to 10:16: "are the trees still being built by the randomizer? Because I find the t → D345, X117
 - **N363** Six rich clearings among four players is the number of pairs of four, C(4,2) = 6: one for each pair is the onl → D345, X117
 - **N364** Albert, Nov 14, 2026, 10:16: "a tree needs to hold more than 1 villager. Each tree should be 4 villagers." Fel → D195, X117
+- **N365** Albert, Nov 14, 2026, 10:06: "make it so the dock is longer, starts on the banks and good further into the sea → D218, D378, X118
 
 ## Named exceptions
 

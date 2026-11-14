@@ -4,16 +4,16 @@ Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 hold
 
 ## Where it stands
 - Albert, Nov 14 07:54 to 08:40: last night's jump to design was a judgement error; back to n41, keep a few items, then bug work only.
-- Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N47 (bottom of `BUILDS.md`).
+- Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N48 (bottom of `BUILDS.md`).
 - Branch `n29-the-list` keeps N42 to N45 whole, parked (`Parked.md`, "Parked Nov 14"). Do not build there.
-- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n47 is the one to play (n46 is the same game on the old map). n40 to n45 stay up.
+- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n48 is the one to play (n47: the new map without the new dock; n46: the old map). n40 to n45 stay up.
 - Live v100 on `main`: untouched. Going live is Albert's call only.
 
 ## In N47 (on top of N46; Albert's go of Nov 14 10:16)
 - Z4 by the randomizer: woods from one field over the board, ten plain and six rich clearings, winding paths clearing to clearing, the corner-to-middle lanes grown over (to confirm with him), a tree holds four villagers. Pictures: `mockups/n47`.
 
 ## Next builds, in his order (ruled, a go: Albert, Nov 14 10:51 "then you can do all three"; The List section 10 has his words). Each its own preview.
-1. Dock + fish as one element: a longer dock from the bank into the water with a rich fish deposit at its end, worked like a farm; wild fish stay and set how rich it is; it shortens on narrow water. Precedent: Age of Empires II's Fish Trap. His number for the deposit is not ruled: propose it in the report.
+1. DONE as N48 (BUILT, his play owed): dock + fish as one element. Left from it: the pier turning toward the water and shortening on narrow water.
 2. The mine shaft: a Gunpowder-age research on the Mine's Digging line (`books/tech.js` O28 "deep" is the line), worked-out gold and iron finds reopened as a shaft that produces in place, sold through the Market's 1,000 lot. The Digging line and worked-out finds have not been read in code yet.
 3. The Pioneer (designed with him Nov 14 10:51 to 10:57; The List section 10 has his words and the research): a unit from the Siege workshop with one new tick, Fell; tap it, then a spot beyond the woods, and it fells a lane wide enough for an engine; a felled tree is the same tree lying down (it no longer blocks, keeps its 100 wood, D53); villagers told to follow it gather as it goes; lanes are permanent (his ruling); unlocked by age and by a research (his ruling). Proposed, to say in the report: five times a villager's speed (felling is about a fifth of the work on a tree), the Ram's age, a research "Pioneer corps" at the Siege workshop.
 The frozen-villager trace is OFF by his word (Nov 14 10:10): he tests first.

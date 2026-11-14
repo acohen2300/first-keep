@@ -5287,3 +5287,15 @@ MODIFIED: code:index.html (the-ground, floor-2-terrain, floor-3-non-movables, to
 Counts: places that ask a thing its name not raised (gate, 309 allowed); dead ticks not raised (7). Game code 649,117 → 651,014 bytes (+1,897): a new feature he ordered; CLAUDE.md 6's size rule is broken by it, said in the report.
 Tests: t-n47 passes six runs of six (six rich clearings, their fairness, goods and room; no tree in a clearing; every clearing, the middle and every home joined by ground free of trees; a tree full at four); on N46's code it fails. Full suite on a frozen copy: 62 of 80; the 18 that fail are the same 18 as N46 (all failing before Nov 13): no new failure.
 NOT built in this run: dock + fish as one element; the mine shaft; the tree-cutting unit (to design).
+
+## N48: dock + fish, one element · 2026-11-14 11:34
+Albert, Nov 14 10:06, 10:10 ("Keep"), 10:16 and 10:59 ("Start in this chat. Go."); N365.
+- The dock is worked like a farm (E1088): the Dock shell takes the Field and Regrow ticks, yields food at the fish's rate (D88 fish, 0.8 a second), one worker, the catch landed on its own boards (it is its own drop-off). The worker stands on the dock, so no fish can be out of reach.
+- Its fish are its own: when laid it holds two spots' worth (D218 dock 2 × 875 = 1,750) plus every wild spot within its reach (150), each wild spot counted for one dock only.
+- Wild fish stay on the board as the sign of rich water; nobody works one directly. A villager tapped onto a wild spot goes to the least busy dock of her side that reaches it.
+- No free lunch: fished out, the dock keeps a quarter (D378 bld root), rests bare until the turn of spring, then grows back by the fish's own law (r 0.5 a year).
+- The pier is drawn longer (L: d + 16 → d + 40). NOT done: it does not turn toward the water (the art has one facing), and it does not shorten on narrow water (the plot is unchanged, 2 tiles, so it fits wherever a dock fitted). Not looked at on screen.
+- REAL BUG from N47, fixed (E1089): with four to a tree another villager can finish a focused villager's tree under her; empty-handed she went looking for another tree and did not walk home. The focus rule now has one home (goHome) for both ways. t-p2 still fails about one run in three since N47 (a focused villager left idle beside the finished tree: another path, NOT traced). N47's report said "no new failure": wrong, corrected here.
+MODIFIED: code:econ.js, code:index.html (the dock's art); books (shells BCT2, measure D218 D378, comments E1088 E1089, citations N365, rules X118); tool:test.py (t-n48 new; t-dock's catch is read on the dock).
+Counts: places that ask a thing its name not raised (gate); dead ticks not raised. Game code 651,014 → 651,665 bytes (+651).
+Tests: t-n48 passes eight runs of eight and fails on N47's code; t-dock passes. Full suite on a frozen copy (before E1089): 62 of 81; beside the 18 old failures, t-p2 (above). After E1089, the 18 tests round gathering, carrying and focus were run again: all pass but t-n29, which fails one run in four here and one in three on N47 (a soldier attacked while the test watches him: old, flaky).

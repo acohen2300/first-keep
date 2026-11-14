@@ -1744,6 +1744,11 @@
 "bytes": 265,
 "numbers": 0
 },
+"book:citations:N365": {
+"sha": "402c94020c5f4de006b8b456e800fc3c08919e7055d8011384ec26a918d9239e",
+"bytes": 706,
+"numbers": 0
+},
 "book:citations:N37": {
 "sha": "3ec3085d37df611e84551fcdd69973b9f53e3c5fb285a05979c0d613f3bce81d",
 "bytes": 54,
@@ -2687,6 +2692,16 @@
 "book:comments:E1087": {
 "sha": "d515d966e1e5a157e48fa232cbcaaa2087d59ef6a2e0bd3ff37c4930c7a00d96",
 "bytes": 281,
+"numbers": 0
+},
+"book:comments:E1088": {
+"sha": "c3d4ae18e93850ed52e121b6e3588fd7443b498a489de74b38c3db48ee6eda62",
+"bytes": 496,
+"numbers": 0
+},
+"book:comments:E1089": {
+"sha": "5e9511b76d927129451ef4eb27f2e93087e69937d15cd89a2701e84d7b6daf35",
+"bytes": 349,
 "numbers": 0
 },
 "book:comments:E109": {
@@ -8115,8 +8130,8 @@
 "numbers": 0
 },
 "book:measure:D218": {
-"sha": "86452ba696672dca026454c724e823ee233849276a2283d7fcef04fe8fc4a2b1",
-"bytes": 1097,
+"sha": "3a59029631240efe7e0bb4c9b53bfe1680c9cdf71f57f73db73ff14fd9658457",
+"bytes": 1381,
 "numbers": 0
 },
 "book:measure:D219": {
@@ -8985,8 +9000,8 @@
 "numbers": 0
 },
 "book:measure:D378": {
-"sha": "060a639796196223d47d8f76c46fbe29f5ef46e6599326f354d46080ee70066d",
-"bytes": 704,
+"sha": "7a9cf4b7942b9dc982986aa6883465600b39c943bacc76582c7ebd2c294d998c",
+"bytes": 911,
 "numbers": 0
 },
 "book:measure:D38": {
@@ -9382,6 +9397,11 @@
 "book:rules:X117": {
 "sha": "3c44a207646187ba34c0939fb0092686acaf9067bcc8e1edec1817af19c3230a",
 "bytes": 569,
+"numbers": 0
+},
+"book:rules:X118": {
+"sha": "42ffd91a62b5bc604403a7e8f5c74648a1a5091f1e11e3d748fa6324cfd4f654",
+"bytes": 456,
 "numbers": 0
 },
 "book:rules:X12": {
@@ -10030,8 +10050,8 @@
 "numbers": 0
 },
 "book:shells:BCT2": {
-"sha": "0e92f1a0a3ef6f8eca0364926c8b175a6a98e7c039554b87bfcc2a3c93608c76",
-"bytes": 213,
+"sha": "fc944324ed5c58f384c19cb4a1f9ad1fc983664fde1338526985656cff10eda9",
+"bytes": 291,
 "numbers": 0
 },
 "book:shells:BF1": {
@@ -12790,8 +12810,8 @@
 "numbers": 83
 },
 "code:econ.js": {
-"sha": "6b410874a1d5debde94d27d4ec8b0272ece05f143be51190dad6e95b240ccdab",
-"bytes": 118080,
+"sha": "9b255c90f78a067ab9e93f2dfc5e937dcaf15ecf7632a509c0020952c20d5396",
+"bytes": 118731,
 "numbers": 70
 },
 "code:index.html#b-the-buildings": {
@@ -12855,7 +12875,7 @@
 "numbers": 24
 },
 "code:index.html#the-building-art": {
-"sha": "846040fe178ff444e6f7b4a56e534db239198d8d92740dfee2445ae48fbd1dc9",
+"sha": "57eca88ca3613489f965b95783a627d966761825e0b87d2a1fb2863e98f49d1c",
 "bytes": 51208,
 "numbers": 4094
 },
@@ -13425,8 +13445,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "3c7cb5b6eaf8ae08faba01596c4db60ec1cc42a5205543661404c5e96e7d55d7",
-"bytes": 336655,
+"sha": "965b10f293cdc1e3226376ab33bda1b2e78a03bc6e12405a6988ce07c0b8f2fc",
+"bytes": 338117,
 "numbers": 0
 }
 }
