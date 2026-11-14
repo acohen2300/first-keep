@@ -240,6 +240,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E78** B the buildings (layer 110; shells without Walk): the size in tiles (D8–D11; a wall piece  · D8 (N112) · D11 (N112) · D12 (N112)
 - **E79** the buildings (layer 110), from their shells: name, size in tiles, Open, the picture, what
 - **E80** a building stands on n × n flat free tiles from (i, j); Closed takes them (OCC 2), Open le
+- **E1069** a Shore building (the dock) is laid on the beach or in the shallows: the board spares it t · E1068 · N348
 - **E710** a new building slides into the things list at its depth instead of re-sorting ten thousand
 - **E81** The Town Center: Who every corner · What one · Where Z2 on the road at D84, the same in al · D84 (N112)
 

@@ -136,3 +136,5 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 - S8 DONE (Nov 13): a find pays once; t-star passes and fails with the old line planted (6,000 iron in 10 s). This was the runaway iron and gold of minutes 109-121. The match log now also counts villagers by work (`vil`, BUILT). [2026-11-13]
 - OPEN from the match log: side 3's gold +14,000 a minute (minutes 119-154), not the finds bug (computers were not affected). [2026-11-13]
 - Screenshots, Nov 13 20:55 (n38): 14 fps among lit houses at night (draw 8.6 ms, things 7); 27 fps at war in snow (logic 13.8 ms); the clock's second line reads "-0:00" throughout; "Something is in the way" when placing beside farms; yellow build lines on the quarries. [2026-11-13]
+- S9 DONE (Nov 13): the dock can be built at the water's edge; t-dock builds one, fishes, and fails with the old check planted. (S5's t-dock had only tested the placing answer.) [2026-11-13]
+- Albert, Nov 13 20:59 (n38): no way to control spies or medics, they still use the old army card; needs a way to sell in bulk at the Market. OPEN. [2026-11-13]

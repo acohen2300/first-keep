@@ -5254,3 +5254,10 @@ Albert, Nov 13 09:39 (trace and fix), 20:56 ("add the log to track villagers and
 - The match log's rows add `vil`: how many of your villagers are at each kind of work (food, wood, stone, gold, iron, build, idle, wait, walk ...).
 MODIFIED: code:econ.js, code:menu.js, book:comments:E671, book:comments:E590, book:citations:N347, book:rules:X113, tool:test.py. ecs counts unchanged (309, 7).
 Tests: t-star passes (300 iron, 100 gold, once); with the old line planted it fails (6,000 iron). A probe row shows `vil` {"food": 5, "wood": 1}.
+
+## S9: the dock can be built at the water's edge · 2026-11-13 21:40
+Albert, Nov 13 20:59: "There is a bug with the docks. I can't fish at all."
+- My S5 fault (E1069, N348): placing accepted a dock on the beach, but the board's own build check still asked for flat ground and returned nothing, so no dock at the water's edge was ever built. The board now spares a Shore building the flat-ground rule as placing does.
+- t-dock tested only the placing answer. It now builds a dock by the nearest fish with the game's planner, calls a villager, taps the fish, and waits for her first catch to be dropped off.
+MODIFIED: code:index.html#b-the-buildings (+100), book:comments:E1069, book:citations:N348, tool:test.py. ecs counts unchanged (309, 7).
+Tests: t-dock passes and fails with the old check planted; t-a1, t-n17, t-n31 pass.

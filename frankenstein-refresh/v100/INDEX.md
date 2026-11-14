@@ -421,6 +421,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N345 |  | Albert, Nov 13, 2026, 10:48-10:55: \Can we find a cheaper source?\; \1.23 is okay\. US Army (USARIEM, Natick, Jan 24, 2013): a typical servi | opened |
 | N346 |  | Albert, Nov 13, 2026, 11:24-11:59: \everything in the game ... would be considered a shell so like an empty vessel. Then to that shell we wo | opened |
 | N347 |  | Albert's match log and screenshot, Nov 13, 2026 (185 minutes): the toast \Fallen star: 300 iron, 100 gold. ×20\; his iron 3,477 → 106,000 an | opened |
+| N348 |  | Albert, Nov 13, 2026, 20:59, after playing preview n38: \There is a bug with the docks. I can't fish at all.\ Traced the same evening: S5 le | opened |
 
 ## colours
 
@@ -1479,6 +1480,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1066 |  | the exception to the levels (N339): after every pair is settled, anyone whose press (the summed levels of those she blocks who could not be  |  |
 | E1067 |  | fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 per), alternate banks, walked out from the middle |  |
 | E1068 |  | by water (N341): any water or marsh tile within r tiles of a footprint; a Shore building needs it, stands on the beach or in the shallows (n |  |
+| E1069 |  | a Shore building (the dock) is laid on the beach or in the shallows: the board spares it the flat-ground rule too, as placing does (E1068).  |  |
 
 ## ground
 

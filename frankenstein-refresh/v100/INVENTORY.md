@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,648 | 644,903 | 645,068 |
-| Books | 2526 | 0 | 806,103 | 807,069 |
+| Game code | 31 | 3,648 | 645,003 | 645,168 |
+| Books | 2528 | 0 | 806,707 | 807,673 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,244 | 367,380 | 367,639 |
+| Tools | 5 | 2,245 | 368,360 | 368,619 |
 
 ## The trades (code)
 
@@ -29,7 +29,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
-| index.html#b-the-buildings | 15 | 1,464 | 1,468 | 20 |
+| index.html#b-the-buildings | 15 | 1,564 | 1,568 | 20 |
 | index.html#floor-5-movables | 158 | 22,072 | 22,076 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
@@ -51,9 +51,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 53 | 15,852 |
-| citations | 346 | 89,631 |
+| citations | 347 | 89,995 |
 | colours | 34 | 10,345 |
-| comments | 1014 | 195,676 |
+| comments | 1015 | 195,939 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 343 | 198,423 |
@@ -190,4 +190,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X112 | ecs | code | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall |
 | X113 | t-star | page | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken |
 
-2656 items sealed · 2526 book entries · 94 laws · 346 citations, 34 still to open · 0 known
+2658 items sealed · 2528 book entries · 94 laws · 347 citations, 34 still to open · 0 known

@@ -447,6 +447,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N345** Albert, Nov 13, 2026, 10:48-10:55: "Can we find a cheaper source?"; "1.23 is okay". US Army (USARIEM, Natick,  → D224
 - **N346** Albert, Nov 13, 2026, 11:24-11:59: "everything in the game ... would be considered a shell so like an empty ve → X112
 - **N347** Albert's match log and screenshot, Nov 13, 2026 (185 minutes): the toast "Fallen star: 300 iron, 100 gold. ×20 → X113
+- **N348** Albert, Nov 13, 2026, 20:59, after playing preview n38: "There is a bug with the docks. I can't fish at all."  → unused
 
 ## Named exceptions
 

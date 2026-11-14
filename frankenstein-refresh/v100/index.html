@@ -1019,7 +1019,7 @@ const B = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 110) B[
 // E80
 function build(code, i, j, col = C.blue) {
   const [, n] = B[code]; if (i < 0 || j < 0 || i + n > N || j + n > N) return null;
-  for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (!free(y * N + x) || H[y * N + x] !== H[j * N + i]) return null;
+  const shore = SH[code].ticks.includes('Shore'); for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (shore ? OCC[y * N + x] || FOR[y * N + x] : !free(y * N + x) || H[y * N + x] !== H[j * N + i]) return null; // E1069
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) OCC[y * N + x] = B[code][2] ? 3 : 2; WALKV++;
   const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, side: SIDES.findIndex((q) => q.col === col), size: 1, done: 1 };
   if (has(t, 'Gate')) GATES.set(j * N + i, t.side); { const at = things.findIndex((x) => x.vy > t.vy); things.splice(at < null ? things.length : at, null, t); } TV++; return t; // E710

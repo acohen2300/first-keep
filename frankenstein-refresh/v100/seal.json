@@ -1669,6 +1669,11 @@
 "bytes": 351,
 "numbers": 0
 },
+"book:citations:N348": {
+"sha": "401cdd2eea18038a1117a751981c291632ed20cef7e1d7e4c77d03ed2629bdcb",
+"bytes": 353,
+"numbers": 0
+},
 "book:citations:N35": {
 "sha": "8e767ac1570de48da34f9654889b7847d0c465ba09fc086dda8736d36a2dafc9",
 "bytes": 66,
@@ -2552,6 +2557,11 @@
 "book:comments:E1068": {
 "sha": "fd458522ec2a10273505adedab6f0188fe48fd9ba97eaebc4161cee3065e9967",
 "bytes": 218,
+"numbers": 0
+},
+"book:comments:E1069": {
+"sha": "e812de0dedf4e678db9643c584c43f77870d02ae7b3b7bbf45041ff0cc11a652",
+"bytes": 251,
 "numbers": 0
 },
 "book:comments:E107": {
@@ -12645,8 +12655,8 @@
 "numbers": 70
 },
 "code:index.html#b-the-buildings": {
-"sha": "f61f8c8e24f18790aedbc4ae08a0027017b20fdf74bff5be8b1c2d0c8e3b8a3d",
-"bytes": 1468,
+"sha": "d646869d45e4504b2c2ca33e0c0fd97e0a99ce3b46888ab61828c368a1c8eae2",
+"bytes": 1568,
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
@@ -13275,8 +13285,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "04f1f90db32e74784dd85e91f35ff58b19adbb14cc41bd211ec4df069a84aef3",
-"bytes": 329636,
+"sha": "bc0362da488b3157ddf40c9ba559e6e22c7aaf23b58dbe7f5559ffc3e317b27f",
+"bytes": 330616,
 "numbers": 0
 }
 }
