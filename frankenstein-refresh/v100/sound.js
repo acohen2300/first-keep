@@ -3,20 +3,20 @@
 // E251
 window.SOUND = (() => {
 const { HB, D, SH, KIND, cam } = FK;
-let AC = null, master = null, air = null, NOISE = null, voices = 0, on = true, ambT = 0, stuck = false;
+let AC = null, master = null, air = null, NOISE = null, voices = 0, on = true, ambT = 0, stuck = false, back = false, hurt = false;
 const mix = Object.fromEntries(Object.keys(HB.mix.names).map((c) => [c, [...HB.mix.steps]])); // E252
 const last = {}, chan = (n) => (HB.chan.amb.includes(n) ? 'amb' : HB.chan.alert.includes(n) ? 'alert' : 'fx');
 function wake() { // E253
-  if (AC && AC.state !== 'running' && stuck) { try { AC.close(); } catch (e) {} AC = null; stuck = false; } // E953
+  if (AC && (hurt || (AC.state !== 'running' && (stuck || back)))) { try { AC.close(); } catch (e) {} AC = null; stuck = hurt = false; voices -= voices; } back = false; // E953
   if (AC) { if (AC.state !== 'running') AC.resume().then(() => { stuck = AC.state !== 'running'; }, () => { stuck = true; }); return; }
   try { if (navigator.audioSession) navigator.audioSession.type = HB.session; } catch (e) {} // E254
-  try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; } if (AC.state !== 'running') AC.resume().catch(() => {}); // E723
+  try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; } if (AC.state !== 'running') AC.resume().catch(() => {}); AC.onstatechange = () => { hurt = hurt || (AC && AC.state === 'interrupted'); }; // E723
   const lim = AC.createDynamicsCompressor(); for (const [k, v] of Object.entries(HB.limiter)) lim[k].value = v; lim.connect(AC.destination); // E255
   air = AC.createBiquadFilter(); air.type = 'lowpass'; air.frequency.value = HB.muffle.open; air.connect(lim);
   master = AC.createGain(); master.gain.value = 0.5; master.connect(air);
   NOISE = AC.createBuffer(1, AC.sampleRate, AC.sampleRate); const d = NOISE.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = FK.glance() * 2 - 1;
 }
-for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) addEventListener(ev, wake, { passive: true }); document.addEventListener('visibilitychange', () => { if (!AC) return; if (document.hidden) AC.suspend().catch(() => {}); else AC.resume().catch(() => {}); }); // E697
+for (const ev of ['pointerdown', 'pointerup', 'touchend', 'click']) addEventListener(ev, wake, { passive: true }); document.addEventListener('visibilitychange', () => { if (!AC) return; if (document.hidden) AC.suspend().catch(() => {}); else { back = true; AC.resume().catch(() => {}); } }); // E697
 function out(gn, pan) { if (pan && AC.createStereoPanner) { const p = AC.createStereoPanner(); p.pan.value = pan; gn.connect(p); p.connect(master); } else gn.connect(master); }
 function env(gn, t0, vol, dur) { gn.gain.setValueAtTime(0.0001, t0); gn.gain.exponentialRampToValueAtTime(Math.max(0.0002, vol), t0 + 0.01); gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur); }
 function tone(at, pan, f, dur, wave, vol, f2, start = 0, p2 = 0) { const t0 = at + start, o = AC.createOscillator(), gn = AC.createGain(); o.type = wave; o.frequency.setValueAtTime(f, t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); env(gn, t0, vol, dur); o.connect(gn); out(gn, p2 || pan); o.start(t0); o.stop(t0 + dur + 0.03); voices++; o.onended = () => voices--; }
@@ -54,5 +54,5 @@ FK.on('tick', (dt) => { if (!AC || (ambT -= dt) > 0) return; ambT = 1;
     if (T.length && FK.glance() < 1 - Math.exp(-HB.amb.bird * T.length)) play('bird', T[Math.floor(FK.glance() * T.length)]); }
   else if (FK.glance() < 1 - Math.exp(-HB.amb.cricket * HB.amb.singers)) play('cricket', { vx: cam.x + (FK.glance() - 0.5) * cw / z, vy: cam.y + (FK.glance() - 0.5) * ch / z });
 });
-return { play, toggle: () => { on = !on; wake(); return on; }, on: () => on, mix: (c) => { const [[, word]] = mix[c]; return word; }, step: (c) => { const [s, ...rest] = mix[c]; mix[c] = [...rest, s]; } };
+return { ctx: () => AC, play, toggle: () => { on = !on; wake(); return on; }, on: () => on, mix: (c) => { const [[, word]] = mix[c]; return word; }, step: (c) => { const [s, ...rest] = mix[c]; mix[c] = [...rest, s]; } };
 })();

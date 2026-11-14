@@ -291,6 +291,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167, N338) · N166 · N17
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
+- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N353) · N353
 - **E98** a find used up is gone; its tile is free again
 - **E100** walking: toward the next point at the walker's pace (QCB) over the ground it steps onto; t · QCB (N13, N181, N19, N179, N185)
 - **E363** a slipped walker stands G10's seconds; which way it walks, for the wind · G10 (N174, N179, N173)
@@ -616,7 +617,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
 - **E1048** the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a sq · N25
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
-- **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195) · D271 (N34, N195)
+- **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195, N350) · D271 (N34, N195)
+- **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1045** a caravan's escort (Albert, Oct 27): its card has Escort +4 (the nearest idle soldiers of 
 - **E1023** a caravan takes a trade route two ways: Trade route on its card sends it to the nearest tr
 - **E1024** the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Frien · N24
@@ -767,7 +769,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## econ.js
 
+- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N353) · N353
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
@@ -860,6 +864,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E445** the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see · D255 (N192)
 - **E446** a site nobody builds (F23, Albert's play test): one no villager of its side can reach says · D203 (N168)
 - **E447** a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost · D233 (N188) · D258 (N192)
+- **E1071** the standing wonder nearest its win (N351): one home for the judge and for the countdown u · N351
 - **E448** who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s · D257 (N192) · D259 (N192)
 - **E449** the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
@@ -1104,7 +1109,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E251** The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow · QAX (N58) · QAY (N59) · QBX (N88)
 - **E252** each channel's volume steps, the one in use first (HX10) · HX10 (N149)
 - **E253** a phone opens its audio only on a touch
-- **E953** a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS · N17
+- **E953** a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS · N17 · N349
 - **E254** the Ring/Silent switch silences the game; the player's music plays on (HX8) · HX8 (N148)
 - **E723** the sound engine is woken the moment it is made: a phone makes it asleep until a gesture r
 - **E255** a battle's many blows never clip a phone speaker

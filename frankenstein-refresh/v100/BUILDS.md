@@ -5261,3 +5261,15 @@ Albert, Nov 13 20:59: "There is a bug with the docks. I can't fish at all."
 - t-dock tested only the placing answer. It now builds a dock by the nearest fish with the game's planner, calls a villager, taps the fish, and waits for her first catch to be dropped off.
 MODIFIED: code:index.html#b-the-buildings (+100), book:comments:E1069, book:citations:N348, tool:test.py. ecs counts unchanged (309, 7).
 Tests: t-dock passes and fails with the old check planted; t-a1, t-n17, t-n31 pass.
+
+## N42: the overnight go, batch 1 · 2026-11-13 22:50
+Albert, Nov 13 22:21 (The List section 9): his rulings and play list, with licence for the night ("yes delete. Clean. Enhance"; code size may rise tonight, his 22:35 exception).
+- Sound after a call (E953, N349): a resume that never answers was never counted as failed, so the game stayed silent until a reload. The first tap after the page comes back, or after iOS reports the audio interrupted, makes a new player unless the old one is running.
+- The Market sells 1,000 at a time (E1070, D270 bulk, N350): a second row, one cell a raw resource; ten lots in one tap, each at the price the lot before left; the cell shows the whole sum first.
+- The clock's second line (E1071, N351): it counted down from the book's default 15 minutes in every game, so it read -0:00 for good after minute 15. It now follows the game's own length (nothing in an untimed game) and, while a wonder stands, shows "Wonder m:ss" in gold (yours) or red (a rival's).
+- A loaded carrier outranks an empty walker (D377 laden, COLREGs Rule 18).
+- Fires (D316 bonfire, D317, N352): the workers' camp fire is three campfires across, nine times the power, its light three times as far; every building carries two torches.
+- A research cell shows what it gives, in green, under its name ("+10% gathering"): the hint that was only in the toast after the tap.
+- Berries grow back (the Regrow tick SC49, D378, E1072, N353): the fish's spring regrowth law now belongs to a tick that fish and bushes both carry. A bush picked out stays as a bare bush, is no find to anyone until spring, comes back to about two thirds and is full the spring after.
+MODIFIED: code:sound.js, code:econ.js, code:menu.js, code:index.html; books (permit opened "book": comments E953 E1070-E1072, citations N349-N353, rules X114, measure D218 D270 D316 D317 D377 D378, words J13 J57, shells MW1 R5, capabilities SC24 SC49); tool:test.py. Game code 645,168 → 646,806 bytes (+1,638; his exception). ecs counts not raised (gate).
+Tests: t-n42 passes, eight checks; on the old code all eight are false; the sound check also fails with only the old wake line planted. t-rank, t-store, t-buffer, t-load, t-star, t-idle, t-a1, t-n17, t-n25, t-n27, t-n29, t-n30, t-n31, t-p2, t-p2b, t-p2c, t-freeze, t-save pass. t-fire and t-research failed before this build (equals-Mid, G5B). t-dock failed once in five runs (the fisher took one catch, then stood 400 s): OPEN, to trace; it passes on the same code the other four times.

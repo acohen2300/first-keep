@@ -1131,7 +1131,8 @@ function spotFor(u, c) { // E301
   return best;
 }
 function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.y))) return false; u.path.pop(); u.path.push([s.x, s.y]); u.spot = s; return true; } // E302
-function take(t, n) { t.amount -= n; if (t.deep && t.amount > ZERO) wake(t); if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); TV++; opened(t.k); if (t.kind === 'tree' && topN >= ZERO) cutTop(t.k); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
+function take(t, n) { const root = has(t, 'Regrow') && D.regrow[t.kind].root; if (root) t.max = Math.max(t.max || ZERO, t.amount); t.amount -= n; if (t.deep && t.amount > ZERO) wake(t); if (root && t.amount <= ZERO) { t.amount = t.max * root; t.bare = true; return; } // E1072
+  if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); TV++; opened(t.k); if (t.kind === 'tree' && topN >= ZERO) cutTop(t.k); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
 function stride(u, [tx, ty], dt, near = 0) { // E100
   if (u.stuck > K.t) return false; if (SIDES[u.side]) RUTS[rutAt(u.k)] += dt * tread(u); const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy); u.ux = d && dx / d; const g = footing(u, tileAt(tx, ty)), beat = Math.floor(u.t / SLIP.every); // E363
   if (!g.ice) u.wary = false; else if (beat !== u.tread) { u.tread = beat; const on = rng() < g.ice; if (!u.wary && g.need > (on ? g.on : g.ground)) { u.stuck = K.t + SLIP.secs; u.wary = on; if (u.side === ME && !(K.told > K.t - SLIP.tell)) { K.told = K.t; fire('event', 'slip', u); } return false; } } // E362
@@ -1161,7 +1162,7 @@ function collide() { // E304
   for (const u of units) if (u.press) { if (u.press > rank(u)) shove(u, u.pvx, u.pvy); u.press = u.pvx = u.pvy = ZERO; } // E1066
 }
 const FORM = D.forming, forming = (u) => !!(u.drill && !u.drill.held && u.job === 'march');
-const PRI = D.priority, rank = (u) => (u.path ? PRI.move : PRI.working.includes(u.job) ? PRI.work : PRI.resting.includes(u.job) ? PRI.rest : PRI.move); // E1065
+const PRI = D.priority, rank = (u) => (u.path ? PRI.move + (u.load ? PRI.laden : ZERO) : PRI.working.includes(u.job) ? PRI.work : PRI.resting.includes(u.job) ? PRI.rest : PRI.move); // E1065
 const shove = (u, x, y) => walkable(tileAt(u.bx + x, u.by + y), u) && ((u.bx += x), (u.by += y), place(u), (u.shoved = true));
 // E103
 const cellKey = (cx, cy) => cy * N * D.tile + cx, file = (g, size, t) => { const c = cellKey(Math.floor(t.bx / size), Math.floor(t.by / size)); // E767
@@ -1567,7 +1568,7 @@ function rims(L, z, nt) { if (!L.length || nt < LGT.dark) return; const R = LGT.
 function drawLights(z) { const nt = nightOf(), m = LGT.k * Math.sqrt(FLM.blaze.p) * z, at = (t) => { const [x, y] = toScreen(t.vx, t.vy); return x > -m && x < cw + m && y > -m && y < ch + m && { x, y }; }, [wx, wy, wf] = LGT.window.at, [la, ld] = LGT.lamp, [, ls, cx, cy, cs] = LGT.up;
   if (nt > LGT.night) { ctx.fillStyle = CLT.window; ctx.globalAlpha = LGT.window.a; for (const t of blds()) { const p = !(t.done < ONE) && LGT.hearth.includes(SH[t.code].look) && !fire('hide', t) && at(t); if (p) ctx.fillRect(p.x + wx * z, p.y - wy * z + t.n * D.tile * wf * TILT * z * DRW.half, LGT.window.px * z, LGT.window.px * z); } ctx.globalAlpha = ONE; }
   const OPEN = []; for (const [t, kind] of lightsOf()) { const p = at(t); if (!p) continue; const { x, y } = p, half = t.n * D.tile * DRW.half * z; if (!FLM[kind].covered && FLM[kind].s) OPEN.push([x, y, kind]);
-    if (t.camp) { if (t.b) GIFT.campfire(x, y, z * artOf('campfire')); glowAt(ctx, x, y, kind, z, t.i); flame(ctx, x, y, kind, z, t.i); } else if (t.pole) { glowAt(ctx, x, y, kind, z, t.i); flame(ctx, x, y - t.pole * z, kind, z, t.i); } else if (t.kind === 'unit') { glowAt(ctx, x, y, kind, z, t.k); flame(ctx, x + cx * z, y - cy * z, kind, z * cs, t.k); }
+    if (t.camp) { if (t.b) GIFT.campfire(x, y, z * artOf('campfire') * LGT.camp.size); glowAt(ctx, x, y, kind, z, t.i); flame(ctx, x, y, kind, z, t.i); } else if (t.pole) { glowAt(ctx, x, y, kind, z, t.i); flame(ctx, x, y - t.pole * z, kind, z, t.i); } else if (t.kind === 'unit') { glowAt(ctx, x, y, kind, z, t.k); flame(ctx, x + cx * z, y - cy * z, kind, z * cs, t.k); }
     else if (kind === 'lantern') { const zl = z * Math.sqrt(ONE + stat(t.code, t.side, 'lamp')); for (const sd of t.n >= LGT.two ? [-ONE, ONE] : [-ONE]) { glowAt(ctx, x + sd * half * la, y + half * TILT * ld, kind, zl, t.i + t.j + sd); flame(ctx, x + sd * half * la, y + half * TILT * ld - LGT.door * z, kind, z * ls, t.i + t.j + sd); } } // E938
     else glowAt(ctx, x, y, kind, z, t.k || ZERO); } rims(OPEN, z, nt); }
 // E612
