@@ -773,3 +773,5 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 
 - Nov 13 22:21 (Albert: "Park"): message-precedence levels (FLASH / IMMEDIATE / PRIORITY / ROUTINE) for orders and tasks. Not built.
 - Nov 13 22:21 (Albert: "Kill this"): G15, the waiting items of Nov 10-11: refund on cancel, the GitHub Pages source setting, the side row (Yield! and the vassal row), a gold vein's 4 miners, keep the blur fix or not, the location (45 N).
+- Nov 13 22:49 (Albert: "Park this idea. We are no where near this level of refinement at this time."): the villager's stops card (Now / Next / Then; D3, #20).
+- Nov 13 22:49 (Albert: "Hold."): quick start, race mode, simple mode (G8). Round 2, by his word: conversions waiting for a house, building health by material, villagers who fight, animals placed at random (G7).
