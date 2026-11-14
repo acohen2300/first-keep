@@ -1913,13 +1913,24 @@ N49JS = r"""(() => { MENU.S.tab = null; MENU.act('start'); FK.fog(false); const 
 async def n49(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N49JS); await pg.close()
     ok('t-n49', all(v.get(k) for k in ('built', 'before', 'after', 'digs', 'out', 'again')) and not errs, [v, info, errs[:2]])
+N50JS = r"""(() => { MENU.S.tab = null; MENU.act('start'); FK.fog(false); const o = {}, info = {}, D = FK.D, h = FK.seatOf(0); FK.SIDES[0].age = D.ages.length; $rich(0);
+ o.locked = /Pioneer corps/.test(ECON.lockWhy(0, 'UM23')); FK.SIDES[0].techs.add($tk('pioneers')); o.unlocked = ECON.lockWhy(0, 'UM23') === '';
+ const woods = FK.things().filter((t) => t.kind === 'tree' && FK.inWoods(t.k)).sort((a, b) => FK.dist(a, h) - FK.dist(b, h)), tree = woods[0], far = woods.at(-1), k0 = FK.tileAt(h.bx, h.by) + 6 * FK.N;
+ const p = FK.spawn('UM23', 0, k0, Math.random), ram = FK.spawn('UM4', 0, k0 + 2, Math.random); o.enters = FK.walkable(far.k, p) === true && FK.walkable(far.k, ram) === false;
+ const a0 = tree.amount; p.bx = tree.bx + 4; p.by = tree.by; FK.place(p); $run(1); o.still = !tree.down && FK.inWoods(tree.k); Object.assign(p, { path: [[tree.bx + 60, tree.by]], at: 0, job: 'walk', then: null, target: null }); FK.sim(0.1); FK.sim(0.1);
+ o.felled = tree.down === true && !FK.inWoods(tree.k) && FK.things().includes(tree) && tree.amount === a0 && a0 > 0 && !far.down && FK.things().filter((t) => t.down).every((t) => FK.dist(t, p) <= D.woods.fell.lane + 2); o.open = FK.walkable(tree.k, ram) === true;
+ const [v] = ECON.villagersOf(0); v.load = 0; FK.fire('tap', v.k, v, v.bx, v.by); MENU.S.tap = null; FK.fire('tap', tree.k, tree, tree.bx, tree.by); o.logs = v.target === tree; info.n50 = [ECON.lockWhy(0, 'UM23'), FK.things().filter((t) => t.down).length, v.job];
+ return [o, info]; })()"""
+async def n50(b):
+    pg, errs = await fresh(b); v, info = await pg.evaluate(N50JS); await pg.close()
+    ok('t-n50', all(v.get(k) for k in ('locked', 'unlocked', 'enters', 'still', 'felled', 'open', 'logs')) and not errs, [v, info, errs[:2]])
 async def star(b):
     pg, errs = await fresh(b); v = await pg.evaluate(STARJS); await pg.close()
     ok('t-star', v['kind'] == 'meteor' and v['iron'] == 300 and v['gold'] == 100 and v['taken'] and not errs, [v, errs[:2]])
 async def freeze(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(FRZJS); await pg.close()
     ok('t-freeze', all(v.values()) and not errs, [v, info, errs[:2]])
-PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

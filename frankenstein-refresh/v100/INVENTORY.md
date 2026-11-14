@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,668 | 651,625 | 651,790 |
-| Books | 2564 | 0 | 825,709 | 826,682 |
+| Game code | 31 | 3,670 | 652,038 | 652,203 |
+| Books | 2570 | 0 | 829,128 | 830,101 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,295 | 377,239 | 377,500 |
+| Tools | 5 | 2,306 | 378,998 | 379,259 |
 
 ## The trades (code)
 
@@ -30,7 +30,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,564 | 1,568 | 20 |
-| index.html#floor-5-movables | 159 | 22,274 | 22,278 | 78 |
+| index.html#floor-5-movables | 161 | 22,687 | 22,691 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
@@ -50,21 +50,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 55 | 16,604 |
-| citations | 360 | 97,333 |
+| capabilities | 56 | 16,972 |
+| citations | 361 | 98,416 |
 | colours | 34 | 10,345 |
-| comments | 1029 | 201,534 |
+| comments | 1030 | 201,971 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 344 | 201,216 |
-| rules | 116 | 46,311 |
+| measure | 344 | 201,755 |
+| rules | 117 | 46,734 |
 | screen | 28 | 17,478 |
-| shells | 110 | 23,691 |
+| shells | 111 | 23,935 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
-| tech | 259 | 75,856 |
-| words | 56 | 103,300 |
+| tech | 260 | 76,080 |
+| words | 56 | 103,468 |
 
 ## The shells
 
@@ -72,7 +72,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | 100 | 17 | 0 |
 | 110 | 50 | 1 |
-| 120 | 43 | 0 |
+| 120 | 44 | 0 |
 
 ## The rules
 
@@ -194,5 +194,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X117 | t-n47 | page | N47 (N362-N364): Z4 by the randomizer: six rich clearings, one for every pair of homes, each with both homes of its pair no more than a third farther than the nearest home, each holding the home pocket's gold, stone, iron and berries and room for a Mill, a Mine and a Tower three times over; plain clearings beside them; no tree stands in a clearing; every clearing, the middle and every home are joined by ground free of trees; a tree holds four villagers and is full to a fifth |
 | X118 | t-n48 | page | N48 (N365): dock + fish, one element: a dock laid by wild fish holds two spots' worth of its own plus every wild spot in its reach, each counted once; a wild spot is no find to anyone by itself; a villager tapped onto one is sent to the dock, fishes there and lands the catch; fished out, the dock keeps a quarter, rests bare and lets its worker go; at the turn of spring it is back |
 | X119 | t-n49 | page | N49 (N366): the mine shaft: before Blasting a Mining camp is only a drop-off; after it, the camp is a post that yields gold: a villager tapped onto it works there and gold comes into the stores with no carrying, its stock falling; emptied, it can be sunk again for its price's share and is full |
+| X120 | t-n50 | page | N50 (N367): the Pioneer: locked until Pioneer corps is learned; it may enter the woods where a Ram may not; standing still it fells nothing; moving, it fells the trees in its lane: a felled tree is still there with all its wood, is no longer woods, and lets a Ram through; a villager tapped onto it gathers it; trees out of its lane stand |
 
-2694 items sealed · 2564 book entries · 94 laws · 360 citations, 34 still to open · 0 known
+2700 items sealed · 2570 book entries · 94 laws · 361 citations, 34 still to open · 0 known

@@ -4,9 +4,9 @@ Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 hold
 
 ## Where it stands
 - Albert, Nov 14 07:54 to 08:40: last night's jump to design was a judgement error; back to n41, keep a few items, then bug work only.
-- Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N49 (bottom of `BUILDS.md`).
+- Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N50 (bottom of `BUILDS.md`).
 - Branch `n29-the-list` keeps N42 to N45 whole, parked (`Parked.md`, "Parked Nov 14"). Do not build there.
-- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n49 is the one to play (n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
+- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n50 is the one to play (n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
 - Live v100 on `main`: untouched. Going live is Albert's call only.
 
 ## In N47 (on top of N46; Albert's go of Nov 14 10:16)
@@ -16,7 +16,8 @@ Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 hold
 1. DONE as N48 (BUILT, his play owed): dock + fish as one element. Left from it: the pier turning toward the water and shortening on narrow water.
 2. DONE as N49 (BUILT, his play owed): the mine shaft (Blasting lets a Mining camp be worked in place for gold). Left from it: iron, the animation.
    FIRST, before the Pioneer: the two faults N47 brought (BUILDS.md N48 and N49): t-p2 (a focused villager idle by a tree another finished) and t-n24 (a far attack order across woods). t-n24 waits on Albert's call.
-3. The Pioneer (designed with him Nov 14 10:51 to 10:57; The List section 10 has his words and the research): a unit from the Siege workshop with one new tick, Fell; tap it, then a spot beyond the woods, and it fells a lane wide enough for an engine; a felled tree is the same tree lying down (it no longer blocks, keeps its 100 wood, D53); villagers told to follow it gather as it goes; lanes are permanent (his ruling); unlocked by age and by a research (his ruling). Proposed, to say in the report: five times a villager's speed (felling is about a fifth of the work on a tree), the Ram's age, a research "Pioneer corps" at the Siege workshop.
+3. DONE as N50 (BUILT, his play owed): the Pioneer. Left from it (BUILDS.md N50): a follow order for villagers, a felling speed, its own picture, trees drawn lying, proof of a tap order across a wood.
+   Albert, Nov 14 12:48, the lanes: "Leave it for now" (t-n24's far check stays open against that).
 The frozen-villager trace is OFF by his word (Nov 14 10:10): he tests first.
 
 ## In N46 (on top of n41)

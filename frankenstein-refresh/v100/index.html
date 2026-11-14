@@ -1063,7 +1063,7 @@ on('tick', () => { if (!every([ICE.beat, ZERO])) return; const load = new Map();
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
 const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < ZERO || K.iceMem.year === year()) ? K.iceMem.mode : null), onIceOk = (k, who) => !who || (!(who.shy > K.t) && !CRACK.has(k) && (iceChoice(who) ? !CROSS.rules[iceChoice(who)].avoid : ICE.load.safe * thick(k) ** (ONE + ONE) >= massOf(who.code) * CROSS.ai)); // E785
-const inWoods = (k) => !!FOR[k] && OCC[k] === ONE, woodsIn = (who) => !!(who && who.code && D.woods.enter[SH[who.code].mount || SH[who.code].body] && !(who.side === ME && iceOf(who) === 'around')), woodsDeep = (k) => D.ways.filter(([dx, dy]) => FOR[k + dy * N + dx]).length / D.ways.length; // E863
+const inWoods = (k) => !!FOR[k] && OCC[k] === ONE, woodsIn = (who) => !!(who && who.code && (D.woods.enter[SH[who.code].mount || SH[who.code].body] || has(who, 'Fell')) && !(who.side === ME && iceOf(who) === 'around')), woodsDeep = (k) => D.ways.filter(([dx, dy]) => FOR[k + dy * N + dx]).length / D.ways.length; // E863
 const crossAt = (k) => iced(k) || inWoods(k), inCross = (u) => onIce(u) || inWoods(u.k); // E874
 const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || (iced(k) && onIceOk(k, who))) && (OCC[k] === 0 || OCC[k] === 3 || (inWoods(k) && woodsIn(who)) || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
 const stepOk = (a, b, who) => walkable(b, who) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
@@ -1141,6 +1141,8 @@ function spotFor(u, c) { // E301
   return best;
 }
 function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.y))) return false; u.path.pop(); u.path.push([s.x, s.y]); u.spot = s; return true; } // E302
+function fell(t) { if (t.down) return; t.down = true; FOR[t.k] = OCC[t.k] = ZERO; t.size *= D.woods.fell.low; TV++; WALKV++; opened(t.k); if (topN >= ZERO) cutTop(t.k); wake(t); } // E1091
+on('tick', () => { for (const u of units) if (u.path && has(u, 'Fell')) woodsNear(u.bx, u.by, D.woods.fell.lane, (t) => { if (Math.hypot(t.bx - u.bx, t.by - u.by) <= D.woods.fell.lane) fell(t); }); });
 function take(t, n) { const root = has(t, 'Regrow') && D.regrow[t.kind].root; if (root) t.max = Math.max(t.max || ZERO, t.amount); t.amount -= n; if (t.deep && t.amount > ZERO) wake(t); if (root && t.amount <= ZERO) { t.amount = t.max * root; t.bare = true; return; } // E1072
   if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); TV++; opened(t.k); if (t.kind === 'tree' && topN >= ZERO) cutTop(t.k); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
 function stride(u, [tx, ty], dt, near = 0) { // E100

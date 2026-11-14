@@ -284,6 +284,11 @@
 "bytes": 398,
 "numbers": 0
 },
+"book:capabilities:SC52": {
+"sha": "5c3325d56e9b476e1fa149dcc31a250b33d6ea1de1460e8830451a5febd63b38",
+"bytes": 357,
+"numbers": 0
+},
 "book:capabilities:SC6": {
 "sha": "e8a01e1ba2778a595d1fc7bd77bb420b5143acbb87b7c9d394d1bb6a073208cb",
 "bytes": 449,
@@ -1759,6 +1764,11 @@
 "bytes": 690,
 "numbers": 0
 },
+"book:citations:N367": {
+"sha": "46690dda9945af072228898881a58d9c7ef6ff7cfb09f8631ad433a27b942277",
+"bytes": 1072,
+"numbers": 0
+},
 "book:citations:N37": {
 "sha": "3ec3085d37df611e84551fcdd69973b9f53e3c5fb285a05979c0d613f3bce81d",
 "bytes": 54,
@@ -2722,6 +2732,11 @@
 "book:comments:E1090": {
 "sha": "cb9f81a356f6b8912726552a1a352d0a3073a368621b911f82bb7ed1366c461e",
 "bytes": 319,
+"numbers": 0
+},
+"book:comments:E1091": {
+"sha": "c4ee23b6dc96bb87d8a48e4dbd2100dc693e9dd2039bf65491ac85b8a1dcd294",
+"bytes": 425,
 "numbers": 0
 },
 "book:comments:E11": {
@@ -7700,13 +7715,13 @@
 "numbers": 0
 },
 "book:measure:D123": {
-"sha": "7ee27b1957281e34106ab436435368f9eea099f1dc441e6b030238aa1ec17db9",
-"bytes": 4145,
+"sha": "35e72f31b74a45ebb0491b89a4afb72f6ad9fbea8047a9bd8b7a274ed4a90db8",
+"bytes": 4197,
 "numbers": 0
 },
 "book:measure:D124": {
-"sha": "e2e86187a4fe2e473eb0116d7f416d353a1e89bf546a4abec6e9cf097aab877b",
-"bytes": 1116,
+"sha": "a8a806ccb34566a098e16e884340fe248207ab96bccf717ba1c5d47edcacb315",
+"bytes": 1147,
 "numbers": 0
 },
 "book:measure:D125": {
@@ -7780,8 +7795,8 @@
 "numbers": 0
 },
 "book:measure:D138": {
-"sha": "e8fdbaa981028c48d78ecdfc77d43188200eb84377dc47bedc55f43df2f4404c",
-"bytes": 5093,
+"sha": "4b6c22314b1916bbc3a85e1ef91e9c5ca3611dbc6e7df8ca690a3189f3905702",
+"bytes": 5186,
 "numbers": 0
 },
 "book:measure:D139": {
@@ -8520,8 +8535,8 @@
 "numbers": 0
 },
 "book:measure:D286": {
-"sha": "c3d45a2514e45dcf83a3865718c18ec419b2fb0e3e17cc16d9afaf24b1c6fcbe",
-"bytes": 236,
+"sha": "d2850c660e956983d75c01af41f97b64751284774bd5fdf2a8d1c007aba1aaa1",
+"bytes": 337,
 "numbers": 0
 },
 "book:measure:D287": {
@@ -8925,8 +8940,8 @@
 "numbers": 0
 },
 "book:measure:D360": {
-"sha": "95b717d70d7a7436003be61d46d052a164f749e60e75d2e55c6cc6d3f15a0848",
-"bytes": 2128,
+"sha": "f18d9ceefcd87b6115bcdd044347c9efd843c0e530eb76506ebe822f682d9d2e",
+"bytes": 2390,
 "numbers": 0
 },
 "book:measure:D361": {
@@ -9427,6 +9442,11 @@
 "book:rules:X12": {
 "sha": "c5d13f0b1638748386ba8a21f1781dde8c12e18af77f6957a485e3bb2b9072b8",
 "bytes": 139,
+"numbers": 0
+},
+"book:rules:X120": {
+"sha": "e7ae953886a73a7de7171566d7097dfac54499cb86bec743039219d81dd89452",
+"bytes": 412,
 "numbers": 0
 },
 "book:rules:X13": {
@@ -10502,6 +10522,11 @@
 "book:shells:UM22": {
 "sha": "1071b6b9c1a1f05a9afa0d53a2c19de63cd64bc616e43590a6b3cb5bc1d150f1",
 "bytes": 348,
+"numbers": 0
+},
+"book:shells:UM23": {
+"sha": "e8ae1f2998c0e148441853bd3767b4003fcf0d96431aaac58e2627c54b88a590",
+"bytes": 233,
 "numbers": 0
 },
 "book:shells:UM3": {
@@ -12139,6 +12164,11 @@
 "bytes": 258,
 "numbers": 0
 },
+"book:tech:O262": {
+"sha": "5a27f15cfabf9185aeaee7f8237ab1bc3803da7f7b888b20f709b4ea6c7b982f",
+"bytes": 213,
+"numbers": 0
+},
 "book:tech:O27": {
 "sha": "95c064e37fad98ee77079475598e2fa3f393532b3ddb670e9de836bcfdf13a0a",
 "bytes": 295,
@@ -12805,8 +12835,8 @@
 "numbers": 0
 },
 "book:words:J7": {
-"sha": "ca317c7b500e06ccf97f6defa67e6fce2ae55a9b4aecf44af607489ff559dfc7",
-"bytes": 54155,
+"sha": "309ea27e9dfa9abe4b6c9207709e5a904f7919d9cb2ceff2d396a1e2bdd4a37e",
+"bytes": 54323,
 "numbers": 0
 },
 "book:words:J8": {
@@ -12855,8 +12885,8 @@
 "numbers": 54
 },
 "code:index.html#floor-5-movables": {
-"sha": "78e1a7377f0e61ade5abe3293d0f21264d2ad9084a055154a98acda348cfa4f4",
-"bytes": 22278,
+"sha": "9f34c81f4bdcfc542ff0edabc9eafbedc58fac0af047f082e639019317f418ce",
+"bytes": 22691,
 "numbers": 78
 },
 "code:index.html#floor-6-climate": {
@@ -13465,8 +13495,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "f3e7bc44f93dac75ebddf22d1e7101efdf7eaf6b9ddfe44a4b1dd6a6bc4d17c0",
-"bytes": 339497,
+"sha": "8c762a988afa6484bd5f5b2daa1067dbb4f8b2d75c7b9676fafb2d44cf72e6b1",
+"bytes": 341256,
 "numbers": 0
 }
 }
