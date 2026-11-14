@@ -439,6 +439,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N365 |  | Albert, Nov 14, 2026, 10:06: \make it so the dock is longer, starts on the banks and good further into the sea. When a dock is built - just  | opened |
 | N366 |  | Albert, Nov 14, 2026, 09:52: \to solve late game gold… when we hit gun powder age how about gold mining? ... you go 'into the ground' ...\;  | opened |
 | N367 |  | Albert, Nov 14, 2026, 10:16: \figure out a way to build a unit, maybe in the siege workshop that cuts down trees faster in order to make a p | opened |
+| N368 |  | Albert, Nov 11, 2026 (N24): an order means go where he taps, period. Nov 14, 2026, 16:09, after a 121-minute game: \They need heavy microman | opened |
 
 ## colours
 
@@ -1513,6 +1514,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1089 |  | the focus rule in one home (Albert, Nov 11: a focused unit stays on its job; its find gone, it walks to the Town Center): it held only when  |  |
 | E1090 |  | the mine shaft (N366): once a side has Blasting, its Mining camps are worked in place for gold, one miner each, straight to the stores (the  |  |
 | E1091 |  | the Pioneer (N367): a unit that carries the Fell tick walks into the woods though its body is an engine's, at the woods' own pace, and fells |  |
+| E1092 |  | an order to ground is obeyed (N368): a soldier sent by the player to a spot (sent) looks for no foe while he marches there, so one pulled ou |  |
 
 ## ground
 
@@ -2029,6 +2031,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X118 | N48 (N365): dock + fish, one element: a dock laid by wild fish holds two spots' worth of its own plus every wild spot in its reach, each counted once; a wild spot is no find to anyone by itself; a villager tapped onto one is sent to the dock, fishes there and lands the catch; fished out, the dock keeps a quarter, rests bare and lets its worker go; at the turn of spring it is back | {stage: page} | N365 |
 | X119 | N49 (N366): the mine shaft: before Blasting a Mining camp is only a drop-off; after it, the camp is a post that yields gold: a villager tapped onto it works there and gold comes into the stores with no carrying, its stock falling; emptied, it can be sunk again for its price's share and is full | {stage: page} | N366 |
 | X120 | N50 (N367): the Pioneer: locked until Pioneer corps is learned; it may enter the woods where a Ram may not; standing still it fells nothing; moving, it fells the trees in its lane: a felled tree is still there with all its wood, is no longer woods, and lets a Ram through; a villager tapped onto it gathers it; trees out of its lane stand | {stage: page} | N367 |
+| X121 | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) | {stage: page} | N368 |
 
 ## screen
 

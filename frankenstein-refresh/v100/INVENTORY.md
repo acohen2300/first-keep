@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,670 | 652,038 | 652,203 |
-| Books | 2570 | 0 | 829,128 | 830,101 |
+| Game code | 31 | 3,671 | 652,113 | 652,278 |
+| Books | 2573 | 0 | 830,499 | 831,472 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,306 | 378,998 | 379,259 |
+| Tools | 5 | 2,317 | 380,934 | 381,195 |
 
 ## The trades (code)
 
@@ -41,7 +41,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#touch | 54 | 10,181 | 10,185 | 54 |
 | menu.js | 625 | 136,515 | 136,574 | 441 |
 | econ.js | 626 | 118,856 | 118,856 | 70 |
-| combat.js | 377 | 64,642 | 64,642 | 83 |
+| combat.js | 378 | 64,717 | 64,717 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
 
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 56 | 16,972 |
-| citations | 361 | 98,416 |
+| citations | 362 | 98,955 |
 | colours | 34 | 10,345 |
-| comments | 1030 | 201,971 |
+| comments | 1031 | 202,351 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 344 | 201,755 |
-| rules | 117 | 46,734 |
+| rules | 118 | 47,220 |
 | screen | 28 | 17,478 |
 | shells | 111 | 23,935 |
 | sides | 7 | 1,869 |
@@ -195,5 +195,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X118 | t-n48 | page | N48 (N365): dock + fish, one element: a dock laid by wild fish holds two spots' worth of its own plus every wild spot in its reach, each counted once; a wild spot is no find to anyone by itself; a villager tapped onto one is sent to the dock, fishes there and lands the catch; fished out, the dock keeps a quarter, rests bare and lets its worker go; at the turn of spring it is back |
 | X119 | t-n49 | page | N49 (N366): the mine shaft: before Blasting a Mining camp is only a drop-off; after it, the camp is a post that yields gold: a villager tapped onto it works there and gold comes into the stores with no carrying, its stock falling; emptied, it can be sunk again for its price's share and is full |
 | X120 | t-n50 | page | N50 (N367): the Pioneer: locked until Pioneer corps is learned; it may enter the woods where a Ram may not; standing still it fells nothing; moving, it fells the trees in its lane: a felled tree is still there with all its wood, is no longer woods, and lets a Ram through; a villager tapped onto it gathers it; trees out of its lane stand |
+| X121 | t-n51 | page | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) |
 
-2700 items sealed · 2570 book entries · 94 laws · 361 citations, 34 still to open · 0 known
+2703 items sealed · 2573 book entries · 94 laws · 362 citations, 34 still to open · 0 known

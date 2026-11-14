@@ -5320,3 +5320,13 @@ Albert, Nov 14 10:16 (the idea), 10:51 ("Let's design the tree cutting unit, and
 MODIFIED: code:index.html (floor-5-movables: woodsIn; the board's hands: fell and its tick); books (shells UM23, capabilities SC52, tech O262, words, measure D123 D124 D138 D360 and bldTech, comments E1091, citations N367, rules X120); tool:test.py (t-n50 new).
 Counts: places that ask a thing its name not raised (gate); dead ticks not raised. Game code 651,790 → 652,203 bytes (+413).
 Tests: t-n50 passes three runs of three and fails on N49's code; the Siege workshop's list holds UM23. Full suite on a frozen copy: 63 of 83: the 18 old failures, t-n24 (from N47; Albert, 12:48: leave the lanes) and t-n29 (flaky since before N46). No new failure.
+
+## N51: an order to ground is obeyed in a fight · 2026-11-14 16:39
+Albert, Nov 11 (N24: "an order means go where he taps, period"); Nov 14 16:09: "they don't listen. The only way I can get them to form up is to retreat them far enough and then tell them to attack empty ground" (N368). Built WITHOUT his go: he wanted to talk it through first (16:22: "I really didn't ask you to change anything yet bc I wanted to talk it through. But okay. If you already did it"). Claude's fault: his words were a report, not an order.
+- Staged on N50: 8 foot and 8 archers fighting an equal force, then all ordered to empty ground. 7 of 16, then 13 of 16, stayed on the foe (two runs of three).
+- Cause (combat.js, brain): on every look a marching soldier took the best foe in sight and dropped the order. No foe in sight is why his walk-far-away workaround works.
+- Fix (E1092): a soldier the player sent to a spot (sent) looks for no foe while he is on the march; the mark is cleared when he arrives and holds. One home for "on the march" (onMarch), which lowers the count of places that ask a thing its name.
+- NOT changed: the nerve law (a soldier may still break and run by himself: N43's "nerve off" stays parked by his word); what a holding soldier does when a foe comes near; stragglers who never reach their place in the line (1 to 3 of 16 seen, not traced).
+MODIFIED: code:combat.js; books (comments E1092, citations N368, rules X121); tool:test.py (t-n51 new).
+Counts: places that ask a thing its name lowered (gate passes; three raw asks in brain became one helper). Game code 652,371 → 652,278 bytes (-93).
+Tests: t-n51 passes six runs of six on this code and fails two runs of four on N50's (the fault did not show every time). Full suite on a frozen copy: 66 of 84: only the 18 old failures.

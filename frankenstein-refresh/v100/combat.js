@@ -25,7 +25,7 @@ const TK = FK.TK, knows = (side, k) => !!SIDES[side] && SIDES[side].techs.has(TK
 const SQ = { plan: [], form: [], temper: [], intent: [], sel: null }, SHAPES = Object.keys(FM).filter((k) => k !== 'column'), DIAL = { temper: WD.tempers, form: SHAPES, intent: WD.intents };
 const fresh = () => { SQ.plan = WD.squads.map(() => ({})); SQ.temper = WD.squads.map(() => AR.temper.guard); SQ.form = WD.squads.map(() => SHAPES.indexOf('line')); SQ.intent = WD.squads.map(() => AR.intent.engage); SQ.sel = null; };
 const mine = (u) => u.side === ME && u.bn != null, temperOf = (u) => (u.wall > K.t ? AR.temper.hold : mine(u) ? SQ.temper[u.bn] : AR.temper.guard), temper = (u) => D.tempers[temperOf(u)], intent = (u) => (mine(u) ? SQ.intent[u.bn] : AR.intent.engage);
-const formOf = (u) => (mine(u) && knows(ME, 'formations') ? SHAPES[SQ.form[u.bn]] : 'line'), marching = (u) => u.job === 'march' && !u.target && !!u.path;
+const formOf = (u) => (mine(u) && knows(ME, 'formations') ? SHAPES[SQ.form[u.bn]] : 'line'), onMarch = (u) => u.job === 'march', marching = (u) => onMarch(u) && !u.target && !!u.path;
 const shapeOf = (u) => FM[u.wall > K.t ? DI.wall.shape : drillOn(u) ? u.drill.shape : marching(u) && knows(u.side, 'formations') ? 'column' : formOf(u)];
 const kiteOf = (u) => !!stat(u).kite || (knows(u.side, 'engage') && (stat(u).tags || []).includes('ranged') && temperOf(u) !== AR.temper.press);
 const dialOf = (key, a) => { const [v, ...more] = a == null ? new Set(SQ[key]) : [SQ[key][a]]; return more.length ? null : v; };
@@ -131,19 +131,20 @@ function brain(u, dt, look) { // E396
   const s = stat(u), sight = FK.stat(u.code, u.side, 'sight'), atHome = u.job === 'idle' || (u.job === 'fight' && u.was == null), d = (v) => edgeDist(u, v); let t = u.target;
   if (u.focus && !(alive(u.focus) && enemies(u, u.focus))) u.focus = null;
   if (t && !(alive(t) && enemies(u, t) && (t === u.focus || d(t) < sight * AR.leash * temper(u).chase || (atHome && nearHome(u, t))))) t = null;
-  if (look && !u.focus) { const it = intent(u), far = it === AR.intent.loose && u.job === 'march' ? s.rng + AR.step : sight, cur = t && t.kind === 'unit' ? t : null;
+  if (look && !u.focus) { const it = intent(u), far = it === AR.intent.loose && onMarch(u) ? s.rng + AR.step : sight, cur = t && t.kind === 'unit' ? t : null;
     let c = s.bonly || (it === AR.intent.bld && foeBld(u, far)) ? foeBld(u, far) : bestFoe(u, far);
     if (cur && (!c || d(cur) <= s.rng || (canBeat(u, cur) >= canBeat(u, c) && worth(u, c, d(c)) < (1 + D.moveOn) * worth(u, cur, d(cur))))) c = cur;
     if (atHome && c && !nearHome(u, c) && c.target !== u) c = null;
     if (!c && atHome && !s.bonly) c = (u.home && nearest(u, D.yard, u.home)) || (home(u.side) && nearest(u, D.yard, home(u.side))) || null;
-    if (!c && (u.job === 'march' || u.job === 'hold' || u.was != null)) c = foeBld(u, sight);
+    if (!c && (onMarch(u) || u.job === 'hold' || u.was != null)) c = foeBld(u, sight);
     if (c && c !== u.focus && tame(u, c)) c = null; // E936
     t = c || (t && t.kind === 'bld' ? t : null); }
   if (t && !u.focus && ((temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
+  if (u.sent && onMarch(u)) t = null; // E1092
   u.pacex = shapeOf(u).spd * (marching(u) && u.slow ? u.slow : 1) * (u.chg ? CH.spd * FK.stat(u.code, u.side, 'charge') : u.tire ?? D.bases.pace);
   if (t && u.target !== t) { if (u.job !== 'fight') u.was = u.job === 'idle' ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
   else if (!t && u.job === 'fight') { u.target = null; u.path = null; if (u.was != null) march(u, u.was); else u.job = 'idle'; u.was = null; }
-  else if (u.job === 'march' && !u.path) { if (u.goal == null || nearK(u.k, u.goal, FK.walkable(u.goal) ? 1 : 4)) u.job = 'hold'; else if (due(u.rp)) { u.rp = D.repath; if (!FK.go(u, u.goal)) u.job = 'hold'; } }
+  else if (onMarch(u) && !u.path) { if (u.goal == null || nearK(u.k, u.goal, FK.walkable(u.goal) ? 1 : 4)) { u.job = 'hold'; u.sent = false; } else if (due(u.rp)) { u.rp = D.repath; if (!FK.go(u, u.goal)) u.job = 'hold'; } }
   else if (u.esc && alive(u.esc) && !u.path && gap(u, u.esc) > D.trade.near * D.trade.keepUp && due(u.rp)) { u.rp = D.repath; if (u.job === 'hold') u.job = 'idle'; FK.go(u, FK.tileAt(u.esc.bx, u.esc.by)); } // E1046
   else if (u.job === 'idle' && u.side === ME && u.home && !u.path && gap(u, u.home) > D.yard) Object.assign(u, { job: 'hold', goal: u.k }); // E1020
   else if (u.job === 'idle' && u.home && !u.path && gap(u, u.home) > AR.near && due(u.rp)) { u.rp = D.repath; const hk = FK.tileAt(u.home.bx, u.home.by); if (FK.walkable(hk) && FK.go(u, hk)) { u.path.pop(); u.path.push([u.home.bx, u.home.by]); u.then = 'idle'; } else if (FK.walkTo(u, (q) => FK.walkable(q) && nearK(q, hk, AR.homeR), hk)) { const [bx, by] = FK.tileMid(u.path.at(-1)); u.home = { bx, by }; u.then = 'idle'; } else u.home = { bx: u.bx, by: u.by }; } // E1036

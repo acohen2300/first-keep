@@ -1009,6 +1009,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
 - **E936** your soldiers leave a wild animal alone unless it is after one of yours or you sent them a
+- **E1092** an order to ground is obeyed (N368): a soldier sent by the player to a spot (sent) looks f · N368
 - **E1020** my soldier left idle far from his post (past the yard, D-yard) holds where he stands and d
 - **E1036** an idle soldier walks home once: if his home spot cannot be stood on (built over, a tree, 
 - **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40)

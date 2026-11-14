@@ -462,6 +462,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N365** Albert, Nov 14, 2026, 10:06: "make it so the dock is longer, starts on the banks and good further into the sea → D218, D378, X118
 - **N366** Albert, Nov 14, 2026, 09:52: "to solve late game gold… when we hit gun powder age how about gold mining? ... y → SC51, X119, O31
 - **N367** Albert, Nov 14, 2026, 10:16: "figure out a way to build a unit, maybe in the siege workshop that cuts down tre → SC52, D286, D360, X120, UM23, O262
+- **N368** Albert, Nov 11, 2026 (N24): an order means go where he taps, period. Nov 14, 2026, 16:09, after a 121-minute g → X121
 
 ## Named exceptions
 

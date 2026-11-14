@@ -1769,6 +1769,11 @@
 "bytes": 1072,
 "numbers": 0
 },
+"book:citations:N368": {
+"sha": "05882afce6be9b80f9fe92788643af817d335006be50124713de3f5a2e3d9f30",
+"bytes": 528,
+"numbers": 0
+},
 "book:citations:N37": {
 "sha": "3ec3085d37df611e84551fcdd69973b9f53e3c5fb285a05979c0d613f3bce81d",
 "bytes": 54,
@@ -2737,6 +2742,11 @@
 "book:comments:E1091": {
 "sha": "c4ee23b6dc96bb87d8a48e4dbd2100dc693e9dd2039bf65491ac85b8a1dcd294",
 "bytes": 425,
+"numbers": 0
+},
+"book:comments:E1092": {
+"sha": "ef54701cd91dccde32681ea7b5895b40ef6253c662c4efd0089e8a01f505adf3",
+"bytes": 368,
 "numbers": 0
 },
 "book:comments:E11": {
@@ -9449,6 +9459,11 @@
 "bytes": 412,
 "numbers": 0
 },
+"book:rules:X121": {
+"sha": "5b7fef5ce0adf040d5430c2279fe6f1126900393157885538d54326f307eeceb",
+"bytes": 475,
+"numbers": 0
+},
 "book:rules:X13": {
 "sha": "05be3e4b0518d8d4b8610a179ccb98bb4e69f18bffdcd0eeaf403afce4ba7a32",
 "bytes": 151,
@@ -12855,8 +12870,8 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "56f94ae2ac8023b5abc6b55817bf61e968d70cbc54fa183e6904b6c4e787ee3b",
-"bytes": 64642,
+"sha": "dbf94221d1371245131f2acc977229b14ae163a2cea85e1ab16d1e12e9cfd29f",
+"bytes": 64717,
 "numbers": 83
 },
 "code:econ.js": {
@@ -13495,8 +13510,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "8c762a988afa6484bd5f5b2daa1067dbb4f8b2d75c7b9676fafb2d44cf72e6b1",
-"bytes": 341256,
+"sha": "da8a5d8f6552090239676c03c1ee02fcde755542cd36c11ab622163166a68f0f",
+"bytes": 343192,
 "numbers": 0
 }
 }
