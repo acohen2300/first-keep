@@ -770,3 +770,6 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - P2b: the card's old status line ("food", the load row) is hidden on your own units; the call row says it. [2026-11-12 19:00]
 - P2c: calling a villager no longer opens the P2b card (Albert: too much screen); the card stays for soldiers and for Log. [2026-11-12 23:00]
 - Nov 13: t-orders' Choke check set aside (Choke is parked since Nov 9: back with the war module). Put the check back when Choke returns.
+
+- Nov 13 22:21 (Albert: "Park"): message-precedence levels (FLASH / IMMEDIATE / PRIORITY / ROUTINE) for orders and tasks. Not built.
+- Nov 13 22:21 (Albert: "Kill this"): G15, the waiting items of Nov 10-11: refund on cancel, the GitHub Pages source setting, the side row (Yield! and the vassal row), a gold vein's 4 miners, keep the blur fix or not, the location (45 N).
