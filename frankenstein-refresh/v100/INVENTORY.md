@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,663 | 650,777 | 650,942 |
-| Books | 2553 | 0 | 820,940 | 821,924 |
+| Game code | 31 | 3,665 | 651,905 | 652,072 |
+| Books | 2560 | 0 | 824,037 | 825,027 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,274 | 374,525 | 374,786 |
+| Tools | 5 | 2,287 | 376,837 | 377,098 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,927 | 5,931 | 24 |
 | index.html#touch | 54 | 10,159 | 10,163 | 54 |
-| menu.js | 625 | 137,240 | 137,299 | 438 |
+| menu.js | 627 | 138,368 | 138,429 | 437 |
 | econ.js | 624 | 118,127 | 118,127 | 70 |
 | combat.js | 377 | 64,665 | 64,665 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 54 | 16,195 |
-| citations | 358 | 95,133 |
+| citations | 359 | 95,617 |
 | colours | 34 | 10,345 |
-| comments | 1024 | 199,686 |
+| comments | 1028 | 200,918 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 344 | 200,636 |
-| rules | 113 | 45,314 |
-| screen | 28 | 18,730 |
+| rules | 114 | 45,850 |
+| screen | 28 | 18,716 |
 | shells | 110 | 23,558 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 56 | 103,363 |
+| words | 57 | 104,308 |
 
 ## The shells
 
@@ -161,7 +161,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X83 | t-n18b | page | N18 build 2, Albert's N17 notes: People's ring recedes while a villager trains; a line said while another shows waits its turn; soldiers trained while a rally flag stands are dressed into one formation there; at night a campfire burns by a drop-off where villagers work and the army's standard carries a torch; no figure is clipped by its box (the horse's head); three blade tiles; a rock's sprite is cached at or above its size; a person behind a building shows through it |
 | X84 | t-n18c | page | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
 | X85 | t-n19 | page | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side |
-| X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
+| X86 | t-n20 | page | N20: ten swordsmen a side fight on to an end and, while the book keeps nerve from breaking (D231, N358), none of them runs by himself (with it on: none before two or more of a side have fallen); the top row is one row of nine; three times the trees; storms from 0.6 |
 | X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
 | X88 | t-n22 | page | N22: nine in ten trees come from the woods' cache; felling trees updates the map's tops exactly as working them out afresh; a bow reaches farther from above and keeps its flat reach from below; the Raiders age with three soldiers; the picture steps to three quarters at level 3; a save loads in under 6 s headless |
 | X91 | t-n24b | page | N24 build 2: a figure is no sharper past 2x zoom; the save is one slot in IndexedDB and nothing of First Keep is left in localStorage; a tab told another has opened pauses and stops saving; a farm makes D136 (0.5 a second); home gold has six piles, four to a vein; a price shows in full, each store its own colour; the Stores and Score cards open from the top bar; a building with research you can start shows the book; the Build menu shows only your age's buildings, no Show all |
@@ -190,6 +190,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X112 | ecs | code | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall |
 | X113 | t-star | page | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken |
 | X114 | t-n42 | page | N42 (N349-N351): a bulk sale at the Market sells 1,000 wood in one tap for less than ten single lots; an untimed game shows no countdown under the clock and a standing wonder shows its own; after the page was hidden and the old sound player will not resume, the next tap makes a new one; a walker with a load is not pushed by an empty walker; a research cell shows what it gives; a bush picked out stays, bare, and is back past six tenths after the turn of spring; the workers' fire is three campfires across and every building has two torches |
-| X115 | t-n43 | page | N43 (N354-N358): the new game card opens on Difficulty, its names 12, its choices 14 at 600, the chosen one ringed in gold, Start at 18 naming the people, the people's two lines in full under their row, no help line below, an icon on every scenario, tension and hazard; the sea holds fish of the book's amount along every coast; autumn's turn warns of winter; a soldier whose nerve is gone holds his ground; a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is |
+| X115 | t-n43 | page | N43 (N354-N358): the new game card opens on Difficulty, its names 12, its choices 14 at 600, the chosen one ringed in gold, Start at 18 naming the people, the people's two lines in full under their row, no help line below, an icon on every scenario and hazard; the sea holds fish of the book's amount along every coast; autumn's turn warns of winter; a soldier whose nerve is gone holds his ground; a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is |
+| X116 | t-n44 | page | N44 (N360, Parked Nov 14): the new game card has no Tension row; a building's card has no All tech button and its plot cell shows its words whole; a spy's card says how he is used; the war Controller's middle button reads who and how many until an order is chosen, then the order and what it still needs; a resource whose out beats its in is red in the top bar |
 
-2683 items sealed · 2553 book entries · 94 laws · 358 citations, 34 still to open · 0 known
+2690 items sealed · 2560 book entries · 94 laws · 359 citations, 34 still to open · 0 known

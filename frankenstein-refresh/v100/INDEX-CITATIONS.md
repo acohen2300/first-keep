@@ -459,6 +459,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N357** Albert, Nov 13, 2026, 09:39: fish in all water; 22:21, after playing: "If we can't fish in the ocean, might as → D218, X115
 - **N358** Albert, Nov 13, 2026, 22:49: "Side note: my troops are still big wimps." and, asked how brave soldiers should  → D231, X115
 - **N359** Traced Nov 13, 2026, from a test that failed one run in five (t-dock) and from Albert's logs of villagers stan → X115
+- **N360** Albert, Nov 13, 2026, 20:59: "I don't know how to control spy's or medics. They are still using the old army c → X116, J58
 
 ## Named exceptions
 

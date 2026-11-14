@@ -670,6 +670,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
+- **E1081** the Town tab trains what the seat trains, from the book (it showed the villager and a dead
 - **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E847** Help: the earlier messages, newest first; the latest stays in the help line beneath
@@ -681,12 +682,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1028** every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill shou · E333
 - **E738** a building's research on its card: the next step of each of its lines, as Base's card (the
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
+- **E1080** a special's card says how he is used (J58, N360): the first of his ticks that the Words bo · J58 (N360) · N360
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
 - **E736** the Home button stands at the rank's left whenever the Town Center is off the screen, and 
 - **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
+- **E1082** every round button of the Controller's top row carries its name under it (J50 dots; Albert · J50 (N325)
+- **E1079** the war Controller's middle button reads as the order being built, as the villager's alrea · E1059
 - **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25
 - **E1003** picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller wi
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
