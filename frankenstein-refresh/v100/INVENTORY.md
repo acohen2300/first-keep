@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,653 | 646,641 | 646,806 |
-| Books | 2540 | 0 | 812,395 | 813,369 |
+| Game code | 31 | 3,663 | 650,777 | 650,942 |
+| Books | 2553 | 0 | 820,940 | 821,924 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,260 | 371,607 | 371,868 |
+| Tools | 5 | 2,274 | 374,525 | 374,786 |
 
 ## The trades (code)
 
@@ -20,7 +20,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,959 | 1,963 | 38 |
 | index.html#floor-2-terrain | 85 | 9,863 | 9,867 | 115 |
-| index.html#floor-3-non-movables | 71 | 10,850 | 10,854 | 54 |
+| index.html#floor-3-non-movables | 73 | 11,451 | 11,455 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
@@ -35,13 +35,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
 | index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 139 | 29,232 | 29,237 | 0 |
+| index.html#the-view-s-eyes-lights-and-stage | 147 | 31,920 | 31,925 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
-| index.html#touch | 54 | 10,150 | 10,154 | 54 |
-| menu.js | 625 | 136,489 | 136,548 | 441 |
-| econ.js | 624 | 118,080 | 118,080 | 70 |
-| combat.js | 377 | 64,642 | 64,642 | 83 |
+| index.html#the-woods-cache | 41 | 5,927 | 5,931 | 24 |
+| index.html#touch | 54 | 10,159 | 10,163 | 54 |
+| menu.js | 625 | 137,240 | 137,299 | 438 |
+| econ.js | 624 | 118,127 | 118,127 | 70 |
+| combat.js | 377 | 64,665 | 64,665 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
 
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 54 | 16,195 |
-| citations | 352 | 91,987 |
+| citations | 358 | 95,133 |
 | colours | 34 | 10,345 |
-| comments | 1018 | 197,133 |
+| comments | 1024 | 199,686 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 344 | 199,887 |
-| rules | 112 | 44,373 |
-| screen | 28 | 17,478 |
+| measure | 344 | 200,636 |
+| rules | 113 | 45,314 |
+| screen | 28 | 18,730 |
 | shells | 110 | 23,558 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 56 | 103,300 |
+| words | 56 | 103,363 |
 
 ## The shells
 
@@ -157,7 +157,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X79 | t-ground | page | the paper ground (N11-N14): on the opening view, open water well below the land is drawn blue and open land well above it green, nine in ten points or more, away from shores, finds and trees |
 | X80 | t-n15 | page | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark |
 | X81 | t-n16 | page | N16, the quick action: open ground gives Attack, Build, Rally; Attack gives All, half, quarter and Squad; Build gives the six groups; a message with a place shows Go on a menu's help line |
-| X82 | t-n18 | page | N18 build 1, Albert's N17 notes on the menus: a pill keeps its curved ends; the selected ring lies on the pill's own outline, its ends on the pill's corners; row titles 14/600, options 12/400; a hazard's ring is the options' white; with Daily on a locked option is flat and dark with no ring; the paused Play button wears the ring at its own size; the Paused card hangs below the Top Info Ribbon; the quick action's ring is its box's size; the tap that opens the quick action does not press the box under the finger |
+| X82 | t-n18 | page | N18 build 1, Albert's N17 notes on the menus: a pill keeps its curved ends; the selected ring lies on the pill's own outline, its ends on the pill's corners; row titles 12/600, options 14/600, a chosen option and a hazard ringed in gold (moved to Albert's Nov 13 ruling, N354; were 14/600, 12/400 and white); with Daily on a locked option is flat and dark with no ring; the paused Play button wears the ring at its own size; the Paused card hangs below the Top Info Ribbon; the quick action's ring is its box's size; the tap that opens the quick action does not press the box under the finger |
 | X83 | t-n18b | page | N18 build 2, Albert's N17 notes: People's ring recedes while a villager trains; a line said while another shows waits its turn; soldiers trained while a rally flag stands are dressed into one formation there; at night a campfire burns by a drop-off where villagers work and the army's standard carries a torch; no figure is clipped by its box (the horse's head); three blade tiles; a rock's sprite is cached at or above its size; a person behind a building shows through it |
 | X84 | t-n18c | page | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
 | X85 | t-n19 | page | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side |
@@ -190,5 +190,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X112 | ecs | code | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall |
 | X113 | t-star | page | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken |
 | X114 | t-n42 | page | N42 (N349-N351): a bulk sale at the Market sells 1,000 wood in one tap for less than ten single lots; an untimed game shows no countdown under the clock and a standing wonder shows its own; after the page was hidden and the old sound player will not resume, the next tap makes a new one; a walker with a load is not pushed by an empty walker; a research cell shows what it gives; a bush picked out stays, bare, and is back past six tenths after the turn of spring; the workers' fire is three campfires across and every building has two torches |
+| X115 | t-n43 | page | N43 (N354-N358): the new game card opens on Difficulty, its names 12, its choices 14 at 600, the chosen one ringed in gold, Start at 18 naming the people, the people's two lines in full under their row, no help line below, an icon on every scenario, tension and hazard; the sea holds fish of the book's amount along every coast; autumn's turn warns of winter; a soldier whose nerve is gone holds his ground; a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is |
 
-2670 items sealed · 2540 book entries · 94 laws · 352 citations, 34 still to open · 0 known
+2683 items sealed · 2553 book entries · 94 laws · 358 citations, 34 still to open · 0 known

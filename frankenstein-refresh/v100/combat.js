@@ -116,7 +116,7 @@ function formHome() { const at = new Map(); for (const u of units()) if (armed(u
 function nerve(u, dt) { let m = u.mor; const full = MO.full * (ONE - D.exposure.nerve * FK.exposure(u.code, u.side)); // E809
   if (!u.target) { const near = FK.bldsNear(u.bx, u.by, MO.shelterR * T, (b) => b.side === u.side && up(b) && (FK.has(b, 'Shoot') || FK.has(b, 'Line') || FK.has(b, 'Gate')) && gap(u, b) < MO.shelterR); m = FK.relax(m, full, MO.tau / FK.stat(u.code, u.side, 'rest') / (near ? MO.shelter * FK.stat(u.code, u.side, 'shelter') : MO.front), dt); }
   else { const us = [u], them = []; FK.unitsNear(u, MO.crowd * T, (v) => { if (armed(v) && alive(v)) (v.side === u.side ? us : atWar(u.side, v.side) ? them : []).push(v); }); if (them.length > us.length * MO.outnumbered) m -= MO.odds * dt; }
-  u.mor = Math.min(full, Math.max(0, m)); if (u.mor > 0 || stat(u).bonly || u.fb > K.t) return;
+  u.mor = Math.min(full, Math.max(0, m)); if (!MO.breaks || u.mor > 0 || stat(u).bonly || u.fb > K.t) return; // E1078
   Object.assign(u, { job: 'rout', routAt: K.t, target: null, focus: null, path: null }); if (u.side === ME && !(K.t - routSaid < MO.say)) { routSaid = K.t; FK.fire('event', 'rout', u, u.bn != null ? WD.squads[u.bn] : WD.all); } }
 let routSaid = -Infinity, homeT = 0, ordT = HU.beat; const sparks = [], tracers = [];
 // E970

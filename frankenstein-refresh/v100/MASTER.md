@@ -94,8 +94,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
-- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170, N341)
-- **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N27, N28, N170, N341)
+- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170, N341, N357)
+- **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N27, N28, N170, N341, N357)
+- **E1077** fish in the sea (N357): along each of the four coasts, every sea spacings, the walk goes f · N357
 - **E50** drawn back to front
 - **E652** The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by wo · QCQ (N229, N233)
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
@@ -492,13 +493,16 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E965** one scratch canvas for the fire's highlights
 - **E1015** the fire-light rim of a figure or building, made once for its picture, the light's kind an
 - **E966** firelight on the side that faces it (Albert, Nov 10, N17 #8, the mock): each person and fi · N17
+- **E1075** a flame's shadow (Mid's flameShadow, kept in the book as D317 shadow and C light shadow bu · D317 (N208, N54, N309, N307, N312, N352) · N356
 - **E938** Lanterns (research) make the door torches brighter: light falls off as the square of dista
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
 - **E934** an order's target answers: a unit glows, a thing ripples in the done colour (Albert, Nov 1
 - **E613** words on the map keep one size whatever the zoom, as the screen's own words; a label is a 
 - **E867** words drawn on the map at the head type (SN20), never a size typed in the code · SN20 (N283, N285, N287)
 - **E614** the dressing: a site staked out and rising with the work, a finished building's pop and fr
+- **E1074** a building going up, as in real life (Albert, Nov 13 22:51, N355: "Foundation, frame, fini · N355 · E1076
 - **E615** a building site: the stakes round its footprint, the walls rising with the work between tw
+- **E1076** the finished part of a rising building is cut along the plot's two near edges lifted to th · E1074
 - **E616** a building's flags, drawn live over its picture where its art put them, waving more in a s
 - **E617** a side's stores as piles by the camp that takes them in: a pyramid by log₁₀ of the store, 
 - **E618** a chimney's plume: rising ∝ x^(2/3) (QAV, Briggs) and widening ∝ x^0.9, leaning downwind ( · QAV (N55, N56)
@@ -662,6 +666,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
+- **E1073** the new game card in the order of the v80 card (Albert, Nov 13 22:21, N354): the settings, · N354
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
@@ -727,7 +732,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
 - **E1051** the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the  · N331
 - **E856** a picked unit takes the next tap as its order, by the tap table (E1038, SN43). While the i · E1038 · SN43 (N326)
-- **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
+- **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they  · N359
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
@@ -960,7 +965,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E230** the blow's strength (Mid's dmgOf): its blow after research, blades worn by frost, rain or  · D234 (N188)
 - **E282** who counters whom (Mid's vsMul): the most of the striker's counters (D138 vs, its ranks' a · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · QBO (N69, N188) · QAG (N36, N37, N188) · QAF (N35)
 - **E387** where a blow comes from (Mid's fromWhere): the cosine between the line's facing (its own a · D232 (N188)
-- **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188) · D355 (N278, N279, N280)
+- **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16, N358) · D228 (N176) · D141 (N188) · D355 (N278, N279, N280)
 - **E875** in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L 
 - **E876** in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear
 - **E1019** a struck soldier is heard: his own within crowd tiles (D-nerve) who stand idle or hold wit
@@ -969,7 +974,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1017** ice-shy (Albert, Nov 11: "They see their comrades fall through the ice and they just conti · E1018
 - **E796** one who falls through the ice is lost, as any death, and leaves no body on the ice (under)
 - **E356** a building that falls pays its destroyer D233 of its price (Mid's plunderBld); game falls  · D233 (N188)
-- **E388** QAI a loss drains each soldier of its side within D231's lossR by 1 ÷ (D142 × n) (Mid's di · QAI (N76, N188) · D231 (N188, N76, N16) · D142 (N76)
+- **E388** QAI a loss drains each soldier of its side within D231's lossR by 1 ÷ (D142 × n) (Mid's di · QAI (N76, N188) · D231 (N188, N76, N16, N358) · D142 (N76)
 - **E232** QAF and QAG the foe (Mid's unitPower, groupPower, canBeat, foeValue): one its group can be · QAF (N35) · QAG (N36, N37, N188)
 - **E389** Lanchester's odds above a half is exactly the ratio above one
 - **E233** the best foe in reach (Mid's bestFoe), the nearest one (nearestFoe, round any point), the  · D11 (N112)
@@ -992,8 +997,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E394** idle soldiers form up at the building that trained them, one block per squad, else one blo
 - **E239** a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; ou · QAI (N76, N188) · QP (N16) · QAO (N45)
 - **E809** a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure) · D354 (N275, N276, N277)
+- **E1078** a soldier runs by himself only while the book says nerve breaks (D231 breaks, N358); off,  · D231 (N188, N76, N16, N358) · N358
 - **E970** a soldier whose rout has run its time comes back to the fight: he turns on the nearest foe
-- **E395** a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own p · D231 (N188, N76, N16)
+- **E395** a broken soldier runs D231's run a step from the nearest foe (or toward home) at its own p · D231 (N188, N76, N16, N358)
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
 - **E936** your soldiers leave a wild animal alone unless it is after one of yours or you sent them a

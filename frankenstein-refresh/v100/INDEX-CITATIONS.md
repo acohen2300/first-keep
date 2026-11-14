@@ -453,6 +453,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N351** Albert, Nov 13, 2026, 22:01-22:21: "I think someone built a wonder"; he lost without seeing a warning; wonder  → X114
 - **N352** Albert, Nov 13, 2026, 22:21: "The fires at night are too small. We need more light from fires. Triple the size → D316, D317, X114
 - **N353** Albert, Nov 13, 2026, 22:21: "Need more berries and late game food. Can berries spawn on their own late game?  → SC49, D378, X114, J57
+- **N354** Albert, Nov 13, 2026, 22:21, his play list: "A new game screen font isn't right. Search history of chats for t → X115
+- **N355** Albert, Nov 13, 2026: his play list "Build yellow lines", "Build in general"; 22:21 "I don't like the building → X115
+- **N356** Albert, Nov 13, 2026, 22:21: "Check v80 for the army torch design there for army it's very nice and detailed.  → unused
+- **N357** Albert, Nov 13, 2026, 09:39: fish in all water; 22:21, after playing: "If we can't fish in the ocean, might as → D218, X115
+- **N358** Albert, Nov 13, 2026, 22:49: "Side note: my troops are still big wimps." and, asked how brave soldiers should  → D231, X115
+- **N359** Traced Nov 13, 2026, from a test that failed one run in five (t-dock) and from Albert's logs of villagers stan → X115
 
 ## Named exceptions
 

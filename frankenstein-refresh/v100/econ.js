@@ -200,7 +200,7 @@ function upkeep(dt) { const needs = {}; for (const u of units()) { if (!SIDES[u.
 function nature(dt) {
   for (const t of FK.blds()) if (FK.has(t, 'Soil') && up(t)) t.fert = Math.min(D.soil.full, Math.max(FK.stat(t.code, t.side, 'soil'), t.fert + (bell - t.workT < D.soil.worked ? -D.soil.loss / D.year : D.soil.rest / D.season) * dt));
   const n = Math.floor(FK.yt() / D.season); if (n !== turned) { turned = n; seasonTurn(); } REACH.dt = (REACH.dt || ZERO) + dt; if (FK.every(D.peaceBeat)) { upkeep(REACH.dt); REACH.dt = ZERO; } }
-function seasonTurn() { const spring = !FK.season(), F = D.flock; // E352
+function seasonTurn() { const spring = !FK.season(), F = D.flock; if (FK.season() === ONE + ONE) tell(EW.ahead); // E352
   for (const side of D.players) { const s = SIDES[side], lost = Math.floor(-s.store.food * Math.expm1((Math.log1p(-D.spoil.year) * D.season * FK.stat('', side, 'spoil')) / D.year / D.spoil.year)); spend(side, 'food', lost, 'spoiled'); if (side === ME && lost >= D.spoil.say) FK.fire('event', 'spoiled', null, lost); }
   if (spring) for (const t of things()) if (FK.has(t, 'Regrow') && t.amount < t.max) { t.amount = Math.min(t.max, t.amount + (D.regrow[t.kind].r * t.amount * (t.max - t.amount)) / t.max); t.bare = false; } // E1072
   for (const t of FK.blds()) if (FK.has(t, 'Flock') && up(t)) {
