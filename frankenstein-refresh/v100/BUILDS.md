@@ -5299,3 +5299,14 @@ Albert, Nov 14 10:06, 10:10 ("Keep"), 10:16 and 10:59 ("Start in this chat. Go."
 MODIFIED: code:econ.js, code:index.html (the dock's art); books (shells BCT2, measure D218 D378, comments E1088 E1089, citations N365, rules X118); tool:test.py (t-n48 new; t-dock's catch is read on the dock).
 Counts: places that ask a thing its name not raised (gate); dead ticks not raised. Game code 651,014 → 651,665 bytes (+651).
 Tests: t-n48 passes eight runs of eight and fails on N47's code; t-dock passes. Full suite on a frozen copy (before E1089): 62 of 81; beside the 18 old failures, t-p2 (above). After E1089, the 18 tests round gathering, carrying and focus were run again: all pass but t-n29, which fails one run in four here and one in three on N47 (a soldier attacked while the test watches him: old, flaky).
+
+## N49: the mine shaft · 2026-11-14 11:58
+Albert, Nov 14 09:52, 09:59 ("I like your idea better for the mining shaft"), 10:16, 10:59; N366.
+- Once a side has Blasting (the Digging line's last step, Gunpowder age, already dated 1627 in the book), its Mining camps are worked in place for gold (E1090): one miner a camp, 0.6 gold a second (D88 gold), straight to the stores with no carrying (the Quarry's way, the Store tick). No new building.
+- A camp's stock is a field's (36 minutes of work: 1,296 gold); emptied, it is sunk again for the replant's share of the camp's price, as a farm is replanted. So late gold is bought with wood and a worker, without raiding.
+- New tick Shaft (SC51): worked only once its side has the research (stat shaft, base 0 in D239). Before Blasting a camp is only a drop-off, as it was.
+- NOT in it: iron from the shaft (one yield a shell: gold); nothing new at the Market (gold is already gold); no "into the ground" animation.
+MODIFIED: code:econ.js; books (shells BI3, capabilities SC51, tech O31, measure D239, comments E1090, citations N366, rules X119); tool:test.py (t-n49 new).
+Counts: places that ask a thing its name not raised (gate); dead ticks not raised. Game code 651,616 → 651,790 bytes (+174).
+Tests: t-n49 passes two runs of two and fails on N48's code. Full suite on a frozen copy: 63 of 82; beside the 18 old failures, t-n24, which is NOT N49's: it fails three runs of three on N48 and two of three on N47, and passes three of three on N46 (below).
+FOUND, from N47, OPEN: t-n24 "far" (an army ordered onto a far foe is at once on a long path, fighting toward it) fails about two runs in three since the lanes were grown over. Not traced; the likely cause is that the straight way now crosses woods, where soldiers are asked how to cross (the woods card, N359) or take another job. Albert's call (lanes, the path's weight, or as it is).

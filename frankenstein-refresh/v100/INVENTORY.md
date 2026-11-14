@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,667 | 651,500 | 651,665 |
-| Books | 2560 | 0 | 823,821 | 824,792 |
+| Game code | 31 | 3,668 | 651,625 | 651,790 |
+| Books | 2564 | 0 | 825,709 | 826,682 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,286 | 375,859 | 376,120 |
+| Tools | 5 | 2,295 | 377,239 | 377,500 |
 
 ## The trades (code)
 
@@ -40,7 +40,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,181 | 10,185 | 54 |
 | menu.js | 625 | 136,515 | 136,574 | 441 |
-| econ.js | 625 | 118,731 | 118,731 | 70 |
+| econ.js | 626 | 118,856 | 118,856 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
@@ -50,20 +50,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 54 | 16,195 |
-| citations | 359 | 96,632 |
+| capabilities | 55 | 16,604 |
+| citations | 360 | 97,333 |
 | colours | 34 | 10,345 |
-| comments | 1028 | 201,203 |
+| comments | 1029 | 201,534 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 344 | 201,188 |
-| rules | 115 | 45,932 |
+| measure | 344 | 201,216 |
+| rules | 116 | 46,311 |
 | screen | 28 | 17,478 |
-| shells | 110 | 23,636 |
+| shells | 110 | 23,691 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
-| tech | 259 | 75,824 |
+| tech | 259 | 75,856 |
 | words | 56 | 103,300 |
 
 ## The shells
@@ -193,5 +193,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X115 | t-n43 | page | N46, from N43 (N355, N357, N359): the sea holds fish of the book's amount along every coast and at least nine in ten of the fish by the coast have a place to stand (N361; under six in ten before); a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is |
 | X117 | t-n47 | page | N47 (N362-N364): Z4 by the randomizer: six rich clearings, one for every pair of homes, each with both homes of its pair no more than a third farther than the nearest home, each holding the home pocket's gold, stone, iron and berries and room for a Mill, a Mine and a Tower three times over; plain clearings beside them; no tree stands in a clearing; every clearing, the middle and every home are joined by ground free of trees; a tree holds four villagers and is full to a fifth |
 | X118 | t-n48 | page | N48 (N365): dock + fish, one element: a dock laid by wild fish holds two spots' worth of its own plus every wild spot in its reach, each counted once; a wild spot is no find to anyone by itself; a villager tapped onto one is sent to the dock, fishes there and lands the catch; fished out, the dock keeps a quarter, rests bare and lets its worker go; at the turn of spring it is back |
+| X119 | t-n49 | page | N49 (N366): the mine shaft: before Blasting a Mining camp is only a drop-off; after it, the camp is a post that yields gold: a villager tapped onto it works there and gold comes into the stores with no carrying, its stock falling; emptied, it can be sunk again for its price's share and is full |
 
-2690 items sealed · 2560 book entries · 94 laws · 359 citations, 34 still to open · 0 known
+2694 items sealed · 2564 book entries · 94 laws · 360 citations, 34 still to open · 0 known

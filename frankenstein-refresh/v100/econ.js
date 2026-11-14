@@ -10,7 +10,7 @@ const fresh = () => ({ age: 0, aging: 0, civ: null, war: null, laurels: null, te
 for (const s of SIDES) Object.assign(s, fresh());
 let result = null, bell = 0, limit = D.bell, turned, harvest; // E214
 const all = FK.things, things = FK.rest, units = FK.units;
-const yieldOf = (t) => (t.kind === 'bld' ? ((FK.has(t, 'Field') || FK.has(t, 'Make')) && up(t) && !t.bare ? t.make || FK.SH[t.code].yield : null) : KIND[t.kind].yield);
+const shaft = (t) => FK.has(t, 'Shaft') && !!FK.stat('', t.side, 'shaft'), yieldOf = (t) => (t.kind === 'bld' ? ((FK.has(t, 'Field') || FK.has(t, 'Make') || shaft(t)) && up(t) && !t.bare ? t.make || FK.SH[t.code].yield : null) : KIND[t.kind].yield);
 const rateOf = (t, side) => { if (FK.has(t, 'Make')) return makeOf(t).rate * FK.stat(yieldOf(t), side, 'make') * scaleOf(t, side); const r = FK.stat(t.code || KIND[t.kind].code, side, 'rate') * scaleOf(t, side); return FK.has(t, 'Flock') ? r * t.sheep : FK.has(t, 'Soil') ? r * D.seasons.farm[FK.season()] * harvest.m * t.fert : r; }; // E291
 const alive = (t) => !t.gone && !t.bare && (t.kind === 'bld' || t.amount > 0), up = (t) => t.done >= 1; // E215
 const dist = FK.dist;
@@ -72,7 +72,8 @@ function spot(side, c, i, j, tol) { const s = snap(side, c, i, j, tol), [si, sj]
   return best; }
 function plan(side, code, i, j) { const cost = D.cost[code] || {}; if (!canPay(side, cost) || placeWhy(side, code, i, j)) return null; if (is(code, 'Gate') && wallAt(j * N + i)) FK.unbuild(wallAt(j * N + i)); const t = site(side, code, i, j); if (t) pay(side, cost, 'buildings'); return t; }
 function raiseTo(side, t, code) { const { i, j } = t, hp = t.hp, old = t.code; if (!canPay(side, D.cost[code] || {}) || capWhy(side, code)) return null; FK.unbuild(t); const u = plan(side, code, i, j); if (u) return u; const b = FK.build(old, i, j, SIDES[side].col); if (b) b.hp = hp; return null; } // E852
-function site(side, code, i, j) { const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; t.done = t.crew = 0; t.laid = FK.K.t; if (is(code, 'Supply')) t.supply = D.camp.start; if (is(code, 'Shore')) t.amount = t.max = Math.round(shoal(t)); else if (is(code, 'Field')) t.amount = t.max = Math.round(D.plot.lasts * FK.stat(code, side, 'rate')); else if (FK.SH[code].amount) t.amount = t.max = FK.ref(FK.SH[code].amount); if (is(code, 'Flock')) t.sheep = D.flock.start; if (is(code, 'Soil')) t.fert = D.soil.full; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
+function site(side, code, i, j) { const t = FK.build(code, i, j, SIDES[side].col); if (!t) return null; t.done = t.crew = 0; t.laid = FK.K.t; if (is(code, 'Supply')) t.supply = D.camp.start; if (is(code, 'Shore')) t.amount = t.max = Math.round(shoal(t)); else if (is(code, 'Field') || is(code, 'Shaft')) t.amount = t.max = Math.round(D.plot.lasts * FK.stat(code, side, 'rate')); // E1090
+  else if (FK.SH[code].amount) t.amount = t.max = FK.ref(FK.SH[code].amount); if (is(code, 'Flock')) t.sheep = D.flock.start; if (is(code, 'Soil')) t.fert = D.soil.full; const M = FK.stat(code, side, 'hp'); if (M) { t.hpMax = M; t.hp = M * D.rising.start; } return t; }
 const costBy = (t, f) => Object.fromEntries(Object.entries(D.cost[t.code] || {}).map(([y, n]) => [y, f(n)])), refund = (t) => costBy(t, (n) => Math.floor(n * (t.done < D.refund.first ? D.refund.early : D.refund.share))); // E317
 function cancel(t) { while (t.q && t.q.length) unqueue(t); payBack(t.side, refund(t), 'buildings'); FK.unbuild(t); }
 const repairCost = (t) => costBy(t, (n) => Math.ceil((n * D.repair.cost * (t.hpMax - t.hp)) / t.hpMax));
@@ -135,7 +136,7 @@ function forage(u, t, b, low) { // E307
 const forageNow = (u) => jobOf(u) && jobOf(u) !== 'build' && alive(u.target) && forage(u, u.target, FK.dropFor(u, u.carry));
 const searchR = (u) => (SR.from + SR.grow * Math.min(1, (bell - (u.lost?.t ?? bell)) / SR.tau)) * D.upm;
 const inBox = (t, r) => t.bx >= r.x0 && t.bx <= r.x1 && t.by >= r.y0 && t.by <= r.y1;
-const post = (t) => FK.has(t, 'Field') || FK.has(t, 'Make'), posted = (u) => !!jobOf(u) && jobOf(u) !== 'build' && post(u.target), idlePost = (b) => post(b) && up(b) && !b.wk;
+const post = (t) => FK.has(t, 'Field') || FK.has(t, 'Make') || shaft(t), posted = (u) => !!jobOf(u) && jobOf(u) !== 'build' && post(u.target), idlePost = (b) => post(b) && up(b) && !b.wk;
 // E221
 const woodBy = (x, y, r) => { const out = things().filter((t) => yieldOf(t) === KIND.tree.yield && alive(t) && (t.kind !== 'bld' || (SIDES[t.side] && !(t.amount <= ZERO)))); FK.woodsNear(x, y, r, (t) => { if (alive(t)) out.push(t); }); return out; }; // E1013
 const woodFor = (u, from, r) => { if (from) return woodBy(from.x, from.y, r); let R = searchR(u), out = woodBy(u.bx, u.by, R); while (!out.some((t) => t.kind !== 'bld') && R < D.board) { R += R; out = woodBy(u.bx, u.by, R); } return out; };

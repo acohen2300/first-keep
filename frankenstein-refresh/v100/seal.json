@@ -279,6 +279,11 @@
 "bytes": 243,
 "numbers": 0
 },
+"book:capabilities:SC51": {
+"sha": "e820010f0d6d10bf00a2b09471c817532837faa946a677a8380fb45fbc6a809c",
+"bytes": 398,
+"numbers": 0
+},
 "book:capabilities:SC6": {
 "sha": "e8a01e1ba2778a595d1fc7bd77bb420b5143acbb87b7c9d394d1bb6a073208cb",
 "bytes": 449,
@@ -1749,6 +1754,11 @@
 "bytes": 706,
 "numbers": 0
 },
+"book:citations:N366": {
+"sha": "79aa69a693154594fa95a3d1d01340e0f06b63e1e4a24f45a8045a77a27f0b7d",
+"bytes": 690,
+"numbers": 0
+},
 "book:citations:N37": {
 "sha": "3ec3085d37df611e84551fcdd69973b9f53e3c5fb285a05979c0d613f3bce81d",
 "bytes": 54,
@@ -2707,6 +2717,11 @@
 "book:comments:E109": {
 "sha": "693103ef914f784158ac2f5726c889171f0926046113be004ee89c5935f1ee40",
 "bytes": 73,
+"numbers": 0
+},
+"book:comments:E1090": {
+"sha": "cb9f81a356f6b8912726552a1a352d0a3073a368621b911f82bb7ed1366c461e",
+"bytes": 319,
 "numbers": 0
 },
 "book:comments:E11": {
@@ -8245,8 +8260,8 @@
 "numbers": 0
 },
 "book:measure:D239": {
-"sha": "3a397692c3add44421d39ed21d07e28c9b104635650c3481096c63fba206b717",
-"bytes": 2288,
+"sha": "71d4ce8e16e7bf8526e50a4329bdbbc5dd54a87dbab5b22f3b148ec6008bb279",
+"bytes": 2316,
 "numbers": 0
 },
 "book:measure:D24": {
@@ -9404,6 +9419,11 @@
 "bytes": 456,
 "numbers": 0
 },
+"book:rules:X119": {
+"sha": "ec47202115137d6104c078eec2f415c62368b5f807088bb3b32984424e30ac82",
+"bytes": 368,
+"numbers": 0
+},
 "book:rules:X12": {
 "sha": "c5d13f0b1638748386ba8a21f1781dde8c12e18af77f6957a485e3bb2b9072b8",
 "bytes": 139,
@@ -10090,8 +10110,8 @@
 "numbers": 0
 },
 "book:shells:BI3": {
-"sha": "9b4cd3fa07154fbaecc4cd3264de4588bc52222e4999122819e3999149a0839a",
-"bytes": 218,
+"sha": "67138e6413bc745d7b6be30554f020f7296caacabef469b8a3ba68cd0f6000f9",
+"bytes": 273,
 "numbers": 0
 },
 "book:shells:BI4": {
@@ -12145,8 +12165,8 @@
 "numbers": 0
 },
 "book:tech:O31": {
-"sha": "5a3e55ccf32ae2dca2e61e879751172b10f8093cd714ef8db730084a1186023d",
-"bytes": 309,
+"sha": "2c28c6ce6d6c2bd135ae8b1e413094768be0702fef00ece66201f6423fb710da",
+"bytes": 341,
 "numbers": 0
 },
 "book:tech:O32": {
@@ -12810,8 +12830,8 @@
 "numbers": 83
 },
 "code:econ.js": {
-"sha": "9b255c90f78a067ab9e93f2dfc5e937dcaf15ecf7632a509c0020952c20d5396",
-"bytes": 118731,
+"sha": "a1fdd2d4f5ae36690d22f044e94b68e068a8178b469636c618596ee9b7ee66ae",
+"bytes": 118856,
 "numbers": 70
 },
 "code:index.html#b-the-buildings": {
@@ -13445,8 +13465,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "965b10f293cdc1e3226376ab33bda1b2e78a03bc6e12405a6988ce07c0b8f2fc",
-"bytes": 338117,
+"sha": "f3e7bc44f93dac75ebddf22d1e7101efdf7eaf6b9ddfe44a4b1dd6a6bc4d17c0",
+"bytes": 339497,
 "numbers": 0
 }
 }

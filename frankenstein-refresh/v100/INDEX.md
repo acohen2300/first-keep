@@ -71,6 +71,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC47 | built more than once in a row: after placing it, the next one waits beside it to be placed (Build another); a building you raise once closes the placing (Albert, Nov 10, N17 #17) | {by: menu.js place, law: [], needs: [], may: []} | N307 |
 | SC48 | a worked building whose yield goes straight to the stores, with no carrying: what is dug stays in the yard (Albert, Nov 13 09:39, N342: finds on the ground are carried home; the Quarry, like the Mint, the Foundry and the Pasture, is not) | {by: econ.js, law: [], needs: [yield, rate], may: [amount]} | N342 |
 | SC49 | a find that grows back each spring toward its own full amount by the logistic law (QY) at D378's rate for its kind; one with a root is never removed: picked out it stands bare until spring (fish, bushes) | {by: econ.js, law: [QY], needs: [amount], may: []} | N353 |
+| SC51 | a building that is worked for its yield, one worker, only once its side has learned the research that sinks the shaft (the stat shaft: Blasting); its stock is a plot's (D222 lasts at its rate) and is sunk again at the replant's share of its price (Repeat) | {by: econ.js, law: [], needs: [yield, rate], may: [amount]} | N366 |
 
 ## citations
 
@@ -435,6 +436,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N363 |  | Six rich clearings among four players is the number of pairs of four, C(4,2) = 6: one for each pair is the only way six can be shared so tha | opened |
 | N364 |  | Albert, Nov 14, 2026, 10:16: \a tree needs to hold more than 1 villager. Each tree should be 4 villagers.\ Felling by hand was crew work: tw | opened |
 | N365 |  | Albert, Nov 14, 2026, 10:06: \make it so the dock is longer, starts on the banks and good further into the sea. When a dock is built - just  | opened |
+| N366 |  | Albert, Nov 14, 2026, 09:52: \to solve late game gold… when we hit gun powder age how about gold mining? ... you go 'into the ground' ...\;  | opened |
 
 ## colours
 
@@ -1507,6 +1509,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1087 |  | a rich clearing's deposits (N362): what the home pocket holds, without the trees (berries, gold, stone, iron, the pocket's own counts and ri |  |
 | E1088 |  | dock + fish, one element (N365): the dock is worked like a farm (the Field tick: one worker, its builder takes it up, the catch landed on it |  |
 | E1089 |  | the focus rule in one home (Albert, Nov 11: a focused unit stays on its job; its find gone, it walks to the Town Center): it held only when  |  |
+| E1090 |  | the mine shaft (N366): once a side has Blasting, its Mining camps are worked in place for gold, one miner each, straight to the stores (the  |  |
 
 ## ground
 
@@ -2021,6 +2024,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X115 | N46, from N43 (N355, N357, N359): the sea holds fish of the book's amount along every coast and at least nine in ten of the fish by the coast have a place to stand (N361; under six in ten before); a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is | {stage: page} | N355; N357; N359; N361 |
 | X117 | N47 (N362-N364): Z4 by the randomizer: six rich clearings, one for every pair of homes, each with both homes of its pair no more than a third farther than the nearest home, each holding the home pocket's gold, stone, iron and berries and room for a Mill, a Mine and a Tower three times over; plain clearings beside them; no tree stands in a clearing; every clearing, the middle and every home are joined by ground free of trees; a tree holds four villagers and is full to a fifth | {stage: page} | N362; N363; N364 |
 | X118 | N48 (N365): dock + fish, one element: a dock laid by wild fish holds two spots' worth of its own plus every wild spot in its reach, each counted once; a wild spot is no find to anyone by itself; a villager tapped onto one is sent to the dock, fishes there and lands the catch; fished out, the dock keeps a quarter, rests bare and lets its worker go; at the turn of spring it is back | {stage: page} | N365 |
+| X119 | N49 (N366): the mine shaft: before Blasting a Mining camp is only a drop-off; after it, the camp is a post that yields gold: a villager tapped onto it works there and gold comes into the stores with no carrying, its stock falling; emptied, it can be sunk again for its price's share and is full | {stage: page} | N366 |
 
 ## screen
 
@@ -2099,7 +2103,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BP10 | War Council | [Squad, Health, Research] | N144 |
 | BI1 | Mill | [Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
 | BI2 | Lumber camp | [Drop-off, Health, Burn, Research, Repeat] | N144; N206 |
-| BI3 | Mining camp | [Drop-off, Health, Research, Repeat] | N144 |
+| BI3 | Mining camp | [Drop-off, Health, Research, Repeat, Shaft, Store] | N144 |
 | BI4 | Store | [Health, Research] | N144 |
 | BI5 | Depot | [Drop-off, Supply, Health, Burn] | N144; N198; N206 |
 | BI6 | Mint | [Make, Health, Research, Repeat] | N144; N195 |
@@ -2351,7 +2355,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | O28 | Deep shafts | {at: BI3, line: Digging, age: 2, cost: {food: 170, stone: 110}, time: 38, fx: [{s: rate, k: R3, p: 0.2}, {s: rate, k: R2, p: 0.2}], when: 50 | N160; N161 |
 | O29 | Mine pumps | {at: BI3, line: Digging, age: 3, cost: {food: 260, stone: 180}, time: 52, fx: [{s: rate, k: R3, p: 0.15}, {s: rate, k: R2, p: 0.15}, {s: rat | N160; N161 |
 | O30 | Mine wagons | {at: BI3, line: Digging, age: 4, cost: {food: 350, stone: 230}, time: 61, fx: [{s: carry, k: UV, a: 3}], when: 1500s, w: 4} | N160; N161 |
-| O31 | Blasting | {at: BI3, line: Digging, age: 4, cost: {food: 470, stone: 310}, time: 77, fx: [{s: rate, k: R3, p: 0.25}, {s: rate, k: R4, p: 0.25}], need:  | N160; N161 |
+| O31 | Blasting | {at: BI3, line: Digging, age: 4, cost: {food: 470, stone: 310}, time: 77, fx: [{s: rate, k: R3, p: 0.25}, {s: rate, k: R4, p: 0.25}, {s: sha | N366; N160; N161 |
 | O32 | Fired brick | {at: BI3, line: Building, age: 1, cost: {food: 170, stone: 110}, time: 38, fx: [{s: room, k: BR1, a: 1}, {s: room, k: BR2, a: 4}], when: 300 | N160; N161 |
 | O33 | Masonry | {at: BI3, line: Building, age: 1, cost: {food: 120, stone: 80}, time: 32, fx: [{s: hp, k: B, p: 0.3}], when: 2600 BC, w: 7} | N160; N161 |
 | O34 | Ventilation | {at: BI3, line: Building, age: 4, cost: {food: 310, stone: 210}, time: 55, fx: [{s: rate, k: R4, p: 0.2}], when: 1500s, w: 3} | N160; N161 |

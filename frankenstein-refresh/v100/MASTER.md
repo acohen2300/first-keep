@@ -806,6 +806,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
 - **E816** where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on
 - **E852** a building raised into another where it stands (the Gate's way over a wall): taken down, t
+- **E1090** the mine shaft (N366): once a side has Blasting, its Mining camps are worked in place for  · N366
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
