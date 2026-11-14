@@ -94,8 +94,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
-- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170, N341)
-- **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N27, N28, N170, N341)
+- **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N27, N28, N170, N341, N357)
+- **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N27, N28, N170, N341, N357)
+- **E1083** a sea fish is laid only where someone can stand to catch it (N361): of the spot one step p · N361 · E2
+- **E1077** fish in the sea (N357): along each of the four coasts, every sea spacings, the walk goes f · N357
 - **E50** drawn back to front
 - **E652** The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by wo · QCQ (N229, N233)
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
@@ -291,6 +293,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E300** a spot is free when its tile is walked and nobody stands on it or has claimed one within a · D196 (N164, N165, N166, N167, N338) · N166 · N17
 - **E301** the spot u keeps at c, else the free one nearest u (round a point, the nearest the point)
 - **E302** walk to a spot of its own at c: the path's last tile becomes the spot itself; false when n
+- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N353) · N353
 - **E98** a find used up is gone; its tile is free again
 - **E100** walking: toward the next point at the walker's pace (QCB) over the ground it steps onto; t · QCB (N13, N181, N19, N179, N185)
 - **E363** a slipped walker stands G10's seconds; which way it walks, for the wind · G10 (N174, N179, N173)
@@ -497,7 +500,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E613** words on the map keep one size whatever the zoom, as the screen's own words; a label is a 
 - **E867** words drawn on the map at the head type (SN20), never a size typed in the code · SN20 (N283, N285, N287)
 - **E614** the dressing: a site staked out and rising with the work, a finished building's pop and fr
+- **E1074** a building going up, as in real life (Albert, Nov 13 22:51, N355: "Foundation, frame, fini · N355 · E1076
 - **E615** a building site: the stakes round its footprint, the walls rising with the work between tw
+- **E1076** the finished part of a rising building is cut along the plot's two near edges lifted to th · E1074
 - **E616** a building's flags, drawn live over its picture where its art put them, waving more in a s
 - **E617** a side's stores as piles by the camp that takes them in: a pyramid by log₁₀ of the store, 
 - **E618** a chimney's plume: rising ∝ x^(2/3) (QAV, Briggs) and widening ∝ x^0.9, leaning downwind ( · QAV (N55, N56)
@@ -616,7 +621,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
 - **E1048** the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a sq · N25
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
-- **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195) · D271 (N34, N195)
+- **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195, N350) · D271 (N34, N195)
+- **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1045** a caravan's escort (Albert, Oct 27): its card has Escort +4 (the nearest idle soldiers of 
 - **E1023** a caravan takes a trade route two ways: Trade route on its card sends it to the nearest tr
 - **E1024** the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Frien · N24
@@ -725,7 +731,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
 - **E1051** the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the  · N331
 - **E856** a picked unit takes the next tap as its order, by the tap table (E1038, SN43). While the i · E1038 · SN43 (N326)
-- **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they 
+- **E794** an order whose way crosses ice asks how to cross, unless a remembered answer stands; they  · N359
 - **E795** ice cracking under yours: the warning said and a clear-off button beside it until all of y
 - **E433** a tile on the board (the floor gives -1 off it)
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
@@ -767,7 +773,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 ## econ.js
 
+- **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N353) · N353
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
@@ -860,6 +868,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E445** the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see · D255 (N192)
 - **E446** a site nobody builds (F23, Albert's play test): one no villager of its side can reach says · D203 (N168)
 - **E447** a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost · D233 (N188) · D258 (N192)
+- **E1071** the standing wonder nearest its win (N351): one home for the judge and for the countdown u · N351
 - **E448** who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s · D257 (N192) · D259 (N192)
 - **E449** the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
@@ -1104,7 +1113,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E251** The ear is the camera, at a height (QAX); a struck thing rings by its material (QAY); snow · QAX (N58) · QAY (N59) · QBX (N88)
 - **E252** each channel's volume steps, the one in use first (HX10) · HX10 (N149)
 - **E253** a phone opens its audio only on a touch
-- **E953** a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS · N17
+- **E953** a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS · N17 · N349
 - **E254** the Ring/Silent switch silences the game; the player's music plays on (HX8) · HX8 (N148)
 - **E723** the sound engine is woken the moment it is made: a phone makes it asleep until a gesture r
 - **E255** a battle's many blows never clip a phone speaker

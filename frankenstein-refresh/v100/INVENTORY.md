@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,648 | 645,003 | 645,168 |
-| Books | 2528 | 0 | 806,707 | 807,673 |
+| Game code | 31 | 3,659 | 648,952 | 649,117 |
+| Books | 2548 | 0 | 816,256 | 817,227 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,245 | 368,360 | 368,619 |
+| Tools | 5 | 2,266 | 372,264 | 372,525 |
 
 ## The trades (code)
 
@@ -20,7 +20,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,959 | 1,963 | 38 |
 | index.html#floor-2-terrain | 85 | 9,863 | 9,867 | 115 |
-| index.html#floor-3-non-movables | 71 | 10,850 | 10,854 | 54 |
+| index.html#floor-3-non-movables | 74 | 11,728 | 11,732 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
@@ -30,41 +30,41 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
 | index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
 | index.html#b-the-buildings | 15 | 1,564 | 1,568 | 20 |
-| index.html#floor-5-movables | 158 | 22,072 | 22,076 | 78 |
+| index.html#floor-5-movables | 159 | 22,274 | 22,278 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
 | index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
 | index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
-| index.html#the-view-s-eyes-lights-and-stage | 139 | 29,216 | 29,221 | 0 |
+| index.html#the-view-s-eyes-lights-and-stage | 142 | 30,660 | 30,665 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
-| index.html#touch | 54 | 10,150 | 10,154 | 54 |
-| menu.js | 624 | 135,894 | 135,953 | 442 |
-| econ.js | 621 | 117,487 | 117,487 | 70 |
+| index.html#touch | 54 | 10,159 | 10,163 | 54 |
+| menu.js | 625 | 136,515 | 136,574 | 441 |
+| econ.js | 624 | 118,080 | 118,080 | 70 |
 | combat.js | 377 | 64,642 | 64,642 | 83 |
 | ai.js | 172 | 27,513 | 27,513 | 25 |
-| sound.js | 58 | 6,238 | 6,238 | 66 |
+| sound.js | 58 | 6,440 | 6,440 | 66 |
 
 ## The books
 
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 53 | 15,852 |
-| citations | 347 | 89,995 |
+| capabilities | 54 | 16,195 |
+| citations | 355 | 93,924 |
 | colours | 34 | 10,345 |
-| comments | 1015 | 195,939 |
+| comments | 1022 | 199,001 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 343 | 198,423 |
-| rules | 111 | 43,713 |
+| measure | 344 | 199,520 |
+| rules | 113 | 44,885 |
 | screen | 28 | 17,478 |
-| shells | 110 | 23,538 |
+| shells | 110 | 23,558 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 70 | 35,550 |
 | tech | 259 | 75,824 |
-| words | 55 | 103,143 |
+| words | 56 | 103,300 |
 
 ## The shells
 
@@ -189,5 +189,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X111 | t-dock | page | a dock stands at any water's edge (N341): spots touching water or marsh take it, by rivers as by lakes; no spot away from water does, and says so; rivers hold fish; the reach is one tile |
 | X112 | ecs | code | the laws hold (N346, Design 09): code asks a thing its tick or its state, never its name (job, kind, civ, code); every tick in the Capabilities book is asked for by a law. The counts of places that ask by name and of ticks no law asks for may only fall |
 | X113 | t-star | page | a find pays once (N347): your unit standing by a fallen star for ten seconds gains its 300 iron and 100 gold once, and the star is marked taken |
+| X114 | t-n42 | page | N46, from N42 (N349-N351): a bulk sale at the Market sells 1,000 wood in one tap for less than ten single lots; an untimed game shows no countdown under the clock and a standing wonder shows its own; after the page was hidden and the old sound player will not resume, the next tap makes a new one; a research cell shows what it gives; a bush picked out stays, bare, and is back past six tenths after the turn of spring |
+| X115 | t-n43 | page | N46, from N43 (N355, N357, N359): the sea holds fish of the book's amount along every coast and at least nine in ten of the fish by the coast have a place to stand (N361; under six in ten before); a building goes up in three stages: a slab only at a twentieth built, the frame half raised and nothing filled at about a third, the frame whole and the building half filled at three quarters, and a plot too low for a frame goes from slab to filling; a villager whose way runs through the woods is not asked how to cross them, a soldier is |
 
-2658 items sealed · 2528 book entries · 94 laws · 347 citations, 34 still to open · 0 known
+2678 items sealed · 2548 book entries · 94 laws · 355 citations, 34 still to open · 0 known

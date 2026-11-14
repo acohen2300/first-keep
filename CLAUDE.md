@@ -4,7 +4,7 @@ This file overrides every other start page (`START-HERE.md`, `frankenstein-refre
 Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task needs them. Then wait for Albert.
 
 ## 1. Where things are
-- Game code: `frankenstein-refresh/v100/` on branch `n29-the-list`. Never `src/` on `main` (old v80 code).
+- Game code: `frankenstein-refresh/v100/` on branch `n46-back-to-n41` (Albert, Nov 14: back to n41; `n29-the-list` keeps N42 to N45, parked). Never `src/` on `main` (old v80 code).
 - One list: `docs/4 Now/The List.md`. Every other list is archive.
 - Commits as `Albert <acohen2300@users.noreply.github.com>` with the session's `Co-Authored-By` and `Claude-Session` trailers. The repo is public.
 
@@ -72,7 +72,7 @@ Read this, then `docs/4 Now/Handoff.md` only. Open other files only when a task 
 
 ## 8d. Taking over (another chat or agent)
 - Read this file, then `docs/4 Now/Handoff.md`, then `The List.md` sections 7-8. Nothing else until a task needs it.
-- Clone: `git clone --depth 1 -b n29-the-list https://github.com/acohen2300/first-keep`; tests need `frankenstein-refresh/mid` and `clean` beside `v100`.
+- Clone: `git clone --depth 1 -b n46-back-to-n41 https://github.com/acohen2300/first-keep`; tests need `frankenstein-refresh/mid` and `clean` beside `v100`.
 - Gate: `cd frankenstein-refresh/v100 && python3 index.py`. Tests: `python3 test.py --only t-p2,...` (headless Chrome; the full run takes about 25 minutes: run it in the background on a copy).
 - Albert plays on his phone; his play is proof. Ask him for `?fps` screenshots for speed.
 

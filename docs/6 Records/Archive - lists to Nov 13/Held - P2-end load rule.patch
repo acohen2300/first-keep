@@ -1,0 +1,233 @@
+diff --git a/frankenstein-refresh/v100/CITATIONS.md b/frankenstein-refresh/v100/CITATIONS.md
+index 871277f..3855d27 100644
+--- a/frankenstein-refresh/v100/CITATIONS.md
++++ b/frankenstein-refresh/v100/CITATIONS.md
+@@ -337,3 +337,4 @@ Written by `index.py` from `books/citations.js`, never by hand: every source by
+ | N332 | design | yes | Albert, Nov 12, 2026, 17:48-17:52, on the card mock: "Make them folded collapsible menus. Chevron opens minus closes. One opens / one closes"; "Keep it all closed for now for me. It's good enough. Go do it." |
+ | N333 | design | yes | Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit (skull, two taps), Restart (resets the choices), the pill (shows the choices as you pick: Food → Drop → Focus → 5 → GO), Hide, ✕ (back), War. Pads read clockwise, for one thumb: brown People, Garrison, Log, Build; blue only picks: Deposit, Drop, Focus, Mobile; red Group (all on that spot, with a counter), Stop, Jobs (opens Gather, Help build, Hunt, Repair in the middle), Order (adds a job). No camera follow. "The village control is meant to fine tune." |
+ | N334 | design | yes | Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game 57-58 fps and land 0 (screenshots, Nov 12 14:16); "Bottom line: we need to see what costs the most and solve those"; Nov 13 00:38, "do 1 and 2" (repaint the ground only when it changes; a test that fails with the 1 s timer back). Measured headless: slow frames 150 ms with snow on the ground, 67 ms with the timer off. |
++| N335 | design | yes | Albert, Nov 13, 2026, 01:00-01:06: "Deposit / drop is stupid. We should just have logic. Focus is also stupid. That's plain logic also"; "1. Yes, just logic" (load: carry it home when a drop-off is near or on the way, else drop it). |
+diff --git a/frankenstein-refresh/v100/COMMENTS.md b/frankenstein-refresh/v100/COMMENTS.md
+index 756a93a..3b47470 100644
+--- a/frankenstein-refresh/v100/COMMENTS.md
++++ b/frankenstein-refresh/v100/COMMENTS.md
+@@ -1006,7 +1006,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
+ | E1051 | menu.js | the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the pick ends, it carries on); a tap on another of yours moves the call to it; with New Group (More) a tap adds or drops one |
+ | E1052 | menu.js | the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldier sent to a site or a find, get a toast and stay called; everyone else in the order goes |
+ | E1053 | econ.js, combat.js | Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to the find or post you send her to and, when it runs out, sends her to the Town Center to wait; Mobile is first picked by + and by a site needing a builder, Focus last |
+-| E1054 | econ.js | Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at once (Destroy) |
++| E1054 | econ.js | the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carrying takes the load home first only when its drop-off lies on her way (nearer to her than the new work, and nearer to the new work than she is); otherwise she drops it and goes. No number: the geometry decides. Destroy (her setting) still drops at once. Before Nov 13 the load always went home first (Drop) unless Destroy was set (E1054, Nov 12) |
+ | E1055 | menu.js | the unit card of the call (Design 08, P2b): a called unit's card opens with its status and how many of yours do the same (Select the rest), Add task, Build and Cancel; under them folded rows Orders, Attention, Load (villagers), Group, History, Statistics and Exit. A chevron opens one row, a minus closes it; one open at a time, all closed when the card opens (Albert, Nov 12 17:52) |
+ | E1056 | menu.js, econ.js | Add task (Design 08): the card asks for the next task; taps on the map are queued on the unit (plan) until Done; when the unit's task ends (idle, or a build done) the next queued task is given through the tap table |
+ | E1057 | econ.js | a unit's record for its card (Design 08): spans of what it gathered (merged while the kind stays the same), builds and idle spells, the total it gathered, what it ate, and when it came |
+diff --git a/frankenstein-refresh/v100/INDEX-CITATIONS.md b/frankenstein-refresh/v100/INDEX-CITATIONS.md
+index f63c688..6638fe6 100644
+--- a/frankenstein-refresh/v100/INDEX-CITATIONS.md
++++ b/frankenstein-refresh/v100/INDEX-CITATIONS.md
+@@ -434,6 +434,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
+ - **N332** Albert, Nov 12, 2026, 17:48-17:52, on the card mock: "Make them folded collapsible menus. Chevron opens minus  → X102, J55
+ - **N333** Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit → X103, J56
+ - **N334** Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game → D363, X104
++- **N335** Albert, Nov 13, 2026, 01:00-01:06: "Deposit / drop is stupid. We should just have logic. Focus is also stupid. → X105
+ 
+ ## Named exceptions
+ 
+diff --git a/frankenstein-refresh/v100/INDEX.md b/frankenstein-refresh/v100/INDEX.md
+index 8a68ff4..7b338ff 100644
+--- a/frankenstein-refresh/v100/INDEX.md
++++ b/frankenstein-refresh/v100/INDEX.md
+@@ -407,6 +407,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
+ | N332 |  | Albert, Nov 12, 2026, 17:48-17:52, on the card mock: \Make them folded collapsible menus. Chevron opens minus closes. One opens / one closes | opened |
+ | N333 |  | Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit (skull, two taps), Restart (r | opened |
+ | N334 |  | Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game 57-58 fps and land 0 (screens | opened |
++| N335 |  | Albert, Nov 13, 2026, 01:00-01:06: \Deposit / drop is stupid. We should just have logic. Focus is also stupid. That's plain logic also\; \1. | opened |
+ 
+ ## colours
+ 
+@@ -1452,7 +1453,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
+ | E1051 |  | the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the pick ends, it carries on); a tap on another of you |  |
+ | E1052 |  | the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldier sent to a site or a find, get a toast and stay c |  |
+ | E1053 |  | Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to the find or post you send her to and, when it runs |  |
+-| E1054 |  | Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at o |  |
++| E1054 |  | the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carrying takes the load home first only when its drop-of |  |
+ | E1055 |  | the unit card of the call (Design 08, P2b): a called unit's card opens with its status and how many of yours do the same (Select the rest),  |  |
+ | E1056 |  | Add task (Design 08): the card asks for the next task; taps on the map are queued on the unit (plan) until Done; when the unit's task ends ( |  |
+ | E1057 |  | a unit's record for its card (Design 08): spans of what it gathered (merged while the kind stays the same), builds and idle spells, the tota |  |
+@@ -1959,6 +1960,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
+ | X102 | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up | {stage: page} | N332 |
+ | X103 | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO | {stage: page} | N333 |
+ | X104 | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once | {stage: page} | N334 |
++| X105 | the load rule (N335): carrying food and sent to wood with a drop-off on her way, she takes the food home first; sent to wood away from any drop-off, she drops it and goes | {stage: page} | N335 |
+ 
+ ## screen
+ 
+diff --git a/frankenstein-refresh/v100/INVENTORY.md b/frankenstein-refresh/v100/INVENTORY.md
+index c6ef7db..c40e076 100644
+--- a/frankenstein-refresh/v100/INVENTORY.md
++++ b/frankenstein-refresh/v100/INVENTORY.md
+@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
+ 
+ | Group | Items | Lines | Characters | Bytes |
+ |---|---|---|---|---|
+-| Game code | 31 | 3,642 | 642,830 | 642,995 |
+-| Books | 2497 | 0 | 791,839 | 792,784 |
++| Game code | 31 | 3,642 | 642,935 | 643,100 (+105) |
++| Books | 2499 | 0 | 792,646 | 793,591 (+280) |
+ | Laws | 94 | 0 | 20,046 | 20,584 |
+-| Tools | 5 | 2,180 | 356,194 | 356,453 |
++| Tools | 5 | 2,189 | 357,354 | 357,613 (+1,160) |
+ 
+ ## The trades (code)
+ 
+@@ -40,7 +40,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
+ | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
+ | index.html#touch | 54 | 10,150 | 10,154 | 54 |
+ | menu.js | 625 | 135,784 | 135,843 | 514 |
+-| econ.js | 620 | 116,976 | 116,976 | 70 |
++| econ.js | 620 | 117,081 | 117,081 (+105) | 70 |
+ | combat.js | 377 | 64,642 | 64,642 | 83 |
+ | ai.js | 172 | 27,479 | 27,479 | 25 |
+ | sound.js | 58 | 6,238 | 6,238 | 66 |
+@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
+ |---|---|---|
+ | angles | 6 | 1,006 |
+ | capabilities | 52 | 15,461 |
+-| citations | 333 | 83,123 |
++| citations | 334 | 83,416 |
+ | colours | 33 | 9,517 |
+-| comments | 1010 | 193,106 |
++| comments | 1010 | 193,386 |
+ | ground | 8 | 2,942 |
+ | mass | 27 | 4,587 |
+ | measure | 342 | 196,625 |
+-| rules | 102 | 41,276 |
++| rules | 103 | 41,532 |
+ | screen | 28 | 17,478 |
+ | shells | 110 | 23,521 |
+ | sides | 7 | 1,869 |
+@@ -180,5 +180,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
+ | X102 | t-p2b | page | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up |
+ | X103 | t-p2c | page | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO |
+ | X104 | t-freeze | page | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once |
++| X105 | t-load | page | the load rule (N335): carrying food and sent to wood with a drop-off on her way, she takes the food home first; sent to wood away from any drop-off, she drops it and goes |
+ 
+-2627 items sealed · 2497 book entries · 94 laws · 333 citations, 34 still to open · 0 known
++2629 items sealed · 2499 book entries · 94 laws · 334 citations, 34 still to open · 0 known
+diff --git a/frankenstein-refresh/v100/MASTER.md b/frankenstein-refresh/v100/MASTER.md
+index fe3d8e9..16d6155 100644
+--- a/frankenstein-refresh/v100/MASTER.md
++++ b/frankenstein-refresh/v100/MASTER.md
+@@ -808,7 +808,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
+ - **E307** QV R = c / (c/g + 2d/v + w·c/(A·v)): c the load, g the rate crowded (QX), v the walk, d th · QV (N23, N24) · QX (N25, N26)
+ - **E221** QV: the find of a yield whose rate of return R is best (the walk out, the walk home and th · QV (N23, N24) · D195 (N322, N164, N166) · D137 (N114) · D197 (N164)
+ - **E1013** wood is searched for near the worker, not across the map: within his search circle, double
+-- **E1054** Load (Design 08): a villager sent to another kind of find with a load drops it off first (
++- **E1054** the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carryi · N335 · E1054
+ - **E222** a find no path reaches, or with no spot free on its ring, is left alone a while (D137), an · D137 (N114)
+ - **E1057** a unit's record for its card (Design 08): spans of what it gathered (merged while the kind
+ - **E320** a builder remembers the work it left (its find and yield, and whether it was pulled off it
+diff --git a/frankenstein-refresh/v100/books/citations.js b/frankenstein-refresh/v100/books/citations.js
+index 8b98fa4..555e36b 100644
+--- a/frankenstein-refresh/v100/books/citations.js
++++ b/frankenstein-refresh/v100/books/citations.js
+@@ -332,5 +332,6 @@ BOOK("citations", {
+  "N331": {"text": "Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you say; tap 2 is the task; tap the same unit: hang up; tap another: the call moves (New Group adds); a full spot: toast \"Full: see closest alt\"; Attention Normal / Focus (don't leave unless reasonably required: the task ends, go to the Town Center; attacked, fight) / Mobile (first responder); Load Drop / Destroy. Design 08.", "opened": true, "kind": "design"},
+  "N332": {"text": "Albert, Nov 12, 2026, 17:48-17:52, on the card mock: \"Make them folded collapsible menus. Chevron opens minus closes. One opens / one closes\"; \"Keep it all closed for now for me. It's good enough. Go do it.\"", "opened": true, "kind": "design"},
+  "N333": {"text": "Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit (skull, two taps), Restart (resets the choices), the pill (shows the choices as you pick: Food → Drop → Focus → 5 → GO), Hide, ✕ (back), War. Pads read clockwise, for one thumb: brown People, Garrison, Log, Build; blue only picks: Deposit, Drop, Focus, Mobile; red Group (all on that spot, with a counter), Stop, Jobs (opens Gather, Help build, Hunt, Repair in the middle), Order (adds a job). No camera follow. \"The village control is meant to fine tune.\"", "opened": true, "kind": "design"},
+- "N334": {"text": "Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game 57-58 fps and land 0 (screenshots, Nov 12 14:16); \"Bottom line: we need to see what costs the most and solve those\"; Nov 13 00:38, \"do 1 and 2\" (repaint the ground only when it changes; a test that fails with the 1 s timer back). Measured headless: slow frames 150 ms with snow on the ground, 67 ms with the timer off.", "opened": true, "kind": "design"}
++ "N334": {"text": "Albert, Nov 12-13, 2026: his phone in snow at night, 15-22 fps with the land layer at 9-19 ms, clear late game 57-58 fps and land 0 (screenshots, Nov 12 14:16); \"Bottom line: we need to see what costs the most and solve those\"; Nov 13 00:38, \"do 1 and 2\" (repaint the ground only when it changes; a test that fails with the 1 s timer back). Measured headless: slow frames 150 ms with snow on the ground, 67 ms with the timer off.", "opened": true, "kind": "design"},
++ "N335": {"text": "Albert, Nov 13, 2026, 01:00-01:06: \"Deposit / drop is stupid. We should just have logic. Focus is also stupid. That's plain logic also\"; \"1. Yes, just logic\" (load: carry it home when a drop-off is near or on the way, else drop it).", "opened": true, "kind": "design"}
+ });
+diff --git a/frankenstein-refresh/v100/books/comments.js b/frankenstein-refresh/v100/books/comments.js
+index 988208b..4bef9c6 100644
+--- a/frankenstein-refresh/v100/books/comments.js
++++ b/frankenstein-refresh/v100/books/comments.js
+@@ -1002,7 +1002,7 @@ BOOK("comments", {
+  "E1051": {"text": "the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the pick ends, it carries on); a tap on another of yours moves the call to it; with New Group (More) a tap adds or drops one"},
+  "E1052": {"text": "the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldier sent to a site or a find, get a toast and stay called; everyone else in the order goes"},
+  "E1053": {"text": "Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to the find or post you send her to and, when it runs out, sends her to the Town Center to wait; Mobile is first picked by + and by a site needing a builder, Focus last"},
+- "E1054": {"text": "Load (Design 08): a villager sent to another kind of find with a load drops it off first (Drop, the default) or throws it down and goes at once (Destroy)"},
++ "E1054": {"text": "the load rule (Albert, Nov 13, N335): a villager sent to another kind of work while carrying takes the load home first only when its drop-off lies on her way (nearer to her than the new work, and nearer to the new work than she is); otherwise she drops it and goes. No number: the geometry decides. Destroy (her setting) still drops at once. Before Nov 13 the load always went home first (Drop) unless Destroy was set (E1054, Nov 12)"},
+  "E1055": {"text": "the unit card of the call (Design 08, P2b): a called unit's card opens with its status and how many of yours do the same (Select the rest), Add task, Build and Cancel; under them folded rows Orders, Attention, Load (villagers), Group, History, Statistics and Exit. A chevron opens one row, a minus closes it; one open at a time, all closed when the card opens (Albert, Nov 12 17:52)"},
+  "E1056": {"text": "Add task (Design 08): the card asks for the next task; taps on the map are queued on the unit (plan) until Done; when the unit's task ends (idle, or a build done) the next queued task is given through the tap table"},
+  "E1057": {"text": "a unit's record for its card (Design 08): spans of what it gathered (merged while the kind stays the same), builds and idle spells, the total it gathered, what it ate, and when it came"},
+diff --git a/frankenstein-refresh/v100/books/rules.js b/frankenstein-refresh/v100/books/rules.js
+index cf16eeb..b8feac1 100644
+--- a/frankenstein-refresh/v100/books/rules.js
++++ b/frankenstein-refresh/v100/books/rules.js
+@@ -101,5 +101,6 @@ BOOK("rules", {
+  "X101": {"key": "door", "value": {"stage": "code"}, "name": "the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load)", "cite": ["N331"]},
+  "X102": {"key": "t-p2b", "value": {"stage": "page"}, "name": "P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up", "cite": ["N332"]},
+  "X103": {"key": "t-p2c", "value": {"stage": "page"}, "name": "P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO", "cite": ["N333"]},
+- "X104": {"key": "t-freeze", "value": {"stage": "page"}, "name": "the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once", "cite": ["N334"]}
++ "X104": {"key": "t-freeze", "value": {"stage": "page"}, "name": "the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once", "cite": ["N334"]},
++ "X105": {"key": "t-load", "value": {"stage": "page"}, "name": "the load rule (N335): carrying food and sent to wood with a drop-off on her way, she takes the food home first; sent to wood away from any drop-off, she drops it and goes", "cite": ["N335"]}
+ });
+diff --git a/frankenstein-refresh/v100/econ.js b/frankenstein-refresh/v100/econ.js
+index cc1445e..a47b221 100644
+--- a/frankenstein-refresh/v100/econ.js
++++ b/frankenstein-refresh/v100/econ.js
+@@ -142,7 +142,7 @@ function bestFind(u, y, from, b = FK.dropFor(u, y)) { const r = from && searchR(
+   for (const t of y === KIND.tree.yield && !u.patch ? woodFor(u, from, r) : findsOf(y)) if ((t.kind !== 'bld' || (t.side === u.side && !u.wild)) && docked(u.side, t) && !unsafe(t, u.side) && bell - ((t.noPath || {})[u.side] ?? -Infinity) >= D.noPath && !full(u, t) && (u.patch ? inBox(t, u.patch) : !from || Math.hypot(from.x - t.bx, from.y - t.by) <= r)) cs.push([forage(u, t, b, true), t]);
+   let best = null, top = 0; for (const [ub, t] of cs.filter(([p]) => isFinite(p)).sort(([p], [q]) => q - p)) { if (ub <= top) break; const R = forage(u, t, b); if (R > top) [best, top] = [t, R]; }
+   return best; }
+-function gatherAt(u, t) { u.tool = null; if (u.load && u.carry !== yieldOf(t)) { if (u.dump === 'destroy') { u.load = ZERO; u.carry = null; } else { u.target = t; carry(u); return; } } // E1054
++function gatherAt(u, t) { u.tool = null; if (u.load && u.carry !== yieldOf(t)) { const d = FK.dropFor(u, u.carry), way = d && dist(u, d) < dist(u, t) && dist(d, t) < dist(u, t); if (u.dump === 'destroy' || !way) { u.load = ZERO; u.carry = null; } else { u.target = t; carry(u); return; } } // E1054
+   if (u.target !== t && (full(u, t) || (t.kind !== 'bld' && !FK.spotFor(u, t)))) { u.carry = yieldOf(t); u.lost = { x: t.bx, y: t.by, t: bell }; return look(u); } t.wk = ~~t.wk + (u.target !== t); u.target = t; u.carry = yieldOf(t); u.lost = null; if (beside(u, t)) { u.job = 'gather'; return; } u.job = 'walk'; u.then = 'gather'; if (!(t.kind === 'bld' ? FK.goBy(u, t) : FK.toSpot(u, t))) { (t.noPath = t.noPath || {})[u.side] = bell; u.target = u.path = null; u.job = 'gather'; } } // E222
+ function carry(u) { u.tool = null; const b = FK.dropFor(u, u.carry); if (!b) { u.job = 'wait'; u.wait = SR.again; return; } if (beside(u, b)) { u.job = 'carry'; return; } u.job = 'walk'; u.then = 'carry'; if (!FK.goBy(u, b)) { u.job = 'wait'; u.wait = SR.again; } }
+ const hist = (u, y, n = ZERO) => { const H = u.hist || (u.hist = []), L = H.at(-ONE); if (L && L.y === y) { L.b = bell; L.n += n; } else H.push({ a: bell, b: bell, y, n }); }; // E1057
+diff --git a/frankenstein-refresh/v100/permit.json b/frankenstein-refresh/v100/permit.json
+index 340f67d..5d9cf3f 100644
+--- a/frankenstein-refresh/v100/permit.json
++++ b/frankenstein-refresh/v100/permit.json
+@@ -1,5 +1,14 @@
+ {
+- "build": "",
+- "agreed": "",
+- "opens": []
+-}
++ "build": "P2-end: the load rule",
++ "agreed": "Albert, Nov 13 01:06: \"1. Yes, just logic.\" (the load buttons become logic); 01:26 \"Do as much as you can\"",
++ "opens": [
++  "code:econ.js",
++  "book:comments:E1054",
++  "book:rules:X105",
++  "book:citations:N335",
++  "tool:test.py"
++ ],
++ "grow": {
++  "code:econ.js": 400
++ }
++}
+\ No newline at end of file
+diff --git a/frankenstein-refresh/v100/test.py b/frankenstein-refresh/v100/test.py
+index 6e9580b..fdb56b8 100644
+--- a/frankenstein-refresh/v100/test.py
++++ b/frankenstein-refresh/v100/test.py
+@@ -1766,7 +1766,7 @@ P2JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) =
+  if (sol) { FK.select([sol]); tap(tree); o.solFind = FK.picked().includes(sol); FK.select(null); } else o.solFind = null;
+  const y = 'wood', M = V.find((u) => u.job !== 'idle' && ECON.jobOf(u) && ECON.jobOf(u) !== y && u !== V[3]); if (M) { M.att = 'mobile'; ECON.assign(0, y, 1); $run(1); o.mobile = !!M.target && M.target.kind === 'tree'; info.mobile = [ECON.jobOf(M), M.target && M.target.kind]; } else o.mobile = null;
+  const D1 = V[V.length - 1], D2 = V[V.length - 2]; for (const [u, mode] of [[D1, 'destroy'], [D2, 'drop']]) { u.dump = mode === 'destroy' ? 'destroy' : undefined; u.load = 5; u.carry = ECON.yieldOf(bush); FK.select([u]); const tt = near('tree').find((x) => x !== tree && !ECON.isFull(u, x) && x !== D1.target); tap(tt); }
+- o.destroy = !D1.load; o.drop = D2.load > 0 && (D2.job === 'carry' || D2.then === 'carry'); info.load = [D1.load, D2.load, D2.job, D2.then];
++ o.destroy = !D1.load; o.drop = D2.load > 0 ? (D2.job === 'carry' || D2.then === 'carry') : D2.target && D2.target.kind === 'tree'; info.load = [D1.load, D2.load, D2.job, D2.then];
+  for (const k in o) if (o[k] === null) delete o[k]; return [o, info]; })()"""
+ async def p2(b):
+     pg, errs = await fresh(b); v, info = await pg.evaluate(P2JS); await pg.close()
+@@ -1812,7 +1812,16 @@ FRZJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
+ async def freeze(b):
+     pg, errs = await fresh(b); v, info = await pg.evaluate(FRZJS); await pg.close()
+     ok('t-freeze', all(v.values()) and not errs, [v, info, errs[:2]])
+-PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
++LOADJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), S = MENU.S, o = {}, info = {};
++ S.tab = null; MENU.act('start'); FK.fog(false); await W(400); const V = ECON.villagersOf(0), u = V[0], y = ECON.yieldOf(FK.things().find((t) => t.kind === 'bush')), trees = FK.things().filter((t) => t.kind === 'tree' && t.amount > 0 && !ECON.isFull(u, t));
++ u.load = 5; u.carry = y; const d = FK.dropFor(u, y), on = (t) => FK.dist(u, d) < FK.dist(u, t) && FK.dist(d, t) < FK.dist(u, t), A = trees.find(on), B = trees.find((t) => !on(t)); info.has = [!!d, !!A, !!B];
++ if (A) { u.load = 5; u.carry = y; u.dump = undefined; ECON.gatherAt(u, A); o.home = u.load === 5 && (u.job === 'carry' || u.then === 'carry'); info.home = [u.load, u.job, u.then]; }
++ if (B) { u.load = 5; u.carry = y; ECON.gatherAt(u, B); o.drop = !u.load && u.target === B; info.drop = [u.load, u.job]; }
++ return [o, info]; })()"""
++async def load(b):
++    pg, errs = await fresh(b); v, info = await pg.evaluate(LOADJS); await pg.close()
++    ok('t-load', len(v) == 2 and all(v.values()) and not errs, [v, info, errs[:2]])
++PAGED = {'t-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-load': load, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+ PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
+ async def page():
+     async with async_playwright() as p:

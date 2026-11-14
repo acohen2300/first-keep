@@ -1,50 +1,33 @@
-# First Keep: hand-off (Nov 12, 2026, 17:45)
+# First Keep: hand-off (Nov 14, 2026, 09:26)
 
-Rules: `CLAUDE.md` (the one start). Open list: `The List.md`. Order and audit: `The Plan.md`.
+Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 holds Albert's Nov 14 return to n41). Laws: `docs/3 Locks/Designs/09`.
 
 ## Where it stands
-- Code: `frankenstein-refresh/v100/`, branch `n29-the-list`, N31 sealed. Not merged to `main`.
-- Preview Albert plays: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n31/ (copy on `main`).
-- Live v100 on `main`: untouched since N10b. Going live is Albert's call only.
-- Other branches (`n11`, `n24-build3`, `n25`–`n28`, older): archive. `n24-build3` holds two things Albert said no to.
+- Albert, Nov 14 07:54 to 08:40: last night's jump to design was a judgement error; back to n41, keep a few items, then bug work only.
+- Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N46 (bottom of `BUILDS.md`).
+- Branch `n29-the-list` keeps N42 to N45 whole, parked (`Parked.md`, "Parked Nov 14"). Do not build there.
+- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n46 is the one to play. n40 to n45 stay up.
+- Live v100 on `main`: untouched. Going live is Albert's call only.
 
-## Why we stopped building (Albert, Nov 12 14:50)
-Days of play, patch, play built fixes on fixes. Found on Nov 12:
-1. The list had many homes (The List, The Plan, Next build list, Decisions - Nov 11, Owed, v81 List, Triage). Now: The List only.
-2. Builds stacked on unmerged branches.
-3. 22 old tests fail, unsorted (G5): no safety net.
-4. One-home audit (`The Plan.md` Part 1): 75 places write a unit's job, 35 its target, 25 its path. P2 (the job door) was planned, then skipped.
-5. Focus (E1027): set on every tap, pinned to one find. If that find is full the villager works another but stays focused on the full one, and returns to it after a raid (`combat.js:176`, `econ.js:145`, `econ.js:257`). Albert's rule #17: stays on its *job* like a reasonable worker.
-6. Menus never checked against the kit (G2).
+## In N46 (on top of n41)
+- From N42: sound after a call; the clock's second line and the wonder countdown; the 1,000 sale; berries regrow; the research hint (TENTATIVE: his play decides).
+- From N43: construction in three stages; sea fish; the woods card for soldiers only (the second half of the dock fix).
+- New in N46: a sea fish is laid only where someone can stand to catch it (N361). Under N43's code 34 to 60 of about 105 sea fish could not be reached, and t-dock failed three runs in five.
 
-## Done Nov 12 afternoon (Albert 15:08 yes yes)
-1. Housekeeping: old lists archived to `docs/6 Records/Archive - lists to Nov 12/`; The List is the one list; `n29-the-list` the one working branch.
-2. The 22 failing tests sorted, first pass: `Failing tests - Nov 12.md`. Group B needs Albert's call.
-3. Gate `proof` (X99) built, sealed (S3 in BUILDS.md), proven by planting bad lines. 16 DONE lines without real proof moved to BUILT.
+## Next, in order (bug work only; none needs Albert)
+1. Trace the frozen villagers. The 40-minute watch (`/home/claude/tools/watch.py` in the Nov 14 chat; the method is on The List, section 9) lists villagers in `carry` with a load and no path who do not move for 40 s: 44 on n41, 28 on N46, all within about a minute of each other around minute 33 to 38. So the fault is older than n41 and N45 did not cause it. A 10 s probe of another run saw none before 2300 s: it does not happen in every game. Not traced. First look: econ.js:229 (`!b || !beside(u, b)` then `carry(u)` again with no path made).
+2. The inland fish with no place to stand (2 to 9 a map on n41, before sea fish): not touched.
+3. His food under 60 for 27 minutes with 97 soldiers; villagers on `wait` with nothing telling him; "Something is in the way" beside farms (needs his screenshot); one computer's +14,000 gold a minute.
+4. The tests that failed before Nov 13 (named in BUILDS.md, N46).
 
-## Nov 12 16:45
-- Albert's call spec for villagers and army is written (`docs/3 Locks/Designs/08 ...`): P2's yardstick. The List section 7 holds his answers (the freeze is snow, H3).
+## Waiting on Albert
+- His play of n46. In play he inspects: dead buttons (Winner, "All tech / Later", "Scout / Later"), cut-off text, soldiers running by themselves. He judges the research hint.
+- H10 (the computers' economy) stays held by his word of Nov 13 08:26.
+- The Controller: he hates the new controls (Nov 13 22:06); a menu matter, done together, his detail to come.
 
-## Nov 12 17:45: P2a built and sealed (BUILDS.md P2a); preview-n32 on main for Albert to play. Next: P2b (the card, mock first), P2c (one end of job).
-
-## Next (CLAUDE.md section 6)
-1. Housekeeping: archive the other lists into The List, one working branch.
-2. Sort the 22 failing tests.
-3. P2, the job door, with Focus and the bug traces.
-4. Menu check (G2) and rings (P4).
-5. The rest of The List.
-
-## Now
-- Nov 13 12:30: S5 sealed; preview-n37 on main. Albert's standing word (09:39): rulings are a go, do not ask again; only the menu grammar is done together. Next: the OPEN checks in `Tests - Nov 13.md`, then G5B. Commits now carry Co-Authored-By: Claude Fable 5.2.
-- Nov 13 midday: sealed G1, H10a, S4 (+P2-end), G5b; preview-n36 on main. Tests sorted in `Tests - Nov 13.md`; next: trace the OPEN checks, then G5B. Menus wait on the grammar spec (Albert: tap area 44, drawn box smaller, tight).
-- Nov 13 day: report `Day - Nov 13.md`. G1 sealed (dbcc9fe). H10 and P2-end held as patches, waiting on Albert. G5B not started.
-- P2c built (preview-n34): the villager Controller; his play owed. P2b built (preview-n33). Next: H3 (snow freeze), P2c. Was: P2a works (Albert played it). P2b: the card mock in `mockups/p2b/`, for his pick. Then H3 (snow freeze), P2c.
-- How a fix works, and how to take over: `CLAUDE.md` 8c and 8d.
-
-## Waiting on Albert (about 12 calls)
-Row 5 (V4), the three ring decisions (D1), four rebalance numbers (D4), nerve (E7), caravans (C5), mock picks (D5), and G15. Give him one quick-answer page, 1–3 lines an item, not one at a time in chat.
-
-## Albert's notes, Nov 12 afternoon (on The List after housekeeping)
-- Gold felt short; in one minute of Medieval: +345 in, −1000 out (a purchase), 17 on gold. Not a bug as far as seen.
-- Winter food: about 300 in, 307–360 out with ~101 people, right after the Medieval age-up. He wants a check that the eating numbers add up (Out looked low for 101 people) and a heads-up before winter. Not verified in v100.
-- Research done: the top RTS villager-control complaints (idle with no warning, orders overridden by automation, babysitting chores, long walks). Lesson: automate chores, never override the player's order.
+## How to build (the short form)
+- Gate: `cd frankenstein-refresh/v100 && python3 index.py` (PASS). A permit (`permit.json`) lists `opens` (at most 10; the prefix `book` opens all books; `code:index.html` opens all its sections) and `grow` bytes per file or section. Seal with `--seal` after the BUILDS.md entry; clear the permit.
+- Tests: copy `v100` to `/tmp` with `mid` and `clean` beside it; `python3 test.py --only t-a,t-b`. Full suite about 25 minutes, in the background on a frozen copy. Do not run other Chrome jobs beside it: t-a1 (a frame-time check) and others fail under load.
+- Publishing a preview: `git worktree add /tmp/mainwt main`; copy the game files (`index.html`, `menu.js`, `econ.js`, `combat.js`, `ai.js`, `sound.js`, `fonts.css`, `manifest.webmanifest`) and `books/`; commit; `git push origin HEAD:main`.
+- The board differs from one page load to the next even on one seed (the scenario's land), so a test that passes once is not proof: run a board-dependent test five times.
+- Times in BUILDS.md and The List come from `date` or `git log`, never from memory.

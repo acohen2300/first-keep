@@ -1,9 +1,9 @@
 // Book · S Shells: everything you can tap, one row a code. A row names its layer, ticks its capabilities, and fills each slot with a pointer into another book (D measurements, W mass, sprites, sound). No number lives here.
 BOOK("shells", {
  "R1": {"name": "Tree", "layer": 100, "find": "tree", "look": "tree", "body": "tree", "ticks": ["Yield"], "yield": "wood", "amount": "D53", "sound": "chop", "cite": ["N144"]},
- "R5": {"name": "Bush", "layer": 100, "find": "bush", "look": "bush", "body": "bush", "ticks": ["Yield"], "yield": "food", "amount": "D54", "sound": "pick", "cite": ["N144"]},
+ "R5": {"name": "Bush", "layer": 100, "find": "bush", "look": "bush", "body": "bush", "ticks": ["Yield", "Regrow"], "yield": "food", "amount": "D54", "sound": "pick", "cite": ["N144"]},
  "R6": {"name": "Carcass", "layer": 100, "find": "meat", "look": "meat", "ticks": ["Yield"], "yield": "food", "amount": "D220.MW3", "sound": "pick", "cite": ["N170"]},
- "MW1": {"name": "Fish", "layer": 100, "find": "fish", "look": "fish", "ticks": ["Yield", "Catch"], "yield": "food", "amount": "D218.amt", "sound": "pick", "cite": ["N170"]},
+ "MW1": {"name": "Fish", "layer": 100, "find": "fish", "look": "fish", "ticks": ["Yield", "Catch", "Regrow"], "yield": "food", "amount": "D218.amt", "sound": "pick", "cite": ["N170"]},
  "R2": {"name": "Gold", "layer": 100, "find": "gold", "look": "gold", "body": "outcrop", "ticks": ["Yield"], "yield": "gold", "amount": "D55", "room": "D169.gold", "sound": "mine", "cite": ["N144"]},
  "R3": {"name": "Stone", "layer": 100, "find": "stone", "look": "stone", "body": "outcrop", "ticks": ["Yield"], "yield": "stone", "amount": "D56", "room": "D169.stone", "sound": "mine", "cite": ["N144"]},
  "R4": {"name": "Iron", "layer": 100, "find": "iron", "look": "iron", "body": "outcrop", "ticks": ["Yield"], "yield": "iron", "amount": "D57", "room": "D169.iron", "sound": "mine", "cite": ["N144"]},

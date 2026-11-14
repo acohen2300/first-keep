@@ -770,3 +770,19 @@ Weather: replace v100's sky colour with SoRen's four palettes weighted by the su
 - P2b: the card's old status line ("food", the load row) is hidden on your own units; the call row says it. [2026-11-12 19:00]
 - P2c: calling a villager no longer opens the P2b card (Albert: too much screen); the card stays for soldiers and for Log. [2026-11-12 23:00]
 - Nov 13: t-orders' Choke check set aside (Choke is parked since Nov 9: back with the war module). Put the check back when Choke returns.
+
+- Nov 13 22:21 (Albert: "Park"): message-precedence levels (FLASH / IMMEDIATE / PRIORITY / ROUTINE) for orders and tasks. Not built.
+- Nov 13 22:21 (Albert: "Kill this"): G15, the waiting items of Nov 10-11: refund on cancel, the GitHub Pages source setting, the side row (Yield! and the vassal row), a gold vein's 4 miners, keep the blur fix or not, the location (45 N).
+- Nov 13 22:49 (Albert: "Park this idea. We are no where near this level of refinement at this time."): the villager's stops card (Now / Next / Then; D3, #20).
+- Nov 13 22:49 (Albert: "Hold."): quick start, race mode, simple mode (G8). Round 2, by his word: conversions waiting for a house, building health by material, villagers who fight, animals placed at random (G7).
+- Nov 13 (N43, on Albert's "What is even the point of running?"): soldiers running by themselves when their nerve breaks. Switched off in the book (D231 `breaks`: false), the code kept; set it true to bring it back.
+- Nov 13 (N43): the Gift button on a rival's row of Relations, which only ever answered "Not built yet" (Albert, 22:49: "it doesn't work right now. There's a bug."). Removed, as his Nov 1 ruling D-057 said (no gifts to rivals, no gift slot). A working gift to a rival (what it buys, how a computer weighs it) is not designed: round 2.
+- Nov 13 (N44): the Tension row of the new game card (Winner, Diplomacy), which was never built and answered "Not built yet" (his D10 note: the Winner button does nothing). Removed with its option and its width. What Tension does when built (the leader ganged up on, or relations weighing more) is not designed: round 2.
+- Nov 13 (N44): "All tech / Later" at the end of every building's research row (28 cards), which answered "Not built yet". Removed: the book button in the card's head already opens the Guide's research table (one home).
+
+## Parked Nov 14: the return to n41 (Albert, 08:33 to 08:40) [2026-11-14 08:48]
+All of these are built and kept on branch `n29-the-list` (N42 `aaf4b19`, N43 `aeb3a5e`, N44 `96e909a`, N45 `0cc18af`; previews n42 to n45 stay on `main`). N46 starts from n41 and does not carry them.
+- For his inspection in play first: the dead ends closed in N44 (Tension row, "All tech / Later", "Scout / Later", the empty queue boxes); N44's cut-off text fixes (the ellipsis, "Needs Bronze age", the two-slot plot cell); N43's soldiers no longer running by themselves (D231 `breaks`).
+- For later: N42's loaded carrier outranks an empty walker (D377 `laden`); N42's bigger fires and two torches on every building, N43's door lantern (D316, D317, N352); N43's new game card, flame shadows, winter heads-up, the Gift button's removal; N44's top bar red, the Controller's order line and button names, the specials' cards; N45, the shell pass slice one (asks by name 309 to 149).
+- With the research hint in and N44's ellipsis out, a long hint may show cut at the ends (known, part of his inspection).
+

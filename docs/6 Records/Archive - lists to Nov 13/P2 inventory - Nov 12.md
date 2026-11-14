@@ -1,0 +1,93 @@
+# P2 inventory: every write of a unit's job, target, then, path, focus (Nov 12 16:50, N31 code, by script)
+
+Read-only. Each line: file:line, the function it sits in, and which fields it writes. Next: mark each keep (the door), merge, or delete against Design 08.
+Totals (writes): job 77, target 40, then 33, path 26, focus 15. Note: index.html and the code files keep many functions on one line, so one line can hold several writes.
+
+- index.html:1098 · (inside a longer line) · job/target/path
+- index.html:1103 · walkTo · path
+- index.html:1143 · (inside a longer line) · job/path
+- index.html:1361 · walker,j · then
+- menu.js:225 · (inside a longer line) · job/target/path
+- menu.js:503 · learnAct · job
+- menu.js:559 · (inside a longer line) · then
+- econ.js:145 · gatherAt · job/target/then/path
+- econ.js:146 · carry · job/then
+- econ.js:147 · buildAt · job/target/then/path
+- econ.js:148 · idle · job/target/then/path
+- econ.js:165 · look · job/then
+- econ.js:179 · (inside a longer line) · focus
+- econ.js:181 · (inside a longer line) · focus
+- econ.js:212 · hunt,free · then
+- econ.js:252 · (inside a longer line) · target/path
+- econ.js:254 · enter · job
+- econ.js:255 · (inside a longer line) · job/target/then
+- econ.js:256 · (inside a longer line) · job/target/then/path
+- econ.js:265 · garrison · job/target/then
+- econ.js:271 · walkTo · job/target/then
+- econ.js:276 · (inside a longer line) · target/focus
+- econ.js:281 · (inside a longer line) · job/target/then
+- econ.js:288 · boardAt · job/target/then/path
+- econ.js:289 · boardIn · target
+- econ.js:290 · boardStep · target
+- econ.js:327 · teach · job/target/path/focus
+- econ.js:328 · graduate · job
+- econ.js:374 · toward · job/then
+- econ.js:408 · unpack · job
+- econ.js:415 · sendWagon · job/target/then
+- econ.js:426 · (inside a longer line) · job
+- econ.js:428 · (inside a longer line) · job/then
+- econ.js:468 · (inside a longer line) · job
+- econ.js:469 · envoyTick · job
+- econ.js:470 · (inside a longer line) · job/then
+- econ.js:471 · reply · job
+- econ.js:473 · (inside a longer line) · job
+- econ.js:538 · loyaltyParts · target
+- econ.js:540 · (inside a longer line) · target
+- econ.js:556 · levy · target
+- econ.js:557 · releaseLevy · job/target/focus
+- combat.js:58 · hit · path
+- combat.js:63 · iceShy · then
+- combat.js:67 · (inside a longer line) · target
+- combat.js:81 · fight · job/target/then/focus
+- combat.js:84 · march · job/target/then
+- combat.js:85 · (inside a longer line) · job/target/then/path
+- combat.js:96 · homeAll · job/target/then
+- combat.js:100 · dress · job
+- combat.js:110 · (inside a longer line) · job/path
+- combat.js:120 · (inside a longer line) · job/target/path/focus
+- combat.js:123 · flee · job/path
+- combat.js:125 · (inside a longer line) · then
+- combat.js:127 · (inside a longer line) · job
+- combat.js:132 · (inside a longer line) · focus
+- combat.js:144 · (inside a longer line) · path
+- combat.js:145 · (inside a longer line) · job/target/path
+- combat.js:146 · (inside a longer line) · job
+- combat.js:147 · (inside a longer line) · job
+- combat.js:148 · (inside a longer line) · job
+- combat.js:149 · (inside a longer line) · then
+- combat.js:169 · walkTo · job/target/then
+- combat.js:173 · (inside a longer line) · focus
+- combat.js:175 · (inside a longer line) · focus
+- combat.js:176 · (inside a longer line) · focus
+- combat.js:177 · (inside a longer line) · path
+- combat.js:216 · (inside a longer line) · target/focus
+- combat.js:218 · (inside a longer line) · target/focus
+- combat.js:234 · (inside a longer line) · target/focus
+- combat.js:262 · (inside a longer line) · job/target/then/path
+- combat.js:263 · (inside a longer line) · path
+- combat.js:264 · (inside a longer line) · then/path
+- combat.js:265 · (inside a longer line) · job/target/then
+- combat.js:300 · (inside a longer line) · job/then
+- combat.js:302 · (inside a longer line) · job
+- combat.js:304 · (inside a longer line) · path
+- combat.js:305 · (inside a longer line) · job/target/path/focus
+- combat.js:306 · (inside a longer line) · job
+- combat.js:315 · (inside a longer line) · job
+- combat.js:316 · (inside a longer line) · job
+- combat.js:318 · sabotage · job
+- combat.js:331 · (inside a longer line) · job/target/path
+- combat.js:353 · (inside a longer line) · job
+- combat.js:355 · (inside a longer line) · then
+- combat.js:358 · (inside a longer line) · then
+- combat.js:374 · take · target
+- ai.js:120 · (inside a longer line) · job

@@ -27,7 +27,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QV** Forager's rate → N23, N24 · used by SC2, D88, D195, D300, X51
 - **QW** Move on → N24 · used by SC2, D132
 - **QX** Crowding → N25, N26 · used by SC2, SC16, D195, X51
-- **QY** Growth → N27 · used by SC24, SC25, D218, D219, X53
+- **QY** Growth → N27 · used by SC24, SC25, SC49, D218, D219, D378, X53
 - **QZ** Sustainable take → N28 · used by SC25, D219, X53
 - **QAA** Soil → N29 · used by SC26, D214, D215, D216, X53
 - **QAB** Learning curve → N30 · used by SC36, D277
@@ -448,6 +448,14 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N346** Albert, Nov 13, 2026, 11:24-11:59: "everything in the game ... would be considered a shell so like an empty ve → X112
 - **N347** Albert's match log and screenshot, Nov 13, 2026 (185 minutes): the toast "Fallen star: 300 iron, 100 gold. ×20 → X113
 - **N348** Albert, Nov 13, 2026, 20:59, after playing preview n38: "There is a bug with the docks. I can't fish at all."  → unused
+- **N349** Albert, Nov 13, 2026, 22:21, after 149 minutes on preview n40: "When you get a call or leave and come back the → X114
+- **N350** Albert, Nov 13, 2026, 22:21: "Offer a 1k at a time sale." From his 149-minute match log: food under 60 for 27  → D270, X114
+- **N351** Albert, Nov 13, 2026, 22:01-22:21: "I think someone built a wonder"; he lost without seeing a warning; wonder  → X114
+- **N353** Albert, Nov 13, 2026, 22:21: "Need more berries and late game food. Can berries spawn on their own late game?  → SC49, D378, X114, J57
+- **N355** Albert, Nov 13, 2026: his play list "Build yellow lines", "Build in general"; 22:21 "I don't like the building → X115
+- **N357** Albert, Nov 13, 2026, 09:39: fish in all water; 22:21, after playing: "If we can't fish in the ocean, might as → D218, X115
+- **N359** Traced Nov 13, 2026, from a test that failed one run in five (t-dock) and from Albert's logs of villagers stan → X115
+- **N361** Traced Nov 14, 2026, from t-dock failing three runs in five on N43's own code and four in five on N46: of abou → X115
 
 ## Named exceptions
 
