@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,658 | 647,570 | 647,735 |
-| Books | 2569 | 0 | 834,835 | 835,804 |
+| Game code | 31 | 3,658 | 647,688 | 647,853 (+118) |
+| Books | 2571 | 0 | 836,495 | 837,465 (+510) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,318 | 388,386 | 388,647 |
 
@@ -40,7 +40,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,181 | 10,185 | 54 |
 | menu.js | 611 | 131,724 | 131,783 | 439 |
-| econ.js | 627 | 119,085 | 119,085 | 70 |
+| econ.js | 627 | 119,203 | 119,203 (+118) | 70 |
 | combat.js | 378 | 64,691 | 64,691 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 57 | 17,364 |
-| citations | 363 | 100,988 |
+| citations | 364 | 101,808 |
 | colours | 34 | 10,273 |
 | comments | 1027 | 203,712 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 343 | 202,199 |
-| rules | 119 | 48,192 |
+| measure | 343 | 202,569 |
+| rules | 120 | 48,539 |
 | screen | 28 | 17,341 |
 | shells | 111 | 24,043 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 69 | 35,082 |
 | tech | 260 | 76,080 |
-| words | 55 | 103,104 |
+| words | 55 | 103,244 |
 
 ## The shells
 
@@ -197,5 +197,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X120 | t-n50 | page | N50 (N367): the Pioneer: locked until Pioneer corps is learned; it may enter the woods where a Ram may not; standing still it fells nothing; moving, it fells the trees in its lane: a felled tree is still there with all its wood, is no longer woods, and lets a Ram through; a villager tapped onto it gathers it; trees out of its lane stand |
 | X121 | t-n51 | page | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) |
 | X122 | t-n52 | page | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks |
+| X123 | t-n53 | page | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too |
 
-2699 items sealed · 2569 book entries · 94 laws · 363 citations, 35 still to open · 0 known
+2701 items sealed · 2571 book entries · 94 laws · 364 citations, 35 still to open · 0 known

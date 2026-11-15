@@ -1,0 +1,10 @@
+const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, D = FK.D, me = 0, WON = Object.keys(FK.SH).find((c) => FK.SH[c].ticks.includes('Wonder')), last = D.age.hidden - 1;
+ MENU.act('start'); await W(400); MENU.S.tab = null; MENU.render(true); FK.fog(false); const h = FK.seatOf(me), said = []; FK.on('say', (m, x) => { said.push([m, x && x.at ? 1 : 0]); }); $rich(me); $rich(1);
+ const [, n] = FK.B[WON], spot = (side) => $ring(FK.seatOf(side), 8, 70, (i, j) => ECON.canPlace(WON, i, j, side, true) && [i, j]);
+ FK.SIDES[me].age = last - 1; const s0 = spot(me); o.early = !!s0 && ECON.plan(me, WON, ...s0) === null && /age/.test(ECON.placeWhy(me, WON, ...s0));
+ FK.SIDES[me].age = last; const w = ECON.plan(me, WON, ...s0); o.late = !!w; o.toldMe = said.some(([m, at]) => m === BOOKS.words.J13.value.laid[0] && at);
+ FK.SIDES[1].age = last; const s1 = spot(1), w1 = s1 && ECON.plan(1, WON, ...s1); o.toldAll = !!w1 && said.some(([m, at]) => /began a wonder/.test(m) && at); info.said = said.slice(0, 4);
+ const v = ECON.villagersOf(me)[0]; ECON.buildAt(v, w); for (let i = 0; i < 2400 + 600; i++) FK.sim(0.1); o.slow = w.done > 0 && w.done < 0.2; info.done = +w.done.toFixed(3);
+ o.hold = D.wonderHold === 1000; w.done = 1; w.hp = w.hpMax = WAR.hpMax(w); const t0 = ECON.time(); w.held = t0 + D.wonderHold; for (let i = 0; i < 4900; i++) FK.sim(0.1); o.notYet = !ECON.result(); info.t = Math.round(ECON.time() - t0);
+ o.ai = D.ai.turn.wonder.age === last && D.bldAge[WON] === last;
+ return [o, info];
