@@ -9,3 +9,4 @@ One file per locked screen or card, each linking its pictures (`mockups/`) and i
 5. `05 Type rules.md` [2026-11-01 07:45]
 6. `06 Mail.md` [2026-11-01 07:45]
 7. `07 Controller.md` [2026-11-11 20:45]
+8. `12 The dock - one card for everything.md`: Albert's Nov 15 menu talk. RULED, NOT BUILT; section E is open, his word. [2026-11-15 18:55]

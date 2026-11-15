@@ -3,6 +3,7 @@
 ## START HERE (2026-11-15 14:47): N60 sealed (preview n60); next N61, the glo-up
 - N60: roads coast to coast, one piece, dry, clear of finds, crossing; stops on the roads (BUILDS.md N60). His play owed.
 - N61, ruled (The List 20, Nov 15 13:24): three tiers by age, Wood = Stone, Bronze; Timber = Classical, Medieval; Stone = Gunpowder, Enlightenment; Claude's improvements 1 to 8 all (7 civ styles stays parked); stone tier adds hit points; Claude picks the shape tells for the house and barracks; farms, pastures, Wonder, camps and booth stay as they are. Mock: https://claude.ai/artifact/Jmdx5BNouy88yNDfgUue6X. Art is drawn by ART[art](col, 0, lv, civ, want) through bldSprite (index.html 1262) with levelOf (547): start there.
+- ALSO READ (2026-11-15 18:55): Design 12, the dock (`docs/3 Locks/Designs/12 ...`; The List 22). Albert's menu talk of Nov 15: ruled, not built, mocks in `mockups/dock/`. Its section E is open and is done with him, one question at a time. He has not said whether the dock or N61 comes first: ask that first.
 
 Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 holds Albert's Nov 14 return to n41). Laws: `docs/3 Locks/Designs/09`.
 
