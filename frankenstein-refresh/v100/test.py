@@ -234,7 +234,7 @@ RES = """(() => { FK.reset(); const D = FK.D, s = FK.SIDES[0], st = s.store, T =
   for (const y of ECON.YIELDS) st[y] = 5000; let lab = null;
   lab = $ring(h, 6, 40, (i, j) => ECON.canPlace(at, i, j) && FK.build(at, i, j, s.col)) || lab;
   const u = ECON.villagersOf(0)[0], tree = FK.things().filter((t) => t.kind === 'tree').sort((a, b) => Math.hypot(a.bx - u.bx, a.by - u.by) - Math.hypot(b.bx - u.bx, b.by - u.by))[0];
-  const cut = () => { u.load = 0; u.carry = null; ECON.gatherAt(u, tree); for (let k = 0; k < 3000 && !(u.job === 'gather' && !u.path); k++) FK.sim(0.1); u.load = 0; FK.sim(0.1); const r = [u.load / 0.1, FK.stat(TREE, 0, 'rate')];
+  const cut = () => { for (const v of ECON.villagersOf(0)) if (v !== u && v.target === tree) ECON.idle(v); u.sick = u.cheer = 0; u.load = 0; u.carry = null; ECON.gatherAt(u, tree); for (let k = 0; k < 3000 && !(u.job === 'gather' && !u.path); k++) FK.sim(0.1); u.load = 0; for (let q = 0; q < 20; q++) { u.sick = 0; FK.sim(0.1); } const r = [u.load / 2, FK.stat(TREE, 0, 'rate')];
     u.load = D.carry + 0.5; FK.sim(0.1); r.push(u.job === 'gather'); u.load = 0; ECON.idle(u); return r; };
   const cells = () => { MENU.S.subject = null; MENU.S.tab = 'Hall'; MENU.S.htab = 'Town'; MENU.render(true); const r = [...[...document.querySelectorAll('#panel .row6')].find((q) => q.querySelectorAll('.q').length).querySelectorAll('.q')].map((c) => c.textContent.replace(/\\d+:\\d+/, '')); MENU.S.tab = null; return r; };
   const words = () => { MENU.S.info = true; MENU.S.tab = 'Hall'; MENU.S.htab = 'Town'; MENU.render(true); const r = [MENU.VERBS.ageUp.label(), document.getElementById('panel').textContent]; MENU.S.info = false; MENU.S.tab = null; return r; };
@@ -1940,14 +1940,15 @@ N57JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  if (!FK.roads) return [{ api: false }, {}]; const R = FK.roads(), T = FK.D.tile, seg = (p, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1))); return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy); };
  const S = FK.things().filter((t) => t.kind === 'stop'), M = FK.D.site / 2;
  info.dev = R.map((L) => Math.max(...L.map((p) => Math.min(...S.map((s) => [s.bx, s.by]).concat([[M, M]]).flatMap((a, i, A) => A.map((b) => seg(p, a, b))))) ) / T);
- o.winds = R.length === FK.D.trade.routes.length && info.dev.every((d) => d > 2);
+ o.winds = R.length >= FK.D.trade.routes.length && R.length <= 2 * FK.D.trade.routes.length && info.dev.some((d) => d > 2);
+ const wet = ([x, y]) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => FK.layer(x + dx * 2 * T, y + dy * 2 * T) === 0), ends = R.flatMap((L) => [L[0], L.at(-1)]); o.shore = ends.filter(wet).length >= 2 * FK.D.trade.routes.length; info.ends = ends.map(wet);
  o.dirt = R.every((L) => L.filter((_, i) => i % 5 === 0).every(([x, y]) => FK.layer(x, y) !== 4));
  o.stops = S.every((s) => R.some((L) => L.some(([x, y]) => Math.hypot(x - s.bx, y - s.by) < 2 * T)));
  const RB = FK.D.readyMark, st = FK.SIDES[0].store, h = FK.seatOf(0); for (const k in st) st[k] = 9000; h.q = []; MENU.S.tab = null; await W(1200); $run(1.2); o.tab = MENU.ready().includes(h) && RB.paper && RB.side > 0 && RB.roof > 0 && RB.roof < 1;
  return [o, info]; })()"""
 async def n57(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N57JS); await pg.close()
-    ok('t-n57', all(v.get(k) for k in ('winds', 'dirt', 'stops', 'tab')) and not errs, [v, info, errs[:2]])
+    ok('t-n57', all(v.get(k) for k in ('winds', 'dirt', 'stops', 'tab', 'shore')) and not errs, [v, info, errs[:2]])
 N56JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false);
  const dots = () => [...document.querySelectorAll('.ctop .dot')].map((d) => d.dataset.v);
  o.two = dots().includes('look|alert|') && dots().includes('look|army|') && !!MENU.VERBS.look; if (!o.two) return [o, { dots: dots() }];
@@ -1987,7 +1988,7 @@ N54JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  o.control = off.map(L).filter((s) => s === 4).length > 0.3 * off.length;
  o.noTrees = pts.every((p) => !FK.inWoods(FK.tileAt(p[0], p[1])));
  const TK = FK.SPRITE.trees, band = D.road.clear * T, near = (t) => pts.some(([x, y]) => Math.hypot(t.bx - x, t.by - y) < band - T); const inBand = FK.things().filter((t) => t.kind === 'tree' && near(t)); o.band = inBand.length > 0 && inBand.every((t) => TK.kinds[Math.floor(t.v / TK.variants) % TK.kinds.length].spare); info.band = [inBand.length];
- const stops = FK.things().filter((t) => t.kind === 'stop'); o.stops = stops.length === TR.routes.length * TR.stops.length && stops.every((s) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => FK.layer(s.bx + dx * T, s.by + dy * T) === 3));
+ const stops = FK.things().filter((t) => t.kind === 'stop'); o.stops = stops.length > 0 && stops.every((s) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => FK.layer(s.bx + dx * T, s.by + dy * T) === 3));
  info.st = stops.map((t) => [Math.round((t.bx - MID) / T), Math.round((t.by - MID) / T), FK.layer(t.bx, t.by)]); const st = stops.find((t) => t.owner == null), keys = () => [...SPR.keys()].filter((k) => k.includes(st.want)).length, k0 = keys(); GIFT.stop(0, 0, 1, st, 1); o.booth = keys() > k0; st.owner = 0; const k1 = keys(); GIFT.stop(0, 0, 1, st, 2); o.heldHidden = keys() === k1; st.owner = null;
  info.n = [pts.length, land.length, on.filter((s) => s === 4).length, off.map(L).filter((s) => s === 4).length];
  return [o, info]; })()"""

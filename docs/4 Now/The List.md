@@ -322,3 +322,5 @@ Claude's read: real-world precedent is AoE2's "go to last alert" and StarCraft's
 ## 19. Roads and the research tab (Nov 15 09:57 to 10:23) [2026-11-15 10:45]
 - "smooth out these edges ... wind and meander ... hit with the randomizer": BUILT in N57 (wandering roads, one smooth stroke). t-n57 passes.
 - The research icon back to v80's parchment tab with the count, "right at the corner, not flying high in the sky": BUILT in N57. t-n57 passes.
+- Found while testing N58 (not his ask, not changed): a trade stop can be missing on some maps: a stop is placed on the nearest free tile within 10 tiles of its spot (D trade.find), and water there leaves none (seen: 7 of 8). Route ownership then needs only the stops that exist. Needs his word. [2026-11-15 11:05]
+- Roads to the coasts, freer, crossing by the dice ("Go. They don't have to cross - or could cross. Make that part of the randomizer as well"): BUILT in N58; t-n57 passes. [2026-11-15 12:05]

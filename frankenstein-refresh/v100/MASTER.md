@@ -94,7 +94,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
-- **E1095** the trade roads: each route winds from stop to stop, its own stops as laid, far end to far · N372 · N374 · N379
+- **E1095** the trade roads: each route from the last dry land on its side, through its stops, to the  · N379 · N381
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
 - **E1097** the trees are set: a tree inside a trade road's cleared band is felled unless its kind is  · N374
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
@@ -142,7 +142,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E921** each water band gets its own layer, laid in order before the first contour: the shapes are
 - **E922** the grass mask (where the season's colour and the blades go) is cut from the contour cells
 - **E779** the contours painted band by band over the whole piece of land, lowest first, so a band la
-- **E1105** the trade roads drawn into the ground once: one smooth round stroke per road, a sand verge · N379
+- **E1105** the trade roads drawn into the ground once: one smooth round stroke per road, a sand verge · N379 · N381
 - **E919** the minimap's picture: the shapes replayed once, small
 - **E918** the water fills every cut up to one level just under the grass (the mock's 'high'): the ba
 - **E924** the marsh: each marsh tile draws a number from the seed; where it is over D366's tussock t · D366 (N301, N305, N304)

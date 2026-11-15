@@ -1849,6 +1849,11 @@
 "bytes": 576,
 "numbers": 0
 },
+"book:citations:N381": {
+"sha": "0bacf3f64d6961bbef16288a07c2c53668c8abee5eec8c563fbedcf14a2e26df",
+"bytes": 873,
+"numbers": 0
+},
 "book:citations:N39": {
 "sha": "d1c1f9644558d4a6744702d82432be3925d07c40a4af7c598c3ff6b7a0377979",
 "bytes": 70,
@@ -2825,8 +2830,8 @@
 "numbers": 0
 },
 "book:comments:E1095": {
-"sha": "2149fa2c7f81f24aae5b420becbf2ef50149e684abea2280a30fe96ddac85b56",
-"bytes": 378,
+"sha": "2da119c9dcc7a83d83bb2bc8bca4101b86e0ac3bf64b57aeb2d2581321ae7f44",
+"bytes": 300,
 "numbers": 0
 },
 "book:comments:E1096": {
@@ -2885,8 +2890,8 @@
 "numbers": 0
 },
 "book:comments:E1105": {
-"sha": "6da651c3a6c1cf42a4159fa81e135ca6a468e75800b5d6fa20d58c966248501b",
-"bytes": 157,
+"sha": "563b8ebea66c7e26e32f03a6c56b7069041c22f8a70d866c3972963d1ce5f89f",
+"bytes": 249,
 "numbers": 0
 },
 "book:comments:E1106": {
@@ -9100,8 +9105,8 @@
 "numbers": 0
 },
 "book:measure:D379": {
-"sha": "13588f2f0d63a08be10dbfdc5084ab0d2bfde4a74d7438e97ac3ea7f5b541035",
-"bytes": 823,
+"sha": "d53498574c059f0320acbdbe3eff82ff229556204d8ab647359145fe4afd7562",
+"bytes": 1393,
 "numbers": 0
 },
 "book:measure:D38": {
@@ -9550,8 +9555,8 @@
 "numbers": 0
 },
 "book:rules:X127": {
-"sha": "d3f1ec0e1150b057cff0c7caa46224e04c867163c036fc1b353dee2d5decebd6",
-"bytes": 360,
+"sha": "9be7664ba2e99f8f71dd878658cadd859c7a9175166b5b04ef921676e5bd27d1",
+"bytes": 466,
 "numbers": 0
 },
 "book:rules:X13": {
@@ -12960,8 +12965,8 @@
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
-"sha": "a55b1be3940711b7b074a7f472cd26d573abf80bde6620275b0a2d1193ad811e",
-"bytes": 19491,
+"sha": "b5ec49b9af85f5b9cf78ab7da028ffa0ffc9a1d573a9369325ad822f49c30314",
+"bytes": 19536,
 "numbers": 92
 },
 "code:index.html#floor-2-terrain": {
@@ -12970,8 +12975,8 @@
 "numbers": 115
 },
 "code:index.html#floor-3-non-movables": {
-"sha": "ae2d42828fcd7aa63bd38068137a446dc784fb3782497f9a146b8613afc52560",
-"bytes": 13213,
+"sha": "d23c734116a2c825deff8854cf214a9f3edc43326bc05a71fba4ea5147fe5ab1",
+"bytes": 13568,
 "numbers": 54
 },
 "code:index.html#floor-5-movables": {
@@ -13585,8 +13590,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "7d59ca3fe44390c30b2681a14f59a4c7e1479680fbd8a12f261f26860f1d647f",
-"bytes": 361241,
+"sha": "e4bd92332e3edb471628e26e4b7ce1c6e945757f0688eb637588e58750d34c37",
+"bytes": 361680,
 "numbers": 0
 }
 }

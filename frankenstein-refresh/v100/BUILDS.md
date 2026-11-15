@@ -5393,3 +5393,11 @@ Albert, Nov 15 09:57 (N379): "Can you smooth out these edges? It should wind and
 - Tests: t-n57 (X127) passes; fails with N56's index.html and measures. t-n54 now walks the winding roads.
 - Full suite on a frozen copy: 72 of 90; no new failure against N56 (t-n25, t-n29 and t-p2 pass this run).
 NOT proven (his play owed): the roads' look on his phone; the tab's place on every building kind.
+
+## N58: roads coast to coast, freer, cross or not by the dice · 2026-11-15 10:52
+Albert, Nov 15 10:45 to 10:47 (N381): to the water on both sides, more winding and free flowing, no forced X; "They don't have to cross - or could cross. Make that part of the randomizer as well".
+- Each route runs from its coast (the outermost dry land on its line) through its stops to the far coast; the stops stay at their fixed, fair distances. The wander is twice a forest path's (D379 wander, 14 tiles). By the map's dice (D379 join, half the maps) a route is one road through the middle, or two roads, each from its coast to its two stops, so the roads cross on some maps and not on others.
+- Where a road meets a lake or river the track breaks and goes on beyond it (no bridge yet).
+- Tests: t-n57 adds both coasts reached; fails with N57's index.html (shore false). t-n54's exact stop count relaxed: a stop can be missing on some maps (water at its spot; logged on The List, not changed).
+- Full suite on a frozen copy: 70 of 90. t-research failed: the new map made the measured villager fall sick at minute 1.3 (u.sick: work × D.health.work), halving his rate against Mid's; the test now keeps that one villager healthy and alone at his tree and averages two seconds, since it measures the rate law, not illness (passes on N57 and N58). t-n25 failed once and passes alone. No other change against N57.
+NOT proven (his play owed): the roads on real maps; the fords.
