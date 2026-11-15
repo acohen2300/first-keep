@@ -252,3 +252,13 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
   11. BUILT: the tick Touch: farms, pasture, quarry, dock, mill, lumber and mining camps, mint, foundry, dwelling, apartment may stand against any building that does not train. Before, only fields could. The computers keep their old lane when choosing a spot. [2026-11-14 19:09]
 - Seen while there, NOT touched (his earlier word: he inspects these in play first): cut-off text on cards ("Tree farm 0/" on the Lumber camp's card; a research box's three lines crowd its 44). [2026-11-14 19:09]
 - CORRECTION (Claude): at 16:45 Claude said Age of Empires shows a later age's tech greyed on the building. From memory it is the other way: the building's panel shows only the age reached; the whole tree is its own screen. His ruling matches it. [2026-11-14 19:09]
+
+## 12. Albert's match log (sent Nov 14 21:46, no words with it; 144 minutes, seed 3982373520, fertile; preview not stated): READ, NOTHING CHANGED [2026-11-14 21:47]
+- Unverified, all of it: read from the log's numbers only, no code traced. [2026-11-14 21:47]
+1. One computer (side 3) held 510,943 gold at minute 94, from 79 at minute 45, with 21 to 35 villagers: up to 14,000 a minute. Cause not known (it reached Gunpowder at 40; the take-off is at 49). [2026-11-14 21:47]
+2. Loot is the whole store: killing side 3 at minute 130 paid 518,947 (his gold 6,188 → 515,040); side 2 at 139 took the loot to 639,619 and wood 21,645 → 98,673. [2026-11-14 21:47]
+3. His villagers 128 → 79 between minutes 88 and 92, after 40 to 48 of them were "walk" from 86. Again 81 → 68 from 131 to 138 (walk 48, then fight 18). [2026-11-14 21:47]
+4. After minute 131 the villagers never went back: 26 to 29 of 68 idle to the end; gather fell to 6,723 in the last ten minutes (48,202 in the ten to minute 80) against about 8,200 upkeep. [2026-11-14 21:47]
+5. The computers sit on stores: side 2 ended with 77,930 wood and 21,691 gold beside 6 soldiers; side 1 held 117 villagers and 52 soldiers flat for 15 minutes. [2026-11-14 21:47]
+6. His ages: Bronze at 11, Classical 36, Medieval 54, Gunpowder 70; the computers were at Gunpowder by 20, 40 and 50. [2026-11-14 21:47]
+7. The picture: "Wonder 0:03" in red while his 65 sent were 3:51 from AC6. Whose wonder, and how it ended: not in the log (his Nov 13 ruling: the log records neither). [2026-11-14 21:47]
