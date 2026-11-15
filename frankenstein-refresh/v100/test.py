@@ -1596,7 +1596,7 @@ async def n24b(b):
     ok('t-n24b', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
 N25JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => [...document.querySelectorAll(s)];
  MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, S = MENU.S, mine = () => FK.units().filter((u) => u.side === 0 && WAR.armyOf(0).includes(u));
- o.peace = document.getElementById('base').className === 'jobs' && q('.ctop .dot').length === 2 && !q('.pad').length;
+ o.peace = document.getElementById('base').className === 'jobs' && q('.ctop .dot').length === 4 && !q('.pad').length;
  let n = 0; $ring(h, 4, 14, (i, j) => { const k = j * N + i; if (FK.walkable(k) && n < 12) { FK.spawn(['UM1', 'UM6', 'UM2'][n % 3], 0, k, Math.random); n++; } return n >= 12; });
  const A = WAR.armyOf(0); o.spawned = A.length === 12;
  MENU.act('war'); o.open = S.war && q('.pad').length === 3 && FK.picked().length === 12 && !q('.exec.go').length && document.getElementById('base').className === 'ctlw';
@@ -1936,6 +1936,20 @@ N52JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
 async def n52(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N52JS); await pg.close()
     ok('t-n52', all(v.get(k) for k in ('ring', 'start', 'solid', 'bushes', 'rest', 'hidden', 'shown', 'blue', 'white', 'green', 'fade', 'red', 'runs', 'toBuild', 'toCard', 'one', 'helper', 'tapped', 'noQuick', 'south', 'touch')) and not errs, [v, info, errs[:2]])
+N56JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false);
+ const dots = () => [...document.querySelectorAll('.ctop .dot')].map((d) => d.dataset.v);
+ o.two = dots().includes('look|alert|') && dots().includes('look|army|') && !!MENU.VERBS.look; if (!o.two) return [o, { dots: dots() }];
+ const h = FK.seatOf(0), sol = Object.keys(FK.SH).find((c) => FK.SH[c].class === 'Foot' && FK.D.train[c]), mk = (side, x, y) => { const u = FK.spawn(sol, side, FK.tileAt(x, y), FK.rng); FK.place && FK.place(u); return u; };
+ const A = [0, 1, 2].map((i) => mk(0, h.bx + 40 + i * 8, h.by + 40)), B = [0, 1].map((i) => mk(0, h.bx + 30 + i * 8, h.by - 40)), far = FK.D.zone[0] * 2;
+ const dir = [Math.sign(FK.D.site / 2 - h.bx), Math.sign(FK.D.site / 2 - h.by)];
+ WAR.order(A, null, FK.tileAt(h.bx + dir[0] * far, h.by + dir[1] * far)); WAR.order(B, null, FK.tileAt(h.bx + dir[0] * far, h.by)); $run(1);
+ const cam = () => [FK.cam.tx ?? FK.cam.x, FK.cam.ty ?? FK.cam.y], before = cam(); MENU.VERBS.look.run('army'); const c1 = cam(); MENU.VERBS.look.run('army'); const c2 = cam(); MENU.VERBS.look.run('army'); const c3 = cam();
+ o.cycle = String(c1) !== String(before) && String(c1) !== String(c2) && String(c3) === String(c1); info.cams = [before, c1, c2, c3];
+ const foe = mk(1, h.bx - 20, h.by + 20); foe.target = A[0]; FK.camGo(FK.D.site / 2, FK.D.site / 2); MENU.VERBS.look.run('alert'); const [ax, ay] = FK.toView(A[0].bx, A[0].by, FK.D.land); o.alert = Math.hypot(cam()[0] - ax, cam()[1] - ay) < 1; info.alert = [cam(), [ax, ay]];
+ return [o, info]; })()"""
+async def n56(b):
+    pg, errs = await fresh(b); v, info = await pg.evaluate(N56JS); await pg.close()
+    ok('t-n56', all(v.get(k) for k in ('two', 'cycle', 'alert')) and not errs, [v, info, errs[:2]])
 N55JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false);
  const mailText = () => { S.tab = 'Mail'; MENU.render(true); const x = document.querySelector('#panel').textContent; S.tab = null; MENU.render(true); return x; };
  o.noBar = !document.getElementById('toast'); FK.fire('event', 'short'); o.toMail = mailText().includes('Not enough to pay for repairs');
@@ -1989,7 +2003,7 @@ async def star(b):
 async def freeze(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(FRZJS); await pg.close()
     ok('t-freeze', all(v.values()) and not errs, [v, info, errs[:2]])
-PAGED = {'t-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

@@ -1829,6 +1829,11 @@
 "bytes": 550,
 "numbers": 0
 },
+"book:citations:N378": {
+"sha": "b3c58061a12eb50842258f415ebb3fbe04d46056fe8955c92603e0cac15be7c2",
+"bytes": 772,
+"numbers": 0
+},
 "book:citations:N38": {
 "sha": "60c1e74371a4027ced1a8112082034f662555be2a38dd0e7a24d94d66d542e2d",
 "bytes": 69,
@@ -2847,6 +2852,26 @@
 "book:comments:E1100": {
 "sha": "407fc2e12105250ebb5dabf8cf0a60fac302becd96e19ab907e8574a4c546545",
 "bytes": 228,
+"numbers": 0
+},
+"book:comments:E1101": {
+"sha": "f8c34916ebb20bfa049dcb11dcb18a50dcf6132e0652f040bd72a6603e6239b9",
+"bytes": 137,
+"numbers": 0
+},
+"book:comments:E1102": {
+"sha": "a0ac065c90f136a2cc7be403274ecce45f388e69d4afde1369c47bf7617fa152",
+"bytes": 183,
+"numbers": 0
+},
+"book:comments:E1103": {
+"sha": "25b65c2691147866087cb7bb4a5efbd1bd0d6554a38fec1dcb2ddad07eb9a61b",
+"bytes": 154,
+"numbers": 0
+},
+"book:comments:E1104": {
+"sha": "2fa75c4b651dadebed1d639cf48790943e27430e5202dacc5368da3cb507e720",
+"bytes": 149,
 "numbers": 0
 },
 "book:comments:E111": {
@@ -9499,6 +9524,11 @@
 "bytes": 365,
 "numbers": 0
 },
+"book:rules:X126": {
+"sha": "9200e88f77202033df89a2cce5595351a022aeab46a72dac4140547c1180bf0e",
+"bytes": 238,
+"numbers": 0
+},
 "book:rules:X13": {
 "sha": "05be3e4b0518d8d4b8610a179ccb98bb4e69f18bffdcd0eeaf403afce4ba7a32",
 "bytes": 151,
@@ -10080,8 +10110,8 @@
 "numbers": 0
 },
 "book:screen:SN42": {
-"sha": "15e7cb38da346f5556788b932d4f7eedb2aea7c400c6161a3d32764af69bd36e",
-"bytes": 4035,
+"sha": "ccf42e50cb9adcc3377524f9a2efbadb23c20de0c1ec20888f01e339ac03c6a7",
+"bytes": 4189,
 "numbers": 0
 },
 "book:screen:SN43": {
@@ -12890,8 +12920,8 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "59d26aa2bcaa93c04d8714a3e494be1b3ff3e75f70db7d95a2072775b6d532f0",
-"bytes": 64698,
+"sha": "d88abea8610e1c9bf4aa903f07885a7876913f412906bc0badd3753baeabe95c",
+"bytes": 65061,
 "numbers": 83
 },
 "code:econ.js": {
@@ -13030,8 +13060,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "9dba8b2443f4277aceb6a84102fcf1e8890cf9e0d436476907737b30e2a9b35c",
-"bytes": 129228,
+"sha": "8ed55cde8e6b44548f1aad67701a0ae536908cbb0f5e7fa7bf61087e2be31ce9",
+"bytes": 129820,
 "numbers": 435
 },
 "code:sound.js": {
@@ -13530,8 +13560,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "67ce4d1585b94568cb985ba776baedf5f7043fe7656d3b2a9fc36682bd7031e1",
-"bytes": 358211,
+"sha": "b90824867d45c3f0098884317892e9145cc3d16a42f393e499e8657e796ea6fa",
+"bytes": 360111,
 "numbers": 0
 }
 }

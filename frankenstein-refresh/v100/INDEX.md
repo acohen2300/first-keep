@@ -450,6 +450,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N375 |  | Albert, Nov 15, 2026, 07:05 to 07:18 (mocks, then \Go\): the trade stop is a trade booth: \Why not a trade booth? Those are far too basic\;  | opened |
 | N376 |  | Albert, Nov 15, 2026, 05:51 and 07:54: items 6 to 8 of his Nov 14 list (\We have to work on war control\; \trace who is still on the old war | opened |
 | N377 |  | Albert, Nov 14, 2026, 22:05 (item 12): \The blue strip on top is crazy annoying and I want it gone.\ (item 13): \The entire 'mail' concept n | opened |
+| N378 |  | Albert, Nov 15, 2026, 08:39: \a quick camera pan option if someone is being attacked. Like 'go' and an option to pan to a marching army? May | opened |
 
 ## colours
 
@@ -1521,6 +1522,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1098 |  | the trade booth, one frame in two states: the stop's empty booth (plain canvas, its wanted ware on the sign and the counter, stock around it |  |
 | E1099 |  | a stop draws its empty booth from the Trade post's own art, with its wanted ware; once a post stands on it and holds it, the post is drawn i |  |
 | E1100 |  | one home for messages: a letter is filed in Mail (merged with the same letter of the last moments, the oldest dropped past the keep); say fi |  |
+| E1101 |  | what of mine is under attack: every hostile whose target is mine and alive (one finder for Defend and the alert button, N378) |  |
+| E1102 |  | the army's fronts: my soldiers and support grouped by their order, with those outside the home zone (Z1) and on no order as one more group;  |  |
+| E1103 |  | look: the camera jumps to the next spot of its kind, alert or army; the same button again goes to the next, round and back to the first (N37 |  |
+| E1104 |  | the two look buttons beside Home on the top row: the alert red while something is under attack, the banner dim when no army is out (N378) |  |
 
 ## ground
 
@@ -2039,6 +2044,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X123 | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too; Exit (one villager or the called group) kills through the one death path: gone from the board and the head count (N371) | {stage: page} | N370; N371 |
 | X124 | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) | {stage: page} | N372; N373; N374; N375 |
 | X125 | N55 (N376, N377): spy, medic and priest are the army (class Support): a picked priest tapped on an enemy goes to convert him, a spy on an enemy building goes to sabotage it, a medic goes where he is sent; no message bar: a message is a letter in Mail, and no menu carries a help line | {stage: page} | N376; N377 |
+| X126 | N56 (N378): two look buttons on the top row: the banner cycles the camera through the army's fronts and round again, the alert jumps to what of mine is under attack | {stage: page} | N378 |
 
 ## screen
 

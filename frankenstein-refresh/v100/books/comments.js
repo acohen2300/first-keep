@@ -1026,5 +1026,9 @@ BOOK("comments", {
  "E1097": {"text": "the trees are set: a tree inside a trade road's cleared band is felled unless its kind is spared (the oak), as the Statute of Winchester ordered (N374)"},
  "E1098": {"text": "the trade booth, one frame in two states: the stop's empty booth (plain canvas, its wanted ware on the sign and the counter, stock around it) and, built on it, the Trade post: the same booth held (the holder's stripes, bunting and three pennants, every ware on the counter, cloth hanging, a scale and coins, a handcart, the trader, a ring); drawn with the building brushes so it sits in the game's own light and line (N375)"},
  "E1099": {"text": "a stop draws its empty booth from the Trade post's own art, with its wanted ware; once a post stands on it and holds it, the post is drawn instead (Base's and v80's rule)"},
- "E1100": {"text": "one home for messages: a letter is filed in Mail (merged with the same letter of the last moments, the oldest dropped past the keep); say files what the world tells, note files what a tap or an order says back (N377)"}
+ "E1100": {"text": "one home for messages: a letter is filed in Mail (merged with the same letter of the last moments, the oldest dropped past the keep); say files what the world tells, note files what a tap or an order says back (N377)"},
+ "E1101": {"text": "what of mine is under attack: every hostile whose target is mine and alive (one finder for Defend and the alert button, N378)"},
+ "E1102": {"text": "the army's fronts: my soldiers and support grouped by their order, with those outside the home zone (Z1) and on no order as one more group; each front is its centre (N378)"},
+ "E1103": {"text": "look: the camera jumps to the next spot of its kind, alert or army; the same button again goes to the next, round and back to the first (N378)"},
+ "E1104": {"text": "the two look buttons beside Home on the top row: the alert red while something is under attack, the banner dim when no army is out (N378)"}
 });

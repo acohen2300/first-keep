@@ -312,3 +312,9 @@ His words: "I meant my villagers wouldn't die. I needed them gone. But killing t
 3. Guards at the stops: "not at this time". Parked.
 4. The computers' runaway gold: "Will test when I play". Waits on his play.
 His words for the build: 12 core values; "Keep it together. Code tight and right. Lean and mean. Clean and Clear."
+
+## 18. Camera jumps (Albert, Nov 15 08:39; talk, not yet a go) [2026-11-15 08:45]
+His words: "a quick camera pan option if someone is being attacked. Like 'go' and an option to pan to a marching army? Maybe the button can cycle between army people who aren't idle. Or a way to quick pan to a group of army people outside the town home area".
+Claude's read: real-world precedent is AoE2's "go to last alert" and StarCraft's space bar (jump to the latest alert), plus cycling through groups. Reuse: the Controller's Defend already finds where you are attacked (WAR.defend); a group = soldiers on the same order (no new clustering). Open: where the button lives (menus are done together).
+
+- 18 ruled: "Two" (two buttons). BUILT in N56: alert and army-banner buttons beside Home; t-n56 passes. [2026-11-15 09:55]

@@ -5377,3 +5377,11 @@ Albert, Nov 15 07:54: "1. Do it. 2 & 3. Kill it and merge with mail." (N376, N37
 - Full suite on a frozen copy: 70 of 88, no new failure against N54 (t-a1 passes this time).
 - Code: menu.js 131,803 → 129,228 bytes; combat.js +7. ecs: gate PASS.
 NOT proven (his play owed): Mail as the only voice in play; support units in fights.
+
+## N56: camera jumps (alert and army) · 2026-11-15 08:42
+Albert, Nov 15 08:39 (N378): a quick pan to an attack, and to the army on the move, cycling; asked where: "Two".
+- Two small buttons beside Home on the top row (the Controller's and the villager page's): the alert, red while something of mine is under attack, jumps to it, and again to the next; the banner, dim when no army is out, jumps to each front: my soldiers and support grouped by their order, plus those outside the home zone (Z1, D zone) on no order. Round and back to the first. Anchors: AoE II's jump to the last alert, StarCraft's space bar.
+- One finder: WAR.attacked() serves Defend and the alert (defend no longer keeps its own copy); WAR.fronts() reuses centreOf. Icons in the screen book (SN42 alert, army).
+- Tests: t-n56 (X126) passes; fails with N55's menu.js.
+- Full suite on a frozen copy: 68 of 89. Moved to the ruling: t-n25's peace top row now has four dots (Home, alert, banner, War), was two; it passes. t-n29 (map-sensitive) and t-p2 (old, flaky) failed in the full run; t-n29 passes alone, t-p2 is the old failure. No other change against N55.
+NOT proven (his play owed): the two buttons in a real fight.

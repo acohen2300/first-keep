@@ -652,6 +652,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
+- **E1103** look: the camera jumps to the next spot of its kind, alert or army; the same button again  · N378
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
 - **E1058** the villager Controller (Design 08 section 8, N333): a called villager (or a group of them · N333 · N371
 - **E1059** the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with
@@ -686,6 +687,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
+- **E1104** the two look buttons beside Home on the top row: the alert red while something is under at · N378
 - **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25
 - **E1003** picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller wi
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
@@ -1018,6 +1020,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E946** an order you give marks each unit sent: its foot ring stays green from the order until its · N17
 - **E475** a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else 
 - **E1002** Defend (Albert Nov 11, N325: 'Defend goes right to the attack', no spot to pick): of the f · N325 · D373 (N325)
+- **E1101** what of mine is under attack: every hostile whose target is mine and alive (one finder for · N378
+- **E1102** the army's fronts: my soldiers and support grouped by their order, with those outside the  · N378
 - **E414** missions: a mission's soldiers, the hostile soldiers a group sees near it, and the chance  · QAF (N35)
 - **E415** each beat: every order's centre, count, fight and time left, arrived once all have stopped
 - **E416** Go (Mid's hudFire, hudGo): a squad's idle soldiers, else the army's, march on the crosshai

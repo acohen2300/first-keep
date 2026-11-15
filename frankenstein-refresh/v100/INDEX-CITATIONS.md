@@ -472,6 +472,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N375** Albert, Nov 15, 2026, 07:05 to 07:18 (mocks, then "Go"): the trade stop is a trade booth: "Why not a trade boo → X124
 - **N376** Albert, Nov 15, 2026, 05:51 and 07:54: items 6 to 8 of his Nov 14 list ("We have to work on war control"; "tra → X125, US1, US2, US3
 - **N377** Albert, Nov 14, 2026, 22:05 (item 12): "The blue strip on top is crazy annoying and I want it gone." (item 13) → X125
+- **N378** Albert, Nov 15, 2026, 08:39: "a quick camera pan option if someone is being attacked. Like 'go' and an option  → X126
 
 ## Named exceptions
 
