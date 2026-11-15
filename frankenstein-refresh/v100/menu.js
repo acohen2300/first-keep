@@ -244,7 +244,7 @@ const VERBS = {
   vorder: { label: () => '', whyNot: () => '', run: () => { S.add = S.add ? null : vsel()[ZERO]; if (S.add) crumb(VW.order); render(true); } }, // E1058
   vpage: { label: () => '', whyNot: () => '', run: (p) => { S.vc.page = S.vc.page === p ? null : p; render(true); } }, // E1058
   vjob: { label: () => '', whyNot: () => '', run: (j) => { S.vc.job = S.vc.job === j ? null : j; if (S.vc.job) crumb(VW[j]); S.vc.page = null; render(true); } }, // E1060
-  vexit: { label: () => '', whyNot: () => '', run: () => { if (!S.exit) { S.exit = true; render(true); return; } const P = vsel(); letGo(); for (const u of P) FK.harm(u, u.hp + u.hpMax); render(true); } }, // E1058
+  vexit: { label: () => '', whyNot: () => '', run: () => { if (!S.exit) { S.exit = true; render(true); return; } const P = vsel(); letGo(); for (const u of P) { FK.harm(u, u.hp); WAR.die(u, null); } render(true); } }, // E1058
   vreset: { label: () => '', whyNot: () => '', run: () => { for (const [u, att, dump] of S.vc.snap) Object.assign(u, { att, dump }); Object.assign(S.vc, { crumbs: [], job: null, page: null }); S.add = S.exit = null; render(true); } }, // E1058
   vhide: { label: () => '', whyNot: () => '', run: () => { S.vc.hide = !S.vc.hide; render(true); } }, // E1058
   vclose: { label: () => '', whyNot: () => '', run: () => { if (S.vc.page) S.vc.page = null; else letGo(); render(true); } }, // E1058
@@ -259,7 +259,7 @@ const VERBS = {
   att: { label: (m) => `${W2.att[m]}<small>${W2.attSub[m]}</small>`, whyNot: () => '', run: (m, u) => { u.att = m === 'normal' ? undefined : m; if (m !== 'focus') u.focus = null; render(true); } }, // E1055
   dump: { label: (m) => `${W2.dump[m]}<small>${W2.dumpSub[m]}</small>`, whyNot: () => '', run: (m, u) => { u.dump = m === 'destroy' ? m : undefined; render(true); } }, // E1055
   newGroup: { label: () => `${W2.newGroup}<small>${W2.newSub}</small>`, whyNot: () => '', run: () => { S.more = !S.more; render(true); } }, // E1055
-  exitU: { label: (u) => (S.exit === u ? W2.exitArm : W2.exit), whyNot: () => '', run: (u) => { if (S.exit !== u) { S.exit = u; render(true); return; } letGo(); FK.harm(u, u.hp + u.hpMax); render(true); } }, // E1055
+  exitU: { label: (u) => (S.exit === u ? W2.exitArm : W2.exit), whyNot: () => '', run: (u) => { if (S.exit !== u) { S.exit = u; render(true); return; } letGo(); FK.harm(u, u.hp); WAR.die(u, null); render(true); } }, // E1055
   recall: { label: () => 'Recall',
  whyNot: () => (!WAR.armyOf(ME).length ? 'No soldiers' : ''), run: () => WAR.recall(ME) },
   train: { label: (c, b) => `${FK.rankName(c, ME)}${price(ECON.priceOf(ME, c, b))}`, whyNot: (c, b) => (b.done < 1 ? 'Not built yet' : !FK.aged(c, ME) ? aging(c) : !ECON.room(b) ? 'That line is full' : !ECON.canPay(ME, ECON.priceOf(ME, c, b)) ? `Needs ${costText(ECON.priceOf(ME, c, b))}` : ECON.popOf(ME) >= ECON.popCap(ME) ? 'No room: build a dwelling' : ECON.soldier(c) && ECON.armyFull(ME) ? `Army at the ceiling: ${ECON.armyRoom(ME)}` : ECON.campWhyTrain(ME, c)), run: (c, b) => ECON.queue(b, c) },

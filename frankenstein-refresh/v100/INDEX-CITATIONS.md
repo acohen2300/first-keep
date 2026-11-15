@@ -465,6 +465,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N368** Albert, Nov 11, 2026 (N24): an order means go where he taps, period. Nov 14, 2026, 16:09, after a 121-minute g → X121
 - **N369** (to open) Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then "Go build"): the new game's option rings a → SC53, C27, C34, D62, D206, D241, D340, X81, X122, SN32, J43
 - **N370** Albert, Nov 14, 2026, 21:49 to 21:52, after a 144-minute game: "They always win with the wonder." Claude put f → D125, D200, D257, D291, X123, J13
+- **N371** Albert, Nov 14, 2026, 22:05: "I meant my villagers wouldn't die. I needed them gone. But killing them with the → X123
 
 ## Named exceptions
 

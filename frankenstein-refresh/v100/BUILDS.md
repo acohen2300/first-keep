@@ -5350,3 +5350,12 @@ MODIFIED: code:menu.js, code:econ.js, code:combat.js, code:ai.js, code:index.htm
 Counts: places that ask a thing its name 306 → 305; dead ticks 7 → 7. Game code 652,278 → 647,735 bytes (-4,543).
 Tests: t-n52 passes eight runs of eight on this code; with N51's code and books under the same test it fails (14 of its 21 checks: ring, bushes, rest, hidden, blue, white, green, toBuild, toCard, one, helper, noQuick, south, touch; the other seven held before: Start's 14/600, solid cards, the red and fading price, a running research's green ring, the tapped site). Full suite on a frozen copy: 66 of 85: the 18 old failures and t-p2, which is not N52's: it fails one run in three on N51's code with the same line (focusHome) and passed three of three here alone. t-n24 (the far order across woods, open since N47) passed in the suite and three of three alone, and failed one staged run: still flaky, not traced.
 NOT proven (his play owed, all of it): the Town Center's frames and the smooth ring on his phone (the cause is read from the code and the rest rule is tested, the phone is not); every look.
+
+## N53: the Wonder, and Exit that kills · 2026-11-14 22:31
+Albert, Nov 14 21:52 (N370): "Agree to all 4." Albert, Nov 14 22:05 (N371): "Fix the villagers so when I kill them they actually die and free up a population slot."
+- The Wonder: a finished one wins after 1,000 s (D257, was 480); laid only in the last open age, the computers too (D200, D291); every side told when one is begun, with its place (J13); 1,575 s for one villager to raise (D125).
+- Found, Exit: both Exit buttons (menu.js vexit E1058, exitU E1055) only lowered health (FK.harm) and never called WAR.die, so the villager swayed as wounded, stayed on the board and in the head count, and no enemy would strike her (combat.js alive: hp above zero). Now both go through WAR.die: she falls, vanishes and frees her place.
+- Found on the way: the wonder messages printed "16.666666666666668 minutes" (econ.js, built and finish: D.wonderHold / MINUTE). Rounded.
+- Tests: t-n53 (X123) passes; with n52's code and books it fails, and with only n52's menu.js its exit check fails. t-alarm's wonder checks moved to the ruling (hold 1,000; the end text's minutes from it). Full suite on a frozen copy: 65 of 86, then t-alarm fixed and passing: the 18 old failures, t-p2 (old, flaky) and t-n24 (open since N47, flaky).
+- ecs: gate PASS, no rise. Code: econ.js +118 bytes, menu.js +20.
+NOT proven (his play owed): the fall on his phone; the wonder's pace in a real match.

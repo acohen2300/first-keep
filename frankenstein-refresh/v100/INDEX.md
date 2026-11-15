@@ -443,6 +443,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N368 |  | Albert, Nov 11, 2026 (N24): an order means go where he taps, period. Nov 14, 2026, 16:09, after a 121-minute game: \They need heavy microman | opened |
 | N369 |  | Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then \Go build\): the new game's option rings are clipped on one side and mus | to open |
 | N370 |  | Albert, Nov 14, 2026, 21:49 to 21:52, after a 144-minute game: \They always win with the wonder.\ Claude put four changes; he said \Agree to | opened |
+| N371 |  | Albert, Nov 14, 2026, 22:05: \I meant my villagers wouldn't die. I needed them gone. But killing them with the controllers button makes them | opened |
 
 ## colours
 
@@ -2031,7 +2032,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X120 | N50 (N367): the Pioneer: locked until Pioneer corps is learned; it may enter the woods where a Ram may not; standing still it fells nothing; moving, it fells the trees in its lane: a felled tree is still there with all its wood, is no longer woods, and lets a Ram through; a villager tapped onto it gathers it; trees out of its lane stand | {stage: page} | N367 |
 | X121 | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) | {stage: page} | N368 |
 | X122 | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks | {stage: page} | N369 |
-| X123 | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too | {stage: page} | N370 |
+| X123 | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too; Exit (one villager or the called group) kills through the one death path: gone from the board and the head count (N371) | {stage: page} | N370; N371 |
 
 ## screen
 
