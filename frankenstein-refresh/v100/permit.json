@@ -1,5 +1,6 @@
 {
- "build": "",
- "agreed": "",
- "opens": []
+ "build": "N60: roads by the cheapest way over open land (Albert, Nov 15 12:24)",
+ "agreed": "Albert, Nov 15 11:24: \"Three bugs 1. They dip into water ... 3. They are mixed into rss nodes which can not happen. Can you fix?\"; 12:24: \"N59 isn't fixed roads. It's even worse\"",
+ "opens": ["book", "code:index.html#floor-3-non-movables", "code:index.html#drawn-once-in-the-view-frame", "tool:test.py"],
+ "grow": {"code:index.html#floor-3-non-movables": 2200}
 }
