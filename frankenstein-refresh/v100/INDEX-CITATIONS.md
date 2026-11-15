@@ -473,6 +473,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N376** Albert, Nov 15, 2026, 05:51 and 07:54: items 6 to 8 of his Nov 14 list ("We have to work on war control"; "tra → X125, US1, US2, US3
 - **N377** Albert, Nov 14, 2026, 22:05 (item 12): "The blue strip on top is crazy annoying and I want it gone." (item 13) → X125
 - **N378** Albert, Nov 15, 2026, 08:39: "a quick camera pan option if someone is being attacked. Like 'go' and an option  → X126
+- **N379** Albert, Nov 15, 2026, 09:57, after n56 with ?fps (two screenshots: the roads straight and stepped at the tile  → D379, X127
+- **N380** Albert, Nov 15, 2026, 10:03, with two screenshots (v100's red disc with a white bow, and an older build's parc → D371, X127
 
 ## Named exceptions
 

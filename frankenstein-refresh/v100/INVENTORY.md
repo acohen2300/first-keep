@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,655 | 646,876 | 647,040 |
-| Books | 2583 | 0 | 849,168 | 850,136 |
+| Game code | 31 | 3,659 | 647,950 | 648,114 |
+| Books | 2588 | 0 | 852,042 | 853,010 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,379 | 397,853 | 398,114 |
+| Tools | 5 | 2,391 | 398,983 | 399,244 |
 
 ## The trades (code)
 
@@ -18,10 +18,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
-| index.html#the-ground | 28 | 2,019 | 2,023 | 38 |
+| index.html#the-ground | 28 | 2,031 | 2,035 | 38 |
 | index.html#floor-2-terrain | 91 | 11,279 | 11,283 | 115 |
-| index.html#floor-3-non-movables | 77 | 13,068 | 13,072 | 54 |
-| index.html#drawn-once-in-the-view-frame | 98 | 19,116 | 19,120 | 92 |
+| index.html#floor-3-non-movables | 78 | 13,209 | 13,213 | 54 |
+| index.html#drawn-once-in-the-view-frame | 99 | 19,487 | 19,491 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
@@ -38,8 +38,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-view-s-eyes-lights-and-stage | 142 | 30,660 | 30,665 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
-| index.html#touch | 54 | 10,225 | 10,229 | 54 |
-| menu.js | 606 | 129,762 | 129,820 | 435 |
+| index.html#touch | 54 | 10,245 | 10,249 | 54 |
+| menu.js | 608 | 130,292 | 130,350 | 435 |
 | econ.js | 627 | 119,227 | 119,227 | 70 |
 | combat.js | 380 | 65,061 | 65,061 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 57 | 17,364 |
-| citations | 372 | 106,480 |
+| citations | 374 | 107,653 |
 | colours | 34 | 10,273 |
-| comments | 1031 | 205,005 |
+| comments | 1033 | 205,457 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 202,488 |
-| rules | 123 | 49,738 |
+| measure | 341 | 203,415 |
+| rules | 124 | 50,109 |
 | screen | 27 | 17,287 |
 | shells | 111 | 24,127 |
 | sides | 7 | 1,869 |
@@ -201,5 +201,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X124 | t-n54 | page | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) |
 | X125 | t-n55 | page | N55 (N376, N377): spy, medic and priest are the army (class Support): a picked priest tapped on an enemy goes to convert him, a spy on an enemy building goes to sabotage it, a medic goes where he is sent; no message bar: a message is a letter in Mail, and no menu carries a help line |
 | X126 | t-n56 | page | N56 (N378): two look buttons on the top row: the banner cycles the camera through the army's fronts and round again, the alert jumps to what of mine is under attack |
+| X127 | t-n57 | page | N57 (N379): each trade road winds: somewhere it strays more than two tiles from the straight line between its stops; its ground is not grass; every stop lies on a road; the research tab (v80's parchment pill) marks a building with research ready, at its roof's upper left corner |
 
-2713 items sealed · 2583 book entries · 94 laws · 372 citations, 35 still to open · 0 known
+2718 items sealed · 2588 book entries · 94 laws · 374 citations, 35 still to open · 0 known

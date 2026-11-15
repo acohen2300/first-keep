@@ -318,3 +318,7 @@ His words: "a quick camera pan option if someone is being attacked. Like 'go' an
 Claude's read: real-world precedent is AoE2's "go to last alert" and StarCraft's space bar (jump to the latest alert), plus cycling through groups. Reuse: the Controller's Defend already finds where you are attacked (WAR.defend); a group = soldiers on the same order (no new clustering). Open: where the button lives (menus are done together).
 
 - 18 ruled: "Two" (two buttons). BUILT in N56: alert and army-banner buttons beside Home; t-n56 passes. [2026-11-15 09:55]
+
+## 19. Roads and the research tab (Nov 15 09:57 to 10:23) [2026-11-15 10:45]
+- "smooth out these edges ... wind and meander ... hit with the randomizer": BUILT in N57 (wandering roads, one smooth stroke). t-n57 passes.
+- The research icon back to v80's parchment tab with the count, "right at the corner, not flying high in the sky": BUILT in N57. t-n57 passes.

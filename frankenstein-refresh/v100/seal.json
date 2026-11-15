@@ -1834,9 +1834,19 @@
 "bytes": 772,
 "numbers": 0
 },
+"book:citations:N379": {
+"sha": "a0f3a0a044388831af6384861775b8f016ce3222ddd773f39d590e7a55721dc4",
+"bytes": 583,
+"numbers": 0
+},
 "book:citations:N38": {
 "sha": "60c1e74371a4027ced1a8112082034f662555be2a38dd0e7a24d94d66d542e2d",
 "bytes": 69,
+"numbers": 0
+},
+"book:citations:N380": {
+"sha": "2aa520d24c6fd410adc4175a0b6a0d7bc2c073d7c03afa89ff08b58ff4c0512a",
+"bytes": 576,
 "numbers": 0
 },
 "book:citations:N39": {
@@ -2815,8 +2825,8 @@
 "numbers": 0
 },
 "book:comments:E1095": {
-"sha": "37b3debd432519e869211ba32c841e485fbb59c4673db92e7ae9f2dfb8d12485",
-"bytes": 262,
+"sha": "2149fa2c7f81f24aae5b420becbf2ef50149e684abea2280a30fe96ddac85b56",
+"bytes": 378,
 "numbers": 0
 },
 "book:comments:E1096": {
@@ -2872,6 +2882,16 @@
 "book:comments:E1104": {
 "sha": "2fa75c4b651dadebed1d639cf48790943e27430e5202dacc5368da3cb507e720",
 "bytes": 149,
+"numbers": 0
+},
+"book:comments:E1105": {
+"sha": "6da651c3a6c1cf42a4159fa81e135ca6a468e75800b5d6fa20d58c966248501b",
+"bytes": 157,
+"numbers": 0
+},
+"book:comments:E1106": {
+"sha": "8b99afcc88e50abc2188d2b4a1e5d8958218fb2f8c43dc02965656e270caae99",
+"bytes": 155,
 "numbers": 0
 },
 "book:comments:E111": {
@@ -9040,8 +9060,8 @@
 "numbers": 0
 },
 "book:measure:D371": {
-"sha": "7187ca92f5a758477af0ed8c4bd86581faf58c6cd7bbc943d0fae84c231f7258",
-"bytes": 529,
+"sha": "1be31d5a0789a2d34609bc34b2486e135acec3183b0b88a4aa3a095388201893",
+"bytes": 1271,
 "numbers": 0
 },
 "book:measure:D372": {
@@ -9080,8 +9100,8 @@
 "numbers": 0
 },
 "book:measure:D379": {
-"sha": "8425db0208b8d76087b2d89ad4d9db700a4d81bdf8b77c8914f726f9df3d0904",
-"bytes": 638,
+"sha": "13588f2f0d63a08be10dbfdc5084ab0d2bfde4a74d7438e97ac3ea7f5b541035",
+"bytes": 823,
 "numbers": 0
 },
 "book:measure:D38": {
@@ -9527,6 +9547,11 @@
 "book:rules:X126": {
 "sha": "9200e88f77202033df89a2cce5595351a022aeab46a72dac4140547c1180bf0e",
 "bytes": 238,
+"numbers": 0
+},
+"book:rules:X127": {
+"sha": "d3f1ec0e1150b057cff0c7caa46224e04c867163c036fc1b353dee2d5decebd6",
+"bytes": 360,
 "numbers": 0
 },
 "book:rules:X13": {
@@ -12935,8 +12960,8 @@
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
-"sha": "30e1fa794a3a4a9ae1503bb69a33b7df8dabad0318e834610aa388d648e14742",
-"bytes": 19120,
+"sha": "a55b1be3940711b7b074a7f472cd26d573abf80bde6620275b0a2d1193ad811e",
+"bytes": 19491,
 "numbers": 92
 },
 "code:index.html#floor-2-terrain": {
@@ -12945,8 +12970,8 @@
 "numbers": 115
 },
 "code:index.html#floor-3-non-movables": {
-"sha": "7e2f5148c1549138fa06ab370ef54acd9fef3a400431595f580a2d7468c03679",
-"bytes": 13072,
+"sha": "ae2d42828fcd7aa63bd38068137a446dc784fb3782497f9a146b8613afc52560",
+"bytes": 13213,
 "numbers": 54
 },
 "code:index.html#floor-5-movables": {
@@ -13015,8 +13040,8 @@
 "numbers": 13
 },
 "code:index.html#the-ground": {
-"sha": "b35b2e842268b8243f88b188add38c9e7d94365ae52a30980f7728a9284f0494",
-"bytes": 2023,
+"sha": "7a042363c30520fb7550a11f5182b4cf7f688ffd4ac4951ac17ce399bbae0f09",
+"bytes": 2035,
 "numbers": 38
 },
 "code:index.html#the-ground-s-soil-and-paper": {
@@ -13055,13 +13080,13 @@
 "numbers": 24
 },
 "code:index.html#touch": {
-"sha": "5e6b2a151779736934dad3b53142c564c4a73e94ae4c677860ed26737deeefab",
-"bytes": 10229,
+"sha": "0b9702ff5f463ed1755a84254ee6f490effd541e16441db641b7c36f0bc7a15d",
+"bytes": 10249,
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "8ed55cde8e6b44548f1aad67701a0ae536908cbb0f5e7fa7bf61087e2be31ce9",
-"bytes": 129820,
+"sha": "8f793bc39dddd9e4b4729b7e9a3d8b8d7145d763a36e0f7aff6b0d54d833c1e7",
+"bytes": 130350,
 "numbers": 435
 },
 "code:sound.js": {
@@ -13560,8 +13585,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "b90824867d45c3f0098884317892e9145cc3d16a42f393e499e8657e796ea6fa",
-"bytes": 360111,
+"sha": "7d59ca3fe44390c30b2681a14f59a4c7e1479680fbd8a12f261f26860f1d647f",
+"bytes": 361241,
 "numbers": 0
 }
 }

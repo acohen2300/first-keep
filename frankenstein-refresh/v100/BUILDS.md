@@ -5385,3 +5385,11 @@ Albert, Nov 15 08:39 (N378): a quick pan to an attack, and to the army on the mo
 - Tests: t-n56 (X126) passes; fails with N55's menu.js.
 - Full suite on a frozen copy: 68 of 89. Moved to the ruling: t-n25's peace top row now has four dots (Home, alert, banner, War), was two; it passes. t-n29 (map-sensitive) and t-p2 (old, flaky) failed in the full run; t-n29 passes alone, t-p2 is the old failure. No other change against N55.
 NOT proven (his play owed): the two buttons in a real fight.
+
+## N57: the roads wind and are drawn smooth; v80's research tab back · 2026-11-15 10:11
+Albert, Nov 15 09:57 (N379): "Can you smooth out these edges? It should wind and meander. The route should be hit with the randomizer like the other map elements." 10:03 and 10:09 (N380): the research icon back as v80's, "right at the corner, not flying high in the sky".
+- Roads: each road is the map's own wandering line (wanderLine, the map's dice, as the zone-4 paths) stop to stop through the middle, kept off the water (a straight line only where no dry wander is found). Drawn once into the ground as one smooth stroke: dirt over a sand verge (the Roman margines, D379 rim). The tile cut of N54 is gone from the ground's colour (layerOf now only keeps the grass blades off the road). Woods: the same clearing and Winchester band along the winding line.
+- The research tab: v80's parchment pill, red ink, red open book, the count when more than one waits; at the roof's upper left corner (D371 side, roof), no longer a red disc above the health bar. Numbers and colours in D371.
+- Tests: t-n57 (X127) passes; fails with N56's index.html and measures. t-n54 now walks the winding roads.
+- Full suite on a frozen copy: 72 of 90; no new failure against N56 (t-n25, t-n29 and t-p2 pass this run).
+NOT proven (his play owed): the roads' look on his phone; the tab's place on every building kind.
