@@ -85,7 +85,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E745 | index.html#floor-6-climate | the aurora: curtains of green and violet over the top of the glass, swaying unless motion is stilled |
 | E746 | index.html#floor-6-climate | an event with its own picture draws it over the map |
 | E747 | index.html#the-view-s-eyes-lights-and-stage | the mirage's dots on the small map, in the colour of what is coming |
-| E737 | menu.js | the help line under the top bar (Albert, Nov 8: one place the eyes always go): every message lands there, gold while fresh (D.toast s) then dim, never gone; a tap goes to the message's place when it has one, else opens the Help card with the whole text |
 | E736 | menu.js | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |
 | E735 | menu.js | the hammer carries the receding brown ring for every site going up (the mean of their progress; Albert, Nov 10, #21: the Build button is the aggregator of all builds), People the green ring while the seat trains, and People is ringed blue while anyone stands idle (Base, items 19 and 20); with no hazard ticked each is drawn by lot at D309 lot odds, Base's HZ_ODDS, and the first message says the level (item 5) |
 | E734 | econ.js | a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job is locked until then and a tap on it says when it opens (the Nov 7 re-read, item 21) |
@@ -808,8 +807,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E821 | menu.js | one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wherever it sits; the pause panel lived outside the three listeners and its buttons never ran |
 | E822 | index.html#the-view-s-eyes-lights-and-stage | the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rate, otherwise the full rate; the loop paces by it and the shed budgets by it |
 | E825 | menu.js | every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, and a tap opens Help; the same line under the top ribbon comes and goes on its own (Albert, Nov 9 12:29) |
-| E826 | menu.js | the help line under the top ribbon carries its words in a span and a white ring (Info Help Ribbon 1), the ring receding over the time it takes to read |
-| E827 | menu.js | a message's time on screen: the toast's least time plus its words at adult reading speed (Brysbaert 2019; Albert, Nov 9 12:12) |
 | E828 | menu.js | the ring's marker inside a box: its colour and its state (dim not chosen, lit chosen, run at work) |
 | E829 | menu.js | one colour a kind of work (Albert, Nov 9 12:03-12:19): the age-up white; soldiers red; scouts, envoys and spies blue; caravans gold; other people green; a research blue, green while it is being researched (Albert, Nov 14, N369: "All tech should be blue. Not green and not red"; was its family's colour) |
 | E830 | menu.js | dim is the colour mixed into the tray brown by one share, never picked by hand |
@@ -828,8 +825,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E843 | menu.js | Paused: the speeds and its help line; a tap on play plays again |
 | E844 | menu.js | Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and shows it, a tap again hears and hides it |
 | E845 | menu.js | the book: Welcome back mid-match (Resume, New game), paused |
-| E846 | menu.js | a message kept for the Help page, newest first, the same one twice in a row once |
-| E847 | menu.js | Help: the earlier messages, newest first; the latest stays in the help line beneath |
 | E848 | menu.js | a small card's title: the title on its own row, back, book and close beneath it |
 | E849 | menu.js | a group's label over its boxes, in small capitals across the whole row (as the v80 card) |
 | E850 | menu.js | a ring is the box's outline: the box drops its own border so the ring sits on the edge, one line, never a second inside |
@@ -903,7 +898,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E936 | combat.js | your soldiers leave a wild animal alone unless it is after one of yours or you sent them at it (Albert, Nov 10, #32) |
 | E937 | combat.js | a beast that is not attacking your side is not a target for your soldiers |
 | E938 | index.html#the-view-s-eyes-lights-and-stage | Lanterns (research) make the door torches brighter: light falls off as the square of distance (E = I / r^2), so a torch seen as far reaches sqrt(1 + gain) as far (Albert, Nov 10 11:51: the tech makes them brighter) |
-| E939 | menu.js | a message with a place shows Go on the blue info bar, at the top and in a menu's help line; a tap there takes the camera to it and closes the menu (Albert, Nov 10, #30) |
 | E940 | index.html#the-trees | a leafy crown takes a warm gloss on its sun side, painted only over its own leaves, baked once with the tree so it costs nothing a frame (Albert, Nov 10, #22) |
 | E941 | menu.js | the pop-up over the map holds one thing, the ice's Clear button. The quick action (a tap on open ground opening Attack, Build, Rally and their steps) is cut (Albert, Nov 14 16:45, N369: "That needs to be gone"); logged in Parked |
 | E943 | menu.js | menus are not redrawn while a finger is down on a button (Albert, Nov 10, N17 #7: taps pressed but did nothing): a redraw replaced the button under the finger, so the click never came; the next frame after the lift draws again |
@@ -914,7 +908,7 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E949 | index.html#the-view-s-eyes-lights-and-stage | a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall clock so game speed does not hurry it; the flame's height and its glow share one signal, so the light on the ground breathes with the flame (Albert, Nov 10, N17 #5) |
 | E950 | index.html#the-view-s-eyes-lights-and-stage | campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work together at night a campfire is lit among them, and stays where it was lit until dawn puts them all out; a light, not a building |
 | E953 | sound.js | a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS's audio interrupted and a resume that fails stays failed, so when the last resume did not bring the sound back the next tap closes the old player and makes a new one. Nov 13 (N349): still silent after a call until the page was reloaded, because a resume that never answers was never counted as failed; now the first tap after the page comes back, or after iOS reports the audio interrupted, makes a new player unless the old one is running and was never interrupted |
-| E954 | menu.js | the blue info strip is read, not flashed (Albert, Nov 10, N17 #18): each line stays its reading time (D read: the least time plus its words at adults' silent reading speed, Brysbaert 2019), and a line that comes while another is showing waits its turn instead of pushing it off, at most a page of them waiting |
+| E954 | menu.js | note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one (N377) |
 | E955 | menu.js | the base and the rank row are drawn once a render and that one drawing is both compared and shown (Albert, Nov 10, N17 #11: People's ring did not recede: the second drawing numbered the Hall's queue 1 where the first had 0, and the ring read an empty slot) |
 | E956 | econ.js | a soldier trained while a rally flag stands joins the ones already marching to it or holding it, and they are dressed into one formation there (Albert, Nov 10, N17 #14 and his N13 call: soldiers arriving together take a formation, not a loose crowd; a muster forms in ranks at its rallying point); each new one re-dresses the block, which grows a rank at a time |
 | E957 | index.html#the-things-drawn-each-frame-back-to-fr | a sprite is cached at the next size up the √2 ladder, never the one below: drawn smaller it stays sharp, drawn larger it went soft and blocky (Albert, Nov 10, N17 #21: rocks still pixelated; the nearest step could sit 19% under the zoom) |
@@ -1036,3 +1030,4 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E1097 | index.html#floor-3-non-movables | the trees are set: a tree inside a trade road's cleared band is felled unless its kind is spared (the oak), as the Statute of Winchester ordered (N374) |
 | E1098 | index.html#the-building-art | the trade booth, one frame in two states: the stop's empty booth (plain canvas, its wanted ware on the sign and the counter, stock around it) and, built on it, the Trade post: the same booth held (the holder's stripes, bunting and three pennants, every ware on the counter, cloth hanging, a scale and coins, a handcart, the trader, a ring); drawn with the building brushes so it sits in the game's own light and line (N375) |
 | E1099 | index.html#the-things-drawn-each-frame-back-to-fr | a stop draws its empty booth from the Trade post's own art, with its wanted ware; once a post stands on it and holds it, the post is drawn instead (Base's and v80's rule) |
+| E1100 | menu.js | one home for messages: a letter is filed in Mail (merged with the same letter of the last moments, the oldest dropped past the keep); say files what the world tells, note files what a tap or an order says back (N377) |

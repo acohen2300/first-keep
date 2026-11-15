@@ -5368,3 +5368,12 @@ Albert, Nov 15 05:46 (N372): "Can you do 9?" ("The trade routes need to comeback
 - Full suite on a frozen copy: 68 of 87, the same old failures as N53 less t-alarm, t-n24 and t-p2 (now passing); t-a1 failed once in the full run and passes alone (a frame-time check); t-n29 the same in the first run. The band opens a cross of land about 98 tiles wide through the middle.
 - ecs: gate PASS. Code: building art 51,208 → 50,959 bytes; terrain and non-movables grew (permit).
 NOT proven (his play owed): the look on his phone, the roads in play, the caravan's route through them.
+
+## N55: Support in army control; the message bar merged with Mail · 2026-11-15 07:58
+Albert, Nov 15 07:54: "1. Do it. 2 & 3. Kill it and merge with mail." (N376, N377)
+- Support: spy, medic and priest get the class Support (shells US1 to US3). They are the army now: All, Idle and squads pick them, they count against the army's room, and a picked one takes the soldier's taps (menu isSoldier asks WAR.troop). The order sends a priest to convert the enemy tapped, a spy to sabotage the building tapped, a medic where he is sent (he heals around him as before). The Class page keeps its four boxes: Support is not a fifth.
+- Mail: one home for messages. say files what the world tells; note files what a tap or an order answers (the old toast). Gone: the bar under the top bar, its timer and queue, the help line in every menu, the Help page. Books: comments E737 E826 E827 E846 E847 E939, measures toast/read/said, screen SN18, words help.title/go, stance.earlier, mail.quiet removed. Logged in Parked.md.
+- Tests: t-n55 (X125) passes and fails with N54's menu and shells. Old checks moved to the ruling: N18B's queue, N24's recall line, N16's "go" and P2's "Full" now read Mail.
+- Full suite on a frozen copy: 70 of 88, no new failure against N54 (t-a1 passes this time).
+- Code: menu.js 131,803 → 129,228 bytes; combat.js +7. ecs: gate PASS.
+NOT proven (his play owed): Mail as the only voice in play; support units in fights.

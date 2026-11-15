@@ -589,14 +589,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E181** the colours: the menus read every colour from the Colours book (C38 the menus' own, the ri · C38 (N336)
 - **E839** a font from the type rule: its weight and size, in the face named
 - **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287)
-- **E826** the help line under the top ribbon carries its words in a span and a white ring (Info Help
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E844** Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and
 - **E182** the glass's own state, nothing of the world's
-- **E827** a message's time on screen: the toast's least time plus its words at adult reading speed (
-- **E846** a message kept for the Help page, newest first, the same one twice in a row once
-- **E954** the blue info strip is read, not flashed (Albert, Nov 10, N17 #18): each line stays its re · N17
-- **E737** the help line under the top bar (Albert, Nov 8: one place the eyes always go): every messa
+- **E954** note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one  · N377
 - **E837** a help line wider than its bar shows the chevron; the chevron opens it to two lines and cl
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
@@ -655,7 +651,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E933** a site's card sends one more villager: the nearest idle, else the nearest worker, who goes
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
-- **E939** a message with a place shows Go on the blue info bar, at the top and in a menu's help line
 - **E838** the chevron's tap: open or close the help lines
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
 - **E1058** the villager Controller (Design 08 section 8, N333): a called villager (or a group of them · N333 · N371
@@ -677,7 +672,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech; its resea
 - **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
-- **E847** Help: the earlier messages, newest first; the latest stays in the help line beneath
 - **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
@@ -751,6 +745,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E637** how a line reaches you (QCH): in sight now; a fight in earshot by its way only; else by a  · QCH (N223)
 - **E707** while a tall sheet (the Start page) is open, messages wait in the post and come out when i
 - **E638** a line said: by messenger later, heard as a fight, or now; merged with its repeat, kept, s
+- **E1100** one home for messages: a letter is filed in Mail (merged with the same letter of the last  · N377
 - **E639** the messengers arrive
 - **E640** the world's news: a line of your age every while, none at first
 - **E641** the peoples on the Start card: the one you pick and its line (its own soldier, the one it 

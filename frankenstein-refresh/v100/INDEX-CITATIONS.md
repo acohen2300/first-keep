@@ -214,7 +214,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
 - **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D352, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D114, D115, D116, D120, D169, D170, D230, D343, D365
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
-- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D163, D164, P37
+- **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
 - **N116** Design: the juice pass of Nov 3 (Base: 2 px, 0.08 s) → D166
 - **N117** Standard gravity (standard) → D168
@@ -308,7 +308,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N205** Design: Mid's finds, wild guards, drifters, events and hazards (05-rules-wild.js FINDS, WAYFARER_EVERY, WILD_L → SC18, SC42, SC43, SC44, C18, D305, D306, D307, D308, D309, X64, MG1, MG2, MG4, MH1, MH3, MH4, MH5, MG7, MG8, MG9, MG10, MG11, MH7, PN1, J19
 - **N206** Design: Mid's fire and sickness (36-economy.js fireHeat, FIRE_SMOKE, ignite, strike, lightning, fireTick, sick → SC45, C18, D310, D311, X65, BTC5, BTC6, BTC7, BTC8, BR1, BCR1, BCR2, BCT2, BI1, BI2, BI5, BI8, BM1, BM2, BM3, BW2, BW4, BF5, O208, O209, O210, O211, O212, O213, O214, O215, O216, O217, O218, O219, O220, O221, O222, J20
 - **N207** Alsan, M. & Goldin, C. (2019) Watersheds in Child Mortality, J. Political Economy 127(2):586-638, doi:10.1086/ → O219, O220
-- **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, D349, D312, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN18, SN14, P45, J37, J39, J53
+- **N208** Design: Mid's view (08-core.js lookout, sightFx, sightClear, visCap, sightOf; 22-view-fog.js knownB, WOODS, wo → C19, C20, C21, D349, D312, D314, D315, D316, D317, D318, D319, D320, D321, X66, X67, SN14, P45, J37, J39, J53
 - **N209** Helland, T. (2012) How to Convert Temperature (K) to RGB: Algorithm and Sample Code, tannerhelland.com: All co → D318
 - **N210** NOAA/NCEP operational code CALVIS (rap.v5.1.20, rap_wrfpost.fd/CALVIS.f, nco.ncep.noaa.gov): vis = −ln(0.02)/β → QK, QCL, D229, X68
 - **N211** ITU-R P.840 liquid water content of fog, 0.05 g/m³ (AGI STK help, Rain Models / cloud and fog table, help.agi. → QCL, D229
@@ -383,9 +383,9 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N281** (to open) US Army FM 21-75, Combat Skills of the Soldier (1984), chapter 3, individual movement: the low crawl and the h → unused
 - **N282** Design: Albert, Nov 9 2026 08:28-09:08 (talk mode; docs/4 Now/Next build list.md items 4, 5 and 8): rain and s → C17, D229, D321
 - **N283** Design: Albert, Nov 9 2026 07:20-12:23 (docs/4 Now/Next build list.md items 1, 2, 3, 9, 11): the type rule, me → C28, C29, D321, SN1, SN20, SN21, SN31, SN27, SN35
-- **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, D356, SN32
+- **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, SN32
 - **N285** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the sea → SN20, SN32, SN27
-- **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → D357, SN33, J42
+- **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → SN33, J42
 - **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D359, D360, D361, D362, D363, X26, SN2, SN3, SN20, SN34, SN35, J43, J44, J46, J47
 - **N288** Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground op → unused
 - **N289** (to open) US Army FM 21-18, Foot Marches (1990), the rates of march by ground: cross-country and wooded ground far slowe → unused
@@ -470,6 +470,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N373** The Law of the Twelve Tables (about 450 BC), Table VII.6: "The width of a road ... shall be eight feet on a st → D379, X124
 - **N374** Statute of Winchester, 1285 (13 Edw. 1 St. 2), chapter 5, Breadth of Highways leading from one Market-Town to  → D379, X124
 - **N375** Albert, Nov 15, 2026, 07:05 to 07:18 (mocks, then "Go"): the trade stop is a trade booth: "Why not a trade boo → X124
+- **N376** Albert, Nov 15, 2026, 05:51 and 07:54: items 6 to 8 of his Nov 14 list ("We have to work on war control"; "tra → X125, US1, US2, US3
+- **N377** Albert, Nov 14, 2026, 22:05 (item 12): "The blue strip on top is crazy annoying and I want it gone." (item 13) → X125
 
 ## Named exceptions
 

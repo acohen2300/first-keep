@@ -305,3 +305,10 @@ His words: "I meant my villagers wouldn't die. I needed them gone. But killing t
 - 13: "okay": Mail becomes the one home of the messages and the match's chronicle. A menu: shaped together. [2026-11-15 05:52]
 - 9 (asked 05:55): how wide to clear the woods by a trade road: "Statute of Winchester" (1285, ch. 5: 200 feet each side, oaks and great trees spared, clear underneath). Shown that oaks, the commonest lowland tree, still cover the road: "Keep oaks". So the road can still be hidden under oak crowns in places; item 11's "find the stop" may need its own answer after he plays n54. [2026-11-15 06:05]
 - 10/11 the stop's look (07:05 to 07:17, talk; mocks only, no go yet): v100's stop is a faint sand ring (sprite book "stop"); Base and v80 drew a bazaar stall with guards (v80 preview/index.html:16679). His asks: a trade booth, not a post or stone; the empty one open and stocked (not shuttered), "busy"; the held one busier still with market things, more flags in the holder's colour, and torches like the other buildings at night. Claude's mock: same frame both states, plain canvas when empty, holder's stripes, bunting, three pennants, goods, scale, handcart, merchant and two torches when held; the Trade post stays hidden while the booth shows (v80's rule). Open: the go, and whether the stop's guards come back. [2026-11-15 07:18]
+
+## 17. Albert's calls, Nov 15 07:54 [2026-11-15 07:55]
+1. 6 to 8, the Support class in army control (spy, medic, priest): "Do it." BUILT in N55; t-n55 passes. [updated 2026-11-15 09:20]
+2. 12 and 13: "Kill it and merge with mail": BUILT in N55 (bar, menu help line and Help page gone; every message a letter in Mail); t-n55 passes. [updated 2026-11-15 09:20]
+3. Guards at the stops: "not at this time". Parked.
+4. The computers' runaway gold: "Will test when I play". Waits on his play.
+His words for the build: 12 core values; "Keep it together. Code tight and right. Lean and mean. Clean and Clear."

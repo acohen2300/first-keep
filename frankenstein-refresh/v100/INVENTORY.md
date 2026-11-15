@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,658 | 648,488 | 648,653 |
-| Books | 2583 | 0 | 847,455 | 848,425 |
+| Game code | 31 | 3,651 | 645,921 | 646,085 |
+| Books | 2577 | 0 | 847,381 | 848,349 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,349 | 393,407 | 393,668 |
+| Tools | 5 | 2,365 | 395,953 | 396,214 |
 
 ## The trades (code)
 
@@ -39,9 +39,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,225 | 10,229 | 54 |
-| menu.js | 611 | 131,744 | 131,803 | 439 |
+| menu.js | 604 | 129,170 | 129,228 | 435 |
 | econ.js | 627 | 119,227 | 119,227 | 70 |
-| combat.js | 378 | 64,691 | 64,691 | 83 |
+| combat.js | 378 | 64,698 | 64,698 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
 
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 57 | 17,364 |
-| citations | 369 | 104,294 |
+| citations | 371 | 105,701 |
 | colours | 34 | 10,273 |
-| comments | 1032 | 205,303 |
+| comments | 1027 | 204,334 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 344 | 203,218 |
-| rules | 121 | 49,113 |
-| screen | 28 | 17,341 |
-| shells | 111 | 24,043 |
+| measure | 341 | 202,488 |
+| rules | 122 | 49,489 |
+| screen | 27 | 17,133 |
+| shells | 111 | 24,127 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 69 | 40,135 |
 | tech | 260 | 76,080 |
-| words | 55 | 103,244 |
+| words | 55 | 103,149 |
 
 ## The shells
 
@@ -199,5 +199,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X122 | t-n52 | page | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks |
 | X123 | t-n53 | page | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too; Exit (one villager or the called group) kills through the one death path: gone from the board and the head count (N371) |
 | X124 | t-n54 | page | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) |
+| X125 | t-n55 | page | N55 (N376, N377): spy, medic and priest are the army (class Support): a picked priest tapped on an enemy goes to convert him, a spy on an enemy building goes to sabotage it, a medic goes where he is sent; no message bar: a message is a letter in Mail, and no menu carries a help line |
 
-2713 items sealed · 2583 book entries · 94 laws · 369 citations, 35 still to open · 0 known
+2707 items sealed · 2577 book entries · 94 laws · 371 citations, 35 still to open · 0 known

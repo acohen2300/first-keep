@@ -448,6 +448,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N373 |  | The Law of the Twelve Tables (about 450 BC), Table VII.6: \The width of a road ... shall be eight feet on a straight stretch, on a bend ...  | opened |
 | N374 |  | Statute of Winchester, 1285 (13 Edw. 1 St. 2), chapter 5, Breadth of Highways leading from one Market-Town to another: highways between mark | opened |
 | N375 |  | Albert, Nov 15, 2026, 07:05 to 07:18 (mocks, then \Go\): the trade stop is a trade booth: \Why not a trade booth? Those are far too basic\;  | opened |
+| N376 |  | Albert, Nov 15, 2026, 05:51 and 07:54: items 6 to 8 of his Nov 14 list (\We have to work on war control\; \trace who is still on the old war | opened |
+| N377 |  | Albert, Nov 14, 2026, 22:05 (item 12): \The blue strip on top is crazy annoying and I want it gone.\ (item 13): \The entire 'mail' concept n | opened |
 
 ## colours
 
@@ -573,7 +575,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E745 |  | the aurora: curtains of green and violet over the top of the glass, swaying unless motion is stilled |  |
 | E746 |  | an event with its own picture draws it over the map |  |
 | E747 |  | the mirage's dots on the small map, in the colour of what is coming |  |
-| E737 |  | the help line under the top bar (Albert, Nov 8: one place the eyes always go): every message lands there, gold while fresh (D.toast s) then  |  |
 | E736 |  | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |  |
 | E735 |  | the hammer carries the receding brown ring for every site going up (the mean of their progress; Albert, Nov 10, #21: the Build button is the |  |
 | E734 |  | a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job  |  |
@@ -1296,8 +1297,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E821 |  | one tap listener for the whole screen (Albert, Nov 9): every button with a verb answers wherever it sits; the pause panel lived outside the  |  |
 | E822 |  | the rate the frames run at, one home: at rest the idle rate, shedding frames the lower rate, otherwise the full rate; the loop paces by it a |  |
 | E825 |  | every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, and a tap opens Help; the same line under the top r |  |
-| E826 |  | the help line under the top ribbon carries its words in a span and a white ring (Info Help Ribbon 1), the ring receding over the time it tak |  |
-| E827 |  | a message's time on screen: the toast's least time plus its words at adult reading speed (Brysbaert 2019; Albert, Nov 9 12:12) |  |
 | E828 |  | the ring's marker inside a box: its colour and its state (dim not chosen, lit chosen, run at work) |  |
 | E829 |  | one colour a kind of work (Albert, Nov 9 12:03-12:19): the age-up white; soldiers red; scouts, envoys and spies blue; caravans gold; other p |  |
 | E830 |  | dim is the colour mixed into the tray brown by one share, never picked by hand |  |
@@ -1316,8 +1315,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E843 |  | Paused: the speeds and its help line; a tap on play plays again |  |
 | E844 |  | Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and shows it, a tap again hears and hides it |  |
 | E845 |  | the book: Welcome back mid-match (Resume, New game), paused |  |
-| E846 |  | a message kept for the Help page, newest first, the same one twice in a row once |  |
-| E847 |  | Help: the earlier messages, newest first; the latest stays in the help line beneath |  |
 | E848 |  | a small card's title: the title on its own row, back, book and close beneath it |  |
 | E849 |  | a group's label over its boxes, in small capitals across the whole row (as the v80 card) |  |
 | E850 |  | a ring is the box's outline: the box drops its own border so the ring sits on the edge, one line, never a second inside |  |
@@ -1391,7 +1388,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E936 |  | your soldiers leave a wild animal alone unless it is after one of yours or you sent them at it (Albert, Nov 10, #32) |  |
 | E937 |  | a beast that is not attacking your side is not a target for your soldiers |  |
 | E938 |  | Lanterns (research) make the door torches brighter: light falls off as the square of distance (E = I / r^2), so a torch seen as far reaches  |  |
-| E939 |  | a message with a place shows Go on the blue info bar, at the top and in a menu's help line; a tap there takes the camera to it and closes th |  |
 | E940 |  | a leafy crown takes a warm gloss on its sun side, painted only over its own leaves, baked once with the tree so it costs nothing a frame (Al |  |
 | E941 |  | the pop-up over the map holds one thing, the ice's Clear button. The quick action (a tap on open ground opening Attack, Build, Rally and the |  |
 | E943 |  | menus are not redrawn while a finger is down on a button (Albert, Nov 10, N17 #7: taps pressed but did nothing): a redraw replaced the butto |  |
@@ -1402,7 +1398,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E949 |  | a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall clock so game speed does not hurry it; the flame's hei |  |
 | E950 |  | campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work together at night a campfire is lit among them, and s |  |
 | E953 |  | a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS's audio interrupted and a resume that fails stays |  |
-| E954 |  | the blue info strip is read, not flashed (Albert, Nov 10, N17 #18): each line stays its reading time (D read: the least time plus its words  |  |
+| E954 |  | note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one (N377) |  |
 | E955 |  | the base and the rank row are drawn once a render and that one drawing is both compared and shown (Albert, Nov 10, N17 #11: People's ring di |  |
 | E956 |  | a soldier trained while a rally flag stands joins the ones already marching to it or holding it, and they are dressed into one formation the |  |
 | E957 |  | a sprite is cached at the next size up the √2 ladder, never the one below: drawn smaller it stays sharp, drawn larger it went soft and block |  |
@@ -1524,6 +1520,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1097 |  | the trees are set: a tree inside a trade road's cleared band is felled unless its kind is spared (the oak), as the Statute of Winchester ord |  |
 | E1098 |  | the trade booth, one frame in two states: the stop's empty booth (plain canvas, its wanted ware on the sign and the counter, stock around it |  |
 | E1099 |  | a stop draws its empty booth from the Trade post's own art, with its wanted ware; once a post stands on it and holds it, the post is drawn i |  |
+| E1100 |  | one home for messages: a letter is filed in Mail (merged with the same letter of the last moments, the oldest dropped past the keep); say fi |  |
 
 ## ground
 
@@ -1714,7 +1711,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D152 | a home goes up when fewer than this many places are left (Mid's think: the people and the queue within two of the room) | 2 | N202 |
 | D157 | villagers sent to a site | 2 | N114 |
 | D162 | the glass redraws every | 0.25 | N114 |
-| D163 | a reason stays | 2.5 | N114 |
 | D164 | what is drawn once and kept, at the phone's own pixels: sprites kept to a budget of pixels (the woods are one sliding picture since Nov 10, like the land), the oldest dropped first (the ground is one picture at every zoom, as Base, Mid and v80 drew it: Albert, Nov 10 07:54, the chunks cut) (an iPhone page is closed when its canvases pass a few hundred MB: Albert, Nov 8 08:04, the map fuzzy on the phone) | {sprites: 16000000} | N114; N254; N255 |
 | D165 | the camera by a person's height on the glass: the game opens with a villager px tall (20 since Nov 9 19:21: further out, as v80, where the town, the trees, the bushes and the gold show on one screen; was 40), and comes no closer than most px; the screen's size of the people comes from the person, not from a building (Albert, Nov 8 13:08; was the Town Center at 0.3 of the width, a villager 12 px, and a closest zoom typed as 6) | {px: 20, most: 60} | N115; N287 |
 | D166 | the screen jolt: pixels a m/s the struck one is sent, at most, for, and from what speed | {px: 1, max: 3, s: 0.08, from: 1.5} | N116 |
@@ -1897,8 +1893,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D353 | the ground's soil and flowers (N11, Nov 10: the meadow's picture cut for the paper sheets): seed, the relief and its octaves, the wetness index (TWI: where water gathers, Beven & Kirkby 1979, N268) and the snow's drift into hollows (lognormal, cv), both for play; slope light (lit); the flowers' bloom windows and clumps; opaque is a full byte | {lit: 0.03, seed: 37, opaque: 255, octaves: [[0.03, 1], [0.07, 0.5], [0.15, 0.25], [0.33, 0.125], [0.7, 0.0625]], jitter: [0.6, 0.8], relief | N299; N264; N265; N266; N267; N268; N269; N270; N287 |
 | D354 | exposure to the weather (Albert, Nov 8 18:39-18:41): a side's share, 0 to 1, is its cold (the air under cold °C, full span °C lower) × its cold cut (Wool cloaks) plus its wet (the ground's wetness) × its wet cut (Oiled cloaks), the whole × its chill cut (Chimneys); everyone eats (1 + ration × exposure) × their meals (the US Army's cold-weather ration, 4,500 against 3,250 kcal a day, N275), the town's cases from outside are × (1 + sick × exposure) (cold and wet raise respiratory infection, N276), and a soldier's nerve settles no higher than full × (1 − nerve × exposure) (cold and wet sap morale, N277); research compounds and never takes it to nothing (QCA) | {cold: 10, span: 20, ration: 0.4, sick: 1, nerve: 0.3} | N275; N276; N277 |
 | D355 | familiarity with the ground (Albert, Nov 8 18:20: the outsider pays, the defender does not; it replaces D-085's road rule): a side knows a cell of cell tiles while one of its eyes (a unit or a finished building) has stood in it, the memory fading as e^(−time ÷ tau) (Ebbinghaus's forgetting, N278); its own ground, within home tiles of a finished building of its own, it always knows; the Natives and the wild know the whole map. A soldier's pace is × (1 − pace × (1 − its familiarity)) (cross-country against road, FM 21-18, N279) and its blows × (1 − fight × (1 − familiarity)); Local guides cut the penalty (guides); scouting ahead is how an army learns the ground, at the risk of the scout being seen | {cell: 8, tau: 600, home: 10, pace: 0.4, fight: 0.3} | N278; N279; N280 |
-| D356 | reading time for a message: the toast's least time (D toast) plus its words at wpm words a minute (min seconds a minute): adults' silent reading (Albert, Nov 9 12:12) | {wpm: 238, min: 60} | N284 |
-| D357 | the Help page: the last keep messages, newest first, the latest one left to the help line beneath (Albert, Nov 9: the Help page lists earlier messages) | {keep: 20} | N286 |
 | D359 | a game starts this share of a season into spring, when the grass has greened (the meadow's green rises from 0.45 of a season: D353 green up): late spring, about May in the north (Albert, Nov 9 19:21, 19:48: start in a greener month) | 0.75 | N287 |
 | D360 | (fell: a Pioneer fells every tree within lane of itself as it goes, a lane an engine can follow; a felled tree is drawn low times its size, lying where it stood, and keeps its wood: Albert, Nov 14, N367) (box: how far a woods chunk's picture reaches past its ground to each side, up and down, in view units, so the tallest and widest tree (216 up, 117 across, measured Nov 10) is never cut at a chunk's edge; cover, side: every untouched tree is drawn once into the woods' cached picture; a tree is drawn again, live, over a person only when it stands in front of him, looked for cover tiles ahead of him and side tiles to each side (Albert, Nov 10 21:08-21:10: still things are not redrawn, only the trees being cut and the things a person stands behind); Albert, Nov 10 20:03-20:06: no silhouettes: a person of yours hidden under the canopy or behind a tree or building shows only a ring, dashed (hidden, as a hidden edge is drawn dashed), thick times the foot ring's line, in his side's colour; an idle villager's ring glows and dims over pulse s, down to low, since he is the one asking to be found) (ring: your own people under the canopy drawn as a ring ring view units wide over the trees: Albert, Nov 9, seeing who is inside) the woods walkable at a cost (Albert, Nov 9 18:33, 19:59: the ice's crossing modes, real math for walking and fighting): who may enter, by what carries them (a person, a rider; engines, wagons and beasts never); eta the Pandolf terrain factor for heavy brush (Soule and Goldman 1972: 1.5), so the pace falls by the same physics as mud and snow; walk a horse's walk in m/s (about 6 km/h: low boughs keep a rider to it); stems a square metre and trunk the trunk's width in m (about 500 a hectare, 0.3 m), so an arrow or shot through L metres of wood is stopped with chance 1 - e^(-stems x trunk x L); edge the crossing's stick-to-edges weight a tile of woods by how deep in it is | {enter: {person: 1, horse: 1}, fell: {lane: 30, low: 0.5}, eta: 1.5, walk: 1.7, stems: 0.05, trunk: 0.3, edge: 4, ring: 3, thick: 2, dash: [ | N367; N292; N294; N287 |
 | D361 | (in or under woods an eye looks between the trunks: a ray goes on while the chance a line is still clear, e^(-stems x trunk x metres of wood, D360), stays above see, about 45 m; from above the canopy the wood is a wall (Albert, Nov 9 20:17: villagers in trees can’t really see); sight in cells of cell × cell tiles, 5 m; each eye sends rays × π × reach rays, so neighbouring rays meet at the rim; a ray marks each cell whose ground, a body high, rises above the steepest top before it, and stops at a wall: ground steeper than the tops by wall; an eye whose rim, rim points round it, is all seen by others casts nothing (Albert, Nov 9 20:12-20:13: you see until the first thing that blocks; only the eyes facing the fog see)) the fog of war's veil over the map (Albert, Nov 9 item 6; StarCraft's three states, N290): ground never seen under dark, ground seen before under seen, ground in sight clear; the veil drawn a pixel a tile and smoothed, so its edge is soft and units fade in and out at the edge of sight | {dark: 0.88, seen: 0.5, cell: 4, rays: 2, rim: 16, wall: 0, see: 0.5} | N290; N287 |
@@ -2044,6 +2038,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X122 | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks | {stage: page} | N369 |
 | X123 | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too; Exit (one villager or the called group) kills through the one death path: gone from the board and the head count (N371) | {stage: page} | N370; N371 |
 | X124 | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) | {stage: page} | N372; N373; N374; N375 |
+| X125 | N55 (N376, N377): spy, medic and priest are the army (class Support): a picked priest tapped on an enemy goes to convert him, a spy on an enemy building goes to sabotage it, a medic goes where he is sent; no message bar: a message is a letter in Mail, and no menu carries a help line | {stage: page} | N376; N377 |
 
 ## screen
 
@@ -2059,7 +2054,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | N140 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | N141 |
 | SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | N142; N143 |
-| SN18 | the help card: a tap on the help line opens what it said in full (Albert, Nov 8 18:57) | {ticks: [], rows: title; the help line's full text} | N208 |
 | SN17 | the ice card: an order over ice asks how to cross (the game keeps running; they wait at the shore) | {ticks: [], rows: title; how thick the ice on the way is and what it holds; the six ways to cross; remember this winter or this game} | N263 |
 | SN16 | the Mail card, as Base (the Nov 7 re-read, item 13) | {ticks: [Tall], rows: title, the messages newest first, each with its group; a tap on one with a place goes there} | N241 |
 | SN15 | the Welcome back card, as Base: a saved game opens paused behind it; the pause itself has no page (the speeds, New game and the volumes drop under the pause button; Paused · tap to carry on; Albert, Nov 7 20:48: all Base) | {ticks: [Tall], rows: title Welcome back, Resume, New game} | N241 |
@@ -2162,9 +2156,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | UM14 | Bombard | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
 | UM15 | Ballista | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
 | UM16 | Trebuchet | [Walk, Fight, Shoot, Health] | N144; N170; N176 |
-| US1 | Priest | [Walk, Health, Convert] | N144; N170; N194 |
-| US2 | Medic | [Walk, Health, Heal] | N144; N170; N194 |
-| US3 | Spy | [Walk, Health, Spy] | N144; N170; N194 |
+| US1 | Priest | [Walk, Health, Convert] | N144; N170; N194; N376 |
+| US2 | Medic | [Walk, Health, Heal] | N144; N170; N194; N376 |
+| US3 | Spy | [Walk, Health, Spy] | N144; N170; N194; N376 |
 | US4 | Scout | [Walk, Fight, Scout, Health] | N144; N170 |
 | US5 | Envoy | [Walk, Envoy, Health] | N144; N198 |
 | UT1 | Caravan | [Walk, Carry, Trade, Health] | N144; N170; N195 |
@@ -2648,7 +2642,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J49 | the Stores and Score cards (Base's, Albert's screenshots Nov 11); (N30) key ledger renamed stores: two entries shared the key ledger and this one silently hid J1, so the Stores card's in and out lines lost their words (Parked N26) | {stores: Stores, last: the last minute, cols: [Have, In, Out, On it], storesSay: In: gathered and brought home in the last minute. Out: what | N322 |
 | J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked, charge: Charge, fallBack: Fall back, hold: Hold, recall: Recall, hunt: Hunt, said: {charge: {n} charging., fallBack: {n | N241 |
 | J32 | the Pause screen's words: its title, the pause mark on the top bar (SoRen's), New game and its confirm (Albert, Nov 7: New game on the pause screen, with a confirm) | {title: Paused, mark: ❙❙, newGame: New game, sure: Sure? Tap again} | N241 |
-| J39 | the help line under the top bar (Albert, Nov 8 18:57, 20:49: one place the eyes go; quiet-looking; a research tells what it does on the first tap and is bought on the second); its card's title; the words for a step with no number to show | {go: Go ›, title: Help, arm: {name}: {what} · {cost}. Tap again to research., done: {name}: {what}., rank: a new rank, tier: a taller tower, | N208 |
+| J39 | the help line under the top bar (Albert, Nov 8 18:57, 20:49: one place the eyes go; quiet-looking; a research tells what it does on the first tap and is bought on the second); its card's title; the words for a step with no number to show | {arm: {name}: {what} · {cost}. Tap again to research., done: {name}: {what}., rank: a new rank, tier: a taller tower, opens: opens the next  | N208 |
 | J40 | each number research moves (the O book's fx s), in words, and the family that tints it (C26): economy, speed, health, war, sight, other | {rate: [gathering, economy], make: [making, economy], scale: [yield per plot, economy], sell: [sale price, economy], trade: [trade, economy] | N160 |
 | J42 | N5 words: the stances of Relations and Misfits (a name, then four), the Paused and Sound cards' help lines, the book with no game, the Help page empty (Albert, Nov 9 12:57-13:25) | {sets: {Relations: [gift, war, terms, ally], Misfits: [bribe, war, terms, ally]}, labels: {gift: Gift, bribe: Bribe, war: War, terms: Terms, | N286 |
 | J43 | N6 words: a card's group labels (as the v80 card) and Welcome back's help line (Albert, Nov 9 19:37); Show tech, the switch on a building's research row (Albert, Nov 14, N369) | {train: Train, research: Research, welcome: Resume where you left off, or start a New game., allTech: Show tech} | N287; N369 |

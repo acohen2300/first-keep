@@ -793,3 +793,5 @@ All of these are built and kept on branch `n29-the-list` (N42 `aaf4b19`, N43 `ae
 - The "All tech / Later" dead box: replaced by Show tech. The whole tree on one screen is still not built. [2026-11-14 18:30]
 - Not done, for his word: a look for a step locked behind another (today dim blue, like one he cannot afford); queued and available are both lit blue (he tests first). [2026-11-14 18:30]
 
+- Stop guards (v80 had bandits at each trade stop): Albert, Nov 15 07:54: "not at this time".
+- Cut in N55 (Albert, Nov 15 07:54, "Kill it and merge with mail"): the message bar under the top bar (#toast, its read-time timer D toast/read, its queue), the help line inside every menu that repeated it, and the Help page (a second list of the same messages, D said). Their messages are letters in Mail. The help line stays on the new-game (Start) and Back cards only, where it carries the civ line and the welcome.
