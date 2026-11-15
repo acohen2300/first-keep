@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,671 | 652,113 | 652,278 |
-| Books | 2573 | 0 | 830,499 | 831,472 |
+| Game code | 31 | 3,658 | 647,570 | 647,735 |
+| Books | 2569 | 0 | 834,835 | 835,804 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,317 | 380,934 | 381,195 |
+| Tools | 5 | 2,318 | 388,386 | 388,647 |
 
 ## The trades (code)
 
@@ -20,7 +20,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 1,972 | 1,976 | 38 |
 | index.html#floor-2-terrain | 91 | 11,279 | 11,283 | 115 |
-| index.html#floor-3-non-movables | 75 | 12,174 | 12,178 | 54 |
+| index.html#floor-3-non-movables | 75 | 12,213 | 12,217 | 54 |
 | index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
@@ -39,10 +39,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
 | index.html#touch | 54 | 10,181 | 10,185 | 54 |
-| menu.js | 625 | 136,515 | 136,574 | 441 |
-| econ.js | 626 | 118,856 | 118,856 | 70 |
-| combat.js | 378 | 64,717 | 64,717 | 83 |
-| ai.js | 172 | 27,513 | 27,513 | 25 |
+| menu.js | 611 | 131,724 | 131,783 | 439 |
+| econ.js | 627 | 119,085 | 119,085 | 70 |
+| combat.js | 378 | 64,691 | 64,691 | 83 |
+| ai.js | 172 | 27,519 | 27,519 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
 
 ## The books
@@ -50,21 +50,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 56 | 16,972 |
-| citations | 362 | 98,955 |
-| colours | 34 | 10,345 |
-| comments | 1031 | 202,351 |
+| capabilities | 57 | 17,364 |
+| citations | 363 | 100,988 |
+| colours | 34 | 10,273 |
+| comments | 1027 | 203,712 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 344 | 201,755 |
-| rules | 118 | 47,220 |
-| screen | 28 | 17,478 |
-| shells | 111 | 23,935 |
+| measure | 343 | 202,199 |
+| rules | 119 | 48,192 |
+| screen | 28 | 17,341 |
+| shells | 111 | 24,043 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
-| sprites | 70 | 35,550 |
+| sprites | 69 | 35,082 |
 | tech | 260 | 76,080 |
-| words | 56 | 103,468 |
+| words | 55 | 103,104 |
 
 ## The shells
 
@@ -156,10 +156,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X78 | t-n17 | page | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the twelve repeatable buildings; every locked research says why on its button; a tap held a second on Train still trains |
 | X79 | t-ground | page | the paper ground (N11-N14): on the opening view, open water well below the land is drawn blue and open land well above it green, nine in ten points or more, away from shores, finds and trees |
 | X80 | t-n15 | page | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark |
-| X81 | t-n16 | page | N16, the quick action: open ground gives Attack, Build, Rally; Attack gives All, half, quarter and Squad; Build gives the six groups; a message with a place shows Go on a menu's help line |
+| X81 | t-n16 | page | N16: a message with a place shows Go on a menu's help line (its quick action checks went with the quick action, N52: t-n52 holds that a tap on open ground opens nothing) |
 | X82 | t-n18 | page | N18 build 1, Albert's N17 notes on the menus: a pill keeps its curved ends; the selected ring lies on the pill's own outline, its ends on the pill's corners; row titles 14/600, options 12/400; a hazard's ring is the options' white; with Daily on a locked option is flat and dark with no ring; the paused Play button wears the ring at its own size; the Paused card hangs below the Top Info Ribbon; the quick action's ring is its box's size; the tap that opens the quick action does not press the box under the finger |
 | X83 | t-n18b | page | N18 build 2, Albert's N17 notes: People's ring recedes while a villager trains; a line said while another shows waits its turn; soldiers trained while a rally flag stands are dressed into one formation there; at night a campfire burns by a drop-off where villagers work and the army's standard carries a torch; no figure is clipped by its box (the horse's head); three blade tiles; a rock's sprite is cached at or above its size; a person behind a building shows through it |
-| X84 | t-n18c | page | N18 build 3: the quick action's aim step is one box above the aimer; a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
+| X84 | t-n18c | page | N18 build 3 (the quick action's aim step went with the quick action, N52): a steady pinch over a second and a half draws the land sheet afresh at most three times (it is stretched between) and once more when the zoom stands still |
 | X85 | t-n19 | page | N19: a day is 240 s, a season 360 s, a person eats 3.75 food a minute as before; the played land is 306 tiles a side |
 | X86 | t-n20 | page | N20: ten swordsmen a side hold until two or more of a side have fallen and fight on to an end; the top row is one row of nine; three times the trees; storms from 0.6 |
 | X87 | t-n21 | page | N21 speed: over a third of the trees are drawn from the woods' cache; a paused, still screen is not redrawn; asking for a picture twice in a frame draws it once |
@@ -196,5 +196,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X119 | t-n49 | page | N49 (N366): the mine shaft: before Blasting a Mining camp is only a drop-off; after it, the camp is a post that yields gold: a villager tapped onto it works there and gold comes into the stores with no carrying, its stock falling; emptied, it can be sunk again for its price's share and is full |
 | X120 | t-n50 | page | N50 (N367): the Pioneer: locked until Pioneer corps is learned; it may enter the woods where a Ram may not; standing still it fells nothing; moving, it fells the trees in its lane: a felled tree is still there with all its wood, is no longer woods, and lets a Ram through; a villager tapped onto it gathers it; trees out of its lane stand |
 | X121 | t-n51 | page | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) |
+| X122 | t-n52 | page | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks |
 
-2703 items sealed · 2573 book entries · 94 laws · 362 citations, 34 still to open · 0 known
+2699 items sealed · 2569 book entries · 94 laws · 363 citations, 35 still to open · 0 known

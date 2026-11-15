@@ -786,3 +786,10 @@ All of these are built and kept on branch `n29-the-list` (N42 `aaf4b19`, N43 `ae
 - For later: N42's loaded carrier outranks an empty walker (D377 `laden`); N42's bigger fires and two torches on every building, N43's door lantern (D316, D317, N352); N43's new game card, flame shadows, winter heads-up, the Gift button's removal; N44's top bar red, the Controller's order line and button names, the specials' cards; N45, the shell pass slice one (asks by name 309 to 149).
 - With the research hint in and N44's ellipsis out, a long hint may show cut at the ends (known, part of his inspection).
 
+## Cut in N52 (Albert, Nov 14 16:45 to 17:56) [2026-11-14 18:30]
+- The quick action, whole (his word: "That needs to be gone"): a tap on open ground opening Attack (All, ½, ¼, Squad, then the aimer), Build (the six groups, then the buildings, placed at the tapped spot) and Rally (then the aimer). Its code is in N51 (`cb8d9dd`, menu.js: the verbs qstep, qsend, qsquad, qaim, qgroup, qbuild, qrally, qvil; `#qa.sq`; the aimer P49; the words J45; the shares D358). [2026-11-14 18:30]
+- OPEN, his: Rally's home. Setting the rally point from the map is gone with the quick action; the war page's Rally stays. He said it is part of a large change tonight. [2026-11-14 18:30]
+- The research rings by family (green economy and health, red war, blue speed and sight, brown for a building's): cut for "all tech blue" (C27 family, N51). The family word is still in the Words book's effects, unused by code. [2026-11-14 18:30]
+- The "All tech / Later" dead box: replaced by Show tech. The whole tree on one screen is still not built. [2026-11-14 18:30]
+- Not done, for his word: a look for a step locked behind another (today dim blue, like one he cannot afford); queued and available are both lit blue (he tests first). [2026-11-14 18:30]
+

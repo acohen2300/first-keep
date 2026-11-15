@@ -386,8 +386,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N284** (to open) Design: Albert, Nov 9 2026 12:03-12:19 (Next build list item 12): the progress ring and the colour map; Brysba → C27, D356, SN32
 - **N285** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13): menus all solid, no glass; one card, the sea → SN20, SN32, SN27
 - **N286** Design: Albert, Nov 9 2026 12:57-13:27 (Next build list item 13, N5): New game one line each, the World row go → D357, SN33, J42
-- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D358, D359, D360, D361, D362, D363, X26, SN2, SN3, SN20, SN34, SN35, J43, J44, J45, J46, J47
-- **N288** Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground op → D358, J45
+- **N287** Design: Albert, Nov 9 2026 18:09-19:37 (Next build list item 14 and the OPEN list, N6): his play notes; the v8 → W27, D165, D320, D353, D359, D360, D361, D362, D363, X26, SN2, SN3, SN20, SN34, SN35, J43, J44, J46, J47
+- **N288** Design: First Keep v80, Build 40 and 44 (the root index.html, showStrip and sendPick): a tap on open ground op → unused
 - **N289** (to open) US Army FM 21-18, Foot Marches (1990), the rates of march by ground: cross-country and wooded ground far slowe → unused
 - **N290** (to open) Bergström, B., FOV using recursive shadowcasting (RogueBasin, 2001) and StarCraft II's fog of war (Blizzard, 2 → C31, D361
 - **N291** (to open) Roach, W. T., Back to basics: Fog (Weather, 1994-95): radiation fog is a shallow layer over the ground, common → D362
@@ -414,7 +414,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N312** Proxemics (Psychology Wiki, Fandom), after Edward T. Hall (1963; The Hidden Dimension, 1966): intimate 15-45 c → D317
 - **N313** Albert, Nov 10, 2026, 14:47-15:07 (notebook page N17, his N18 list) and 15:32 "Go": build 1 of N18, the menus: → X82
 - **N314** Albert, Nov 10, 2026, 14:47-15:30 (his N17 notebook page and the fire talk: a big bright campfire by a drop-of → X83
-- **N315** Albert, Nov 10, 2026, 16:54 "Sure" on build 3 of N18 and 16:55 "A is fine for now" (the aimer mock): #15 a pla → X84, P49
+- **N315** Albert, Nov 10, 2026, 16:54 "Sure" on build 3 of N18 and 16:55 "A is fine for now" (the aimer mock): #15 a pla → X84
 - **N316** Albert, Nov 10, 2026, 18:16-18:22: days move too fast, the map too small (a: enemies too close), the day doubl → X85
 - **N317** Albert, Nov 10, 2026, 18:23 (a lot more trees), 18:27 (the two top rows in the footprint of one), 18:55 ("Go f → X86
 - **N318** Albert, Nov 10, 2026, 18:56-18:59 (the game too slow on his phone; the most expensive things on a frame) and 1 → X87
@@ -463,6 +463,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N366** Albert, Nov 14, 2026, 09:52: "to solve late game gold… when we hit gun powder age how about gold mining? ... y → SC51, X119, O31
 - **N367** Albert, Nov 14, 2026, 10:16: "figure out a way to build a unit, maybe in the siege workshop that cuts down tre → SC52, D286, D360, X120, UM23, O262
 - **N368** Albert, Nov 11, 2026 (N24): an order means go where he taps, period. Nov 14, 2026, 16:09, after a 121-minute g → X121
+- **N369** (to open) Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then "Go build"): the new game's option rings a → SC53, C27, C34, D62, D206, D241, D340, X81, X122, SN32, J43
 
 ## Named exceptions
 

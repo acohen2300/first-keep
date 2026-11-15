@@ -80,7 +80,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E40** Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each st
 - **E41** the finds (layer 100), from their shells: kind → code, yield, amount, the ground kept clea
-- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N322, N256, N242, N304, N340) · D63 (N228, N242) · D65 (N228, N231, N242, N304)
+- **E42** QBJ the pocket's store, one age up calculated (D62: the age's price, the villagers and the · D62 (N322, N256, N242, N304, N340, N369) · D63 (N228, N242) · D65 (N228, N231, N242, N304)
 - **E711** the pocket as Mid's (QCS): zone 1's need from the age's price and the first villagers and  · QCS (N242)
 - **E43** what stands on each tile, and the shells themselves
 - **E709** the buildings as their own list, a derived index of things rebuilt only when things change
@@ -88,9 +88,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E44** the free tile nearest a spot
 - **E45** a shell on a tile; its stand wanders within the tile by D82 on the dice, so no wood is a g · D82 (N112)
 - **E46** the n free tiles nearest a spot: a grove (marked as woods, the trees follow) or a berry pa
-- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112, N258, N304) · D65 (N228, N231, N242, N304) · QBF (N65)
+- **E47** The home finds: Who every corner · What the pocket's berries, grove, gold and stone at D70 · D70 (N112, N258, N304) · D62 (N322, N256, N242, N304, N340, N369) · N369 · D65 (N228, N231, N242, N304) · QBF (N65)
 - **E653** Z3, laid by the Randomizer: each find of D65 at three pockets' worth, and the land's speci · D65 (N228, N231, N242, N304)
-- **E1087** a rich clearing's deposits (N362): what the home pocket holds, without the trees (berries, · N362 · D62 (N322, N256, N242, N304, N340)
+- **E1087** a rich clearing's deposits (N362): what the home pocket holds, without the trees (berries, · N362 · D62 (N322, N256, N242, N304, N340, N369)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
@@ -176,7 +176,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E684** the work queue: slow jobs, each a generator that yields where it may stop; one job of a ke
 - **E685** a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, no · D339 (N236, N237) · QCR (N237)
 - **E67** a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's · D182 (N122) · D184 (N122) · D98 (N112)
-- **E695** at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, · D340 (N238)
+- **E695** at rest (paused, a full-screen page, the end) the world draws D340's idle frames a second, · D340 (N238, N369)
 - **E715** the loop as Mid's (41-boot frame): the world steps at a fixed rate (D343) however the fram · D343 (N112)
 - **E998** shedding (fewer drops, then 30 fps, then a lower resolution) is timed on the drawing alone
 - **E655** The save and the safety net (Mid's 34-save and 41-boot): the game saves itself on the save
@@ -600,21 +600,21 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E276** a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; 
 - **E815** what a research does, in words from its effects; with no effects, why it is there
 - **E828** the ring's marker inside a box: its colour and its state (dim not chosen, lit chosen, run 
-- **E829** one colour a kind of work (Albert, Nov 9 12:03-12:19): the age-up white; soldiers red; sco
+- **E829** one colour a kind of work (Albert, Nov 9 12:03-12:19): the age-up white; soldiers red; sco · N369
 - **E830** dim is the colour mixed into the tray brown by one share, never picked by hand
 - **E831** the box's outline as one path from 12 o'clock, clockwise, round its corners
-- **E832** each ring drawn once its box has a size, and again only when its size, colour or state cha
+- **E832** each ring drawn once its box has a size, and again only when its size, colour or state cha · N369
 - **E850** a ring is the box's outline: the box drops its own border so the ring sits on the edge, on
 - **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
 - **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
-- **E926** a price is one line in one colour, by the store you are shortest of: red at nothing, white · N24
+- **E926** a price is one line in one colour, by the store you are shortest of: red at nothing, white · C34 (N308, N307, N369) · N369
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
 - **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
 - **E1038** the tap table (SN43, Albert Nov 12 08:12-08:15): with something picked, the next tap is it · SN43 (N326)
 - **E1060** Jobs fine-tunes the next tap (Albert: "the village control is meant to fine tune"): with H
 - **E1052** the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldie
-- **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · E1048
+- **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · E1048 · N369
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
@@ -641,13 +641,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
 - **E1025** no food for a villager: the People icon wears the cannot-afford fade, red at nothing to wh
 - **E191** tap a yield: new villagers go there (the ring)
-- **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17
+- **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
+- **E1093** Show tech (Albert, Nov 14, N369): one switch for every card; off, a card lists only the re · N369
 - **E192** tap picks, slide places the ghost, tap again builds
 - **E854** made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm · SN34 (N287)
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
-- **E857** the quick action: a tap on open ground opens a square of four, the first under the finger 
-- **E858** a share of the army sent to the spot: all, half or a quarter, nearest first, or the idle o
-- **E859** Build from the quick action: the Build menu opens on its first tab, the building's ghost s
 - **E932** tap a queued slot to cancel it, refunded (Albert, Nov 10, #29)
 - **E933** a site's card sends one more villager: the nearest idle, else the nearest worker, who goes
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
@@ -665,15 +663,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
-- **E942** the quick action's steps that open another step, so the block stays open after them
-- **E860** the square laid with its first box under the finger, held inside the screen
 - **E849** a group's label over its boxes, in small capitals across the whole row (as the v80 card)
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
-- **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech
+- **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech; its resea
 - **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E847** Help: the earlier messages, newest first; the latest stays in the help line beneath
@@ -683,7 +679,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
 - **E358** a pasture's card counts its sheep
 - **E1028** every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill shou · E333
-- **E738** a building's research on its card: the next step of each of its lines, as Base's card (the
+- **E738** a building's research on its card: the next step of each of its lines, as Base's card (the · N369
 - **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
 - **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
@@ -708,7 +704,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E955** the base and the rank row are drawn once a render and that one drawing is both compared an · N17
 - **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
 - **E843** Paused: the speeds and its help line; a tap on play plays again
-- **E941** the quick action (Albert, Nov 10, #37, his sketches): tap open ground for a block of Attac
+- **E941** the pop-up over the map holds one thing, the ice's Clear button. The quick action (a tap o · N369
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E872** the Start page's Fog of war: off, every side sees all (one rule for all)
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager
@@ -725,7 +721,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
 - **E339** while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the T
 - **E340** the ghost: a wall's tiles green or red with its corners, the first ringed green; a buildin
-- **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
+- **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168, N369)
 - **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
@@ -742,7 +738,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E430** the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green 
 - **E431** the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picki
 - **E997** a book over each of your finished, idle buildings with research you can start now, looked 
-- **E969** the quick action's aimer: on the aim step a plain white ring with four ticks and a dot sit
 - **E432** the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line,  · N29 · E1 · E2
 - **E359** the town is told what food, the seasons and the flock do, in the Words book's news
 - **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
@@ -784,7 +779,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
-- **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168)
+- **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168, N369)
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
 - **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t
@@ -802,7 +797,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E851** what a side cannot build yet (age, research, a building it needs, a later age): the locks 
 - **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198)
 - **E1068** by water (N341): any water or marsh tile within r tiles of a footprint; a Shore building n · N341
-- **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · E686
+- **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · N369 · N52
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
 - **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
 - **E816** where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on
@@ -814,7 +809,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195, N198, N225) · D129 (N160)
 - **E931** any queued item can be taken out, not only the last, and is paid back in full; taking out 
 - **E956** a soldier trained while a rally flag stands joins the ones already marching to it or holdi · N17 · N13
-- **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle (
+- **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle o · N369
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
 - **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
@@ -834,6 +829,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E321** a new site gets the nearest free villager; with none free, your nearest worker is pulled o
 - **E945** first placed, first built (Albert, Nov 10, N17 #4; AoE2's build queue): a site placed with · N17
 - **E1027** Focus (Decisions Nov 11, #17; Design 08, Nov 12): a villager is focused only when her Atte · E1053
+- **E1094** the side's builder: a villager raising (or walking to raise) a building that is not a wall · E945
 - **E322** back to the very find it left if it still stands, else the best of its yield, else idle (M
 - **E323** the next site for a builder done: a wall piece close by, else a site nobody raises (Mid's 
 - **E861** a builder's next site: the first one laid, then the nearest (a wall line keeps to the near
@@ -1001,7 +997,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E407** the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, 
 - **E806** an order leaves its soldiers tired as a charge does (D247 slow, settling back with tired): · D247 (N190)
 - **E393** time to contact: a soldier in a drill fights where it stands when the nearest foe would re · D242 (N188, N273)
-- **E394** idle soldiers form up at the building that trained them, one block per squad, else one blo
+- **E394** idle soldiers form up at the building that trained them, one block per squad, else one blo · D241 (N188, N369) · N369
 - **E239** a soldier's nerve (QAI): at rest it settles back (QP), faster by its own wall or tower; ou · QAI (N76, N188) · QP (N16) · QAO (N45)
 - **E809** a soldier's nerve settles no higher than its full × (1 − D354 nerve × its side's exposure) · D354 (N275, N276, N277)
 - **E970** a soldier whose rout has run its time comes back to the fight: he turns on the nearest foe

@@ -14,7 +14,7 @@ const dist = FK.dist, tick = (c, k) => FK.has({ code: c }, k), kindOf = (k) => O
 let DF;
 // E245
 function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);
-  for (let r = rmin; r < rmax; r++) for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i += j === cj - r || j === cj + r ? 1 : 2 * r) if (ECON.canPlace(code, i, j, side, true)) return [i, j]; return null; }
+  for (let r = rmin; r < rmax; r++) for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i += j === cj - r || j === cj + r ? 1 : 2 * r) if (ECON.canPlace(code, i, j, side, true, true)) return [i, j]; return null; }
 function raise(side, code, bx, by, rmin, rmax) { if (!ECON.canPay(side, D.cost[code] || {}) || ECON.capWhy(side, code)) return null; const at = spot(code, bx, by, rmin, side, rmax); // E686
   if (!at) return null; const t = ECON.plan(side, code, ...at); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (u.job === 'idle' || u.job === 'wait' || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
 function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n * H, cj = h.j + h.n * H, mid = FK.MID / D.tile, base = Math.atan2(mid - cj, mid - ci), off = new Map(); let pi = null, pj = null; // E331

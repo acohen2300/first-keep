@@ -109,7 +109,7 @@ const drillOn = (u) => !!(u.drill && u.drill.until > K.t && u.goal === u.drill.k
 function drillHold(u) { const L = u.drill; if (!drillOn(u) || L.held) return; const [x, y] = FK.tileMid(u.goal), mine = far(u, { bx: x, by: y }) / D.upm / FK.pace(u); let foe = Infinity; for (const f of foesNear(u)) foe = Math.min(foe, far(f, u) / D.upm / FK.pace(f));
   if (foe < mine) { L.held = true; L.k = FK.tileAt(u.bx, u.by); Object.assign(u, { path: null, goal: L.k, job: 'hold' }); } }
 function formHome() { const at = new Map(); for (const u of units()) if (armed(u) && u.job === 'idle' && !u.target && !u.esc) { const b = u.hb && alive(u.hb) ? u.hb : home(u.side); if (!b) continue; const H = at.get(b) || at.set(b, new Map()).get(b), k = u.bn ?? u.code; (H.get(k) || H.set(k, []).get(k)).push(u); } // E394
-  for (const [b, blocks] of at) { const [fx, fy] = dir(FK.MID - b.bx, FK.MID - b.by), out = (half(b.n) + GR.yard) * T, list = [...blocks.keys()].sort((p, q) => String(p).localeCompare(String(q))).map((k) => blocks.get(k).sort((p, q) => ranged(p) - ranged(q)));
+  for (const [b, blocks] of at) { const [fx, fy] = GR.face, out = (half(b.n) + GR.yard) * T, list = [...blocks.keys()].sort((p, q) => String(p).localeCompare(String(q))).map((k) => blocks.get(k).sort((p, q) => ranged(p) - ranged(q)));
     const cols = list.map((a) => Math.min(GR.cols, Math.ceil(Math.sqrt(a.length * GR.block)))); let x0 = half(-(sum(cols, (c) => c + 1) - 1) * GR.gap);
     list.forEach((a, bi) => { a.forEach((u, i) => { const c = (x0 + ((i % cols[bi]) + 0.5) * GR.gap) * T, r = out + Math.floor(i / cols[bi]) * GR.gap * T; u.home = { bx: b.bx + fx * r - fy * c, by: b.by + fy * r + fx * c }; if (!u.path) [u.fx, u.fy] = [fx, fy]; }); x0 += (cols[bi] + 1) * GR.gap; }); } }
 // E239

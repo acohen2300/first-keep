@@ -221,7 +221,7 @@ function makeThings(roll) {
   // E47
   const LS = D.lands, names = Object.keys(LS.rows), lr = dice(seed ^ LS.seed), fixed = new Set(), [, z2, z3] = D.zone; land = names[Math.floor(lr() * names.length)]; const LD = LS.rows[land];
   CORNERS.forEach((_, c) => { const hr = dice(seed ^ 0x9e3779b9), spot3 = (n) => { for (let t = D.tries.spot; t--; ) { const r = between(hr, [z2 + reachOf(n), z3 - reachOf(n)]), a = hr() * QT * RAD, [x, y] = corner(c, r * Math.cos(a), r * Math.sin(a)); if (laneDist(x, y) >= D.lane + D.tile && free(tileAt(x, y))) return [x, y]; } return null; };
-    for (const kind in D.z1) { const { n, amount } = pocketOf(kind); cluster(kind, ...corner(c, ...D.z1[kind]), n, hr, amount).forEach((k) => fixed.add(k)); }
+    for (const kind in D.z1) { const { n, amount } = pocketOf(kind), x = PK.near[kind]; cluster(kind, ...corner(c, ...D.z1[kind]), Math.round(n * x), hr, amount * x).forEach((k) => fixed.add(k)); }
     for (const [kind, [n, each]] of [...Object.entries(D.Z3.finds), ...(LD.extra ? [[LD.extra, D.Z3.finds[LD.extra]]] : [])]) { const at = spot3(n); if (at) cluster(kind, ...at, n, hr, each * n * PK.findSize[kind]); } }); // E653
   for (const g of GLADES) if (g.rich) { const K = Object.keys(PK.home).filter((kind) => !WOODS.has(kind)), a0 = roll() * A.round * RAD, GL = D.forest.glade; K.forEach((kind, i) => { const [n, each] = PK.home[kind], a = a0 + (i * A.round * RAD) / K.length; cluster(kind, g.x + Math.cos(a) * g.r * GL.out, g.y + Math.sin(a) * g.r * GL.out, n, roll, each * n * PK.rich * PK.homeRich * PK.findSize[kind]).forEach((k) => fixed.add(k)); }); } // E1087
   // E48
