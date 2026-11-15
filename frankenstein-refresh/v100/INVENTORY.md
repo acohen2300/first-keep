@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,660 | 648,350 | 648,514 |
-| Books | 2589 | 0 | 853,605 | 854,573 |
+| Game code | 31 | 3,661 | 649,053 | 649,217 |
+| Books | 2591 | 0 | 855,047 | 856,015 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,392 | 399,422 | 399,683 |
+| Tools | 5 | 2,396 | 400,353 | 400,614 |
 
 ## The trades (code)
 
@@ -20,8 +20,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 2,031 | 2,035 | 38 |
 | index.html#floor-2-terrain | 91 | 11,279 | 11,283 | 115 |
-| index.html#floor-3-non-movables | 79 | 13,564 | 13,568 | 54 |
-| index.html#drawn-once-in-the-view-frame | 99 | 19,532 | 19,536 | 92 |
+| index.html#floor-3-non-movables | 80 | 14,275 | 14,279 | 54 |
+| index.html#drawn-once-in-the-view-frame | 99 | 19,524 | 19,528 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 57 | 17,364 |
-| citations | 375 | 108,533 |
+| citations | 376 | 109,144 |
 | colours | 34 | 10,273 |
-| comments | 1033 | 205,471 |
+| comments | 1034 | 205,672 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 203,985 |
-| rules | 124 | 50,215 |
+| measure | 341 | 204,543 |
+| rules | 124 | 50,306 |
 | screen | 27 | 17,287 |
 | shells | 111 | 24,127 |
 | sides | 7 | 1,869 |
@@ -201,6 +201,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X124 | t-n54 | page | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) |
 | X125 | t-n55 | page | N55 (N376, N377): spy, medic and priest are the army (class Support): a picked priest tapped on an enemy goes to convert him, a spy on an enemy building goes to sabotage it, a medic goes where he is sent; no message bar: a message is a letter in Mail, and no menu carries a help line |
 | X126 | t-n56 | page | N56 (N378): two look buttons on the top row: the banner cycles the camera through the army's fronts and round again, the alert jumps to what of mine is under attack |
-| X127 | t-n57 | page | N57 (N379), N58 (N381): the trade roads reach the water at both sides of the map (one road or two per route); each trade road winds: somewhere it strays more than two tiles from the straight line between its stops; its ground is not grass; every stop lies on a road; the research tab (v80's parchment pill) marks a building with research ready, at its roof's upper left corner |
+| X127 | t-n57 | page | N57 (N379), N58 (N381), N59 (N382): no drawn road runs in water; stops keep apart and clear of every find; the trade roads reach the water at both sides of the map (one road or two per route); each trade road winds: somewhere it strays more than two tiles from the straight line between its stops; its ground is not grass; every stop lies on a road; the research tab (v80's parchment pill) marks a building with research ready, at its roof's upper left corner |
 
-2719 items sealed · 2589 book entries · 94 laws · 375 citations, 35 still to open · 0 known
+2721 items sealed · 2591 book entries · 94 laws · 376 citations, 35 still to open · 0 known

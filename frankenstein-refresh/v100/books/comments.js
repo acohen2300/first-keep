@@ -1032,5 +1032,6 @@ BOOK("comments", {
  "E1103": {"text": "look: the camera jumps to the next spot of its kind, alert or army; the same button again goes to the next, round and back to the first (N378)"},
  "E1104": {"text": "the two look buttons beside Home on the top row: the alert red while something is under attack, the banner dim when no army is out (N378)"},
  "E1105": {"text": "the trade roads drawn into the ground once: one smooth round stroke per road, a sand verge under a dirt track, following the land's height (N379); the track breaks where it meets water (a ford, no bridge yet) and goes on beyond it (N381)"},
- "E1106": {"text": "the research tab: a parchment pill in red ink with a red open book, and the count of what can be started when more than one (v80's badge, N380)"}
+ "E1106": {"text": "the research tab: a parchment pill in red ink with a red open book, and the count of what can be started when more than one (v80's badge, N380)"},
+ "E1107": {"text": "a trade stop's seat: the nearest free tile to its fixed place with no find within room tiles and no stop within apart tiles, looked for within find tiles, then twice that (N382)"}
 });

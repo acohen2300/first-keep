@@ -93,6 +93,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1087** a rich clearing's deposits (N362): what the home pocket holds, without the trees (berries, · N362 · D62 (N322, N256, N242, N304, N340, N369)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
+- **E1107** a trade stop's seat: the nearest free tile to its fixed place with no find within room til · N382
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
 - **E1095** the trade roads: each route from the last dry land on its side, through its stops, to the  · N379 · N381
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)

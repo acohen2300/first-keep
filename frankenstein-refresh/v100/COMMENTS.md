@@ -1037,3 +1037,4 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E1104 | menu.js | the two look buttons beside Home on the top row: the alert red while something is under attack, the banner dim when no army is out (N378) |
 | E1105 | index.html#drawn-once-in-the-view-frame | the trade roads drawn into the ground once: one smooth round stroke per road, a sand verge under a dirt track, following the land's height (N379); the track breaks where it meets water (a ford, no bridge yet) and goes on beyond it (N381) |
 | E1106 | menu.js | the research tab: a parchment pill in red ink with a red open book, and the count of what can be started when more than one (v80's badge, N380) |
+| E1107 | index.html#floor-3-non-movables | a trade stop's seat: the nearest free tile to its fixed place with no find within room tiles and no stop within apart tiles, looked for within find tiles, then twice that (N382) |

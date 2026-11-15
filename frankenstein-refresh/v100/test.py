@@ -1941,14 +1941,18 @@ N57JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  const S = FK.things().filter((t) => t.kind === 'stop'), M = FK.D.site / 2;
  info.dev = R.map((L) => Math.max(...L.map((p) => Math.min(...S.map((s) => [s.bx, s.by]).concat([[M, M]]).flatMap((a, i, A) => A.map((b) => seg(p, a, b))))) ) / T);
  o.winds = R.length >= FK.D.trade.routes.length && R.length <= 2 * FK.D.trade.routes.length && info.dev.some((d) => d > 2);
- const wet = ([x, y]) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => FK.layer(x + dx * 2 * T, y + dy * 2 * T) === 0), ends = R.flatMap((L) => [L[0], L.at(-1)]); o.shore = ends.filter(wet).length >= 2 * FK.D.trade.routes.length; info.ends = ends.map(wet);
+ const wet = ([x, y]) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]].some(([dx, dy]) => [2, 3, 4, 5].some((m) => FK.layer(x + dx * m * T, y + dy * m * T) === 0)), ends = R.flatMap((L) => [L[0], L.at(-1)]); o.shore = ends.filter(wet).length >= 2 * FK.D.trade.routes.length; info.ends = ends.map(wet);
  o.dirt = R.every((L) => L.filter((_, i) => i % 5 === 0).every(([x, y]) => FK.layer(x, y) !== 4));
  o.stops = S.every((s) => R.some((L) => L.some(([x, y]) => Math.hypot(x - s.bx, y - s.by) < 2 * T)));
+ const TR = FK.D.trade, J = FK.D.jitter || 0, RW = (FK.D.road.w + FK.D.road.rim) * T * 0.6;
+ o.apart = S.every((a) => S.every((b) => a === b || Math.hypot(a.bx - b.bx, a.by - b.by) >= TR.apart * T - 2 * J)); info.gap = Math.min(...S.flatMap((a) => S.filter((b) => b !== a).map((b) => Math.hypot(a.bx - b.bx, a.by - b.by) / T)));
+ const finds = FK.things().filter((t) => !['tree', 'stop', 'bld'].includes(t.kind)); o.clear = S.every((a) => finds.every((f) => Math.hypot(f.bx - a.bx, f.by - a.by) >= (TR.room - 1) * T)); info.near = S.map((a) => finds.filter((f) => Math.hypot(f.bx - a.bx, f.by - a.by) < (TR.room - 1) * T).map((f) => f.kind));
+ o.dry = R.every((L) => L.every(([x, y, up]) => !up || [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => FK.layer(x + dx * RW, y + dy * RW) !== 0))) && R.some((L) => L.some((p) => p[2]));
  const RB = FK.D.readyMark, st = FK.SIDES[0].store, h = FK.seatOf(0); for (const k in st) st[k] = 9000; h.q = []; MENU.S.tab = null; await W(1200); $run(1.2); o.tab = MENU.ready().includes(h) && RB.paper && RB.side > 0 && RB.roof > 0 && RB.roof < 1;
  return [o, info]; })()"""
 async def n57(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N57JS); await pg.close()
-    ok('t-n57', all(v.get(k) for k in ('winds', 'dirt', 'stops', 'tab', 'shore')) and not errs, [v, info, errs[:2]])
+    ok('t-n57', all(v.get(k) for k in ('winds', 'dirt', 'stops', 'tab', 'shore', 'apart', 'clear', 'dry')) and not errs, [v, info, errs[:2]])
 N56JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false);
  const dots = () => [...document.querySelectorAll('.ctop .dot')].map((d) => d.dataset.v);
  o.two = dots().includes('look|alert|') && dots().includes('look|army|') && !!MENU.VERBS.look; if (!o.two) return [o, { dots: dots() }];

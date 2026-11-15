@@ -5401,3 +5401,11 @@ Albert, Nov 15 10:45 to 10:47 (N381): to the water on both sides, more winding a
 - Tests: t-n57 adds both coasts reached; fails with N57's index.html (shore false). t-n54's exact stop count relaxed: a stop can be missing on some maps (water at its spot; logged on The List, not changed).
 - Full suite on a frozen copy: 70 of 90. t-research failed: the new map made the measured villager fall sick at minute 1.3 (u.sick: work × D.health.work), halving his rate against Mid's; the test now keeps that one villager healthy and alone at his tree and averages two seconds, since it measures the rate law, not illness (passes on N57 and N58). t-n25 failed once and passes alone. No other change against N57.
 NOT proven (his play owed): the roads on real maps; the fords.
+
+## N59: roads out of the water; stops apart and clear of finds · 2026-11-15 11:29
+Albert, Nov 15 11:24 (N382): "1. They dip into water 2. The posts are too close to each other in some cases 3. They are mixed into rss nodes which can not happen."
+- Water: a road point is dry only when the road's full width with its verge is land; the wander is kept to dry points, and only dry points are drawn, so a ford breaks the track and none of it lies in a lake or river. Coast ends sit back from the sea by the same margin.
+- Stops: each takes the nearest free tile to its fixed place with no find (gold, stone, iron, berries, ruins and the rest) within room (4 tiles) and no other stop within apart (12 tiles), looking within find, then twice find (D trade apart, room; E1107).
+- Tests: t-n57 adds no drawn road in water, stops apart, stops clear of finds; fails with N58's index.html. A probe of six random maps found no find within 3 tiles of a stop.
+- Full suite on a frozen copy: 72 of 90; no new failure against N58.
+NOT proven (his play owed): the roads and stops on real maps.

@@ -324,3 +324,7 @@ Claude's read: real-world precedent is AoE2's "go to last alert" and StarCraft's
 - The research icon back to v80's parchment tab with the count, "right at the corner, not flying high in the sky": BUILT in N57. t-n57 passes.
 - Found while testing N58 (not his ask, not changed): a trade stop can be missing on some maps: a stop is placed on the nearest free tile within 10 tiles of its spot (D trade.find), and water there leaves none (seen: 7 of 8). Route ownership then needs only the stops that exist. Needs his word. [2026-11-15 11:05]
 - Roads to the coasts, freer, crossing by the dice ("Go. They don't have to cross - or could cross. Make that part of the randomizer as well"): BUILT in N58; t-n57 passes. [2026-11-15 12:05]
+- Three road bugs (Nov 15 11:24: roads dip into water; posts too close; posts mixed into resource nodes): BUILT in N59; t-n57 passes. [2026-11-15 11:50]
+
+## 20. Building glo-up by age (Albert, Nov 15 11:30, approved mock https://claude.ai/artifact/Jmdx5BNouy88yNDfgUue6X; six boards) [2026-11-15 11:50]
+Three material tiers (Wood, Timber, Stone) by age; every building updates at once; footprint fixed; one shell + a tier skin; extras are ticks; materials in the books; one tell per building in all tiers; shapes before colours; static draw. Open before building: names matched to the repo; which ages are T1/T2/T3 (his yes); the unmocked buildings; reuse of existing level art (levelOf, sprite book level).

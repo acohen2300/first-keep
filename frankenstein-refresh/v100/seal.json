@@ -1854,6 +1854,11 @@
 "bytes": 873,
 "numbers": 0
 },
+"book:citations:N382": {
+"sha": "f912e57024f856e939eebd954c32dbdb23d4f44aa47a2fb4f012d3d46e4e4ed1",
+"bytes": 604,
+"numbers": 0
+},
 "book:citations:N39": {
 "sha": "d1c1f9644558d4a6744702d82432be3925d07c40a4af7c598c3ff6b7a0377979",
 "bytes": 70,
@@ -2897,6 +2902,11 @@
 "book:comments:E1106": {
 "sha": "8b99afcc88e50abc2188d2b4a1e5d8958218fb2f8c43dc02965656e270caae99",
 "bytes": 155,
+"numbers": 0
+},
+"book:comments:E1107": {
+"sha": "1a2ed59282f7607a7df4ea10d39669e9ea4853cc411f18d54d671d553d85c1f1",
+"bytes": 189,
 "numbers": 0
 },
 "book:comments:E111": {
@@ -8575,8 +8585,8 @@
 "numbers": 0
 },
 "book:measure:D278": {
-"sha": "a31111e140b780aa23185d4e95ad36faad7d66978663a95daabb9f77226b65c3",
-"bytes": 2321,
+"sha": "6fdcfbc99be48d513ba6ba489de3b15b8978ef6f27ced86f65e9353960ab1cee",
+"bytes": 2879,
 "numbers": 0
 },
 "book:measure:D279": {
@@ -9555,8 +9565,8 @@
 "numbers": 0
 },
 "book:rules:X127": {
-"sha": "9be7664ba2e99f8f71dd878658cadd859c7a9175166b5b04ef921676e5bd27d1",
-"bytes": 466,
+"sha": "746a6b289e87cb9caa34339def8aeed7e0441a4273202ae6ac547fb7d41b9740",
+"bytes": 557,
 "numbers": 0
 },
 "book:rules:X13": {
@@ -12965,8 +12975,8 @@
 "numbers": 20
 },
 "code:index.html#drawn-once-in-the-view-frame": {
-"sha": "b5ec49b9af85f5b9cf78ab7da028ffa0ffc9a1d573a9369325ad822f49c30314",
-"bytes": 19536,
+"sha": "10a3c5427735684942f59f5d04df7943ba790e267ebed7840f0d5bda019c78e4",
+"bytes": 19528,
 "numbers": 92
 },
 "code:index.html#floor-2-terrain": {
@@ -12975,8 +12985,8 @@
 "numbers": 115
 },
 "code:index.html#floor-3-non-movables": {
-"sha": "d23c734116a2c825deff8854cf214a9f3edc43326bc05a71fba4ea5147fe5ab1",
-"bytes": 13568,
+"sha": "0a9d84a75fe8a49e5af447f216a1e71a04f209fbd2b9b4f97c6aaa42f6c1cd4c",
+"bytes": 14279,
 "numbers": 54
 },
 "code:index.html#floor-5-movables": {
@@ -13590,8 +13600,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "e4bd92332e3edb471628e26e4b7ce1c6e945757f0688eb637588e58750d34c37",
-"bytes": 361680,
+"sha": "807389f1577bbf35e79d42d229cf584a41cfe046b104ecfa893dcd2bf8b388df",
+"bytes": 362611,
 "numbers": 0
 }
 }
