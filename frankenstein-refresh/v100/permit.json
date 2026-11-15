@@ -1,5 +1,6 @@
 {
- "build": "",
- "agreed": "",
- "opens": []
+ "build": "N53: the Wonder (Albert, Nov 14 21:52)",
+ "agreed": "Albert, Nov 14 21:52: \"Agree to all 4.\" The List, section 12",
+ "opens": ["book", "code:econ.js", "tool:test.py"],
+ "grow": {"code:econ.js": 150}
 }

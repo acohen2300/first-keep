@@ -167,7 +167,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144, N206)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225) · D125 (N169, N168, N195, N198) · SN1 (N133, N283) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225) · D125 (N169, N168, N195, N198, N370) · SN1 (N133, N283) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
 - **E694** a unit's row of numbers with its side's research applied, kept until the research changes:
 - **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198) · D130 (N160)
@@ -795,7 +795,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E217** a site: a building paid for and placed at done 0; villagers raise it. canPlace mirrors bui
 - **E734** a yield's first age is the earliest age of anything that costs it (units, buildings, resea
 - **E851** what a side cannot build yet (age, research, a building it needs, a later age): the locks 
-- **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198)
+- **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198, N370)
 - **E1068** by water (N341): any water or marsh tile within r tiles of a footprint; a Shore building n · N341
 - **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · N369 · N52
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
@@ -857,7 +857,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E347** the gather beat: the field is worked now (its soil wears); a flock's food goes straight to
 - **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119, N195)
-- **E436** the Alarm and the end (F23, Mid's 09-nav, 12-sim-core, 13-sim-civil, 16-sim-fight, 40-emer · D253 (N192) · D255 (N192) · J12 (N192) · J13 (N192)
+- **E436** the Alarm and the end (F23, Mid's 09-nav, 12-sim-core, 13-sim-civil, 16-sim-fight, 40-emer · D253 (N192) · D255 (N192) · J12 (N192) · J13 (N192, N370)
 - **E437** a threat (Mid's isThreat): alive, not inside, one that fights and is neither a villager, g
 - **E438** the danger map (Mid's dangerMap, stampDanger): each side's, drawn afresh each beat on the  · D253 (N192)
 - **E439** why a spot is dangerous, nearest cause first (Mid's dangerWhy): a threat near (its side na
@@ -873,7 +873,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E446** a site nobody builds (F23, Albert's play test): one no villager of its side can reach says · D203 (N168)
 - **E447** a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost · D233 (N188) · D258 (N192)
 - **E1071** the standing wonder nearest its win (N351): one home for the judge and for the countdown u · N351
-- **E448** who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s · D257 (N192) · D259 (N192)
+- **E448** who wins (Mid's judge): your fall loses; every rival fallen wins; a Wonder standing D257 s · D257 (N192, N370) · D259 (N192)
 - **E449** the end (Mid's finish): won or lost, the text and the score (Mid's level played comes with
 - **E226** the score (QBR): what a side holds, cost ÷ D135, everything it gathered ÷ D135, and what i · QBR (N75) · D135 (N75)
 - **E458** Teach (Mid's teachTo, teachWhy, teach): an older soldier learns the newer kind its shell's · D263 (N194)
@@ -1083,21 +1083,21 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E525** what a side stands, raises, trains and has queued, asked of the things themselves
 - **E526** the by-need plan's eyes (QCM, QV): the seconds to the bell, what one more hand earns at th · QCM (N24, N202) · QV (N23, N24)
 - **E682** a computer's estimate of what one more worker earns on a yield is kept for the slow beat ( · D182 (N122)
-- **E527** the army a side keeps: its personality's ceiling plus D291's armyAge an age, at most D226; · D291 (N202) · D226 (N176) · D285 (N198, N199, N202)
+- **E527** the army a side keeps: its personality's ceiling plus D291's armyAge an age, at most D226; · D291 (N202, N370) · D226 (N176) · D285 (N198, N199, N202)
 - **E528** the counter (QCN, Mid's bestCounter): among the soldiers it can train now, the best answer · QCN (N202)
 - **E529** a computer's turn, every D304 react s (Mid's think), in Mid's order: a site nobody raises, · D304 (N202)
 - **E649** a computer chases its crown (Mid's chaseCrown): the wellbeing chaser builds each place of 
 - **E1021** a computer thinks in slices across steps (E684): its hall can fall between two slices, and · E684
 - **E530** shelter before it is needed: a Home (an Apartment once it can) when the people come within · D152 (N202)
-- **E531** a drop-off where D291's crew work a yield whose nearest find stands far from one · D291 (N202)
+- **E531** a drop-off where D291's crew work a yield whose nearest find stands far from one · D291 (N202, N370)
 - **E532** the shift to plots: one at a time, never more than the hands on its yield, when it beats t
 - **E533** the age: once the town is big enough (D176) it saves for the next; a save once begun holds · D176 (N202) · D290 (N202)
 - **E534** the town grows while one more villager pays its price in the time left (QCM), and not whil · QCM (N24, N202)
 - **E535** its personality's buildings in order (D303 build); while saving, only the first; a second  · D303 (N202, N203, N222)
 - **E330** the computer's wall ring: from its age, with stone, a few pieces a round, gates first, whi
 - **E536** faith and care: priests with an army, Zeal on the soldiers fighting, medics (Mid's think)
-- **E537** engines to break what soldiers cannot, by D291's cycle and the age's late engine · D291 (N202)
-- **E538** research while not saving: its personality's list in order, each through the first step it · D291 (N202)
+- **E537** engines to break what soldiers cannot, by D291's cycle and the age's late engine · D291 (N202, N370)
+- **E538** research while not saving: its personality's list in order, each through the first step it · D291 (N202, N370)
 - **E539** the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yiel · QCM (N24, N202)
 - **E540** a hand moves to the bottleneck from a yield the goal does not need whose store does not th
 - **E541** with nothing short, the personality's mix: no stone and less gold in the Stone age, no iro
