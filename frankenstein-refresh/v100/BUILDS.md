@@ -5409,3 +5409,16 @@ Albert, Nov 15 11:24 (N382): "1. They dip into water 2. The posts are too close 
 - Tests: t-n57 adds no drawn road in water, stops apart, stops clear of finds; fails with N58's index.html. A probe of six random maps found no find within 3 tiles of a stop.
 - Full suite on a frozen copy: 72 of 90; no new failure against N58.
 NOT proven (his play owed): the roads and stops on real maps.
+
+## N60: roads coast to coast, one piece, never in water or finds · 2026-11-15 14:47
+Albert, Nov 15 12:24 and 12:32 (N383): "N59 isn't fixed roads. It's even worse." / "They both are supposed to span from one coast to the other respectively. And cross at some point. It can't go in water."
+- Each route is one road: from the main land's last open tile on its coast, through the open tile nearest each stop's fixed place, to the other coast. Each leg is the cheapest way (A*, E1109) over land clear of water, shallows and every find by the road's width and verge (E1108), the ground's cost from the map's fractal so it meanders; rounded by Chaikin (E1110). The join/halves dice (D379 join) is cut by his ruling.
+- The main land (E1111): the open land's largest piece (flood fill), so no end or waypoint sits in a pocket the road cannot reach.
+- Fault found and fixed: A*'s costs were kept in a Float32Array; rounding made settled tiles look stale and skipped, so legs failed with land between them (the "no land path" of the WIP). Now Float64.
+- Stops are seated after the roads, on a road tile (E1107, E492), so every stop is on a road and the roads go round the finds.
+- Tests: t-n60 (new, five boards): one road per route, every point clear of water and finds by half its width and verge, both ends on the coast beyond the far stops, the roads cross, every stop on a road. Fails on N59 (3 pieces, no coasts) and on the N60 WIP (up to 4 pieces). t-n57's dry now checks every point (it skipped the unflagged ones: not proof).
+- t-troops: its units stood at the first open tile near the middle; on N60's board a stop and its robbers are 6 tiles away and attacked them. The test now takes the open tile farthest from any misfit (it measures teach, convert, heal and veil, not robbers). Passes on N59 and N60.
+- Full suite on a frozen copy against N59 on the same tests: 71 of 91 vs 70 of 91. t-n29 flakes on both (N60 1 of 5 runs, N59 2 of 5). t-p2 failed 2 of 3 on N59, 0 of 3 on N60. No new failure.
+- Sizes: index.html 300,620 → 303,065 bytes (+2,445; floor 3 +2,498 under a grant raised from 2,200 to 2,500 for the main land and the fix). ecs: named 305 → 305, dead 7 → 7.
+- Open, unchanged: on 2 of 10 boards one stop has no free road tile far enough from finds and other stops within twice find tiles (The List 19, needs his word).
+NOT proven (his play owed): the roads on real maps.

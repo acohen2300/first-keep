@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,668 | 651,083 | 651,247 (+2,030) |
-| Books | 2595 | 0 | 856,832 | 857,804 (+497) |
+| Game code | 31 | 3,669 | 651,498 | 651,662 |
+| Books | 2597 | 0 | 857,472 | 858,444 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,396 | 400,353 | 400,614 |
+| Tools | 5 | 2,415 | 402,917 | 403,178 |
 
 ## The trades (code)
 
@@ -20,8 +20,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-coast | 11 | 472 | 476 | 17 |
 | index.html#the-ground | 28 | 2,031 | 2,035 | 38 |
 | index.html#floor-2-terrain | 91 | 11,279 | 11,283 | 115 |
-| index.html#floor-3-non-movables | 87 | 16,358 | 16,362 (+2,083) | 54 |
-| index.html#drawn-once-in-the-view-frame | 99 | 19,471 | 19,475 (-53) | 92 |
+| index.html#floor-3-non-movables | 88 | 16,773 | 16,777 | 54 |
+| index.html#drawn-once-in-the-view-frame | 99 | 19,471 | 19,475 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
@@ -53,11 +53,11 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 57 | 17,364 |
 | citations | 377 | 109,903 |
 | colours | 34 | 10,273 |
-| comments | 1037 | 206,214 |
+| comments | 1038 | 206,600 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 205,074 |
-| rules | 124 | 50,306 |
+| measure | 341 | 205,011 |
+| rules | 125 | 50,646 |
 | screen | 27 | 17,287 |
 | shells | 111 | 24,127 |
 | sides | 7 | 1,869 |
@@ -202,5 +202,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X125 | t-n55 | page | N55 (N376, N377): spy, medic and priest are the army (class Support): a picked priest tapped on an enemy goes to convert him, a spy on an enemy building goes to sabotage it, a medic goes where he is sent; no message bar: a message is a letter in Mail, and no menu carries a help line |
 | X126 | t-n56 | page | N56 (N378): two look buttons on the top row: the banner cycles the camera through the army's fronts and round again, the alert jumps to what of mine is under attack |
 | X127 | t-n57 | page | N57 (N379), N58 (N381), N59 (N382): no drawn road runs in water; stops keep apart and clear of every find; the trade roads reach the water at both sides of the map (one road or two per route); each trade road winds: somewhere it strays more than two tiles from the straight line between its stops; its ground is not grass; every stop lies on a road; the research tab (v80's parchment pill) marks a building with research ready, at its roof's upper left corner |
+| X128 | t-n60 | page | N60 (N383): on five boards each trade route is one road, every point of it clear of water and of every find by half its worn width and verge, both ends on the coast beyond the far stops at opposite sides, the two roads cross, and every stop lies on a road |
 
-2725 items sealed · 2595 book entries · 94 laws · 377 citations, 35 still to open · 0 known
+2727 items sealed · 2597 book entries · 94 laws · 377 citations, 35 still to open · 0 known

@@ -769,7 +769,7 @@ async def alarm(b):
 TRJS = r"""(() => { const D = FK.D, [me, foe] = D.players, out = {}, said = [], step = $run, by = (f) => Object.keys(FK.SH).find(f), look = (l) => by((c) => FK.SH[c].look === l), tick = (t) => by((c) => FK.SH[c].ticks.includes(t));
   const fresh = () => { $calm(me, foe); said.length = 0; for (const s of D.players) $rich(s); }; FK.on('say', (m) => { said.push(m); });
   const put = (code, side) => $put(code, side);
-  const open = []; FK.stamp(FK.MID, FK.MID, 12 * D.tile, (k) => { if (FK.walkable(k)) open.push(k); }); const k0 = open[0], at = (u, dx) => { const [x, y] = FK.tileMid(k0); Object.assign(u, { bx: x + dx * D.tile, by: y, path: null }); }, mk = (c, s, dx = 0) => { const u = FK.spawn(c, s, k0, FK.rng); at(u, dx); return u; };
+  const open = [], wild = FK.units().filter((u) => u.side < 0), far = (k) => { const [x, y] = FK.tileMid(k); return Math.min(Infinity, ...wild.map((u) => Math.hypot(u.bx - x, u.by - y))); }; FK.stamp(FK.MID, FK.MID, 12 * D.tile, (k) => { if (FK.walkable(k)) open.push(k); }); const k0 = open.reduce((a, k) => (far(k) > far(a) ? k : a)), at = (u, dx) => { const [x, y] = FK.tileMid(k0); Object.assign(u, { bx: x + dx * D.tile, by: y, path: null }); }, mk = (c, s, dx = 0) => { const u = FK.spawn(c, s, k0, FK.rng); at(u, dx); return u; };
   const SP = look('spear'), UV = tick('Gather');
   fresh(); out.pairs = Object.keys(FK.SH).filter((c) => ECON.teachTo({ code: c, side: me })).map((c) => { const u = { code: c, side: me }; return [FK.SH[c].look, FK.SH[ECON.teachTo(u)].look, ECON.teachCost(me, u), ECON.teachSecs(me, u)]; });
   const s = mk(SP, me), why0 = ECON.teachWhy(me, s); FK.learn(me, $tk('veterans')); FK.SIDES[me].age = 2; const why1 = ECON.teachWhy(me, s); put(tick('Teach'), me); s.hp = s.hpMax / 2; const secs = ECON.teachSecs(me, s), g0 = FK.SIDES[me].store.gold;
@@ -1947,12 +1947,31 @@ N57JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  const TR = FK.D.trade, J = FK.D.jitter || 0, RW = (FK.D.road.w + FK.D.road.rim) * T * 0.6;
  o.apart = S.every((a) => S.every((b) => a === b || Math.hypot(a.bx - b.bx, a.by - b.by) >= TR.apart * T - 2 * J)); info.gap = Math.min(...S.flatMap((a) => S.filter((b) => b !== a).map((b) => Math.hypot(a.bx - b.bx, a.by - b.by) / T)));
  const finds = FK.things().filter((t) => !['tree', 'stop', 'bld'].includes(t.kind)); o.clear = S.every((a) => finds.every((f) => Math.hypot(f.bx - a.bx, f.by - a.by) >= (TR.room - 1) * T)); info.near = S.map((a) => finds.filter((f) => Math.hypot(f.bx - a.bx, f.by - a.by) < (TR.room - 1) * T).map((f) => f.kind));
- o.dry = R.every((L) => L.every(([x, y, up]) => !up || [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => FK.layer(x + dx * RW, y + dy * RW) !== 0))) && R.some((L) => L.some((p) => p[2]));
+ o.dry = R.every((L) => L.every(([x, y]) => [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].every(([dx, dy]) => FK.layer(x + dx * RW, y + dy * RW) !== 0)));
  const RB = FK.D.readyMark, st = FK.SIDES[0].store, h = FK.seatOf(0); for (const k in st) st[k] = 9000; h.q = []; MENU.S.tab = null; await W(1200); $run(1.2); o.tab = MENU.ready().includes(h) && RB.paper && RB.side > 0 && RB.roof > 0 && RB.roof < 1;
  return [o, info]; })()"""
 async def n57(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N57JS); await pg.close()
     ok('t-n57', all(v.get(k) for k in ('winds', 'dirt', 'stops', 'tab', 'shore', 'apart', 'clear', 'dry')) and not errs, [v, info, errs[:2]])
+N60JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); if (!FK.roads) return [{ api: false }, {}];
+ const D = FK.D, T = D.tile, RD = D.road, TR = D.trade, R = FK.roads(), M = D.site / 2, half = (RD.w / 2 + RD.rim) * T, wet = ([x, y], r) => [0, 0.5, 1].some((f) => Array.from({ length: 16 }, (_, a) => a / 8 * Math.PI).some((t) => FK.layer(x + Math.cos(t) * r * f, y + Math.sin(t) * r * f) === 0));
+ const F = FK.things().filter((t) => !['tree', 'stop', 'bld'].includes(t.kind)), fr = (t) => ((FK.KIND[t.kind] || {}).r || 0), S = FK.things().filter((t) => t.kind === 'stop');
+ o.one = R.length === TR.routes.length && R.every((L) => L.length > 2 && L.every((p, i) => !i || Math.hypot(p[0] - L[i - 1][0], p[1] - L[i - 1][1]) < 2 * T));
+ o.dry = R.every((L) => L.every((p) => !wet(p, half)));
+ o.clear = R.every((L) => L.every((p) => F.every((f) => Math.hypot(f.bx - p[0], f.by - p[1]) >= fr(f) + half)));
+ const reach = (Math.max(...TR.stops) + TR.find) * T; o.coasts = R.every((L) => [L[0], L.at(-1)].every((p) => Math.hypot(p[0] - M, p[1] - M) > reach && wet(p, half + 6 * T)) && Math.hypot(L[0][0] - L.at(-1)[0], L[0][1] - L.at(-1)[1]) > 2 * reach);
+ const X = (a, b, c, d) => { const r = (p, q, s) => (q[0] - p[0]) * (s[1] - p[1]) - (q[1] - p[1]) * (s[0] - p[0]); return r(a, b, c) * r(a, b, d) < 0 && r(c, d, a) * r(c, d, b) < 0; };
+ o.cross = R.length === 2 && R[0].some((p, i) => i && R[1].some((q, j) => j && X(R[0][i - 1], p, R[1][j - 1], q)));
+ o.stops = S.length > 0 && S.every((s) => R.some((L) => L.some(([x, y]) => Math.hypot(x - s.bx, y - s.by) < 2 * T)));
+ return [o, { roads: R.length, pts: R.map((L) => L.length), stops: S.length }]; })()"""
+async def n60(b):   # five boards: a test that passes on one map is not proof (the board differs by seed)
+    errs = []; bad = {}
+    for sd in (SEED, 11, 22, 33, 44):
+        pg = await b.new_page(viewport={'width': 390, 'height': 844}); pg.on('pageerror', lambda e: errs.append(str(e))); await pg.add_init_script(PRE); await pg.goto(URL.split('#')[0] + '#' + str(sd)); await pg.wait_for_timeout(800)
+        v, info = await pg.evaluate(N60JS); await pg.close()
+        for k in ('one', 'dry', 'clear', 'coasts', 'cross', 'stops'):
+            if not v.get(k): bad.setdefault(k, []).append([sd, info])
+    ok('t-n60', not bad and not errs, [bad, errs[:2]])
 N56JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false);
  const dots = () => [...document.querySelectorAll('.ctop .dot')].map((d) => d.dataset.v);
  o.two = dots().includes('look|alert|') && dots().includes('look|army|') && !!MENU.VERBS.look; if (!o.two) return [o, { dots: dots() }];
@@ -2020,7 +2039,7 @@ async def star(b):
 async def freeze(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(FRZJS); await pg.close()
     ok('t-freeze', all(v.values()) and not errs, [v, info, errs[:2]])
-PAGED = {'t-n57': n57, 't-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-n60': n60, 't-n57': n57, 't-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

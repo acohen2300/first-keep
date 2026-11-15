@@ -1,10 +1,8 @@
 # First Keep: hand-off (Nov 15, 2026, 12:40)
 
-## START HERE (Nov 15 12:40): N60 roads, mid-build, NOT sealed
-- Albert's ruling (The List 21): both roads coast to coast, cross somewhere, never in water.
-- Working tree on the branch holds N60 work (committed as WIP; permit.json open). index.html around E1108 to E1110 and E1095: least-cost roads; books: D379, N383, E1108 to E1110.
-- Still to do: (1) why some legs find no land path (a river or lake cutting the map? the shore start tile boxed in? check the `lay` start/goal and the NO stamp of camps beside stops); if a river truly cuts the map, ask Albert: bridge or ford. (2) the 8 to 29 shore-margin points (Chaikin corners or diagonal steps past NO corners). (3) a test that fails on N59: every road point clear of water by w+rim, none within its r + w of a find, each road one piece touching both coasts, the two roads cross. Update t-n57 (its `dry` skipped wet points) and t-n54 (join). (4) size: index.html floor-3 grew about 2.1 KB; look for cuts (wanderLine still used elsewhere). (5) gate, full suite on a frozen copy, seal, preview n60. Probe: /tmp/glo/r2.js (gone in a new session: rewrite from this list).
-
+## START HERE (2026-11-15 14:47): N60 sealed (preview n60); next N61, the glo-up
+- N60: roads coast to coast, one piece, dry, clear of finds, crossing; stops on the roads (BUILDS.md N60). His play owed.
+- N61, ruled (The List 20, Nov 15 13:24): three tiers by age, Wood = Stone, Bronze; Timber = Classical, Medieval; Stone = Gunpowder, Enlightenment; Claude's improvements 1 to 8 all (7 civ styles stays parked); stone tier adds hit points; Claude picks the shape tells for the house and barracks; farms, pastures, Wonder, camps and booth stay as they are. Mock: https://claude.ai/artifact/Jmdx5BNouy88yNDfgUue6X. Art is drawn by ART[art](col, 0, lv, civ, want) through bldSprite (index.html 1262) with levelOf (547): start there.
 
 Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 holds Albert's Nov 14 return to n41). Laws: `docs/3 Locks/Designs/09`.
 

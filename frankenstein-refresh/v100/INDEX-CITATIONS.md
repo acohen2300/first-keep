@@ -477,7 +477,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N380** Albert, Nov 15, 2026, 10:03, with two screenshots (v100's red disc with a white bow, and an older build's parc → D371, X127
 - **N381** Albert, Nov 15, 2026, 10:45: "It should reach the edges of the map I think. And it doesn't have to cross at an → D379, X127
 - **N382** Albert, Nov 15, 2026, 11:24, after n58 with three screenshots: "I love it. Three bugs 1. They dip into water 2 → D278, X127
-- **N383** Albert, Nov 15, 2026, 12:24, with a screenshot of preview n59 zoomed out: "N59 isn’t fixed roads. It’s even wo → D379
+- **N383** Albert, Nov 15, 2026, 12:24, with a screenshot of preview n59 zoomed out: "N59 isn’t fixed roads. It’s even wo → D379, X128
 
 ## Named exceptions
 

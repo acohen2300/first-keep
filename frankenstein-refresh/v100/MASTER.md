@@ -93,13 +93,14 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1087** a rich clearing's deposits (N362): what the home pocket holds, without the trees (berries, · N362 · D62 (N322, N256, N242, N304, N340, N369)
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
-- **E1107** a trade stop's seat: the nearest free tile to its fixed place with no find within room til · N382
+- **E1107** a trade stop's seat: the nearest free road tile to its fixed place with no find within roo · N382
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
-- **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
 - **E1108** where a road may not go: water and the shallows (under the sand's top) and, by the road's  · N383
 - **E1109** a road's leg: the cheapest way from tile to tile over open land (A*, eight ways, octile di · N383
 - **E1110** a road rounded by Chaikin's corner cutting, soft passes, kept only if every rounded point  · N383
-- **E1095** the trade roads: each route from the last open land on its side, through its stops, to the · E1109 · E1110 · N379 · N381 · N383
+- **E1111** the main land: the open land (clear of water and finds by the road's width and verge) spli
+- **E1095** the trade roads: each route one road from the last open land of the main land (E1111) on i · E1111 · E1109 · E1110 · N383
+- **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines, · E1107
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
 - **E1097** the trees are set: a tree inside a trade road's cleared band is felled unless its kind is  · N374
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
