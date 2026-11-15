@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,658 | 647,732 | 647,897 |
-| Books | 2572 | 0 | 837,432 | 838,402 |
+| Game code | 31 | 3,658 | 648,488 | 648,653 |
+| Books | 2583 | 0 | 847,455 | 848,425 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,333 | 390,690 | 390,951 |
+| Tools | 5 | 2,349 | 393,407 | 393,668 |
 
 ## The trades (code)
 
@@ -18,27 +18,27 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
-| index.html#the-ground | 28 | 1,972 | 1,976 | 38 |
+| index.html#the-ground | 28 | 2,019 | 2,023 | 38 |
 | index.html#floor-2-terrain | 91 | 11,279 | 11,283 | 115 |
-| index.html#floor-3-non-movables | 75 | 12,213 | 12,217 | 54 |
-| index.html#drawn-once-in-the-view-frame | 98 | 19,129 | 19,133 | 92 |
+| index.html#floor-3-non-movables | 77 | 13,068 | 13,072 | 54 |
+| index.html#drawn-once-in-the-view-frame | 98 | 19,116 | 19,120 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,055 | 19,060 | 63 |
 | index.html#the-brushes | 9 | 1,337 | 1,341 | 24 |
-| index.html#the-building-art | 326 | 51,204 | 51,208 | 4094 |
+| index.html#the-building-art | 324 | 50,955 | 50,959 | 4051 |
 | index.html#the-node-art | 18 | 2,711 | 2,715 | 125 |
 | index.html#the-trees | 44 | 9,922 | 9,926 | 16 |
-| index.html#the-figures | 144 | 24,571 | 24,575 | 1473 |
+| index.html#the-figures | 144 | 24,613 | 24,617 | 1473 |
 | index.html#b-the-buildings | 15 | 1,564 | 1,568 | 20 |
 | index.html#floor-5-movables | 161 | 22,687 | 22,691 | 78 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,012 | 6,016 | 90 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,036 | 6,040 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
 | index.html#floor-7-display | 80 | 17,660 | 17,664 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 142 | 30,660 | 30,665 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 5,910 | 5,914 | 24 |
-| index.html#touch | 54 | 10,181 | 10,185 | 54 |
+| index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
+| index.html#touch | 54 | 10,225 | 10,229 | 54 |
 | menu.js | 611 | 131,744 | 131,803 | 439 |
 | econ.js | 627 | 119,227 | 119,227 | 70 |
 | combat.js | 378 | 64,691 | 64,691 | 83 |
@@ -51,18 +51,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 57 | 17,364 |
-| citations | 365 | 102,325 |
+| citations | 369 | 104,294 |
 | colours | 34 | 10,273 |
-| comments | 1027 | 204,010 |
+| comments | 1032 | 205,303 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 343 | 202,569 |
-| rules | 120 | 48,668 |
+| measure | 344 | 203,218 |
+| rules | 121 | 49,113 |
 | screen | 28 | 17,341 |
 | shells | 111 | 24,043 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
-| sprites | 69 | 35,082 |
+| sprites | 69 | 40,135 |
 | tech | 260 | 76,080 |
 | words | 55 | 103,244 |
 
@@ -198,5 +198,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X121 | t-n51 | page | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) |
 | X122 | t-n52 | page | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks |
 | X123 | t-n53 | page | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too; Exit (one villager or the called group) kills through the one death path: gone from the board and the head count (N371) |
+| X124 | t-n54 | page | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) |
 
-2702 items sealed · 2572 book entries · 94 laws · 365 citations, 35 still to open · 0 known
+2713 items sealed · 2583 book entries · 94 laws · 369 citations, 35 still to open · 0 known

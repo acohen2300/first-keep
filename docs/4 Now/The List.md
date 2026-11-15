@@ -296,3 +296,12 @@ His words: "I meant my villagers wouldn't die. I needed them gone. But killing t
 3. His villagers held at 121 from m116 to the end (30 min) with 20k to 60k food; 7 to 17 on wait or idle from m116. [2026-11-14 23:10]
 4. His stores at the end: 60k food, 101k wood, 44k gold unspent (101k wood after the m138 loot of 142,110). [2026-11-14 23:10]
 5. No wonder win in 146 min with two computers in the last age from m40: fits N53 if he played n53; not confirmed. [2026-11-14 23:10]
+
+## 16. Albert's answers on section 14 (Nov 15 05:46 to 05:51) [2026-11-15 05:52]
+- 9: "Can you do 9?" GO: BUILT in N54 (roads, Winchester band, oaks kept), with the trade booth (N375); t-n54 passes. [2026-11-15 05:52, updated 08:05]
+- 6 to 8: "you're suggestions work": spy, medic and priest become their own class in army control; a tap on an enemy converts, sabotages or heals. "The old army card is the one before the controller": anything still on it moves to the Controller. GO. [2026-11-15 05:52]
+- 11: "I couldn't find the route so there was no stop to click on." The roads of N54 are the first half; the stop must be findable on the board. [2026-11-15 05:52]
+- 12: "I'm not sure yet but you have to cut it or allow me to hide it." The toast bar: cut or hideable, his pick owed. [2026-11-15 05:52]
+- 13: "okay": Mail becomes the one home of the messages and the match's chronicle. A menu: shaped together. [2026-11-15 05:52]
+- 9 (asked 05:55): how wide to clear the woods by a trade road: "Statute of Winchester" (1285, ch. 5: 200 feet each side, oaks and great trees spared, clear underneath). Shown that oaks, the commonest lowland tree, still cover the road: "Keep oaks". So the road can still be hidden under oak crowns in places; item 11's "find the stop" may need its own answer after he plays n54. [2026-11-15 06:05]
+- 10/11 the stop's look (07:05 to 07:17, talk; mocks only, no go yet): v100's stop is a faint sand ring (sprite book "stop"); Base and v80 drew a bazaar stall with guards (v80 preview/index.html:16679). His asks: a trade booth, not a post or stone; the empty one open and stocked (not shuttered), "busy"; the held one busier still with market things, more flags in the holder's colour, and torches like the other buildings at night. Claude's mock: same frame both states, plain canvas when empty, holder's stripes, bunting, three pennants, goods, scale, handcart, merchant and two torches when held; the Trade post stays hidden while the booth shows (v80's rule). Open: the go, and whether the stop's guards come back. [2026-11-15 07:18]

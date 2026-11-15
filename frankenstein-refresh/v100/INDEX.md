@@ -444,6 +444,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N369 |  | Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then \Go build\): the new game's option rings are clipped on one side and mus | to open |
 | N370 |  | Albert, Nov 14, 2026, 21:49 to 21:52, after a 144-minute game: \They always win with the wonder.\ Claude put four changes; he said \Agree to | opened |
 | N371 |  | Albert, Nov 14, 2026, 22:05: \I meant my villagers wouldn't die. I needed them gone. But killing them with the controllers button makes them | opened |
+| N372 |  | Albert, Nov 15, 2026, 05:46: \Can you do 9?\ (his list of Nov 14 22:05, item 9: \The trade routes need to comeback.\) Mid drew a worn dirt t | opened |
+| N373 |  | The Law of the Twelve Tables (about 450 BC), Table VII.6: \The width of a road ... shall be eight feet on a straight stretch, on a bend ...  | opened |
+| N374 |  | Statute of Winchester, 1285 (13 Edw. 1 St. 2), chapter 5, Breadth of Highways leading from one Market-Town to another: highways between mark | opened |
+| N375 |  | Albert, Nov 15, 2026, 07:05 to 07:18 (mocks, then \Go\): the trade stop is a trade booth: \Why not a trade booth? Those are far too basic\;  | opened |
 
 ## colours
 
@@ -1515,6 +1519,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1092 |  | an order to ground is obeyed (N368): a soldier sent by the player to a spot (sent) looks for no foe while he marches there, so one pulled ou |  |
 | E1093 |  | Show tech (Albert, Nov 14, N369): one switch for every card; off, a card lists only the research of the age reached; on, the later ages' ste |  |
 | E1094 |  | the side's builder: a villager raising (or walking to raise) a building that is not a wall. The menu hands him the next site placed, so one  |  |
+| E1095 |  | the trade roads: each route runs straight from stop to stop, its own stops as laid, far end to far end through the middle; the woods are cle |  |
+| E1096 |  | one ground law: a tile's top layer is its stratum, except that worn road shows dirt where grass would grow (a road is a cut through the gras |  |
+| E1097 |  | the trees are set: a tree inside a trade road's cleared band is felled unless its kind is spared (the oak), as the Statute of Winchester ord |  |
+| E1098 |  | the trade booth, one frame in two states: the stop's empty booth (plain canvas, its wanted ware on the sign and the counter, stock around it |  |
+| E1099 |  | a stop draws its empty booth from the Trade post's own art, with its wanted ware; once a post stands on it and holds it, the post is drawn i |  |
 
 ## ground
 
@@ -1908,6 +1917,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D376 | every job a unit may hold (N30, the job door E1041): a job not in this list is recorded as odd the moment it is set, and the test fails on it | [idle, walk, gather, carry, back, wait, build, repair, raise, board, school, inside, shelter, march, hold, fight, rout, follow, scout, sab,  | N326 |
 | D377 | who gives way when two people meet (Albert, Nov 13 09:39, N339): each has a level by what it is doing: at work (standing at a task: gathering, building, holding a post) 3, on the move (anyone on a path, and anyone fighting: soldiers closing on one foe must be able to press in together, t-n25) 2, at rest (idle, waiting) 1. The lower gives way and takes the whole push, as at sea the vessel freer to manoeuvre keeps clear of the one held by her work (COLREGs Rule 18, N344); equals part by their mass (QCJ). The exception: when those a higher one blocks cannot be moved aside (a building, a wall, water, trees, a find: any ground that cannot be walked), their levels add up, and once the sum passes hers she gives way | {work: 3, move: 2, rest: 1, working: [gather, build, hold], resting: [idle, wait]} | N339; N344 |
 | D378 | (bld: a building that grows back, the dock: the fish's own rate, and a root so that a dock fished out rests until spring and is never dead water, N365) what grows back each spring (the Regrow tick, QY: the logistic law, N + r × N × (1 − N ÷ K), K the find's own full amount): r a year by kind; root is the share of K that picking cannot take (a berry bush is a perennial shrub: the canes and roots stay and fruit again; fish have no root, so a spot fished out is gone). A bush picked bare rests until spring, comes back to about two thirds, and is full the spring after; one picked only to half is full the next spring (the largest sustained harvest is at half of K, Schaefer 1954) | {fish: {r: 0.5}, bush: {r: 2, root: 0.25}, bld: {r: 0.5, root: 0.25}} | N365; N353 |
+| D379 | a trade road, tiles: w its worn width, the Twelve Tables' 8 feet for a straight road, 2.45 m; clear the woods cleared each side, the Statute of Winchester's 200 feet, 60.96 m, sparing oaks (the sprite book's spare); both at 8 units a metre (D85) and 10 units a tile (the routes run straight along the board's two axes); the woods opened beside it are the forest's own path width, one law for every path (Albert, Nov 15 05:46: the trade routes come back) | {w: 1.96, clear: 48.77} | N372; N373; N374 |
 
 ## rules
 
@@ -2033,6 +2043,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X121 | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) | {stage: page} | N368 |
 | X122 | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks | {stage: page} | N369 |
 | X123 | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too; Exit (one villager or the called group) kills through the one death path: gone from the board and the head count (N371) | {stage: page} | N370; N371 |
+| X124 | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) | {stage: page} | N372; N373; N374; N375 |
 
 ## screen
 

@@ -94,7 +94,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E48** Z4's finds: Who the map · What piles of gold, stone and iron, berry patches, and the gifts · D73 (N112) · D81 (N112)
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines,
+- **E1095** the trade roads: each route runs straight from stop to stop, its own stops as laid, far en · N372 · N373
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
+- **E1097** the trees are set: a tree inside a trade road's cleared band is felled unless its kind is  · N374
 - **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
@@ -107,6 +109,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
 - **E54** the forest floor: the grass, shaded; the marsh: the grass, toward the water (N11: the pape · N11 · E902
 - **E52** 0 water, 1 sand, 2 dirt, 3 grass; bare dirt again high over the land (D23) · D23 (N112)
+- **E1096** one ground law: a tile's top layer is its stratum, except that worn road shows dirt where 
 - **E53** the first band is what can be waded (D24) (N11: three sheets of water, shallow to deep) · D24 (N112) · N11
 - **E909** how far each water tile lies from its shore, in tiles (a chamfer distance in two passes); 
 - **E923** the water's distance from shore starts at the waterline itself: a water tile beside land t
@@ -217,6 +220,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E761** damp moss rising from a wall's foot, fading upward
 - **E622** a banner on a building that flies live leaves its place to the view (Mid's FLAGS)
 - **E73** a building picture's height, from its look
+- **E1098** the trade booth, one frame in two states: the stop's empty booth (plain canvas, its wanted · N375
 
 ## index.html#the-node-art
 
@@ -348,6 +352,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E957** a sprite is cached at the next size up the √2 ladder, never the one below: drawn smaller i · N17
 - **E119** the node art's own small dice, seeded by the variant, so a tree's leaves fall the same eac
 - **E120** each drawn at its stand (x, y on the screen), s pixels a unit
+- **E1099** a stop draws its empty booth from the Trade post's own art, with its wanted ware; once a p
 - **E580** a find drawn as blobs from the Sprites book
 - **E581** flames on what burns, with its smoke, as strong as the fire
 - **E524** A hidden trap is drawn flat on the ground from the Sprites book, in its side's shade or th

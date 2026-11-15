@@ -466,6 +466,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N369** (to open) Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then "Go build"): the new game's option rings a → SC53, C27, C34, D62, D206, D241, D340, X81, X122, SN32, J43
 - **N370** Albert, Nov 14, 2026, 21:49 to 21:52, after a 144-minute game: "They always win with the wonder." Claude put f → D125, D200, D257, D291, X123, J13
 - **N371** Albert, Nov 14, 2026, 22:05: "I meant my villagers wouldn't die. I needed them gone. But killing them with the → X123
+- **N372** Albert, Nov 15, 2026, 05:46: "Can you do 9?" (his list of Nov 14 22:05, item 9: "The trade routes need to come → D379, X124
+- **N373** The Law of the Twelve Tables (about 450 BC), Table VII.6: "The width of a road ... shall be eight feet on a st → D379, X124
+- **N374** Statute of Winchester, 1285 (13 Edw. 1 St. 2), chapter 5, Breadth of Highways leading from one Market-Town to  → D379, X124
+- **N375** Albert, Nov 15, 2026, 07:05 to 07:18 (mocks, then "Go"): the trade stop is a trade booth: "Why not a trade boo → X124
 
 ## Named exceptions
 
