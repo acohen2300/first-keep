@@ -289,3 +289,10 @@ His words: "I meant my villagers wouldn't die. I needed them gone. But killing t
 11. How to sell or trade with the caravan: tap the caravan, then a stop (tap table: caravan + stop = route); the Market sells in its card. Nothing in the game teaches it. A menu matter: together. [2026-11-14 22:13]
 12. The blue strip on top: read as the toast bar (#toast, gunmetal #2c3238, menu.js:88). Weakness: it is the only home of tap feedback. Asked him to confirm and where its messages go. [2026-11-14 22:13]
 13. Mail rework: talk; Claude's idea: Mail becomes the one home of what the toast says plus the chronicle (ties to 12). [2026-11-14 22:13]
+
+## 15. Albert's match log, Nov 14 23:05 ("Again!", no other words; 146 min, seed 3478130664, golden; log says version "100 · 12", preview not stated). Saved as `Match log - Nov 14 (146 min).json`. READ, NOTHING CHANGED [2026-11-14 23:10]
+1. Side 4 (index 3) gold: 4,665 at m46 → 170,528 at m75 (about 5,700 a minute with 18 to 41 villagers), then flat near 170k to 184k to the end, unspent. Same shape as the 510,943 of the last game. Cause NOT TRACED: every gold source is tagged (econ.js:360 to 404, 487) but the log tags only his side. [2026-11-14 23:10]
+2. Not over the cap by the log: his most is 121 villagers + 57 soldiers = 178 of 180. The log does not record the cap, so a lower cap from lost dwellings can't be seen. [2026-11-14 23:10]
+3. His villagers held at 121 from m116 to the end (30 min) with 20k to 60k food; 7 to 17 on wait or idle from m116. [2026-11-14 23:10]
+4. His stores at the end: 60k food, 101k wood, 44k gold unspent (101k wood after the m138 loot of 142,110). [2026-11-14 23:10]
+5. No wonder win in 146 min with two computers in the last age from m40: fits N53 if he played n53; not confirmed. [2026-11-14 23:10]
