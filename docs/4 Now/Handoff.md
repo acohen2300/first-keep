@@ -1,12 +1,12 @@
-# First Keep: hand-off (Nov 14, 2026, 19:09)
+# First Keep: hand-off (Nov 14, 2026, 22:40)
 
 Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 holds Albert's Nov 14 return to n41). Laws: `docs/3 Locks/Designs/09`.
 
 ## Where it stands
 - Albert, Nov 14 07:54 to 08:40: last night's jump to design was a judgement error; back to n41, keep a few items, then bug work only.
-- Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N52 (bottom of `BUILDS.md`): Albert's fix list of Nov 14 16:45 to 17:56 (The List, section 11; Design 11).
+- Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N53 (bottom of `BUILDS.md`): the Wonder (N370) and Exit that kills (N371). Preview n53. Albert's list of 13 (Nov 14 22:05) is The List section 14: 1 and 2 built; 3 to 13 traced or waiting on his word.
 - Branch `n29-the-list` keeps N42 to N45 whole, parked (`Parked.md`, "Parked Nov 14"). Do not build there.
-- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n52 is the one to play (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
+- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n53 is the one to play (n52: without N53) (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
 - Live v100 on `main`: untouched. Going live is Albert's call only.
 
 ## In N47 (on top of N46; Albert's go of Nov 14 10:16)
