@@ -262,3 +262,4 @@ Sections 1 to 5 came from one chat's audit. These come from the repo's own older
 5. The computers sit on stores: side 2 ended with 77,930 wood and 21,691 gold beside 6 soldiers; side 1 held 117 villagers and 52 soldiers flat for 15 minutes. [2026-11-14 21:47]
 6. His ages: Bronze at 11, Classical 36, Medieval 54, Gunpowder 70; the computers were at Gunpowder by 20, 40 and 50. [2026-11-14 21:47]
 7. The picture: "Wonder 0:03" in red while his 65 sent were 3:51 from AC6. Whose wonder, and how it ended: not in the log (his Nov 13 ruling: the log records neither). [2026-11-14 21:47]
+- Albert, Nov 14 21:49, on item 7: "They always win with the wonder." Talk, not a go. Read from the code: a finished Wonder wins after 480 s (D257 wonderHold); a computer lays one from the Classical age with 12 soldiers and the price plus 300 of each spare (ai.js:98, D291 ai.turn.wonder). [2026-11-14 21:50]
