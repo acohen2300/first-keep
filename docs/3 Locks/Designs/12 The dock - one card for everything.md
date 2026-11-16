@@ -90,3 +90,17 @@ Each is built. None was ruled in these words. Real screens: `mockups/dock/6-n63-
 6. **The symbols** have one home (SN45) and reuse the game's own icons where it had one: the shield (Foot), the bow (Archers), the horse (Riders), the house (Buildings); new in SN19: the wheel (Engines), the heart, the blow, the reach. 10 px (SN35 sym). Seen: the horse reads weakly at 10 px.
 7. **Cut** (Parked, "Cut in N63"): the dead verb `kind`, which held a second home for a class's icon.
 
+## J. F4, the Help section: Claude's proposal, MOCK ONLY, nothing built: his word owed [2026-11-16 05:50]
+Albert, Nov 16 05:20: "Ok go for F4". Ruled already (B6, C8): the tech tree, the guide, tips and the triangle live in one section "Help, guide, tips and tricks, learn". Not ruled: its form, its door, how the tree looks. The menus are done together, so this is a mock first: `mockups/dock/7-help-section-mock.png` (drawn in the running game with its own cells and the Guide's own data; no game code changed).
+Found: v100 never had the Guide as a page. `guide()`, `guideMd()` and `hist()` (menu.js 545 to 572) only write GUIDE.md; the page N55 removed was the earlier help lines, not the Guide. Mid has it as a card of pages (mid/src/31-guide.js: rules, buildings, units, research, ages, peoples, history). The Guide holds 50 buildings, 32 units, 254 research steps (28 buildings research; none has more than 20 steps or 7 lines), 6 ages, 6 peoples, 9 finds, 7 rules; Words has 14 tips.
+The proposal (one mold, the dock's):
+1. **Help is a card in the dock**: "Help" in the top pill, Back and Close beside War, six tabs: Tips, Units, Buildings, Research, Ages, Peoples. Its body is taller than six cells (a tick, as the Start page is taller: his Nov 5 "exception in height only").
+2. **Nothing scrolls.** A tab shows cells; a tap on one fills a reading box at the foot (its name, where, age, price, what it becomes, the why).
+3. **Units**: the triangle as one line of symbols and words (spearmen > riders > archers > spearmen; engines > buildings), then every unit in N63's cell, a row a class.
+4. **Research, the whole tree**: first the 28 buildings as cells with how much is learned ("2/20"); a tap opens that building's every step in the Learn tab's own cell, a group a line, in age order; a later age's step says its age in red. Back returns to the buildings.
+5. **Buildings**: Build's six groups as a second row, then that group's places and a reading box. **Ages**: your town now (food eaten a minute, the next age's price and time: the Town Center's parked info) and each age's price, time and what it opens. **Peoples**: the six, then the finds. **Tips**: the 14 tips and the 7 rules.
+6. **The door**: under the pause button, beside New game (the game is paused while you read).
+7. Also in F4, ruled or plain fixes: the Guide stops listing the Ram and the Small camp wagon as trained.
+Weaknesses: the Units and tree bodies are about 420 px tall and cover most of the map; a research cell in Help looks like one you can buy (proposal: Help only tells, a tap never buys); the rules' titles are sentences and need short names for cells; Mid's History page (dated steps, searchable) is left out.
+Open, his word: (a) the form, 1 and 2; (b) the door, 6; (c) the tree, 4; (d) static or the game's first scrolling list.
+
