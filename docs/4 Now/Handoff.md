@@ -1,6 +1,13 @@
-# First Keep: hand-off (Nov 16, 2026, 07:41)
+# First Keep: hand-off (Nov 16, 2026, 09:30)
 
-## START HERE (2026-11-16 07:41): N64 sealed (preview n64): the Help card. Next: Design 12 F5 (shots by kind), then the glo-up
+## START HERE (2026-11-16 09:30): N65 sealed (preview n65): shots by kind. Design 12's plan is built. Next: the glo-up
+- N65 (BUILDS.md N65; Design 12 F5 and its section L; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up, and "build Design 12 F5" (Nov 16 08:23). F1 to F5 are built; the glo-up is ruled and NOT built (The List 20; the notes are under "Before that (2026-11-15 14:47)" below). His play of n61 to n65 owed. Design 12 H, I, K and L list Claude's calls inside F2 to F5: his to overrule; ask nothing again that they or The List 22 answer.
+- A shot's code: the shell slot `shot` (a look in the Sprites book, P49 to P54: its parts, `m` metres a unit, `trail`, the burning picture as `rank`); `combat.js:160` shot() and `combat.js:281` (E399); the numbers are D245. A new shooter must name a shot (the gate: SC7 needs it).
+- Open, his (Design 12 L): the sizes (true to life, small when zoomed out); no night light from a burning shot (Mid had it); the gun's ball as smoke alone.
+- Size: combat.js is 65,500 bytes after a grant of 440 in N65; menu.js 130,624.
+- Open from N60, not traced: t-n60 fails about 1 run in 3. The tests that come and go are named in BUILDS N62 to N65.
+
+## Before that (2026-11-16 07:41): N64 sealed (preview n64): the Help card
 - N64 (BUILDS.md N64; Design 12 F4 and its sections J and K; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up, and "build Design 12 F4" (Nov 16 06:55). F1 to F4 are built; F5 and the glo-up are ruled and NOT built. His play of n61 to n64 owed. Design 12 H, I and K list Claude's calls inside F2, F3 and F4: his to overrule; ask nothing again that they or The List 22 answer.
 - Help's code: `SCREENS.Help`, the table `HELP` (one function a tab: its body and what the reading box says), the verb `help` (no word: open; a word: set tab, grp, sub or sel), state `S.h` through `help()`; words J59, page SN46. A page that ticks Dock is drawn in the dock by base(); test.py's main opens every page by `S.tab`, so a new page must draw with no state set.
 - For F5 (C9): `combat.js` shot() and D245; mock 4. Start: "build Design 12 F5".
@@ -36,7 +43,7 @@ Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 hold
 - Albert, Nov 14 07:54 to 08:40: last night's jump to design was a judgement error; back to n41, keep a few items, then bug work only.
 - Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N59 (bottom of `BUILDS.md`): roads out of water; stops apart and clear. Preview n59 (n58: roads coast to coast; n57: winding roads, research tab; n56: camera jumps; n55: Support and Mail; (n54: trade roads and booth; n53: the Wonder and Exit). Albert's list of 13 (Nov 14 22:05) is The List section 14: 1 and 2 built; 3 to 13 traced or waiting on his word.
 - Branch `n29-the-list` keeps N42 to N45 whole, parked (`Parked.md`, "Parked Nov 14"). Do not build there.
-- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n64 is the one to play (n63: the unit cell, no Help; n62: cards in the dock, no unit numbers; n61: Build in the dock, the old cards; n60: the roads); before them n59 was (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
+- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n65 is the one to play (n64: the Help card, shots as streaks; n63: the unit cell, no Help; n62: cards in the dock, no unit numbers; n61: Build in the dock, the old cards; n60: the roads); before them n59 was (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
 - Live v100 on `main`: untouched. Going live is Albert's call only.
 
 ## In N47 (on top of N46; Albert's go of Nov 14 10:16)

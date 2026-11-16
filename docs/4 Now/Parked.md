@@ -823,3 +823,7 @@ The code as it was is in N63 (`57ef62e`, `frankenstein-refresh/v100/menu.js`).
 - The Guide's rows for the Ram and the Small camp wagon, and their names in the Classical and Bronze ages' openings (menu.js guide(), `UN`): Design 12 J7, "the Guide stops listing the Ram and the Small camp wagon as trained". The Guide lists a unit a building trains or one that is sent. Their shells, prices and numbers stay in the books; bringing either back to a building (Parked, "Cut in N62") brings its row back.
 - Left out, not cut: Mid's History page (the dated research steps; `hist` and `histText` still stand in menu.js and write nothing on screen). Help has no tab for it (Design 12 K11).
 
+## Cut in N65, shots by kind (Design 12 F5) [2026-11-16 09:30]
+The code as it was is in N64 (`af89e2e`, `frankenstein-refresh/v100/combat.js:281`).
+- The cream streak every shot was drawn as (the colour C11, a line D245's tail of the flight long): a shot is its look's picture now (Design 12 L5). C11 stays for the radar. A look's `trail` in the Sprites book brings a streak back for that look, in dots.
+- The Caravan's streak: it never ticked Shoot (Design 12 L9). Ticking Shoot and naming a shot brings it back.

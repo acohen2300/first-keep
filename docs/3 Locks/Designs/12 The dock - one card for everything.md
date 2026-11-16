@@ -1,6 +1,6 @@
 # Design 12: the dock, one card for everything (Albert, Nov 15 2026, 14:38 to 18:46)
 
-His words, sorted. F1 BUILT as N61, F2 BUILT as N62, F3 BUILT as N63 and F4 BUILT as N64 (his play owed on all four; sections H, I and K hold Claude's calls inside F2, F3 and F4; J is F4's ruling); F5 RULED, NOT BUILT. Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind; 5 and 6 real screens of N62 and N63; 7 the Help section).
+His words, sorted. F1 BUILT as N61, F2 BUILT as N62, F3 BUILT as N63, F4 BUILT as N64 and F5 BUILT as N65: the plan is built (his play owed on all five; sections H, I, K and L hold Claude's calls inside F2, F3, F4 and F5; J is F4's ruling). Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind; 5 and 6 real screens of N62 and N63; 7 the Help section; 8 and 9 real screens of N64 and N65).
 His words for the build (18:46): "Lean and mean. Light and tight. Clean and clear. Simple and elegant. Follow our rules. Only one home for things. ECS laws. Books, citations, indexes, references, comments. No loose info. No helpers. No agents. No builders. Just you." And the 12 core values.
 
 ## A. The idea
@@ -55,7 +55,7 @@ Spec: this file, complete once E is answered. Then, each its own build and previ
 2. Cards in it: Train, Learn, Manage tabs; three lines; cost in letters with the stepped colour; the ring and count; Show tech, the Ram, the small wagon and the queue row cut and logged in Parked (B2, B3, B4, B6). BUILT, N62 (BUILDS.md N62; cuts in Parked, "Cut in N62").
 3. The unit cell and "loses to" (C8). BUILT, N63 (BUILDS.md N63; section I).
 4. The Help section: guide, tips, the tech tree, the triangle (B6, C8). BUILT, N64 (BUILDS.md N64; sections J and K).
-5. Shots by kind (C9).
+5. Shots by kind (C9). BUILT, N65 (BUILDS.md N65; section L).
 Expected, unverified: 1 and 2 shrink menu.js (the Build page, the Town Center page and the card's rows give way to one mold).
 
 ## G. The 12 core values, checked for the dock
@@ -127,3 +127,16 @@ Real screens: `mockups/dock/8-n64-real-screens.png`. (C) throughout.
 13. The Build circle is lit only when Build is open (it was lit for any page).
 14. menu.js grew 4,617 bytes under a grant: Help is a new page and the cuts of N62 gave back more than it took (131,352 before N62, 130,624 now).
 
+## L. N65 (F5), shots by kind: how his words were read, and Claude's calls inside them: his to overrule [2026-11-16 09:30]
+Real screens: `mockups/dock/9-n65-real-screens.png` (its script beside it). (C) throughout.
+1. The kinds. Mock 4's: arrow (Archer, horse archers), bolt (crossbowmen), ball (Arquebusier), stone (Catapult, Trebuchet), cannonball (Bombard). Beyond the mock: the Javelineer throws a javelin; the Ballista looses the crossbow's bolt, same picture and size; the Siege tower and the six buildings that shoot loose arrows.
+2. True size, nothing enlarged (N388, N389): arrow 0.76 m, bolt 0.37, javelin 1.15, stone 0.33, the bombard's ball 0.5. At the opening zoom an arrow is 8 px long and a stone 4. Weakness: small on a phone when zoomed out. One number a look (`m`, Sprites P49 to P54) enlarges it.
+3. The gun's ball has no picture: 15 mm cannot be seen. It is a dotted grey smoke trail. Mock 4 drew a small dot.
+4. "Where it should be. So everywhere" is read as wherever the stat fire is: Fire arrows gives it to the Archer, the Crossbowman and the Horse archer; Burning shot to every engine (Catapult, Trebuchet, Ballista, Bombard, Siege tower). No research gives fire to the Javelineer, the Arquebusier or a building, so theirs never burn. The Bombard's burning ball is drawn glowing.
+5. Trails: a stone, a cannonball and the gun's ball leave dots; an arrow, a bolt and a javelin leave none. The cream streak is cut (Parked, "Cut in N65").
+6. One kept picture a kind: no flicker, no embers, no smoke at the muzzle (the frames risk in C9).
+7. At night a burning shot does not light the ground. Mid's did. Not built: his word.
+8. A missile flies from where it was loosed. Before, its path slid with its shooter (a fault, fixed).
+9. The Caravan's blow draws no missile now: it reaches 2.4 tiles but does not tick Shoot.
+10. Every missile still flies the arrow's arc, a stone and a ball too. Seen, not changed.
+11. combat.js grew 439 bytes under a grant.

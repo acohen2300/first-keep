@@ -305,8 +305,8 @@
 "numbers": 0
 },
 "book:capabilities:SC7": {
-"sha": "4da97e73639009ef9553334a56b267e3f8fb791056d1689561842118b3ef267d",
-"bytes": 319,
+"sha": "eb70d58d36534aeeef9eaae7325f56be402748d1cdf6a3470014dafb3835657b",
+"bytes": 412,
 "numbers": 0
 },
 "book:capabilities:SC8": {
@@ -1889,6 +1889,16 @@
 "bytes": 1063,
 "numbers": 0
 },
+"book:citations:N388": {
+"sha": "101c2bae3b693d4ae6893b3ebddc6f4943439a0c478ad9ba03a75639edc13a81",
+"bytes": 1482,
+"numbers": 0
+},
+"book:citations:N389": {
+"sha": "aa9a605a87fbfb19f6cd1f203ec9e02596ec8b4ceeb5f645eaa5e47468e3dbb3",
+"bytes": 345,
+"numbers": 0
+},
 "book:citations:N39": {
 "sha": "d1c1f9644558d4a6744702d82432be3925d07c40a4af7c598c3ff6b7a0377979",
 "bytes": 70,
@@ -2235,8 +2245,8 @@
 "numbers": 0
 },
 "book:colours:C11": {
-"sha": "d3b7291d7ce47ba4a26f8dcc492a0dd2295e84ee496520ae0b5b73662cee911b",
-"bytes": 103,
+"sha": "3ea1989c6de0c4d8790240bb27a0f2d006bfeeefbcb5dfbbf6d377b0d844b246",
+"bytes": 182,
 "numbers": 0
 },
 "book:colours:C12": {
@@ -4525,8 +4535,8 @@
 "numbers": 0
 },
 "book:comments:E397": {
-"sha": "6fd72f2171c30622319665bf29397ee727fce1c507e9dc89147055c8ec6595dd",
-"bytes": 296,
+"sha": "3f5d85575eb7de0714b2597e5c556d5c45e3fc1cb13fdbc6f7df5a87434ea12d",
+"bytes": 523,
 "numbers": 0
 },
 "book:comments:E398": {
@@ -4535,8 +4545,8 @@
 "numbers": 0
 },
 "book:comments:E399": {
-"sha": "e748689d969f6142621e985e526435ec702ae95cf41ca7dadc306c5641620407",
-"bytes": 101,
+"sha": "ac7fe5ddcf06ccb905eac85014e7c950ad99a985a7c81918d92ba5f533efb81d",
+"bytes": 348,
 "numbers": 0
 },
 "book:comments:E4": {
@@ -8470,8 +8480,8 @@
 "numbers": 0
 },
 "book:measure:D245": {
-"sha": "98ce259e4a9d52ba4c65ca503f39ed973ca4c2091cc38b7e0e041db60303c752",
-"bytes": 418,
+"sha": "c078ac39ad3ff1000978cd5deb6c5ec3a44b0432ede40e58e82a078cac96eadd",
+"bytes": 572,
 "numbers": 0
 },
 "book:measure:D246": {
@@ -9664,6 +9674,11 @@
 "bytes": 1533,
 "numbers": 0
 },
+"book:rules:X133": {
+"sha": "4b7519158d5fa4f569098606903b657b62f292173d414b05d195b57b5aa9b44c",
+"bytes": 1186,
+"numbers": 0
+},
 "book:rules:X14": {
 "sha": "5bca5d09ae4587587424983fa29cf3e984377993d3747ed81370c8d714e17113",
 "bytes": 144,
@@ -10300,8 +10315,8 @@
 "numbers": 0
 },
 "book:shells:BCT1": {
-"sha": "39155c6bd2bb3887a781cd094dad899eb0f51f987e786cef42601d07fa69353d",
-"bytes": 182,
+"sha": "f809ca8da845798abf04e22296707a63722ec1ee9be090bb516eb5413bd6f5e1",
+"bytes": 199,
 "numbers": 0
 },
 "book:shells:BCT2": {
@@ -10440,8 +10455,8 @@
 "numbers": 0
 },
 "book:shells:BP8": {
-"sha": "35a4d9383a187954ee6b0dcfcb142627717c42177c601b910e571a114e8302d0",
-"bytes": 190,
+"sha": "429157fac270ede4e82987f5d99462c678019b8a959b0a629004b1e685cd7599",
+"bytes": 207,
 "numbers": 0
 },
 "book:shells:BP9": {
@@ -10470,13 +10485,13 @@
 "numbers": 0
 },
 "book:shells:BTC1": {
-"sha": "fcb5f842e6d991bed4cd17e3aa8267646840a2e36739ddc6e2fd9b46d9ea5e42",
-"bytes": 276,
+"sha": "50367e02016294b6cd45a68ad6ab4082a5e101e00563ca17d2eb27b9eeddf09d",
+"bytes": 293,
 "numbers": 0
 },
 "book:shells:BTC2": {
-"sha": "7ba4dcbab93329e1dd8b39dac7d22f7f1816404ddccce933ddf70f158a8bedd1",
-"bytes": 192,
+"sha": "900caaebd17e205b80574b7801970ba812fd24c924c1f45e4da21e7aab6e8c8c",
+"bytes": 209,
 "numbers": 0
 },
 "book:shells:BTC5": {
@@ -10495,8 +10510,8 @@
 "numbers": 0
 },
 "book:shells:BTC8": {
-"sha": "21c64ee525b548588f396010727c09e6b86f2d96211cc331a478d6e6f4e02518",
-"bytes": 184,
+"sha": "41f966365fa2fe48be9836526310e0e19b6e55fc022b991e76d67b188062a7a8",
+"bytes": 201,
 "numbers": 0
 },
 "book:shells:BW1": {
@@ -10510,8 +10525,8 @@
 "numbers": 0
 },
 "book:shells:BW3": {
-"sha": "713185ebe134c72baa51126448e804d0b5938cb827c949dcb88a9231e51c8b2a",
-"bytes": 180,
+"sha": "07181f3962fe82332ef07c1dc2f24301a5718aa2d37d0c275a451418914179c5",
+"bytes": 197,
 "numbers": 0
 },
 "book:shells:BW4": {
@@ -10675,8 +10690,8 @@
 "numbers": 0
 },
 "book:shells:UM11": {
-"sha": "85cb287e1f4904856f4df9554e451d32afffb4d75c2c3e164f30da278544f572",
-"bytes": 296,
+"sha": "6b05e525add65983b06caa95cef4278d62563b6c73b1995e0c58689f2e8aca1d",
+"bytes": 313,
 "numbers": 0
 },
 "book:shells:UM12": {
@@ -10685,23 +10700,23 @@
 "numbers": 0
 },
 "book:shells:UM13": {
-"sha": "240ff53f3eff740ee5db9e501eedee95c9a76a42370f2ec3bc2004f06fde50d6",
-"bytes": 258,
+"sha": "32f4df407706c842c01298c614905cf61580654ed1f240f083605dae1585a701",
+"bytes": 275,
 "numbers": 0
 },
 "book:shells:UM14": {
-"sha": "733deb24ece8cf2d33c71edd92c93d39c6ae68a979e131dd91b336528cc1285a",
-"bytes": 255,
+"sha": "a8aa1955bf8f5298939dc9744c5d975496b610efbaead291389b3b925208c85e",
+"bytes": 277,
 "numbers": 0
 },
 "book:shells:UM15": {
-"sha": "70bed94ad48fdf02fd649a749009dad6eb423ba4902e41574e31271fa4d0f9b3",
-"bytes": 274,
+"sha": "70790e0d74fba396b1a9eb3b7c92c91084998cf00b21fd5aab6f867e21e0fb3e",
+"bytes": 290,
 "numbers": 0
 },
 "book:shells:UM16": {
-"sha": "6913225cb74d70552520b53f525843a5de32f64b1f786e0dccfe2873d771e96c",
-"bytes": 253,
+"sha": "65e77e9aa563082fcd28eafb60dc812b3a4923a3d0b81918ce053b467024c4fa",
+"bytes": 270,
 "numbers": 0
 },
 "book:shells:UM17": {
@@ -10710,8 +10725,8 @@
 "numbers": 0
 },
 "book:shells:UM18": {
-"sha": "ff0ae17406220a07fa30e635689c06f1b4aa275cd2f090fa12939eb1ffac7549",
-"bytes": 327,
+"sha": "3691f24d84a21f76df998d29c6283dd02bdf90c916a52967ecc079f44aeb2261",
+"bytes": 343,
 "numbers": 0
 },
 "book:shells:UM19": {
@@ -10720,13 +10735,13 @@
 "numbers": 0
 },
 "book:shells:UM2": {
-"sha": "25cace299c26f2419ff63bf41c9ea65f5ec63ff8040433af58065fc3a318e0a6",
-"bytes": 283,
+"sha": "d41020d70e0a9d667c9f8f249d7919c097ac68c6905c3aebda8f7d82079dd328",
+"bytes": 300,
 "numbers": 0
 },
 "book:shells:UM20": {
-"sha": "8c2f202d08e334f84ff0e2e86ebb85f51fbbf167a972e7b2aacccf75dcfbb9fc",
-"bytes": 350,
+"sha": "bdc1b7012a54c12ea2022034c1895d456c05e31ce77b52f6702f505f7eb2baa5",
+"bytes": 367,
 "numbers": 0
 },
 "book:shells:UM21": {
@@ -10755,8 +10770,8 @@
 "numbers": 0
 },
 "book:shells:UM5": {
-"sha": "9e4661238ba8e294a6da8a588dc095e4a6c450a5ee5ddd3a5fb2c613b6edb94b",
-"bytes": 274,
+"sha": "b25c74f9dae880a1f59c94e4961b453ee7180a7f5e0c25d15ecd3156b774498a",
+"bytes": 291,
 "numbers": 0
 },
 "book:shells:UM6": {
@@ -10765,18 +10780,18 @@
 "numbers": 0
 },
 "book:shells:UM7": {
-"sha": "6ec0641cf820fde2c533be3ce1e22e385d69f07cbd0d95f63b55829d547f97eb",
-"bytes": 298,
+"sha": "8abd745a791118497e4c24ec79c0802475a2fd8a2576d4fdef25188fc5f877ef",
+"bytes": 317,
 "numbers": 0
 },
 "book:shells:UM8": {
-"sha": "3ed25e3092dc7e74ac78bc51102993f59da515154e7cbbe7d2a97db3d446b312",
-"bytes": 297,
+"sha": "89e09eb4a9b9bf0e6553309add17374106051a2bca380925ff49f51c086181e8",
+"bytes": 313,
 "numbers": 0
 },
 "book:shells:UM9": {
-"sha": "f839e89c1140958276cc25e6c8edbec91bd466da9720e404e06c3a22dcda6083",
-"bytes": 277,
+"sha": "dbb42c9e790b78fa1afb27091c2bf4014139f254075468ea95166906efa3679d",
+"bytes": 293,
 "numbers": 0
 },
 "book:shells:US1": {
@@ -11354,9 +11369,39 @@
 "bytes": 451,
 "numbers": 0
 },
+"book:sprites:P49": {
+"sha": "add271b4786f96bcd782fbf8dfa3a3ab8cec00e5c2bfd29bcf3b29aaa496caf0",
+"bytes": 1086,
+"numbers": 0
+},
 "book:sprites:P5": {
 "sha": "2685613ca0a7ed3e9abdf66f4fe4fed24f4676ebbffb76902f61f2423bfd106e",
 "bytes": 1078,
+"numbers": 0
+},
+"book:sprites:P50": {
+"sha": "654176dc760e747a94d05b26a667e302152395f58626a6c69bd42676e5883e9d",
+"bytes": 975,
+"numbers": 0
+},
+"book:sprites:P51": {
+"sha": "41e8174f1664fcbc5644a356e9c207d19dbdf5c9ea4d197f1138365561840b75",
+"bytes": 379,
+"numbers": 0
+},
+"book:sprites:P52": {
+"sha": "7912af13d56f1d98868cd921f486323219b9f9f395e75fb2694e62b8f0dd24a7",
+"bytes": 250,
+"numbers": 0
+},
+"book:sprites:P53": {
+"sha": "0cdef64bcaad970ef0d39c130af7b4ccecd7217337943dbff6897420835e5841",
+"bytes": 843,
+"numbers": 0
+},
+"book:sprites:P54": {
+"sha": "947802c48bfd85d5d55844619409b0665856ebae6a5f8d28157f322dbe274265",
+"bytes": 579,
 "numbers": 0
 },
 "book:sprites:P6": {
@@ -13070,8 +13115,8 @@
 "numbers": 25
 },
 "code:combat.js": {
-"sha": "d88abea8610e1c9bf4aa903f07885a7876913f412906bc0badd3753baeabe95c",
-"bytes": 65061,
+"sha": "384692d53e5be382c2dd1476e57563f426b9240f5a5bcc35812c147956655669",
+"bytes": 65500,
 "numbers": 83
 },
 "code:econ.js": {
@@ -13690,8 +13735,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "bdc51705faa983a642e82d0a9f8999298a9d84eeb8366d935f55e7d15e96089e",
-"bytes": 31731,
+"sha": "ee7a4348d459090e7b543bfa40b55e6fcb43aadacf704ae7fe5eb654be2c6a7c",
+"bytes": 31859,
 "numbers": 0
 },
 "tool:pages.yml": {
@@ -13710,8 +13755,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "57b6f40d461fe719bd4d8041e6a7ed341ba4c408d12dcab0cce11b6c5b92df31",
-"bytes": 394566,
+"sha": "8a4d8a8af6ec12aca5144f752e24864f4bfc1405ce16c1286d121a5f3902c706",
+"bytes": 401018,
 "numbers": 0
 }
 }

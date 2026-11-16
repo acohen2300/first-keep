@@ -2162,7 +2162,47 @@ N64JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
 async def n64(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N64JS); await pg.close()
     ok('t-n64', all(v.get(k) for k in ('door', 'card', 'tick', 'tips', 'rule', 'tip', 'units', 'tri', 'read', 'groups', 'place', 'labs', 'tree', 'nobuy', 'trees', 'ages', 'age', 'peoples', 'people', 'find', 'fits', 'static', 'guide', 'close', 'back', 'fresh')) and not errs, [v, info, errs[:2]])
-PAGED = {'t-n64': n64, 't-n63': n63, 't-n62': n62, 't-n61': n61, 't-n60': n60, 't-n57': n57, 't-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+N65JS = r"""(async () => { const o = {}, info = {}, D = FK.D, SH = BOOKS.shells, SP = FK.SPRITE, [ME, foe] = D.players, N = FK.N, byName = (n) => Object.keys(SH).find((c) => SH[c].name === n), look = (n) => SH[byName(n)].shot;
+ const shooters = Object.keys(SH).filter((c) => (SH[c].ticks || []).includes('Shoot')); info.shooters = shooters.length;
+ o.slot = shooters.length >= 18 && shooters.every((c) => SH[c].shot && !!SP[SH[c].shot]) && Object.keys(SH).every((c) => !SH[c].shot || shooters.includes(c));
+ const K = { Archer: 'arrow', 'Horse archer': 'arrow', 'Mongol horse archer': 'arrow', 'Siege tower': 'arrow', Tower: 'arrow', 'Town Center': 'arrow', Castle: 'arrow', 'Camp tower': 'arrow', Crossbowman: 'bolt', 'Han crossbowman': 'bolt', Ballista: 'bolt', Javelineer: 'javelin', Arquebusier: 'ball', Catapult: 'stone', Trebuchet: 'stone', Bombard: 'cannonball' };
+ info.kinds = Object.keys(K).filter((n) => look(n) !== K[n]); o.kinds = !info.kinds.length; if (!o.slot || !o.kinds) return [o, info];
+ $calm(ME); FK.pause(true); FK.show.U = true; const me = FK.SIDES[ME], white = FK.C.white, PIC = [...new Set(Object.values(K))];
+ const log = [], dash = [], fig0 = FK.figure, blit0 = FK.blit, ctx = FK.ctx, dash0 = ctx.setLineDash.bind(ctx); let cur = null;
+ FK.figure = (lk, col, lv, fr, s, kit) => { const c = fig0(lk, col, lv, fr, s, kit); if (PIC.includes(lk)) cur = { lk, lv, c }; return c; };
+ FK.blit = (c, x, y, s, into) => { if (cur && cur.c === c) { const m = ctx.getTransform(); log.push({ lk: cur.lk, lv: cur.lv, s, a: Math.atan2(m.b, m.a), x: m.e, y: m.f }); cur = null; } return blit0(c, x, y, s, into); };
+ const norm = (c) => { const x = document.createElement('canvas').getContext('2d'); x.strokeStyle = c; return x.strokeStyle; }, TR = PIC.filter((k) => SP[k].trail).map((k) => norm(SP[k].trail)); let nd = 0; FK.on('draw', () => nd++);
+ ctx.setLineDash = (a) => { if (a.length && TR.includes(ctx.strokeStyle)) dash.push(ctx.strokeStyle); return dash0(a); };
+ const frame = async () => { const n = nd; FK.dirty(); for (let i = 0; i < 40 && nd === n; i++) await new Promise((r) => requestAnimationFrame(r)); return nd > n; }, h = FK.seatOf(ME), GAP = 8;
+ const k0 = $ring(h, 22, 70, (i, j) => i > 2 && i + GAP + 2 < N && j > 2 && j < N - 2 && [0, 1, GAP, GAP + 1].every((d) => FK.walkable(j * N + i + d)) && j * N + i); if (!k0) return [o, { ...info, k0 }];
+ const mine = [], put = (n, side, k) => { const u = FK.spawn(byName(n), side, k, FK.rng); mine.push(u); return u; }, tgt = put('Spearman', foe, k0 + GAP), gone = (u) => { const i = FK.units().indexOf(u); if (i >= 0) FK.units().splice(i, 1); };
+ const loose = async (n, side, mid) => { const a = put(n, side, k0); tgt.hp = tgt.hpMax = 1e6; log.length = dash.length = 0; WAR.hit(a, tgt); gone(a); let end = 0, drew = 0; for (let i = 0; i < 160 && !end; i++) { FK.sim(0.05); const n0 = log.length + dash.length, d = await frame(); drew += d; if (mid && i === 4) await mid(a); if (d && log.length + dash.length === n0) end = i + 1; } return { L: log.slice(), Ds: dash.slice(), end, drew }; };
+ let p1 = null, p2 = null;
+ const A = await loose('Archer', ME, async (a) => { p1 = log.at(-1); a.bx += 400; await frame(); p2 = log.at(-1); });
+ info.arrow = [A.L.length, A.Ds.length, A.end, A.drew];
+ o.flies = A.L.length > 5 && A.L.every((e) => e.lk === 'arrow' && e.lv === 0) && !A.Ds.length; o.lands = A.end > 0;
+ const as = A.L.map((e) => e.a); info.turn = [Math.min(...as), Math.max(...as)]; o.turns = Math.max(...as) - Math.min(...as) > 0.3;
+ const len = FK.LOOKBOX.arrow[0] * SP.arrow.m; info.len = len; o.scale = A.L.every((e) => Math.abs(e.s - FK.cam.z * D.upm * SP.arrow.m) < 1e-9) && len > 0.7 && len < 0.85;
+ info.fixed = [p1, p2]; o.fixed = !!p1 && !!p2 && Math.hypot(p2.x - p1.x, p2.y - p1.y) < 1;
+ const hot = (lk, lv) => { const c = fig0(lk, white, lv, 0, 8, 0), d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0; for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 200 && d[i] > 200 && d[i + 1] > 80 && d[i + 1] < 215 && d[i + 2] < 110) n++; return n; };
+ info.hot = PIC.filter((k) => SP[k].brush).map((k) => [k, hot(k, 0), hot(k, 1)]); o.flame = ['arrow', 'bolt', 'stone', 'cannonball'].every((k) => !hot(k, 0) && hot(k, 1) > 20) && !hot('javelin', 1);
+ o.distinct = new Set(PIC.filter((k) => SP[k].brush).map((k) => fig0(k, white, 0, 0, 8, 0).toDataURL())).size === 5 && !SP.ball.brush;
+ const learn = (k) => { me.techs.add($tk(k)); FK.learn(ME, $tk(k)); }, one = (n, side = ME) => loose(n, side), all = (r, lk, lv) => r.L.length > 3 && r.L.every((e) => e.lk === lk && e.lv === lv);
+ const cat0 = await one('Catapult'), xb = await one('Crossbowman'), jav = await one('Javelineer'), treb = await one('Trebuchet'), bom = await one('Bombard'), gun = await one('Arquebusier');
+ info.kindsFly = [cat0, xb, jav, treb, bom, gun].map((r) => [r.L.length, r.Ds.length, r.L[0] && r.L[0].lk, r.L[0] && r.L[0].lv]);
+ o.engines = all(cat0, 'stone', 0) && all(treb, 'stone', 0) && all(bom, 'cannonball', 0) && all(xb, 'bolt', 0) && all(jav, 'javelin', 0);
+ o.trail = cat0.Ds.length > 3 && cat0.Ds.every((c) => c === norm(SP.stone.trail)) && bom.Ds.length > 3 && !xb.Ds.length && !jav.Ds.length;
+ o.ball = !gun.L.length && gun.Ds.length > 3 && gun.Ds.every((c) => c === norm(SP.ball.trail)) && gun.end > 0;
+ learn('firearrows'); const F = await one('Archer'), theirs = await one('Archer', foe); learn('burningshot'); const cat1 = await one('Catapult'), jav1 = await one('Javelineer');
+ info.fire = [F.L.length, F.L[0], theirs.L[0], cat1.L[0], jav1.L[0]]; o.fire = all(F, 'arrow', 1) && all(theirs, 'arrow', 0) && all(cat1, 'stone', 1) && all(jav1, 'javelin', 0);
+ mine.forEach(gone); for (let i = 0; i < 40; i++) { FK.sim(0.1); await frame(); } log.length = 0; WAR.treaty(ME, foe, 'war');
+ const en = FK.spawn(byName('Spearman'), foe, $ring(h, 3, 12, (i, j) => FK.walkable(j * N + i) && j * N + i), FK.rng); en.hp = en.hpMax = 1e6; for (let i = 0; i < 150 && !log.length; i++) { FK.sim(0.1); await frame(); }
+ info.tower = log.slice(0, 2); o.tower = log.length > 0 && log.every((e) => e.lk === 'arrow');
+ return [o, info]; })()"""
+async def n65(b):
+    pg, errs = await fresh(b); v, info = await pg.evaluate(N65JS); await pg.close()
+    ok('t-n65', all(v.get(k) for k in ('slot', 'kinds', 'flies', 'lands', 'turns', 'scale', 'fixed', 'flame', 'distinct', 'engines', 'trail', 'ball', 'fire', 'tower')) and not errs, [v, info, errs[:2]])
+PAGED = {'t-n65': n65, 't-n64': n64, 't-n63': n63, 't-n62': n62, 't-n61': n61, 't-n60': n60, 't-n57': n57, 't-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

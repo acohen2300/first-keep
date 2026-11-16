@@ -118,6 +118,7 @@ for c, s in BOOKS['shells'].items():
     for k in [s.get('body'), s.get('mount')] + s.get('kit', []): rule('pointers', not k or k in keys('mass'), f'{c} is made of {k}, not in the Mass book')
     for k in (s.get('sound'), s.get('voice')): rule('pointers', not k or k in keys('sound'), f'{c} sounds {k}, not in the Sound book')
     rule('pointers', s['layer'] != 120 or s['look'] in keys('sprites'), f'{c} wears {s.get("look")}, not in the Sprites book')
+    rule('pointers', not s.get('shot') or s['shot'] in keys('sprites'), f'{c} looses {s.get("shot")}, not in the Sprites book')
 for c, e in BOOKS['screen'].items():
     if isinstance(e['value'], dict) and 'ticks' in e['value']: mold(c, {**e['value'], 'name': e['name'], 'cite': e['cite'], 'layer': 'page'})
 for ev, s in book('sound')['on'].items(): rule('sounds', s in keys('sound'), f'event {ev} plays {s}, not in the Sound book')

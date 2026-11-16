@@ -1020,7 +1020,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1092** an order to ground is obeyed (N368): a soldier sent by the player to a spot (sent) looks f · N368
 - **E1020** my soldier left idle far from his post (past the yard, D-yard) holds where he stands and d
 - **E1036** an idle soldier walks home once: if his home spot cannot be stood on (built over, a tree, 
-- **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40)
+- **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40, N388) · N388
 - **E983** a bow's reach from a height: the arrow's flight (its drag and gravity, QAJ) at the speed t · QAJ (N39, N40)
 - **E409** the orders' shared measures: a point of a tile, the tile of a point, the length between, a
 - **E410** the walk over the straight line (Mid's routeK): the way by A* (QBL), its steps summed, hel · QBL (N74) · D247 (N190)
@@ -1049,7 +1049,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E240** the bars: a unit's or building's health, when it is hurt and in sight; the crosshair of th
 - **E1043** one health bar: the war module draws its bars with the world's own (index.html bar), not a
 - **E1034** a boarded building shows its planks across its foot, one by one as they go on
-- **E399** the missiles in flight: a streak along the drag path, its tail D245's share of the flight · D245 (N188, N39, N40)
+- **E399** the missiles in flight (N388): each is its look's picture from the Sprites book, drawn onc · N388 · D12 (N112) · D245 (N188, N39, N40, N388)
 - **E400** a blow's sparks (Mid's sparkDraw)
 - **E960** an army's standard groups the soldiers of one order, one rally or one march (Albert, Nov 1 · N17
 - **E401** the standards (Mid's drawStandards): a group of D sprites' least on the move carries its s

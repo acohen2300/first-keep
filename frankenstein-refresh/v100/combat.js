@@ -157,7 +157,7 @@ function fly(v, h) { const k = M.drag / M.kg, P = []; let x = 0, y = h, vx = v *
 function speedFor(d, h) { let lo = 0, hi = D.g; while (fly(hi, h).land < d) hi *= 2; for (let i = FLY.tries; i--; ) { const v = half(lo + hi); if (fly(v, h).land < d) lo = v; else hi = v; } return half(lo + hi); }
 const hillReach = (rng, h, dh) => { const key = [rng, h, Math.round(dh)].join(); if (!reachs.has(key)) reachs.set(key, fly(speedFor(rng * mpt, ZERO), h + Math.max(ZERO, Math.round(dh))).land / mpt); return reachs.get(key); }; // E983
 const tileOf = (a) => a.k ?? FK.tileAt(a.bx, a.by), dropTo = (a, b) => (FK.H[tileOf(a)] - (b ? FK.H[tileOf(b)] : ZERO)) / D.upm, reachOf = (t, u = null) => { const w = D.tower[t.code]; return hillReach(w.bow, w.h * mpt, u ? dropTo(t, u) : Math.max(ZERO, dropTo(t))) + FK.stat(t.code, t.side, 'rng'); };
-function shot(a, t, h) { tracers.push({ a, u: dir(t.bx - a.bx, t.by - a.by), P: fly(speedFor(gap(a, t) * mpt, h), h), t0: K.t }); }
+function shot(a, t, h) { const k = FK.SH[a.code].shot; if (k) tracers.push({ k, lv: +(FK.stat(a.code, a.side, 'fire') >= ONE), x: a.bx, y: a.by, u: dir(t.bx - a.bx, t.by - a.by), P: fly(speedFor(gap(a, t) * mpt, h), h), t0: K.t }); }
 // E409
 const say = (w, o = {}) => FK.fire('say', w.replace(/\{(\w+)\}/g, (_, x) => o[x] ?? '')), mid = (k) => { const [bx, by] = FK.tileMid(k); return { bx, by }; }, kOf = (p) => FK.tileAt(p.bx, p.by), far = FK.dist;
 const centreOf = (S) => ({ bx: sum(S, (u) => u.bx) / S.length, by: sum(S, (u) => u.by) / S.length }), tl = (a, b) => Math.hypot((a % N) - (b % N), Math.floor(a / N) - Math.floor(b / N));
@@ -278,9 +278,10 @@ FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size(), 
   for (const t of FK.blds()) if ((t.board || t.bp != null) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, , , m] = B.bld, W = t.n * w * s, n = D.prep.planks, f = t.board ? ONE : t.bp; if (!seen(x, y, m)) continue; ctx.save(); ctx.strokeStyle = C.pole; ctx.lineWidth = B.h; for (let i = ZERO; i < Math.ceil(n * f); i++) { const yy = y - (i + ONE) * B.h * (ONE + ONE) * s; ctx.beginPath(); ctx.moveTo(x - half(W), yy); ctx.lineTo(x + half(W), yy - B.h * s * (i % (ONE + ONE) ? ONE : -ONE)); ctx.stroke(); } ctx.restore(); } // E1034
   for (const t of FK.blds()) if (t.hp != null && t.hp < t.hpMax && up(t) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, up, plus, m] = B.bld; if (seen(x, y, m)) bar(x, y - (t.n * up + plus) * s, t.n * w * s, t.hp / t.hpMax, SIDES[t.side].col); }
   drawOrders(ctx, s, at, oval);
-  ctx.strokeStyle = C.shaft; ctx.lineWidth = s; for (const r of tracers.slice()) { const P = r.P, n = P.length - 1, p = (K.t - r.t0) / (n * FLY.dt); if (p >= 1) { tracers.splice(tracers.indexOf(r), 1); continue; } // E399
-    const [ux, uy] = r.u, pt = (f) => { const [x, y] = P[Math.round(Math.max(0, f) * n)], m = (x / mpt) * T; return at(r.a.bx + ux * m, r.a.by + uy * m, y * D.upm); };
-    ctx.beginPath(); ctx.moveTo(...pt(p - FLY.tail)); ctx.lineTo(...pt(p)); ctx.stroke(); }
+  const dots = FLY.dots.map((d) => d * s); ctx.lineWidth = s; for (const r of tracers.slice()) { const P = r.P, n = P.length - 1, p = (K.t - r.t0) / (n * FLY.dt); if (p >= 1) { tracers.splice(tracers.indexOf(r), 1); continue; } // E399
+    const [ux, uy] = r.u, v = ST[r.k], q = s * D.upm * v.m, pt = (f) => { const [x, y] = P[Math.round(Math.max(0, f) * n)], m = (x / mpt) * T; return at(r.x + ux * m, r.y + uy * m, y * D.upm); }, [x0, y0] = pt(p - FLY.tail), [x, y] = pt(p);
+    if (v.trail) { ctx.strokeStyle = v.trail; ctx.setLineDash(dots); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]); }
+    if (v.brush) { ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(y - y0, x - x0)); FK.blit(FK.figure(r.k, C.white, r.lv, ZERO, q, ZERO), ZERO, ZERO, q); ctx.restore(); } }
   const K0 = ST.spark; ctx.save(); ctx.strokeStyle = C.flame; ctx.lineWidth = K0.line * s; for (const k of sparks) { const a = (K.t - k.t) / FLY.spark; if (a < 0 || a >= 1) continue; const [x, y] = at(k.x, k.y, K0.lift), g = (K0.to + a * K0.grow) * s; ctx.globalAlpha = 1 - a; ctx.beginPath(); // E400
     for (let i = K0.rays; i--; ) { const an = i * K0.turn + k.t * K0.spin, c = Math.cos(an), e = Math.sin(an); ctx.moveTo(x + c * K0.from * s, y + e * K0.from * s); ctx.lineTo(x + c * g, y + e * g); } ctx.stroke(); } ctx.restore();
 // E960
