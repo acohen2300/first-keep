@@ -827,3 +827,9 @@ The code as it was is in N63 (`57ef62e`, `frankenstein-refresh/v100/menu.js`).
 The code as it was is in N64 (`af89e2e`, `frankenstein-refresh/v100/combat.js:281`).
 - The cream streak every shot was drawn as (the colour C11, a line D245's tail of the flight long): a shot is its look's picture now (Design 12 L5). C11 stays for the radar. A look's `trail` in the Sprites book brings a streak back for that look, in dots.
 - The Caravan's streak: it never ticked Shoot (Design 12 L9). Ticking Shoot and naming a shot brings it back.
+
+## Parked in N65's talk: a burning shot lighting the ground at night (TBD) [2026-11-16 11:58]
+Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground for burning shot and park it as tbd."
+- What it is: at night a burning arrow or stone glows and lights the ground under it as it flies. Mid did it (`frankenstein-refresh/mid/src/24-view-overlays.js`, drawTracers: a candle's glow under a fire shot). v100 never has.
+- Where it would go: the night lights' list (index.html, lightsOf) fed by combat.js's missiles that burn; a cap on how many glow at once (frames).
+- Not built. The flame itself is in the shot's picture day and night (N65); how it reads under the night shade is not looked at.

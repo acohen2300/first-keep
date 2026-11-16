@@ -5495,3 +5495,5 @@ Albert, Nov 15 18:29 to 19:15 (N388; Design 12 C9, F5 and its section L; The Lis
 - Seen, not changed: every missile flies the arrow's arc (QAJ with the bow's drag, loosed at 45 degrees, combat.js:153 to 157), a stone and a gun's ball too; at night a burning shot does not light the ground (Mid's drawTracers did: N388); the Caravan reaches 2.4 tiles, over melee's 2, without ticking Shoot, so its blow drew a streak and now draws nothing.
 - Real screens: `mockups/dock/9-n65-real-screens.png` (its script beside it).
 NOT proven (his play owed): the look and the read on his phone, day and night; speed on his phone in a big fight; every call in Design 12 L.
+
+- Albert, Nov 16 11:58, on the seals of N58 to N65 under size grants ("his word still owed on that rule" above): "You can seal them up". The seals stand. A burning shot lighting the ground at night: left out, parked as TBD (Parked.md). [2026-11-16 11:58]

@@ -3,7 +3,7 @@
 ## START HERE (2026-11-16 09:30): N65 sealed (preview n65): shots by kind. Design 12's plan is built. Next: the glo-up
 - N65 (BUILDS.md N65; Design 12 F5 and its section L; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up, and "build Design 12 F5" (Nov 16 08:23). F1 to F5 are built; the glo-up is ruled and NOT built (The List 20; the notes are under "Before that (2026-11-15 14:47)" below). His play of n61 to n65 owed. Design 12 H, I, K and L list Claude's calls inside F2 to F5: his to overrule; ask nothing again that they or The List 22 answer.
 - A shot's code: the shell slot `shot` (a look in the Sprites book, P49 to P54: its parts, `m` metres a unit, `trail`, the burning picture as `rank`); `combat.js:160` shot() and `combat.js:281` (E399); the numbers are D245. A new shooter must name a shot (the gate: SC7 needs it).
-- Open, his (Design 12 L): the sizes (true to life, small when zoomed out); no night light from a burning shot (Mid had it); the gun's ball as smoke alone.
+- Ruled Nov 16 11:58: the night light from a burning shot is left out and parked as TBD (Parked); N58 to N65's seals under grants stand ("You can seal them up"). Open, his, after play (Design 12 L): the sizes (true to life, small when zoomed out); the gun's ball as smoke alone.
 - Size: combat.js is 65,500 bytes after a grant of 440 in N65; menu.js 130,624.
 - Open from N60, not traced: t-n60 fails about 1 run in 3. The tests that come and go are named in BUILDS N62 to N65.
 

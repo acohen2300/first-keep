@@ -135,8 +135,8 @@ Real screens: `mockups/dock/9-n65-real-screens.png` (its script beside it). (C) 
 4. "Where it should be. So everywhere" is read as wherever the stat fire is: Fire arrows gives it to the Archer, the Crossbowman and the Horse archer; Burning shot to every engine (Catapult, Trebuchet, Ballista, Bombard, Siege tower). No research gives fire to the Javelineer, the Arquebusier or a building, so theirs never burn. The Bombard's burning ball is drawn glowing.
 5. Trails: a stone, a cannonball and the gun's ball leave dots; an arrow, a bolt and a javelin leave none. The cream streak is cut (Parked, "Cut in N65").
 6. One kept picture a kind: no flicker, no embers, no smoke at the muzzle (the frames risk in C9).
-7. At night a burning shot does not light the ground. Mid's did. Not built: his word.
+7. At night a burning shot does not light the ground. Mid's did. RULED (Albert, Nov 16 11:58): "I would leave it out for now for the lighting the ground for burning shot and park it as tbd." Left out; Parked. [2026-11-16 11:58]
 8. A missile flies from where it was loosed. Before, its path slid with its shooter (a fault, fixed).
 9. The Caravan's blow draws no missile now: it reaches 2.4 tiles but does not tick Shoot.
 10. Every missile still flies the arrow's arc, a stone and a ball too. Seen, not changed.
-11. combat.js grew 439 bytes under a grant.
+11. combat.js grew 439 bytes under a grant. RULED (Albert, Nov 16 11:58, asked for his word on N58 to N65 being sealed under grants): "You can seal them up". Those seals stand. Read narrowly: CLAUDE.md 6's rule itself is unchanged, so a later build that grows the code still needs a grant and his word. [2026-11-16 11:58]
