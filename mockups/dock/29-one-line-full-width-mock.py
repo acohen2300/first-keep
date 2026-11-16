@@ -1,0 +1,108 @@
+# mock: the building card, the 18:08 layout in a 2027 skin, on n65's real cells. python3 pads10.py <v100 dir> <out.png> <before.png>
+import asyncio, sys, os, json
+from playwright.async_api import async_playwright
+from PIL import Image, ImageDraw
+V, OUT, BEFORE = sys.argv[1], sys.argv[2], sys.argv[3]
+PREP = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), S = MENU.S, D = FK.D, SH = BOOKS.shells; MENU.act('start'); await W(400); S.tab = null; MENU.render(true);
+ Object.assign(FK.SIDES[0].store, { food: 900, wood: 900, gold: 600, stone: 300, iron: 200 }); FK.SIDES[0].age = 3; const h0 = FK.seatOf(0), made = {};
+ for (const n of ['Barracks', 'Stable', 'Siege workshop', 'Lumber camp']) { const c = Object.keys(SH).find((k) => SH[k].name === n); out: for (let d = 8; d < 240; d++) for (const [i, j] of [[h0.i + d, h0.j], [h0.i - d, h0.j], [h0.i, h0.j + d], [h0.i, h0.j - d], [h0.i + d, h0.j + d], [h0.i - d, h0.j - d]]) { if (!ECON.canPlace(c, i, j, 0)) continue; const t = FK.build(c, i, j, FK.SIDES[0].col); if (t) { t.side = 0; t.done = 1; made[n] = t; break out; } } }
+ FK.pause(true); window.$made = made; window.$W = W; return Object.keys(made); })()"""
+CSS = r"""
+#base { background: linear-gradient(#3b2b1e, #20160e) !important; border: 0 !important; border-radius: 14px !important; padding: 4px 6px 6px !important; gap: 0 !important; box-shadow: 0 -10px 28px rgba(0,0,0,.32), inset 0 1px 0 rgba(236,229,211,.16) !important; }
+.mk-hd { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 29px; padding: 0 2px; }
+.mk-l, .mk-r { display: flex; gap: GAPpx; align-items: center; } .mk-r { justify-content: flex-end; }
+.mk-n span { font: 18px var(--display); color: var(--g1); position: relative; white-space: nowrap; line-height: 22px; display: inline-block; }
+.mk-n span::after { content: ''; position: absolute; left: 1px; right: 1px; bottom: -1px; height: 2px; border-radius: 1px; background: #5fd08a; opacity: .9; }
+#base .dot { width: 28px !important; height: 28px !important; border: 0 !important; box-shadow: none !important; flex: 0 0 28px; }
+#base .dot:not(.red) { background: rgba(236,229,211,.10) !important; }
+.mk-lb { display: grid; grid-template-columns: 1fr 1fr; align-items: end; font: var(--second); color: color-mix(in srgb, var(--g1) 92%, transparent); line-height: 14px; height: 15px; margin-bottom: 3px; position: relative; }
+.mk-lb span { padding-left: 5px; } .mk-lb span + span { padding-left: 10px; }
+.mk-more { position: absolute; right: 2px; bottom: 0; font: var(--second); line-height: 15px; color: rgba(236,229,211,.8); background: rgba(236,229,211,.10); border: 0; border-radius: 8px; padding: 0 8px; }
+#base .row6 { display: grid !important; grid-template-columns: repeat(3, 1fr) 6px repeat(3, 1fr) !important; gap: 2px !important; background: none !important; align-items: stretch !important; }
+#base .row6.r1 { margin-top: 2px; }
+#base .row6 > .cell, #base .row6 > i { background: rgba(236,229,211,.10) !important; border: 0 !important; border-radius: 3px !important; box-shadow: none !important; height: 44px !important; min-width: 0; padding: 0 !important; margin: 0 !important; visibility: visible !important; opacity: 1 !important; position: relative; display: flex !important; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; box-sizing: border-box; }
+#base .row6 > i { background: rgba(236,229,211,.035) !important; }
+#base .row6 > b.sp { background: none !important; }
+#base .r0 > :nth-child(1), #base .r0 > :nth-child(5) { border-top-left-radius: 10px !important; }
+#base .r0 > :nth-child(3), #base .r0 > :nth-child(7) { border-top-right-radius: 10px !important; }
+#base .r1 > :nth-child(1), #base .r1 > :nth-child(5) { border-bottom-left-radius: 10px !important; }
+#base .r1 > :nth-child(3), #base .r1 > :nth-child(7) { border-bottom-right-radius: 10px !important; }
+#base .cell > span, #base .cell > small { display: inline-block; white-space: nowrap; line-height: 14px !important; font: var(--second); transform-origin: center; font-variant-numeric: tabular-nums; }
+#base .cell > span { color: #f1eadb; }
+#base .cell > small.c, #base .cell > small.u { color: rgba(236,229,211,.6) !important; }
+#base .cell.dim { background: rgba(236,229,211,.045) !important; } #base .cell.dim > span, #base .cell.dim > small.u, #base .cell.dim > small.c { opacity: .55; }
+#base .cell > svg.rg, #base .cell > i.rk { display: none !important; }
+#base .cell.work { background: rgba(95,208,138,.10) !important; }
+#base .cell.work::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 2px; background: conic-gradient(#5fd08a calc(var(--p) * 1turn), rgba(95,208,138,.22) 0); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+#base .cell > small.u svg { width: 9px !important; height: 9px !important; }
+TIGHT
+
+.lists { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.col { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ri { background: rgba(236,229,211,.10); border-radius: 3px; display: flex; align-items: center; padding: 0 6px; gap: 6px; min-width: 0; position: relative; box-sizing: border-box; font: var(--second); color: #f1eadb; overflow: hidden; }
+.ri.e { background: rgba(236,229,211,.035); } .ri.one { height: 22px; } .ri.two { height: 30px; }
+.col > .ri:first-child { border-radius: 10px 10px 3px 3px; } .col > .ri:last-child { border-radius: 3px 3px 10px 10px; }
+.ri .md { color: rgba(236,229,211,.6); } .ri.dim .nm, .ri.dim .md { opacity: .55; } .ri .lack { text-decoration: underline; }
+.ri svg { vertical-align: -1px; } .ri .md svg { width: 9px !important; height: 9px !important; }
+.ri .md > span + span, .ri .ct > span + span, .ri .pr > span + span { margin-left: 3px; }
+.ri.one .tx { display: inline-flex; gap: 7px; white-space: nowrap; transform-origin: left center; flex: 0 0 auto; align-items: baseline; }
+.ri .ck { position: absolute; right: 6px; top: 3px; width: 16px; height: 16px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid rgba(236,229,211,.5); }
+.ri.work .ck { border: 0; background: conic-gradient(#5fd08a calc(var(--p) * 1turn), rgba(95,208,138,.25) 0); -webkit-mask: radial-gradient(circle, transparent 5.5px, #000 6px); mask: radial-gradient(circle, transparent 5.5px, #000 6px); }
+.ri.two .tx { display: flex; flex-direction: column; align-items: flex-start; line-height: 13px; white-space: nowrap; min-width: 0; }
+.ri.two .nm, .ri.two .md { display: inline-block; transform-origin: left center; }
+.ri .pr { margin-left: auto; flex: 0 0 auto; height: 22px; border-radius: 11px; padding: 0 8px; background: rgba(236,229,211,.13); border: 0; font: var(--second); display: inline-flex; align-items: center; white-space: nowrap; position: relative; }
+.ri.work .pr::before { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 2px; background: conic-gradient(#5fd08a calc(var(--p) * 1turn), rgba(95,208,138,.25) 0); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.lists.stack { display: block; } .mk-lb1 { font: var(--second); color: color-mix(in srgb, var(--g1) 92%, transparent); line-height: 14px; padding: 1px 5px 3px; } .col + .mk-lb1 { padding-top: 5px; } .stack .ri.one .tx { display: grid; grid-template-columns: 100px 104px auto; gap: 0; }
+.mk-ft { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; height: 28px; align-items: center; margin-top: 2px; } .mk-ft span { text-align: right; }
+.mk-go { font: var(--head); color: #f1eadb; background: rgba(236,229,211,.13); border: 0; border-radius: 11px; height: 22px; padding: 0 14px; }
+"""
+SHOW = r"""async ([n, opt, css]) => { const S = MENU.S, t = $made[n], W = $W; document.getElementById('mk-style')?.remove(); document.querySelector('#rank').style.display = '';
+ const open = async () => { S.subject = t; S.tab = null; S.cpage = 0; MENU.render(true); await W(150); }, tabs = () => [...document.querySelectorAll('#base .tabs .cell')], cells = () => [...document.querySelectorAll('#base .tabs + .row6 > *')].filter((x) => x.tagName !== 'I'), go = async (tab) => { const e = tabs().find((x) => x.textContent.trim() === tab); if (!e) return false; e.click(); await W(150); return true; }, tap = async (word) => { const c = cells().find((x) => x.textContent.trim().startsWith(word)); S.tap = null; if (c) c.click(); await W(120); S.tap = null; };
+ await open(); const names = tabs().map((x) => x.textContent.trim()).filter(Boolean), L = names[0], R = names[1];
+ if (opt.queue) { for (let q = 0; q < (opt.taps || 1); q++) { await go(opt.queue[0]); await tap(opt.queue[1]); } for (let i = 0; i < opt.secs * 20; i++) FK.sim(0.05); MENU.render(true); await W(120); }
+ const grab = async (tab) => ((await go(tab)) ? cells().map((x) => x.outerHTML) : []), tr = await grab(L), le = R ? await grab(R) : [];
+ await go(L); const ub = document.querySelector('#base .cell .u b'), us = document.querySelector('#base .cell span.u svg'), bcol = ub ? getComputedStyle(ub).color : '#e8604c', scol = us ? getComputedStyle(us).color : '#e6b947', ssz = us ? Math.round(us.getBoundingClientRect().width) : 11;
+ if (opt.mode && opt.mode !== 'tiles') { const rows = document.querySelectorAll('#base .row6'), one = opt.mode !== 'rows2', stack = opt.mode === 'stack';
+  const parse = (html) => { const d = document.createElement('div'); d.innerHTML = html; const c = d.firstElementChild, ls = [...c.children].filter((e) => e.tagName === 'SPAN' || e.tagName === 'SMALL'), rr = c.querySelector(':scope > svg.rg .rr'), run = c.querySelector(':scope > i.rk[data-rs="run"]'), last = ls[ls.length - 1], cost = ls.length > 1 && /color/.test(last.getAttribute('style') || '') ? last : null, mid = ls.slice(1).filter((e) => e !== cost)[0] || null; return { nm: ls[0].innerHTML, md: mid ? mid.innerHTML : '', ct: cost ? cost.innerHTML : '', col: cost ? cost.style.color : '', dim: c.classList.contains('dim'), work: run && rr ? Math.min(1, parseFloat(rr.getAttribute('stroke-dasharray')) || 1) : null }; };
+  const at = (o) => `class="ri ${one ? 'one' : 'two'}${o.dim ? ' dim' : ''}${o.work != null ? ' work' : ''}"${o.work != null ? ` style="--p:${o.work}"` : ''}`;
+  const mk = (o) => (one ? `<div ${at(o)}><span class="tx"><span class="nm">${o.nm}</span><span class="md">${o.md}</span><span class="ct" style="color:${o.col}">${o.ct}</span></span><i class="ck"></i></div>` : `<div ${at(o)}><span class="tx"><span class="nm">${o.nm}</span><span class="md">${o.ct ? o.md : ''}</span></span><button class="pr" style="color:${o.col || '#f1eadb'}">${o.ct || o.md}</button></div>`);
+  const A = tr.map(parse), Z = le.map(parse), nr = stack ? 0 : one ? 6 : Math.max(A.length, Z.length), col = (X) => `<div class="col">${[...X.map(mk), ...Array(Math.max(0, nr - X.length)).fill(`<div class="ri ${one ? 'one' : 'two'} e"></div>`)].join('')}</div>`;
+  const rk = document.querySelector('#rank'), dots = [...rk.querySelectorAll('.dot')], nm = rk.querySelector('.exec span').textContent, hd = document.createElement('div'), lists = document.createElement('div');
+  hd.className = 'mk-hd'; hd.innerHTML = '<div class="mk-l"></div><div class="mk-n"><span></span></div><div class="mk-r"></div>'; hd.querySelector('.mk-n span').textContent = nm; hd.querySelector('.mk-r').append(dots[3], dots[4]);
+  lists.className = 'lists' + (stack ? ' stack' : ''); lists.innerHTML = stack ? `<div class="mk-lb1">${L}</div>` + col(A) + (Z.length ? `<div class="mk-lb1">${R}</div>` + col(Z) : '') : col(A) + col(Z); rows[0].before(hd);
+  if (stack) rows[0].before(lists); else if (one) { const ft = document.createElement('div'); ft.className = 'mk-ft'; ft.innerHTML = `<span><button class="mk-go">${L}</button></span><span><button class="mk-go">${R}</button></span>`; rows[0].before(lists, ft); } else { const lb = document.createElement('div'); lb.className = 'mk-lb'; lb.innerHTML = `<span>${L}</span><span>${R || ''}</span>`; rows[0].before(lb, lists); }
+  rows[0].remove(); rows[1].remove(); rk.style.display = 'none';
+  const st = document.createElement('style'); st.id = 'mk-style'; st.textContent = css + `.ri b { color: ${bcol}; font-weight: 400; } .ri .nm svg { color: ${scol}; width: ${ssz}px; height: ${ssz}px; }`; document.head.append(st); await W(120);
+  const fits = []; for (const r of document.querySelectorAll('#base .ri.one:not(.e)')) { const tx = r.querySelector('.tx'), avail = r.getBoundingClientRect().width - 12 - 16 - 6; tx.style.transform = 'none'; const nat = tx.getBoundingClientRect().width, k = Math.min(1, avail / nat); tx.style.transform = `scaleX(${k})`; fits.push([tx.textContent.trim().slice(0, 12), +k.toFixed(2), Math.round(nat)]); }
+  for (const r of document.querySelectorAll('#base .ri.two:not(.e)')) { const pr = r.querySelector('.pr'), avail = r.getBoundingClientRect().width - 12 - pr.getBoundingClientRect().width - 6; for (const l of r.querySelectorAll('.nm, .md')) { l.style.transform = 'none'; const nat = l.getBoundingClientRect().width, k = Math.min(1, avail / nat); l.style.transform = `scaleX(${k})`; if (nat > 0) fits.push([l.textContent.trim().slice(0, 12), +k.toFixed(2), Math.round(nat)]); } }
+  const r1 = document.querySelector('#base .ri'); return { names, tile: [Math.round(r1.getBoundingClientRect().width), Math.round(r1.getBoundingClientRect().height)], card: Math.round(document.querySelector('#base').getBoundingClientRect().height), fits: fits.sort((x, y) => x[1] - y[1]) }; }
+ const rows = document.querySelectorAll('#base .row6'), E = '<i></i>', pad6 = (X) => [...X, E, E, E, E, E, E].slice(0, 6), a = pad6(tr), b = pad6(le), SP = '<b class="sp"></b>';
+ rows[0].className = 'row6 r0'; rows[1].className = 'row6 r1'; rows[0].innerHTML = [...a.slice(0, 3), SP, ...b.slice(0, 3)].join(''); rows[1].innerHTML = [...a.slice(3), SP, ...b.slice(3)].join('');
+ const rk = document.querySelector('#rank'), dots = [...rk.querySelectorAll('.dot')], nm = rk.querySelector('.exec span').textContent, hd = document.createElement('div'), lb = document.createElement('div');
+ hd.className = 'mk-hd'; hd.innerHTML = '<div class="mk-l"></div><div class="mk-n"><span></span></div><div class="mk-r"></div>'; hd.querySelector('.mk-n span').textContent = nm;
+ if (opt.B) { hd.querySelector('.mk-l').append(dots[0], dots[1], dots[2]); hd.querySelector('.mk-r').append(dots[3], dots[4], dots[5]); } else hd.querySelector('.mk-r').append(dots[3], dots[4]);
+ lb.className = 'mk-lb'; lb.innerHTML = `<span>${L}</span><span>${R || ''}</span>` + (opt.B && names[2] ? `<button class="mk-more">${names.slice(2).join(' ')}</button>` : ''); rows[0].before(hd, lb); rk.style.display = 'none';
+ const st = document.createElement('style'); st.id = 'mk-style'; st.textContent = css; document.head.append(st); await W(100);
+ for (const c of document.querySelectorAll('#base .row6 > .cell')) { const k = c.querySelector(':scope > i.rk[data-rs="run"]'), rr = c.querySelector(':scope > svg.rg .rr'); if (k && rr) { c.classList.add('work'); c.style.setProperty('--p', Math.min(1, parseFloat(rr.getAttribute('stroke-dasharray')) || 1)); } }
+ const fits = []; for (const c of document.querySelectorAll('#base .row6 > .cell')) { const cw = c.getBoundingClientRect().width - 4; for (const l of c.querySelectorAll(':scope > span, :scope > small')) { l.style.transform = 'none'; const nat = l.getBoundingClientRect().width, k = Math.min(1, cw / nat); l.style.transform = `scaleX(${k})`; if (k < 1) fits.push([l.textContent.trim(), +k.toFixed(2), Math.round(nat)]); } }
+ const one = document.querySelector('#base .row6 > .cell'), sm = [...document.querySelectorAll('#base .cell > small')].find((x) => x.children.length > 1), g = sm ? getComputedStyle(sm) : null, sp = sm ? getComputedStyle(sm.children[1]) : null;
+ return { names, tile: +one.getBoundingClientRect().width.toFixed(1), card: Math.round(document.querySelector('#base').getBoundingClientRect().height), fits: fits.sort((x, y) => x[1] - y[1]), gap: g ? [g.display, g.gap, sp.marginLeft, sp.paddingLeft, g.wordSpacing] : null, nameW: Math.round(hd.querySelector('.mk-n span').getBoundingClientRect().width) }; }"""
+PANELS = [('Stable', 'Stable: one line an item, full width', {'queue': ['Train', 'Chariot'], 'secs': 5, 'taps': 2, 'mode': 'stack'}),
+          ('Barracks', 'Barracks', {'queue': ['Learn', 'Shields'], 'secs': 9, 'mode': 'stack'}),
+          ('Siege workshop', 'Siege workshop', {'mode': 'stack'}),
+          ('Lumber camp', 'Lumber camp', {'mode': 'stack'})]
+async def main():
+    tight = sys.argv[4] if len(sys.argv) > 4 else ''
+    async with async_playwright() as p:
+        b = await p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--no-sandbox', '--allow-file-access-from-files']); shots = []
+        for n, title, opt in PANELS:
+            pg = await b.new_page(viewport={'width': 390, 'height': 844}, device_scale_factor=3); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+            await pg.goto('file://' + os.path.abspath(os.path.join(V, 'index.html')) + '#20261105'); await pg.wait_for_timeout(1500); await pg.evaluate(PREP)
+            css = CSS.replace('GAPpx', '8px' if opt.get('B') else '12px').replace('TIGHT', tight)
+            r = await pg.evaluate(SHOW, [n, opt, css]); await pg.wait_for_timeout(200); f = f'/tmp/mock/p10_{len(shots)}.png'; await pg.screenshot(path=f); low = [x[1] for x in r['fits'] if x[1] < 1]; shots.append((f"{title}  |  card {r['card']} px" + (f", text squeezed to {min(low):.2f}" if low else ', no squeeze'), f)); print(n, json.dumps(r)[:700], errs[:2]); await pg.close()
+        await b.close()
+    CH = 900; ims = [Image.open(f) for _, f in shots]; w, h = ims[0].size
+    sheet = Image.new('RGB', (w, (CH + 76) * len(ims)), (16, 12, 9)); d = ImageDraw.Draw(sheet)
+    for i, (title, _) in enumerate(shots): y = i * (CH + 76); d.text((18, y + 22), title, fill=(236, 229, 211), font_size=32); sheet.paste(ims[i].crop((0, h - CH, w, h)), (0, y + 76))
+    sheet.save(OUT); print(sheet.size)
+asyncio.run(main())
