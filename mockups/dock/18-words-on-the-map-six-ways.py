@@ -3,7 +3,10 @@ import asyncio, sys, os
 from playwright.async_api import async_playwright
 from PIL import Image, ImageDraw
 V, OUT = sys.argv[1], sys.argv[2]
-PREP = open('/tmp/mock/pads.py').read().split('PREP = r"""')[1].split('"""')[0]
+PREP = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), S = MENU.S, D = FK.D, SH = BOOKS.shells; MENU.act('start'); await W(400); S.tab = null; MENU.render(true);
+ Object.assign(FK.SIDES[0].store, { food: 900, wood: 900, gold: 600, stone: 300, iron: 200 }); FK.SIDES[0].age = 3; const h0 = FK.seatOf(0), made = {};
+ for (const n of ['Barracks', 'Stable', 'Siege workshop', 'Lumber camp']) { const c = Object.keys(SH).find((k) => SH[k].name === n); out: for (let d = 8; d < 240; d++) for (const [i, j] of [[h0.i + d, h0.j], [h0.i - d, h0.j], [h0.i, h0.j + d], [h0.i, h0.j - d], [h0.i + d, h0.j + d], [h0.i - d, h0.j - d]]) { if (!ECON.canPlace(c, i, j, 0)) continue; const t = FK.build(c, i, j, FK.SIDES[0].col); if (t) { t.side = 0; t.done = 1; made[n] = t; break out; } } }
+ FK.pause(true); window.$made = made; window.$W = W; return Object.keys(made); })()"""
 WAYS = [('1 Plain (nothing behind)', 'background:none;border-color:transparent;box-shadow:none', ''),
         ('2 Outline (stroke round each letter)', 'background:none;border-color:transparent;box-shadow:none', '-webkit-text-stroke:3px #1b130c;paint-order:stroke fill'),
         ('3 Halo (soft dark glow)', 'background:none;border-color:transparent;box-shadow:none', 'text-shadow:0 0 3px #000,0 0 5px #000,0 0 8px #000,0 1px 2px #000'),
