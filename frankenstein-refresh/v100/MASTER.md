@@ -176,10 +176,10 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144, N206)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225) · D125 (N169, N168, N195, N198, N370) · SN1 (N133, N283) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225, N385) · D125 (N169, N168, N195, N198, N370) · SN1 (N133, N283) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
 - **E694** a unit's row of numbers with its side's research applied, kept until the research changes:
-- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198) · D130 (N160)
+- **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198, N385) · D130 (N160)
 - **E370** a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give 
 - **E281** learning a step puts its effects in force for that side; every unit and building of the si
 - **E684** the work queue: slow jobs, each a generator that yields where it may stop; one job of a ke
@@ -584,7 +584,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E171** the codes and their floors; Lock is a mark for us (no floor is locked yet)
 - **E172** the Screen book: the Build tabs are its; a building shows priced once econ prices it, else
 - **E173** the seat, and who it trains first: asked of the books, never named
-- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194, N195, N198)
+- **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194, N195, N198, N385)
 - **E175** a page that keeps its own height (SC20) · SC20 (N101)
 - **E176** the new game's choices: the first is the label's row in Albert's template; built ones set 
 - **E177** which choices are floors yet
@@ -605,19 +605,19 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E274** how much slower a full cover of mud or snow makes a march, in percent, from its terrain fa · QN (N13)
 - **E275** a place as the map's lettered squares, measured from the board's corner: D190 units a squa · D190 (N132) · A1 (N90)
 - **E276** a ledger line: its reasons largest first, each in its word and shortened, apart by a dot; 
-- **E815** what a research does, in words from its effects; with no effects, why it is there
-- **E828** the ring's marker inside a box: its colour and its state (dim not chosen, lit chosen, run 
+- **E815** what a research does, in words from its effects; with no effects, why it is there. N62 (N3 · N62 · N385 · J58 (N385)
+- **E828** the ring's marker inside a box: its colour and its state (dim not chosen, lit chosen, run  · N62 · N385
 - **E829** one colour a kind of work (Albert, Nov 9 12:03-12:19): the age-up white; soldiers red; sco · N369
 - **E830** dim is the colour mixed into the tray brown by one share, never picked by hand
 - **E831** the box's outline as one path from 12 o'clock, clockwise, round its corners
 - **E832** each ring drawn once its box has a size, and again only when its size, colour or state cha · N369
 - **E850** a ring is the box's outline: the box drops its own border so the ring sits on the edge, on
 - **E833** how far the work is: a queue's first item by the time left on it; the help line by its tim
+- **E1120** the fit law: a line of a dock cell, a tab or the name pill that is wider than its box is d · N385
 - **E834** every frame the running rings recede, pinned at 12, clockwise, gone when the work is done
-- **E926** a price is one line in one colour, by the store you are shortest of: red at nothing, white · C34 (N308, N307, N369) · N369
+- **E926** a price is one line in one colour, by the store you are shortest of: red at nothing, white · C34 (N308, N307, N369, N385) · N369 · N62 · N385
 - **E183** 60w 60f, as Albert's Build menu
 - **E404** the squads' words and the step each dial waits for (Engagement, Formations, Battalions)
-- **E405** the War Council's card: the three squads, the picked one's plan by class (− and +) and Mus
 - **E1038** the tap table (SN43, Albert Nov 12 08:12-08:15): with something picked, the next tap is it · SN43 (N326)
 - **E1060** Jobs fine-tunes the next tap (Albert: "the village control is meant to fine tune"): with H
 - **E1052** the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldie
@@ -627,13 +627,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
 - **E373** why a kind waits: the age it opens in (Mid's trainWhy)
 - **E184** read: the one window onto the world the glass draws from
-- **E185** VERBS: every way the player may act, each with its reason not to. act() asks whyNot first;
+- **E1112** Back, the circle beside Close: on a card with a people chosen it steps back to the peoples · N385
 - **E403** the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up op
 - **E1004** who goes: All, Idle, a Class (Foot, Archers, Cavalry, Siege) or a Squad; choosing one pick
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
 - **E1048** the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a sq · N25
 - **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
-- **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195, N350) · D271 (N34, N195)
+- **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195, N350, N385) · D271 (N34, N195)
 - **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1045** a caravan's escort (Albert, Oct 27): its card has Escort +4 (the nearest idle soldiers of 
 - **E1023** a caravan takes a trade route two ways: Trade route on its card sends it to the nearest tr
@@ -649,57 +649,57 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1025** no food for a villager: the People icon wears the cannot-afford fade, red at nothing to wh
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
-- **E1093** Show tech (Albert, Nov 14, N369): one switch for every card; off, a card lists only the re · N369
 - **E192** tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines · N61 · N384
 - **E854** made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm · SN34 (N287)
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
-- **E932** tap a queued slot to cancel it, refunded (Albert, Nov 10, #29)
 - **E933** a site's card sends one more villager: the nearest idle, else the nearest worker, who goes
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
 - **E1103** look: the camera jumps to the next spot of its kind, alert or army; the same button again  · N378
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
-- **E1058** the villager Controller (Design 08 section 8, N333): a called villager (or a group of them · N333 · N371
+- **E1058** the villager Controller (Design 08 section 8, N333): a called villager (or a group of them · N333 · N371 · N62 · N385
 - **E1059** the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with
-- **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and · N371
-- **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
+- **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and · N371 · N62 · N385
+- **E1113** a card's tab: choosing one shows its cells from the first page and lets go of a chosen peo · N385
+- **E1114** the More cell, in the sixth place only when a tab holds more than six: it says how many mo · N385
+- **E1115** a people's cell on Relations or Misfits: a tap chooses it, and the row then shows that peo · N385
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
-- **E849** a group's label over its boxes, in small capitals across the whole row (as the v80 card)
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
-- **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
-- **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings  · N61 · N384
-- **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech; its resea
+- **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings  · N61 · N384 · N62 · N385 · E1117
 - **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
-- **E199** one row a name in SN4; each answers for the subject t, or says nothing · SN4 (N136, N170, N194)
-- **E358** a pasture's card counts its sheep
-- **E1028** every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill shou · E333
-- **E738** a building's research on its card: the next step of each of its lines, as Base's card (the · N369
-- **E477** the troops row: Teach, Zeal and ransoms on your own card, the lesson's time left, and what
-- **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the 
-- **E200** the base: Albert's template. Corners Yard and War; who works where; Build and − + under ea
+- **E1116** the card's helpers: up, your building and finished; info, a cell that only tells; docked,  · N385
+- **E1117** the dock's one mold, for Build and for every card: a row of up to six tabs, the chosen one · N385
+- **E840** Relations and Misfits in the dock (N385: tap, then choices): the peoples as cells, each wi · N385
+- **E199** a card's tabs (SN4), one a name: each answers for the subject t with its cells, none when  · SN4 (N136, N170, N194, N385) · N385
+- **E738** a building's Learn tab: the next step of each of its lines (the Town Center's next age fir · N385
+- **E1028** every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill shou · E333 · N62 · N385
+- **E405** the War Council's tabs (N385): Squads, the three squads and Muster for what the picked one · N385
+- **E477** the Intel tab on their hall: what your spy read (when, their age, their steps of research, · N385
+- **E1118** Manage, every card's last tab: first what the thing is (its health and what it is doing, a · N385
+- **E1119** a card in the dock: the tabs the subject ticks and that hold something, in the book's orde · N385
+- **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the  · N62 · N385
 - **E736** the Home button stands at the rank's left whenever the Town Center is off the screen, and 
 - **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E1104** the two look buttons beside Home on the top row: the alert red while something is under at · N378
-- **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25 · N61 · N384
+- **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25 · N61 · N384 · N62 · N385 · E1112
 - **E1003** picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller wi
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
-- **E840** the stances: a people's name over two columns, then its four boxes (gift or bribe, war, te
 - **E971** the top row holds what two rows held (Albert, Nov 10 18:27): a cell named two keys joined 
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
@@ -721,7 +721,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E333** the ghost to the finger, lifted above it on a phone, snapped beside yours; the reason it m
 - **E334** a wall's next corner snaps flat or upright when nearly so; its tiles from its corners (Mid
 - **E335** a finger on a wall's corner moves it, on its line slides the whole wall; elsewhere it look
-- **E726** the place bar says what Base's said (J34): where to press, then the name with 'tap Build,  · J34 (N241)
+- **E726** the place bar says what Base's said (J34): where to press, then the name with 'tap Build,  · J34 (N241, N385)
 - **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near · N17
 - **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map; the drag
 - **E700** only a touch on or near the ghost moves it; a touch away from it falls through to the came
@@ -732,6 +732,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E699** the ghost carries its own label on the map, as Base and Mid: its name and price where it f
 - **E207** the tap: the glass answers first. A ghost takes it; aiming takes it; a unit or a thing und
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
+- **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
 - **E1047** one tap rule on the war page too: a tap on a villager (or any of yours that is not a soldi · N30
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
@@ -786,9 +787,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
 - **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
-- **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168, N369)
+- **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E213** First Keep v100 · econ.js (floor 9): the economy. Lives alone; touches the world only thro
 - **E290** the Research book (O) by code and by key
 - **E267** a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and t
@@ -815,7 +816,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E317** taking a building down pays back half its price, all of it early in the build; its line is
 - **E318** a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing s
 - **E319** the walk starts on the Town Center's own floor; walls being laid count as built; everythin
-- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195, N198, N225) · D129 (N160)
+- **E218** training, research and the age: one queue at the building, as long as the mold's six and w · QCA (N154, N155, N156, N176, N185) · D124 (N169, N176, N194, N195, N198, N225, N385) · D129 (N160)
 - **E931** any queued item can be taken out, not only the last, and is paid back in full; taking out 
 - **E956** a soldier trained while a rally flag stands joins the ones already marching to it or holdi · N17 · N13
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle o · N369
@@ -1094,21 +1095,21 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E525** what a side stands, raises, trains and has queued, asked of the things themselves
 - **E526** the by-need plan's eyes (QCM, QV): the seconds to the bell, what one more hand earns at th · QCM (N24, N202) · QV (N23, N24)
 - **E682** a computer's estimate of what one more worker earns on a yield is kept for the slow beat ( · D182 (N122)
-- **E527** the army a side keeps: its personality's ceiling plus D291's armyAge an age, at most D226; · D291 (N202, N370) · D226 (N176) · D285 (N198, N199, N202)
+- **E527** the army a side keeps: its personality's ceiling plus D291's armyAge an age, at most D226; · D291 (N202, N370, N385) · D226 (N176) · D285 (N198, N199, N202)
 - **E528** the counter (QCN, Mid's bestCounter): among the soldiers it can train now, the best answer · QCN (N202)
 - **E529** a computer's turn, every D304 react s (Mid's think), in Mid's order: a site nobody raises, · D304 (N202)
 - **E649** a computer chases its crown (Mid's chaseCrown): the wellbeing chaser builds each place of 
 - **E1021** a computer thinks in slices across steps (E684): its hall can fall between two slices, and · E684
 - **E530** shelter before it is needed: a Home (an Apartment once it can) when the people come within · D152 (N202)
-- **E531** a drop-off where D291's crew work a yield whose nearest find stands far from one · D291 (N202, N370)
+- **E531** a drop-off where D291's crew work a yield whose nearest find stands far from one · D291 (N202, N370, N385)
 - **E532** the shift to plots: one at a time, never more than the hands on its yield, when it beats t
 - **E533** the age: once the town is big enough (D176) it saves for the next; a save once begun holds · D176 (N202) · D290 (N202)
 - **E534** the town grows while one more villager pays its price in the time left (QCM), and not whil · QCM (N24, N202)
 - **E535** its personality's buildings in order (D303 build); while saving, only the first; a second  · D303 (N202, N203, N222)
 - **E330** the computer's wall ring: from its age, with stone, a few pieces a round, gates first, whi
 - **E536** faith and care: priests with an army, Zeal on the soldiers fighting, medics (Mid's think)
-- **E537** engines to break what soldiers cannot, by D291's cycle and the age's late engine · D291 (N202, N370)
-- **E538** research while not saving: its personality's list in order, each through the first step it · D291 (N202, N370)
+- **E537** engines to break what soldiers cannot, by D291's cycle and the age's late engine · D291 (N202, N370, N385)
+- **E538** research while not saving: its personality's list in order, each through the first step it · D291 (N202, N370, N385)
 - **E539** the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yiel · QCM (N24, N202)
 - **E540** a hand moves to the bottleneck from a yield the goal does not need whose store does not th
 - **E541** with nothing short, the personality's mix: no stone and less gold in the Stone age, no iro

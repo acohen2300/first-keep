@@ -241,7 +241,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N138** Design: Albert, Nov 5 07:36 → SN6
 - **N139** Design: Albert, Nov 4 (the setup screen its own height) → SN10
 - **N140** Design: Albert, Nov 5 → SN11
-- **N141** Design: Albert, Nov 5 07:34 → SN12
+- **N141** Design: Albert, Nov 5 07:34 → unused
 - **N142** Design: v100 floor 8, Nov 5 → SN13
 - **N143** Design: Albert, Nov 5 10:28 (Tall for the volume row: keep for now) → SN13
 - **N144** Design: the v100 dictionary, Nov 4–5 (S, U, M, R, B) → R1, R5, R2, R3, R4, MG1, MG2, MG3, MG4, BTC1, BTC2, BTC5, BTC6, BTC7, BTC8, BR1, BR2, BCR1, BCR2, BCL1, BCL2, BCL3, BCL4, BCT1, BCT2, BP1, BP2, BP3, BP4, BP5, BP6, BP7, BP8, BP9, BP10, BI1, BI2, BI3, BI4, BI5, BI6, BI7, BI8, BI9, BM1, BM2, BM3, BM4, BW1, BW2, BW3, BW4, BF5, BF1, BF2, BF3, BF4, BS1, BS2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM23, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, US5, UT1, UT2, UT4, MH1, MH3, MH4, MH5, MH6, MW3, MW4, MW6, UM17, UM18, UM19, UM20, UM21, UM22
@@ -463,7 +463,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N366** Albert, Nov 14, 2026, 09:52: "to solve late game gold… when we hit gun powder age how about gold mining? ... y → SC51, X119, O31
 - **N367** Albert, Nov 14, 2026, 10:16: "figure out a way to build a unit, maybe in the siege workshop that cuts down tre → SC52, D286, D360, X120, UM23, O262
 - **N368** Albert, Nov 11, 2026 (N24): an order means go where he taps, period. Nov 14, 2026, 16:09, after a 121-minute g → X121
-- **N369** (to open) Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then "Go build"): the new game's option rings a → SC53, C27, C34, D62, D206, D241, D340, X81, X122, SN32, J43
+- **N369** (to open) Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then "Go build"): the new game's option rings a → SC53, C27, C34, D62, D206, D241, D340, X81, X122, SN32
 - **N370** Albert, Nov 14, 2026, 21:49 to 21:52, after a 144-minute game: "They always win with the wonder." Claude put f → D125, D200, D257, D291, X123, J13
 - **N371** Albert, Nov 14, 2026, 22:05: "I meant my villagers wouldn't die. I needed them gone. But killing them with the → X123
 - **N372** Albert, Nov 15, 2026, 05:46: "Can you do 9?" (his list of Nov 14 22:05, item 9: "The trade routes need to come → D379, X124
@@ -479,10 +479,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N382** Albert, Nov 15, 2026, 11:24, after n58 with three screenshots: "I love it. Three bugs 1. They dip into water 2 → D278, X127
 - **N383** Albert, Nov 15, 2026, 12:24, with a screenshot of preview n59 zoomed out: "N59 isn’t fixed roads. It’s even wo → D379, X128
 - **N384** Albert, Nov 15, 2026, 14:38 to 19:15, talk mode (Design 12, The List 22): "Why does the build menu need to be  → SC54, X129, SN11
+- **N385** Albert, Nov 15, 2026, 15:53 to 19:15, talk mode and his answers on paper (Design 12 B and E, The List 22), the → C34, D124, D133, D270, D291, X29, X30, X50, X78, X102, X103, X122, X130, SN4, SN32, SN44, J36, J34, J40, J43, J58
 
 ## Named exceptions
 
-- Tall: Start, Hall, Layers, Mail, Back
+- Tall: Start, Layers, Mail, Back
 - Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL2
 
 ## Sounds waiting for a feature

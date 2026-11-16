@@ -795,3 +795,21 @@ All of these are built and kept on branch `n29-the-list` (N42 `aaf4b19`, N43 `ae
 
 - Stop guards (v80 had bandits at each trade stop): Albert, Nov 15 07:54: "not at this time".
 - Cut in N55 (Albert, Nov 15 07:54, "Kill it and merge with mail"): the message bar under the top bar (#toast, its read-time timer D toast/read, its queue), the help line inside every menu that repeated it, and the Help page (a second list of the same messages, D said). Their messages are letters in Mail. The help line stays on the new-game (Start) and Back cards only, where it carries the civ line and the welcome.
+
+## Cut in N62, cards in the dock (Albert, Nov 15 15:53 to 19:15, Design 12 F2) [2026-11-15 20:50]
+The code as it was is in N61 (`34f4a71`, `frankenstein-refresh/v100/menu.js`). His words are in N385 and The List 22.
+- The sheet cards, whole: every thing's card as rows on a sheet (`ROWS`: title, health, load, store, flock, trade, make, hire, plot, queue, train, tech, troops, acts) and the Town Center page (`SCREENS.Hall`, SN12: the title with the age bar over it, Back, the book and Close; the tabs Town, Relations, Misfits). Every card is drawn in the dock now.
+- The Town Center's info page (the book on its title): health in numbers, what the people eat a minute, the next age's price and time. For the Help section (Design 12 F4).
+- The queue row ("No queue row. Just a ring and counter"): `queue6`, the verb `unq`, `hallRead`, the − box (`untrain`). A unit is cancelled from Back; a research by a tap on its cell.
+- Show tech ("Yes move the show tech from everywhere"): the verb `alltech`, `S.allTech`, the word J43 allTech. A step of a later age is hidden until its age. The whole tree is for the Help section (F4).
+- The Ram ("The siege workshop has too many anyhow"; the engine to go: "The ram"): its training time (D124, UM4: 20 s) is taken out, so no side trains it, and it is out of the computers' siege cycle (D291). Its shell (UM4), price (D123: 150 wood, 50 gold) and numbers (D138) stay in the books. To bring it back: D124 UM4 20, D291 cycle first.
+- The Small camp wagon ("I think the large one is enough"): out of the Stable's list (D133). Its shell (UT2), price, time and numbers stay. The Guide still lists both it and the Ram: for F4.
+- Spice at the Market ("We don't make spice. Kill it"): out of D270's sells and, Claude's call, its buys (buying what cannot be sold). A caravan's spice (`route.spice`, econ.js) is untouched and was already unreachable.
+- The unit card ("Kill the villager cards for now. We only need: select, kill, hold, go"): Design 08's card for a called unit (status and Select the rest, Add task, Build, Cancel; the folded rows Orders, Attention, Load, Group, History, Statistics) and the villager pad's Log. Verbs cut: rest, addTask, planDone, planDrop, buildFor, hang, fold, att, dump, newGroup, vlog. Its words (J55) and what econ.js records for it (a unit's history, what it gathered and ate, when it was born) stay. Left: Exit, in the Manage tab of a unit's card.
+- Rally ("It doesn't work anyway. Park it"): the verb `rally` (no button called it). The flag itself (`SIDES.flag`, econ.js and combat.js) stays.
+- Words that do not fit a cell, dropped from the cards (each is still told another way): the sentence saying why a research is locked (the cell says it short, in red: the age, the step it needs, Line full; the tap says it whole) or why a Build place is (it reads Locked; the tap says why); " · Fits here" on a suggested place (its blue edge stays); "(theirs)" after a name (the name is in their colour); a caravan's sentence about its route; "carrying N" on a unit that is not yours; a research's second and later effects (the cell shows the first; the message on research says all).
+- Recall on the card of a unit that is not a soldier (a caravan, a wagon, an envoy): it called the whole army home from the wrong card. Soldiers keep it.
+- The choices' coloured rings on Relations and Misfits (gift gold, war red, terms gold, ally blue): not drawn in the dock, where a ring means work.
+- OPEN, his: the villager's brown pad has three boxes where Log was the fourth.
+- OPEN, his: a research that can be bought no longer wears a blue ring in the dock (his Nov 14 word: "blue when available"); the mock he approved rings only the one at work. Rings in the dock show at work only.
+

@@ -1,6 +1,6 @@
 # Design 12: the dock, one card for everything (Albert, Nov 15 2026, 14:38 to 18:46)
 
-His words, sorted. Talk mode: RULED, NOT BUILT. Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind).
+His words, sorted. F1 BUILT as N61 and F2 BUILT as N62 (his play owed on both; section H holds Claude's calls inside F2); F3 to F5 RULED, NOT BUILT. Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind).
 His words for the build (18:46): "Lean and mean. Light and tight. Clean and clear. Simple and elegant. Follow our rules. Only one home for things. ECS laws. Books, citations, indexes, references, comments. No loose info. No helpers. No agents. No builders. Just you." And the 12 core values.
 
 ## A. The idea
@@ -28,6 +28,7 @@ His words for the build (18:46): "Lean and mean. Light and tight. Clean and clea
 2. Groups over six (D133, `books/measure.js:125`; `index.html:412` trains): Siege workshop 7 (6 without the Ram); the Training tent 7 (Villager, 2 Foot, 4 Archers); the Market sells 7 goods (D market). No building has more than 6 techs in one age.
 3. CORRECTION: the Stable trains 6, not 7 as Claude said at 17:59. A civilisation's rider replaces a base rider (shells `replaces`). With the small wagon gone it is 5. The Chariot's retirement, which he agreed to, is no longer needed for the cap.
 4. CORRECTION: Claude said 18 characters at 18:11; drawn at size it is about 14.
+9. CORRECTION (N62, 2026-11-15 21:30): 14 was wrong too. Measured in the running game at 390 px wide: a cell is 62.7 px and "Lumber camp" (11 letters) is 63.9 px at 12 px, so a cell holds 10 to 11 letters. 101 of 254 research names, 9 unit names and every three-part price were wider than a cell. Hence the fit law and the short names (section H 3).
 5. Relations (3 peoples) and Misfits (4 groups) (`menu.js:379`) fit as cells; each one's stances need a second step.
 6. The unit's card (Design 08; `menu.js:327` ROWS.call): its 13 buttons fit as tabs and cells; its lists (orders, history, stats) are text with no cell.
 7. Build tabs already hold exactly six each (SN2, `books/screen.js:5`).
@@ -50,8 +51,8 @@ His words for the build (18:46): "Lean and mean. Light and tight. Clean and clea
 
 ## F. The plan (CLAUDE.md 8c): for his yes
 Spec: this file, complete once E is answered. Then, each its own build and preview, tests first (each check failing on today's code), permit, book entries, full suite on a frozen copy, seal; the `ecs` counts and the code size may not rise.
-1. The dock frame: the six circles, the pill, the tab row, six cells; Build drawn in it (B1, B5, A3, A4).
-2. Cards in it: Train, Learn, Manage tabs; three lines; cost in letters with the stepped colour; the ring and count; Show tech, the Ram, the small wagon and the queue row cut and logged in Parked (B2, B3, B4, B6).
+1. The dock frame: the six circles, the pill, the tab row, six cells; Build drawn in it (B1, B5, A3, A4). BUILT, N61.
+2. Cards in it: Train, Learn, Manage tabs; three lines; cost in letters with the stepped colour; the ring and count; Show tech, the Ram, the small wagon and the queue row cut and logged in Parked (B2, B3, B4, B6). BUILT, N62 (BUILDS.md N62; cuts in Parked, "Cut in N62").
 3. The unit cell and "loses to" (C8).
 4. The Help section: guide, tips, the tech tree, the triangle (B6, C8).
 5. Shots by kind (C9).
@@ -59,3 +60,23 @@ Expected, unverified: 1 and 2 shrink menu.js (the Build page, the Town Center pa
 
 ## G. The 12 core values, checked for the dock
 1 Fair: yes, the same card for every side. 2 Our logic: one mold, one home (the dock). 3 Real-life: the command card. 4, 5, 9 Math and source: Fitts's law T = a + b log2(D/W + 1), W the hit zone (from memory, not opened; goes in the Citations book at build). 6 Purpose: the map stays in sight; one grammar. 7 Function: every card's groups in at most six tabs of six. 8 One home: yes. 10 Detail and play: what a unit beats is shown. 11 Solves a problem: his words, A5. 12 Saves code: expected, unverified.
+
+## H. N62 (F2), Claude's calls inside his rulings: his to overrule [2026-11-15 21:30]
+Each is built. None was ruled in these words.
+1. **The tabs** (SN4), by the thing's ticks, only those with something in them: Train, Learn, Sell, Buy, Bulk (the Market), Make, Plant (a drop-off's plots), Relations, Misfits (your Town Center), Squads, Plan (the War Council), Intel (what a spy read, on their hall), Manage (everything: what it is, what can be done). The Market has exactly six.
+2. **Manage's first cell only tells**: health (and what a unit is doing), a site's share raised, what is left in a find, a flock.
+3. **The fit law and the short names.** A line wider than its cell is drawn narrower, never under 77% of its width (SN44). 32 names still too wide have a short form for cells only (Words J58), by his "Shorten them as needed": Weights and measures → Weights; Chimney and fireplace → Chimney; Scientific method → Sci. method; Large camp wagon → Camp wagon; Elite: Royal elephant → Royal elephant; and the rest. The full name stays in messages and the Guide.
+4. **The effect line** shows the first effect only, in sentence case ("Train time −25%", his form with a small t). Words shortened to fit (J40): gathering → Gather, research time → Research, the stranger's penalty → Penalty, two at a time → Per train.
+5. **The cost's colour** ticks in 4 shades a side (C34 steps).
+6. **More than six**: the sixth cell reads "+1" (how many more than six) over the page ("1/2"); a tap turns the page. Five cells a page then.
+7. **The count** is "×3" on the cell's middle line. On a unit cell F3 puts the three metrics there: while the unit is queued the count takes that line.
+8. **Rings in the dock show only at work**: green and receding on the one in hand, full on those that wait (blue for a research that waits). A research that can be bought wears no ring (his Nov 14 "blue when available" was "for now until he test plays"; mock 2 rings only the one at work).
+9. **The Scout trains at the Town Center** (it was a dead "Later" box; the book D133 always listed it and the computers train it).
+10. **Buying spice** is cut with selling it.
+11. **A unit's card**: a lone unit of yours that is neither villager nor soldier (a caravan, a wagon, an envoy) opens Manage in the dock on a tap; a soldier always gets the Controller (a lone soldier used to get the card over it); a double tap on any unit opens its card. Manage holds Teach, Trade route, Escort, Release, the camera, Stealth, Stop or Recall, Exit.
+12. **A thing that is not yours** has its name in its side's colour, for "(theirs)".
+13. **Back** cancels the last unit queued from any tab of that building, and says so ("Spearman cancelled: its price is back").
+14. **Locks**: a research says why short, in red, on its price line; a Build place reads Locked. A tap says it whole.
+15. **The villager's brown pad** holds three; Log's box is empty.
+16. **A four-part price** (the Wonder, the last two ages) takes two lines, two parts each; the age cell has no "Next age" line (mock 2 had it).
+

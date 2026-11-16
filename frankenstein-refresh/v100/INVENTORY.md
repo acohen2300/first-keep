@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,669 | 652,500 | 652,664 |
-| Books | 2600 | 0 | 859,687 | 860,659 |
+| Game code | 31 | 3,634 | 646,327 | 646,470 |
+| Books | 2604 | 0 | 868,291 | 869,266 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,435 | 405,879 | 406,140 |
+| Tools | 5 | 2,463 | 413,696 | 413,960 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,245 | 10,249 | 54 |
-| menu.js | 608 | 131,294 | 131,352 | 435 |
+| menu.js | 573 | 125,121 | 125,158 | 407 |
 | econ.js | 627 | 119,227 | 119,227 | 70 |
 | combat.js | 380 | 65,061 | 65,061 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
@@ -50,21 +50,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 58 | 17,639 |
-| citations | 378 | 110,562 |
-| colours | 34 | 10,273 |
-| comments | 1038 | 207,279 |
+| capabilities | 58 | 17,652 |
+| citations | 379 | 111,929 |
+| colours | 34 | 10,399 |
+| comments | 1039 | 209,732 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 205,011 |
-| rules | 126 | 51,152 |
-| screen | 27 | 17,392 |
+| measure | 341 | 205,443 |
+| rules | 127 | 52,721 |
+| screen | 27 | 17,879 |
 | shells | 111 | 24,127 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 69 | 40,135 |
 | tech | 260 | 76,080 |
-| words | 55 | 103,167 |
+| words | 56 | 105,447 |
 
 ## The shells
 
@@ -106,8 +106,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X26 | t-height | page | every Build tab shares one height, two rows of three (Albert Nov 9: fit two rows; since N2 the other menus are bottom sheets that hug their rows) |
 | X27 | t-tall | page | the Tall pages keep their own height |
 | X28 | t-solid | page | the panel is solid |
-| X29 | t-queue | page | the seat's queue is the mold's six single slots, filling in order |
-| X30 | t-cards | page | a card shows the rows its subject ticks: a villager, a find, the seat |
+| X29 | t-queue | page | the seat's queue has no row (N62, N385): the Train cell of what is queued rings and counts |
+| X30 | t-cards | page | a card is the dock's mold (N62, N385): tabs over six cells and its name in the top row, nothing on the sheet: a villager, a find, the seat |
 | X31 | t-place | page | a building picked from Build is placed as a site |
 | X32 | t-errors | page | the page runs with no errors |
 | X33 | t-proof | page | the gate stops each planted break: a second home, a bad tick, a shell named in code, swallowed code, one byte of a locked law |
@@ -125,7 +125,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X47 | t-effects | page | a kind's numbers after research are Mid's stats(), maxHpB, unitCost, techCost and rehealth with its shares added, not multiplied (QCA); a Home's health is D139 × (1 + Σ shares); the lowest is kept; a find's rate and the walk read the law |
 | X48 | t-odds | page | the odds of a battle are Mid's frozen unitPower, powerOf, powerFrom, matchup and lanchester for the same armies and towers (Mid's values, a tower 120, the people 250); a villager walled in from every find does not crash and ends idle or waiting |
 | X49 | t-foe | page | who is a foe is Mid's frozen isFoe, gangOf, atWar and friendly for the same sides, groups and stances: animals everyone's foe, each wild group by its own stance, a treaty binding only its signers; a soldier and a tower strike only a foe |
-| X50 | t-research | page | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age |
+| X50 | t-research | page | ages and research are Mid's frozen code for the same orders: the age queued at the seat at its price and wait, the seat training nothing while it rises, the lines in order at each step's price and time (research-speed steps applied), a step out of order, queued, before its age or its needs refused; after each step the wood rate, the load, a home's room and the camp's footing Mid's with its shares added; the Hall names a step and an age, the age button and info card the next age and its own wait, the hidden age never next, the keep's level at Gunpowder drawn, Z1 from Mid's first age; N62 (N385): the hall's queue is read from its cells at work; the info card is parked |
 | X51 | t-gather | page | ten villagers sent to one bush patch each stand on a spot of their own on its ring, the spots and the bodies a pace apart, never more on a find than Mid's frozen findCap; each one's crowd share and forager's rate are Mid's frozen forage for the same load, walk, crowd and walked length; Mid's frozen makeNow on the same five minutes of work gathers the same food within 2% (the walk is v100's: paths, and the push by mass) |
 | X52 | t-walls | page | builders, repair, limits, placing and walls are Mid's frozen code for the same actions: a crew's build time and a site's health (bldTick, n^0.7), a repair's time and stores spent (repairTick) and its price (repairCost), every price Mid's BLD and UNIT cost, the refund taken down (shellBack), every building's limit by age with research (capFor, capWhy), placing's refusals (canPlace), a wall laid corner to corner (wallLine) and the seal's gap (sealPath); on the page the nearest free villager is sent and one pulled off its work goes back to it, the ghost snaps a lane apart, a gate opens to its own and an ally and shuts to a foe, and the computer lays its ring |
 | X53 | t-food | page | a year and a season of food is Mid's frozen code for the same town (20 villagers, five at bushes, 5 foot, 5 riders, 4 farms worked and resting, a tended pasture of 11 with a wolf at two turns, half-fished fish, the hearth, the ice house and seed selection known, the store run dry and fed again): what is eaten (shareOf, upkeepTick, starveTick, foodInReach, hungerOf), spoiled and regrown at each turn (seasonTurn), the soil left (natureTick), the flock and its mutton, and the fields' harvest by season, soil and the year's roll (gatherMul) all equal Mid's; an order's meals are Mid's orderCost; a boar hunted falls as its meat and is butchered; fish are worked only near a dock |
@@ -153,7 +153,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
-| X78 | t-n17 | page | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the twelve repeatable buildings; every locked research says why on its button; a tap held a second on Train still trains |
+| X78 | t-n17 | page | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the twelve repeatable buildings; every locked research says why on its button; a tap held a second on Train still trains; N62 (N385): the lock is said short on the button, to fit a cell of the dock |
 | X79 | t-ground | page | the paper ground (N11-N14): on the opening view, open water well below the land is drawn blue and open land well above it green, nine in ten points or more, away from shores, finds and trees |
 | X80 | t-n15 | page | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark |
 | X81 | t-n16 | page | N16: a message with a place shows Go on a menu's help line (its quick action checks went with the quick action, N52: t-n52 holds that a tap on open ground opens nothing) |
@@ -177,8 +177,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X99 | proof | gate | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) |
 | X100 | t-p2 | page | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first |
 | X101 | door | code | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) |
-| X102 | t-p2b | page | P2b, the card (Design 08): calling a villager opens her card with every section folded; one fold opens at a time; Attention and Load set the unit; Add task queues the next tap and runs it when her task ends; History and Statistics record her work; Exit asks twice and removes her; Cancel hangs up |
-| X103 | t-p2c | page | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO |
+| X102 | t-p2b | page | P2b, moved to the ruling of Nov 15 (N385: "Kill the villager cards for now. We only need: select, kill, hold, go"): a villager's card is the dock's Manage with her health and Exit; the folds, Add task, Cancel and their verbs are gone; her history is still recorded; Exit asks twice and removes her |
+| X103 | t-p2c | page | P2c, the villager Controller (Design 08 section 8): calling a villager shows the Controller, not the card; the pads hold the clockwise order; Deposit/Drop and Focus/Mobile set her and light; Group calls everyone on her spot; Jobs restricts the next tap; Order queues it; Restart puts back her settings; Exit asks twice; the pill builds the choices and ends in GO; N62 (N385): the brown pad holds three, Log cut with the card |
 | X104 | t-freeze | page | the ground does not repaint every second (N334): with snow on the ground and the camera still, at most two repaints in 5 seconds (the snow can step once); a new scar repaints it at once |
 | X106 | hues | code | G1 (N336): a colour typed in the menus, the logic or the page style instead of read from the Colours book (the brushes' and figures' own paint excepted) |
 | X107 | t-idle | page | a computer leaves no villager standing (N337): one waiting on a find she lost, one waiting with no find and one idle are all sent to work in one turn of its mind |
@@ -196,7 +196,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X119 | t-n49 | page | N49 (N366): the mine shaft: before Blasting a Mining camp is only a drop-off; after it, the camp is a post that yields gold: a villager tapped onto it works there and gold comes into the stores with no carrying, its stock falling; emptied, it can be sunk again for its price's share and is full |
 | X120 | t-n50 | page | N50 (N367): the Pioneer: locked until Pioneer corps is learned; it may enter the woods where a Ram may not; standing still it fells nothing; moving, it fells the trees in its lane: a felled tree is still there with all its wood, is no longer woods, and lets a Ram through; a villager tapped onto it gathers it; trees out of its lane stand |
 | X121 | t-n51 | page | N51 (N368): an order to ground is obeyed in a fight: eight foot and eight archers fighting an equal force are sent to empty ground; three seconds on none is still on a foe and at least four in five of those who have not broken are nearer the spot; twelve seconds later none of those has turned back to the fight (a soldier who breaks and runs is no longer under the order: the nerve law, not this one) |
-| X122 | t-n52 | page | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks |
+| X122 | t-n52 | page | N52 (N369): a chosen option's ring is whole (its box above its neighbours, the ring the size of the box it is laid on); the Town Center page does not rest the world; a building's card lists no research of a later age until Show tech is on; a research of this age waiting on another opens that one's building with its box ringed, or the Build page on the building when none stands; three sites placed in a row are one villager's, built in the order placed, + Villager sends a second, and a villager tapped onto a site takes that site; every research ring is blue, lit when it can start, green while it runs; a price is white at exactly enough and green at twice; a tap on open ground opens nothing; the home patch holds half again as many bushes; a trained unit comes out on the south side and stands in a yard to the south; a Mint may touch a Mint and a Dwelling a Dwelling, never a Barracks; N62 (N385) moved three checks to the Nov 15 rulings: Show tech is cut (a later age's research stays hidden); in the dock a research rings only at work (green while it runs); the price's colour ticks in steps |
 | X123 | t-n53 | page | N53 (N370): a Wonder cannot be laid before the last open age and can in it; laying one tells every side, with its place; one villager's four minutes leave it under a fifth raised; a finished one wins only after 1,000 s; a computer waits for the last open age too; Exit (one villager or the called group) kills through the one death path: gone from the board and the head count (N371) |
 | X124 | t-n54 | page | N54 (N372): the trade roads: every land tile along both routes, far stop to far stop, wears to dirt (none grass), no tree stands on them, and every stop sits on its road; inside 200 feet of a road only oaks stand (Statute of Winchester); a free stop draws its empty trade booth and a held one leaves the drawing to its Trade post (N375) |
 | X125 | t-n55 | page | N55 (N376, N377): spy, medic and priest are the army (class Support): a picked priest tapped on an enemy goes to convert him, a spy on an enemy building goes to sabotage it, a medic goes where he is sent; no message bar: a message is a letter in Mail, and no menu carries a help line |
@@ -204,5 +204,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X127 | t-n57 | page | N57 (N379), N58 (N381), N59 (N382): no drawn road runs in water; stops keep apart and clear of every find; the trade roads reach the water at both sides of the map (one road or two per route); each trade road winds: somewhere it strays more than two tiles from the straight line between its stops; its ground is not grass; every stop lies on a road; the research tab (v80's parchment pill) marks a building with research ready, at its roof's upper left corner |
 | X128 | t-n60 | page | N60 (N383): on five boards each trade route is one road, every point of it clear of water and of every find by half its worn width and verge, both ends on the coast beyond the far stops at opposite sides, the two roads cross, and every stop lies on a road |
 | X129 | t-n61 | page | N61 (N384): the Build page lives in the dock: no sheet opens; the dock's top row is the six tabs and its second row the tab's six places; the top row of circles stays, Home first and War last, with Jobs and Build beside Home, the page's name in the middle, Back and Close beside War while it is open and the two look buttons there when it is not; a building that can be built once shows no count, and Built when it stands |
+| X130 | t-n62 | page | N62 (N385): every card lives in the dock: a tap on your Town Center opens no sheet, its tabs (Train, Learn, Relations, Misfits, Manage) stand over six cells and its name in the top row with Back and Close; a research cell holds three lines (its name, the word then the amount, its price in letters) and the price's colour ticks in steps; a unit queued rings its Train cell with a count, there is no queue row, and Back cancels the last one; a queued research rings alone and a tap cancels it; Show tech, the Ram, the Small camp wagon, spice, Rally and the unit card's rows are gone; seven in a tab turn the sixth cell into +1 and a second page; Relations shows the peoples, then one people's four choices, and Back returns; the Market's six tabs; a find's and a lone unit's card in the dock; every line of every card, every research, unit and Build place fits its cell at the book's share or wider |
 
-2730 items sealed · 2600 book entries · 94 laws · 378 citations, 35 still to open · 0 known
+2734 items sealed · 2604 book entries · 94 laws · 379 citations, 35 still to open · 0 known
