@@ -1,8 +1,8 @@
 # First Keep: hand-off (Nov 16, 2026, 04:52)
 
-## START HERE (2026-11-16 04:52): N63 sealed (preview n63): the unit cell and "loses to". Next: Design 12 F4 (the Help section), then F5, then the glo-up
+## START HERE (2026-11-16 04:52): N63 sealed (preview n63): the unit cell and "loses to". Next: Design 12 F4 (the Help section, ruled on mock 7: section J), then F5, then the glo-up
 - N63 (BUILDS.md N63; Design 12 F3 and its section I; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up. F1 to F3 are built; F4, F5 and the glo-up are ruled and NOT built. His play of n61, n62 and n63 owed. Design 12 H and I list Claude's calls inside F2 and F3: his to overrule; ask nothing again that they or The List 22 answer.
-- F4 (2026-11-16 05:50): Albert said "Ok go for F4"; its form was never ruled, so Claude mocked a proposal (Design 12 section J, mock 7) and asked four questions: the form, the door, the tree, static or scrolling. NOTHING BUILT. Build only after his answers; they go in section J first.
+- F4 (2026-11-16 06:50): RULED on mock 7, NOT BUILT. His four answers and the build notes are Design 12 section J: build exactly that, ask nothing it answers. Start: "build Design 12 F4".
 - For F4 (Design 12 B6, C8): a new section "Help, guide, tips and tricks, learn" holding the Guide, the whole tech tree, the Town Center's info (Parked, "Cut in N62") and the triangle of what beats what. The Guide still lists the Ram and the Small camp wagon. What beats what is one law now: `top`, `beats`, `loses` (menu.js, E1121) over `WAR.vs`; the symbols are SN45 (`MK`), drawn by `SVG[key]` inside a `.u` line. N55 removed the Help page: find what is left of it before building.
 - For F5 (C9): `combat.js` shot() and D245; mock 4.
 - Size: menu.js is 126,007 bytes after a grant of 850 in N63. The verbs callHome and recallP have no button (seen, not cut).

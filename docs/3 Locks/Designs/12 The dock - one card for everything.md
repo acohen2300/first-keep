@@ -1,6 +1,6 @@
 # Design 12: the dock, one card for everything (Albert, Nov 15 2026, 14:38 to 18:46)
 
-His words, sorted. F1 BUILT as N61, F2 BUILT as N62 and F3 BUILT as N63 (his play owed on all three; sections H and I hold Claude's calls inside F2 and F3); F4 and F5 RULED, NOT BUILT. Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind; 5 and 6 real screens of N62 and N63).
+His words, sorted. F1 BUILT as N61, F2 BUILT as N62 and F3 BUILT as N63 (his play owed on all three; sections H and I hold Claude's calls inside F2 and F3); F4 RULED on its mock (section J) and F5 RULED: both NOT BUILT. Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind; 5 and 6 real screens of N62 and N63; 7 the Help section).
 His words for the build (18:46): "Lean and mean. Light and tight. Clean and clear. Simple and elegant. Follow our rules. Only one home for things. ECS laws. Books, citations, indexes, references, comments. No loose info. No helpers. No agents. No builders. Just you." And the 12 core values.
 
 ## A. The idea
@@ -90,7 +90,7 @@ Each is built. None was ruled in these words. Real screens: `mockups/dock/6-n63-
 6. **The symbols** have one home (SN45) and reuse the game's own icons where it had one: the shield (Foot), the bow (Archers), the horse (Riders), the house (Buildings); new in SN19: the wheel (Engines), the heart, the blow, the reach. 10 px (SN35 sym). Seen: the horse reads weakly at 10 px.
 7. **Cut** (Parked, "Cut in N63"): the dead verb `kind`, which held a second home for a class's icon.
 
-## J. F4, the Help section: Claude's proposal, MOCK ONLY, nothing built: his word owed [2026-11-16 05:50]
+## J. F4, the Help section: RULED on the mock (2026-11-16 06:50), NOT BUILT
 Albert, Nov 16 05:20: "Ok go for F4". Ruled already (B6, C8): the tech tree, the guide, tips and the triangle live in one section "Help, guide, tips and tricks, learn". Not ruled: its form, its door, how the tree looks. The menus are done together, so this is a mock first: `mockups/dock/7-help-section-mock.png` (drawn in the running game with its own cells and the Guide's own data; no game code changed).
 Found: v100 never had the Guide as a page. `guide()`, `guideMd()` and `hist()` (menu.js 545 to 572) only write GUIDE.md; the page N55 removed was the earlier help lines, not the Guide. Mid has it as a card of pages (mid/src/31-guide.js: rules, buildings, units, research, ages, peoples, history). The Guide holds 50 buildings, 32 units, 254 research steps (28 buildings research; none has more than 20 steps or 7 lines), 6 ages, 6 peoples, 9 finds, 7 rules; Words has 14 tips.
 The proposal (one mold, the dock's):
@@ -102,5 +102,11 @@ The proposal (one mold, the dock's):
 6. **The door**: under the pause button, beside New game (the game is paused while you read).
 7. Also in F4, ruled or plain fixes: the Guide stops listing the Ram and the Small camp wagon as trained.
 Weaknesses: the Units and tree bodies are about 420 px tall and cover most of the map; a research cell in Help looks like one you can buy (proposal: Help only tells, a tap never buys); the rules' titles are sentences and need short names for cells; Mid's History page (dated steps, searchable) is left out.
-Open, his word: (a) the form, 1 and 2; (b) the door, 6; (c) the tree, 4; (d) static or the game's first scrolling list.
+His answers (2026-11-16 06:50, to four questions on mock 7; each was the option marked recommended):
+- (a) The form: "Yes, as mocked": Help is a card in the dock, "Help" in the pill, the six tabs, a taller body of cells, a reading box at the foot.
+- (b) The door: "Under the pause button": a Help cell beside New game; the game is paused while you read.
+- (c) The tree: "Yes, as mocked": the buildings that research as cells with learned/total; a tap shows that building's every step in the Learn tab's cell, a group a line, later ages marked in red. Help only tells: a tap there never buys.
+- (d) "Static, tap to read": nothing in Help scrolls; the 7 rules get short names for cells.
+Still Claude's calls inside these, his to overrule (items 3 and 5 above were on the mock or in the question's words only in part): the triangle as one line; Buildings by Build's six groups; what Ages, Peoples and Tips hold; Mid's History page left out.
+For the build (CLAUDE.md 8c; its own chat: "build Design 12 F4"): tests first; the mock's script is not in the repo, but everything it drew came from the game's own `VERBS.train.label`, `VERBS.research.label`, `guide()` and SN45; the body's height is a tick on the page (SN, as Start's Tall); the pause drop is `spdEl` (menu.js 91, 366; E706, E718); Back inside a building's tree returns to the buildings (as Relations: E840, E1115); the Guide's Ram and Small camp wagon rows go (units with no training time, D124).
 
