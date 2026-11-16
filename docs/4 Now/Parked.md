@@ -818,3 +818,8 @@ The code as it was is in N62 (`6637d97`, `frankenstein-refresh/v100/menu.js`).
 - The verb `kind` and its helper `trainer` (menu.js; comment E186): "train a kind at the nearest building that trains it". Dead since N62 cut the sheet cards: no button, page or test called it. It also held a second home for a class's icon (the first look of its kinds that had one); the class symbols now have one home, SN45. `ECON.lineFor` (econ.js), which it asked, stays.
 - Words too wide for a unit's cell once the red > and the symbol stand after the name (a cell is 61 px; the mark takes 16): the civilisation's or the elite's word, in the cell only. Crossbowman, Han crossbowman and Elite crossbowman read Crossbow; Longbowman, Longbow; War elephant, Maurya war elephant and Royal elephant, Elephant; Mali horseman and Elite horseman, Horseman; Mongol horse archer, Horse archer (Words J58). The full names stay in the shells, the research cells, the messages and the Guide. His to reword.
 
+## Cut in N64, the Help card (Design 12 F4) [2026-11-16 07:41]
+The code as it was is in N63 (`57ef62e`, `frankenstein-refresh/v100/menu.js`).
+- The Guide's rows for the Ram and the Small camp wagon, and their names in the Classical and Bronze ages' openings (menu.js guide(), `UN`): Design 12 J7, "the Guide stops listing the Ram and the Small camp wagon as trained". The Guide lists a unit a building trains or one that is sent. Their shells, prices and numbers stay in the books; bringing either back to a building (Parked, "Cut in N62") brings its row back.
+- Left out, not cut: Mid's History page (the dated research steps; `hist` and `histText` still stand in menu.js and write nothing on screen). Help has no tab for it (Design 12 K11).
+

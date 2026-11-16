@@ -481,10 +481,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N384** Albert, Nov 15, 2026, 14:38 to 19:15, talk mode (Design 12, The List 22): "Why does the build menu need to be  → SC54, X129, SN11
 - **N385** Albert, Nov 15, 2026, 15:53 to 19:15, talk mode and his answers on paper (Design 12 B and E, The List 22), the → C34, D124, D133, D270, D291, X29, X30, X50, X78, X102, X103, X122, X130, SN4, SN32, SN44, J36, J34, J40, J43, J58
 - **N386** Albert, Nov 15, 2026, 18:29 to 19:15, talk mode and his answers on paper (Design 12 C8 and E; The List 22), bu → X131, SN19, SN35, SN45, J43
+- **N387** Albert, Nov 16, 2026, 05:20 to 06:50 (Design 12 section J; The List 22), built on his word of Nov 16 06:55, "b → X132, SN46, J59
 
 ## Named exceptions
 
-- Tall: Start, Layers, Mail, Back
+- Tall: Start, Layers, Mail, Back, Help
 - Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL2
 
 ## Sounds waiting for a feature

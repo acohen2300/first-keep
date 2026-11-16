@@ -1,8 +1,15 @@
-# First Keep: hand-off (Nov 16, 2026, 04:52)
+# First Keep: hand-off (Nov 16, 2026, 07:41)
 
-## START HERE (2026-11-16 04:52): N63 sealed (preview n63): the unit cell and "loses to". Next: Design 12 F4 (the Help section, ruled on mock 7: section J), then F5, then the glo-up
+## START HERE (2026-11-16 07:41): N64 sealed (preview n64): the Help card. Next: Design 12 F5 (shots by kind), then the glo-up
+- N64 (BUILDS.md N64; Design 12 F4 and its sections J and K; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up, and "build Design 12 F4" (Nov 16 06:55). F1 to F4 are built; F5 and the glo-up are ruled and NOT built. His play of n61 to n64 owed. Design 12 H, I and K list Claude's calls inside F2, F3 and F4: his to overrule; ask nothing again that they or The List 22 answer.
+- Help's code: `SCREENS.Help`, the table `HELP` (one function a tab: its body and what the reading box says), the verb `help` (no word: open; a word: set tab, grp, sub or sel), state `S.h` through `help()`; words J59, page SN46. A page that ticks Dock is drawn in the dock by base(); test.py's main opens every page by `S.tab`, so a new page must draw with no state set.
+- For F5 (C9): `combat.js` shot() and D245; mock 4. Start: "build Design 12 F5".
+- Size: menu.js is 130,624 bytes after a grant of 4,620 in N64. The verbs callHome and recallP have no button (seen, not cut).
+- Open, his: the Pioneer has no history line of its own (Help shows the Ram's); the Guide's tables still hold the cut field defences; the 14 buildings off the Build menu are not in Help.
+- Open from N60, not traced: t-n60 fails about 1 run in 3. t-a1, t-n25, t-n29, t-n51 and t-p2 also come and go on N63 and N64 alike.
+
+## Before that (2026-11-16 04:52): N63 sealed (preview n63): the unit cell and "loses to"
 - N63 (BUILDS.md N63; Design 12 F3 and its section I; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up. F1 to F3 are built; F4, F5 and the glo-up are ruled and NOT built. His play of n61, n62 and n63 owed. Design 12 H and I list Claude's calls inside F2 and F3: his to overrule; ask nothing again that they or The List 22 answer.
-- F4 (2026-11-16 06:50): RULED on mock 7, NOT BUILT. His four answers and the build notes are Design 12 section J: build exactly that, ask nothing it answers. Start: "build Design 12 F4".
 - For F4 (Design 12 B6, C8): a new section "Help, guide, tips and tricks, learn" holding the Guide, the whole tech tree, the Town Center's info (Parked, "Cut in N62") and the triangle of what beats what. The Guide still lists the Ram and the Small camp wagon. What beats what is one law now: `top`, `beats`, `loses` (menu.js, E1121) over `WAR.vs`; the symbols are SN45 (`MK`), drawn by `SVG[key]` inside a `.u` line. N55 removed the Help page: find what is left of it before building.
 - For F5 (C9): `combat.js` shot() and D245; mock 4.
 - Size: menu.js is 126,007 bytes after a grant of 850 in N63. The verbs callHome and recallP have no button (seen, not cut).
@@ -29,7 +36,7 @@ Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 hold
 - Albert, Nov 14 07:54 to 08:40: last night's jump to design was a judgement error; back to n41, keep a few items, then bug work only.
 - Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N59 (bottom of `BUILDS.md`): roads out of water; stops apart and clear. Preview n59 (n58: roads coast to coast; n57: winding roads, research tab; n56: camera jumps; n55: Support and Mail; (n54: trade roads and booth; n53: the Wonder and Exit). Albert's list of 13 (Nov 14 22:05) is The List section 14: 1 and 2 built; 3 to 13 traced or waiting on his word.
 - Branch `n29-the-list` keeps N42 to N45 whole, parked (`Parked.md`, "Parked Nov 14"). Do not build there.
-- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n63 is the one to play (n62: cards in the dock, no unit numbers; n61: Build in the dock, the old cards; n60: the roads); before them n59 was (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
+- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n64 is the one to play (n63: the unit cell, no Help; n62: cards in the dock, no unit numbers; n61: Build in the dock, the old cards; n60: the roads); before them n59 was (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
 - Live v100 on `main`: untouched. Going live is Albert's call only.
 
 ## In N47 (on top of N46; Albert's go of Nov 14 10:16)

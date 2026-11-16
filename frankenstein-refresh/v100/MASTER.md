@@ -661,6 +661,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1059** the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with
 - **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and · N371 · N62 · N385
 - **E1113** a card's tab: choosing one shows its cells from the first page and lets go of a chosen peo · N385
+- **E1123** Help's verb (N387): with no word it opens Help on its first tab, from the pause drop, the  · N387
 - **E1114** the More cell, in the sixth place only when a tab holds more than six: it says how many mo · N385
 - **E1115** a people's cell on Relations or Misfits: a tap chooses it, and the row then shows that peo · N385
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
@@ -780,6 +781,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E678** Mid's guideModel, field for field, on v100's tables (a building's menu is its Build tab, e
 - **E679** History (Mid's yearOf, histRows, histText): a step's date as a year (BC below none; an era
 - **E680** the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a ba
+- **E1122** Help, a card in the dock (N387, mock 7): one function a tab, each giving its body and what · N387
 
 ## econ.js
 

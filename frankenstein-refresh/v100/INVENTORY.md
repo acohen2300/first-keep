@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,635 | 647,176 | 647,319 |
-| Books | 2607 | 0 | 872,237 | 873,212 |
+| Game code | 31 | 3,654 | 651,793 | 651,936 |
+| Books | 2613 | 0 | 878,476 | 879,451 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,493 | 420,100 | 420,365 |
+| Tools | 5 | 2,538 | 432,304 | 432,569 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,245 | 10,249 | 54 |
-| menu.js | 574 | 125,970 | 126,007 | 406 |
+| menu.js | 593 | 130,587 | 130,624 | 406 |
 | econ.js | 627 | 119,227 | 119,227 | 70 |
 | combat.js | 380 | 65,061 | 65,061 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
@@ -50,21 +50,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 58 | 17,652 |
-| citations | 380 | 112,824 |
+| capabilities | 58 | 17,658 |
+| citations | 381 | 113,898 |
 | colours | 34 | 10,399 |
-| comments | 1039 | 210,208 |
+| comments | 1041 | 211,298 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 205,443 |
-| rules | 128 | 53,658 |
-| screen | 28 | 19,268 |
+| rules | 129 | 55,202 |
+| screen | 29 | 19,859 |
 | shells | 111 | 24,127 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 69 | 40,135 |
 | tech | 260 | 76,080 |
-| words | 56 | 105,730 |
+| words | 57 | 107,731 |
 
 ## The shells
 
@@ -206,5 +206,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X129 | t-n61 | page | N61 (N384): the Build page lives in the dock: no sheet opens; the dock's top row is the six tabs and its second row the tab's six places; the top row of circles stays, Home first and War last, with Jobs and Build beside Home, the page's name in the middle, Back and Close beside War while it is open and the two look buttons there when it is not; a building that can be built once shows no count, and Built when it stands |
 | X130 | t-n62 | page | N62 (N385): every card lives in the dock: a tap on your Town Center opens no sheet, its tabs (Train, Learn, Relations, Misfits, Manage) stand over six cells and its name in the top row with Back and Close; a research cell holds three lines (its name, the word then the amount, its price in letters) and the price's colour ticks in steps; a unit queued rings its Train cell with a count, there is no queue row, and Back cancels the last one; a queued research rings alone and a tap cancels it; Show tech, the Ram, the Small camp wagon, spice, Rally and the unit card's rows are gone; seven in a tab turn the sixth cell into +1 and a second page; Relations shows the peoples, then one people's four choices, and Back returns; the Market's six tabs; a find's and a lone unit's card in the dock; every line of every card, every research, unit and Build place fits its cell at the book's share or wider |
 | X131 | t-n63 | page | N63 (N386): a soldier's Train cell tells what to build: its first line is the name, a red > and the symbol of the class it hits hardest (the largest of its bonuses in D138 against every trained kind; Buildings when it strikes only buildings, or strikes them harder), as mock 3 has the Archer, the Javelineer, the Crossbowman and the Arquebusier; its second line is three numbers under their symbols: health, damage a second (a blow over the seconds a blow takes) and reach, read through FK.stat; its third the price; while it is queued the count takes the second line; a villager's cell is as it was; an enemy soldier's card says which of your kinds it loses to (a Cataphract to your spearmen, an Archer to the Javelineer) and your own unit's card does not; every unit's cell fits at the book's share under every rank's name; the dead verb kind is gone |
+| X132 | t-n64 | page | N64 (N387): Help is a card in the dock, as mock 7: its door is a Help cell beside New game under the pause button, and the game stays paused while it is open; Help in the pill, Back and Close, six tabs (Tips, Units, Buildings, Research, Ages, Peoples), a body of cells taller than six (the page ticks Dock and Tall) and a reading box at the foot that a tap on a cell fills; nothing scrolls and every view stands under the top bar at 390 by 844; Tips holds the 14 tips and the 7 rules under short names; Units the triangle as one line (the symbols in the order the cells' own marks give: spearmen > riders > archers > spearmen, engines > buildings) and every unit you can train in the Train tab's own cell; Buildings the Build page's six groups as a second row and the group's places; Research the 28 buildings that research with learned/total, a tap opening that building's every step, a group a line in age order, a learned step saying so and a later age's step saying its age in red, Back returning to the buildings and then leaving Help; Ages what your people eat a minute, the next age's price and time and the six ages; Peoples the six peoples and the nine finds; a tap in Help never buys, queues or places (the stores, the research and every line are as they were); every line of every cell fits at the book's share; the Guide no longer lists the Ram or the Small camp wagon (no building trains them) and keeps the Envoy; Close returns to the pause drop |
 
-2737 items sealed · 2607 book entries · 94 laws · 380 citations, 35 still to open · 0 known
+2743 items sealed · 2613 book entries · 94 laws · 381 citations, 35 still to open · 0 known
