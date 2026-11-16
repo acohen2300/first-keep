@@ -5422,3 +5422,16 @@ Albert, Nov 15 12:24 and 12:32 (N383): "N59 isn't fixed roads. It's even worse."
 - Sizes: index.html 300,620 → 303,065 bytes (+2,445; floor 3 +2,498 under a grant raised from 2,200 to 2,500 for the main land and the fix). ecs: named 305 → 305, dead 7 → 7.
 - Open, unchanged: on 2 of 10 boards one stop has no free road tile far enough from finds and other stops within twice find tiles (The List 19, needs his word).
 NOT proven (his play owed): the roads on real maps.
+
+## N61: the dock, the Build page drawn in it · 2026-11-15 20:25
+Albert, Nov 15 14:38 to 19:15 (N384; Design 12, The List 22): "Why does the build menu need to be a menu." / of the Jobs dock: "This is what I want it to look like." / "Go go go proceed." This is Design 12 F1, the first of five.
+- The Build page has the Dock tick (SN11, SC54): it is drawn in the dock's two rows, never on a sheet (menu.js: ticked, sheet, base, page, rank, render). Top row: the six tabs; the chosen one is the dock's gold box with its floor out, the rule under it gold. Second row: the tab's six places. The title row and the gold frame are gone.
+- A place holds three lines: the name; the count (none for a building built once; "0/4" where there is a cap; the count alone where there is none); the price, or Built when a build-once stands (words J34 built).
+- The top row of circles shows in peace and over a docked page (ctop, E733): Home first, War last; Jobs and Build beside Home; the page's name in the middle; Back and Close beside War while it is open, the two look buttons (N56) there when it is not. War's own row is unchanged.
+- Claude's calls inside his "do what makes sense": the Jobs circle uses the Controller's jobs icon and closes the page; the Jobs dock keeps its own Build cell (he has not ruled it out); "Defence" keeps its spelling (not ruled).
+- Tests: t-n61 (new): passes; fails with N60's menu.js planted back. Old checks moved to the ruling: t-tabs and t-n24b read the dock's rows where they read the sheet; t-n25's peace row counts six circles where it counted four.
+- Full suite on a frozen copy against N60 on its own tests: 71 of 92 vs 72 of 91. The three that fell (t-tabs, t-n24b, t-n25) are the moved checks and pass after the move (4 of 4 with t-n61); t-p2 failed on N60 only (its known flake). No other difference.
+- Sizes: menu.js 130,350 → 131,352 bytes (+1,002, under a grant of 1,100: CLAUDE.md 6 says a build that grows the code is not sealed; N58 to N60 were sealed under grants the same way; his word still owed on that rule). ecs: named 305 → 305, dead 7 → 7.
+- Seen, not changed: "Lumber camp" and "Mining camp" fill their places edge to edge (his ruling: shorten names as needed; next build). A locked building's reason (capWhy, lockWhy) is a sentence and is clipped in a place.
+NOT proven (his play owed): the look and the taps on his phone.
+

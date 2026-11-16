@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,669 | 651,498 | 651,662 |
-| Books | 2597 | 0 | 857,472 | 858,444 |
+| Game code | 31 | 3,669 | 652,500 | 652,664 |
+| Books | 2600 | 0 | 859,687 | 860,659 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,415 | 402,917 | 403,178 |
+| Tools | 5 | 2,435 | 405,879 | 406,140 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,245 | 10,249 | 54 |
-| menu.js | 608 | 130,292 | 130,350 | 435 |
+| menu.js | 608 | 131,294 | 131,352 | 435 |
 | econ.js | 627 | 119,227 | 119,227 | 70 |
 | combat.js | 380 | 65,061 | 65,061 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
@@ -50,21 +50,21 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Book | Entries | Bytes |
 |---|---|---|
 | angles | 6 | 1,006 |
-| capabilities | 57 | 17,364 |
-| citations | 377 | 109,903 |
+| capabilities | 58 | 17,639 |
+| citations | 378 | 110,562 |
 | colours | 34 | 10,273 |
-| comments | 1038 | 206,600 |
+| comments | 1038 | 207,279 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 205,011 |
-| rules | 125 | 50,646 |
-| screen | 27 | 17,287 |
+| rules | 126 | 51,152 |
+| screen | 27 | 17,392 |
 | shells | 111 | 24,127 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 69 | 40,135 |
 | tech | 260 | 76,080 |
-| words | 55 | 103,149 |
+| words | 55 | 103,167 |
 
 ## The shells
 
@@ -203,5 +203,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X126 | t-n56 | page | N56 (N378): two look buttons on the top row: the banner cycles the camera through the army's fronts and round again, the alert jumps to what of mine is under attack |
 | X127 | t-n57 | page | N57 (N379), N58 (N381), N59 (N382): no drawn road runs in water; stops keep apart and clear of every find; the trade roads reach the water at both sides of the map (one road or two per route); each trade road winds: somewhere it strays more than two tiles from the straight line between its stops; its ground is not grass; every stop lies on a road; the research tab (v80's parchment pill) marks a building with research ready, at its roof's upper left corner |
 | X128 | t-n60 | page | N60 (N383): on five boards each trade route is one road, every point of it clear of water and of every find by half its worn width and verge, both ends on the coast beyond the far stops at opposite sides, the two roads cross, and every stop lies on a road |
+| X129 | t-n61 | page | N61 (N384): the Build page lives in the dock: no sheet opens; the dock's top row is the six tabs and its second row the tab's six places; the top row of circles stays, Home first and War last, with Jobs and Build beside Home, the page's name in the middle, Back and Close beside War while it is open and the two look buttons there when it is not; a building that can be built once shows no count, and Built when it stands |
 
-2727 items sealed · 2597 book entries · 94 laws · 377 citations, 35 still to open · 0 known
+2730 items sealed · 2600 book entries · 94 laws · 378 citations, 35 still to open · 0 known

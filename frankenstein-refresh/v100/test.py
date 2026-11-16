@@ -35,7 +35,7 @@ async def main(b):
     scr = await ev("fromBook('screen')")
     ok('t-version', await ev("document.title === 'First Keep v' + FK.D.version"))
     ok('t-top', await ev("[document.querySelectorAll('.topbar .strip').length, document.querySelectorAll('.topbar .strip .cell').length]") == [1, len(scr['top'])])
-    shown = await ev("(() => { MENU.S.tab = 'Build'; const out = {}; for (const g of Object.keys(MENU.SCR.tabs)) { MENU.S.group = g; FK.SIDES[0].age = FK.D.ages.length - 1; MENU.render(true); const all = document.querySelectorAll('#panel .frame [data-v^=pick], #panel .frame [data-v^=later]').length; FK.SIDES[0].age = 0; MENU.render(true); out[g] = [document.getElementById('panel').offsetHeight, all, [...document.querySelectorAll('#panel .tabs .cell')].map((c) => c.textContent).join(), document.querySelectorAll('#panel .frame > *').length]; } return out; })()")   # E853: the last age shows the whole tab (Show all cut, N24); E898: shut, the grid still keeps its six slots
+    shown = await ev("(() => { MENU.S.tab = 'Build'; const out = {}; for (const g of Object.keys(MENU.SCR.tabs)) { MENU.S.group = g; FK.SIDES[0].age = FK.D.ages.length - 1; MENU.render(true); const all = document.querySelectorAll('#base > .row6:last-child [data-v^=pick], #base > .row6:last-child [data-v^=later]').length; FK.SIDES[0].age = 0; MENU.render(true); out[g] = [document.getElementById('base').offsetHeight, all, [...document.querySelectorAll('#base .tabs .cell')].map((c) => c.textContent).join(), document.querySelectorAll('#base > .row6:last-child > *').length]; } return out; })()")   # E853: the last age shows the whole tab (Show all cut, N24); E898: shut, the grid still keeps its six slots
     ok('t-tabs', all(v[1] == len(scr['tabs'][g]) and v[2] == ','.join(scr['tabs']) and v[3] == len(scr['tabs'][g]) for g, v in shown.items()), shown)
     pages = {t: 'Tall' in v.get('ticks', []) for t, v in scr.items() if isinstance(v, dict) and 'ticks' in v}; size = "(() => { MENU.S.tab = '%s'; MENU.render(true); const p = document.getElementById('panel'); return [p.offsetHeight, p.style.height]; })()"
     heights = {t: await ev(size % t) for t in pages}
@@ -1590,13 +1590,13 @@ N24BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, m
  MENU.S.tab = 'Stores'; MENU.render(true); const rows = document.querySelectorAll('#panel .tb tr').length; MENU.S.tab = 'Score'; MENU.render(true); const cols = document.querySelectorAll('#panel .tb tr:first-child th').length; o.cards = rows === 6 && cols === D.players.length + 1;
  MENU.S.tab = null; MENU.render(true); o.topTaps = [...document.querySelectorAll('.topbar [data-v]')].some((b) => b.dataset.v === 'tab|Stores') && [...document.querySelectorAll('.topbar [data-v]')].some((b) => b.dataset.v === 'tab|Score');
  Object.assign(st, { food: 9000, wood: 9000, gold: 9000, stone: 9000 }); h.q = []; FK.dirty(); await W(1300); o.mark = MENU.ready().includes(h);
- FK.SIDES[0].age = 0; MENU.S.tab = 'Build'; MENU.S.group = Object.keys(MENU.SCR.tabs).find((g) => MENU.SCR.tabs[g].includes('BCL4')); MENU.render(true); const has = () => !!document.querySelector('#panel [data-v^="pick|BCL4|"]'), q0 = has(); FK.SIDES[0].age = 2; MENU.render(true); o.byAge = !q0 && has() && !document.querySelector('#panel [data-v^="allB"]'); return o; })()"""
+ FK.SIDES[0].age = 0; MENU.S.tab = 'Build'; MENU.S.group = Object.keys(MENU.SCR.tabs).find((g) => MENU.SCR.tabs[g].includes('BCL4')); MENU.render(true); const has = () => !!document.querySelector('#base [data-v^="pick|BCL4|"]'), q0 = has(); FK.SIDES[0].age = 2; MENU.render(true); o.byAge = !q0 && has() && !document.querySelector('#base [data-v^="allB"]'); return o; })()"""
 async def n24b(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N24BJS); await pg.close()
     ok('t-n24b', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
 N25JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => [...document.querySelectorAll(s)];
  MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, S = MENU.S, mine = () => FK.units().filter((u) => u.side === 0 && WAR.armyOf(0).includes(u));
- o.peace = document.getElementById('base').className === 'jobs' && q('.ctop .dot').length === 4 && !q('.pad').length;
+ o.peace = document.getElementById('base').className === 'jobs' && q('.ctop .dot').length === 6 && !q('.pad').length;
  let n = 0; $ring(h, 4, 14, (i, j) => { const k = j * N + i; if (FK.walkable(k) && n < 12) { FK.spawn(['UM1', 'UM6', 'UM2'][n % 3], 0, k, Math.random); n++; } return n >= 12; });
  const A = WAR.armyOf(0); o.spawned = A.length === 12;
  MENU.act('war'); o.open = S.war && q('.pad').length === 3 && FK.picked().length === 12 && !q('.exec.go').length && document.getElementById('base').className === 'ctlw';
@@ -1953,6 +1953,26 @@ N57JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
 async def n57(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N57JS); await pg.close()
     ok('t-n57', all(v.get(k) for k in ('winds', 'dirt', 'stops', 'tab', 'shore', 'apart', 'clear', 'dry')) and not errs, [v, info, errs[:2]])
+N61JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S, q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)], shown = (e) => !!e && e.offsetHeight > 0, dots = () => qa('#rank .dot').map((d) => d.dataset.v);
+ MENU.act('start'); await W(400); S.tab = null; MENU.render(true);
+ const d0 = dots(); info.d0 = d0; o.rest = d0[0] === 'home||' && d0.at(-1) === 'war||' && d0.includes('look|alert|') && d0.includes('look|army|') && d0.includes('tab|Build|') && !q('#rank .name');
+ const bd = q('#rank [data-v="tab|Build|"]'); if (bd) bd.click(); else { S.tab = 'Build'; MENU.render(true); } await W(60);
+ o.dock = S.tab === 'Build' && !shown(q('#panel')) && shown(q('#base')) && qa('#base .tabs [data-v^="group|"]').length === 6;
+ const rows = () => qa('#base > .row6'); o.six = rows().length === 2 && rows()[1].children.length === 6 && rows()[1].querySelectorAll('[data-v^="pick|"]').length > 0;
+ const d1 = dots(); info.d1 = d1; o.open = shown(q('#rank .ctop')) && d1[0] === 'home||' && d1.at(-1) === 'war||' && d1.includes('back||') && d1.includes('close||') && !d1.includes('look|alert|') && !!q('#rank .name') && q('#rank .name').textContent === 'Build' && !!q('#rank [data-v="tab|Build|"].on');
+ const cells = () => qa('#base [data-v^="pick|"]'), code = (e) => e.dataset.v.split('|')[1], once = [];
+ for (const g of qa('#base .tabs [data-v^="group|"]').map((e) => e.dataset.v)) { q(`#base [data-v="${g}"]`).click(); await W(30); for (const e of cells()) if (ECON.limitOf(0, code(e)) === 1) once.push([code(e), e.textContent]); }
+ info.once = once; o.one = once.length > 0 && once.every(([, x]) => !/\d\/1\b/.test(x));
+ const bk = once.length ? once[0][0] : null, put = bk && $put(bk, 0); if (put) put.done = 1; MENU.render(true); let said = '';
+ for (const g of qa('#base .tabs [data-v^="group|"]').map((e) => e.dataset.v)) { q(`#base [data-v="${g}"]`).click(); await W(30); const e = cells().find((x) => code(x) === bk); if (e) said = e.textContent; }
+ info.said = said; o.built = !!put && said.includes('Built') && !/\d\/1\b/.test(said);
+ const tabs = () => qa('#base .tabs [data-v^="group|"]'); tabs()[0].click(); await W(30); const home = rows()[1].textContent, g2 = tabs()[1].dataset.v; tabs()[1].click(); await W(30);
+ o.tab = S.group === g2.split('|')[1] && rows()[1].textContent !== home && qa('#base .tabs .on').length === 1 && qa('#base .tabs .on')[0].dataset.v === g2;
+ const jobs = qa('#rank .dot')[1]; jobs.click(); await W(60); o.jobs = S.tab == null && qa('#base [data-v^="yield|"]').length > 0 && !q('#rank .name') && dots().includes('look|alert|');
+ return [o, info]; })()"""
+async def n61(b):
+    pg, errs = await fresh(b); v, info = await pg.evaluate(N61JS); await pg.close()
+    ok('t-n61', all(v.get(k) for k in ('rest', 'dock', 'six', 'open', 'one', 'built', 'tab', 'jobs')) and not errs, [v, info, errs[:2]])
 N60JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); if (!FK.roads) return [{ api: false }, {}];
  const D = FK.D, T = D.tile, RD = D.road, TR = D.trade, R = FK.roads(), M = D.site / 2, half = (RD.w / 2 + RD.rim) * T, wet = ([x, y], r) => [0, 0.5, 1].some((f) => Array.from({ length: 16 }, (_, a) => a / 8 * Math.PI).some((t) => FK.layer(x + Math.cos(t) * r * f, y + Math.sin(t) * r * f) === 0));
  const F = FK.things().filter((t) => !['tree', 'stop', 'bld'].includes(t.kind)), fr = (t) => ((FK.KIND[t.kind] || {}).r || 0), S = FK.things().filter((t) => t.kind === 'stop');
@@ -2039,7 +2059,7 @@ async def star(b):
 async def freeze(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(FRZJS); await pg.close()
     ok('t-freeze', all(v.values()) and not errs, [v, info, errs[:2]])
-PAGED = {'t-n60': n60, 't-n57': n57, 't-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-n61': n61, 't-n60': n60, 't-n57': n57, 't-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:

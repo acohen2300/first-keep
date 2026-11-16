@@ -42,6 +42,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC18 | scouts: finds the hidden traps it comes near, for its side; left to itself, it goes for a find whose guards have fallen, then loops the land (Mid's scoutTick) | {by: combat.js traps, econ.js scout, law: [], needs: [], may: []} | N100; N198; N205 |
 | SC19 | trades: a Market sells and buys by the lot at the going price (D270, QAE), sends ventures (D274) and loads its side's caravans; a caravan (D278) with a route carries goods from its Market to a trade stop or an ally's Market, sells them by distance (QCE) and buys spice at a stop, or with none runs to an ally's Market for distance² pay; a trade stop is where caravans sell, on one of the two routes | {by: econ.js, law: [QAE, QCE], needs: [], may: []} | N195 |
 | SC20 | a page that keeps its own height (the Town Center, the Start page); every other page shares the tallest of the rest | {by: menu.js, law: [], needs: [], may: []} | N101 |
+| SC54 | a page drawn in the dock's two rows of six, under the top row of circles, never on a sheet (the Build page; Albert, Nov 15: the dock is the menu) | {by: menu.js, law: [], needs: [], may: []} | N384 |
 | SC21 | laid as a line, corner to corner, one piece a tile, four-connected; touches any building, keeps no lane (Mid's lineKind) | {by: econ.js, menu.js, law: [], needs: [], may: []} | N168 |
 | SC22 | shut to a foe of its owner, open to the rest; laid on its owner's wall, it takes the piece's place (Mid's blockedCell) | {by: index.html walkable, combat.js, law: [], needs: [], may: []} | N168 |
 | SC23 | stands by a lake, within D218's shore past its beach (Mid's dock) | {by: econ.js placeWhy, ai.js, law: [], needs: [], may: []} | N170 |
@@ -456,6 +457,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N381 |  | Albert, Nov 15, 2026, 10:45: \It should reach the edges of the map I think. And it doesn't have to cross at an x it can be a bit more windin | opened |
 | N382 |  | Albert, Nov 15, 2026, 11:24, after n58 with three screenshots: \I love it. Three bugs 1. They dip into water 2. The posts are too close to e | opened |
 | N383 |  | Albert, Nov 15, 2026, 12:24, with a screenshot of preview n59 zoomed out: \N59 isn’t fixed roads. It’s even worse\. The screenshot shows bro | opened |
+| N384 |  | Albert, Nov 15, 2026, 14:38 to 19:15, talk mode (Design 12, The List 22): \Why does the build menu need to be a menu\; his sketch: mode circ | opened |
 
 ## colours
 
@@ -802,7 +804,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E189 |  | a cell for what is drawn but not yet built: Albert's reminder |  |
 | E190 |  | the new game: the bell (D134), fog, the day's map or a fresh one |  |
 | E191 |  | tap a yield: new villagers go there (the ring) |  |
-| E192 |  | tap picks, slide places the ghost, tap again builds |  |
+| E192 |  | tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines: the name, the count (none for a building built o |  |
 | E193 |  | the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only says why |  |
 | E194 |  | a cell's object arguments live here by key, since the DOM holds strings (the hold verbs are gone: one tap does everything, Albert, Nov 8) |  |
 | E195 |  | the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one frame with one lit. Every screen is a list of rib |  |
@@ -2059,6 +2061,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X126 | N56 (N378): two look buttons on the top row: the banner cycles the camera through the army's fronts and round again, the alert jumps to what of mine is under attack | {stage: page} | N378 |
 | X127 | N57 (N379), N58 (N381), N59 (N382): no drawn road runs in water; stops keep apart and clear of every find; the trade roads reach the water at both sides of the map (one road or two per route); each trade road winds: somewhere it strays more than two tiles from the straight line between its stops; its ground is not grass; every stop lies on a road; the research tab (v80's parchment pill) marks a building with research ready, at its roof's upper left corner | {stage: page} | N379; N380; N381; N382 |
 | X128 | N60 (N383): on five boards each trade route is one road, every point of it clear of water and of every find by half its worn width and verge, both ends on the coast beyond the far stops at opposite sides, the two roads cross, and every stop lies on a road | {stage: page} | N383 |
+| X129 | N61 (N384): the Build page lives in the dock: no sheet opens; the dock's top row is the six tabs and its second row the tab's six places; the top row of circles stays, Home first and War last, with Jobs and Build beside Home, the page's name in the middle, Back and Close beside War while it is open and the two look buttons there when it is not; a building that can be built once shows no count, and Built when it stands | {stage: page} | N384 |
 
 ## screen
 
@@ -2071,7 +2074,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN5 | (Albert, Nov 10 18:27: the two top rows in the footprint of the top one: stores share a cell two to a cell, the season an icon beside the clock with the time left under it, people with idle and army, rank over score; one row of nine) the top ribbon: the five stores, sound, pause, the Mail door with its unread count (Base; Albert, Nov 7 20:48: all Base — the small map lives in the war station's middle, not here) | [food/wood, stone/gold, iron/age, when, folk, rank/score, mute, pause, mail] | N137; N241 |
 | SN6 | readings with no row: the second top row was cut, each waited for its new home; all now in the Top Info Ribbon (SN39, Nov 10) | [] | N138; N306 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |
-| SN11 | the Build page | {ticks: [], rows: title, the six tabs, the tab's grid} | N140 |
+| SN11 | the Build page: Dock, drawn in the dock's two rows, never on a sheet (Albert, Nov 15: the dock is the menu) | {ticks: [Dock], rows: the six tabs, the tab's six places} | N140; N384 |
 | SN12 | the Town Center page | {ticks: [Tall], rows: title, three tabs, the queue, train, tech} | N141 |
 | SN13 | the Yard | {ticks: [Tall], rows: title, the layers, Fast and New, the three volumes} | N142; N143 |
 | SN17 | the ice card: an order over ice asks how to cross (the game keeps running; they wait at the shore) | {ticks: [], rows: title; how thick the ice on the way is and what it holds; the six ways to cross; remember this winter or this game} | N263 |
@@ -2658,7 +2661,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J31 | a Build cell's second line when the store cannot pay: the sign before each shortfall, the amount you are short of each store (Albert, Nov 10, #24: what you are short, not the word Short), its colour how near (the shortfall is in the tap's Needs) | − | N132 |
 | J36 | why a research cannot start now (B8, as Base's research buttons); shown on the button in place of its price, every lock but the purse (Albert, Nov 10, N17 #18) | {age: Needs the {age} age, need: Needs {name} first, busy: Being researched, at: Needs its building standing, full: That line is full, cost: | N251; N307 |
 | J35 | the Welcome back card (Base's: the saved game opens paused, Resume or New game) and the pause's line (Base's pauseT) | {title: Welcome back, resume: Resume, paused: Paused · tap to carry on} | N241 |
-| J34 | the place bar's words, Base's (26-input placeT; Albert's screenshot Nov 7 20:38) | {helper: + Villager, start: Press where the {name} goes · drag empty ground to look around, lineStart: Tap where the {line} starts, ok: {Nam | N241 |
+| J34 | the place bar's words, Base's (26-input placeT; Albert's screenshot Nov 7 20:38) | {built: Built, helper: + Villager, start: Press where the {name} goes · drag empty ground to look around, lineStart: Tap where the {line} st | N241 |
 | J49 | the Stores and Score cards (Base's, Albert's screenshots Nov 11); (N30) key ledger renamed stores: two entries shared the key ledger and this one silently hid J1, so the Stores card's in and out lines lost their words (Parked N26) | {stores: Stores, last: the last minute, cols: [Have, In, Out, On it], storesSay: In: gathered and brought home in the last minute. Out: what | N322 |
 | J33 | the picked villagers' bar (Base's selection bar, Albert Nov 7 20:38): its header | {picked: {n} picked, charge: Charge, fallBack: Fall back, hold: Hold, recall: Recall, hunt: Hunt, said: {charge: {n} charging., fallBack: {n | N241 |
 | J32 | the Pause screen's words: its title, the pause mark on the top bar (SoRen's), New game and its confirm (Albert, Nov 7: New game on the pause screen, with a confirm) | {title: Paused, mark: ❙❙, newGame: New game, sure: Sure? Tap again} | N241 |

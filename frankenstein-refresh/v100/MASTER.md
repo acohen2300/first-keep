@@ -650,7 +650,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
 - **E1093** Show tech (Albert, Nov 14, N369): one switch for every card; off, a card lists only the re · N369
-- **E192** tap picks, slide places the ghost, tap again builds
+- **E192** tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines · N61 · N384
 - **E854** made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm · SN34 (N287)
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
 - **E932** tap a queued slot to cancel it, refunded (Albert, Nov 10, #29)
@@ -675,7 +675,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
 - **E835** the queue: the first item rings down (run), those waiting behind it full and bright (lit);
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
-- **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings 
+- **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings  · N61 · N384
 - **E197** Albert's Town Center: the bars in the title, three tabs, the queue, train, tech; its resea
 - **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
@@ -694,7 +694,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E1104** the two look buttons beside Home on the top row: the alert red while something is under at · N378
-- **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25
+- **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25 · N61 · N384
 - **E1003** picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller wi
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop

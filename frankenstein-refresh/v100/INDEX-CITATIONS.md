@@ -478,6 +478,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N381** Albert, Nov 15, 2026, 10:45: "It should reach the edges of the map I think. And it doesn't have to cross at an → D379, X127
 - **N382** Albert, Nov 15, 2026, 11:24, after n58 with three screenshots: "I love it. Three bugs 1. They dip into water 2 → D278, X127
 - **N383** Albert, Nov 15, 2026, 12:24, with a screenshot of preview n59 zoomed out: "N59 isn’t fixed roads. It’s even wo → D379, X128
+- **N384** Albert, Nov 15, 2026, 14:38 to 19:15, talk mode (Design 12, The List 22): "Why does the build menu need to be  → SC54, X129, SN11
 
 ## Named exceptions
 
