@@ -1,6 +1,6 @@
 # Design 12: the dock, one card for everything (Albert, Nov 15 2026, 14:38 to 18:46)
 
-His words, sorted. F1 BUILT as N61 and F2 BUILT as N62 (his play owed on both; section H holds Claude's calls inside F2); F3 to F5 RULED, NOT BUILT. Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind).
+His words, sorted. F1 BUILT as N61, F2 BUILT as N62 and F3 BUILT as N63 (his play owed on all three; sections H and I hold Claude's calls inside F2 and F3); F4 and F5 RULED, NOT BUILT. Lines marked (C) are Claude's calls or findings, his to overrule. Mocks: `mockups/dock/` (0 his two sketches; 1 Build in the dock; 2 Town Center with tabs, three lines and the ring; 3 the unit cell and the symbols; 4 shots by kind; 5 and 6 real screens of N62 and N63).
 His words for the build (18:46): "Lean and mean. Light and tight. Clean and clear. Simple and elegant. Follow our rules. Only one home for things. ECS laws. Books, citations, indexes, references, comments. No loose info. No helpers. No agents. No builders. Just you." And the 12 core values.
 
 ## A. The idea
@@ -53,7 +53,7 @@ His words for the build (18:46): "Lean and mean. Light and tight. Clean and clea
 Spec: this file, complete once E is answered. Then, each its own build and preview, tests first (each check failing on today's code), permit, book entries, full suite on a frozen copy, seal; the `ecs` counts and the code size may not rise.
 1. The dock frame: the six circles, the pill, the tab row, six cells; Build drawn in it (B1, B5, A3, A4). BUILT, N61.
 2. Cards in it: Train, Learn, Manage tabs; three lines; cost in letters with the stepped colour; the ring and count; Show tech, the Ram, the small wagon and the queue row cut and logged in Parked (B2, B3, B4, B6). BUILT, N62 (BUILDS.md N62; cuts in Parked, "Cut in N62").
-3. The unit cell and "loses to" (C8).
+3. The unit cell and "loses to" (C8). BUILT, N63 (BUILDS.md N63; section I).
 4. The Help section: guide, tips, the tech tree, the triangle (B6, C8).
 5. Shots by kind (C9).
 Expected, unverified: 1 and 2 shrink menu.js (the Build page, the Town Center page and the card's rows give way to one mold).
@@ -79,4 +79,14 @@ Each is built. None was ruled in these words.
 14. **Locks**: a research says why short, in red, on its price line; a Build place reads Locked. A tap says it whole.
 15. **The villager's brown pad** holds three; Log's box is empty.
 16. **A four-part price** (the Wonder, the last two ages) takes two lines, two parts each; the age cell has no "Next age" line (mock 2 had it).
+
+## I. N63 (F3), Claude's calls inside his rulings: his to overrule [2026-11-16 04:52]
+Each is built. None was ruled in these words. Real screens: `mockups/dock/6-n63-real-screens.png`.
+1. **What "beats" means.** One symbol: the class of the trained kind this unit has its largest bonus against, by combat's own law (`WAR.vs`, D138 vs); Buildings when it strikes only buildings, or strikes them harder than any kind. A tie goes to the first class in the book. It gives: Spearman > Riders; Swordsman, Legionary, Immortal > Engines; Archer, Horse archer > Foot; Javelineer > Archers; Crossbowman, Arquebusier, Ballista > Riders; Chariot, Cataphract > Archers (the Cataphract ties with Engines); War elephant > Buildings; Catapult, Bombard, Trebuchet > Buildings. Siege tower, Pioneer, Priest, Medic and Spy beat nothing and wear no mark. Weakness: one symbol hides a second bonus (the Arquebusier's 1.5 against Riders sits under its 2 against heavy riders: same symbol here, not always).
+2. **The three numbers** (SN45): health; damage a second (a blow over the seconds a blow takes); reach in tiles. From 10 up a number is whole, under 10 it has one decimal. They are read through `FK.stat`, so research and ranks move them. Every soldier shows them, the Support class and the Pioneer too (their damage reads 0).
+3. **No space round the >.** A cell is 61 px; the > and a 10 px symbol take 16. With a space, three more names would not fit.
+4. **Ten short names, in cells only** (Words J58), by his "Shorten them as needed": where the name, the > and the symbol do not fit even drawn narrower, the cell keeps the kind and drops the civilisation's or the elite's word. Crossbowman, Han crossbowman, Elite crossbowman → Crossbow; Longbowman → Longbow; War elephant, Maurya war elephant, Royal elephant → Elephant; Mali horseman, Elite horseman → Horseman; Mongol horse archer → Horse archer. Weakness: a Han, Maurya, Mali or Mongol player's own unit, and four elites, lose their word on the cell (the numbers still differ; the full name is in the research cell, the messages and the Guide).
+5. **"Loses to"** (Words J43): on the Manage tab of a unit that is not yours, one cell names the kind of yours with the largest bonus against it, under its class symbol ("Loses to / Spearman"). None when no kind of yours has a bonus. Not on buildings (not ruled), not on your own units.
+6. **The symbols** have one home (SN45) and reuse the game's own icons where it had one: the shield (Foot), the bow (Archers), the horse (Riders), the house (Buildings); new in SN19: the wheel (Engines), the heart, the blow, the reach. 10 px (SN35 sym). Seen: the horse reads weakly at 10 px.
+7. **Cut** (Parked, "Cut in N63"): the dead verb `kind`, which held a second home for a class's icon.
 

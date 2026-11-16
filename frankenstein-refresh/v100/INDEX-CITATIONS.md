@@ -480,6 +480,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N383** Albert, Nov 15, 2026, 12:24, with a screenshot of preview n59 zoomed out: "N59 isn’t fixed roads. It’s even wo → D379, X128
 - **N384** Albert, Nov 15, 2026, 14:38 to 19:15, talk mode (Design 12, The List 22): "Why does the build menu need to be  → SC54, X129, SN11
 - **N385** Albert, Nov 15, 2026, 15:53 to 19:15, talk mode and his answers on paper (Design 12 B and E, The List 22), the → C34, D124, D133, D270, D291, X29, X30, X50, X78, X102, X103, X122, X130, SN4, SN32, SN44, J36, J34, J40, J43, J58
+- **N386** Albert, Nov 15, 2026, 18:29 to 19:15, talk mode and his answers on paper (Design 12 C8 and E; The List 22), bu → X131, SN19, SN35, SN45, J43
 
 ## Named exceptions
 

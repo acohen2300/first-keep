@@ -299,7 +299,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E182 | menu.js | the glass's own state, nothing of the world's |
 | E183 | menu.js | 60w 60f, as Albert's Build menu |
 | E184 | menu.js | read: the one window onto the world the glass draws from |
-| E186 | menu.js | Train a kind: the nearest finished building that trains it; a kind before its age says which age it waits for |
 | E187 | menu.js | a channel's volume, a step a tap (HX10) |
 | E188 | menu.js | sound on or off |
 | E189 | menu.js | a cell for what is drawn but not yet built: Albert's reminder |
@@ -1043,3 +1042,4 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E1118 | menu.js | Manage, every card's last tab: first what the thing is (its health and what it is doing, a site's share raised, what is left in a find, a flock), then what can be done with it, by its ticks and by whose it is (N385) |
 | E1119 | menu.js | a card in the dock: the tabs the subject ticks and that hold something, in the book's order; a new subject opens on its first tab (N385) |
 | E1120 | menu.js | the fit law: a line of a dock cell, a tab or the name pill that is wider than its box is drawn narrower to fit, never under the book's share; bare words are wrapped so that they can be (N385) |
+| E1121 | menu.js | what to build, told on the cell (N386): top, the trained kind of your side that scores highest over one (none if none does); beats, the symbol of the class a kind hits hardest by combat's own vs (E282), or Buildings when it strikes only them or strikes them harder; unit, a soldier's two lines: its name, a red > and that symbol, then the book's three numbers (SN45) read from its row, a number from the book's whole up shown whole; both are worked out once for a row of numbers and kept until research makes a new row; loses, a cell naming the kind of yours that hits a thing hardest |

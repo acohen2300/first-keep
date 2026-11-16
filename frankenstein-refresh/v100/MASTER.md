@@ -594,7 +594,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E819** the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes
 - **E181** the colours: the menus read every colour from the Colours book (C38 the menus' own, the ri · C38 (N336)
 - **E839** a font from the type rule: its weight and size, in the face named
-- **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287)
+- **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287, N386)
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E844** Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and
 - **E182** the glass's own state, nothing of the world's
@@ -632,7 +632,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1004** who goes: All, Idle, a Class (Foot, Archers, Cavalry, Siege) or a Squad; choosing one pick
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
 - **E1048** the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a sq · N25
-- **E186** Train a kind: the nearest finished building that trains it; a kind before its age says whi
 - **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195, N350, N385) · D271 (N34, N195)
 - **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1045** a caravan's escort (Albert, Oct 27): its card has Escort +4 (the nearest idle soldiers of 
@@ -679,6 +678,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
+- **E1121** what to build, told on the cell (N386): top, the trained kind of your side that scores hig · N386 · E282 · SN45 (N386)
 - **E1116** the card's helpers: up, your building and finished; info, a cell that only tells; docked,  · N385
 - **E1117** the dock's one mold, for Build and for every card: a row of up to six tabs, the chosen one · N385
 - **E840** Relations and Misfits in the dock (N385: tap, then choices): the peoples as cells, each wi · N385

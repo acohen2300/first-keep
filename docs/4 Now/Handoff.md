@@ -1,6 +1,13 @@
-# First Keep: hand-off (Nov 15, 2026, 12:40)
+# First Keep: hand-off (Nov 16, 2026, 04:52)
 
-## START HERE (2026-11-15 21:58): N62 sealed (preview n62): every card in the dock. Next: Design 12 F3 (the unit cell and "loses to"), then F4, F5, then the glo-up
+## START HERE (2026-11-16 04:52): N63 sealed (preview n63): the unit cell and "loses to". Next: Design 12 F4 (the Help section), then F5, then the glo-up
+- N63 (BUILDS.md N63; Design 12 F3 and its section I; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up. F1 to F3 are built; F4, F5 and the glo-up are ruled and NOT built. His play of n61, n62 and n63 owed. Design 12 H and I list Claude's calls inside F2 and F3: his to overrule; ask nothing again that they or The List 22 answer.
+- For F4 (Design 12 B6, C8): a new section "Help, guide, tips and tricks, learn" holding the Guide, the whole tech tree, the Town Center's info (Parked, "Cut in N62") and the triangle of what beats what. The Guide still lists the Ram and the Small camp wagon. What beats what is one law now: `top`, `beats`, `loses` (menu.js, E1121) over `WAR.vs`; the symbols are SN45 (`MK`), drawn by `SVG[key]` inside a `.u` line. N55 removed the Help page: find what is left of it before building.
+- For F5 (C9): `combat.js` shot() and D245; mock 4.
+- Size: menu.js is 126,007 bytes after a grant of 850 in N63. The verbs callHome and recallP have no button (seen, not cut).
+- Open from N60, not traced: t-n60 fails about 1 run in 3. t-a1, t-n29 and t-p2 also come and go on N62 and N63 alike.
+
+## Before that (2026-11-15 21:58): N62 sealed (preview n62): every card in the dock
 - N62 (BUILDS.md N62; Design 12 F2 and its section H; The List 22): his go was "Go go go proceed" (Nov 15 19:15) for all of Design 12 F and the glo-up. F1 and F2 are built; F3 to F5 and the glo-up are ruled and NOT built. His play of n61 and n62 owed. Design 12 H lists Claude's sixteen calls inside F2: his to overrule; ask nothing again that it or The List 22 answers.
 - For F3: a Train cell is `VERBS.train.label` (menu.js); its middle line is free unless the unit is queued (then "×3"). The numbers are D138 (`books/measure.js`), read through `FK.stat`. A cell holds 10 to 11 letters; the fit law (`fit`, E1120, SN44) squeezes to 77% and no further, and t-n62's `fits` check measures every research, unit and Build place: the three metrics and the symbol must pass it. Mock 3 is `mockups/dock/3-...png`; real screens of N62 are `mockups/dock/5-n62-real-screens.png`.
 - The dock's mold is `dock(tabs, on, verb, cells)`; a card's tabs are `CARD` (one function a tab, SN4 gives the order and the tick); Manage is the catch-all. F4 (Help) needs a home for the tech tree, the Guide and the Town Center's info (Parked, "Cut in N62").
@@ -21,7 +28,7 @@ Rules: `CLAUDE.md` (the one start). The one list: `The List.md` (section 10 hold
 - Albert, Nov 14 07:54 to 08:40: last night's jump to design was a judgement error; back to n41, keep a few items, then bug work only.
 - Code: `frankenstein-refresh/v100/`, branch `n46-back-to-n41` (cut from S9 = n41, `cb9c9d2`). Last sealed build: N59 (bottom of `BUILDS.md`): roads out of water; stops apart and clear. Preview n59 (n58: roads coast to coast; n57: winding roads, research tab; n56: camera jumps; n55: Support and Mail; (n54: trade roads and booth; n53: the Wonder and Exit). Albert's list of 13 (Nov 14 22:05) is The List section 14: 1 and 2 built; 3 to 13 traced or waiting on his word.
 - Branch `n29-the-list` keeps N42 to N45 whole, parked (`Parked.md`, "Parked Nov 14"). Do not build there.
-- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n62 is the one to play (n61: Build in the dock, the old cards; n60: the roads); before them n59 was (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
+- Previews on `main` (`frankenstein-refresh/preview-nNN/`): n63 is the one to play (n62: cards in the dock, no unit numbers; n61: Build in the dock, the old cards; n60: the roads); before them n59 was (n51: without the fix list; n50: without the order fix; n49: without the Pioneer; n48: without the mine shaft; n47: the new map only; n46: the old map). n40 to n45 stay up.
 - Live v100 on `main`: untouched. Going live is Albert's call only.
 
 ## In N47 (on top of N46; Albert's go of Nov 14 10:16)

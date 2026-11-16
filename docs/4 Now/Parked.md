@@ -813,3 +813,8 @@ The code as it was is in N61 (`34f4a71`, `frankenstein-refresh/v100/menu.js`). H
 - OPEN, his: the villager's brown pad has three boxes where Log was the fourth.
 - OPEN, his: a research that can be bought no longer wears a blue ring in the dock (his Nov 14 word: "blue when available"); the mock he approved rings only the one at work. Rings in the dock show at work only.
 
+## Cut in N63, the unit cell (Design 12 F3) [2026-11-16 04:10]
+The code as it was is in N62 (`6637d97`, `frankenstein-refresh/v100/menu.js`).
+- The verb `kind` and its helper `trainer` (menu.js; comment E186): "train a kind at the nearest building that trains it". Dead since N62 cut the sheet cards: no button, page or test called it. It also held a second home for a class's icon (the first look of its kinds that had one); the class symbols now have one home, SN45. `ECON.lineFor` (econ.js), which it asked, stays.
+- Words too wide for a unit's cell once the red > and the symbol stand after the name (a cell is 61 px; the mark takes 16): the civilisation's or the elite's word, in the cell only. Crossbowman, Han crossbowman and Elite crossbowman read Crossbow; Longbowman, Longbow; War elephant, Maurya war elephant and Royal elephant, Elephant; Mali horseman and Elite horseman, Horseman; Mongol horse archer, Horse archer (Words J58). The full names stay in the shells, the research cells, the messages and the Guide. His to reword.
+
