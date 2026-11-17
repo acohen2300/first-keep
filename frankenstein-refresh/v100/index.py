@@ -161,6 +161,9 @@ for k, t in NOW.items():   # G1 (Albert, Nov 13): the menus and the logic hold n
 LAWSRE = re.compile(r"\b(?:job|then|kind|civ|code)\s*[!=]==?\s*['\"]\w+['\"]"); JOINED = ''.join(text(f) for f in CODE)
 NAMED = len(LAWSRE.findall(JOINED)); DEAD = sorted(e['key'] for e in BOOKS['capabilities'].values() if not e['key'].startswith('layer') and e['key'] != 'shell' and f"'{e['key']}'" not in JOINED)
 ECSV = next(e['value'] for e in BOOKS['rules'].values() if e['key'] == 'ecs')
+SHN = {x for e in BOOKS['shells'].values() for x in [e.get('name')] + [e.get(f) for f in ('find', 'look', 'body')] if isinstance(x, str)} | set(BOOKS['shells'])   # X112 widened (Albert, Nov 17 15:36, The List 26 item 30): a typed shell name compared or switched on, anywhere
+NAMED2 = sum(1 for m in re.finditer(r"(?:[!=]==?\s*|case\s*)['\"]([\w ]+)['\"]|['\"]([\w ]+)['\"]\s*[!=]==?", JOINED) if (m.group(1) or m.group(2)) in SHN)
+rule('ecs', NAMED2 <= ECSV.get('named2', 0), f"{NAMED2} places compare a typed shell name; the rule allows {ECSV.get('named2', 0)}: ask its tick")
 rule('ecs', NAMED <= ECSV['named'], f"{NAMED} places ask a thing its name; the rule allows {ECSV['named']}: ask its tick, never raise the count")
 rule('ecs', len(DEAD) <= ECSV['dead'], f"{len(DEAD)} ticks no law asks for ({', '.join(DEAD)}); the rule allows {ECSV['dead']}")
 MEAS = book('measure'); TABLES = {'Health': MEAS['buildTime'], 'Research': {e['value']['at']: 1 for e in BOOKS['tech'].values() if e['value'].get('at')}, 'Spawn': MEAS['trains'], 'Field|Make': MEAS['ai.plots']}

@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,581 | 646,082 | 646,221 (-15,403) |
-| Books | 2648 | 0 | 894,912 | 895,891 (-76) |
+| Game code | 31 | 3,581 | 646,083 | 646,222 (-15,402) |
+| Books | 2649 | 0 | 895,538 | 896,517 (-80) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,598 | 442,638 | 442,903 |
+| Tools | 5 | 2,616 | 445,564 | 445,829 (+2,926) |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,245 | 10,249 | 54 |
-| menu.js | 518 | 124,156 | 124,189 (-15,684) | 395 |
+| menu.js | 518 | 124,157 | 124,190 (-15,683) | 395 |
 | econ.js | 628 | 119,508 | 119,508 (+281) | 70 |
 | combat.js | 381 | 65,500 | 65,500 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
@@ -57,8 +57,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 205,597 |
-| rules | 131 | 57,390 |
-| screen | 31 | 22,447 |
+| rules | 132 | 58,045 |
+| screen | 31 | 22,429 |
 | shells | 111 | 24,430 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
@@ -209,5 +209,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X132 | t-n64 | page | N64 (N387): Help is a card in the dock, as mock 7: its door is a Help cell beside New game under the pause button, and the game stays paused while it is open; Help in the pill, Back and Close, six tabs (Tips, Units, Buildings, Research, Ages, Peoples), a body of cells taller than six (the page ticks Dock and Tall) and a reading box at the foot that a tap on a cell fills; nothing scrolls and every view stands under the top bar at 390 by 844; Tips holds the 14 tips and the 7 rules under short names; Units the triangle as one line (the symbols in the order the cells' own marks give: spearmen > riders > archers > spearmen, engines > buildings) and every unit you can train in the Train tab's own cell; Buildings the Build page's six groups as a second row and the group's places; Research the 28 buildings that research with learned/total, a tap opening that building's every step, a group a line in age order, a learned step saying so and a later age's step saying its age in red, Back returning to the buildings and then leaving Help; Ages what your people eat a minute, the next age's price and time and the six ages; Peoples the six peoples and the nine finds; a tap in Help never buys, queues or places (the stores, the research and every line are as they were); every line of every cell fits at the book's share; the Guide no longer lists the Ram or the Small camp wagon (no building trains them) and keeps the Envoy; Close returns to the pause drop |
 | X133 | t-n65 | page | N65 (N388): a shot is drawn as what it is, as mock 4: every shell that ticks Shoot names its shot, a look in the Sprites book (the Archer, the Horse archer, the Siege tower and every building that shoots an arrow; the crossbowmen and the Ballista a bolt; the Javelineer a javelin; the Arquebusier a ball; the Catapult and the Trebuchet a stone; the Bombard a cannonball), and no other shell does; in the running game a missile in the air is its look's picture, turned along its flight (it rises, then falls), at true size (px = zoom x D12 x the look's metres a unit: an arrow 0.76 m), and it lands and is gone; it keeps to its own path when its shooter moves; a shooter whose side has learned to burn its shots (the stat fire: Fire arrows, Burning shot) looses the look's burning picture, which holds flame where the plain one holds none, and the other side's shots stay plain; the looks differ from one another; a stone and a cannonball leave a dotted trail in the look's colour, an arrow, a bolt and a javelin none; the gun's ball is too small to see and is its smoke trail alone; a building's shot is an arrow |
 | X134 | t-n66 | page | N66 (N390; Design 13): your building's card is a bar over a box in the Jobs dock's own two rectangles: the bar holds Home, the name, Repair and Demolish as ringed icons and an X, with no Back; the box holds what the building makes (green) over what it learns (blue), never on separate tabs; a first tap on a cell selects it and the bar reads it with its button, a second tap or the button buys, the button cancels one at work, and the X steps back, then closes; a row with nothing in it is not drawn and a one-row card sits at the bottom; a card of three cells a row or fewer is three cells wide at the right, its bar as wide; a building with nothing to train, plant, make or learn gets no card: circles float by it (send a villager where one works it, Repair, Demolish) and the Jobs dock stays; send puts the nearest idle villager to work it; Demolish arms on a tap and takes the building down on the next |
+| X135 | t-n67 | page | N67 (N391; Design 14, the mold): Jobs is the Jobs | Build toggle over six tiles; Build shows the group track (the screen book's groups) over six tiles at most; the Town Center's card reads Train | Learn | Talk with the group word in its path and Repair and Demolish in its row; one tap on a Train tile buys; a villager gets one line (Stop, Garrison, Remove, Cancel) and no tiles; the Controller shows six who buttons over six orders; the alert circle shows while something of mine is attacked; Home and War sit at the same height on all of these |
 
-2778 items sealed · 2648 book entries · 94 laws · 385 citations, 36 still to open · 0 known
+2779 items sealed · 2649 book entries · 94 laws · 385 citations, 36 still to open · 0 known

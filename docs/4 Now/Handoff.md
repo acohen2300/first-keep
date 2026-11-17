@@ -1,4 +1,11 @@
-# First Keep: hand-off (Nov 17, 2026, 14:27)
+# First Keep: hand-off (Nov 17, 2026, 16:00)
+
+## START HERE (2026-11-17 16:00): N67 BUILT (preview n67): Design 14's mold and the audit answers. His play is next
+- His go (Nov 17 15:40): "Go for all", the whole of Design 14 and The List 26 (his audit answers; the page https://claude.ai/artifact/XkZM2q1bKADA1r68i7Q6TC). Audit: `docs/4 Now/Audit - Nov 17.md`.
+- What is in: BUILDS.md N67 (and Claude's calls there, his to overrule). Cuts: Parked.md "Cut in N67".
+- Code: menu.js "The mold" (MOLD: jobs, build, bld, crew, find, ice, war; mline, mbase; verbs jsel to mrule, E1200 to E1232). Sizes and words: SN48 mold2, J61 mold.
+- NOT done: colour dedupe (List 26 items 40 to 43: needs a pointer form in the colours book; art colours would shift), words stored twice (48), long lines (34), ECON teach internals, the cut buildings' shells (AI), the town alarm's button (his call).
+- What he reports from play is not a go: talk first.
 
 ## START HERE (2026-11-17 14:27): Design 14 SAVED (the mold for new game, Jobs, Build and the building card); NOTHING BUILT since N66
 - Albert, Nov 17 08:24 to 14:25, talk and mocks: `docs/3 Locks/Designs/14 The mold - new game, Jobs, Build.md` holds every ruling; The List section 25 holds his words in order; mocks `mockups/dock/74` to `140`, the sheet `127`.

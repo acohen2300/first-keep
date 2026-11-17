@@ -519,3 +519,7 @@ Claude's calls inside them (his to overrule):
 - 7: weakness: Teach changes a unit's kind (econ.js:332 teachTo, 337 graduate); stats already follow research (FK.stat by side). Auto-upgrade of a unit line on research is NEW behaviour: unverified whether any research does it today. Parked with Teach until traced.
 - 17: the reading uses the ice report v100 has (Ice page, WI.lead: cm and kg): "Ice N cm · safe" or "· unsafe".
 - 45: circles drawn 26 and 40; both tap at 44 (Design 14 A).
+
+## 27. N67 built (preview n67): Design 14's mold and the audit answers (Albert, Nov 17 15:40 "Go for all") [2026-11-17 16:00]
+- BUILT, not proven (his play is the proof): BUILDS.md N67 lists what is in and Claude's calls. t-n67 passes (fails on N66).
+- NOT done (why, what is needed): see the N67 report in this chat and Handoff; the colour dedupe (items 40 to 43), words stored twice (48), long lines (34), ECON's teach code (cut from menus only), the cut buildings' shells (kept for the AI), the town alarm's button (OPEN, his call).

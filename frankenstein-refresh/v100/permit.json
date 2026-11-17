@@ -1,6 +1,6 @@
 {
  "build": "N67: Design 14, the mold (new game, Jobs, Build, the cards, the Controller, the alert) and the audit answers (The List 26)",
  "agreed": "Albert, Nov 17 15:40: \"Go for all\" / \"Build size… it doesn't matter. You can do it all.\"",
- "opens": ["code:menu.js", "book", "code:index.html", "code:econ.js"],
+ "opens": ["code:menu.js", "book", "code:index.html", "code:econ.js", "tool:index.py", "tool:test.py"],
  "grow": {"code:econ.js": 300}
 }
