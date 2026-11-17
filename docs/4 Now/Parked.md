@@ -853,3 +853,6 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - Villager orders (item 14): vdump, vatt, vgroup, vorder, vpage, vjob, vexit, vreset, vhide, vclose, vgo, send, unpick.
 - Market Bulk (sellK), fromCard (the Apartment from the House), helpers (the site's auto-builder), the sound pop and the mute cell (sound lives on the pause screen), the Score sheet (merged under Stores and on the pause screen), the Ice sheet (now the ice card in the mold), mid (the war screen's middle box).
 - Later (his "Later"): Zeal (kept as a tile on the Temple's Learn side), Ransom (kept as tiles on the Town Center's Talk side), the army-on-the-move jump (N56's banner; no button now).
+
+## Parked Nov 17 18:29 (Albert: "Let's just do the coloring for now")
+- The building card's toggle moving right with the tiles (Design 14 E; n67 left it at the left) and the left-justified card (mock `mockups/dock/167`, his question 18:27). Not now.
