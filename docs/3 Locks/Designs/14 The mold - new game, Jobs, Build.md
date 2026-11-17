@@ -54,7 +54,10 @@ Albert, Nov 17 2026, 08:24 to 14:01 (talk and mocks; NOT built). Sheet: `mockups
 - Orders: six tiles Attack, Move, Defend, Hold, Retreat, Squad. Tap and tap, either order: the map then the order, or the order then the map; the second tap sends them. No ✓ ✕. Orders without a spot (Hold, Defend, Retreat) go on the tap.
 - The same menu opens from the War circle, a tap on your own soldier, or a hold-and-drag box over soldiers; the who-line fills to match. Soldiers get no card of their own.
 - Leave the war screen: People, Garrison, Build, Protect (they live in Jobs and the villager card).
-- OPEN: formation; the Support class (spy, medic, priest); the two camera jumps (alert, army on the move); Squad's page.
+- Formation: parked (15:02).
+- Support (spy, medic, priest) are villagers, not army: they get the villager card's one line (Home › Spy ...), not the Controller (15:02).
+- Alert: when anything of yours is attacked, an alert circle appears just left of War, on the fixed line; tap it and the camera goes there; it hides when nothing is under attack (15:02). The army-on-the-move jump is not ruled.
+- OPEN: Squad's page; Support's buttons.
 
 ## E4. Finds (15:00, his word; not mocked)
 - Animals, berries, fish, rocks, stones and trees get a variation of the villager card: one line on the fixed Home/War line, Home › the find's name, a reading (what is left), its buttons, Cancel, War.

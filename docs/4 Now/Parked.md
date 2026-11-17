@@ -837,3 +837,7 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 ## Cut in N66, the building card (Design 13) [2026-11-17 08:06]
 - For your own buildings only (finds, units and foes' buildings keep the old dock card): the tabs Train | Learn | Manage over six cells; Back in the top row; the three-line cell (the effect and the price are in the bar after a tap); the buy on the first tap; Demolish on one tap; the Manage tab's readings (a site's "% raised", health when whole); Helpers as its own cell (Repair does it); Repair's "Pick a villager".
 - Where it was: menu.js cardDock, dock, ctop (still there, still used by the other subjects); CARD.Manage's own-building branch is now read only for its verbs.
+
+## Parked in Design 14 talk: formation (Albert, Nov 17 15:02) [2026-11-17 15:13]
+- What it is: the army's formation (line, column, wedge...) as a choice in the Controller. Mid had six formation names (Nov 4: "kept, defined later").
+- Not designed in the new mold; no slot reserved.
