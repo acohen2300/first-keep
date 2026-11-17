@@ -523,3 +523,6 @@ Claude's calls inside them (his to overrule):
 ## 27. N67 built (preview n67): Design 14's mold and the audit answers (Albert, Nov 17 15:40 "Go for all") [2026-11-17 16:00]
 - BUILT, not proven (his play is the proof): BUILDS.md N67 lists what is in and Claude's calls. t-n67 passes (fails on N66).
 - NOT done (why, what is needed): see the N67 report in this chat and Handoff; the colour dedupe (items 40 to 43), words stored twice (48), long lines (34), ECON's teach code (cut from menus only), the cut buildings' shells (kept for the AI), the town alarm's button (OPEN, his call).
+
+## 28. His play of n67 (Albert, Nov 17 17:38; talk, not a go) [2026-11-17 17:40]
+- Problem 1, his words: "I need a build option for the villages" (villagers). Claude: Design 14 E3 says Build (and Protect) "live in Jobs and the villager card"; N67 left Build off the villager card (E2's list), Claude's miss. place() already sends the picked villagers to the site (menu.js:321), but Build mode cannot open while a villager is picked (the crew card wins in mold()). Idea offered: a Build icon on the villager's line opens Build with the villager still picked; the placed site is built by that villager.
