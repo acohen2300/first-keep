@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,655 | 652,232 | 652,375 |
-| Books | 2622 | 0 | 886,710 | 887,685 |
+| Game code | 31 | 3,680 | 661,480 | 661,624 |
+| Books | 2639 | 0 | 894,225 | 895,200 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,579 | 438,884 | 439,149 |
+| Tools | 5 | 2,598 | 442,638 | 442,903 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,245 | 10,249 | 54 |
-| menu.js | 593 | 130,587 | 130,624 | 406 |
+| menu.js | 618 | 139,835 | 139,873 | 405 |
 | econ.js | 627 | 119,227 | 119,227 | 70 |
 | combat.js | 381 | 65,500 | 65,500 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
@@ -51,20 +51,20 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 58 | 17,751 |
-| citations | 383 | 115,747 |
+| citations | 384 | 116,870 |
 | colours | 34 | 10,478 |
-| comments | 1041 | 211,772 |
+| comments | 1054 | 214,891 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 205,597 |
-| rules | 130 | 56,399 |
-| screen | 29 | 19,859 |
+| rules | 131 | 57,390 |
+| screen | 30 | 21,680 |
 | shells | 111 | 24,436 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 75 | 43,876 |
 | tech | 260 | 76,080 |
-| words | 57 | 107,731 |
+| words | 58 | 108,391 |
 
 ## The shells
 
@@ -208,5 +208,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X131 | t-n63 | page | N63 (N386): a soldier's Train cell tells what to build: its first line is the name, a red > and the symbol of the class it hits hardest (the largest of its bonuses in D138 against every trained kind; Buildings when it strikes only buildings, or strikes them harder), as mock 3 has the Archer, the Javelineer, the Crossbowman and the Arquebusier; its second line is three numbers under their symbols: health, damage a second (a blow over the seconds a blow takes) and reach, read through FK.stat; its third the price; while it is queued the count takes the second line; a villager's cell is as it was; an enemy soldier's card says which of your kinds it loses to (a Cataphract to your spearmen, an Archer to the Javelineer) and your own unit's card does not; every unit's cell fits at the book's share under every rank's name; the dead verb kind is gone |
 | X132 | t-n64 | page | N64 (N387): Help is a card in the dock, as mock 7: its door is a Help cell beside New game under the pause button, and the game stays paused while it is open; Help in the pill, Back and Close, six tabs (Tips, Units, Buildings, Research, Ages, Peoples), a body of cells taller than six (the page ticks Dock and Tall) and a reading box at the foot that a tap on a cell fills; nothing scrolls and every view stands under the top bar at 390 by 844; Tips holds the 14 tips and the 7 rules under short names; Units the triangle as one line (the symbols in the order the cells' own marks give: spearmen > riders > archers > spearmen, engines > buildings) and every unit you can train in the Train tab's own cell; Buildings the Build page's six groups as a second row and the group's places; Research the 28 buildings that research with learned/total, a tap opening that building's every step, a group a line in age order, a learned step saying so and a later age's step saying its age in red, Back returning to the buildings and then leaving Help; Ages what your people eat a minute, the next age's price and time and the six ages; Peoples the six peoples and the nine finds; a tap in Help never buys, queues or places (the stores, the research and every line are as they were); every line of every cell fits at the book's share; the Guide no longer lists the Ram or the Small camp wagon (no building trains them) and keeps the Envoy; Close returns to the pause drop |
 | X133 | t-n65 | page | N65 (N388): a shot is drawn as what it is, as mock 4: every shell that ticks Shoot names its shot, a look in the Sprites book (the Archer, the Horse archer, the Siege tower and every building that shoots an arrow; the crossbowmen and the Ballista a bolt; the Javelineer a javelin; the Arquebusier a ball; the Catapult and the Trebuchet a stone; the Bombard a cannonball), and no other shell does; in the running game a missile in the air is its look's picture, turned along its flight (it rises, then falls), at true size (px = zoom x D12 x the look's metres a unit: an arrow 0.76 m), and it lands and is gone; it keeps to its own path when its shooter moves; a shooter whose side has learned to burn its shots (the stat fire: Fire arrows, Burning shot) looses the look's burning picture, which holds flame where the plain one holds none, and the other side's shots stay plain; the looks differ from one another; a stone and a cannonball leave a dotted trail in the look's colour, an arrow, a bolt and a javelin none; the gun's ball is too small to see and is its smoke trail alone; a building's shot is an arrow |
+| X134 | t-n66 | page | N66 (N390; Design 13): your building's card is a bar over a box in the Jobs dock's own two rectangles: the bar holds Home, the name, Repair and Demolish as ringed icons and an X, with no Back; the box holds what the building makes (green) over what it learns (blue), never on separate tabs; a first tap on a cell selects it and the bar reads it with its button, a second tap or the button buys, the button cancels one at work, and the X steps back, then closes; a row with nothing in it is not drawn and a one-row card sits at the bottom; a card of three cells a row or fewer is three cells wide at the right, its bar as wide; a building with nothing to train, plant, make or learn gets no card: circles float by it (send a villager where one works it, Repair, Demolish) and the Jobs dock stays; send puts the nearest idle villager to work it; Demolish arms on a tap and takes the building down on the next |
 
-2752 items sealed · 2622 book entries · 94 laws · 383 citations, 36 still to open · 0 known
+2769 items sealed · 2639 book entries · 94 laws · 384 citations, 36 still to open · 0 known

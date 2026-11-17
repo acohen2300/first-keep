@@ -661,12 +661,18 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1059** the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with
 - **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and · N371 · N62 · N385
 - **E1113** a card's tab: choosing one shows its cells from the first page and lets go of a chosen peo · N385
+- **E1124** the X of the building card (N390): with a cell chosen it steps back to the building's bar; · N390 · C1 (N102)
+- **E1125** the button on a unit at work: it takes the last one of that kind out of the line and says  · E1112
 - **E1123** Help's verb (N387): with no word it opens Help on its first tab, from the pause drop, the  · N387
 - **E1114** the More cell, in the sixth place only when a tab holds more than six: it says how many mo · N385
 - **E1115** a people's cell on Relations or Misfits: a tap chooses it, and the row then shows that peo · N385
+- **E1126** Send (N390): the nearest idle villager; to a find it gathers, to a building a villager wor · N390
+- **E1127** Repair (N390): no villager need be picked: the picked one if there is one, else autoBuilde · N390 · SN47 (N390)
+- **E1128** Demolish (N390: "tap the icon once, red fill, tap again"): the first tap arms it (S.dm), t · N390 · SN47 (N390)
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
+- **E1129** a cell made while the card's model is being built (K): its verb is noted, the chosen one ( · N390
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
@@ -689,6 +695,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E405** the War Council's tabs (N385): Squads, the three squads and Muster for what the picked one · N385
 - **E477** the Intel tab on their hall: what your spy read (when, their age, their steps of research, · N385
 - **E1118** Manage, every card's last tab: first what the thing is (its health and what it is doing, a · N385
+- **E1130** the building card's parts (Design 13, N390): KB its numbers and lists (SN47), KW its words · N390 · SN47 (N390) · J60 (N390)
+- **E1131** a walker's picture for a cell: its figure at SN47's fig, in your colour, drawn once a kind · SN47 (N390)
+- **E1132** the card's model, once a render: the groups the building's ticks give (SN4, without Manage · SN4 (N136, N170, N194, N385) · SN47 (N390)
+- **E1133** the bar: at rest Home, the name (and its health when hurt), the pages as tabs, the icons (
+- **E1134** the box: a row for the page's top group and one for its bottom, a row with nothing not dra · E1114
 - **E1119** a card in the dock: the tabs the subject ticks and that hold something, in the book's orde · N385
 - **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the  · N62 · N385
 - **E736** the Home button stands at the rank's left whenever the Town Center is off the screen, and 
@@ -713,6 +724,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
 - **E843** Paused: the speeds and its help line; a tap on play plays again
 - **E941** the pop-up over the map holds one thing, the ice's Clear button. The quick action (a tap o · N369
+- **E1135** the floating circles follow their building every frame (popAt sets them above it, under it
+- **E1136** the first tap on a cell of the box selects it (the bar reads it); the same cell tapped aga · SN47 (N390)
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E872** the Start page's Fog of war: off, every side sees all (one rule for all)
 - **E817** the small pop-ups on the map (a quick attack on bare ground, the ice's clear, the villager

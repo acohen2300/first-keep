@@ -1,7 +1,7 @@
 # Design 13: the building card as a bar and a box (Albert, Nov 16 22:45 to Nov 17 07:35; talk and mocks only, NOTHING BUILT)
 
 Replaces the card of Design 12 F2 (tabs Train | Learn | Manage in the dock) and the brown card of Nov 16 18:14. Every mock is n65's real page at 390 x 844 with its real cells, costs, figures and reasons.
-The glo-up stays ON HOLD and his play bugs still come first (Nov 16 12:04): this design is not a go to build.
+The glo-up stays ON HOLD. BUILT as N66 (Albert, Nov 17 07:46: "Go. I would keep the tests very light"; BUILDS.md N66 says what went in and how it differs from the mocks): his play owed.
 
 ## A. Where the card stands (as of Nov 17 07:31)
 

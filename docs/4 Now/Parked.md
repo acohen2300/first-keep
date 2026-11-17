@@ -833,3 +833,7 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - What it is: at night a burning arrow or stone glows and lights the ground under it as it flies. Mid did it (`frankenstein-refresh/mid/src/24-view-overlays.js`, drawTracers: a candle's glow under a fire shot). v100 never has.
 - Where it would go: the night lights' list (index.html, lightsOf) fed by combat.js's missiles that burn; a cap on how many glow at once (frames).
 - Not built. The flame itself is in the shot's picture day and night (N65); how it reads under the night shade is not looked at.
+
+## Cut in N66, the building card (Design 13) [2026-11-17 08:06]
+- For your own buildings only (finds, units and foes' buildings keep the old dock card): the tabs Train | Learn | Manage over six cells; Back in the top row; the three-line cell (the effect and the price are in the bar after a tap); the buy on the first tap; Demolish on one tap; the Manage tab's readings (a site's "% raised", health when whole); Helpers as its own cell (Repair does it); Repair's "Pick a villager".
+- Where it was: menu.js cardDock, dock, ctop (still there, still used by the other subjects); CARD.Manage's own-building branch is now read only for its verbs.

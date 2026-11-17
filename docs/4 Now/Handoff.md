@@ -1,6 +1,13 @@
-# First Keep: hand-off (Nov 17, 2026, 07:40)
+# First Keep: hand-off (Nov 17, 2026, 08:06)
 
-## START HERE (2026-11-17 07:40): a night of talk and mocks on the building card: Design 13. NOTHING BUILT, nothing in the game changed since N65
+## START HERE (2026-11-17 08:06): N66 BUILT (preview n66): Design 13's building card is in the game for his play. His list from play is next
+- His word (Nov 17 07:45, 07:46): get it all in the game, tests very light, he makes "a proper list" from play. What he reports from play is still not a go: talk first.
+- What is in: BUILDS.md N66 (the bar and box, select then buy, small cards at the right, floating circles, Demolish tap-fill-tap, Repair and Send without a picked villager). Claude's calls are listed there: his to overrule.
+- Code: menu.js kmodel (the card's model, once a render), kbar, kbox, kdot, kat; S.cs is the chosen cell's data-v, S.dm the armed building; SN47 holds every number and list, J60 the words. Finds, units and foes' buildings still use cardDock and ctop.
+- OWED: the tests that read the old tabs (BUILDS.md N66 names them; main() throws until t-queue, t-cards and t-research are moved); the full suite not run. menu.js grew 9,249 bytes under a grant.
+- Found, not fixed: `--rb` is set twice (blue, then a 2 px radius), so blue edges are void. Screens of N66: `mockups/dock/72-n66-real-screens.png`, `73-n66-real-screens.png`.
+
+## Before that (2026-11-17 07:40): a night of talk and mocks on the building card: Design 13. NOTHING BUILT, nothing in the game changed since N65
 - Read `docs/3 Locks/Designs/13 The building card - bar and box.md` first: section A is where the card stands, B his words in order, C Claude's calls (his to overrule), E the breaks not fixed. Ask him nothing that B answers.
 - It is NOT a go to build. The glo-up is still ON HOLD and his play bugs come first (Nov 16 12:04). He has given no bug notes yet; he sent one match log with no words (`docs/4 Now/Match log - Nov 16 (188 min).json`; read on The List 23).
 - The night began with "I think I messed up my game... over engineered it and somehow lost features" (Nov 16 20:58). The inventory (`docs/4 Now/Inventory - Nov 16.md`) found nothing lost by accident between n41 and n65. Claude's get-back-on-track plan (freeze design, play n65, sort notes, one bug build, repeat) was offered at 21:19 and not answered: he went on to the card.
