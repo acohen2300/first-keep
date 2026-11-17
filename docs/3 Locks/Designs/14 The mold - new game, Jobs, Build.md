@@ -42,6 +42,15 @@ Albert, Nov 17 2026, 08:24 to 14:01 (talk and mocks; NOT built). Sheet: `mockups
 - Kept from K: one tap buys; the bar reads the tile after the tap (stats, "training 1") with Cancel; white ring = selected; green ring receding = training; blue receding = learning.
 - Supersedes for the card his Nov 17 06:21 "I do mind separating training from learning" (he chose the toggle at 14:09 after Claude raised it).
 
+## E2. Villager card (14:26 to 14:43; mock `mockups/dock/153`)
+- One line on the fixed Home/War line: Home › Villager (Barlow 16/600 gold, halo), then buttons Stop, Garrison, Remove, Cancel, then War. Nothing under it: the map shows.
+- Tap and tap: tap a villager, tap where it goes; the card holds only what a tap on the map can't do.
+- Remove: tap, red fill, tap; the villager dies and frees its slot. Garrison: the nearest building. Cancel: closes.
+- Path rule: the middle word only when the thing belongs to a Build group (Home › Army › Barracks; Home › Villager).
+
+## Law: Home and War never move (14:40)
+- Both circles sit at the same spot on every screen (714 px down on an 844 px phone); every card stacks from that line down.
+
 ## F. OPEN
 - New game in the mold's look, or kept as a full-screen sheet.
 - + and − on People; where the alert and army jumps go; the Jobs middle (a reading line?); three-cost buildings at 44 px; Abatis.
