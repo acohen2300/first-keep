@@ -33,10 +33,16 @@ Albert, Nov 17 2026, 08:24 to 14:01 (talk and mocks; NOT built). Sheet: `mockups
 - Two columns of pads, 3 across, all 40 px: Difficulty | Scenario (Siege "Holdout", Silk Road "Economic", Last Keep "3 vs 1"; optional, none = a normal game); Length (Conquest, 15, 30) | Rules (War Fog, Allies, Random; tap on, no tap off); Civilization | Hazards (points shown +3, +2; none lit = no hazards).
 - Style B: top-lit brown gradient, sheen on Start; Start reads the civ's perks and the game.
 
-## E. Building card (K; old footprint, to redo in the mold)
-- Cells: picture, name (cream), cost (red to green); the info in the bar after a tap; one tap buys; white ring = selected; green ring receding = training; blue receding = learning; row outlines at 35%; bar icons bare, only the X ringed.
+## E. Building card (14:02 to 14:25; mocks `mockups/dock/130` to `140`)
+- The mold: Home (left) and War (right) on top; beside Home a path "› Army › Barracks": the group word dim (Barlow 14) and tappable as a back button to that Build tab; the building's name Barlow 17/600, gold, with a soft gold halo behind it (centre 22%, fading out).
+- Control row: a toggle Train | Learn (the left word follows what the building makes: Train, Plant at the Mill, Build at the Mine); Repair, Demolish and ✕ at the right (for now). Opens on Train; a building with nothing to train shows Learn only, no toggle.
+- One tile row for the toggled side; the card shrinks to the right as options are fewer, the toggle moving right with it.
+- Tiles: a unit's picture (small), its name, its cost on one line at 11 (a cost too long for its tile drops its spaces: "450w250f150g"); Train tiles outlined dim green, Learn dim blue (35% into the tray brown).
+- Over six research: the sixth tile is More, paging the rest.
+- Kept from K: one tap buys; the bar reads the tile after the tap (stats, "training 1") with Cancel; white ring = selected; green ring receding = training; blue receding = learning.
+- Supersedes for the card his Nov 17 06:21 "I do mind separating training from learning" (he chose the toggle at 14:09 after Claude raised it).
 
 ## F. OPEN
-- The building card in the mold (next).
 - New game in the mold's look, or kept as a full-screen sheet.
 - + and − on People; where the alert and army jumps go; the Jobs middle (a reading line?); three-cost buildings at 44 px; Abatis.
+- Found in the books: Rebels has no cost; the unit pictures read poorly at tile size; research names that need short forms (Weights and measures, Letters of credit, Threshing sledge).

@@ -474,3 +474,4 @@ Spec, his words, the checks and the plan: `docs/3 Locks/Designs/12 The dock - on
 - Ruled (14:23): the name at 17, not 18 ("too big") (`mockups/dock/138`). A size outside his 12/14/18 scale, for this one place. [2026-11-17 14:27]
 - His word (14:24): "a halo behind it", not a glow on the letters: mocked as a soft oval of gold light behind the name, the letters crisp (`mockups/dock/139`). Not yet confirmed. [2026-11-17 14:28]
 - Ruled (14:24): the halo stays ("That's kind of cool"), less bright: its centre at 22% gold, fading out (was 38%) (`mockups/dock/140`). [2026-11-17 14:29]
+- His word (14:25): "I think we're done": the card is settled; written into Design 14 section E; Handoff updated for a new chat. NOTHING BUILT. [2026-11-17 14:28]

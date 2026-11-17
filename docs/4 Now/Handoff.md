@@ -1,6 +1,11 @@
-# First Keep: hand-off (Nov 17, 2026, 08:06)
+# First Keep: hand-off (Nov 17, 2026, 14:27)
 
-## START HERE (2026-11-17 08:06): N66 BUILT (preview n66): Design 13's building card is in the game for his play. His list from play is next
+## START HERE (2026-11-17 14:27): Design 14 SAVED (the mold for new game, Jobs, Build and the building card); NOTHING BUILT since N66
+- Albert, Nov 17 08:24 to 14:25, talk and mocks: `docs/3 Locks/Designs/14 The mold - new game, Jobs, Build.md` holds every ruling; The List section 25 holds his words in order; mocks `mockups/dock/74` to `140`, the sheet `127`.
+- Next, his: the Controller (army) in the mold, or one build (n67) of Design 14. Design 14 F lists what is still open.
+- This chat ran very long: start the next one fresh (CLAUDE.md, this file, then Design 14).
+
+## Before that (2026-11-17 08:06): 2026-11-17 08:06): N66 BUILT (preview n66): Design 13's building card is in the game for his play. His list from play is next
 - His word (Nov 17 07:45, 07:46): get it all in the game, tests very light, he makes "a proper list" from play. What he reports from play is still not a go: talk first.
 - What is in: BUILDS.md N66 (the bar and box, select then buy, small cards at the right, floating circles, Demolish tap-fill-tap, Repair and Send without a picked villager). Claude's calls are listed there: his to overrule.
 - Code: menu.js kmodel (the card's model, once a render), kbar, kbox, kdot, kat; S.cs is the chosen cell's data-v, S.dm the armed building; SN47 holds every number and list, J60 the words. Finds, units and foes' buildings still use cardDock and ctop.
