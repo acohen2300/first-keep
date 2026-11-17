@@ -841,3 +841,7 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 ## Parked in Design 14 talk: formation (Albert, Nov 17 15:02) [2026-11-17 15:13]
 - What it is: the army's formation (line, column, wedge...) as a choice in the Controller. Mid had six formation names (Nov 4: "kept, defined later").
 - Not designed in the new mold; no slot reserved.
+
+## Idea, not a cut: Second Keep (Albert, Nov 17 16:19) [2026-11-17 16:20]
+- His words: "It's a different game. It's like second keep or first keep 2." A game in the style of Rise of Castles: running your castle, no ending as the point; First Keep stays the Age of Empires-style match game.
+- Claude's notes: it reuses First Keep's map, economy, buildings, shells and books; it needs First Keep's balance right first, since an endless game runs a broken economy forever.
