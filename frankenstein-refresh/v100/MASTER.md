@@ -671,6 +671,20 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1128** Demolish (N390: "tap the icon once, red fill, tap again"): the first tap arms it (S.dm), t · N390 · SN47 (N390)
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
 - **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
+- **E1227** the Normal | Daily toggle on the new-game sheet
+- **E1228** a scenario is optional: a tap lights one, a second tap clears it (a normal game)
+- **E1229** the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) 
+- **E1214** a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villag
+- **E1215** − and + step the picked Jobs tile: on a resource they move a villager to or from it; on Pe
+- **E1216** the Jobs | Build toggle
+- **E1217** the path's group word: back to Build on that group
+- **E1218** Home: closes whatever is open; with nothing open it takes the camera home
+- **E1219** Cancel on a one-line card: let go of the pick and close
+- **E1220** Gather on a find: the nearest idle villager goes
+- **E1221** remember the ice answer this winter or this game
+- **E1222** the who-line: All, a class, or Idle picks those soldiers
+- **E1223** − leaves out the picked soldier nearest the Town Center; + adds the unpicked one of the wh
+- **E1224** the six orders: Hold, Defend and Retreat go on the tap; Attack and Move go on the map tap 
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
 - **E1129** a cell made while the card's model is being built (K): its verb is noted, the chosen one ( · N390
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
@@ -690,25 +704,30 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1117** the dock's one mold, for Build and for every card: a row of up to six tabs, the chosen one · N385
 - **E840** Relations and Misfits in the dock (N385: tap, then choices): the peoples as cells, each wi · N385
 - **E199** a card's tabs (SN4), one a name: each answers for the subject t with its cells, none when  · SN4 (N136, N170, N194, N385) · N385
-- **E738** a building's Learn tab: the next step of each of its lines (the Town Center's next age fir · N385
 - **E1028** every drop-off offers its plot on its own card (Decisions Nov 11, #11; Albert: a Mill shou · E333 · N62 · N385
-- **E405** the War Council's tabs (N385): Squads, the three squads and Muster for what the picked one · N385
-- **E477** the Intel tab on their hall: what your spy read (when, their age, their steps of research, · N385
-- **E1118** Manage, every card's last tab: first what the thing is (its health and what it is doing, a · N385
+- **E738** a building's Learn tab: the next step of each of its lines (the Town Center's next age fir · N385
+- **E1225** Talk on the Town Center: Relations and Misfits as tiles (tap one for its stances), then pr
 - **E1130** the building card's parts (Design 13, N390): KB its numbers and lists (SN47), KW its words · N390 · SN47 (N390) · J60 (N390)
 - **E1131** a walker's picture for a cell: its figure at SN47's fig, in your colour, drawn once a kind · SN47 (N390)
-- **E1132** the card's model, once a render: the groups the building's ticks give (SN4, without Manage · SN4 (N136, N170, N194, N385) · SN47 (N390)
-- **E1133** the bar: at rest Home, the name (and its health when hurt), the pages as tabs, the icons (
-- **E1134** the box: a row for the page's top group and one for its bottom, a row with nothing not dra · E1114
-- **E1119** a card in the dock: the tabs the subject ticks and that hold something, in the book's orde · N385
-- **E669** the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the  · N62 · N385
-- **E736** the Home button stands at the rank's left whenever the Town Center is off the screen, and 
-- **E724** a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, N
-- **E704** the two base rows as Base has them; War is Mid's one red button on the rank above the rows
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
 - **E1104** the two look buttons beside Home on the top row: the alert red while something is under at · N378
-- **E733** the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitti · N325 · N25 · N61 · N384 · N62 · N385 · E1112
 - **E1003** picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller wi
+- **E1200** the mold (Design 14): every screen in play is one fixed line (Home, the path and name, a c
+- **E1201** who the mold is for: the army is the picked soldiers less support (priest, medic, spy); th
+- **E1202** a building's Build group is where it sits in the tabs; a tile may wear a short name from t
+- **E1203** a pill is a word button drawn small with a 44 tap area; a toggle is the pill track whose l
+- **E1204** the path: › the group word (tap: back to that Build group), › the name
+- **E1205** a tile row: six at most; over six the sixth is More and pages the rest; fewer than six sit
+- **E1206** a card's sides are its ticks' rows in the screen book's order; a side that plants or build
+- **E1207** the reading on the line: health when hurt, a site's percent, what is left of a find, sheep
+- **E1208** ice by Gold's formula: a load of P kg on h cm of ice is safe under A_safe·h², maybe under  · D350 (N17, N173, N262, N263)
+- **E1209** the six cards the mold draws: Jobs, Build, a building, a crew, a find, ice and the Control
+- **E1230** whether a Rules pad is lit
+- **E1210** the Squad tile: Save while the picked army differs from the saved squad, then Squad N; a t
+- **E1226** send: Attack goes through the tap rows (a foe is fought, the ground marched to); Move marc
+- **E1211** which card shows: ice, war, a crew, my building, any other subject, then Build or Jobs
+- **E1212** the fixed line: Home at the left; the alert circle when something of mine is attacked; War
+- **E1213** under the line the control row and the tile row; empty rows keep their height so Home and 
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
 - **E203** Relations and Misfits: one row a people: who and where they stand, (a bribe for misfits), 
@@ -724,7 +743,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E205** a page or a card is a bottom sheet: it opens from the bottom edge over the base's rows and
 - **E843** Paused: the speeds and its help line; a tap on play plays again
 - **E941** the pop-up over the map holds one thing, the ice's Clear button. The quick action (a tap o · N369
-- **E1135** the floating circles follow their building every frame (popAt sets them above it, under it
 - **E1136** the first tap on a cell of the box selects it (the bar reads it); the same cell tapped aga · SN47 (N390)
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E872** the Start page's Fog of war: off, every side sees all (one rule for all)

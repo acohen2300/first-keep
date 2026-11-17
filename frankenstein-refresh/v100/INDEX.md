@@ -464,6 +464,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N388 |  | Albert, Nov 15, 2026, 18:29 and 18:38 (Design 12 C9, F5 and section L; The List 22), built on his word of Nov 16 08:23, \build Design 12 F5\ | opened |
 | N389 |  | For N65 (N388), from memory, to open: a javelin 1.15 m (Polybius 6.22, the velites' javelin: a shaft of two cubits and a span of head); a gu | to open |
 | N390 |  | Albert, Nov 16 22:45 to Nov 17 07:46 (Design 13: the building card as a bar and a box; his words in order are its section B): \If I wanted t | opened |
+| N391 |  | Albert, Nov 17 08:24 to 15:40 (Design 14, the mold: new game, Jobs, Build, the building card, the villager card, the army Controller, the al | opened |
 
 ## colours
 
@@ -524,7 +525,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E701 |  | the top bar's cells by the Screen book: pause and the small map are live controls; a cell that does nothing is not shown (Base's bar had non |  |
 | E702 |  | pause stops the clock and opens the Pause screen; the same cell resumes |  |
 | E703 |  | New game asks twice, so a stray tap cannot end a match; then the Start sheet |  |
-| E704 |  | the two base rows as Base has them; War is Mid's one red button on the rank above the rows, at the right, shown only over the open map, its  |  |
 | E705 |  | a hazard switched on adds its points to the level (the measure book's hazards.pts); the Start sheet's picks are a setting, copied into the m |  |
 | E706 |  | as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New game and the volumes under the pause button and says  |  |
 | E707 |  | while a tall sheet (the Start page) is open, messages wait in the post and come out when it closes, so none covers the sheet (Base's land ca |  |
@@ -589,10 +589,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E745 |  | the aurora: curtains of green and violet over the top of the glass, swaying unless motion is stilled |  |
 | E746 |  | an event with its own picture draws it over the map |  |
 | E747 |  | the mirage's dots on the small map, in the colour of what is coming |  |
-| E736 |  | the Home button stands at the rank's left whenever the Town Center is off the screen, and takes the camera home (Base, item 15) |  |
 | E735 |  | the hammer carries the receding brown ring for every site going up (the mean of their progress; Albert, Nov 10, #21: the Build button is the |  |
 | E734 |  | a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job  |  |
-| E733 |  | the Controller's top row (Albert Nov 11, N325: 'small, small, clean'): glass circles sitting over the pads. Left: Home (back to the hall), B |  |
 | E732 |  | the Mail door on the top bar with its unread count opens the Mail card: the messages newest first, each with its group, a tap on one with a  |  |
 | E731 |  | the Controller's parts (Albert Nov 11, N325): its words J50, its sizes SN41, its thin icons SN42, its tints C37; 'soldiers' are the picked t |  |
 | E730 |  | the Build card as Base's: opening it reads the middle of the view and opens the tab of what fits there, marked blue with Fits here; a second |  |
@@ -601,7 +599,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E727 |  | a blow from beyond melee reach (D.flanking.melee, the combat book's own line) is a missile: its hit is the arrow's sound, as Base's (the Nov |  |
 | E726 |  | the place bar says what Base's said (J34): where to press, then the name with 'tap Build, or drag it to move', the pieces of a line; Build a |  |
 | E725 |  | the finger's target is lift px a zoom ABOVE the figure's foot, its body; the sign was turned, so the target sat below the feet and a tap on  |  |
-| E724 |  | a picked villager's bar on the rank, as Base's selection bar (Albert's Base screenshots, Nov 7 20:38): 'n picked' and the cross that lets th |  |
 | E723 |  | the sound engine is woken the moment it is made: a phone makes it asleep until a gesture resumes it, so the first taps were silent |  |
 | E722 |  | zero and one are named from the count row (D346), no longer borrowed from the hazards' base |  |
 | E721 |  | the path search keeps its working memory between searches (typed arrays stamped by a search number, a heap in two arrays): no Maps, Sets or  |  |
@@ -1011,7 +1008,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E402 |  | Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the War Council: D244's times the price, the slowest k |  |
 | E403 |  | the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up opens them for the one picked or the whole army |  |
 | E404 |  | the squads' words and the step each dial waits for (Engagement, Formations, Battalions) |  |
-| E405 |  | the War Council's tabs (N385): Squads, the three squads and Muster for what the picked one lacks; Plan, the picked squad's plan by class (−  |  |
 | E406 |  | the orders, missions and the War Director's measures and words; the groups on the march (ORD), the missions by squad or the whole army (MS), |  |
 | E407 |  | the archers' arc (Mid's dress 'arc'): each on a circle of the arc's radius round the foe, a rank's gap apart along it, facing in |  |
 | E408 |  | a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16); while it lasts the pace is D249 spd times the ch |  |
@@ -1081,7 +1077,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E474 |  | sabotage (Mid's sabotage): a building burns a share of its health or stalls and loses the head of its line; the spy is spent; a fall by fire |  |
 | E475 |  | a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else it walks there |  |
 | E476 |  | Teach on a soldier, Zeal at the Temple, a ransom at your hall |  |
-| E477 |  | the Intel tab on their hall: what your spy read (when, their age, their steps of research, their soldiers, their stores), each a cell that o |  |
 | E478 |  | the Market (Mid's marketTrade and its prices): a yield by the raw lot, a good by the good lot, sold at sell of its worth and bought at buy,  |  |
 | E479 |  | sell or buy one lot at a finished Market: raw sold for gold is a swap, not gathered; a good sold counts |  |
 | E480 |  | the Mint debases the coin once: its gold now, every Market price dearer for good (Rome's denarius) |  |
@@ -1268,7 +1263,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E666 |  | the economy's part of the save: a finished game clears the save instead |  |
 | E667 |  | the war's part of the save: the waves, the orders, the relations, the squads |  |
 | E668 |  | the computers' part of the save: their clocks, plans and minds |  |
-| E669 |  | the ghost's bar (Mid's place bar): what the ghost says, Build to place it, ✕ to stop; the menu stays closed so the ghost and its guides are  |  |
 | E670 |  | The test tools (Mid's matchLog, copyLog, tapCount): the match log for Claude to read, tap counts kept on this phone |  |
 | E671 |  | a row a minute (D335): each side's age, villagers, soldiers and stores, or none once it fell; and your own ledger so far, in and out by reas |  |
 | E672 |  | copied to the clipboard, or through a hidden box where the clipboard is refused |  |
@@ -1543,8 +1537,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1115 |  | a people's cell on Relations or Misfits: a tap chooses it, and the row then shows that people and its choices (N385) |  |
 | E1116 |  | the card's helpers: up, your building and finished; info, a cell that only tells; docked, the thing whose card is in the dock (none under a  |  |
 | E1117 |  | the dock's one mold, for Build and for every card: a row of up to six tabs, the chosen one the gold box with its floor out, over six cells;  |  |
-| E1118 |  | Manage, every card's last tab: first what the thing is (its health and what it is doing, a site's share raised, what is left in a find, a fl |  |
-| E1119 |  | a card in the dock: the tabs the subject ticks and that hold something, in the book's order; a new subject opens on its first tab (N385) |  |
 | E1120 |  | the fit law: a line of a dock cell, a tab or the name pill that is wider than its box is drawn narrower to fit, never under the book's share |  |
 | E1121 |  | what to build, told on the cell (N386): top, the trained kind of your side that scores highest over one (none if none does); beats, the symb |  |
 | E1122 |  | Help, a card in the dock (N387, mock 7): one function a tab, each giving its body and what the reading box says of the chosen cell; a cell o |  |
@@ -1557,11 +1549,38 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1129 |  | a cell made while the card's model is being built (K): its verb is noted, the chosen one (S.cs is its data-v) keeps what the bar reads (its  |  |
 | E1130 |  | the building card's parts (Design 13, N390): KB its numbers and lists (SN47), KW its words (J60), KP the unit pictures drawn once, kOf a bui |  |
 | E1131 |  | a walker's picture for a cell: its figure at SN47's fig, in your colour, drawn once a kind |  |
-| E1132 |  | the card's model, once a render: the groups the building's ticks give (SN4, without Manage), Manage's other verbs after the top group; page  |  |
-| E1133 |  | the bar: at rest Home, the name (and its health when hurt), the pages as tabs, the icons (send where a villager works it, Repair, Demolish)  |  |
-| E1134 |  | the box: a row for the page's top group and one for its bottom, a row with nothing not drawn; cells packed right; more than fit: the last ce |  |
-| E1135 |  | the floating circles follow their building every frame (popAt sets them above it, under it near the top of the screen) |  |
 | E1136 |  | the first tap on a cell of the box selects it (the bar reads it); the same cell tapped again goes on to its verb; SN47's direct verbs act at |  |
+| E1200 |  | the mold (Design 14): every screen in play is one fixed line (Home, the path and name, a card's buttons, the alert, War), a control row and  |  |
+| E1201 |  | who the mold is for: the army is the picked soldiers less support (priest, medic, spy); the crew is any picked walker of mine that is not ar |  |
+| E1202 |  | a building's Build group is where it sits in the tabs; a tile may wear a short name from the screen book |  |
+| E1203 |  | a pill is a word button drawn small with a 44 tap area; a toggle is the pill track whose lit thumb is the side shown |  |
+| E1204 |  | the path: › the group word (tap: back to that Build group), › the name |  |
+| E1205 |  | a tile row: six at most; over six the sixth is More and pages the rest; fewer than six sit at the right (the card shrinks right) |  |
+| E1206 |  | a card's sides are its ticks' rows in the screen book's order; a side that plants or builds from the card reads Plant when all it makes are  |  |
+| E1207 |  | the reading on the line: health when hurt, a site's percent, what is left of a find, sheep, and for a foe what the spies saw |  |
+| E1208 |  | ice by Gold's formula: a load of P kg on h cm of ice is safe under A_safe·h², maybe under A_fail·h², unsafe over it (D350 load) |  |
+| E1209 |  | the six cards the mold draws: Jobs, Build, a building, a crew, a find, ice and the Controller |  |
+| E1210 |  | the Squad tile: Save while the picked army differs from the saved squad, then Squad N; a tap picks them again |  |
+| E1211 |  | which card shows: ice, war, a crew, my building, any other subject, then Build or Jobs |  |
+| E1212 |  | the fixed line: Home at the left; the alert circle when something of mine is attacked; War at the right (red, an X while the Controller is o |  |
+| E1213 |  | under the line the control row and the tile row; empty rows keep their height so Home and War never move |  |
+| E1214 |  | a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villagers go there) |  |
+| E1215 |  | − and + step the picked Jobs tile: on a resource they move a villager to or from it; on People + trains one at the Town Center and − is refu |  |
+| E1216 |  | the Jobs / Build toggle |  |
+| E1217 |  | the path's group word: back to Build on that group |  |
+| E1218 |  | Home: closes whatever is open; with nothing open it takes the camera home |  |
+| E1219 |  | Cancel on a one-line card: let go of the pick and close |  |
+| E1220 |  | Gather on a find: the nearest idle villager goes |  |
+| E1221 |  | remember the ice answer this winter or this game |  |
+| E1222 |  | the who-line: All, a class, or Idle picks those soldiers |  |
+| E1223 |  | − leaves out the picked soldier nearest the Town Center; + adds the unpicked one of the who-line's set nearest the group |  |
+| E1224 |  | the six orders: Hold, Defend and Retreat go on the tap; Attack and Move go on the map tap before or after them; Squad saves or picks the squ |  |
+| E1225 |  | Talk on the Town Center: Relations and Misfits as tiles (tap one for its stances), then prisoners to ransom |  |
+| E1226 |  | send: Attack goes through the tap rows (a foe is fought, the ground marched to); Move marches to the spot whatever is there |  |
+| E1227 |  | the Normal / Daily toggle on the new-game sheet |  |
+| E1228 |  | a scenario is optional: a tap lights one, a second tap clears it (a normal game) |  |
+| E1229 |  | the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) each tap on and off |  |
+| E1230 |  | whether a Rules pad is lit |  |
 
 ## ground
 
@@ -2095,9 +2114,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | Code | Name | Value | Cited |
 |---|---|---|---|
 | SN1 | (lnIcon: the icon beside a number in a two-line cell of the top row, Albert, Nov 10 18:27) the mold: six slots a row, a slot 44 tall (Apple's least touch target), gaps and edges 6; the villager's square: one card of four boxes sq a side, no gaps, its dividers drawn inset from the card's edges, its icons sqIcon (Albert, Nov 8 21:42: a square; Nov 9 08:02-08:18: 44, one card, inset dividers, icons 14) | {lnIcon: 13, slots: 6, slot: 44, gap: 6, sq: 44, sqIcon: 14, inset: 9} | N133; N283 |
-| SN2 | the Build tabs: six of two rows of three (each cell two slots wide), Dwelling first, top left; the Courthouse in Defence (it trains spies and shoots only spies) (Albert, Nov 9 18:29-18:33; replaces Base's order of up to nine) | {Home: [BR1, BTC1, BCR2, BP4, BP6, BP7], Resources: [BCL1, BI1, BI2, BI3, BCL4, BCL3], Military: [BM1, BM2, BM3, BM4, BI9, BI7], Defence: [B | N134; N287 |
-| SN3 | (N6, Albert Nov 9 18:29: the Abatis, a field defence, cut for players as caltrops and stakes were on Nov 8; the Apartment and the Tree farm made from a card, SN34) buildings not on the Build menu: the Throne is the map's; the camp tents and the Depot (the camp's store, a forward base; Albert, Nov 8 19:22) come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the traps (the pit, the net, the stakes, the caltrops) are the Natives' booby traps and nobody else's (Albert, Nov 8 19:12: no laid defences for players; they wait with the Natives) | [BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL2] | N135; N172; N198; N287 |
-| SN4 | a card's tabs, in order, each with the tick the subject must carry (none: always); a tab with nothing in it is not shown, so a card never has more than six: the card is drawn in the dock, its tabs over six cells (Albert, Nov 15, N385: every card by Build's rule); Manage holds what the thing is (its health, what is left in it) and what can be done with it | [[Train, Spawn], [Learn, Research], [Sell, Trade], [Buy, Trade], [Bulk, Trade], [Make, Make], [Plant, Drop-off], [Relations, Seat], [Misfits | N136; N170; N194; N385 |
+| SN2 | the Build tabs: six of two rows of three (each cell two slots wide), Dwelling first, top left; the Courthouse in Defence (it trains spies and shoots only spies) (Albert, Nov 9 18:29-18:33; replaces Base's order of up to nine) | {Town: [BR1, BI4, BCR2, BP5, BP4, BP7], Work: [BI1, BI2, BI3, BCT2, BI8, BCR1], Army: [BM1, BM2, BM3, BM4, BI9, BP10], Keep: [BTC1, BTC2, BW | N134; N287 |
+| SN3 | (N6, Albert Nov 9 18:29: the Abatis, a field defence, cut for players as caltrops and stakes were on Nov 8; the Apartment and the Tree farm made from a card, SN34) buildings not on the Build menu: the Throne is the map's; the camp tents and the Depot (the camp's store, a forward base; Albert, Nov 8 19:22) come with the camp wagon; the Palisade comes with the war camp (Albert, Nov 5 16:07); the traps (the pit, the net, the stakes, the caltrops) are the Natives' booby traps and nobody else's (Albert, Nov 8 19:12: no laid defences for players; they wait with the Natives) | [BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL1, BCL2, BCL3, BCL4, BI6, BI7, BW2, BCT1] | N135; N172; N198; N287 |
+| SN4 | a card's tabs, in order, each with the tick the subject must carry (none: always); a tab with nothing in it is not shown, so a card never has more than six: the card is drawn in the dock, its tabs over six cells (Albert, Nov 15, N385: every card by Build's rule); Manage holds what the thing is (its health, what is left in it) and what can be done with it | [[Train, Spawn], [Plant, null], [Make, Make], [Sell, Trade], [Buy, Trade], [Learn, Research], [Talk, Seat]] | N136; N170; N194; N385 |
 | SN5 | (Albert, Nov 10 18:27: the two top rows in the footprint of the top one: stores share a cell two to a cell, the season an icon beside the clock with the time left under it, people with idle and army, rank over score; one row of nine) the top ribbon: the five stores, sound, pause, the Mail door with its unread count (Base; Albert, Nov 7 20:48: all Base — the small map lives in the war station's middle, not here) | [food/wood, stone/gold, iron/age, when, folk, rank/score, mute, pause, mail] | N137; N241 |
 | SN6 | readings with no row: the second top row was cut, each waited for its new home; all now in the Top Info Ribbon (SN39, Nov 10) | [] | N138; N306 |
 | SN10 | the Start page | {ticks: [Tall], rows: the new game's choices} | N139 |
@@ -2108,22 +2127,23 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SN15 | the Welcome back card, as Base: a saved game opens paused behind it; the pause itself has no page (the speeds, New game and the volumes drop under the pause button; Paused · tap to carry on; Albert, Nov 7 20:48: all Base) | {ticks: [Tall], rows: title Welcome back, Resume, New game} | N241 |
 | SN14 | words on the map (Mid's LABEL, mapFont, tag): px whatever the zoom, as a screen's words (Albert, Nov 8 21:21: a label must not scale with the zoom; 12 is Mid's, Oct 31); a label's pill (padding, edge, rise, height, inset, the words' nudge down) | {px: 12, pad: [10, 4, 13, 19, 5, 1]} | N208 |
 | SN19 | the villager square's icons the bar lacked (24-unit paths, drawn as the others: a stroke, no fill): send, more, the rally flag, info; N63 (N386): the wheel (the Engines' symbol) and the three metric marks: heart (health), blow (damage a second), reach | {send: <path d=\M4 12h14M13 6l6 6-6 6\/>, more: <circle cx=\5\ cy=\12\ r=\1.6\/><circle cx=\12\ cy=\12\ r=\1.6\/><circle cx=\19\ cy=\12\ r=\ | N133; N386 |
-| SN20 | the type rule: card titles in the display font at title (weight, px); row headers in column 1 head; inside a box, the first line first and the second line second (Albert, Nov 9 07:37-09:59, 13:12: 12 inside boxes; 19:37: first lines 14 again, as the v80 card; Nov 10, #12: every line inside a box 12 at 400; folder tabs at tab, so six names fit; a group's label in small capitals at label, letters spaced track em) | {ui: Barlow Semi Condensed, display: IM Fell English SC, title: [400, 18], head: [600, 14], first: [400, 12], second: [400, 12], label: [600 | N283; N285; N287 |
+| SN20 | the type rule: card titles in the display font at title (weight, px); row headers in column 1 head; inside a box, the first line first and the second line second (Albert, Nov 9 07:37-09:59, 13:12: 12 inside boxes; 19:37: first lines 14 again, as the v80 card; Nov 10, #12: every line inside a box 12 at 400; folder tabs at tab, so six names fit; a group's label in small capitals at label, letters spaced track em) | {ui: Barlow Semi Condensed, display: IM Fell English SC, title: [600, 17], head: [600, 14], first: [400, 14], second: [400, 11], label: [600 | N283; N285; N287 |
 | SN21 | the jobs rows: the two rows and a job's − and + gap apart, columns as the mold; icon, count and word at the second line's size, icons icon px; one ink and one fill in every state (Albert, Nov 9 10:03-10:10) | {gap: 3, icon: 12} | N283 |
 | SN31 | Info Help Ribbon 1, the help line: h tall on its tray, text pad in from the left, gunmetal with the working ring's blue edge, white second-line words; in two places, one look: the footer of every menu, always there, the latest message (a tap opens Help); and under the top ribbon, only while a message is fresh, coming and going in place of the toasts (Albert, Nov 9 11:14-11:21, 12:26, 12:29) | {h: 22, pad: 10} | N283 |
 | SN32 | the ring round a box (research buttons, the queue, the help line): dim (thin, the dim colour) not chosen; lit (thin, bright) chosen; run (thick, bright, over the dim track) at work, pinned at 12 o'clock and receding clockwise until done; corner radius r; seam closes the full ring (Albert, Nov 9 11:23-12:19); verbs: which buttons ring and in what colour (unit: by what it trains; Albert, Nov 9 12:57: rings on everything), the chosen one lit in place of the gold edge; N62 (N385): a Train cell rings only while its unit is queued (its own ring, green), and in the dock a ring shows only at work | {thin: 1, thick: 2, r: 6, seam: 0.006, verbs: {pick: brown, opt: white, speed: white, hazard: white, vol: white, resume: white, pause: white | N284; N285; N369; N385 |
 | SN27 | MR title: the title's wide box, then back, book (or info) and close, always, in the last slots of the mold, the three small boxes jobs-gap apart (Albert, Nov 9 10:31-10:32, 12:57) | {slots: 2} | N283; N285 |
 | SN33 | a wide box, two columns of the mold: train and research boxes in a card, and the small cards (Mail and Welcome back centred over the bars; Paused under the pause button, Sound under the mute button) (Albert, Nov 9 13:08-13:25) | {slots: 2, small: [Mail, Back]} | N286 |
-| SN34 | made from a building's own card, not the Build menu: a Dwelling raised to an Apartment (a house adding a floor), a Tree farm planted from the Lumber camp (Albert, Nov 9 18:29) | {BR1: BR2, BI2: BCL2} | N287 |
+| SN34 | made from a building's own card, not the Build menu: a Dwelling raised to an Apartment (a house adding a floor), a Tree farm planted from the Lumber camp (Albert, Nov 9 18:29) | {BI1: [BCL1, BCL3], BI3: [BCL4, BI6, BI7], BI2: [BCL2], BW1: [BW2]} | N287 |
 | SN35 | the menus' sizes in px, once (item 1, the stray sweep: every size typed in menu.js's style comes here): hair a 1 px line; edge a 2 px border; r a box's corner, rc a card's, rq the quick square's, rb a bar's; icon an icon's side; glyph the − / + signs; pad a small gap inside a box; side the inset of a bar and the card text; tpad a title's left inset; vpad and hpad a card's padding; bar a progress bar's height; strip a strip row's height; none the safe-area fallback; caps the title's letter spacing in em (the values as they were typed, now named); N63 (N386): sym the side of a symbol set in a line of words (a class symbol, a metric mark) | {hair: 1, edge: 2, r: 6, rc: 9, rq: 8, rb: 2, icon: 18, glyph: 18, pad: 4, side: 12, tpad: 14, vpad: 8, hpad: 10, bar: 3, strip: 30, none: 0 | N283; N287; N386 |
 | SN40 | the New Game sheet: each row's label span in slots, its choices taking the rest of the six (Daily first, Albert, Nov 10, N17 #2; moved from the code in the N17 audit) | {daily: 4, civ: 0, diff: 3, len: 2, scen: 2, tension: 4, fog: 4} | N307 |
-| SN41 | the Controller (replaces the 14-box sheet of Nov 9): three pads, each two slots of the mold wide and two high, one box with dividers inset as the villager's square; over them a row of round glass buttons dot px across, their icons glyph px, their touch reaching hit px past the edge, the glass blurred blur px; Execute a pill exec px wide; a pad's icons icon px in a line stroke wide; half and full are the shares a divider sits at and spans; a button that cannot act keeps dim of its ink; the icons' frames (box; War's own, warW as wide as high) | {dot: 28, glyph: 14, hit: -8, blur: 7, icon: 18, stroke: 1.5, half: 50, full: 100, dim: 0.45, exec: 80, box: 0 0 24 24, warBox: -1.8 1.8 27. | N325 |
+| SN41 | the Controller (replaces the 14-box sheet of Nov 9): three pads, each two slots of the mold wide and two high, one box with dividers inset as the villager's square; over them a row of round glass buttons dot px across, their icons glyph px, their touch reaching hit px past the edge, the glass blurred blur px; Execute a pill exec px wide; a pad's icons icon px in a line stroke wide; half and full are the shares a divider sits at and spans; a button that cannot act keeps dim of its ink; the icons' frames (box; War's own, warW as wide as high) | {dot: 28, glyph: 14, hit: -8, icon: 18, stroke: 1.5, half: 50, full: 100, dim: 0.45, exec: 80, box: 0 0 24 24, warBox: -1.8 1.8 27.6 20.8, w | N325 |
 | SN42 | (N66, N390: trash, Demolish; sendv, send a villager, the person with a plus; plant, Replant) the Controller's icons: one thin line, one size, no picture used twice; War is Albert's shield over crossed straight swords (Nov 11 14:49-15:18: curved top, swords at 39 degrees), drawn solid | {trash: <path d='M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6'/>, sendv: <circle cx='14' cy='8' r='3.5'/><path d='M7 20a7 7 0 0 1 14 0 | N325 |
 | SN43 | the tap table (Albert, Nov 12 08:12-08:15: "If X, then Y"; "Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, and thus becomes deselected"): each row is [what is picked, what was tapped, what it does], read top down, the first row that fits wins, so a villager row comes before an any row. What is picked: villager, soldier, caravan, or any (every other unit). What was tapped: foe (a unit or building of a side at war, or a wild beast that fights), prey (a beast that is hunted), find (something to gather), site (your building not finished), hurt (your building that needs repair), own (your finished building), stop (a trade stop), mine (another of your units), ground (nothing). After any row, everything picked lets go (after). Rows 'work' and 'own' for a villager keep today's behaviour until Albert rules on row 5 (shelter or nothing) | {rows: [[villager, find, gather], [villager, prey, hunt], [villager, foe, fight], [villager, site, build], [villager, hurt, repair], [villag | N326 |
 | SN44 | the dock's words: a line wider than its cell is drawn narrower to fit, never under fit of its width; a name still too wide gets a short form in the Words book (J58) (Albert, Nov 15, N385: "Shorten them as needed"; the squeeze is Claude's, to keep twelve px) | {fit: 0.77} | N385 |
 | SN45 | the symbols of a unit's cell (Albert, Nov 15, N386: the five class symbols, "Approve"): class, the icon of each class of soldier (the shield, the bow, the horse, the wheel); bld, the icon of Buildings (the house); stats, the three numbers of a soldier's second line in order, each its icon, the number in D138 and, when there is one, the number it is divided by: health; damage a second, a blow over the seconds a blow takes; reach in tiles; whole: a number from here up is shown whole, a smaller one to one decimal | {class: {Foot: train, Archers: archer, Riders: cata, Engines: wheel}, bld: gather, stats: [[heart, hp], [blow, atk, rof], [reach, rng]], who | N386 |
 | SN46 | the Help page (Albert, Nov 16, N387: "Yes, as mocked"): Dock, drawn in the dock under the top row of circles, and Tall, its body taller than six cells (his Nov 5 "exception in height only"); nothing in it scrolls; its door is the Help cell under the pause button | {ticks: [Dock, Tall], rows: the six tabs; the tab's cells, as many rows of six as it holds (Buildings: the Build page's six groups first; Re | N387 |
 | SN47 | the building card (Design 13; Albert, Nov 17, N390): a bar over a box in the Jobs dock's two rectangles. dot: a ring's px on a small card's bar; float: a floating circle's px; pic: a unit's picture in a cell, px high, drawn at fig times; tint: the share of its colour a row wears; share: a small card's width as a share of the dock (three cells of six); small: a card whose rows hold this many cells or fewer is small; disarm: ms after which an armed Demolish lets go; top: the groups that take the top row, the first a building has (what it makes); low: the group on the bottom row; label: a page named for its first group, but for these; hide: Manage's verbs that live in the bar as icons (or are folded into Repair), not in a row; direct: verbs that only choose and cost nothing, done on the first tap (the rest: first tap selects, second buys); red: the verbs whose icon arms red; icon: each verb's icon (SN42) as a ring in the bar or a floating circle | {dot: 26, float: 40, pic: 21, fig: 3, tint: 13, share: 50, small: 3, disarm: 3000, top: [Train, Plant, Make], low: Learn, label: {Sell: Trad | N390 |
+| SN48 | the mold (Design 14): gap and edges 2; the fixed line 40 tall with Home and War as circles drawn big 40 (small ones 26), every tap area 44 (SN1 slot); the control row 40 with a pill thumb 24; tiles 44 tall; the name's gold halo glow px at halo %; Train and Learn rows outlined at odim % into the tray brown; the tint is the one gradient at tint % (no blur); short: a tile's short name; sides: which toggle words outline green (T) or blue (L) | {gap: 2, line: 40, ctl: 40, tile: 44, big: 40, small: 26, thumb: 24, pic: 12, glow: 10, halo: 22, odim: 35, tint: 85, short: {BI2: Lumber, B | N391 |
 
 ## shells
 
@@ -2147,10 +2167,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BTC6 | Training tent | [Spawn, Health, Burn] | N144; N198; N206 |
 | BTC7 | Mess tent | [Shelter, Health, Burn] | N144; N198; N206 |
 | BTC8 | Camp tower | [Shoot, Health, Burn] | N144; N198; N206 |
-| BR1 | Dwelling | [House, Health, Burn, Research, Repeat, Touch] | N144; N206 |
+| BR1 | House | [House, Health, Burn, Research, Repeat, Touch] | N144; N206 |
 | BR2 | Apartment | [House, Health, Touch] | N144; N235 |
 | BCR1 | Market | [Trade, Spawn, Burn, Health, Research] | N144; N195; N206 |
-| BCR2 | Tavern | [Burn, Care, Health] | N144; N206 |
+| BCR2 | Bar | [Burn, Care, Health] | N144; N206 |
 | BCL1 | Farm | [Field, Health, Soil, Repeat, Touch] | N144; N170 |
 | BCL2 | Tree farm | [Field, Health, Repeat, Touch] | N144; N170 |
 | BCL3 | Pasture | [Field, Health, Flock, Touch] | N144; N170 |
@@ -2720,4 +2740,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J58 | short names for a cell of the dock: a name too wide for a cell even drawn narrower (SN44) is shown by its short form here; the full name stays in its own book, the messages and the Guide (Albert, Nov 15, N385: "Shorten them as needed. Use & for and if required") | {Charcoal burning: Charcoal, Threshing sledge: Threshing, Rollers and sledges: Rollers, Treadwheel crane: Treadwheel, Chimney and fireplace: | N385 |
 | J59 | the Help card's words (N64, N387; mock 7): its title and the door's word; its six tabs, in order; a short name for a cell for each tip (J25, by its key) and each rule of the Guide (J27, in its order: "the 7 rules get short names for cells"); n, what stands for a tip's number when it is read in Help; tri, the triangle as one line ({Foot}, {Riders}, {Archers}, {Engines} and {Buildings} are the class symbols of SN45, {gt} the red >; t-n64 holds the order to the cells' own marks, so the words cannot drift from D138); the lead lines of Units and Research; learned, on a step you have; the reading box's words (becomes: a unit's ranks; needs: the step before; steps: how much research; opens: what an age opens); now, the Ages tab's lead: what your people eat a minute and the next age (the Town Center's info page, cut in N62), and what it says in the last age | {title: Help, tabs: [Tips, Units, Buildings, Research, Ages, Peoples], tips: {full: Dwellings, more: Villagers, wood: Wood, idle: Idle, barr | N387 |
 | J60 | the building card's words (Design 13, N390): say, the button's word for the chosen cell's verb (go for any other); cancel, the button on a cell at work; noIdle and full, what Send a villager says when it cannot | {say: {train: Train, research: Learn, ageUp: Learn, pick: Place, sell: Sell, sellK: Sell, buy: Buy, zeal: Call, muster: Muster, fromCard: Bu | N390 |
+| J61 | the mold's words (Design 14, N391): the Jobs | Build toggle, the left word of a card that plants (all fields) or builds, the villager card's buttons, the Controller's who-line (Foot, Bow, Cav, Siege) and its six orders, the Squad tile, the ice reading (Gold's formula: safe under the safe load, maybe under the failing load, unsafe over it) | {modes: [Jobs, Build], people: People, plant: [Plant, Build], stop: Stop, garrison: Garrison, remove: Remove, skill: Skill, gather: Gather,  | N391 |
 

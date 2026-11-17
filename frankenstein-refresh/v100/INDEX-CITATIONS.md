@@ -485,11 +485,12 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N388** Albert, Nov 15, 2026, 18:29 and 18:38 (Design 12 C9, F5 and section L; The List 22), built on his word of Nov  → SC7, D245, X133, P49, P50, P51, P52, P53, P54
 - **N389** (to open) For N65 (N388), from memory, to open: a javelin 1.15 m (Polybius 6.22, the velites' javelin: a shaft of two cu → P51, P52
 - **N390** Albert, Nov 16 22:45 to Nov 17 07:46 (Design 13: the building card as a bar and a box; his words in order are  → X134, SN47, J60
+- **N391** Albert, Nov 17 08:24 to 15:40 (Design 14, the mold: new game, Jobs, Build, the building card, the villager car → SN48, J61
 
 ## Named exceptions
 
 - Tall: Start, Layers, Mail, Back, Help
-- Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL2
+- Off the Build menu: BS1, BTC5, BTC6, BTC7, BTC8, BI5, BW4, BF1, BF2, BF3, BF4, BF5, BR2, BCL1, BCL2, BCL3, BCL4, BI6, BI7, BW2, BCT1
 
 ## Sounds waiting for a feature
 
