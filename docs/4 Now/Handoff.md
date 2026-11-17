@@ -1,6 +1,15 @@
-# First Keep: hand-off (Nov 16, 2026, 09:30)
+# First Keep: hand-off (Nov 17, 2026, 07:40)
 
-## START HERE (2026-11-16 18:27): talk only since 17:02: the building card redrawn in mocks, nothing built; his play notes on bugs are still owed
+## START HERE (2026-11-17 07:40): a night of talk and mocks on the building card: Design 13. NOTHING BUILT, nothing in the game changed since N65
+- Read `docs/3 Locks/Designs/13 The building card - bar and box.md` first: section A is where the card stands, B his words in order, C Claude's calls (his to overrule), E the breaks not fixed. Ask him nothing that B answers.
+- It is NOT a go to build. The glo-up is still ON HOLD and his play bugs come first (Nov 16 12:04). He has given no bug notes yet; he sent one match log with no words (`docs/4 Now/Match log - Nov 16 (188 min).json`; read on The List 23).
+- The night began with "I think I messed up my game... over engineered it and somehow lost features" (Nov 16 20:58). The inventory (`docs/4 Now/Inventory - Nov 16.md`) found nothing lost by accident between n41 and n65. Claude's get-back-on-track plan (freeze design, play n65, sort notes, one bug build, repeat) was offered at 21:19 and not answered: he went on to the card.
+- The card in one line: the Jobs dock's two rectangles, the strip as a bar (Home, name, tabs, Repair and Demolish as ringed icons, an X) that becomes a reading line when a cell is selected, the box as a green row (Train, Plant or Make) over a blue row (Learn); buildings with neither float three circles on the map.
+- Mocks: `mockups/dock/46`, `52`, `54` to `70` (pngs kept for the key ones; every script is there). `card8.py` draws any building: `python3 card8.py <v100 dir> sheet <out.png> <panels.json>`; a panel is `[title, {"b": "Stable", "icons": true, "sel": "Chariot", ...}]` (options: cols 3, drop down, rj, barFit, vil, page, armed, queue, store, learn). `61` to `63` are the floating circles.
+- Next, his: (1) his bug notes of n61 to n65, still owed; (2) on the card, Design 13 C and E: the X's two jobs, where Replant and the other state actions live, a status line, the double tap, whether this is the mold for every page. (3) Not run: the cards in other states (damaged, a site, worked out, prisoners).
+- A bug met, not traced: the Pasture's Manage tab shows "Sheep" with "undefined" under it.
+
+## Before that (2026-11-16 18:27): talk only since 17:02: the building card redrawn in mocks, nothing built; his play notes on bugs are still owed
 - Nothing in the game changed since N65. The glo-up stays ON HOLD (Nov 16 12:04). n65 is the preview to play (`.../preview-n65/?fps` shows the meter).
 - He came to give play notes and gave one: "I hate the two tabs for spawn and learn" (Nov 16 17:02). The rest of the talk is that card (The List, the lines of Nov 16 17:02 to 18:14; `mockups/dock/10` to `26`). His bug notes of n61 to n65 are NOT given yet.
 - Where the card stands: "Sadly this is the best layout" (18:14) = mock 25 (one brown card, the name centred, back and close top right, Train and Learn under it, two pads of six tiles, a clear space). Then "bring this design to 2027 not 1997": mock 26, Claude's skin, NOT ruled. Nothing of it is a go to build.
