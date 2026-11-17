@@ -5,6 +5,7 @@
 - What is in: BUILDS.md N67 (and Claude's calls there, his to overrule). Cuts: Parked.md "Cut in N67".
 - Code: menu.js "The mold" (MOLD: jobs, build, bld, crew, find, ice, war; mline, mbase; verbs jsel to mrule, E1200 to E1232). Sizes and words: SN48 mold2, J61 mold.
 - NOT done: colour dedupe (List 26 items 40 to 43: needs a pointer form in the colours book; art colours would shift), words stored twice (48), long lines (34), ECON teach internals, the cut buildings' shells (AI), the town alarm's button (his call).
+- Sealed N67; preview `frankenstein-refresh/preview-n67/` on main. Tests: t-n67 and t-guide pass; the old menu tests that Design 14 replaced fail (BUILDS N67 names them: rewrite or retire, his call); 24 tests fail on N66 and N67 alike (older).
 - What he reports from play is not a go: talk first.
 
 ## START HERE (2026-11-17 14:27): Design 14 SAVED (the mold for new game, Jobs, Build and the building card); NOTHING BUILT since N66
