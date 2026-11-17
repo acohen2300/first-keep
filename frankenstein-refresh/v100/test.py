@@ -48,17 +48,17 @@ async def main(b):
     rows = "(() => { FK.select(null); MENU.S.subject = %s; MENU.render(true); return [document.querySelectorAll('#card > *').length, [...document.querySelectorAll('#base > *')].map((e) => e.className).join(), document.querySelectorAll('#base .tabs + .row6 > *').length, document.querySelector('#rank .name').textContent]; })()"
     cards = [await ev("MENU.S.tab = null; 0"), await ev(rows % 'ECON.villagersOf(0)[0]'), await ev(rows % "FK.things().find((t) => t.kind === 'tree')"), await ev(rows % "FK.things().find((t) => FK.has(t, 'Seat') && t.side === 0)")][1:]
     ok('t-cards', cards == [[0, 'row6 tabs,row6', 6, 'Villager'], [0, 'row6 tabs,row6', 6, 'Tree'], [0, 'row6 tabs,row6', 6, 'Town Center']], cards)   # N62 (N385): every card is the dock's mold, tabs over six cells, its name in the top row; nothing on the sheet
-    site = await ev("""(() => { MENU.S.subject = null; MENU.S.tab = 'Build'; MENU.S.group = 'Home'; MENU.render(true); const code = MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')); MENU.act('pick', code);
+    site = await ev("""(() => { MENU.S.subject = null; MENU.S.tab = 'Build'; MENU.S.group = 'Town'; MENU.render(true); const code = MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')); MENU.act('pick', code);
       const h = FK.things().find((t) => FK.has(t, 'Seat') && t.side === 0); const at = $ring(h, 8, 30, (i, j) => ECON.canPlace(code, i, j) && [i, j]); if (!at) return false; Object.assign(MENU.S.ghost, { i: at[0], j: at[1], ok: true }); MENU.act('build'); return FK.things().some((t) => t.code === code && t.done < 1); })()""")
     ok('t-place', site)
-    flow = await ev("""(async () => { MENU.S.subject = MENU.S.ghost = null; MENU.S.tab = 'Build'; MENU.S.group = 'Home'; MENU.render(true); const D = FK.D, P = D.place, code = MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')), c = FK.ctx, sd = c.setLineDash, lt = c.lineTo;
+    flow = await ev("""(async () => { MENU.S.subject = MENU.S.ghost = null; MENU.S.tab = 'Build'; MENU.S.group = 'Town'; MENU.render(true); const D = FK.D, P = D.place, code = MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')), c = FK.ctx, sd = c.setLineDash, lt = c.lineTo;
       const frame = async () => { const ev = []; c.setLineDash = function (d) { ev.push(d.join()); return sd.call(this, d); }; c.lineTo = function (...a) { ev.push('L'); return lt.apply(this, a); }; FK.dirty(); await new Promise((r) => setTimeout(r, 250)); c.setLineDash = sd; c.lineTo = lt;
         const at = ev.indexOf(P.dash.guide.join()); return at >= 0 && ev.slice(at + 1).findIndex((x) => x !== 'L') !== 0 && ev[at + 1] === 'L'; };
       FK.SIDES[0].store.wood = 2000; MENU.act('pick', code); const g = MENU.S.ghost, n = FK.B[code][1], h = FK.seatOf(0), hc = h.j + h.n * P.half, off = !FK.things().some((b) => b.kind === 'bld' && b.side === 0 && (b.i + b.n * P.half === g.i + n * P.half || b.j + b.n * P.half === g.j + n * P.half));
       const lone = ECON.guides(0, code, g.i, g.j).some((q) => !q.d) === (await frame()); /* a guide shows exactly when a line is met: E716 edges and centres, E816 snaps the ghost onto one */ const keep = [g.i, g.j]; g.j = hc - n * P.half; const lined = await frame(); [g.i, g.j] = keep;
       return [MENU.S.tab, g.code === code && g.ok, lone && lined, !!document.querySelector('#card.on [data-v^="build|"]'), FK.things().filter((t) => t.code === code && t.done < 1 && t.side === 0).length]; })()""")
     await ev("document.querySelector('#card [data-v^=\"build|\"]').click()"); await pg.wait_for_timeout(200)   # the tap on the bar's Build, through the menu's own click
-    placed = await ev("FK.things().filter((t) => t.code === MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')) && t.done < 1 && t.side === 0).length")   # yours: a computer may raise its own house in the wait (A1: their turns are spread)
+    placed = await ev("FK.things().filter((t) => t.code === MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')) && t.done < 1 && t.side === 0).length")   # yours: a computer may raise its own house in the wait (A1: their turns are spread)
     mid = open(os.path.join(HERE, '../mid/src/26-input.js')).read(); sp = mid[mid.index('function startPlace'):mid.index('function cancelPlace')]
     ok('t-place', flow[:4] == [None, True, True, True] and placed == flow[4] + 1 and 'closeCard();' in sp and 'G.place = {' in sp, [flow, placed])   # C4 (Albert, Nov 6 19:09): Build gives the ghost and its guides with the menu closed, as Mid's startPlace; one tap on Build places
     start = await ev("JSON.stringify(FK.D.start)")
@@ -90,7 +90,7 @@ ACTS = """(() => { FK.reset(); ECON.villagersOf(0).forEach(ECON.idle); const s =
   const snap = () => JSON.parse(JSON.stringify({ store: s.store, gathered: s.gathered, flow: s.flow, spent1: s.spent1, flowBy: s.flowBy, spentBy: s.spentBy, rate: s.rate, orate: s.orate, ledger: s.ledger, lines: [M.ledgerLine(s.ledger.in), M.ledgerLine(s.ledger.out)],
     vel: E.YIELDS.map((y) => [E.flowOf(0, y, s.rate, s.flow), E.outOf(0, y), E.netOf(0, y), E.velOf(0, y)]) }));
   const out = { start: JSON.parse(JSON.stringify(s.store)), steps: [] }, step = (name, mid, f) => { out.steps.push([name, f(), JSON.parse(JSON.stringify(mid)), snap(), FK.K.t]); };
-  const code = MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')), h = FK.seatOf(0), vil = D.trains[h.code][0]; let t = null;
+  const code = MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')), h = FK.seatOf(0), vil = D.trains[h.code][0]; let t = null;
   out.home = D.cost[code]; out.Y = E.YIELDS;
   step('earn', [['earn', 'food', 600, 'gather']], () => (E.earn(0, 'food', 600, 'gather'), true));
   step('plan', [['pay', D.cost[code], 'buildings']], () => { t = $ring(h, 8, 30, (i, j) => E.canPlace(code, i, j) && E.plan(0, code, i, j)); return !!t; });
@@ -1742,7 +1742,7 @@ async def n30(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N30JS); await pg.close()
     ok('t-n30', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
 N31JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms));
- MENU.act('start'); FK.fog(false); await W(300); const h = FK.seatOf(0), S = MENU.S; $rich(0); const code = MENU.SCR.tabs.Home.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat'));
+ MENU.act('start'); FK.fog(false); await W(300); const h = FK.seatOf(0), S = MENU.S; $rich(0); const code = MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat'));
  const spot = () => { for (let d = 6; d < 20; d++) for (let a = 0; a < 16; a++) { const i = Math.round(h.i + d * Math.cos(a)), j = Math.round(h.j + d * Math.sin(a)); if (ECON.canPlace(code, i, j)) return [i, j]; } return null; };
  const put = () => { const was = new Set(FK.blds()), at = spot(); S.ghost = { code, i: at[0], j: at[1], ok: true, pts: [], cells: [] }; MENU.act('build'); return FK.blds().find((b) => !was.has(b)); };
  const V = ECON.villagersOf(0);

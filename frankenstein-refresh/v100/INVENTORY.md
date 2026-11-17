@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,581 | 646,083 | 646,222 (-15,402) |
-| Books | 2649 | 0 | 895,538 | 896,517 (-80) |
+| Game code | 31 | 3,581 | 646,083 | 646,222 |
+| Books | 2649 | 0 | 895,799 | 896,778 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,616 | 445,564 | 445,829 (+2,926) |
+| Tools | 5 | 2,616 | 445,564 | 445,829 |
 
 ## The trades (code)
 
@@ -39,8 +39,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,245 | 10,249 | 54 |
-| menu.js | 518 | 124,157 | 124,190 (-15,683) | 395 |
-| econ.js | 628 | 119,508 | 119,508 (+281) | 70 |
+| menu.js | 518 | 124,157 | 124,190 | 395 |
+| econ.js | 628 | 119,508 | 119,508 | 70 |
 | combat.js | 381 | 65,500 | 65,500 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
@@ -64,7 +64,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | sound | 55 | 12,731 |
 | sprites | 75 | 43,876 |
 | tech | 260 | 76,080 |
-| words | 59 | 109,875 |
+| words | 59 | 110,136 |
 
 ## The shells
 
