@@ -39,3 +39,18 @@ Asked by Albert 15:15: ECS mapping of the new controls, the 12 core values, code
 
 ## 6. Features with no home in Design 14 (his ruling needed, each: keep where, or cut to Parked)
 Market (Sell, Buy, Bulk, sellK), Relations, Misfits, Intel, Plan, Mail, Score, Stores, Ice, Layers, teach, zeal, ransom, scrap, raise, replant/replantAll, hire, escort, ambush, ageUp, the old squads (plan, formation, temper, intent, Battalions).
+
+## 7. Streamline (Albert 15:21: fonts, thickness, colours, verbs, one home, group, shells and ticks, the 12 values)
+Measured. The menus' CSS is already all variables (menu.js:49 to 95, 251 selectors, 0 typed px or rgba): the drift sits in the books behind the variables.
+- Type (SN type): six roles at 18/14/12/12/12/12; Design 14 adds 11, 16, 17. Idea: 11 · 14 · 17 (1.25 scale), weights 400 and 600, IM Fell for Welcome only.
+- Lines: hair, edge, SN ring thin 1 and thick 2, SN controller stroke 1.5. Idea: 1 and 2.
+- Corners: --r, --rc, --rb (set twice: blue edges void), --cd, --gap. Idea: pill and tile.
+- Blur: SN controller.blur 7 still used (menu.js css, filter blur twice). Design 14 rules tint: cut.
+- Gradients: six kinds. Idea: one.
+- Colours book: 173 hex values, 145 distinct; 17 stored in 2 to 5 places; two golds (C gold #e6b947, menu.gold #f2cf55); reds #ff6b5b, #a3262a, #ff3b2f, #d8432f; blues #6aaeff, #2f8cff; resource colours twice (menu vs bundle, all five differ). 47 menu entries. Idea: about 14 menu tokens; one per meaning.
+- CSS vars: --kc and --n set twice; --display, --sq, --track, --ring, --sqi never read.
+- Circles: SN kbar dot 26, controller dot 28, kbar float 40. Idea: one, drawn 40, tapped 44.
+- Words: 1,333 strings; 71 in 2+ places (Hold, Garrison, Home 3 each). Idea: one button-word table.
+- Verbs: 123; v-verbs 13. Idea: one verb a tick family, about 35.
+- Shells and ticks already there to reuse: SN card (tab → tick; Manage has none), SN tap (who × target → verb), SN ring.verbs (colour by verb: idea, colour by state).
+- Answer page: items 35 to 53 (https://claude.ai/artifact/XkZM2q1bKADA1r68i7Q6TC).
