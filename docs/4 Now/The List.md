@@ -550,3 +550,4 @@ Claude's calls inside them (his to overrule):
 - Problem 6, his word (Nov 17 18:33) on mock 168 and its meaning: "It's good." = ✕ at the control row's right end on every screen (40); a tap: the rows go, the map is clear, a card's pick is let go; Home brings Jobs back; the villager's ✕ moves from the line to the row end.
 - Problem 7, his word (Nov 17 18:34): "Yes" = the ready book is a tap spot (44 px); a tap opens that building's card on Learn; the book wins the tap over what is under it.
 - His 18:06 note (a picked building shown on the map), Nov 17 18:36 after mock 169 (ring, outline): "Why not just make it glow a bit like a halo from the back". Mock `mockups/dock/170` (gold, as the card name's halo; white). Not ruled: gold or white.
+- 18:38, his word on mock 170: "It's a bit too bright. It would have to be more subtle and less stark". Mock `mockups/dock/171`: three softer gold halos (peaks about 24%, 33%, 43%, tighter). Not ruled.
