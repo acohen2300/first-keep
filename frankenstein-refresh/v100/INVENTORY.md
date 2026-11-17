@@ -4,8 +4,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,638 | 657,244 | 657,399 (-4,225) |
-| Books | 2660 | 0 | 896,442 | 897,427 (-68) |
+| Game code | 31 | 3,581 | 646,082 | 646,221 (-15,403) |
+| Books | 2648 | 0 | 894,912 | 895,891 (-76) |
 | Laws | 94 | 0 | 20,046 | 20,584 |
 | Tools | 5 | 2,598 | 442,638 | 442,903 |
 
@@ -39,8 +39,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,916 | 5,920 | 24 |
 | index.html#touch | 54 | 10,245 | 10,249 | 54 |
-| menu.js | 576 | 135,599 | 135,648 (-4,225) | 402 |
-| econ.js | 627 | 119,227 | 119,227 | 70 |
+| menu.js | 518 | 124,156 | 124,189 (-15,684) | 395 |
+| econ.js | 628 | 119,508 | 119,508 (+281) | 70 |
 | combat.js | 381 | 65,500 | 65,500 | 83 |
 | ai.js | 172 | 27,519 | 27,519 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
@@ -53,12 +53,12 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | capabilities | 58 | 17,751 |
 | citations | 385 | 117,431 |
 | colours | 34 | 10,478 |
-| comments | 1072 | 214,574 |
+| comments | 1060 | 212,902 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 205,597 |
 | rules | 131 | 57,390 |
-| screen | 31 | 22,442 |
+| screen | 31 | 22,447 |
 | shells | 111 | 24,430 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
@@ -210,4 +210,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X133 | t-n65 | page | N65 (N388): a shot is drawn as what it is, as mock 4: every shell that ticks Shoot names its shot, a look in the Sprites book (the Archer, the Horse archer, the Siege tower and every building that shoots an arrow; the crossbowmen and the Ballista a bolt; the Javelineer a javelin; the Arquebusier a ball; the Catapult and the Trebuchet a stone; the Bombard a cannonball), and no other shell does; in the running game a missile in the air is its look's picture, turned along its flight (it rises, then falls), at true size (px = zoom x D12 x the look's metres a unit: an arrow 0.76 m), and it lands and is gone; it keeps to its own path when its shooter moves; a shooter whose side has learned to burn its shots (the stat fire: Fire arrows, Burning shot) looses the look's burning picture, which holds flame where the plain one holds none, and the other side's shots stay plain; the looks differ from one another; a stone and a cannonball leave a dotted trail in the look's colour, an arrow, a bolt and a javelin none; the gun's ball is too small to see and is its smoke trail alone; a building's shot is an arrow |
 | X134 | t-n66 | page | N66 (N390; Design 13): your building's card is a bar over a box in the Jobs dock's own two rectangles: the bar holds Home, the name, Repair and Demolish as ringed icons and an X, with no Back; the box holds what the building makes (green) over what it learns (blue), never on separate tabs; a first tap on a cell selects it and the bar reads it with its button, a second tap or the button buys, the button cancels one at work, and the X steps back, then closes; a row with nothing in it is not drawn and a one-row card sits at the bottom; a card of three cells a row or fewer is three cells wide at the right, its bar as wide; a building with nothing to train, plant, make or learn gets no card: circles float by it (send a villager where one works it, Repair, Demolish) and the Jobs dock stays; send puts the nearest idle villager to work it; Demolish arms on a tap and takes the building down on the next |
 
-2790 items sealed · 2660 book entries · 94 laws · 385 citations, 36 still to open · 0 known
+2778 items sealed · 2648 book entries · 94 laws · 385 citations, 36 still to open · 0 known

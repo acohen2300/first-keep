@@ -581,7 +581,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E168** First Keep v100 · menu.js (floor 8): everything on the glass. Lives alone; it reads the wo
 - **E169** Its shape lives in the Screen book (books/screen.js): the mold, the Build tabs, the card's
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
-- **E171** the codes and their floors; Lock is a mark for us (no floor is locked yet)
 - **E172** the Screen book: the Build tabs are its; a building shows priced once econ prices it, else
 - **E173** the seat, and who it trains first: asked of the books, never named
 - **E174** the classes War's Train box offers (D133), each as the first kind of it open at this age ( · D133 (N114, N176, N194, N195, N198, N385)
@@ -596,7 +595,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E839** a font from the type rule: its weight and size, in the face named
 - **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287, N386)
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
-- **E844** Sound: the three volumes and its help line, under the mute button; a tap on mute mutes and
 - **E182** the glass's own state, nothing of the world's
 - **E954** note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one  · N377
 - **E837** a help line wider than its bar shows the chevron; the chevron opens it to two lines and cl
@@ -621,27 +619,21 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1038** the tap table (SN43, Albert Nov 12 08:12-08:15): with something picked, the next tap is it · SN43 (N326)
 - **E1060** Jobs fine-tunes the next tap (Albert: "the village control is meant to fine tune"): with H
 - **E1052** the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldie
-- **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · E1048 · N369
+- **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · N369
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
 - **E373** why a kind waits: the age it opens in (Mid's trainWhy)
 - **E184** read: the one window onto the world the glass draws from
 - **E1112** Back, the circle beside Close: on a card with a people chosen it steps back to the peoples · N385
-- **E403** the squads: a tap picks one for orders, a tap on the one picked opens its dials; Set up op
 - **E1004** who goes: All, Idle, a Class (Foot, Archers, Cavalry, Siege) or a Squad; choosing one pick
 - **E1005** what they do: Attack lights and waits for a spot on the map, then Execute; Retreat sends t · E1002
-- **E1048** the Controller's Execute keeps its group picked: the Controller's pads (All, a class, a sq · N25
 - **E1022** the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set  · D270 (N195, N350, N385) · D271 (N34, N195)
-- **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E1045** a caravan's escort (Albert, Oct 27): its card has Escort +4 (the nearest idle soldiers of 
 - **E1023** a caravan takes a trade route two ways: Trade route on its card sends it to the nearest tr
 - **E1024** the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Frien · N24
 - **E845** the book: Welcome back mid-match (Resume, New game), paused
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
-- **E188** sound on or off
-- **E451** the Alarm's four cells (Mid's EMERGENCY): Gather, Garrison and Shelter start it; Work ends
-- **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E189** a cell for what is drawn but not yet built: Albert's reminder
 - **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the St
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
@@ -649,16 +641,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
 - **E192** tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines · N61 · N384
-- **E854** made from a building's card (SN34): the Dwelling's Apartment, the Lumber camp's Tree farm · SN34 (N287)
 - **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
-- **E933** a site's card sends one more villager: the nearest idle, else the nearest worker, who goes
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
 - **E1103** look: the camera jumps to the next spot of its kind, alert or army; the same button again  · N378
 - **E703** New game asks twice, so a stray tap cannot end a match; then the Start sheet
 - **E1058** the villager Controller (Design 08 section 8, N333): a called villager (or a group of them · N333 · N371 · N62 · N385
-- **E1059** the pill (Albert, Nov 12 22:00): before any choice it says what she does and how many with
 - **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and · N371 · N62 · N385
 - **E1113** a card's tab: choosing one shows its cells from the first page and lets go of a chosen peo · N385
 - **E1124** the X of the building card (N390): with a cell chosen it steps back to the building's bar; · N390 · C1 (N102)
@@ -666,11 +655,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1123** Help's verb (N387): with no word it opens Help on its first tab, from the pause drop, the  · N387
 - **E1114** the More cell, in the sixth place only when a tab holds more than six: it says how many mo · N385
 - **E1115** a people's cell on Relations or Misfits: a tap chooses it, and the row then shows that peo · N385
-- **E1126** Send (N390): the nearest idle villager; to a find it gathers, to a building a villager wor · N390
 - **E1127** Repair (N390): no villager need be picked: the picked one if there is one, else autoBuilde · N390 · SN47 (N390)
 - **E1128** Demolish (N390: "tap the icon once, red fill, tap again"): the first tap arms it (S.dm), t · N390 · SN47 (N390)
 - **E357** hunt a beast from its card; replant a cut-out plot, or every one a drop-off takes, from th
-- **E476** Teach on a soldier, Zeal at the Temple, a ransom at your hall
 - **E1227** the Normal | Daily toggle on the new-game sheet
 - **E1228** a scenario is optional: a tap lights one, a second tap clears it (a normal game)
 - **E1229** the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) 
@@ -692,13 +679,12 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
 - **E836** MR title: every menu's title row ends in back, book and close, always in the same place (A
 - **E848** a small card's title: the title on its own row, back, book and close beneath it
+- **E1232** the score table, one home: under the stores on the Stores sheet and on the pause screen (T
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings  · N61 · N384 · N62 · N385 · E1117
 - **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
-- **E793** the ice card: what the thinnest ice on the way holds, the six ways, remember
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
-- **E198** Fast and New sit in the title row; the volumes add a row, so the Yard ticks Tall (SN13) · SN13 (N142, N143)
 - **E1121** what to build, told on the cell (N386): top, the trained kind of your side that scores hig · N386 · E282 · SN45 (N386)
 - **E1116** the card's helpers: up, your building and finished; info, a cell that only tells; docked,  · N385
 - **E1117** the dock's one mold, for Build and for every card: a row of up to six tabs, the chosen one · N385
@@ -735,7 +721,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E701** the top bar's cells by the Screen book: pause and the small map are live controls; a cell 
 - **E204** the five stores, sound, play, mail (SN5) · SN5 (N137, N241)
 - **E927** the Top Info Ribbon (SN39): nine readings under the top ribbon, rank by score among the si
-- **E842** a card hanging under its top button: centred under the button, held inside the screen
 - **E841** the small cards are two columns of the mold wide: the width read from the bar's own width,
 - **E693** the arguments the cells point at are made again with each render, so the table holds only 
 - **E825** every menu ends in the help line, always there (Info Help Ribbon 1): the latest message, a
@@ -818,8 +803,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N365, N353) · N353
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
-- **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
-- **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168, N369)
 - **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
@@ -855,6 +838,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E311** a trained unit steps out onto the free spot of its building's outline nearest the middle o · N369
 - **E402** Muster (Mid's musterN, musterCost, musterWhy, muster): a squad's lack in one order at the  · D244 (N188)
 - **E219** the age (Mid's ageUp): the next age, never the hidden sixth until the peace opens it; paid · D129 (N160) · D130 (N160)
+- **E1231** Albert, Nov 17 15:36 (The List 26 item 7): when a side reaches an age, every unit of its l
 - **E292** Mid's research lines: a line is the steps of one line at one building, in the book's order
 - **E769** a research's needs worked out once and kept: the Tech book does not change in play
 - **E293** research (Mid's researchWhy and research): a step is refused when known, before its age, b
@@ -912,6 +896,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E443** the Alarm's ranking (Mid's shelterRank, roomIn, fillRank, threatDir): buildings with room, · D255 (N192)
 - **E444** the Alarm (Mid's emgStart, townSquare, soldiersIn, villagersIn): its first order notes eac
 - **E1031** Protect's three (Decisions Nov 11; Albert: Protect is really a lure): each garrisons your 
+- **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
 - **E445** the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see · D255 (N192)
 - **E446** a site nobody builds (F23, Albert's play test): one no villager of its side can reach says · D203 (N168)
 - **E447** a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost · D233 (N188) · D258 (N192)
@@ -927,6 +912,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E463** each tick: a lesson that is over graduates; a prisoner unransomed in time goes over to its
 - **E464** a spy by a foe's building reads that side: its stores, age, research and army, kept with t
 - **E478** the Market (Mid's marketTrade and its prices): a yield by the raw lot, a good by the good  · QAE (N34)
+- **E1070** a bulk sale at the Market (N350): bulk lots sold one after another in one tap, each at the · N350 · QAE (N34)
 - **E479** sell or buy one lot at a finished Market: raw sold for gold is a swap, not gathered; a goo
 - **E480** the Mint debases the coin once: its gold now, every Market price dearer for good (Rome's d
 - **E481** a venture from the Market (the commenda): back in a year with the return or lost; only the · QCF (N195)

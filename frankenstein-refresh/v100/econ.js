@@ -104,7 +104,8 @@ function muster(side, plan, bn) { if (musterWhy(side, plan)) return false; const
 // E219
 const nextAge = (side) => { const n = SIDES[side].age + 1; return n < D.ages.length && (n !== D.age.hidden || opened) ? n : null; }, ageCost = (side) => D.age.cost[nextAge(side)] || null;
 function ageUp(side) { const s = SIDES[side], n = nextAge(side), h = FK.seatOf(side); if (!n || s.aging || !h || !room(h) || !canPay(side, D.age.cost[n])) return false; pay(side, D.age.cost[n], 'research'); order(h, D.ages[n]); s.aging = timeOf(side, D.ages[n]); return true; }
-const rise = (side) => { const s = SIDES[side]; s.aging = 0; s.age++; if (side === ME) FK.fire('event', 'age', null); };
+const rise = (side) => { const s = SIDES[side]; s.aging = 0; s.age++; for (const u of FK.units()) if (u.side === side && teachTo(u) && ageOf(teachTo(u)) <= s.age) lineUp(u); if (side === ME) FK.fire('event', 'age', null); }; // E1231
+const lineUp = (u) => { const f = u.hp / u.hpMax; u.code = teachTo(u); u.hpMax = FK.stat(u.code, u.side, 'hp'); u.hp = Math.max(D.bases.pace, u.hpMax * f); }; // E1231
 // E292
 const lineOf = (c) => Object.keys(T).filter((x) => T[x].value.at === T[c].value.at && T[x].value.line === T[c].value.line);
 const prevOf = (c) => { const L = lineOf(c); return L[L.indexOf(c) - 1] || null; };
