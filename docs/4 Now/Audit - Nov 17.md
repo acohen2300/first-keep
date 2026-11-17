@@ -54,3 +54,21 @@ Measured. The menus' CSS is already all variables (menu.js:49 to 95, 251 selecto
 - Verbs: 123; v-verbs 13. Idea: one verb a tick family, about 35.
 - Shells and ticks already there to reuse: SN card (tab → tick; Manage has none), SN tap (who × target → verb), SN ring.verbs (colour by verb: idea, colour by state).
 - Answer page: items 35 to 53 (https://claude.ai/artifact/XkZM2q1bKADA1r68i7Q6TC).
+
+## 8. Outside audit of n67 (pasted by Albert, Nov 17 17:28), sorted by Claude against the code
+Real:
+- combat.js:279 a hurt building's bar reads SIDES[t.side].col with no fallback (units have it, combat.js:278): throws for a building whose side has no seat. Fix: the units' fallback.
+- index.html:1091 pace(): no floor on the discriminant. With b = 0 it goes negative when PAN.load·M·(L/m)² > PAN.walk·v0²·m (a 70 kg walker at full load needs v0 under about 0.25): not reached by today's villagers as far as checked; NaN would stick in bx, by. Fix: Math.max(0, …) and a least pace.
+- menu.js newsTick: newsI starts null, ++null is 1, so the first pass skips the first item. Cosmetic.
+- sound.js: wake() zeroes voices (voices -= voices) but the closed context's onended still subtracts: the count can go below zero (the cap lets more voices through for a while).
+- Unused names: ai.js IRON, econ.js U (and others in its 27; not all checked).
+Partly:
+- combat.js:157 speedFor(): hi doubles with no cap; d is a weapon's range (bounded), so no hang seen; a cap is cheap.
+By design, not bugs:
+- index.html:427 fault(): the first error is logged and play goes on; a second kind pauses and holds the save (E656). His call whether one error should pause.
+- index.html:1822 boot race: SIDES' stores exist from load (index.html:1055) and the loop runs sim only once play is set (index.html:423); no error seen in Claude's page loads.
+- menu.js CARD.Make: gold is the Mint's only product (D makes BI6), so the Mint has nothing to choose; the Workshop's default lights.
+- ai.js:125: ai.plots holds stone, gold and iron plots too, so the plots clause is live.
+- tech O254 to O259: the six civs' given bonuses; they have no place to be learned.
+- shells' looks not in Sprites: buildings and finds are drawn by index.html's art, not the Sprites book (not checked look by look).
+Note: it counts 15 books (there are 16) and citations to N385 (the book holds N391): it may have read part of the folder.
