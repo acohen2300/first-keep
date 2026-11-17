@@ -551,3 +551,4 @@ Claude's calls inside them (his to overrule):
 - Problem 7, his word (Nov 17 18:34): "Yes" = the ready book is a tap spot (44 px); a tap opens that building's card on Learn; the book wins the tap over what is under it.
 - His 18:06 note (a picked building shown on the map), Nov 17 18:36 after mock 169 (ring, outline): "Why not just make it glow a bit like a halo from the back". Mock `mockups/dock/170` (gold, as the card name's halo; white). Not ruled: gold or white.
 - 18:38, his word on mock 170: "It's a bit too bright. It would have to be more subtle and less stark". Mock `mockups/dock/171`: three softer gold halos (peaks about 24%, 33%, 43%, tighter). Not ruled.
+- His ruling (Nov 17 18:39): "1." = the picked building gets halo 1 of mock 171: gold, faint (peak about 24%, the card name's gold), drawn behind the building, gone when the card closes. Check in his play on bright ground (midday, snow).
