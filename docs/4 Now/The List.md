@@ -498,7 +498,7 @@ Spec, his words, the checks and the plan: `docs/3 Locks/Designs/12 The dock - on
 - His word (15:00): words in the who-line if they fit, icons if not ("I prefer words"); "That's all menus I think"; finds (animals, berries, fish, rocks, stones, trees) get a variation of the villager card. Written into Design 14 (E3 the Controller, E4 finds). NOTHING BUILT. [2026-11-17 15:12]
 - Ruled (15:02): formation parked (Parked.md); Support (spy, medic, priest) are villagers, not army: they get the villager card style; an alert circle appears left of War whenever something of yours is attacked, tap it to go there. Written into Design 14 E3. [2026-11-17 15:13]
 
-## 26. Audit answers (Albert, Nov 17 15:36, from the answer page; items in `docs/4 Now/Audit - Nov 17.md`, page https://claude.ai/artifact/XkZM2q1bKADA1r68i7Q6TC) [2026-11-17 15:40]
+## 26. Audit answers (Albert, Nov 17 15:36, from the answer page; items in `docs/4 Now/Audit - Nov 17.md`, page https://claude.ai/artifact/XkZM2q1bKADA1r68i7Q6TC) [2026-11-17 15:37]
 His words, as sent ("Idea" = Claude's idea on the page, taken):
 1 Market trading: "Maybe it should be part of the slider, then we can have a full 6 boxes."
 2 Relations: "We need this still. But you can redesign it to the town centers card as an option on the slider tab menu thing."
