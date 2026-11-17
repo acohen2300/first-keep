@@ -69,3 +69,10 @@ Albert, Nov 17 2026, 08:24 to 14:01 (talk and mocks; NOT built). Sheet: `mockups
 - New game in the mold's look, or kept as a full-screen sheet.
 - + and − on People; where the alert and army jumps go; the Jobs middle (a reading line?); three-cost buildings at 44 px; Abatis.
 - Found in the books: Rebels has no cost; the unit pictures read poorly at tile size; research names that need short forms (Weights and measures, Letters of credit, Threshing sledge).
+
+## G. Rulings, Nov 17 15:10 (new chat)
+- Alert: a red circle with a triangle, just left of War on the fixed line; tap = camera goes there. (N56 already has the alert finder, WAR.attacked(): reuse it, move the button.)
+- Support: the villager card plus one Skill button.
+- Squad: Claude's idea, in the mold: the Squad tile reads "Squad 12" and a tap re-picks them; when the who-line holds a different pick it reads "Save" and a tap stores it. OPEN against the old squads (combat.js:25 SQ: plan, form, temper, intent; menu.js:158 needs Battalions): see the audit.
+- New game: Claude's review offered (keep the full sheet; pads 44; separate tiles 2 px apart; Daily as a pill). Not ruled.
+- 15:15: he asked for a full audit (ECS mapping of the new controls, the 12 core values, code attitude) before n67. 15:16: "In concept the new controls should allow us to cut ALOT of features." Audit: `docs/4 Now/Audit - Nov 17.md`.
