@@ -402,3 +402,4 @@ Spec, his words, the checks and the plan: `docs/3 Locks/Designs/12 The dock - on
 - OWED, Claude's: the older tests that read the dock's tabs moved to this ruling once the card settles (named in BUILDS.md N66); the full suite. [2026-11-17 08:06]
 - FOUND, not fixed: `--rb` is both the blue and a 2 px radius in the style, the radius wins, so the blue edge on cells is void everywhere. [2026-11-17 08:06]
 - NEXT, his: his list from playing n66. [2026-11-17 08:06]
+- Albert, Nov 17 08:23, after playing n66: "It's def much more playable." A verdict on the whole, not proof of each part: N66 stays BUILT, not DONE, until his list says which parts work. [2026-11-17 08:23]
