@@ -497,3 +497,25 @@ Spec, his words, the checks and the plan: `docs/3 Locks/Designs/12 The dock - on
 - Ruled (14:58): the who-track stays one line ("Don't trick me"); icons instead of words where words don't fit: All, Foot (sword), Bow, Cav, Siege (wheel), Idle (pause), each with picked/total; − + at the right; all on screen, every button 44 wide or more, Home and War on the fixed line (`mockups/dock/157`). Claude's error, corrected: it had said one line could not fit and stacked the counts. The bow and horse icons are rough drafts. [2026-11-17 15:10]
 - His word (15:00): words in the who-line if they fit, icons if not ("I prefer words"); "That's all menus I think"; finds (animals, berries, fish, rocks, stones, trees) get a variation of the villager card. Written into Design 14 (E3 the Controller, E4 finds). NOTHING BUILT. [2026-11-17 15:12]
 - Ruled (15:02): formation parked (Parked.md); Support (spy, medic, priest) are villagers, not army: they get the villager card style; an alert circle appears left of War whenever something of yours is attacked, tap it to go there. Written into Design 14 E3. [2026-11-17 15:13]
+
+## 26. Audit answers (Albert, Nov 17 15:36, from the answer page; items in `docs/4 Now/Audit - Nov 17.md`, page https://claude.ai/artifact/XkZM2q1bKADA1r68i7Q6TC) [2026-11-17 15:40]
+His words, as sent ("Idea" = Claude's idea on the page, taken):
+1 Market trading: "Maybe it should be part of the slider, then we can have a full 6 boxes."
+2 Relations: "We need this still. But you can redesign it to the town centers card as an option on the slider tab menu thing."
+3 Misfits: Idea · "keep the features but design it the same as item 2"
+4 Intel: Idea · "That works". 5 Plan: Idea (cut).
+6 Old squads: "The only thing squad needs to do, is to build a squad, save it, and then we need a way to control it."
+7 Teach: Cut · "when you upgrade the tech all units should upgrade automatically"
+8 Zeal: Later. 9 Ransom: Later. 10 Replant, 11 Hire, 12 Trade carts, 13 Extra army orders, 14 Villager orders, 15 Mail, 16 Score and Stores: Idea.
+17 Ice: Idea · "Plus a ice thickness measurement that tells you if it's safe to cross or not"
+18 Layers: Cut. 19 System controls: Idea. 20 Army-on-the-move jump: Later.
+21 People − +: "Plus trains. Minus doesn't allow a tap on people."
+22 to 38: Idea. 39 Gradients: Idea · "Gradient a single style applied everywhere"
+40 to 44: Idea. 45 Circle sizes: "26 and 40. Two." 46 to 53: Idea.
+Claude's calls inside them (his to overrule):
+- 1: the Market's slider reads Sell | Buy | Learn; Sell and Buy show one tile a resource.
+- 2, 3: the Town Center's slider reads Train | Learn | Talk; Talk lists Relations and Misfits as tiles (stances as in SN sets: gift or bribe, war, terms, ally).
+- 6: one Squad: the Squad tile reads "Save" while the who-line holds a new pick, then "Squad N"; a tap re-picks them and the six orders control them.
+- 7: weakness: Teach changes a unit's kind (econ.js:332 teachTo, 337 graduate); stats already follow research (FK.stat by side). Auto-upgrade of a unit line on research is NEW behaviour: unverified whether any research does it today. Parked with Teach until traced.
+- 17: the reading uses the ice report v100 has (Ice page, WI.lead: cm and kg): "Ice N cm · safe" or "· unsafe".
+- 45: circles drawn 26 and 40; both tap at 44 (Design 14 A).
