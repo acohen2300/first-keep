@@ -403,3 +403,8 @@ Spec, his words, the checks and the plan: `docs/3 Locks/Designs/12 The dock - on
 - FOUND, not fixed: `--rb` is both the blue and a 2 px radius in the style, the radius wins, so the blue edge on cells is void everywhere. [2026-11-17 08:06]
 - NEXT, his: his list from playing n66. [2026-11-17 08:06]
 - Albert, Nov 17 08:23, after playing n66: "It's def much more playable." A verdict on the whole, not proof of each part: N66 stays BUILT, not DONE, until his list says which parts work. [2026-11-17 08:23]
+
+## 25. The new-game screen in the new design (Albert, Nov 17 08:24 to 10:12; talk and mocks, NOT a go to build) [2026-11-17 10:13]
+- His sketch (10:07): two columns of pads with a space between, a title over each pad, choices as pads (dividers inside a pad don't run full span, like the Controller's); Daily, Fog and Allies as switches; Difficulty, Length, Scenario; Civ and Hazards as 3×2 pads; Start with a sentence of the settings. No title, no X drawn. Mocks `mockups/dock/74`, `75`. [2026-11-17 10:13]
+- Ruled (10:10, 10:12): drop 60 min from Length (Conquest, 15, 30); drop Open from Scenario, which becomes optional like Hazards: none lit is a normal game (Claude: one or none, a second tap clears it). [2026-11-17 10:13]
+- Taken, not confirmed: Allies is today's Tension (Diplomacy); the civ help line at the foot goes, as drawn; no X on first load (from inside a game a way back is still needed). OPEN: the switch's on-colour; what the hazard numbers mean on screen; Daily alone on the top row. [2026-11-17 10:13]
