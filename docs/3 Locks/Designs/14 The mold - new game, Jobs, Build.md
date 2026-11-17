@@ -48,6 +48,17 @@ Albert, Nov 17 2026, 08:24 to 14:01 (talk and mocks; NOT built). Sheet: `mockups
 - Remove: tap, red fill, tap; the villager dies and frees its slot. Garrison: the nearest building. Cancel: closes.
 - Path rule: the middle word only when the thing belongs to a Build group (Home › Army › Barracks; Home › Villager).
 
+## E3. The army Controller (14:44 to 15:00; mocks `mockups/dock/154` to `157`)
+- Home › War (red, red halo); the War circle lit red, showing ✕ to close.
+- Who: one line, All · Foot · Bow · Cav · Siege · Idle, each with picked of total ("Cav 1/30"); words if they fit, icons if not (he prefers words; on a 390 px phone they need icons); − + at the right: each "−" leaves behind the picked unit nearest your Town Center and its ring goes out on the map.
+- Orders: six tiles Attack, Move, Defend, Hold, Retreat, Squad. Tap and tap, either order: the map then the order, or the order then the map; the second tap sends them. No ✓ ✕. Orders without a spot (Hold, Defend, Retreat) go on the tap.
+- The same menu opens from the War circle, a tap on your own soldier, or a hold-and-drag box over soldiers; the who-line fills to match. Soldiers get no card of their own.
+- Leave the war screen: People, Garrison, Build, Protect (they live in Jobs and the villager card).
+- OPEN: formation; the Support class (spy, medic, priest); the two camera jumps (alert, army on the move); Squad's page.
+
+## E4. Finds (15:00, his word; not mocked)
+- Animals, berries, fish, rocks, stones and trees get a variation of the villager card: one line on the fixed Home/War line, Home › the find's name, a reading (what is left), its buttons, Cancel, War.
+
 ## Law: Home and War never move (14:40)
 - Both circles sit at the same spot on every screen (714 px down on an 844 px phone); every card stacks from that line down.
 
