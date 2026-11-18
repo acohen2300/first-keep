@@ -856,3 +856,4 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 
 ## Parked Nov 17 18:29 (Albert: "Let's just do the coloring for now")
 - The building card's toggle moving right with the tiles (Design 14 E; n67 left it at the left) and the left-justified card (mock `mockups/dock/167`, his question 18:27). Not now.
+- Problem 8 (The List 28): Home going back to the page you left (Build if you came from Build). His word Nov 17 19:00: "Drop it for now".
