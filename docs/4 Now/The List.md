@@ -685,7 +685,7 @@ Build:
 4. Cost colours (21): red short, white exact, green over.
 5. Villager: the wood-from-gathering fix (3, econ.js:235).
 6. Placing (4, 16): a still tap on the ghost builds; a drag moves it. A site under construction: tap it, it turns red, a small trash at the tap and in the dock; tap again, gone, with a refund by the share not built (18; AoE rule checked first). Its row: "House → 40%", Delete | Cancel.
-7. Building card under the law (26, 19, mock 201): line → Train | Learn | Talk; crumb row "Town Center → Train", Repair | Demolish | Cancel; a unit tapped lights it, Train | Cancel, each Train adds one; the queue in the crumb ("6 Villagers"), Stop.
+7. Building card under the law (26, 19, mock 201): line → Train | Learn | Talk; crumb row "Town Center → Train", Repair | Demolish | Cancel; a unit tile tapped trains one, each tap adds one (no pick, no confirm: his 14:51 "There is no first pick. It's a plain tap train system"); the queue in the crumb ("Town Center → 6 Villagers"), Stop.
 8. War row: Shelter | Work back (ECON.alarm('shelter'), ECON.allClear) and Out (5, 6).
 9. Pause card (2, mock 203): ‖ Paused | Resume · Help | Copy log · ‹; Pause → Settings, New | Quit | Cancel; Speed (tap one) ×1 ×2 ×3; Sounds (tap to cycle) three.
 10. Ribbon: a resource tapped opens the in/out table; the score cell opens the scores (7, 8); the blue help bar out of pause (9).
