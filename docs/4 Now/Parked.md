@@ -857,3 +857,10 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 ## Parked Nov 17 18:29 (Albert: "Let's just do the coloring for now")
 - The building card's toggle moving right with the tiles (Design 14 E; n67 left it at the left) and the left-justified card (mock `mockups/dock/167`, his question 18:27). Not now.
 - Problem 8 (The List 28): Home going back to the page you left (Build if you came from Build). His word Nov 17 19:00: "Drop it for now".
+
+## Cut in N68 (Nov 17, Design 15; his go 19:00 "carry on without me and go build new preview")
+- The old reticle (Mid's drawReticle: corner brackets, crosshair arms, sonar ring, turning chevrons, scan line, the held glow, the ETA and map-coordinate label) and etaNow: replaced by reticle B (his 18:44).
+- The War page's aim set at the screen's middle when War opens (the reticle that could not be cleared, problem 12).
+- A ground spot turning red when foes are near (aimColor's foesNear branch) and boardAt: the ground spot is white (his 18:40 on mock 161).
+- The building's name in the placing hint ("House: tap Build, or drag it to move · drag empty ground to look"): the name is on the line's path; the hint reads "drag to move · ✓ to place".
+- Dead code: VERBS.attack (the old Go button, E427), msnSay, WA. The word WD.place.locked is no longer shown (a locked tile shows its reason); left in the book.

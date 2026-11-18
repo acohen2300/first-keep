@@ -560,3 +560,8 @@ Claude's calls inside them (his to overrule):
 - Problem 13, Claude's correction: the trace of 18:4x was wrong. A map tap already takes the nearest unit within a radius (index.html:1797, hitAt E725: r = max(TO.hit, TO.hitZ × zoom)); under() is not the unit path. Cause of "doesn't stick" is not known: needs a test (a moving foe tapped with Attack armed: is it the target, and do they chase it to the end?).
 - Found against his ruling: Attack on the ground is a plain move today: order() sets sent when there is no target (combat.js:183) and a sent soldier on the march drops any foe (combat.js:143, E1092). So ground Attack must clear sent (attack-move), Move keeps it.
 - Problem 8, his ruling (Nov 17 19:00): "Drop it for now" = Home stays Jobs; the villager card's Build (problem 1) covers most of it. Logged in Parked.md.
+
+## 29. N68 built (preview n68): the n67 play fixes (Albert, Nov 17 19:00 "Can you carry on without me and go build new preview?") [2026-11-17 20:00]
+- In (BUILDS.md N68; Design 15): problem 1 (villager line over Jobs | Build, Build first, Jobs tile sends), 2 (toggle colours), 3 (placing pills, hint on the line, locked dim with the age), 6 (✕ at the row end; Home brings Jobs back), 7 (the book opens Learn), the picked building's halo, 10 (Attack lit, the line says what is next), reticle B, 12 (the reticle clears), 13 (ground Attack fights on the way; Move does not), 9 (buttons 40: Claude's call).
+- Proof: t-n68 passes; his play is the proof of the rest. Not in N68: 8 (dropped for now), 11 (one font: open, his).
+- Claude's calls inside N68: BUILDS.md N68, his to overrule.

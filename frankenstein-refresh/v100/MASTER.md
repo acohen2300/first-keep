@@ -641,7 +641,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
 - **E192** tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines · N61 · N384
-- **E427** Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke 
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
@@ -667,6 +666,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1217** the path's group word: back to Build on that group
 - **E1218** Home: closes whatever is open; with nothing open it takes the camera home
 - **E1219** Cancel on a one-line card: let go of the pick and close
+- **E1233** the row's ✕ (Design 15 D): the rows go and the map is clear, what was picked is let go; Ho
 - **E1220** Gather on a find: the nearest idle villager goes
 - **E1221** remember the ice answer this winter or this game
 - **E1222** the who-line: All, a class, or Idle picks those soldiers
@@ -708,6 +708,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1207** the reading on the line: health when hurt, a site's percent, what is left of a find, sheep
 - **E1208** ice by Gold's formula: a load of P kg on h cm of ice is safe under A_safe·h², maybe under  · D350 (N17, N173, N262, N263)
 - **E1209** the six cards the mold draws: Jobs, Build, a building, a crew, a find, ice and the Control
+- **E1236** a picked villager: its line over the Jobs | Build rows, Build first; its ✕ at the row end 
 - **E1230** whether a Rules pad is lit
 - **E1210** the Squad tile: Save while the picked army differs from the saved squad, then Squad N; a t
 - **E1226** send: Attack goes through the tap rows (a foe is fought, the ground marched to); Move marc
@@ -753,6 +754,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
 - **E1047** one tap rule on the war page too: a tap on a villager (or any of yours that is not a soldi · N30
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
+- **E1234** a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins ove
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
 - **E1051** the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the  · N331
@@ -764,6 +766,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E431** the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picki
 - **E997** a book over each of your finished, idle buildings with research you can start now, looked 
 - **E1106** the research tab: a parchment pill in red ink with a red open book, and the count of what  · N380
+- **E1235** a picked building glows faintly gold from behind (Design 15 F): drawn on the back hook, be
 - **E432** the crosshair (Mid's drawReticle): brackets, a sonar ring, turning chevrons, a scan line,  · N29 · E1 · E2
 - **E359** the town is told what food, the seasons and the flock do, in the Words book's news
 - **E342** dragging the ghost near the screen's edge scrolls the map (Mid's edgeScroll)
@@ -869,6 +872,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E223** assign: + sends an idle or waiting villager (else the one earning least, QV, on another jo · QV (N23, N24)
 - **E1053** Attention (Design 08): Normal is the default and no tap focuses; Focus pins a villager to 
 - **E944** minus on a job acts at once: the villager drops what it carries and stands idle, so the co · N17
+- **E1237** one home for sending a villager to a job: the best find of that kind (Jobs' +, and a Jobs 
 - **E348** what a unit eats a second: its kind's shares (its Upkeep, with research) of a person's day
 - **E1032** an order's food is charged by the ground marched, not by the tap (Decisions Nov 11, #4; Al · D224 (N13, N173, N181, N185, N198, N328, N345) · N29
 - **E1088** dock + fish, one element (N365): the dock is worked like a farm (the Field tick: one worke · N365

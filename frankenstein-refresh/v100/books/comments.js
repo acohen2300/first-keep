@@ -515,7 +515,6 @@ BOOK("comments", {
  "E424": {"text": "your groups on the march (Mid's drawOrders): a dashed line to where they go, a ring there, the time left; the rally flag (flagAt); leaves over a hidden soldier (leavesOver)"},
  "E425": {"text": "the finger's gesture: where it went down and is, when, and what a module made of it (a line, the crosshair, a box); a hold after D246 hold"},
  "E426": {"text": "the hold's ring once the finger plainly holds, and the box being drawn (Mid's drawTouch)"},
- "E427": {"text": "Attack is Go, held it is Home (Mid's station); the rally flag, held the ambush; the choke tool; reinforce the mission most in need; a kind's two moves; the quick action's sword and close"},
  "E429": {"text": "Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens the card; with yours picked a tap is the obvious order; on open ground with nothing picked, the sword and close (Nov 3); a group's ring picks the group; a cut-out plot replants"},
  "E430": {"text": "the crosshair (Mid's aimSpot, aimColor): a foe, a find or the ground under the tap; green yours, red a foe or a hostile near, blue an ally, white nature"},
  "E431": {"text": "the finger's holds and drags on the map: the crosshair dragged, yours picked to keep picking, a box picks yours in it"},
@@ -1059,5 +1058,10 @@ BOOK("comments", {
  "E1229": {"text": "the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) each tap on and off"},
  "E1230": {"text": "whether a Rules pad is lit"},
  "E1231": {"text": "Albert, Nov 17 15:36 (The List 26 item 7): when a side reaches an age, every unit of its line upgrades to the next kind that age opens (AoE II's line upgrade), keeping its share of health and its job; the School's Teach is cut from the player's menus"},
+ "E1233": {"text": "the row's ✕ (Design 15 D): the rows go and the map is clear, what was picked is let go; Home brings Jobs back"},
+ "E1234": {"text": "a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins over what is under it, its tap area the slot"},
+ "E1235": {"text": "a picked building glows faintly gold from behind (Design 15 F): drawn on the back hook, before the building"},
+ "E1236": {"text": "a picked villager: its line over the Jobs | Build rows, Build first; its ✕ at the row end (Design 15 A)"},
+ "E1237": {"text": "one home for sending a villager to a job: the best find of that kind (Jobs' +, and a Jobs tile with villagers picked)"},
  "E1232": {"text": "the score table, one home: under the stores on the Stores sheet and on the pause screen (The List 26 item 16)"}
 });

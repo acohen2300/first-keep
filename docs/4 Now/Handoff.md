@@ -1,4 +1,12 @@
-# First Keep: hand-off (Nov 17, 2026, 16:00)
+# First Keep: hand-off (Nov 17, 2026, 20:00)
+
+## START HERE (2026-11-17 20:00): N68 BUILT (preview n68): Design 15, the n67 play fixes. His play is next
+- His go (Nov 17 19:00): "Can you carry on without me and go build new preview?" Rulings 18:12 to 18:46: The List 28; spec: `docs/3 Locks/Designs/15 The n67 play fixes.md`; mocks `mockups/dock/158` to `172`.
+- What is in, cuts and Claude's calls: BUILDS.md N68; Parked.md "Cut in N68". Code: menu.js MOLD.crew (E1236), mx (E1233), book tap (E1234), halo on the `back` hook (E1235), reticle B (E432, P38); econ.js toJob (E1237).
+- Open, his: problem 11 (one font; mock 162); the unit pictures at tile size; the trash red; whether the War screen and finds want a row ✕.
+- Tests: t-n68, t-n67, t-guide pass; the full suite has no new failure against N67's list (t-n60 flaky on both).
+- What he reports from play is not a go: talk first.
+
 
 ## START HERE (2026-11-17 16:00): N67 BUILT (preview n67): Design 14's mold and the audit answers. His play is next
 - His go (Nov 17 15:40): "Go for all", the whole of Design 14 and The List 26 (his audit answers; the page https://claude.ai/artifact/XkZM2q1bKADA1r68i7Q6TC). Audit: `docs/4 Now/Audit - Nov 17.md`.
