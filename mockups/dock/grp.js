@@ -1,0 +1,18 @@
+const q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)], sp = document.getElementById('spd'); if (sp) sp.classList.remove('on');
+const st = document.createElement('style'); st.textContent = `.fl { background: none; border: 0; color: var(--rw); font: 600 17px 'Barlow Semi Condensed', sans-serif; padding: 0 6px; height: 40px; text-shadow: 0 0 4px rgba(0,0,0,.85); white-space: nowrap; } .fl.on { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; } .row2 { display: flex; align-items: center; gap: 2px; width: 100%; white-space: nowrap; } .row2 .p { color: var(--g1, #e6b947); font: 600 18px 'Barlow Semi Condensed', sans-serif; padding: 0 6px; text-shadow: 0 0 4px rgba(0,0,0,.85); } .row2 .p b { color: var(--rw); font-weight: 500; } .row2 .gap { flex: 1; }
+.ic { display: flex; gap: 2px; margin-left: auto; margin-right: 4px; } .ic button { width: 34px; height: 40px; background: none; border: 0; color: var(--rw); opacity: .5; display: grid; place-items: center; position: relative; } .ic button.on { opacity: 1; } .ic button.on::after { content: ''; position: absolute; bottom: 4px; left: 9px; right: 9px; height: 2px; background: var(--g1, #e6b947); border-radius: 2px; } .ic svg { width: 22px; height: 22px; filter: drop-shadow(0 0 3px rgba(0,0,0,.8)); }
+.dots { display: flex; gap: 0; margin-left: auto; margin-right: 6px; } .dots button { width: 22px; height: 40px; background: none; border: 0; display: grid; place-items: center; } .dots button i { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--rw); opacity: .6; } .dots button.on i { background: var(--g1, #e6b947); border-color: var(--g1, #e6b947); opacity: 1; width: 10px; height: 10px; }
+.cyc { margin-left: auto; margin-right: 6px; display: flex; align-items: center; gap: 2px; background: none; border: 0; color: var(--g1, #e6b947); font: 600 17px 'Barlow Semi Condensed', sans-serif; text-shadow: 0 0 4px rgba(0,0,0,.85); height: 40px; } .cyc span { color: var(--rw); opacity: .5; font-size: 13px; }`; document.head.appendChild(st);
+const S = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+const IC = { Town: `<svg ${S}><path d="M4 11l8-6 8 6M6 10v9h12v-9M10 19v-5h4v5"/></svg>`, Work: `<svg ${S}><path d="M14 6l4 4M4 20l9-9M12 4l8 8-3 3-8-8z"/></svg>`, Army: `<svg ${S}><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z"/></svg>`, Keep: `<svg ${S}><path d="M5 21V8h2V5h2v3h2V5h2v3h2V5h2v3h2v13zM10 21v-4h4v4"/></svg>`, Learn: `<svg ${S}><path d="M4 5h6a2 2 0 012 2v12a2 2 0 00-2-2H4zM20 5h-6a2 2 0 00-2 2v12a2 2 0 012-2h6z"/></svg>` };
+const G = ['Town', 'Work', 'Army', 'Keep', 'Learn'], K = window.__K, path = q('.mline .mpath'), ctl = q('.mctl'), war = q('.mline [data-v^="war|"]');
+war.innerHTML = '<span style="font:700 20px \'Barlow Semi Condensed\',sans-serif;color:var(--rr)">W</span>';
+path.style.cssText = 'display:flex;align-items:center;flex:1;min-width:0;gap:0';
+let sel = '';
+if (K === 'icons') sel = '<div class="ic">' + G.map((g, i) => `<button class="${i ? '' : 'on'}">${IC[g]}</button>`).join('') + '</div>';
+if (K === 'dots') sel = '<div class="dots">' + G.map((g, i) => `<button class="${i ? '' : 'on'}"><i></i></button>`).join('') + '</div>';
+if (K === 'cyc') sel = '<button class="cyc">Town <span>›</span></button>';
+if (K === 'now') sel = '';
+path.innerHTML = '<button class="fl">Jobs</button><button class="fl on">Build</button>' + sel;
+if (K === 'now') { const tr = document.createElement('div'); }
+ctl.style.cssText = 'height:40px;align-items:center'; ctl.innerHTML = '<div class="row2"><span class="p">Build → <b>Town</b></span><span class="gap"></span><button class="fl">Cancel</button></div>';
