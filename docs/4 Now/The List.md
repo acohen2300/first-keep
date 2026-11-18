@@ -673,3 +673,4 @@ Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Do
 - 10, his ask (Nov 18 14:46): "Can you make the home glow white and the war glow red like the same faint halo glow style thing?" Mock `mockups/dock/219`: Home a faint white halo, W a faint red halo (12 px blur).
 - 10, his word (Nov 18 14:47): "We have the alert triangle when attacked. Check the code." Checked: menu.js:278 (mline) shows a red alert dot (look|alert) on the line while anything of his is attacked (spots('alert'), menu.js:246). So W's red halo is steady (no pulse); the triangle carries the alarm.
 - 25, his ruling (14:47): "The people we need to put a white ring, and instead of train put 50f." Mock `mockups/dock/220`: People white ring, "18|35" over "50f +" (the cost, by 21's colours).
+- 25, his option (Nov 18 14:47): "Or Train 50f". Mock `mockups/dock/221`: "50f +" beside "Train 50f". Claude's pick: Train 50f (the verb and the cost, no symbol to learn). Not ruled.
