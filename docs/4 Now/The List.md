@@ -668,3 +668,4 @@ Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Do
 - 27, his ask (Nov 18 14:38): "You'll have to put some kind of symbol that means if you tap me you will see what I am displaying." Mock `mockups/dock/214`: eye, target, map pin before "Idle: 2". Claude's pick: the target (it reads as "find it", and the map's reticle family). Not ruled.
 - 25, 27, his sketch (Nov 18 14:42, photo `docs/4 Now/Notes/2026-11-18 idle train.jpg`): a boxed "📍 Idle: 2" over People; People reads "+👤 18|35" over "Train +". Mock `mockups/dock/215` (Idle gold when any, dim at 0). Not ruled.
 - 27, his word (Nov 18 14:43): "We have to make it fit… it's too wide." Mock `mockups/dock/216`: the box inside People's column ("Idle 2", no colon, 14 px, pin 15 px). Not ruled.
+- 25, 27, his ruling (Nov 18 14:44): "Text to 12. Also fix the font size in train to the rest." Mock `mockups/dock/217`: Idle at 12; "Train +" in the tiles' own size (as Food, Wood).
