@@ -649,3 +649,4 @@ Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Do
 - 10, his ruling (Nov 18 13:47): "D. And let's add a hint like the others. Jobs is selected. Tap build to switch." = the glow (A) on Home and Jobs | Build; the closed one dims (D); a hint when Jobs is open with no villager. Mock `mockups/dock/206`: his words fit, just; Claude's shorter "tap Build to switch" offered. Not settled: which wording.
 - 10, his word (Nov 18 13:49): "Yours is good. Eventually we can add a setting in pause to hide hints" = the hint "tap Build to switch". LATER: a pause setting to hide hints.
 - 11 mocked (Nov 18 13:52), mock `mockups/dock/207`: open: ‹ before W; closed: ⌂ + … W; closed: ⌂ + only. Not ruled.
+- 11, his ruling (Nov 18 14:11): "The home and w has to stay. Just trying to hide the jobs and build." = ‹ (before W) hides Jobs | Build (and closes the rows): the line is ⌂ + … W; + brings Jobs | Build back. Open: does a game start collapsed or open.
