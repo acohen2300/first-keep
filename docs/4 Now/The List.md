@@ -669,3 +669,4 @@ Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Do
 - 25, 27, his sketch (Nov 18 14:42, photo `docs/4 Now/Notes/2026-11-18 idle train.jpg`): a boxed "📍 Idle: 2" over People; People reads "+👤 18|35" over "Train +". Mock `mockups/dock/215` (Idle gold when any, dim at 0). Not ruled.
 - 27, his word (Nov 18 14:43): "We have to make it fit… it's too wide." Mock `mockups/dock/216`: the box inside People's column ("Idle 2", no colon, 14 px, pin 15 px). Not ruled.
 - 25, 27, his ruling (Nov 18 14:44): "Text to 12. Also fix the font size in train to the rest." Mock `mockups/dock/217`: Idle at 12; "Train +" in the tiles' own size (as Food, Wood).
+- 25, his word (Nov 18 14:45): "I think green is training ring. Not blue." = People's outline green (the training ring's colour). Mock `mockups/dock/218`.
