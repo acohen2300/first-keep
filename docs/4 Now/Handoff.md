@@ -1,5 +1,10 @@
 # First Keep: hand-off (Nov 17, 2026, 20:00)
 
+## START HERE (2026-11-18): N69 BUILT (preview n69): Design 16, the menu law. His play is next
+- His go (Nov 18 10:31): "Ok let's do it." Rulings 08:12 to 10:31: The List 30; spec `docs/3 Locks/Designs/16 The menu law.md`; mocks `mockups/dock/175` to `197`.
+- What is in, cuts: BUILDS.md N69; Parked.md "Cut in N69". Code: menu.js MOLD.jobs/build/crew/none, row2, mtab, mback, jpm, vjob, vgo, finish.
+- Open, his: the building card, finds, War and ice under the law; page 1 notes of Nov 18 (The List 30, items 1 to 7); the n67 end-game slowdown (needs his ?fps shot).
+
 ## START HERE (2026-11-17 20:00): N68 BUILT (preview n68): Design 15, the n67 play fixes. His play is next
 - His go (Nov 17 19:00): "Can you carry on without me and go build new preview?" Rulings 18:12 to 18:46: The List 28; spec: `docs/3 Locks/Designs/15 The n67 play fixes.md`; mocks `mockups/dock/158` to `172`.
 - What is in, cuts and Claude's calls: BUILDS.md N68; Parked.md "Cut in N68". Code: menu.js MOLD.crew (E1236), mx (E1233), book tap (E1234), halo on the `back` hook (E1235), reticle B (E432, P38); econ.js toJob (E1237).

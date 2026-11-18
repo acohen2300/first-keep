@@ -641,6 +641,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
 - **E192** tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines · N61 · N384
+- **E1248** Build placed: the menu closes after the crumb reads Building
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
@@ -661,8 +662,11 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1228** a scenario is optional: a tap lights one, a second tap clears it (a normal game)
 - **E1229** the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) 
 - **E1214** a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villag
-- **E1215** − and + step the picked Jobs tile: on a resource they move a villager to or from it; on Pe
 - **E1216** the Jobs | Build toggle
+- **E1244** one job's − or + from the floating row (People: + trains a villager)
+- **E1245** a picked villager's job tile: tap to pick, tap again to drop
+- **E1246** Go: the picked villagers go to the picked job, then the menu closes
+- **E1247** the one Cancel (Design 16): drops the last crumb; a crumb tapped drops all after it
 - **E1217** the path's group word: back to Build on that group
 - **E1218** Home: closes whatever is open; with nothing open it takes the camera home
 - **E1219** Cancel on a one-line card: let go of the pick and close
@@ -707,7 +711,13 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1206** a card's sides are its ticks' rows in the screen book's order; a side that plants or build
 - **E1207** the reading on the line: health when hurt, a site's percent, what is left of a find, sheep
 - **E1208** ice by Gold's formula: a load of P kg on h cm of ice is safe under A_safe·h², maybe under  · D350 (N17, N173, N262, N263)
+- **E1238** a floating action word (Design 16): dim when it cannot run
+- **E1239** the line's parts (Design 16): Jobs | Build, the group words split by bars, the italic hint
+- **E1240** the crumb row (Design 16): crumbs, the first large, each tappable back to it; a quiet note
+- **E1241** a unit's state word for the crumb; finish: the crumb reads Going or Building, then the men
 - **E1209** the six cards the mold draws: Jobs, Build, a building, a crew, a find, ice and the Control
+- **E1242** Jobs (Design 16): floating − + over each job, a + alone over People; nothing open shows on
+- **E1243** Build (Design 16): the group words on the line, Build → group → building in the crumb row,
 - **E1236** a picked villager: its line over the Jobs | Build rows, Build first; its ✕ at the row end 
 - **E1230** whether a Rules pad is lit
 - **E1210** the Squad tile: Save while the picked army differs from the saved squad, then Squad N; a t

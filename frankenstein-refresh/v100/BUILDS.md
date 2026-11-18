@@ -5544,3 +5544,18 @@ Albert, Nov 17 19:00: "Can you carry on without me and go build new preview?" (N
 - Gate: PASS. ecs: named 293 → 293; named2 32 → 32; dead 6 → 6. Sizes: menu.js 124,190 → 124,206 (+16); econ.js +61; index.html +41 (the hook and its list); game code 646,202 → 646,340 (+118, under the permit's grant).
 - Tests: t-n68 (X136) passes (twice in a row); fails on N67's code (planted back: it throws on the first check). t-n67's villager check moved to the ruling (the ✕ at the row end, rows under the line). t-guide passes.
 - Full suite on a frozen copy: 46 of 99. Against N67's list (BUILDS N67): no new failure but t-n60, the road test known to fail about 1 run in 3: rerun alone it passes 1 of 4 on N68 and 3 of 5 on N67 (fails on both; not traced). Passing now that failed on N67's run: t-a1, t-n22, t-n31, t-n57, t-p2 (flaky ones).
+
+## N69: the menu law (Design 16; The List 30) · 2026-11-18
+Albert, Nov 18 10:31: "Ok let's do it." (N393; his rulings 08:12 to 10:31; mocks 175 to 197.)
+- The line never changes: Home · Jobs | Build · … · W (War as a W, E1212). Jobs and Build float with a pipe, the open one underlined (mtab, E1216): tap one to open, the other to switch, the open one again to close. Nothing open at the start.
+- Jobs (E1242): floating − + over each job, a + alone over People (jpm, E1244); People, Food, Wood, Gold, Stone, Iron (gold before stone, SN48 jobs).
+- Build (E1243): Town | Work | Army | Keep | Tech on the line (Learn renamed Tech, SN2); crumb row Build → Town (→ House) with Build | Cancel; the placing hint between, italic.
+- The crumb row (row2, E1240): the first crumb large (type.crumb 600/20), the rest the same size, each tappable back to it; actions with pipes.
+- One Cancel (mback, E1247): drops the last crumb (the building picked, the job picked, the open rows, then the villager).
+- A picked villager (E1236): italic hint centred on the line (choose a task / choose a job below / tap Go to send); crumb Villager → state; Garrison | Delete | Cancel (Stop cut); its Jobs: five job tiles, a tapped one lights and Go takes the first slot (vjob, vgo, E1245, E1246); tapped again it drops; on Build, Build joins the actions.
+- After Go or Build the crumb reads Going / Building for settle (1.2 s, SN48), then the menu closes and the villager is let go (finish, E1241, E1248).
+- Cut and logged in Parked.md ("Cut in N69").
+- Not in N69: the building card, a find's card, War and the ice card keep their own line (design them under the law next, his).
+- Gate: PASS. ecs: named 293 → 293; named2 32 → 32; dead 6 → 6. Size: menu.js 124,206 → 128,113 (+3,907, under the permit's 4,000).
+- Tests: t-n69 (X137) passes; fails on N68's code (0/1). t-n67 and t-n68 moved to the ruling (their mmode, ✕ on the rows, the single − +, Stop and the ✓ ✕ pills checks now read mtab, the tap-again close, the floating − +, no Stop and Build | Cancel), both pass. t-guide passes.
+- Full suite on a frozen copy: 46 of 100. Against N68's list: no new failure but t-a1, which passes alone (flaky, as at N67).

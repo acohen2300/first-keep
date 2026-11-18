@@ -1045,7 +1045,6 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E1212 | menu.js | the fixed line: Home at the left; the alert circle when something of mine is attacked; War at the right (red, an X while the Controller is open) |
 | E1213 | menu.js | under the line the control row and the tile row; empty rows keep their height so Home and War never move |
 | E1214 | menu.js | a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villagers go there) |
-| E1215 | menu.js | − and + step the picked Jobs tile: on a resource they move a villager to or from it; on People + trains one at the Town Center and − is refused |
 | E1216 | menu.js | the Jobs / Build toggle |
 | E1217 | menu.js | the path's group word: back to Build on that group |
 | E1218 | menu.js | Home: closes whatever is open; with nothing open it takes the camera home |
@@ -1067,4 +1066,15 @@ Written by `index.py` from `books/comments.js`, never by hand: every why, by its
 | E1235 | menu.js | a picked building glows faintly gold from behind (Design 15 F): drawn on the back hook, before the building |
 | E1236 | menu.js | a picked villager: its line over the Jobs / Build rows, Build first; its ✕ at the row end (Design 15 A) |
 | E1237 | econ.js | one home for sending a villager to a job: the best find of that kind (Jobs' +, and a Jobs tile with villagers picked) |
+| E1238 | menu.js | a floating action word (Design 16): dim when it cannot run |
+| E1239 | menu.js | the line's parts (Design 16): Jobs / Build, the group words split by bars, the italic hint centred in the free span |
+| E1240 | menu.js | the crumb row (Design 16): crumbs, the first large, each tappable back to it; a quiet note in the middle; the actions with pipes |
+| E1241 | menu.js | a unit's state word for the crumb; finish: the crumb reads Going or Building, then the menu closes after settle |
+| E1242 | menu.js | Jobs (Design 16): floating − + over each job, a + alone over People; nothing open shows only the line |
+| E1243 | menu.js | Build (Design 16): the group words on the line, Build → group → building in the crumb row, Build and Cancel |
+| E1244 | menu.js | one job's − or + from the floating row (People: + trains a villager) |
+| E1245 | menu.js | a picked villager's job tile: tap to pick, tap again to drop |
+| E1246 | menu.js | Go: the picked villagers go to the picked job, then the menu closes |
+| E1247 | menu.js | the one Cancel (Design 16): drops the last crumb; a crumb tapped drops all after it |
+| E1248 | menu.js | Build placed: the menu closes after the crumb reads Building |
 | E1232 | menu.js | the score table, one home: under the stores on the Stores sheet and on the pause screen (The List 26 item 16) |

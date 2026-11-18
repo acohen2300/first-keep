@@ -864,3 +864,11 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - A ground spot turning red when foes are near (aimColor's foesNear branch) and boardAt: the ground spot is white (his 18:40 on mock 161).
 - The building's name in the placing hint ("House: tap Build, or drag it to move · drag empty ground to look"): the name is on the line's path; the hint reads "drag to move · ✓ to place".
 - Dead code: VERBS.attack (the old Go button, E427), msnSay, WA. The word WD.place.locked is no longer shown (a locked tile shows its reason); left in the book.
+
+## Cut in N69 (Nov 18, Design 16; his go 10:31 "Ok let's do it")
+- The villager's Stop (VERBS.vstop): his 09:56 "you don't need stop" (a tap on ground moves it).
+- The ✕ at the row end on Jobs and Build (N68 E1233 on those screens) and the hidden-rows state S.hide: rows now close by tapping the open one again (08:44); Cancel drops the last crumb (09:59).
+- The Jobs | Build toggle track and the group track (Town to Learn): floating words with pipes (09:15, 10:18); the group Learn renamed Tech.
+- The single − + pair (VERBS.jstep): − + float over each job (09:08).
+- The ✓ ✕ pills while placing: Build | Cancel on the crumb row (09:41).
+- Placing again at once after a repeat building (the next House spot): Build now closes the menu after "Building" (10:27).
