@@ -675,3 +675,19 @@ Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Do
 - 25, his ruling (14:47): "The people we need to put a white ring, and instead of train put 50f." Mock `mockups/dock/220`: People white ring, "18|35" over "50f +" (the cost, by 21's colours).
 - 25, his option (Nov 18 14:47): "Or Train 50f". Mock `mockups/dock/221`: "50f +" beside "Train 50f". Claude's pick: Train 50f (the verb and the cost, no symbol to learn). Not ruled.
 - 25, his ruling (Nov 18 14:49): "Train: 50f" = People's second line reads "Train: 50f" (the cost coloured by 21), white ring, + gone.
+- 26, his ruling (Nov 18 14:50): "Yes. Keep tapping train keep adding units.." = after the first pick, each tap of Train queues one more.
+
+### N70 plan (Nov 18 14:52, from section 32; his go needed)
+Build:
+1. Line: Home white halo, W red halo, Jobs | Build glow, the closed one dims (10); hint in one fixed spot after Jobs | Build, italic, left (13); "tap Build to switch" (10); → before the group words, the open group underlined (14).
+2. Collapse (11): − floating above the line's right end hides Jobs | Build and closes the rows; a floating + after Home brings them back; Home and W stay.
+3. Jobs: People tile white ring, "18|35" over "Train: 50f", a tap trains (25, 26 rule for the cost colour); floating + over People gone; "Idle n" box with a pin over People, dim at 0, gold when any, 12 px; a tap jumps to the next idle villager and picks it (27); a job tile tapped sets the rally, tapped again clears it, − + never touch it (24).
+4. Cost colours (21): red short, white exact, green over.
+5. Villager: the wood-from-gathering fix (3, econ.js:235).
+6. Placing (4, 16): a still tap on the ghost builds; a drag moves it. A site under construction: tap it, it turns red, a small trash at the tap and in the dock; tap again, gone, with a refund by the share not built (18; AoE rule checked first). Its row: "House → 40%", Delete | Cancel.
+7. Building card under the law (26, 19, mock 201): line → Train | Learn | Talk; crumb row "Town Center → Train", Repair | Demolish | Cancel; a unit tapped lights it, Train | Cancel, each Train adds one; the queue in the crumb ("6 Villagers"), Stop.
+8. War row: Shelter | Work back (ECON.alarm('shelter'), ECON.allClear) and Out (5, 6).
+9. Pause card (2, mock 203): ‖ Paused | Resume · Help | Copy log · ‹; Pause → Settings, New | Quit | Cancel; Speed (tap one) ×1 ×2 ×3; Sounds (tap to cycle) three.
+10. Ribbon: a resource tapped opens the in/out table; the score cell opens the scores (7, 8); the blue help bar out of pause (9).
+11. Halo: lift 0.12, left 0.10 (17); the book flashes on tap (23).
+Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under the law; a hints setting (later).
