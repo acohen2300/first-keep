@@ -621,3 +621,16 @@ Page 2 ("So. Always is"): Home … War. "Tap Home (Jobs by default)": Home [Jobs
 11. "< at the end closes it. ⌂ + ← plus sign reopens."
 12. "Villager Jobs | Build choose job | choose task closer to Build. Looks weird floating in the center."
 13. "Maybe can be static." Sketch: "Jobs | Build ← choose task"; "Jobs Build choose job below"; "Jobs | Build Choose → Town | Work | etc".
+Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Don't do anything yet":
+14. "When tapping Town | Work | Army etc, underline it like others."
+15. "Villager → Build → Work → Mill [ ] ring is weird."
+16. "For building, tap green ghost should be a build shortcut. Tap again should be cancel. Double tap shortcut."
+17. "Halo under building isn't centered. It's too high."
+18. "Currently no way to stop construction."
+19. "When you train there is a cancel but it only shows when it's five or less. Villager ×6 50f hides under Cancel when it's 6."
+20. "Train tile fonts & Learn fonts should be cream or white."
+21. "Only the cost transitions from red to green. It should go to green the second you have even 1 more of anything. White is only for exact."
+22. "Recession ring seems to be off. It seems like there are 2-3 rings (outlines) on a lot of tiles."
+23. "Tapping a book icon should show it's tapped."
+24. "Jobs needs a default tap selected for new villagers to go to."
+25. "People shouldn't be tappable, only the +. So let's make the plus bigger. The icon show 18|35 ← house max."
