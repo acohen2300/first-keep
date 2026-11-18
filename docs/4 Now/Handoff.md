@@ -1,10 +1,13 @@
-# First Keep: hand-off (Nov 17, 2026, 20:00)
+# First Keep: hand-off (Nov 18, 2026, 16:30)
 
 ## START HERE (2026-11-18 16:00): N70 BUILT (preview n70): Design 17, the n69 play fixes. His play is next
 - His go (Nov 18 14:51): "Go go go go go go do it". Rulings 12:53 to 14:51: The List 32; spec `docs/3 Locks/Designs/17 The n69 play fixes.md`; mocks `mockups/dock/200` to `221`.
 - What is in, cuts, Claude's call: BUILDS.md N70; Parked.md "Cut in N70"; The List 33.
 - Open, his: Quit on the pause card; the War menu under the law; the shell/ring/text audit (SOON); the n67 end-game slowdown (needs his ?fps shot).
 - Tests: t-n70, t-n69, t-n68, t-n67, t-ledger pass; full suite 46/101, no new failure but t-n22 and t-p2 (pass alone: load).
+- Next: his n70 play notes (talk first, one at a time, mocks on the game screen), then his rulings on the open items above.
+- Full-suite baseline at N70 (the 55 that fail; compare a new run against this): t-bell, t-cards, t-civs, t-errors, t-fire, t-food, t-gather, t-gone, t-height, t-kinds, t-land, t-ledger, t-mind, t-n17, t-n18, t-n18b, t-n22, t-n24, t-n24b, t-n25, t-n26, t-n27, t-n29, t-n30, t-n42, t-n43, t-n52, t-n53, t-n56, t-n61, t-n62, t-n63, t-n64, t-n66, t-odds, t-orders, t-p2, t-p2b, t-p2c, t-peace, t-physics, t-place, t-queue, t-realm, t-research, t-same, t-sight, t-stage, t-start, t-tabs, t-trade, t-wait, t-walls, t-war, t-wild.
+- Test traps met in N70: test pages start paused, so the pause card's own `.mline` sits in `#spd` (aim at `#rank .mline`); a tap on the ground needs `FK.toView(..., FK.D.land)`; an armed site ignores a second tap inside TO.dbl (move `S.dmT` back in tests).
 - What he reports from play is not a go: talk first.
 
 ## START HERE (2026-11-18): N69 BUILT (preview n69): Design 16, the menu law. His play is next
