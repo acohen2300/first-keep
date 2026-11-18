@@ -606,3 +606,18 @@ Page 2 ("So. Always is"): Home … War. "Tap Home (Jobs by default)": Home [Jobs
 - In (BUILDS.md N69; Design 16): the line, Jobs | Build, W, Jobs with floating − +, Build with Town | Work | Army | Keep | Tech, the crumb row (first crumb large, tappable), one Cancel, the villager (no Stop, Go after a job, Build after a building), Going / Building then the menu closes.
 - Proof: t-n69 passes; his play is the proof of the rest.
 - Not in N69: the building card, a find's card, War, the ice card (not designed under the law yet); his Nov 18 page 1 notes (top strip, mail button, tile and toggle audit, pause, score, 3 across, the blue help bar).
+
+## 32. His n69 notes (Nov 18 12:36, photo `docs/4 Now/Notes/2026-11-18 n69 notes.jpg`) — talk, "Don't do anything yet… first 13"
+1. Welcome / new game: text, weights, fonts, rings are off; titles on the left larger than the right; Scenario and Rules tiles have a brown outline and are larger; "Start" in the start is too small. "Best solution for this is a text, weight, tile, outline, ring audit."
+2. Pause menu redesign (sketch): "(II) Paused | Resume … Help | Copy log ⟨"; crumb "Pause Menu → Settings"; "New | Quit | Cancel"; "Speed (tap one)" ×1 ×2 ×3; "Sounds (tap to cycle)" three icons. "Trying to model off the bottom."
+3. "Tap villager, open bottom, pick wood while gathering food doesn't go. But goes other times."
+4. "Shortcut tap building to Build."
+5. "If you garrison a villager how do you ungarrison?"
+6. "In war controller needed a way to garrison all and back to work all."
+7. "Scores out of pause back in score."
+8. "Rss in and out out of pause and back to top ribbon."
+9. "Blue read strip out of pause."
+10. "⌂ Jobs | Build. Maybe small glow?"
+11. "< at the end closes it. ⌂ + ← plus sign reopens."
+12. "Villager Jobs | Build choose job | choose task closer to Build. Looks weird floating in the center."
+13. "Maybe can be static." Sketch: "Jobs | Build ← choose task"; "Jobs Build choose job below"; "Jobs | Build Choose → Town | Work | etc".
