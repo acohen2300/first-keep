@@ -5559,3 +5559,22 @@ Albert, Nov 18 10:31: "Ok let's do it." (N393; his rulings 08:12 to 10:31; mocks
 - Gate: PASS. ecs: named 293 → 293; named2 32 → 32; dead 6 → 6. Size: menu.js 124,206 → 128,113 (+3,907, under the permit's 4,000).
 - Tests: t-n69 (X137) passes; fails on N68's code (0/1). t-n67 and t-n68 moved to the ruling (their mmode, ✕ on the rows, the single − +, Stop and the ✓ ✕ pills checks now read mtab, the tap-again close, the floating − +, no Stop and Build | Cancel), both pass. t-guide passes.
 - Full suite on a frozen copy: 46 of 100. Against N68's list: no new failure but t-a1, which passes alone (flaky, as at N67).
+
+## N70: the n69 play fixes (Design 17; The List 32) · 2026-11-18
+Albert, Nov 18 14:51: "Go go go go go go do it" (N394; his rulings 12:53 to 14:51; mocks 200 to 221).
+- Line (E1239, E1250): Home a faint white halo, W a faint red one, Jobs | Build glow, the closed one dims (SN48 lit); the hint left after them, italic ("tap Build to switch"); → before the group words, the open one underlined; a floating − above the line's right end hides Jobs | Build and the rows, a floating + brings them back.
+- Jobs (E1249): People has a white ring, people | room over "Train: cost", and a tap trains; no + over it; an "Idle n" box with a pin over People (dim at 0, gold when any) jumps to the next idle villager and picks it (ECON.idlers); a job tile sets the rally, tapped again clears it.
+- Cost (price): red short, white exact, green over (the gradient cut).
+- Villager (E1251, econ.js drop branch): sent to a job while carrying another kind, it goes to the new job.
+- Placing (E1252, E1253): a still tap on the ghost builds; a site tapped turns red with a trash at the tap and shows "House → 40%", Delete | Cancel; tapped again it comes down (a fast second tap on an armed site is no longer read as a double tap); refund = cost × (1 − share built) (D202; AoE II).
+- Building card (E1254): → Train | Learn | Talk on the line (Train green, Learn blue); crumb "Town Center → Train" or the queue "→ 2 Villager"; Stop | Repair | Demolish | Cancel; a unit tile tapped trains one per tap.
+- War (E1256, E1255): Shelter | Work | Out.
+- Pause (E843): a card: ‖ Paused | Resume · Help | Copy log · close; Pause → Settings, New | Cancel; Speed (tap one) ×1 ×2 ×3; Sounds (tap to cycle). No tables, no blue bar.
+- Ribbon (E1257): resources open the in/out table, the score cell the scores (SCREENS.Score).
+- Halo lift 0.12, left 0.10 (SN49); a tapped book flashes.
+- Claude's call, his to overrule: Repair shows only on a hurt building (the crumb row overflowed with a queue: Cancel was cut off at 390 px).
+- Not in N70: Quit on the pause card (what it does is not ruled); the War menu under the law; the shell/ring/text audit (SOON; the queued tile's "50f" is clipped under "×1"); a hints setting (LATER).
+- Cut and logged in Parked.md ("Cut in N70").
+- Gate: PASS. ecs: named 293 → 293; named2 32 → 32; dead 6 → 6. Size: menu.js 128,113 → 133,494 (+5,381; permit 5,400), econ.js 119,569 → 119,927 (+358).
+- Tests: t-n70 (X138) passes; fails on N69's code. Moved to the rulings, all pass: t-n69 (Idle n over People, no +), t-n68 (the card toggle on the line; the halo read on the left), t-n67 (the card's toggle on the line, its name the big crumb; Repair on a hurt hall), t-ledger (a site pays back the share not built; fails with the old refund planted). t-walls' refund check moved too (unverified: t-walls' Mid side does not run, failing before N70).
+- Full suite on a frozen copy: 46 of 101. Against N69's list: new t-ledger (moved, passes), t-n22 and t-p2 (pass alone: load); t-a1 and t-n60 now pass.

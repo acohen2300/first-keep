@@ -1073,5 +1073,14 @@ BOOK("comments", {
  "E1246": {"text": "Go: the picked villagers go to the picked job, then the menu closes"},
  "E1247": {"text": "the one Cancel (Design 16): drops the last crumb; a crumb tapped drops all after it"},
  "E1248": {"text": "Build placed: the menu closes after the crumb reads Building"},
+ "E1249": {"text": "the idle villagers (idle or waiting, not inside); Idle n over People: a tap jumps the camera to the next and picks it (Design 17, 27)"},
+ "E1250": {"text": "the − above the line hides Jobs | Build and closes the rows; the + after Home brings them back (Design 17, 11)"},
+ "E1251": {"text": "at the drop a villager sent to a find of another kind takes that kind (Design 17, 3: sent to wood from gathering food, it went back to food)"},
+ "E1252": {"text": "placing: a still tap on the green ghost builds it; a tap elsewhere moves it (Design 17, 4, 16)"},
+ "E1253": {"text": "a site of one's own: a tap picks it and arms its trash (red, a small trash by the tap); a second tap takes it down, the share not built paid back (Design 17, 16, 18)"},
+ "E1254": {"text": "the building card under the law: Train | Learn | Talk on the line; the crumb row with the queue, Stop, Repair, Demolish and Cancel; a unit tile tapped trains one (Design 17, 26, 19)"},
+ "E1255": {"text": "every villager inside or sheltering comes out to its work"},
+ "E1256": {"text": "War: Shelter, Work and Out (Design 17, 5, 6)"},
+ "E1257": {"text": "the score: the ribbon's score cell opens it apart from the stores (Design 17, 7, 8)"},
  "E1232": {"text": "the score table, one home: under the stores on the Stores sheet and on the pause screen (The List 26 item 16)"}
 });

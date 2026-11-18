@@ -872,3 +872,10 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - The single − + pair (VERBS.jstep): − + float over each job (09:08).
 - The ✓ ✕ pills while placing: Build | Cancel on the crumb row (09:41).
 - Placing again at once after a repeat building (the next House spot): Build now closes the menu after "Building" (10:27).
+
+## Cut in N70 (Nov 18, Design 17; his go 14:51 "Go go go go go go do it")
+- The + over People (jpm people): a tap on People trains (14:49).
+- The pause pop's in/out table and score table, and the blue help bar (.ihr) on it: the in/out opens from a ribbon resource, the scores from the score cell (13:36).
+- The cost gradient (FK.C.cost steps, red to green by share): three colours, red short, white exact, green over (14:22). The book entry is left, unread.
+- The early refund numbers (D.refund first 0.15, early 1: all back while a site was under 15%): a site pays back the share not built (13:29, the AoE II rule).
+- The building card's Train | Learn | Talk toggle pill on the control row: the words sit on the line (14:50).

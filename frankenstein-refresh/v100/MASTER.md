@@ -621,6 +621,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1052** the call's refusals (Design 08): a villager sent to a find with no free spot, and a soldie
 - **E1050** one place lets the pick go (letGo): after every order given to what you picked (a tap by t · N369
 - **E989** the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall
+- **E1249** the idle villagers (idle or waiting, not inside); Idle n over People: a tap jumps the came
 - **E332** who trains a kind: the building with the shortest line; walls are laid as lines; walls and
 - **E925** the Daily challenge: when it is on, the civ, difficulty, length (Albert, Nov 10 11:51) and
 - **E373** why a kind waits: the age it opens in (Mid's trainWhy)
@@ -634,6 +635,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1024** the Relations and Misfits rows work: each shows your stance (Foe red, Neutral white, Frien · N24
 - **E845** the book: Welcome back mid-match (Resume, New game), paused
 - **E187** a channel's volume, a step a tap (HX10) · HX10 (N149)
+- **E1256** War: Shelter, Work and Out (Design 17, 5, 6)
 - **E189** a cell for what is drawn but not yet built: Albert's reminder
 - **E705** a hazard switched on adds its points to the level (the measure book's hazards.pts); the St
 - **E190** the new game: the bell (D134), fog, the day's map or a fresh one · D134 (N114)
@@ -662,6 +664,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1228** a scenario is optional: a tap lights one, a second tap clears it (a normal game)
 - **E1229** the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) 
 - **E1214** a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villag
+- **E1250** the − above the line hides Jobs | Build and closes the rows; the + after Home brings them 
 - **E1216** the Jobs | Build toggle
 - **E1244** one job's − or + from the floating row (People: + trains a villager)
 - **E1245** a picked villager's job tile: tap to pick, tap again to drop
@@ -687,6 +690,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E853** the Build menu: the open tab's buildings of your age and before; a later age's are gone un
 - **E898** the Build grid keeps its tab's two rows of three: empty slots fill where locked buildings  · N61 · N384 · N62 · N385 · E1117
 - **E996** the Stores card (Have, In, Out, On it over the last minute) and the Score card (each side'
+- **E1257** the score: the ribbon's score cell opens it apart from the stores (Design 17, 7, 8)
 - **E732** the Mail door on the top bar with its unread count opens the Mail card: the messages newes
 - **E706** as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New gam
 - **E1121** what to build, told on the cell (N386): top, the trained kind of your side that scores hig · N386 · E282 · SN45 (N386)
@@ -718,6 +722,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1209** the six cards the mold draws: Jobs, Build, a building, a crew, a find, ice and the Control
 - **E1242** Jobs (Design 16): floating − + over each job, a + alone over People; nothing open shows on
 - **E1243** Build (Design 16): the group words on the line, Build → group → building in the crumb row,
+- **E1253** a site of one's own: a tap picks it and arms its trash (red, a small trash by the tap); a 
+- **E1254** the building card under the law: Train | Learn | Talk on the line; the crumb row with the 
 - **E1236** a picked villager: its line over the Jobs | Build rows, Build first; its ✕ at the row end 
 - **E1230** whether a Rules pad is lit
 - **E1210** the Squad tile: Save while the picked army differs from the saved squad, then Squad N; a t
@@ -762,6 +768,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E343** what fits a spot: a drop-off for finds far from theirs, more of what stands round you, a w
 - **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
 - **E772** every tap on the map sounds once, by what it did: a pick the unit's voice, an order the go
+- **E1252** placing: a still tap on the green ghost builds it; a tap elsewhere moves it (Design 17, 4,
 - **E1047** one tap rule on the war page too: a tap on a villager (or any of yours that is not a soldi · N30
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
 - **E1234** a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins ove
@@ -816,6 +823,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 
 - **E1072** what grows back (the Regrow tick, D378, N353): the law is written once for the tick, not f · D378 (N365, N353) · N353
 - **E170** its numbers live in books/measure.js (D); nothing is typed here
+- **E1249** the idle villagers (idle or waiting, not inside); Idle n over People: a tap jumps the came
 - **E730** the Build card as Base's: opening it reads the middle of the view and opens the tab of wha
 - **E716** the guide lines, Base's PDF guides (Build 63; Albert, Nov 8: locked): a dashed line along  · D206 (N168, N369)
 - **E1056** Add task (Design 08): the card asks for the next task; taps on the map are queued on the u
@@ -896,6 +904,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E224** a stroke of work (gathering or raising) faces its work and sounds on every other beat; the
 - **E1008** who works what, counted without walking the whole map: only the things worked last step ar
 - **E347** the gather beat: the field is worked now (its soil wears); a flock's food goes straight to
+- **E1251** at the drop a villager sent to a find of another kind takes that kind (Design 17, 3: sent 
 - **E326** a crew of n raises a site at n^0.7 (QAC), counted once a tick; frost slows stone work; the · QAC (N31)
 - **E225** a new game: the book's stores (D172); the bell stays as Start set it · D172 (N119, N195)
 - **E436** the Alarm and the end (F23, Mid's 09-nav, 12-sim-core, 13-sim-civil, 16-sim-fight, 40-emer · D253 (N192) · D255 (N192) · J12 (N192) · J13 (N192, N370)
@@ -911,6 +920,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E444** the Alarm (Mid's emgStart, townSquare, soldiersIn, villagersIn): its first order notes eac
 - **E1031** Protect's three (Decisions Nov 11; Albert: Protect is really a lure): each garrisons your 
 - **E1033** Prep (D375): one tap and every villager, working, idle or sheltered, stops and walks to th · D375 (N326)
+- **E1255** every villager inside or sheltering comes out to its work
 - **E445** the warnings (Mid's incomingTick, watchHome, drawRadar): the nearest foe's soldier you see · D255 (N192)
 - **E446** a site nobody builds (F23, Albert's play test): one no villager of its side can reach says · D203 (N168)
 - **E447** a side falls (Mid's fall): its killer takes its stores and D233 of what its buildings cost · D233 (N188) · D258 (N192)

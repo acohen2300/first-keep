@@ -691,3 +691,10 @@ Build:
 10. Ribbon: a resource tapped opens the in/out table; the score cell opens the scores (7, 8); the blue help bar out of pause (9).
 11. Halo: lift 0.12, left 0.10 (17); the book flashes on tap (23).
 Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under the law; a hints setting (later).
+
+## 33. N70 built (preview n70): the n69 play fixes (Albert, Nov 18 14:51 "Go go go go go go do it") [2026-11-18]
+- In (BUILDS.md N70; Design 17): items 1 to 11 of the N70 plan above, but Quit on the pause card.
+- Proof: t-n70 passes (fails on N69's code); his play is the proof of the rest.
+- Claude's call, his to overrule: Repair shows only on a hurt building (the crumb row overflowed with a queue).
+- Not in N70: Quit (what it does, his); the War menu under the law; the shell/ring/text audit (SOON; a queued tile's cost is clipped under "×1"); a hints setting (LATER); the n67 end-game slowdown (his ?fps shot); the halo on a House and a Barracks (his play).
+

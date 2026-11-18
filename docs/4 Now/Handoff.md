@@ -1,5 +1,12 @@
 # First Keep: hand-off (Nov 17, 2026, 20:00)
 
+## START HERE (2026-11-18 16:00): N70 BUILT (preview n70): Design 17, the n69 play fixes. His play is next
+- His go (Nov 18 14:51): "Go go go go go go do it". Rulings 12:53 to 14:51: The List 32; spec `docs/3 Locks/Designs/17 The n69 play fixes.md`; mocks `mockups/dock/200` to `221`.
+- What is in, cuts, Claude's call: BUILDS.md N70; Parked.md "Cut in N70"; The List 33.
+- Open, his: Quit on the pause card; the War menu under the law; the shell/ring/text audit (SOON); the n67 end-game slowdown (needs his ?fps shot).
+- Tests: t-n70, t-n69, t-n68, t-n67, t-ledger pass; full suite 46/101, no new failure but t-n22 and t-p2 (pass alone: load).
+- What he reports from play is not a go: talk first.
+
 ## START HERE (2026-11-18): N69 BUILT (preview n69): Design 16, the menu law. His play is next
 - His go (Nov 18 10:31): "Ok let's do it." Rulings 08:12 to 10:31: The List 30; spec `docs/3 Locks/Designs/16 The menu law.md`; mocks `mockups/dock/175` to `197`.
 - What is in, cuts: BUILDS.md N69; Parked.md "Cut in N69". Code: menu.js MOLD.jobs/build/crew/none, row2, mtab, mback, jpm, vjob, vgo, finish.
