@@ -651,3 +651,4 @@ Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Do
 - 11 mocked (Nov 18 13:52), mock `mockups/dock/207`: open: ‹ before W; closed: ⌂ + … W; closed: ⌂ + only. Not ruled.
 - 11, his ruling (Nov 18 14:11): "The home and w has to stay. Just trying to hide the jobs and build." = ‹ (before W) hides Jobs | Build (and closes the rows): the line is ⌂ + … W; + brings Jobs | Build back. Open: does a game start collapsed or open.
 - 11, his word (Nov 18 14:12): "I'd do a plus with no circle" = the + floats (no circle), like Jobs | Build. Start open (Claude's, not objected).
+- 15, 22, his ruling (Nov 18 14:12): "For the ring - we should do that on the ring audit." Claude's finding (measured on the Mill tile, n69): a picked tile draws three outlines: the tile border (cream 42%), the picked inset (2 px), the SVG ring (.rg, dim brown). Fix in the audit: one outline, the ring only (lit = picked, dim = not).
