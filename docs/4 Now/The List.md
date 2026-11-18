@@ -634,3 +634,4 @@ Page 2 (Nov 18 12:47, photo `docs/4 Now/Notes/2026-11-18 n69 notes p2.jpg`), "Do
 23. "Tapping a book icon should show it's tapped."
 24. "Jobs needs a default tap selected for new villagers to go to."
 25. "People shouldn't be tappable, only the +. So let's make the plus bigger. The icon show 18|35 ← house max."
+26. (Nov 18 12:48) "The train / learn needs a refresh based off villager card and Job card flow." = the building card under the menu law (Design 16): the line, the crumb row (Town Center → Train → Villager), pick then confirm, one Cancel.
