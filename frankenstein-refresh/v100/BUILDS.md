@@ -5689,3 +5689,11 @@ Opened: code:menu.js, book:citations, book:rules, tool:test.py.
 - Gate: PASS. Size: menu.js 128,014 → 128,010 bytes (−4). ecs unchanged.
 - Tests: t-n78's new check `clear` passes and fails on N78's menu.js; t-n78, t-n77, t-n76, t-n70, t-n68, t-n67 pass. The full suite was not run.
 - Talk, not built (17:37): a dark glow for contrast. Mock `mockups/cards/glow.png` (top: N79 as built; bottom: a dark glow behind the boxes, tiles and words).
+
+## N80: Jobs' tiles filled; the fill has one home · 2026-11-19 20:00
+Albert, Nov 19 17:41: "jobs too needs to be filled"; "please don't build patches. I assume you are fixing code each time" (N412).
+Opened: code:menu.js, book:citations, book:rules, tool:test.py.
+- N79 had cleared the tiles with an override laid over an older rule (`#base .mt:not(.T, .L) .cell.dim`): a patch. Redone at the source: a tile row says once whether it is filled (`.mt.T, .mt.L, .mt.J` set the fill and the dimmed fill); every tile and the dimmed-tile rule read that. No override.
+- Jobs' tiles (the Jobs page and a villager's job tiles) are a filled row (J).
+- Gate: PASS. Size: menu.js 128,010 → 127,997 bytes (−13). ecs unchanged.
+- Tests: t-n78 `clear` now also asks that Jobs' tiles are filled and that Build's dimmed and locked tiles are clear; it fails on N79's menu.js. t-n78, t-n77, t-n76, t-n70, t-n69, t-n67 pass. The full suite was not run.

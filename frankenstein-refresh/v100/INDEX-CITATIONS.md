@@ -505,6 +505,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N409** Albert, Nov 19 16:34 and 16:45: the ghost steps to the next spot, then vanishes; repeatable builds are House,  → X78, X147
 - **N410** Albert, Nov 19 13:39 to 17:03 (Drafts 7 and 8): the new HUD, one mold: Home | Jobs | Build, a gold title, W; r → X148, SN20, SN48, J61
 - **N411** Albert, Nov 19 17:36: "The fill in all the buttons and outlines are to be clear. Except for the tiles for tech → X148
+- **N412** Albert, Nov 19 17:41: "jobs too needs to be filled"; "please don't build patches. I assume you are fixing code → X148
 
 ## Named exceptions
 
