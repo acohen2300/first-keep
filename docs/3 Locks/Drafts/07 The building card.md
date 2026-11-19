@@ -59,3 +59,13 @@ STATUS: DESIGN TALK, mocked on the n74 screen; not built. Albert, Nov 19 13:39 t
 - His question (16:20): the minimum option (Home circle, +, W). It exists today: the − beside Build folds the menu (menu.js:154 mfold; :236 draws the + to unfold). Not yet in the new mold's mocks: row 1 (Home | Jobs | Build, title, W) has no − for it. Open: where the − goes. [2026-11-19 16:40]
 - RULING (Albert, 16:27, "That's fine"): the fold's − sits right after Build, where it is today; folded, the menu is the Home circle, a + and W. Taken as his answer on the − only; the touch-gap fix still waits for his go. [2026-11-19 16:45]
 - The touch-gap fix, tried on the page, not built (16:50): one rule, "#base and everything in it lets touches through; anything with a verb (data-v) takes them". Trial on n75: a touch in the gap of the card's row 2 lands on the map (before: on the row); every button still takes its tap on the Town Center card (6), Jobs (17), Build (8), War (14); nothing in #base takes touches without a verb. Mail, Help and Pause are another panel, untouched. Weakness: a tap that misses a button now reaches the map as a tap (with soldiers picked, that is an order). Waits for his go. [2026-11-19 16:50]
+
+## Build plan for the new HUD (Albert, 16:57: build the menus before the clock, to play test; the clock overnight) — waits for his yes on this list [2026-11-19 17:50]
+What he will see (one preview, n78):
+1. Every building's card in the mold: Home | Jobs | Build, − (fold), gold title, W; row 2 the breadcrumb, pages, Repair | Demolish | Exit; tiles under. Clear over the game, as today.
+2. Demolish asks "Sure?"; Exit replaces Cancel; Talk reads Relations; Repair shows only when damaged, its slot kept.
+3. War Command: gold title, W lit red; All | Foot | Bow | Cav | Siege | Idle | Squad with counts, − and +; orders with red icons; the sixth tile Garrison villagers / Back to work. Out is cut.
+4. Item cards: tap berries, a tree, gold, stone, iron or fish: title, "Add a villager" − +, Exit; "240 food left | 2 of 4 working" where the tiles would be.
+5. Build in the mold (groups in row 2). Jobs keeps how it works today, in the mold's top row.
+Claude's calls on what was open (his to overrule): the 21 page-less buildings keep the full card (one mold); long tile names shortened in the Words book (his Nov 15 word); tiles show name and cost only, as his final mock, the effect line leaves the tile (cut, to Parked); War's row keeps seven groups, so its tap areas run under 44 px ("It is what it is"); a group's number is how many are picked, or the total when none is; item card: + sends the nearest free villager, − sends one back to idle.
+Not in it: the clock, the tools, grading.
