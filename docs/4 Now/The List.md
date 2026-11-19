@@ -765,3 +765,14 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
 - `docs/4 Now/Traces - Nov 18.md`. Proven: Hold does not hold (all 20 holders chase at the first foe seen; 4 never return). In the numbers: a group routs after about 30% dead near it, winning or not. Proven in code: a gatherer on `wait` counts as idle. Part seen: a crowd on one plot costs about 18% a head. Not traced: population (his example needed); the 28 on `wait`.
 - Full suite on N72: 62 of 90, no new failure.
 - His rulings owed on each; nothing changed.
+
+## 40. Nov 19 06:05 — the audit was punted three times; hand-off for a new chat
+- 06:05: "What happened to the shell, ring, font, outline audit". Claude's answer: not done. Logged SOON in N70, carried in N71, listed last and dropped for time in N72 and N73. Only the card tiles' white names landed (N73). Claude's fault: his rulings of Nov 18 14:12 to 14:36 (The List 32) were a go and were parked again.
+- 06:07, asked whether to start the audit build now: "No. I need everything updated so I can start a new chat".
+- THE AUDIT (N74, first in the new chat; ruled, a go, except the one colour):
+  1. Ring (Nov 18 14:12: "we should do that on the ring audit"): a picked tile draws three outlines (the tile border, the picked inset, the SVG ring `.rg`). One outline: the ring only, lit = picked, dim = not.
+  2. People's outline (Nov 18 14:36): a different outline colour for People. The colour is NOT ruled: mock three in a game screen, he picks.
+  3. Tile text cream/white on every tile (Nov 18 14:22; Nov 18 22:02 "Confirmed"). N73 did the card tiles' names only: check every other tile.
+  4. Small text: the "×1" in a tile; a queued tile's cost clipped under it.
+  5. Shell: every tile one shell from one mold (Design 09, Design 16).
+  6. Found Nov 18 night, same family: Learn tiles wrap two-word names ("Tally sticks", "Bronze age") and clip the top or the cost.

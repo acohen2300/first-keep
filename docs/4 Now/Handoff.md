@@ -1,5 +1,13 @@
 # First Keep: hand-off (Nov 18, 2026)
 
+## START HERE (2026-11-19 06:10): new chat. N73 is the latest build (preview n73). FIRST JOB: the shell, ring, font, outline audit (N74)
+1. THE AUDIT, first, a go (The List 40 has the six items and his words). It was punted in N70, N71, N72 and N73: do not park it again. Only People's outline colour needs him: mock three in a game screen, build the rest meanwhile.
+2. His play of n73 (holds n72): Jobs | Build close a card; War answers; sickness burns out; the yellow alert; white card tiles. Nothing proven by his play yet. He could not finish a game on n71 (The List 35).
+3. Then, with him (mocks in a game screen): a flag on a worked plot (his "Ok"); archers form up and hold, footmen make a wall (his "Yes we have to mock it").
+4. Traced, his rulings owed (`docs/4 Now/Traces - Nov 18.md`): Hold does not hold (proven); a winning group routs after about 30% dead near it; a gatherer on `wait` counts as idle (econ.js:124); a crowd costs about 18% a head.
+5. Owed, Claude alone: the 26 red tests traced against Mid (bring him only real differences); the full suite on N73 (N72: 62 of 90, no new failure); tests for the unit cell and the Help card; the 109 long whys; `loses` (what a unit loses to) is called nowhere.
+6. Owed, his: population (one example of a number that looked wrong); route map findings 3 and 5 to 8 (`docs/4 Now/Route map - Nov 18.md`); Quit; the War menu under the menu law (Design 16); a `?fps` shot for the n67 slowdown.
+- How he works now (Nov 18): one at a time, small builds with light tests, bugs before design; what he reports from play is not a go; what he has ruled is a go. Rerun tools: `docs/4 Now/tools/`.
 ## START HERE (2026-11-18 22:40): N73 BUILT (preview n73, holds N72 too). His play is next. Then mocks 4 and 5, with him
 - His go (Nov 18 22:02, The List 37): sickness immune for good, the yellow alert, white tile text. What is in: BUILDS.md N73; Design 20; The List 38. Cuts: Parked.md "Cut in N73".
 - Tests: t-n73 passes, fails on N72. The full suite ran on N72: 62 of 90, no new failure (`docs/4 Now/Traces - Nov 18.md`, 6). NOT run on N73.
