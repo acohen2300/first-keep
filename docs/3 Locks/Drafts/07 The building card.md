@@ -29,3 +29,14 @@ STATUS: DESIGN TALK, mocked on the n74 screen; not built. Albert, Nov 19 13:39 t
 - Albert 14:45: the pages beside the breadcrumb, "in one place and the selected one glows". 14:46: pipes between them; the title in a gold outline, not underlined; Learn glows blue when picked (Train green). Mock: `07 card mock - Nov 19 14-46.png`. The page menu under the title (14:42) goes if he keeps this. [2026-11-19 14:50]
 - RULINGS (14:48 to 14:52): one row, fixed slots: [building] > [page] Train | Learn | Relations | Repair | Demolish | Exit. A slot not used (Relations on a building with none, Repair when not damaged) keeps its space, empty, and its pipes go, so every slot is always in the same spot. Demolish gets its home here. The breadcrumb box stays ("We cannot drop town center. You will have to make it fit"): fits at 390 px at 13 px text (the row ends at 379 of 386). Mock: `07 card mock - Nov 19 14-52.png`. Claude flags: Demolish beside Exit wants a confirm tap. [2026-11-19 14:55]
 - RULINGS (14:55): Demolish has a confirm tap ("Yeah"); the space above the tiles cut and the whole panel lowered, tighter. Mock: `07 card mock - Nov 19 14-55.png`. The confirm word "Tap again" overflows the row by 5 px at 13 px: a shorter word ("Sure?") or the same word glowing red. [2026-11-19 14:58]
+- RULING (14:57): the confirm word is "Sure?". [2026-11-19 14:59]
+
+## The card as agreed, Nov 19 14:57 ("So I think we have a new hud. Finally") [2026-11-19 14:59]
+1. Row 1: house icon, Home | Jobs | Build; the building's name as a title in gold, in a gold outline (not tappable); W.
+2. Row 2, one row of fixed slots: [building, green glow] > [page, glowing] Train | Learn | Relations | Repair | Demolish | Exit. The picked page glows: green for Train (and Relations), blue for Learn. A slot not used keeps its space empty and loses its pipes.
+3. Demolish: one tap shows "Sure?" in its slot; a second demolishes; anything else cancels.
+4. Exit: red outline, white letters, the height of the row.
+5. Row 3: the tiles, on the left, outlined in white, tight under row 2. The whole panel lower, no padding over the tiles.
+- Text 13 px on row 2 so all of it fits at 390 px (ends at 379 of 386).
+- Open for the build: the breadcrumb's building box quieter than the page box?; long building names in row 1's gold box (shrink to fit); Home | Jobs | Build order (his 14:40 sketch wrote Home | Build | Jobs); a script "Welcome to" parked until a font is added.
+- One mold for every building's card (one home), not the Town Center alone.
