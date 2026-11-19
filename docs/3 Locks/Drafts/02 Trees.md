@@ -49,3 +49,10 @@ STATUS: DRAFT (Albert, Nov 19 11:20: "we are done with trees then. We have a new
 - Today (seed 3982373520): 2,148 forest trees at 100, 204 at 600 (Z3), 260 at 690 (home), all drawn one size: against "wood follows size". Home trees drawn about 1.9x taller, or more trees.
 - Felling 0.75 wood/s = 1.9 kg/s, about 24x a real woodcutter (2.8 t over a 10 h day, the 10 h assumed): the work clock, on hold with Draft 3.
 - Building costs (D123) stay game numbers, flagged NOT REAL, until the buildings element: a house at 30 wood would be 75 kg. No unit makes loads and buildings both real.
+
+## Home trees [2026-11-19 11:59]
+- Albert 11:57: "Why don't we make the trees fatter?" RULING (11:58): "Yes home trees are broad old trees".
+- Same height (10 m, W25), trunk about 2.6x fatter (26 cm to about 68 cm), a wider crown so it reads from the tilted camera. Wood = treeWood x girth^2 x height (V = f x g x h): 6.9x = 690 wood. Same 260 trees.
+- Real: open-grown and pollarded trees by a village are short and stout; tall thin stems belong to dense forest (from memory, NOT opened).
+- Needs: one girth number a tree, passed to the trunk drawing (treeArt). Z3's 600-wood trees: the same rule, to settle.
+- Replaces the "1.9x taller" option (it would tower over the Town Center).
