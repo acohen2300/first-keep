@@ -47,3 +47,7 @@ STATUS: OPEN TALK (Albert, Nov 19 11:25-11:36). Nothing ruled. Came out of trees
 
 ## ON HOLD (Albert 11:49: "Let's put this on hold and go back to wood") [2026-11-19 11:50]
 - Ruled so far: the year is an hour; 4 seasons an hour; fewer days; night a quarter of a day. Open: how many days, and how night falls (the cycle is disorienting).
+
+## RULED, off hold (Albert 12:37) [2026-11-19 12:41]
+- Year 3,600 s; season 900 s; day 300 s, 3 a season, 12 a year; night 25% of the day (75 s). Work speed kept as today, a declared game rule (about 24x real).
+- To re-time: D20 day 240 to 300, D21 season 360 to 900, D22 year 1,440 to 3,600; ice (degree-days), fish (yearly regrowth), fields and tree farms (36 min), upkeep, dry days, leaf stages.

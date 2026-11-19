@@ -17,3 +17,11 @@ Albert, Nov 19 12:17: "You can find sources.. and I don't want anything punted. 
 1. Days: one a season (4 an hour), night the turn between seasons.
 2. Work speed: keep today's (about 24x real), written as a declared game rule.
 3. Tools: real ratios (stone 1, bronze 6x, iron no gain, saw 1.9x) in place of +10/+15/+15/+15%.
+
+## Albert's calls, 12:37 [2026-11-19 12:41]
+- Mud: "There is regular mass friction mud math we have already. No?" Yes for walking: the book already walks by Pandolf (D pace.pandolf; woods use the heavy-brush factor 1.5, D360). Soule & Goldman 1972 terrain factors: dirt road 1.1, light brush 1.2, heavy brush 1.5, swampy bog 1.8, loose sand 2.1, soft snow 15 cm 2.5 (Pandolf equation table). Mud walks at 1.8; D106 walkCost goes. Only the slip number (G6 mu) stays without a source.
+- Piers: real physics, yes (Euler's column, strength as 1 / length^2).
+- "We need plow rates by oxen." An acre was the land one man behind a team of eight oxen tilled in a day; a team ploughed about an acre a day in 220-yard furrows; two people a team (ploughman and ox-boy); at Lyminge only three-quarters of an acre (Carucate; Kent Archaeological Society; SCLHRG). 1 acre = 4,047 m2.
+- RULING: days 3 a season; night 25% of the day. With the year an hour: day 300 s (5 min), 12 days a year, night 75 s.
+- RULING: work speed kept (about 24x real), a declared game rule.
+- Tools, his question: "Do the metals have different weights? Maybe the efficiencies are there?" Open, see chat.
