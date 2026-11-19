@@ -29,3 +29,8 @@ STATUS: OPEN TALK (Albert, Nov 19 11:25-11:36). Nothing ruled. Came out of trees
 - Albert 11:42: "What if we make minute seconds?" = 60x: hour 60 s, day 1,440 s (24 min); a straight 60x season is 36.5 h. Ground at 1:60 makes real-pace walking true (map about 30 km).
 - RULING (Albert 11:42): "A day is 1440 seconds". One real minute = one game second. Was 240 (D.day), 6x longer.
 - Open: the season and the year. Today's year (1,440 s) now equals one day; today's season (360 s) equals a quarter day (6 game hours).
+
+## 11:43-11:45 [2026-11-19 11:46]
+- Albert clarified 11:43: the day ruling meant a straight factor of 60. Straight factors: 60 = day 24 min, year 146 h; 600 = day 2.4 min, year 14.6 h; 6,000 = day 14.4 s, year 88 min. Day 60 / season 600 / year 6,000 fails (season longer than the year).
+- RULING (Albert 11:45): "I want 4 seasons in an hour". Year = 3,600 s, season = 900 s (15 min). Year factor 8,760 (was about 21,900: year 1,440 s, season 360 s).
+- Clash to settle: a 1,440 s day (11:42) is longer than a 900 s season. The day must divide the season: 900 s (1 a season, 4 a year), 450 s (2, 8), 300 s (3, 12).
