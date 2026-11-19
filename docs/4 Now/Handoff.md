@@ -181,3 +181,9 @@ The frozen-villager trace is OFF by his word (Nov 14 10:10): he tests first.
 - Publishing a preview: `git worktree add /tmp/mainwt main`; copy the game files (`index.html`, `menu.js`, `econ.js`, `combat.js`, `ai.js`, `sound.js`, `fonts.css`, `manifest.webmanifest`) and `books/`; commit; `git push origin HEAD:main`.
 - The board differs from one page load to the next even on one seed (the scenario's land), so a test that passes once is not proof: run a board-dependent test five times.
 - Times in BUILDS.md and The List come from `date` or `git log`, never from memory.
+
+## Nov 19 audit (2026-11-19 07:09)
+- Done and saved: `docs/4 Now/Audit - Nov 19.md` (steps 1 to 8). The List section 41 has the done / not done. The game is untouched at n73.
+- Next for a new chat: read the audit's section 8, then wait for Albert. Open work that needs no word from him: trace the 10 untraced red tests (audit 1a, items 18 to 27).
+- Rerun the measures: `docs/4 Now/tools/audit-nov19/` (`design.py`, `probes.py`, `books.js`, `logs.py`) against a frozen copy in `/tmp/fk`.
+

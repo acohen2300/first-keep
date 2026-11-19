@@ -776,3 +776,13 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
   4. Small text: the "×1" in a tile; a queued tile's cost clipped under it.
   5. Shell: every tile one shell from one mold (Design 09, Design 16).
   6. Found Nov 18 night, same family: Learn tiles wrap two-word names ("Tally sticks", "Bronze age") and clip the top or the cost.
+
+## 41. The Nov 19 audit, run (Claude alone, read-only, n73 unchanged) [2026-11-19 07:09]
+Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/tools/audit-nov19/`. Nothing here is built; every item waits for Albert's word.
+1. DONE (report only): steps 2 to 8; step 1 in part.
+2. NOT DONE: 10 of the 27 red tests have no cause yet (t-odds, t-food, t-sight, t-stage, t-war, t-civs, t-wild, t-mind, t-realm, t-orders). Why: each needs the test made to print v100 and Mid side by side. Claude's work.
+3. NOT DONE: `index.html` 510 to 1038 (the art) sampled by script, not read. The suite was run once, not five times.
+4. NOT PROVEN: speed (tap cost not reproduced on a desktop; the save is 23 ms once a minute). Needs Albert's `?fps` shots at minutes 10, 60, 90.
+5. New faults found (not fixed): the delete button on a site reads "undefined" (menu.js:257); two errors leave an empty screen (index.html:427); a new game from War keeps War (menu.js:434); the 1,000 lot sale is gone (econ.js:362); 11 clipped tiles (Stable all five); 316 buttons under 44 px.
+6. Owed from Albert: rulings on the rout rule, on 11 against 12 px, and on whether the 1,000 lot cut was his.
+
