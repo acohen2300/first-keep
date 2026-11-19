@@ -19,17 +19,17 @@ window.fkPanel = (sp, taps) => {
   .fk .tile{width:61px;height:44px;border:1.5px solid #efe6d2;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;line-height:1.1;box-sizing:border-box;white-space:nowrap;overflow:hidden}
   .fk .tile small{color:#5fd08a;font-size:11px}.fk .tile.ton{border-color:#5fd08a;box-shadow:0 0 6px #5fd08a88}.fk .tile.tgr{border-color:#5fd08a}
   .fk .tile.twar{color:#e8604c;font-style:italic;font-weight:600;text-transform:uppercase;font-size:11px;white-space:normal;text-align:center}.fk .tile.twar svg{width:14px;height:14px;stroke:#e8604c;fill:none;stroke-width:1.6}
-  .fk .info{position:absolute;left:8px;top:54px;height:44px;display:flex;align-items:center;font-size:13px;color:#c9b99a}`;
+  .fk .inf{position:absolute;left:8px;top:101px;height:44px;display:flex;align-items:center;gap:10px;font-size:15px}.fk .inf b{font-weight:600}.fk .inf i{font-style:normal;color:#8a7660}.fk .hint{font-style:italic;font-weight:400;color:#c9b99a;padding-right:6px}`;
   const s = (t, c = '') => `<div class="s ${c}">${t}</div>`, r2 = [];
   if (sp.crumb) { r2.push(s(`<span class="fg">${sp.crumb}</span>`), sp.pages && sp.pages.length ? s('›', 'nt') : ''); }
   (sp.pages || []).forEach((p, i) => r2.push(s(p === sp.page ? `<span class="fg ${p === 'Learn' ? 'bl' : ''}">${p}</span>` : p, i && p !== sp.page && sp.pages[i - 1] !== sp.page ? 'fp' : '')));
   (sp.pick || []).forEach(([n, c], i) => r2.push(s(i === (sp.picked || 0) ? `<span class="fg ${sp.war ? 'rd' : ''}">${n}<small>${c ?? ''}</small></span>` : `${n}<small>${c ?? ''}</small>`, i && i !== (sp.picked || 0) && i - 1 !== (sp.picked || 0) ? 'fp' : '')));
-  r2.push('<div class="fsp"></div>'); if (sp.pm) r2.push(s('<span>−</span>', 'fpm'), s('<span>+</span>', 'fpm'));
+  r2.push('<div class="fsp"></div>'); if (sp.hint) r2.push(s(sp.hint, 'nt hint')); if (sp.pm) r2.push(s('<span>−</span>', 'fpm'), s('<span>+</span>', 'fpm'));
   for (const a of sp.acts || []) r2.push(s(a === 'Exit' ? '<span>Exit</span>' : a, a === 'Exit' ? 'ex fp' : a === 'Demolish' ? 'dm fp' : 'fp'));
   const tile = (t) => t.war ? `<div class="tile twar ${t.c || ''}">${t.i ? `<svg viewBox="0 0 24 24">${t.i}</svg>` : ''}${t.n}</div>` : `<div class="tile ${t.c || ''}">${t.n}${t.s ? `<small>${t.s}</small>` : ''}</div>`;
   const d = document.createElement('div'); d.className = 'fk' + (taps ? ' taps' : '') + (sp.fix ? ' fix' : '');
   d.innerHTML = `<style>${css}</style><div class="r1"><div class="hm"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#efe6d2" stroke-width="1.6"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg></div><div class="way">Home<i>|</i>${sp.way === 'Jobs' ? '<b>Jobs</b>' : 'Jobs'}<i>|</i>${sp.way === 'Build' ? '<b>Build</b>' : 'Build'}</div><div class="tt">${sp.title}</div><div class="w ${sp.war ? 'won' : ''}">W</div></div>
-    <div class="r2">${r2.join('')}</div><div class="r3">${(sp.tiles || []).map(tile).join('')}</div>`;
+    <div class="r2">${r2.join('')}</div><div class="r3">${(sp.tiles || []).map(tile).join('')}</div>${sp.info ? `<div class="inf">${sp.info.map((t) => `<b>${t}</b>`).join('<i>|</i>')}</div>` : ''}`;
   document.body.append(d);
   for (const t of d.querySelectorAll('.tile')) { const sm = t.querySelector('small'); let f = 11; while (sm && t.scrollWidth > t.clientWidth && f > 8) sm.style.fontSize = --f + 'px'; f = 13; while (t.scrollWidth > t.clientWidth && f > 9) t.style.fontSize = --f + 'px'; }
   const row = d.querySelector('.r2'); return { over: Math.max(0, Math.round(row.scrollWidth - row.clientWidth)), title: Math.round(d.querySelector('.r1').scrollWidth - d.querySelector('.r1').clientWidth) };

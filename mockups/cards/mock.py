@@ -24,7 +24,7 @@ war = lambda last, cls: {'title': 'War Command', 'war': 1, 'pick': [['All', 9], 
 jobs = {'title': 'Jobs', 'way': 'Jobs', 'pick': [['Villagers', '6|10'], ['Idle', 0]], 'picked': -1, 'pm': 1, 'acts': ['Exit'], 'tiles': [{'n': 'Villager', 's': '50f'}] + [{'n': n, 's': c, 'c': 'ton' if n == 'Food' else ''} for n, c in [('Food', 5), ('Wood', 1), ('Gold', 0), ('Stone', 0), ('Iron', 0)]]}
 builds = [{'title': 'Build', 'way': 'Build', 'pick': [[x, None] for x in M['Build']], 'picked': i, 'acts': ['Exit'], 'tiles': [tile(c) for c in cs]} for i, (g, cs) in enumerate(M['Build'].items())]
 sheets['Menus'] = [jobs] + builds + [war('Garrison villagers', ''), war('Back to work', 'tgr')]
-item = lambda n, left, unit, on: {'title': n, 'crumb': n, 'pages': [], 'pick': [[f'{left} {unit} left', None], [f'{on} of 4 working', None]], 'picked': -1, 'pm': 1, 'acts': ['Exit'], 'tiles': []}
+item = lambda n, left, unit, on: {'title': n, 'crumb': n, 'pages': [], 'hint': 'Add a villager', 'pm': 1, 'acts': ['Exit'], 'tiles': [], 'info': [f'{left} {unit} left', f'{on} of 4 working']}
 sheets['Items'] = [item('Berries', 240, 'food', 2), item('Tree', 310, 'wood', 1), item('Gold', 800, 'gold', 0), item('Stone', 600, 'stone', 0), item('Iron', 600, 'iron', 0), item('Fish', 500, 'food', 0)]
 async def main():
     async with async_playwright() as p:
