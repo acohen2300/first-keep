@@ -71,3 +71,4 @@ Claude's calls on what was open (his to overrule): the 21 page-less buildings ke
 Not in it: the clock, the tools, grading.
 - RULING (Albert, 17:36), built as N79: the fills of all buttons and outlines are clear, except the tiles for tech and train. [2026-11-19 19:40]
 - His idea (17:37, talk): "we should consider a dark glow for contrast.. thoughts?" Claude: yes; it is how film subtitles and map labels stay readable over any picture (a dark halo), and the game's loose words already carry one. Weakness: under a coloured line it dulls the colour, so the glow goes outside and inside the line, the line itself stays crisp. Mock `mockups/cards/glow.png`. His word owed. [2026-11-19 19:40]
+- His reason for the clear fills (17:38): "a lot of buttons and a text heavy menu is offset by seeing the game board in between things. Visually it works." [2026-11-19 19:45]
