@@ -25,3 +25,4 @@ STATUS: DESIGN TALK, mocked on the n74 screen; not built. Albert, Nov 19 13:39 t
 - Row 1: the way (house, Home | Jobs | Build), the title, W. Row 1.A: the pages under the title, their left edge on the title's (his vertical line, "Align"). Row 2: the breadcrumb, and Exit under W. Row 3: the tiles. Mock: `07 card mock - Nov 19 14-40.png`.
 - RULING (14:40): Exit, red, white letters. Read as a red outline with white letters (his 14:31: "I meant outline").
 - His sketch writes Home | Build | Jobs; the game's order is Home | Jobs | Build: to confirm.
+- RULING (14:42): the title on the line of Home | Jobs | Build; Train | Learn | Relations tight under it, between the title and the breadcrumb row. The title is not tappable, so the pages' tap areas may reach up over it. Mock: `07 card mock - Nov 19 14-42.png`. [2026-11-19 14:48]
