@@ -707,3 +707,10 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
 - Part done: the Comments book. The copy page is gone and long whys are capped; the 109 long ones are not rewritten.
 - Claude's calls, his to overrule: "send an idle villager" no longer takes a posted or garrisoned one, and the idle tip no longer counts the garrisoned; Carry and Repair cut, not wired; t-n63 and t-n64 retired with new tests owed (the unit cell's lines, the Help card); the icons' home is the Screen book.
 - Still his from N70: his n70 play notes; Quit; the War menu under the law; the shell/ring/text audit; the n67 slowdown (?fps).
+
+## 35. His n71 play talk (Nov 18 19:27 on) — talk mode, not a go
+- 19:27: "I'm overwhelmed a bit"; wants to go slow, one by one, with quick previews, to test a full game.
+- 19:35, his three kinds of report: (1) things he built that don't make sense, to fix; (2) things he asked for that aren't there; (3) bugs that don't stop play. Claude's handling, not yet ruled by him: 2 and 3 built in small batches, 1 talked one at a time (a cut or a simplification, no new design).
+- 19:38: "we designed it too well. It's so clean that I'm not used to it. So I keep looking for a menu that isn't there. So i tap town center, then the jobs / build and nothing happens. Which makes logical sense but not game play sense."
+  - Read: the card draws Jobs | Build (menu.js:246, jb()) and mtab sets only S.tab (menu.js:157); the building stays picked, so the card stays (the last step unverified). Design 16 left the card "open, his".
+  - Idea (Claude): with any card open, a tap on Jobs or Build closes the card and opens that page (as a phone's tab bar). 19:39, asked if that is what his thumb expected: "Yes." Not a go to build yet.
