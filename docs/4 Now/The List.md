@@ -736,3 +736,5 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
   7. "We need a way to see when a villager is working a rss plot like land.. more than just a villager. It needs like a flag or something."
   8. "There is a weird way the game is counting villagers and units and population as a whole."
   9. "If a food villager gets stuck for a moment- it turns them into the idle counter." (N71 made idle one law: check whether N71 brought this.)
+- 20:58: "It would be nice to get a warning. We have the red alert. We should have a yellow and orange" (talk; what trips each level not yet said).
+- The route map is made: `docs/4 Now/Route map - Nov 18.md` (61 screens, 1,155 taps, read-only; tools in `docs/4 Now/tools/`). Eight findings; the first four are checked against the code or by hand. His rulings owed.

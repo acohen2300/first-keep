@@ -1,5 +1,12 @@
 # First Keep: hand-off (Nov 18, 2026)
 
+## START HERE (2026-11-18 21:20): TALK ONLY since N71. Nothing built. Three things found, his rulings owed
+- Read The List 35 first: his words of Nov 18 19:27 to 20:58, in order. He could not finish a game on n71 (stopped at minute 107: `docs/4 Now/Match log - Nov 18 (107 min, n71).json`).
+- PROVEN, not fixed: villagers die of ordinary sickness that never ends (econ.js:535, no immunity; D311 R0 2). 37 of 60 dead in 45 minutes with full food. Rerun: `docs/4 Now/tools/sick.py <v100 dir> 45 54`. Idea offered: the recovered stay immune (a real SIR). His call.
+- The route map: `docs/4 Now/Route map - Nov 18.md`. Finding 1 (Jobs | Build dead on a building's card) he agreed in talk; no go to build yet.
+- His ten play notes (The List 35): gathering slows in a crowd; archers and footmen to form up and hold; they run though told to hold; many run from few; tile text white with only the cost red to white to green (v80's); a flag on a worked plot; population counted oddly; a stuck food villager counted idle; yellow and orange alerts. None traced yet but the first.
+- How he wants to work now: one at a time, small builds, bugs first, no new design; what he reports is not a go.
+
 ## START HERE (2026-11-18 19:10): N71 BUILT (preview n71): Design 18, the Nov 18 audit fixes. His n70 play notes are still next
 - His go (Nov 18 17:25): "Do it all." on the seven fixes of `docs/4 Now/Audit - Nov 18.md`. What is in: BUILDS.md N71; The List 34; cuts: Parked.md "Cut in N71". No play change meant: n71 should play as n70.
 - Tests: t-n71, t-n70, t-n69 pass. Full suite 62 of 89 (13 rules retired, stage "retired" in the Rules book). The 27 red are the baseline now: t-civs, t-fire, t-food, t-gather, t-kinds, t-land, t-mind, t-n17, t-n24b, t-n27, t-n29, t-n30, t-n42, t-odds, t-orders, t-p2, t-peace, t-physics, t-realm, t-research, t-same, t-sight, t-stage, t-trade, t-walls, t-war, t-wild. t-n57 and t-n60 come and go with the board; t-a1 and t-n22 with load.
