@@ -900,3 +900,7 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - A card tile's name taking its cost's colour (Albert, Nov 17 05:27: the item's name shifting red to green): superseded by his word of Nov 18 20:55 and 22:02 (tile text white, only the cost coloured). The code was `col` in `vcell` (menu.js).
 - The helper `vils` (menu.js; "the picked, if all villagers"): called nowhere.
 - Sickness without immunity (Mid's healthTick as carried over): a recovered villager could catch it again at once. Mid's numbers (D311) are unchanged; only the R of SIR is added.
+
+## Cut in N74 (Nov 19, the land clean-up) [2026-11-19 14:20]
+- Rocks and crevices (E36, E37; D39 rocks, D40 rockR, D41 rockH, D42 crevices, D43 creviceW, D44 creviceFloor, D45 creviceL): stamped shapes with no math, 0.17% of the test map. Cut on Albert's go of Nov 19 12:52 (Draft 4). Draft 1's land would make its own steep ground. [2026-11-19 14:20]
+- The felling of the road's strip (the band, the oak's `spare` in PT1, the `felled` set): the Statute of Winchester read as written, the trees stand (Albert, Nov 19 11:51). t-n54's check `band` retired (test.py RETIRED); t-n74 holds the new rule. [2026-11-19 14:20]

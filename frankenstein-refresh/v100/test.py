@@ -10,7 +10,7 @@ RULES = {e['key']: e['name'] for e in book('rules').values() if e['value']['stag
 ONLY = sys.argv[sys.argv.index('--only') + 1].split(',') if '--only' in sys.argv else list(RULES)
 CHROME = next((p for p in ('/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser') if os.path.exists(p)), None); done = {}
 RETIRED = {   # N71 (Design 18, 6): the checks a later ruling replaced, by rule; each is logged in Parked.md ("Cut in N71"). live() leaves them out of a rule's verdict
-    't-n18b': ['people'], 't-n52': ['ring', 'fade'], 't-n43': ['woods'], 't-n26': ['tapMoves', 'aimWaits', 'peopleRed'], 't-n53': ['exit'], 't-n24': ['recall'], 't-n42': ['bulk'], 't-p2b': ['opens', 'arm', 'exit'], 't-n30': ['prepPlayed', 'alarm_split', 'alarm_lure', 'alarm_seek']}
+    't-n18b': ['people'], 't-n52': ['ring', 'fade'], 't-n43': ['woods'], 't-n26': ['tapMoves', 'aimWaits', 'peopleRed'], 't-n53': ['exit'], 't-n24': ['recall'], 't-n42': ['bulk'], 't-p2b': ['opens', 'arm', 'exit'], 't-n30': ['prepPlayed', 'alarm_split', 'alarm_lure', 'alarm_seek'], 't-n54': ['band']}
 live = lambda key, v: {k: x for k, x in v.items() if k not in RETIRED[key]} if isinstance(v, dict) else tuple(k for k in v if k not in RETIRED[key])
 def ok(key, cond, got=''):
     if key not in ONLY: return   # a test of several rules says only those asked for
@@ -1929,7 +1929,7 @@ N54JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  return [o, info]; })()"""
 async def n54(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N54JS); await pg.close()
-    ok('t-n54', all(v.get(k) for k in ('noGrass', 'dirt', 'control', 'noTrees', 'stops', 'band', 'booth', 'heldHidden')) and not errs, [v, info, errs[:2]])
+    ok('t-n54', all(v.get(k) for k in live('t-n54', ('noGrass', 'dirt', 'control', 'noTrees', 'stops', 'band', 'booth', 'heldHidden'))) and not errs, [v, info, errs[:2]])
 N53JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, D = FK.D, me = 0, WON = Object.keys(FK.SH).find((c) => FK.SH[c].ticks.includes('Wonder')), last = D.age.hidden - 1;
  MENU.act('start'); await W(400); MENU.S.tab = null; MENU.render(true); FK.fog(false); const h = FK.seatOf(me), said = []; FK.on('say', (m, x) => { said.push([m, x && x.at ? 1 : 0]); }); $rich(me); $rich(1);
  const [, n] = FK.B[WON], spot = (side) => $ring(FK.seatOf(side), 8, 70, (i, j) => ECON.canPlace(WON, i, j, side, true) && [i, j]);
@@ -2067,6 +2067,17 @@ N71JS = r"""(() => { const v = {}, info = {}, W = fromBook('words').say, L = typ
   v.opts = info.opts[0] === 'siege' && info.opts[1] === '30 min' && info.opts[2] === 'Famine' && (MENU.SCR.opts || {}).len?.[2] === 1800;
   info.ticks = [FK.ticked('Carry').length, FK.ticked('Repair').length, FK.ticked('Yield').length]; v.ticks = !info.ticks[0] && !info.ticks[1] && info.ticks[2] > 0;
   return [v, info]; })()"""
+N74JS = r"""(() => { const v = {}, info = {}, T = FK.things().filter((t) => t.kind === 'tree'), F = FK.D.forest, own = FK.D.treeWood, slim = T.filter((t) => !t.wide), broad = T.filter((t) => t.wide);
+  v.makers = ['makeForest', 'makeRoads', 'makeTrees', 'makeFish'].every((n) => typeof window[n] === 'function');
+  const inStrip = T.filter((t) => STRIP[t.k]), kinds = new Set(inStrip.map((t) => Math.floor(t.v / 3))); info.strip = [inStrip.length, kinds.size, T.length]; v.strip = inStrip.length > 500 && kinds.size > 3;
+  const a = inStrip[0].k, o = T.find((t) => !STRIP[t.k]).k; v.cover = !FK.cover(a) && !!FK.cover(o) && !FK.cover(FK.seatOf(0).j * FK.N + FK.seatOf(0).i);
+  const per = slim.map((t) => t.amount / (own * t.size ** F.solid)), off = Math.max(...per) - Math.min(...per), lo = Math.min(...slim.map((t) => t.amount)), hi = Math.max(...slim.map((t) => t.amount)); info.size = [off, lo, hi]; v.size = off < 0.02 && hi > lo * 2;
+  info.broad = [broad.length, Math.min(...broad.map((t) => t.amount)), F.broad]; v.broad = broad.length >= 4 * 50 && broad.every((t) => t.amount > hi && t.wide === F.broad);
+  v.rocks = FK.D.rocks === undefined && FK.D.crevices === undefined;
+  return [v, info]; })()"""
+async def n74(b):
+    pg, errs = await fresh(b, 2500); v, info = await pg.evaluate(N74JS); await pg.close()
+    ok('t-n74', all(v.get(k) for k in ('makers', 'strip', 'cover', 'size', 'broad', 'rocks')) and not errs, [v, info, errs[:2]])
 N73JS = r"""(() => { const v = {}, info = {}, S = MENU.S, q = (s) => document.querySelector(s), R = () => MENU.render(true), now = () => FK.K.t;
   $calm(0); FK.pause(false); FK.select(null); Object.assign(S, { tab: null, subject: null, war: false, ghost: null }); const h = FK.seatOf(0), mine = () => FK.units().filter((u) => u.side === 0);
   let made = 0; for (let d = 2; d < 12 && made < 54; d++) for (let a = -d; a <= d && made < 54; a++) for (const j of [h.j + d, h.j - d]) { const k = j * FK.N + h.i + a; if (made < 54 && FK.walkable(k)) { FK.spawn(mine()[0].code, 0, k, FK.rng); made++; } }
@@ -2118,7 +2129,7 @@ async def n68(b):
 async def n67(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N67JS); await pg.close()
     ok('t-n67', all(v.get(k) for k in ('jobs', 'build', 'card', 'oneTap', 'crew', 'war', 'alert', 'fixed')) and not errs, [v, info, errs[:2]])
-PAGED = {'t-n73': n73, 't-n72': n72, 't-n71': n71, 't-n70': n70, 't-n69': n69, 't-n68': n68, 't-n67': n67, 't-n65': n65, 't-n60': n60, 't-n57': n57, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-n74': n74, 't-n73': n73, 't-n72': n72, 't-n71': n71, 't-n70': n70, 't-n69': n69, 't-n68': n68, 't-n67': n67, 't-n65': n65, 't-n60': n60, 't-n57': n57, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
 def stepped(f):   # N71 (Design 18, 6): each top-level statement of a test runs alone, in one shared namespace; one that throws fails the rules it names (or the next that need what it made), and the rest run on
     import ast, inspect, textwrap
     src = textwrap.dedent(inspect.getsource(f)); body = ast.parse(src).body[0].body

@@ -212,7 +212,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D39, D40, D41, D42, D43, D44, D45, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D352, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D114, D115, D116, D120, D169, D170, D230, D343, D365
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D352, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D114, D115, D116, D120, D169, D170, D230, D343, D365
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -492,6 +492,10 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N395** Albert, Nov 18 17:17 and 17:25 (Design 18, the Nov 18 audit fixes; docs/4 Now/Audit - Nov 18.md). 17:17: "can  → X25, X26, X29, X30, X82, X92, X103, X126, X129, X130, X131, X132, X134, X139, X140, X141, SN51, J9
 - **N396** Albert, Nov 18 19:38 to 21:29 (Design 19, the n71 play fixes; The List 35; docs/4 Now/Route map - Nov 18.md).  → X142
 - **N397** Albert, Nov 18 20:46 to 22:02 (Design 20; The List 35 and 37). 20:55: "The villagers die on their own. I saw i → D311, X143
+- **N398** Albert, Nov 19, 2026 (Drafts 2 and 6; the land audit). 11:15 and 11:51: the road strip by the Statute of Winch → D53, D345, D379, X144
+- **N399** Australian National University, Fenner School, Forest Mensuration (fennerschool-associated.anu.edu.au/mensurat → D345
+- **N400** Knapik, J. et al., Soldier Load Carriage: Historical, Physiological, Biomechanical and Medical Aspects (US Arm → D53
+- **N401** Soule, R. G. and Goldman, R. F. (1972), Terrain coefficients for energy cost prediction, Journal of Applied Ph → D106
 
 ## Named exceptions
 

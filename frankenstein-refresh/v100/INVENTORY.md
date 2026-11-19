@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,562 | 649,643 | 649,789 |
-| Books | 2685 | 0 | 918,062 | 919,079 |
+| Game code | 31 | 3,567 | 649,360 | 649,506 |
+| Books | 2682 | 0 | 919,406 | 920,413 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,516 | 427,229 | 427,485 |
+| Tools | 5 | 2,527 | 428,725 | 428,981 |
 
 ## The trades (code)
 
@@ -18,9 +18,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-frames | 12 | 1,023 | 1,027 | 13 |
 | index.html#qbf-the-dice | 10 | 1,133 | 1,137 | 25 |
 | index.html#the-coast | 11 | 472 | 476 | 17 |
-| index.html#the-ground | 28 | 2,031 | 2,035 | 38 |
-| index.html#floor-2-terrain | 91 | 11,279 | 11,283 | 115 |
-| index.html#floor-3-non-movables | 88 | 16,643 | 16,647 | 54 |
+| index.html#the-ground | 28 | 2,098 | 2,102 | 38 |
+| index.html#floor-2-terrain | 86 | 10,237 | 10,241 | 101 |
+| index.html#floor-3-non-movables | 98 | 17,200 | 17,204 | 52 |
 | index.html#drawn-once-in-the-view-frame | 99 | 19,471 | 19,475 | 92 |
 | index.html#the-view | 9 | 1,068 | 1,072 | 13 |
 | index.html#the-door | 106 | 19,065 | 19,070 | 63 |
@@ -32,16 +32,16 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#b-the-buildings | 15 | 1,564 | 1,568 | 20 |
 | index.html#floor-5-movables | 159 | 22,540 | 22,544 | 77 |
 | index.html#the-body-s-laws | 32 | 2,819 | 2,823 | 32 |
-| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,036 | 6,040 | 90 |
+| index.html#the-things-drawn-each-frame-back-to-fr | 37 | 6,078 | 6,082 | 90 |
 | index.html#floor-6-climate | 169 | 30,459 | 30,471 | 113 |
 | index.html#floor-7-display | 80 | 17,653 | 17,657 | 54 |
 | index.html#the-view-s-eyes-lights-and-stage | 142 | 30,653 | 30,658 | 0 |
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
-| index.html#the-woods-cache | 41 | 5,940 | 5,944 | 24 |
-| index.html#touch | 54 | 9,911 | 9,915 | 54 |
+| index.html#the-woods-cache | 41 | 5,996 | 6,000 | 24 |
+| index.html#touch | 54 | 9,946 | 9,950 | 54 |
 | menu.js | 498 | 128,233 | 128,273 | 161 |
 | econ.js | 631 | 119,676 | 119,676 | 70 |
-| combat.js | 381 | 65,427 | 65,427 | 83 |
+| combat.js | 381 | 65,429 | 65,429 | 83 |
 | ai.js | 172 | 27,499 | 27,499 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
 
@@ -51,18 +51,18 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 56 | 17,305 |
-| citations | 391 | 121,346 |
+| citations | 395 | 122,801 |
 | colours | 34 | 10,478 |
-| comments | 1081 | 215,847 |
+| comments | 1080 | 215,472 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 205,833 |
-| rules | 140 | 64,460 |
+| measure | 334 | 205,507 |
+| rules | 141 | 65,029 |
 | screen | 34 | 29,294 |
 | shells | 111 | 24,384 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
-| sprites | 75 | 43,792 |
+| sprites | 75 | 43,782 |
 | tech | 260 | 76,080 |
 | words | 59 | 113,083 |
 
@@ -218,5 +218,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X141 | t-n71 | page | N71 (N395; Design 18, the Nov 18 audit fixes): an idle villager is one thing (the Idle box, the tip and the send-an-idle-villager verb read ECON.idlers; a garrisoned villager is none of them); the menu draws every icon from the Screen book; the refusals read from the Words book (a blocked site, a full line, no villagers); the new game's options keep their words and values; a find with a yield is told by its Yield tick; Carry and Repair are ticked nowhere |
 | X142 | t-n72 | page | N72 (N396; Design 19, the n71 play fixes): with a building's card open, Jobs or Build closes the card and opens that page; a card opened from Jobs or Build closes the page and leaves nothing lit; a picked villager keeps his rows; in War an order's answer is read on the line (Hold, Retreat, a refusal) and a taken order lights its tile; Defend with no one under attack lights nothing and says why; the answer and the light go at the next tap |
 | X143 | t-n73 | page | N73 (N397; Design 20): sickness burns out: who gets well is immune for good (the R of SIR, N47), so twenty minutes after an outbreak in a fed town of sixty it is over and few are dead, the recovered do not catch it again, and with nobody at risk there is no outbreak and no letter; the alert circle is yellow while any of mine is sick and nothing is attacked (red outranks it), and a tap jumps to the sick; a card tile's text is white and only its cost is coloured |
+| X144 | t-n74 | page | N74 (N398; Drafts 2 and 4, the land audit): the forest, the roads, the trees and the fish each have their own maker; every tree in a road's strip stands, of every kind, and woods in the strip give no cover while woods outside it do; a forest tree holds its wood times its size cubed (times its land's share, the same for all), the biggest over twice the smallest; the clusters' trees are broad old trees holding more than any forest tree; the rocks and crevices are gone from the book |
 
-2815 items sealed · 2685 book entries · 94 laws · 391 citations, 36 still to open · 0 known
+2812 items sealed · 2682 book entries · 94 laws · 395 citations, 36 still to open · 0 known

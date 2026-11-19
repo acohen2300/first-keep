@@ -232,7 +232,7 @@ function narrowAt(k, [fx, fy]) { const [cx, cy] = FK.tileMid(k), most = CK.max *
   return w < most + most ? Math.min(CK.max, Math.max(CK.min, Math.round(w / GR.gap))) : null; }
 function coverNear(k) { const ci = k % N, cj = Math.floor(k / N), R = Math.ceil(AM.find), C0 = AM.cover, inN = (v) => v >= C0 && v < N - C0; let best = null, bd = Infinity; // E422
   for (let j = cj - R; j <= cj + R; j++) for (let i = ci - R; i <= ci + R; i++) { const q = j * N + i, d = Math.hypot(i - ci, j - cj); if (!inN(i) || !inN(j) || !FK.walkable(q) || d >= bd || d > AM.find) continue;
-    let near = false; for (let y = -C0; y <= C0 && !near; y++) for (let x = -C0; x <= C0 && !near; x++) if ((x || y) && FK.FOR[q + y * N + x]) near = true; if (near) [best, bd] = [q, d]; }
+    let near = false; for (let y = -C0; y <= C0 && !near; y++) for (let x = -C0; x <= C0 && !near; x++) if ((x || y) && FK.cover(q + y * N + x)) near = true; if (near) [best, bd] = [q, d]; }
   return best; }
 function ambushAt(k, S) { const [none, bare, gone] = WO.ambush; if (!S.length) return say(none); const q = coverNear(k); if (q == null) return say(bare); const A = { k: q };
   for (const u of S) Object.assign(u, { target: null, focus: null, ord: null, hid: false }); dress(S, q, 'square'); for (const u of S) Object.assign(u, { amb: A, ambK: u.goal }); say(gone, { n: S.length, at: MENU.coord(...FK.tileMid(q)) }); }

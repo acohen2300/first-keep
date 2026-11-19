@@ -134,8 +134,6 @@ BOOK("comments", {
  "E33": {"text": "Fords (TC4): Who every river · What a shallow crossing · Where wherever a river crosses one of the four roads, and once more at a rolled spot · When with the river · Why towns grew at fords: a road meets water where it can be waded · How the bed raised to wading depth over D33"},
  "E34": {"text": "Hills (TR1): Who the map · What a few smooth rises · Where Z4, clear of water and roads · When the map is made · Why high ground to hold and to see from · How count D36, radius D37, a dome of D38"},
  "E35": {"text": "Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 · When with the hills · Why water springs where ground rises · How a channel of D34 by D35"},
- "E36": {"text": "Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry land, off the roads · When the map is made · Why cover and chokepoints inland · How count D39, radius D40, raised D41 in one step so every edge is a face (QBE); its top is bare (D23)"},
- "E37": {"text": "Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads and water · When the map is made · Why a line that cannot be walked, without water · How count D42, a wandering line of D45, cut to D44 so both walls are faces"},
  "E38": {"text": "Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor 3) · Where a wall round every home at D50 with the road through it (the same for all, L12); elsewhere each zone's tree share (D63–D66): none in Z1 and Z2, thickening across Z3 to Z4's own (QCP); never on water, slopes or roads · When the map is made · Why woods to cut, to hide in, to go round, and room to build out near home (Albert, Nov 6) · How QAZ as a surface, scale D48, ranked so each zone holds its share (QCP)"},
  "E39": {"text": "the wood's edge keeps one tile from any slope or water"},
  "E40": {"text": "Floor 3, non-movables (layer 100): shells with no Walk, an Amount and a Yield (S). Each stands on one flat tile of land; a big one takes the tiles under it. Nothing here moves; floor 5 takes from the amounts."},
@@ -992,7 +990,7 @@ BOOK("comments", {
  "E1094": {"text": "the side's builder: a villager raising (or walking to raise) a building that is not a wall. The menu hands him the next site placed, so one villager goes site to site, first placed first built (E945), unless the player sends another (+ Villager, or a villager tapped onto the site)"},
  "E1095": {"text": "the trade roads: each route one road from the last open land of the main land (E1111) on its coast, through the open tile nearest each stop's fixed place, to the other coast, each leg the cheapest way (E1109), the whole rounded (E1110); a place with no way to it is passed by; the two routes cross the board, so their roads cross (Albert, Nov 15 12:32: coast to coast, cross somewhere, never in water; N383)"},
  "E1096": {"text": "one ground law: a tile's top layer is its stratum, except that worn road shows dirt where grass would grow (a road is a cut through the grass, as a lake is a cut through the land)"},
- "E1097": {"text": "the trees are set: a tree inside a trade road's cleared band is felled unless its kind is spared (the oak), as the Statute of Winchester ordered (N374)"},
+ "E1097": {"text": "the trees are set, every tile of woods one tree: wood by size, and a tree laid by amount (a cluster's) is a broad old tree (D345, N398); the road's strip fells none (N374)"},
  "E1098": {"text": "the trade booth, one frame in two states: the stop's empty booth (plain canvas, its wanted ware on the sign and the counter, stock around it) and, built on it, the Trade post: the same booth held (the holder's stripes, bunting and three pennants, every ware on the counter, cloth hanging, a scale and coins, a handcart, the trader, a ring); drawn with the building brushes so it sits in the game's own light and line (N375)"},
  "E1099": {"text": "a stop draws its empty booth from the Trade post's own art, with its wanted ware; once a post stands on it and holds it, the post is drawn instead (Base's and v80's rule)"},
  "E1100": {"text": "one home for messages: a letter is filed in Mail (merged with the same letter of the last moments, the oldest dropped past the keep); say files what the world tells, note files what a tap or an order says back (N377)"},
@@ -1080,5 +1078,6 @@ BOOK("comments", {
  "E1255": {"text": "every villager inside or sheltering comes out to its work"},
  "E1256": {"text": "War: Shelter, Work and Out (Design 17, 5, 6)"},
  "E1257": {"text": "the score: the ribbon's score cell opens it apart from the stores (Design 17, 7, 8)"},
- "E1232": {"text": "the score table, one home: under the stores on the Stores sheet and on the pause screen (The List 26 item 16)"}
+ "E1232": {"text": "the score table, one home: under the stores on the Stores sheet and on the pause screen (The List 26 item 16)"},
+ "E1258": {"text": "the road's strip: every tile within the road book's clear of a road tile, by one two-way distance sweep (a chamfer); woods there give no cover (N374, N398)"}
 });

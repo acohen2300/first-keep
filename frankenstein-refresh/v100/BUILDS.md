@@ -5612,3 +5612,19 @@ Albert, Nov 18 22:02: "1. Yes 2. Yellow = health crisis / orange kill for now 3.
 - Found, not fixed: on a building's card the Learn tiles wrap a two-word name ("Tally sticks", "Bronze age") and the top or the cost is clipped (n72 the same); the helper `loses` (what a unit loses to) is called nowhere, so that line shows nowhere.
 - Gate: PASS. ecs: named 250 → 250; named2 32 → 32; dead 0 → 0. Size: menu.js 128,333 → 128,273 (−60); econ.js 119,630 → 119,676 (+46, a grant of 46); game code −14.
 - Tests: t-n73 (X143) passes; fails on N72's code, all five parts. Run with it, all pass: t-n72, t-n71, t-n70, t-n69, t-n68, t-n67, t-guide, t-ledger, t-effects, t-pace, t-troops. The full suite was not run on N73.
+
+## N74: the land clean-up — makers, the road law as written, wood by size, broad home trees · 2026-11-19 13:15
+Albert, Nov 19 12:52: "You can build here. Go" (N398; Drafts 2, 4 and 6). 11:51: the road strip by the law as written. 11:15: wood follows size. 11:58: "Yes home trees are broad old trees".
+Opened: code:index.html, code:combat.js, book:measure, book:sprites, book:comments, book:citations, book:rules, tool:test.py
+- Makers: the forest, the roads, the trees and the fish each in their own function (makeForest, makeRoads, makeTrees, makeFish). The split alone gave the same map and the same three minutes of play on three seeds (20261105, 3982373520, 77), fingerprint for fingerprint.
+- The road law as written (D379, E1097, E1258; N374, N398): the strip fells no tree; woods in the strip give no cover (FK.cover; the ambush's cover search asks it). The strip is one two-way distance sweep from the road, not 623 stamps. Seed 3982373520: 2,612 trees → 7,654; wood 516,616 → 1,036,582.
+- Wood by size (D345 size, solid; N399): a forest tree holds its wood × size³. A tree laid by amount (the home and ring clusters) keeps its amount and is drawn a broad old tree, 1.6 times as wide (D345 broad). A tree shrinks by its own full amount, not the book's 100.
+- The road's cost field is worked out only where the path search looks. makeThings on the test machine: 624 ms → 318 ms.
+- Mud: D106 already walks full mud at Pandolf's 1.8 (1 + 0.8); it now cites Soule and Goldman (N401). Snow's 0.6 is marked a design number.
+- 1 wood = 2.5 kg written at D53 (N398, N400).
+- Cut and logged in Parked.md ("Cut in N74"): rocks and crevices (D39 to D45, E36, E37); the strip's felling (the oak's spare, the felled set).
+- Found, not changed: the lane rule (D46, laneDist) is not dead: it lays the river fords on the line from each home to the middle and keeps the ring's finds off it.
+- Not in N74 (owed, Drafts 1, 3, 4, 6): the new clock; the tools ratios; nature-made land, grading, piers, causeways, coves; the baked ground and woods; one ice model; one fish rule; one trunk density for sight; units on the land's entries; the typed names; the fairness sweep; the master list ticked.
+- Gate: PASS. Size: index.html −282 bytes net (grants: non-movables +560, ground +67, things +42, woods cache +56, touch +35; terrain −1,042); combat.js +2.
+- Tests: t-n74 (X144) passes; it cannot pass on N73's code (no makers, no strip). Run with it: t-ground, t-n47, t-n50, t-n55, t-n57, t-n43, t-n22, t-n23, t-n21, t-load, t-n73, t-pace, t-buffer pass; t-n54 passes with its `band` check retired. Red before and after alike: t-n29, t-n17, t-land, t-gather. Smoke 6/6. The full suite was not run.
+Inventory: 2812 items sealed · 2682 book entries · 94 laws · 395 citations, 36 still to open · 0 known

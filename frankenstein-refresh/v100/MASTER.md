@@ -9,7 +9,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 ## index.html#frames
 
 - **E1** First Keep v100 · the world reads its numbers from the Books (books/*.js), never from here
-- **E2** A Book entry is { key, value, name, cite, law } under its code; the game sees each book as · D53 (N112) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225)
+- **E2** A Book entry is { key, value, name, cite, law } under its code; the game sees each book as · D53 (N112, N398, N400) · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225)
 - **E3** every code in every book
 - **E4** a slot's pointer, read
 - **E5** S the shells (books/shells.js): a row names its layer, ticks its capabilities (SC) and poi
@@ -67,10 +67,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1018** every lake has a ford (D374): a shallow bed through its middle, toward the middle of the m · D374 (N326)
 - **E34** Hills (TR1): Who the map · What a few smooth rises · Where Z4, clear of water and roads ·  · D36 (N112) · D37 (N112) · D38 (N112)
 - **E35** Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 ·  · D34 (N112) · D35 (N112)
-- **E36** Rock (TR2): Who the map · What outcrops nothing walks over or through · Where Z4, on dry l · D39 (N112) · D40 (N112) · D41 (N112) · QBE (N64) · D23 (N112)
-- **E37** Crevices (TC5): Who the map · What a dry trench nothing crosses · Where Z4, off the roads  · D42 (N112) · D45 (N112) · D44 (N112)
 - **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
-- **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N256, N249, N362, N363) · N249 · D50 (N112)
+- **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N256, N249, N362, N363, N398, N399) · N249 · D50 (N112)
 - **E1084** the woods' field reads the board's own coordinates (N362): one field over the whole land,  · N362
 - **E1085** a clearing, one randomized element of Z4 (N362, N363): a disc of flat land kept free of tr · N362 · N363
 - **E1086** a path, the other randomized element (N362, N363): a winding line kept free of trees, from · N362 · N363
@@ -95,21 +93,22 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E674** a guarded find stands in its own clearing, as Mid lays its guards on the ring round it (26
 - **E1107** a trade stop's seat: the nearest free road tile to its fixed place with no find within roo · N382
 - **E564** the dens and drifters' camps laid in Z4 on their own dice, so the map's other rolls stay a
+- **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines, · E1107
+- **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
+- **E50** drawn back to front
 - **E1108** where a road may not go: water and the shallows (under the sand's top) and, by the road's  · N383
 - **E1109** a road's leg: the cheapest way from tile to tile over open land (A*, eight ways, octile di · N383
 - **E1110** a road rounded by Chaikin's corner cutting, soft passes, kept only if every rounded point  · N383
 - **E1111** the main land: the open land (clear of water and finds by the road's width and verge) spli
 - **E1095** the trade roads: each route one road from the last open land of the main land (E1111) on i · E1111 · E1109 · E1110 · N383
-- **E492** the trade stops (Mid's ROUTES, PLACES.stop): four on each of the board's two middle lines, · E1107
+- **E1258** the road's strip: every tile within the road book's clear of a road tile, by one two-way d · N374 · N398
 - **E49** The trees: Who every tile of woods (TF1, and the groves) · What one tree, its stand, size  · R1 (N144)
-- **E1097** the trees are set: a tree inside a trade road's cleared band is felled unless its kind is  · N374
-- **E654** The land's character (D329, Mid's LAND): past the pocket every find is worth its store's s · D329 (N229)
+- **E1097** the trees are set, every tile of woods one tree: wood by size, and a tree laid by amount ( · D345 (N256, N249, N362, N363, N398, N399) · N398 · N374
 - **E51** a tree with trees on all eight sides is deep: nothing can stand between it and its neighbo
 - **E344** fish round every lake: a spot every D218 per of its radius, walked out from the middle to  · D218 (N365, N27, N28, N170, N341, N357)
 - **E1067** fish along every river and stream (N341): the lakes' own spacing along the bank (2π × D218 · N341 · D218 (N365, N27, N28, N170, N341, N357)
 - **E1083** a sea fish is laid only where someone can stand to catch it (N361): of the spot one step p · N361 · E2
 - **E1077** fish in the sea (N357): along each of the four coasts, every sea spacings, the walk goes f · N357
-- **E50** drawn back to front
 - **E652** The way home (QCQ, Mid's openWays and wayHome): nothing is walled in; a find cut off by wo · QCQ (N229, N233)
 - **E345** a find laid where something falls (game becomes a carcass where it stood); a lake near eno
 - **E54** the forest floor: the grass, shaded; the marsh: the grass, toward the water (N11: the pape · N11 · E902
@@ -176,7 +175,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E66** event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by  · HE1 (N97)
 - **E277** QCA, the effects: what each side has learned, and each side's numbers worked out once unti · QCA (N154, N155, N156, N176, N185)
 - **E278** a thing's keys, the names an effect may reach it by: every head of its code's letters (B,  · BR1 (N144, N206)
-- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225, N385) · D125 (N169, N168, N195, N198, N370) · SN1 (N133, N283) · D87 (N112) · D127 (N69, N235) · D106 (N112) · D228 (N176)
+- **E279** a number's base, from its one home: the pace (D86), a building's health (D139) or a unit's · D86 (N71, N72, N73, N79, N170, N176, N198, N223, N225) · D139 (N69, N169, N170, N196, N198) · D138 (N69, N170, N176, N188, N194, N195, N198, N225) · D123 (N168, N176, N194, N195, N198, N225) · D124 (N169, N176, N194, N195, N198, N225, N385) · D125 (N169, N168, N195, N198, N370) · SN1 (N133, N283) · D87 (N112) · D127 (N69, N235) · D106 (N112, N401) · D228 (N176)
 - **E280** the one window for a kind's number after research (QCA): flat adds first, then the boosts  · QCA (N154, N155, N156, N176, N185)
 - **E694** a unit's row of numbers with its side's research applied, kept until the research changes:
 - **E369** the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a s · D133 (N114, N176, N194, N195, N198, N385) · D130 (N160)
