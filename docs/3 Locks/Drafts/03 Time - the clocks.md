@@ -39,3 +39,8 @@ STATUS: OPEN TALK (Albert, Nov 19 11:25-11:36). Nothing ruled. Came out of trees
 - RULING (Albert 11:46): "My problem is days.. there are too many of them and night can only be 25% of a day". Fewer days; night = a quarter of the day.
 - Night at 25% is a game rule (real night averages half the day over a year): night hours squeezed 3x harder than daylight hours.
 - Fits with 4 seasons an hour: 4 days a year (day 15 min: light 11.25, night 3.75); 2 a year (30 min: 22.5 / 7.5); 1 a year (60 min: 45 / 15, and then night = winter, both a quarter).
+
+## 11:48 [2026-11-19 11:49]
+- RULING (Albert 11:48): "The year as an hour works." Year = 3,600 s, season = 900 s.
+- Albert 11:48: "The issues is the cycle between day and night is disorienting". Asked 11:46: "What if days were really weeks?" (52 an hour, 69 s each: more days, not fewer).
+- Claude's proposal, not ruled: one day a season, in step with it; night is the curtain between seasons (the season turns in the dark; baked woods and ground repaint then). Fallback: no daily cycle, light by season only (Age of Empires II has none).
