@@ -502,6 +502,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N405** (to open) Huang & Turcotte (1989), fractal mapping of digitized images: topography's surface fractal dimension about 2.1 → D380
 - **N407** Albert, Nov 19 14:59: the nature-made land, go ("I like it. I would continue to proceed"); bridges at the cove → D379, D380, X145
 - **N408** Albert, Nov 19 16:20 and 16:32: a touch on the empty space between the menu's words cannot scroll the map; "Le → X146
+- **N409** Albert, Nov 19 16:34 and 16:45: the ghost steps to the next spot, then vanishes; repeatable builds are House,  → X78, X147
 
 ## Named exceptions
 

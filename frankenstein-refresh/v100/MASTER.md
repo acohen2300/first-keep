@@ -636,7 +636,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
 - **E192** tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines · N61 · N384
-- **E1248** Build placed: the menu closes after the crumb reads Building
+- **E1248** Build placed: the menu closes after the crumb reads Building, unless the ghost waits on a  · N409
 - **E702** pause stops the clock and opens the Pause screen; the same cell resumes
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
@@ -665,7 +665,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1217** the path's group word: back to Build on that group
 - **E1218** Home: closes whatever is open; with nothing open it takes the camera home
 - **E1219** Cancel on a one-line card: let go of the pick and close
-- **E1233** the row's ✕ (Design 15 D): the rows go and the map is clear, what was picked is let go; Ho
 - **E1220** Gather on a find: the nearest idle villager goes
 - **E1221** remember the ice answer this winter or this game
 - **E1222** the who-line: All, a class, or Idle picks those soldiers
@@ -750,7 +749,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E726** the place bar says what Base's said (J34): where to press, then the name with 'tap Build,  · J34 (N241, N385)
 - **E336** Build: a wall line laid while the stores last, said in one toast; a building sent its near · N17
 - **E337** while placing, the finger moves the ghost (a wall's corner or line), not the map; the drag
-- **E700** only a touch on or near the ghost moves it; a touch away from it falls through to the came
+- **E700** only a touch on or near the ghost moves it; a touch away from it falls through to the came · N409
 - **E338** the ghost's own art tinted green where it fits and red where not, one tinted copy a sprite
 - **E339** while a wall or gate is placed: a red line where a foe could walk in, or Sealed over the T
 - **E340** the ghost: a wall's tiles green or red with its corners, the first ringed green; a buildin

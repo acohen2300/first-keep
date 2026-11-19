@@ -1994,6 +1994,11 @@
 "bytes": 256,
 "numbers": 0
 },
+"book:citations:N409": {
+"sha": "13afb5b2f68f66c5097867a00ad359fc8e502d87e946b8a6ff2fe21fb2b082de",
+"bytes": 349,
+"numbers": 0
+},
 "book:citations:N41": {
 "sha": "cc7250f8028aa355b5a43cbb19453f751eaa8d85b93a14a88a3134343db2e26c",
 "bytes": 70,
@@ -3349,11 +3354,6 @@
 "bytes": 121,
 "numbers": 0
 },
-"book:comments:E1233": {
-"sha": "d5197bc5dad6e3da0013661c055b9d96ca892501187b83067e70611a03510ea2",
-"bytes": 123,
-"numbers": 0
-},
 "book:comments:E1234": {
 "sha": "115bc256828a70d2e155e2f11706da00499064fd37f7f0382d47f9cc9204bb15",
 "bytes": 143,
@@ -3430,8 +3430,8 @@
 "numbers": 0
 },
 "book:comments:E1248": {
-"sha": "fd82ac1889758de164c70afcc356163a80d5d0baa7f0363ac65e93017d6f178c",
-"bytes": 72,
+"sha": "800506431d5b17b69d1459fb3bb43763e98f44dd28a72eb943de6618828dd2a5",
+"bytes": 126,
 "numbers": 0
 },
 "book:comments:E1249": {
@@ -6490,8 +6490,8 @@
 "numbers": 0
 },
 "book:comments:E700": {
-"sha": "d835b65c6687629b673f9d7f8c3dbc08831b35c3e16e7b203cd7229dafa5560a",
-"bytes": 237,
+"sha": "d7bccd0fed3c6cce4f6327c72772352b4150d244efea3342b930fa53afe4cd10",
+"bytes": 314,
 "numbers": 0
 },
 "book:comments:E701": {
@@ -9904,6 +9904,11 @@
 "bytes": 324,
 "numbers": 0
 },
+"book:rules:X147": {
+"sha": "72d746e56bc62303d348e0bd1ca3c3fce1de722bd1171923de66e78080c256e0",
+"bytes": 404,
+"numbers": 0
+},
 "book:rules:X15": {
 "sha": "c478d3e0bb2e352476e9d77e4547200949af3651ff553ff47a82271683a6f108",
 "bytes": 127,
@@ -10240,8 +10245,8 @@
 "numbers": 0
 },
 "book:rules:X78": {
-"sha": "8c7ebac1155fbf60da1325123070dbdacccbedd3f5bf12bd38839a74170d7095",
-"bytes": 538,
+"sha": "7df31e1bcc33470a2908c3b76166a3e94d4ad4a10812649610421d2e1202efd9",
+"bytes": 597,
 "numbers": 0
 },
 "book:rules:X79": {
@@ -10595,18 +10600,18 @@
 "numbers": 0
 },
 "book:shells:BI1": {
-"sha": "84a9b276e46f47f81486af04dbe019d06385441af8a210ad7e32197d1aa0f7d9",
-"bytes": 217,
+"sha": "75cefe60e59625d53b76c774845e38a173ba737a9fcdabceaf897b232d1886a0",
+"bytes": 207,
 "numbers": 0
 },
 "book:shells:BI2": {
-"sha": "487c1ceb3a1a7808ee56cae99e9e388aa63049d68e4a2052c4fc1579351f7e6c",
-"bytes": 226,
+"sha": "5d255e7482d48414e6c7f87f0f2ed21f60d9928024d4a2df88f08fffa5d3688e",
+"bytes": 216,
 "numbers": 0
 },
 "book:shells:BI3": {
-"sha": "33671aa033fe64dbbdf7a5ea07371c59760ac605b158f241b6a232d3344318b4",
-"bytes": 282,
+"sha": "6cd0d718d1179ca6e01f6512b57fb7c32740088b2fa11eb291b91caafd375685",
+"bytes": 272,
 "numbers": 0
 },
 "book:shells:BI4": {
@@ -10760,8 +10765,8 @@
 "numbers": 0
 },
 "book:shells:BW1": {
-"sha": "af578eef174e926230b10440baa139a41b0ceb1b7bf216a5f8779dd537db5de6",
-"bytes": 159,
+"sha": "057e606957ccf59dcb6e762766941a5e44afb05215a42b2b5b8d71fbf014b860",
+"bytes": 149,
 "numbers": 0
 },
 "book:shells:BW2": {
@@ -10770,13 +10775,13 @@
 "numbers": 0
 },
 "book:shells:BW3": {
-"sha": "07181f3962fe82332ef07c1dc2f24301a5718aa2d37d0c275a451418914179c5",
-"bytes": 197,
+"sha": "ddb4c43f4d8a3044280d70879655f33522bc1e75ed9b7eef3bcf293ad9f81a91",
+"bytes": 187,
 "numbers": 0
 },
 "book:shells:BW4": {
-"sha": "d19f5feb8a30549f424d00096bb99f37ea8b43c6d76c2548b640ee017f53138c",
-"bytes": 184,
+"sha": "f755152cbba0576d1fe21ad8af9d9d1cae2c6766ee618d9f22af521c4ac97a74",
+"bytes": 174,
 "numbers": 0
 },
 "book:shells:MG1": {
@@ -13510,8 +13515,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "51aa7f79975afdf33843c2f1fb0f3f2be6f5006183cc8f987a7eeb549b09f6a1",
-"bytes": 128183,
+"sha": "7e6ff3b41dcaaadc4665b7129441ab99c795450591df2847637e92c8dc6b7efc",
+"bytes": 128043,
 "numbers": 158
 },
 "code:sound.js": {
@@ -14010,8 +14015,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "34ae84643feda55bd8e7133257bb46bb2350d431d336437df0536a4d01495abc",
-"bytes": 393872,
+"sha": "3ae33bacf60c159a3fc9ff7491e83f33675c79c18199551635c221cc7493ff20",
+"bytes": 396627,
 "numbers": 0
 }
 }

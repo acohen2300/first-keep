@@ -5653,3 +5653,14 @@ Opened: code:menu.js, book:citations, book:rules, tool:test.py.
 - Cut, logged in Parked.md: the dead style `.cell.warx` (no markup used it).
 - Gate: PASS. Size: menu.js 128,273 → 128,183 bytes (−90). ecs unchanged (no logic touched).
 - Tests: t-n76 (X146) passes; it fails on N75's menu.js. With it: t-n75, t-n73, t-n72, t-n71, t-n70, t-n69, t-n68, t-n67, t-n65, t-n43, t-p2b, t-freeze, t-idle, t-dock pass. t-n60 (check `cross`, the roads) failed 2 runs of 3 and t-p2 (check `focusHome`) 1 of 3 with the new menu; each passed its one run on the old menu. Neither check reads the menu; unsteady, cause not traced: OPEN. The full suite was not run.
+
+## N77: the ghost waits (six repeatable builds); a tap on the ghost builds · 2026-11-19 17:40
+Albert, Nov 19 16:34: "the ghost moves over to the next one… Then.. it vanishes"; 16:45: the repeatable builds are Houses, Farms, Quarry, Lumber farm, Foundry, Mint and "shouldn't have that timer"; the others: "One is enough"; "Tapping the ghost is good second option / short cut to build" (N409; The List 44).
+Opened: code:menu.js, book:shells, book:citations, book:comments, book:rules, tool:test.py.
+- Cause (The List 44): Build stepped the ghost to the next spot (E336) and the same tap started the settle timer that closes the menu and clears the ghost (E1241).
+- Fix: Build starts the timer only when no ghost waits (`!S.ghost`, E1248). A repeatable build keeps its ghost and the Build menu until he builds again, cancels or leaves.
+- Repeat (the Shells book) is now six: House, Farm, Tree farm, Quarry, Mint, Foundry. Off: Mill, Lumber camp, Mining camp, Tower, Wall, Palisade (the two lines never read it). For these the ghost goes and the menu closes after Build.
+- A still tap on a set ghost builds; a finger that moves more than D.touch.move (10 px) drags it (E700). Before, a touch on the ghost only moved it.
+- Cut, logged in Parked.md: the verb `mx` (E1233; no button drew it), the style `.prog`.
+- Gate: PASS. Size: menu.js 128,183 → 128,043 bytes (−140). ecs unchanged.
+- Tests: t-n77 (X147) passes; on N76's menu and Shells book its checks six, waits, one and tap fail. With it: t-n76, t-n73, t-n72, t-n71, t-n70, t-n69, t-n68, t-n67, t-n65, t-n43, t-p2b, t-idle pass; t-n17 passes (red before: its Repeat list named 'Dwelling'; now the six, X78). t-p2 failed 1 run of 3 (focusHome, full): unsteady as in N76, OPEN. The full suite was not run.

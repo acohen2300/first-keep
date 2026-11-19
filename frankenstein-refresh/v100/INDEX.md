@@ -479,6 +479,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N405 |  | Huang & Turcotte (1989), fractal mapping of digitized images: topography's surface fractal dimension about 2.1 to 2.3 (a profile's 1.1 to 1. | to open |
 | N407 |  | Albert, Nov 19 14:59: the nature-made land, go (\I like it. I would continue to proceed\); bridges at the cove; streams under 2 tiles not dr | opened |
 | N408 |  | Albert, Nov 19 16:20 and 16:32: a touch on the empty space between the menu's words cannot scroll the map; \Let's try 1 and I'll play test i | opened |
+| N409 |  | Albert, Nov 19 16:34 and 16:45: the ghost steps to the next spot, then vanishes; repeatable builds are House, Farm, Quarry, Lumber (tree) fa | opened |
 
 ## colours
 
@@ -1568,7 +1569,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1229 |  | the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) each tap on and off |  |
 | E1230 |  | whether a Rules pad is lit |  |
 | E1231 |  | Albert, Nov 17 15:36 (The List 26 item 7): when a side reaches an age, every unit of its line upgrades to the next kind that age opens (AoE  |  |
-| E1233 |  | the row's ✕ (Design 15 D): the rows go and the map is clear, what was picked is let go; Home brings Jobs back |  |
 | E1234 |  | a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins over what is under it, its tap area the slot |  |
 | E1235 |  | a picked building glows faintly gold from behind (Design 15 F): drawn on the back hook, before the building |  |
 | E1236 |  | a picked villager: its line over the Jobs / Build rows, Build first; its ✕ at the row end (Design 15 A) |  |
@@ -1583,7 +1583,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1245 |  | a picked villager's job tile: tap to pick, tap again to drop |  |
 | E1246 |  | Go: the picked villagers go to the picked job, then the menu closes |  |
 | E1247 |  | the one Cancel (Design 16): drops the last crumb; a crumb tapped drops all after it |  |
-| E1248 |  | Build placed: the menu closes after the crumb reads Building |  |
+| E1248 |  | Build placed: the menu closes after the crumb reads Building, unless the ghost waits on a next spot (Repeat, N409) |  |
 | E1249 |  | the idle villagers (idle or waiting, not inside); Idle n over People: a tap jumps the camera to the next and picks it (Design 17, 27) |  |
 | E1250 |  | the − above the line hides Jobs / Build and closes the rows; the + after Home brings them back (Design 17, 11) |  |
 | E1251 |  | at the drop a villager sent to a find of another kind takes that kind (Design 17, 3: sent to wood from gathering food, it went back to food) |  |
@@ -2050,7 +2050,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X76 | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) | {stage: books} | N239 |
 | X74 | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 | {stage: page} | N235; N236 |
 | X77 | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) | {stage: code} | N250 |
-| X78 | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the twelve repeatable buildings; every locked research says why on its button; a tap held a second on Train still trains; N62 (N385): the lock is said short on the button, to fit a cell of the dock | {stage: page} | N307; N385 |
+| X78 | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the six repeatable buildings (N409: House, Farm, Tree farm, Quarry, Mint, Foundry); every locked research says why on its button; a tap held a second on Train still trains; N62 (N385): the lock is said short on the button, to fit a cell of the dock | {stage: page} | N307; N385; N409 |
 | X79 | the paper ground (N11-N14): on the opening view, open water well below the land is drawn blue and open land well above it green, nine in ten points or more, away from shores, finds and trees | {stage: page} | N301; N304 |
 | X80 | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark | {stage: page} | N306 |
 | X81 | N16: a message with a place shows Go on a menu's help line (its quick action checks went with the quick action, N52: t-n52 holds that a tap on open ground opens nothing) | {stage: page} | N306; N369 |
@@ -2118,6 +2118,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X144 | N74 (N398; Drafts 2 and 4, the land audit): the forest, the roads, the trees and the fish each have their own maker; every tree in a road's strip stands, of every kind, and woods in the strip give no cover while woods outside it do; a forest tree holds its wood times its size cubed (times its land's share, the same for all), the biggest over twice the smallest; the clusters' trees are broad old trees holding more than any forest tree; the rocks and crevices are gone from the book | {stage: page} | N398 |
 | X145 | N75 (N407; Draft 1, the nature-made land): the land has relief and every home pocket is graded flat at the land's height; the land within Z3 is the same at all four homes; every corner has a cove with water at the pond and a wadeable ford midway on its channel; every drawn river is 2 tiles wide or more; lakes and rivers hold water, each lake's centre in water; both trade roads are laid and every river tile a road crosses is wadeable; the marsh lies in patches: under a tenth of its tiles stand alone | {stage: page} | N407 |
 | X146 | N76 (N408): a touch on the menu's empty space reaches the map: on the closed line, a building's card, Jobs, Build, War and the folded menu, every point of the menu's rows that is not a button lands on the map, and every button still takes its own tap | {stage: page} | N408 |
+| X147 | N77 (N409): only House, Farm, Tree farm, Quarry, Mint and Foundry tick Repeat; after Build on a House the ghost waits on the next spot and is still there, with the Build menu, past the settle time; after Build on a Mill the ghost is gone and the menu closes; a still tap on a set ghost builds, and a drag moves it without building | {stage: page} | N409 |
 
 ## screen
 
@@ -2200,9 +2201,9 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BP8 | Courthouse | [Spawn, Shoot, Health, Research] | N144; N194 |
 | BP9 | Hall | [Health, Research] | N144 |
 | BP10 | War Council | [Squad, Health, Research] | N144 |
-| BI1 | Mill | [Drop-off, Health, Burn, Research, Repeat, Touch] | N144; N206 |
-| BI2 | Lumber camp | [Drop-off, Health, Burn, Research, Repeat, Touch] | N144; N206 |
-| BI3 | Mining camp | [Drop-off, Health, Research, Repeat, Shaft, Store, Touch] | N144 |
+| BI1 | Mill | [Drop-off, Health, Burn, Research, Touch] | N144; N206 |
+| BI2 | Lumber camp | [Drop-off, Health, Burn, Research, Touch] | N144; N206 |
+| BI3 | Mining camp | [Drop-off, Health, Research, Shaft, Store, Touch] | N144 |
 | BI4 | Store | [Health, Research] | N144 |
 | BI5 | Depot | [Drop-off, Supply, Health, Burn] | N144; N198; N206 |
 | BI6 | Mint | [Make, Health, Research, Repeat, Touch] | N144; N195 |
@@ -2213,10 +2214,10 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BM2 | Range | [Spawn, Health, Burn, Research] | N144; N206 |
 | BM3 | Stable | [Spawn, Health, Burn, Research] | N144; N206 |
 | BM4 | Siege workshop | [Spawn, Health, Research] | N144 |
-| BW1 | Wall | [Health, Line, Repeat] | N144 |
+| BW1 | Wall | [Health, Line] | N144 |
 | BW2 | Gate | [Health, Gate, Burn] | N144; N206 |
-| BW3 | Tower | [Shoot, Health, Hold, Research, Repeat] | N144 |
-| BW4 | Palisade | [Health, Line, Burn, Repeat] | N144; N206 |
+| BW3 | Tower | [Shoot, Health, Hold, Research] | N144 |
+| BW4 | Palisade | [Health, Line, Burn] | N144; N206 |
 | BF5 | Abatis | [Health, Burn] | N144; N198; N206 |
 | BF1 | Pit | [Trap, Health] | N144; N198 |
 | BF2 | Net | [Trap, Health] | N144; N198 |

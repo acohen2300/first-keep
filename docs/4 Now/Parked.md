@@ -915,3 +915,8 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 
 ## Cut in N76 (Nov 19) [2026-11-19 17:00]
 - The style `.cell.warx` (menu.js; a red-ringed cell): no markup used it. [2026-11-19 17:00]
+
+## Cut in N77 (Nov 19) [2026-11-19 17:40]
+- Repeat on the Mill, Lumber camp, Mining camp, Tower, Wall and Palisade (Albert, 16:45: "One is enough"): after Build their ghost no longer steps to a next spot. [2026-11-19 17:40]
+- The verb `mx` (menu.js, E1233: "the row's ✕ (Design 15 D): the rows go and the map is clear, what was picked is let go; Home brings Jobs back"): no button drew it. The style `.prog` (a progress bar under a cell): no markup used it. [2026-11-19 17:40]
+- Found, not cut: `loses` (menu.js; the "loses to" line of a unit, Design 12 F3) is defined and called nowhere: a ruled feature that no longer shows. For the ledger. [2026-11-19 17:40]

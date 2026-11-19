@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,551 | 649,204 | 649,350 |
-| Books | 2673 | 0 | 919,308 | 920,295 |
+| Game code | 31 | 3,550 | 649,064 | 649,210 |
+| Books | 2674 | 0 | 920,070 | 921,055 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,550 | 432,881 | 433,137 |
+| Tools | 5 | 2,565 | 435,636 | 435,892 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 51 | 9,447 | 9,451 | 0 |
 | index.html#the-woods-cache | 41 | 5,996 | 6,000 | 24 |
 | index.html#touch | 54 | 9,946 | 9,950 | 54 |
-| menu.js | 498 | 128,143 | 128,183 | 158 |
+| menu.js | 497 | 128,003 | 128,043 | 158 |
 | econ.js | 631 | 119,676 | 119,676 | 70 |
 | combat.js | 381 | 65,429 | 65,429 | 83 |
 | ai.js | 172 | 27,499 | 27,499 | 25 |
@@ -51,15 +51,15 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 56 | 17,305 |
-| citations | 401 | 124,009 |
+| citations | 402 | 124,369 |
 | colours | 34 | 10,478 |
-| comments | 1075 | 213,556 |
+| comments | 1074 | 213,552 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 322 | 205,093 |
-| rules | 143 | 65,952 |
+| rules | 144 | 66,426 |
 | screen | 34 | 29,294 |
-| shells | 111 | 24,384 |
+| shells | 111 | 24,324 |
 | sides | 7 | 1,869 |
 | sound | 55 | 12,731 |
 | sprites | 75 | 43,782 |
@@ -153,7 +153,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X76 | ticked | books | G2: a shell named in a build, research, train or computer table that lacks the tick that table asks (Health, Research, Spawn, Field or Make) |
 | X74 | t-a1 | page | speed and the audit's fixes (A1): Reinforce sends its soldiers into the fight's order; a drill holds its shape past its first frame; a save opened keeps a war order, a camp and an ambush as one record each (the camp count unchanged) and the fresh map unmarked; a civilisation's own kind shows on its building's card and trains from it; a soldier with a support unit beside it still picks the armed foe; the Apartment adds Mid's room and the Quarry is worked for Mid's stone; New World crops, Town watch and every step's needs equal Mid's TECH; a side's reach equals the walk the pathfinder finds; the new-game screen runs with no frame over D338 |
 | X77 | unique | code | an object (a table in code or a book) that holds the same key twice: the later one silently wins (B6: two home verbs) |
-| X78 | t-n17 | page | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the twelve repeatable buildings; every locked research says why on its button; a tap held a second on Train still trains; N62 (N385): the lock is said short on the button, to fit a cell of the dock |
+| X78 | t-n17 | page | N17, Albert's N15 notes: a site placed with a busy builder waits its turn and he walks to it when his first is done; minus drops the job count at once; gatherers at work hold their spots (under 2% of their frames move); Repeat is ticked on exactly the six repeatable buildings (N409: House, Farm, Tree farm, Quarry, Mint, Foundry); every locked research says why on its button; a tap held a second on Train still trains; N62 (N385): the lock is said short on the button, to fit a cell of the dock |
 | X79 | t-ground | page | the paper ground (N11-N14): on the opening view, open water well below the land is drawn blue and open land well above it green, nine in ten points or more, away from shores, finds and trees |
 | X80 | t-n15 | page | N15 (Albert's N13 notebook): the Daily challenge locks civ, difficulty, length, scenario and fog, and off frees them; any queued unit taken out is paid back in full; the Top Info Ribbon shows each of its readings; every finished building but walls and fields has its door torch after dark |
 | X81 | t-n16 | page | N16: a message with a place shows Go on a menu's help line (its quick action checks went with the quick action, N52: t-n52 holds that a tap on open ground opens nothing) |
@@ -221,5 +221,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X144 | t-n74 | page | N74 (N398; Drafts 2 and 4, the land audit): the forest, the roads, the trees and the fish each have their own maker; every tree in a road's strip stands, of every kind, and woods in the strip give no cover while woods outside it do; a forest tree holds its wood times its size cubed (times its land's share, the same for all), the biggest over twice the smallest; the clusters' trees are broad old trees holding more than any forest tree; the rocks and crevices are gone from the book |
 | X145 | t-n75 | page | N75 (N407; Draft 1, the nature-made land): the land has relief and every home pocket is graded flat at the land's height; the land within Z3 is the same at all four homes; every corner has a cove with water at the pond and a wadeable ford midway on its channel; every drawn river is 2 tiles wide or more; lakes and rivers hold water, each lake's centre in water; both trade roads are laid and every river tile a road crosses is wadeable; the marsh lies in patches: under a tenth of its tiles stand alone |
 | X146 | t-n76 | page | N76 (N408): a touch on the menu's empty space reaches the map: on the closed line, a building's card, Jobs, Build, War and the folded menu, every point of the menu's rows that is not a button lands on the map, and every button still takes its own tap |
+| X147 | t-n77 | page | N77 (N409): only House, Farm, Tree farm, Quarry, Mint and Foundry tick Repeat; after Build on a House the ghost waits on the next spot and is still there, with the Build menu, past the settle time; after Build on a Mill the ghost is gone and the menu closes; a still tap on a set ghost builds, and a drag moves it without building |
 
-2803 items sealed · 2673 book entries · 94 laws · 401 citations, 37 still to open · 0 known
+2804 items sealed · 2674 book entries · 94 laws · 402 citations, 37 still to open · 0 known
