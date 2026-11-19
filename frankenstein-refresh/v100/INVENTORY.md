@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,551 | 649,294 | 649,440 |
-| Books | 2671 | 0 | 918,728 | 919,715 |
+| Game code | 31 | 3,551 | 649,204 | 649,350 |
+| Books | 2673 | 0 | 919,308 | 920,295 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,542 | 431,483 | 431,739 |
+| Tools | 5 | 2,550 | 432,881 | 433,137 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 51 | 9,447 | 9,451 | 0 |
 | index.html#the-woods-cache | 41 | 5,996 | 6,000 | 24 |
 | index.html#touch | 54 | 9,946 | 9,950 | 54 |
-| menu.js | 498 | 128,233 | 128,273 | 161 |
+| menu.js | 498 | 128,143 | 128,183 | 158 |
 | econ.js | 631 | 119,676 | 119,676 | 70 |
 | combat.js | 381 | 65,429 | 65,429 | 83 |
 | ai.js | 172 | 27,499 | 27,499 | 25 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 56 | 17,305 |
-| citations | 400 | 123,742 |
+| citations | 401 | 124,009 |
 | colours | 34 | 10,478 |
 | comments | 1075 | 213,556 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 322 | 205,093 |
-| rules | 142 | 65,617 |
+| rules | 143 | 65,952 |
 | screen | 34 | 29,294 |
 | shells | 111 | 24,384 |
 | sides | 7 | 1,869 |
@@ -220,5 +220,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X143 | t-n73 | page | N73 (N397; Design 20): sickness burns out: who gets well is immune for good (the R of SIR, N47), so twenty minutes after an outbreak in a fed town of sixty it is over and few are dead, the recovered do not catch it again, and with nobody at risk there is no outbreak and no letter; the alert circle is yellow while any of mine is sick and nothing is attacked (red outranks it), and a tap jumps to the sick; a card tile's text is white and only its cost is coloured |
 | X144 | t-n74 | page | N74 (N398; Drafts 2 and 4, the land audit): the forest, the roads, the trees and the fish each have their own maker; every tree in a road's strip stands, of every kind, and woods in the strip give no cover while woods outside it do; a forest tree holds its wood times its size cubed (times its land's share, the same for all), the biggest over twice the smallest; the clusters' trees are broad old trees holding more than any forest tree; the rocks and crevices are gone from the book |
 | X145 | t-n75 | page | N75 (N407; Draft 1, the nature-made land): the land has relief and every home pocket is graded flat at the land's height; the land within Z3 is the same at all four homes; every corner has a cove with water at the pond and a wadeable ford midway on its channel; every drawn river is 2 tiles wide or more; lakes and rivers hold water, each lake's centre in water; both trade roads are laid and every river tile a road crosses is wadeable; the marsh lies in patches: under a tenth of its tiles stand alone |
+| X146 | t-n76 | page | N76 (N408): a touch on the menu's empty space reaches the map: on the closed line, a building's card, Jobs, Build, War and the folded menu, every point of the menu's rows that is not a button lands on the map, and every button still takes its own tap |
 
-2801 items sealed · 2671 book entries · 94 laws · 400 citations, 37 still to open · 0 known
+2803 items sealed · 2673 book entries · 94 laws · 401 citations, 37 still to open · 0 known

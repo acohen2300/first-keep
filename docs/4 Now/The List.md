@@ -790,3 +790,7 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 ## 42. N75 built (preview n75): the nature-made land (Albert, Nov 19 14:59 "I like it. I would continue to proceed") [2026-11-19 15:55]
 1. BUILT: relief from the seed; the same plain at every home; pocket and middle flat; water found from the shape (lakes, rivers 2 tiles and up, marsh patches); cove with a ford at every corner; roads ford rivers; hills shown by slope light. Proof owed: his play. t-n75 passes (fails on N74).
 2. NOT BUILT (next land build, his word needed): grading, piers, causeways, a drawn timber bridge, hills that raise the ground.
+
+## 43. N76 built (preview n76): touches pass through the menu's empty space (Albert, Nov 19 16:32, a trial for his play) [2026-11-19 17:00]
+1. BUILT: a drag on the empty space between the menu's words scrolls the map; buttons unchanged. Proof owed: his play. t-n76 passes (fails on N75).
+2. OPEN: t-n60 `cross` and t-p2 `focusHome` unsteady (see BUILDS N76); not traced.

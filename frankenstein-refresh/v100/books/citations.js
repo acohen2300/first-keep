@@ -399,5 +399,6 @@ BOOK("citations", {
  "N403": {"text": "Jefferson & McGee (2013), channel heads in the forested North Carolina Piedmont: A·S^1.27 >= 380 m² (100 heads mapped)", "opened": true},
  "N404": {"text": "Qiu, Lyon & Creveling (2020): the wetness index ln(a / tan b) > 10.5 matched the FEMA floodplain, New Jersey", "opened": true},
  "N405": {"text": "Huang & Turcotte (1989), fractal mapping of digitized images: topography's surface fractal dimension about 2.1 to 2.3 (a profile's 1.1 to 1.3)", "opened": false},
- "N407": {"text": "Albert, Nov 19 14:59: the nature-made land, go (\"I like it. I would continue to proceed\"); bridges at the cove; streams under 2 tiles not drawn; hills shaded by slope; roads round the water; fair because random", "opened": true, "kind": "design"}
+ "N407": {"text": "Albert, Nov 19 14:59: the nature-made land, go (\"I like it. I would continue to proceed\"); bridges at the cove; streams under 2 tiles not drawn; hills shaded by slope; roads round the water; fair because random", "opened": true, "kind": "design"},
+ "N408": {"text": "Albert, Nov 19 16:20 and 16:32: a touch on the empty space between the menu's words cannot scroll the map; \"Let's try 1 and I'll play test it\" (the rows let touches through to the map, only buttons take them)", "opened": true, "kind": "design"}
 });

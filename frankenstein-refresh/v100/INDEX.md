@@ -478,6 +478,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N404 |  | Qiu, Lyon & Creveling (2020): the wetness index ln(a / tan b) > 10.5 matched the FEMA floodplain, New Jersey | opened |
 | N405 |  | Huang & Turcotte (1989), fractal mapping of digitized images: topography's surface fractal dimension about 2.1 to 2.3 (a profile's 1.1 to 1. | to open |
 | N407 |  | Albert, Nov 19 14:59: the nature-made land, go (\I like it. I would continue to proceed\); bridges at the cove; streams under 2 tiles not dr | opened |
+| N408 |  | Albert, Nov 19 16:20 and 16:32: a touch on the empty space between the menu's words cannot scroll the map; \Let's try 1 and I'll play test i | opened |
 
 ## colours
 
@@ -2116,6 +2117,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X143 | N73 (N397; Design 20): sickness burns out: who gets well is immune for good (the R of SIR, N47), so twenty minutes after an outbreak in a fed town of sixty it is over and few are dead, the recovered do not catch it again, and with nobody at risk there is no outbreak and no letter; the alert circle is yellow while any of mine is sick and nothing is attacked (red outranks it), and a tap jumps to the sick; a card tile's text is white and only its cost is coloured | {stage: page} | N397; N47 |
 | X144 | N74 (N398; Drafts 2 and 4, the land audit): the forest, the roads, the trees and the fish each have their own maker; every tree in a road's strip stands, of every kind, and woods in the strip give no cover while woods outside it do; a forest tree holds its wood times its size cubed (times its land's share, the same for all), the biggest over twice the smallest; the clusters' trees are broad old trees holding more than any forest tree; the rocks and crevices are gone from the book | {stage: page} | N398 |
 | X145 | N75 (N407; Draft 1, the nature-made land): the land has relief and every home pocket is graded flat at the land's height; the land within Z3 is the same at all four homes; every corner has a cove with water at the pond and a wadeable ford midway on its channel; every drawn river is 2 tiles wide or more; lakes and rivers hold water, each lake's centre in water; both trade roads are laid and every river tile a road crosses is wadeable; the marsh lies in patches: under a tenth of its tiles stand alone | {stage: page} | N407 |
+| X146 | N76 (N408): a touch on the menu's empty space reaches the map: on the closed line, a building's card, Jobs, Build, War and the folded menu, every point of the menu's rows that is not a button lands on the map, and every button still takes its own tap | {stage: page} | N408 |
 
 ## screen
 

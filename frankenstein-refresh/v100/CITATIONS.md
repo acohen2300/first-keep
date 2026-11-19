@@ -404,3 +404,4 @@ Written by `index.py` from `books/citations.js`, never by hand: every source by 
 | N404 | source | yes | Qiu, Lyon & Creveling (2020): the wetness index ln(a / tan b) > 10.5 matched the FEMA floodplain, New Jersey |
 | N405 | source | to open | Huang & Turcotte (1989), fractal mapping of digitized images: topography's surface fractal dimension about 2.1 to 2.3 (a profile's 1.1 to 1.3) |
 | N407 | design | yes | Albert, Nov 19 14:59: the nature-made land, go ("I like it. I would continue to proceed"); bridges at the cove; streams under 2 tiles not drawn; hills shaded by slope; roads round the water; fair because random |
+| N408 | design | yes | Albert, Nov 19 16:20 and 16:32: a touch on the empty space between the menu's words cannot scroll the map; "Let's try 1 and I'll play test it" (the rows let touches through to the map, only buttons take them) |

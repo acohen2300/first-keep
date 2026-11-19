@@ -912,3 +912,6 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - `landAt` (used only by the domes), STOPS and its why E952 (used only by the old lake placement). [2026-11-19 15:40]
 - The meadow's own relief and flow (D-meadow relief and slope; the soil's own D8 pass): the land's one relief and wetness (E32) feed it now. [2026-11-19 15:40]
 - makeShore's own step-count sweep (E556): now the one distance sweep `spread` (octile, in tiles). [2026-11-19 15:40]
+
+## Cut in N76 (Nov 19) [2026-11-19 17:00]
+- The style `.cell.warx` (menu.js; a red-ringed cell): no markup used it. [2026-11-19 17:00]

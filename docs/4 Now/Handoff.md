@@ -1,7 +1,7 @@
 # First Keep: hand-off (Nov 19, 2026, 15:55) [2026-11-19 15:55]
 
 ## Since 13:25 [2026-11-19 15:55]
-- N75 built and sealed: the nature-made land (Draft 1), preview n75. Not yet played by Albert. Next in his order: item 2, the clock. The land's next build (grading, piers, causeways) waits for his word.
+- N76 built and sealed (touches pass through the menu, preview n76; his play owed). N75 built and sealed: the nature-made land (Draft 1), preview n75. Not yet played by Albert. Next in his order: item 2, the clock. The land's next build (grading, piers, causeways) waits for his word.
 - Another chat was writing building-card drafts on this branch at the same time (14:36 to 14:57): fetch before pushing.
 
 

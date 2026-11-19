@@ -501,6 +501,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N404** Qiu, Lyon & Creveling (2020): the wetness index ln(a / tan b) > 10.5 matched the FEMA floodplain, New Jersey → D380
 - **N405** (to open) Huang & Turcotte (1989), fractal mapping of digitized images: topography's surface fractal dimension about 2.1 → D380
 - **N407** Albert, Nov 19 14:59: the nature-made land, go ("I like it. I would continue to proceed"); bridges at the cove → D379, D380, X145
+- **N408** Albert, Nov 19 16:20 and 16:32: a touch on the empty space between the menu's words cannot scroll the map; "Le → X146
 
 ## Named exceptions
 

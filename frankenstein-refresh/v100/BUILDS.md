@@ -5644,3 +5644,12 @@ Opened: code:index.html, book:measure, book:citations, book:comments, book:rules
 - Gate: PASS. Size: index.html 302,189 → 302,162 bytes (−27; grants: terrain +1,609, ground +12; soil −657, non-movables −574, climate −400, view frame −56). ecs: named 249 → 249; dead 0 → 0.
 - Map start on the test machine (seed 3478130664): 2.6 s → 2.5 to 3.3 s by seed. Water 2.4 to 10.4% of the land on three seeds (today 1.6 to 3.7%).
 - Tests: t-n75 (X145) passes; it fails on N74's code. Run with it, the same on N74 and N75: t-n74, t-n73, t-n57, t-n55, t-n54, t-ground, t-n21, t-n22, t-n23, t-n43, t-n47, t-n48, t-n49, t-n50, t-load, t-buffer, t-dock, t-save, t-dew, t-pace pass; t-n29, t-n17, t-land, t-sight, t-wild, t-fire, t-trade, t-physics, t-gather fail on both with the same checks false. Smoke 6/6. The full suite was not run.
+
+## N76: the menu's empty space lets touches through · 2026-11-19 17:00
+Albert, Nov 19 16:20: "How come when I tap the empty space between words on the menu area I can't scroll the screen"; 16:32: "Let's try 1 and I'll play test it" (N408). A trial for his play.
+Opened: code:menu.js, book:citations, book:rules, tool:test.py.
+- The rule `#ui > * { pointer-events: auto }` is now `#card, #panel, #ui [data-v] { pointer-events: auto }`: the menu's rows (#rank, #base) take no touch; a button (anything with a verb) does. A drag or tap on the empty space reaches the map. Mail, Help and Pause (#panel) and #card are as before.
+- Known and accepted for the trial (his pick 1): a tap that misses a button reaches the map as a tap; with soldiers picked that is an order.
+- Cut, logged in Parked.md: the dead style `.cell.warx` (no markup used it).
+- Gate: PASS. Size: menu.js 128,273 → 128,183 bytes (−90). ecs unchanged (no logic touched).
+- Tests: t-n76 (X146) passes; it fails on N75's menu.js. With it: t-n75, t-n73, t-n72, t-n71, t-n70, t-n69, t-n68, t-n67, t-n65, t-n43, t-p2b, t-freeze, t-idle, t-dock pass. t-n60 (check `cross`, the roads) failed 2 runs of 3 and t-p2 (check `focusHome`) 1 of 3 with the new menu; each passed its one run on the old menu. Neither check reads the menu; unsteady, cause not traced: OPEN. The full suite was not run.
