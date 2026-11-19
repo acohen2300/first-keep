@@ -525,15 +525,15 @@ function shot(a, t, d) { if (!up(t) || !SIDES[a.side]) return; const F = FI.arro
 const HE = D.health, [HBEAT] = D.beats.health; let plague = -Infinity;
 const town = (side, k) => units().filter((u) => u.side === side && !u.inside && !u.gone && u.hp > null && (dist(u, k) < HE.near * D.tile || !!depotFor(u)));
 const sickRisk = (side) => HE.risk * (ONE + D.exposure.sick * FK.exposure('', side)) * FK.stat('', side, 'sick');
-function outbreak(side, share, pl) { const k = FK.seatOf(side); if (!k || fell.has(side)) return; const P = town(side, k).filter((u) => !(u.sick > FK.K.t)), n = Math.max(ONE, Math.round(P.length * share * FK.stat('', side, 'plague') ** !!pl));
-  for (let i = n; i-- && P.length; ) { const [u] = P.splice(Math.floor(FK.rng() * P.length), ONE); Object.assign(u, { sick: FK.K.t + HE.sickFor, plague: !!pl }); } if (side === ME) tell(pl ? HW.sick.plague : HW.sick.ill, { n }); }
+function outbreak(side, share, pl) { const k = FK.seatOf(side); if (!k || fell.has(side)) return; const P = town(side, k).filter((u) => !u.immune && !(u.sick > FK.K.t)), n = P.length && Math.max(ONE, Math.round(P.length * share * FK.stat('', side, 'plague') ** !!pl));
+  for (let i = n; i-- && P.length; ) { const [u] = P.splice(Math.floor(FK.rng() * P.length), ONE); Object.assign(u, { sick: FK.K.t + HE.sickFor, plague: !!pl }); } if (n && side === ME) tell(pl ? HW.sick.plague : HW.sick.ill, { n }); }
 function health() { const now = FK.K.t, H = [...things().filter((b) => b.kind === 'bld' && FK.has(b, 'Heal') && up(b) && alive(b)), ...units().filter((u) => FK.has(u, 'Heal') && !u.gone && u.hp > null)]; // E597
   for (const side of D.players) { const s = SIDES[side]; if (fell.has(side)) continue; s.sickT = (s.sickT ?? HE.every) - HBEAT; if (s.sickT <= null) { s.sickT = HE.every; if (chance(sickRisk(side), ONE)) outbreak(side, null, false); } }
-  for (const side of D.players) { const k = FK.seatOf(side); if (fell.has(side) || !k) continue; const S = []; let I = null, pl = false; for (const u of town(side, k)) if (u.sick > now) { I++; pl = pl || u.plague; } else S.push(u); if (!I || !S.length) continue;
-    const x = (((HE.R0 * HE.plagueR0[+pl]) / HE.sickFor) * HBEAT * FK.stat('', side, 'spread') * S.length * I) / (I + S.length); let n = Math.floor(x); if (FK.rng() < x - n) n++;
+  for (const side of D.players) { const k = FK.seatOf(side); if (fell.has(side) || !k) continue; const S = [], T = town(side, k); let I = null, pl = false; for (const u of T) if (u.sick > now) { I++; pl = pl || u.plague; } else if (!u.immune) S.push(u); if (!I || !S.length) continue;
+    const x = (((HE.R0 * HE.plagueR0[+pl]) / HE.sickFor) * HBEAT * FK.stat('', side, 'spread') * S.length * I) / T.length; let n = Math.floor(x); if (FK.rng() < x - n) n++;
     for (let i = n; i-- && S.length; ) { const [v] = S.splice(Math.floor(FK.rng() * S.length), ONE); Object.assign(v, { sick: now + HE.sickFor, plague: pl }); } }
-  for (const u of units().slice()) { if (!(u.sick > now)) { if (u.sick) Object.assign(u, { sick: null, plague: false }); continue; } const o = u.side;
-    if (H.some((h) => h.side === o && D.heal[h.code] && dist(h, u) < D.heal[h.code].r * D.tile) && FK.rng() < HE.cure * FK.stat('', o, 'cure')) { Object.assign(u, { sick: null, plague: false }); continue; }
+  for (const u of units().slice()) { const well = () => Object.assign(u, { sick: null, plague: false, immune: true }); if (!(u.sick > now)) { if (u.sick) well(); continue; } const o = u.side;
+    if (H.some((h) => h.side === o && D.heal[h.code] && dist(h, u) < D.heal[h.code].r * D.tile) && FK.rng() < HE.cure * FK.stat('', o, 'cure')) { well(); continue; }
     if ((!u.plague || ~~SIDES[o].plagueDead < Math.max(ONE, popOf(o) * HE.plagueCap)) && FK.rng() < HE.death * HE.plagueDeath[+!!u.plague] * FK.stat('', o, 'death')) { if (u.plague) SIDES[o].plagueDead = -~SIDES[o].plagueDead; WAR.die(u); } } }
 FK.on('start', () => { plague = -Infinity; lit.clear(); for (const s of SIDES) s.sickT = s.plagueDead = null; });
 // E509

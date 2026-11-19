@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,562 | 649,657 | 649,803 |
-| Books | 2683 | 0 | 916,528 | 917,541 |
+| Game code | 31 | 3,562 | 649,643 | 649,789 |
+| Books | 2685 | 0 | 918,062 | 919,079 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,498 | 423,804 | 424,060 |
+| Tools | 5 | 2,516 | 427,229 | 427,485 |
 
 ## The trades (code)
 
@@ -39,8 +39,8 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,940 | 5,944 | 24 |
 | index.html#touch | 54 | 9,911 | 9,915 | 54 |
-| menu.js | 498 | 128,293 | 128,333 | 161 |
-| econ.js | 631 | 119,630 | 119,630 | 70 |
+| menu.js | 498 | 128,233 | 128,273 | 161 |
+| econ.js | 631 | 119,676 | 119,676 | 70 |
 | combat.js | 381 | 65,427 | 65,427 | 83 |
 | ai.js | 172 | 27,499 | 27,499 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 56 | 17,305 |
-| citations | 390 | 120,784 |
+| citations | 391 | 121,346 |
 | colours | 34 | 10,478 |
-| comments | 1081 | 215,580 |
+| comments | 1081 | 215,847 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
-| measure | 341 | 205,654 |
-| rules | 139 | 63,904 |
+| measure | 341 | 205,833 |
+| rules | 140 | 64,460 |
 | screen | 34 | 29,294 |
 | shells | 111 | 24,384 |
 | sides | 7 | 1,869 |
@@ -217,5 +217,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X140 | whys | code | a why is one line (N395; Design 18, 7): the count of Comments entries longer than the line may only fall |
 | X141 | t-n71 | page | N71 (N395; Design 18, the Nov 18 audit fixes): an idle villager is one thing (the Idle box, the tip and the send-an-idle-villager verb read ECON.idlers; a garrisoned villager is none of them); the menu draws every icon from the Screen book; the refusals read from the Words book (a blocked site, a full line, no villagers); the new game's options keep their words and values; a find with a yield is told by its Yield tick; Carry and Repair are ticked nowhere |
 | X142 | t-n72 | page | N72 (N396; Design 19, the n71 play fixes): with a building's card open, Jobs or Build closes the card and opens that page; a card opened from Jobs or Build closes the page and leaves nothing lit; a picked villager keeps his rows; in War an order's answer is read on the line (Hold, Retreat, a refusal) and a taken order lights its tile; Defend with no one under attack lights nothing and says why; the answer and the light go at the next tap |
+| X143 | t-n73 | page | N73 (N397; Design 20): sickness burns out: who gets well is immune for good (the R of SIR, N47), so twenty minutes after an outbreak in a fed town of sixty it is over and few are dead, the recovered do not catch it again, and with nobody at risk there is no outbreak and no letter; the alert circle is yellow while any of mine is sick and nothing is attacked (red outranks it), and a tap jumps to the sick; a card tile's text is white and only its cost is coloured |
 
-2813 items sealed · 2683 book entries · 94 laws · 390 citations, 36 still to open · 0 known
+2815 items sealed · 2685 book entries · 94 laws · 391 citations, 36 still to open · 0 known

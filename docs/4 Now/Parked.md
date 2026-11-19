@@ -894,3 +894,9 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - The verb `kx` (menu.js; the building card's old X, E1124): no button drew it since the menu law. Its why read: "the X of the building card (N390): with a cell chosen it steps back to the building's bar; with none it closes the card".
 - The helper `doing` (menu.js; a unit's "what it is doing" word for the old unit card): called nowhere. `W2.doing`, the words, stay.
 - Cut to pay for the build's 204 new bytes, so no grant was needed.
+
+## Cut in N73 (Nov 18, Design 20; his go 22:02)
+- The orange alert: "orange kill for now" (Albert, Nov 18 22:02). Yellow (a health crisis) is built; orange has no meaning yet.
+- A card tile's name taking its cost's colour (Albert, Nov 17 05:27: the item's name shifting red to green): superseded by his word of Nov 18 20:55 and 22:02 (tile text white, only the cost coloured). The code was `col` in `vcell` (menu.js).
+- The helper `vils` (menu.js; "the picked, if all villagers"): called nowhere.
+- Sickness without immunity (Mid's healthTick as carried over): a recovered villager could catch it again at once. Mid's numbers (D311) are unchanged; only the R of SIR is added.

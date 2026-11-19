@@ -147,7 +147,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N44** Lima (1995) → QAN
 - **N45** Ydenberg & Dill (1986) → QAO
 - **N46** Thermal resistance in series (standard) → QAP
-- **N47** Kermack & McKendrick (1927), Proc. R. Soc. A 115 → QAQ, D311
+- **N47** Kermack & McKendrick (1927), Proc. R. Soc. A 115 → QAQ, D311, X143
 - **N48** Bootsma & Ferguson (2007), PNAS 104(18) → QAQ, D311, O215
 - **N49** Goldberg (1989), roulette-wheel selection → QAR
 - **N50** Hertz (1882), contact → QAS
@@ -491,6 +491,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N391** Albert, Nov 17 08:24 to 15:40 (Design 14, the mold: new game, Jobs, Build, the building card, the villager car → X135, SN48, J61
 - **N395** Albert, Nov 18 17:17 and 17:25 (Design 18, the Nov 18 audit fixes; docs/4 Now/Audit - Nov 18.md). 17:17: "can  → X25, X26, X29, X30, X82, X92, X103, X126, X129, X130, X131, X132, X134, X139, X140, X141, SN51, J9
 - **N396** Albert, Nov 18 19:38 to 21:29 (Design 19, the n71 play fixes; The List 35; docs/4 Now/Route map - Nov 18.md).  → X142
+- **N397** Albert, Nov 18 20:46 to 22:02 (Design 20; The List 35 and 37). 20:55: "The villagers die on their own. I saw i → D311, X143
 
 ## Named exceptions
 

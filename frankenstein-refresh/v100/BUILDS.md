@@ -5601,3 +5601,14 @@ Albert, Nov 18 21:29: "2. Go 3. Go" (N396; his words 19:38 to 21:29; the route m
 - Not in N72: sickness (his question on the math; ruling owed); his other notes of 20:55 and 20:58; route map findings 3 and 5 to 8.
 - Gate: PASS. ecs: named 250 → 250; named2 32 → 32; dead 0 → 0. Size: menu.js 128,388 → 128,333 (−55); no grant for game code (test.py +3,118 under a permit).
 - Tests: t-n72 (X142) passes; fails on N71's code (jobs, build, open, hold, defend, retreat, none). Run with it, all pass: t-n71, t-n70, t-n69, t-n68, t-n67, t-guide, t-ledger. The full suite was NOT run (light tests by his way of working tonight): owed.
+
+## N73: sickness burns out, the yellow alert, white tiles (Design 20; The List 37) · 2026-11-18 23:00
+Albert, Nov 18 22:02: "1. Yes 2. Yellow = health crisis / orange kill for now 3. Confirmed … Ok go" (N397).
+- Sickness (econ.js `outbreak`, `health`; E597; D311): who gets well, by time or a healer, is immune for good: the R of SIR (Kermack and McKendrick 1927, N47). Only the susceptible catch it, over the whole town (N = S + I + R); nobody at risk, no outbreak and no letter. Mid's numbers are unchanged. Proof beside the test: `docs/4 Now/tools/sick.py` on his seed, 60 fed villagers, 45 minutes: 5 dead, nobody sick at the end (N72: 37 dead, half the town sick throughout).
+- Alert (menu.js `spots`, the line; E1104, E1212): the alert circle is yellow while any of mine is sick and nothing is attacked; a tap jumps to the sick. Red outranks it: one circle, the highest alert.
+- Tiles (menu.js `vcell`; E1129): a card tile's text is white; only the cost is coloured (red short, white exact, green over, as N70).
+- Claude's calls, his to overrule: one immunity for sickness and plague alike; "health crisis" = anyone of mine sick; one circle, not two (two cut "Talk" off the card's line at 390 px).
+- Cut and logged in Parked.md ("Cut in N73"): the orange alert (his word), the name's colour, the helper `vils`.
+- Found, not fixed: on a building's card the Learn tiles wrap a two-word name ("Tally sticks", "Bronze age") and the top or the cost is clipped (n72 the same); the helper `loses` (what a unit loses to) is called nowhere, so that line shows nowhere.
+- Gate: PASS. ecs: named 250 → 250; named2 32 → 32; dead 0 → 0. Size: menu.js 128,333 → 128,273 (−60); econ.js 119,630 → 119,676 (+46, a grant of 46); game code −14.
+- Tests: t-n73 (X143) passes; fails on N72's code, all five parts. Run with it, all pass: t-n72, t-n71, t-n70, t-n69, t-n68, t-n67, t-guide, t-ledger, t-effects, t-pace, t-troops. The full suite was not run on N73.

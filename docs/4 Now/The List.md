@@ -754,3 +754,9 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
 - 5 Archers form up and hold, footmen a wall: "Yes we have to mock it".
 - 6 The route map's leftovers: "I lost you here." (to be explained again, plainly; no ruling). 7: "What's the menu law?" (to be explained). 8 The 19 red tests held to Mid: "No idea." (Claude traces each and brings him only the real differences.)
 - "You'll do the next through 27.. Ok go": read as items 9 to 21 of that list (it ended at 21): the traces, the full suite, the owed tests and audit.
+
+## 38. N73 built (preview n73): sickness burns out, the yellow alert, white tiles (Albert, Nov 18 22:02 "Ok go") [2026-11-18 23:00]
+- Spec: `docs/3 Locks/Designs/20 Sickness burns out, the yellow alert, white tiles.md`. What is in: BUILDS.md N73. Cuts: Parked.md "Cut in N73".
+- BUILT, proven by t-n73 (fails on N72's code): the recovered are immune for good; the alert circle yellow while any of mine is sick; a card tile's text white, only the cost coloured.
+- NOT proven by his play. The full suite was not run on N73.
+- Found, not fixed: the Learn tiles' two-word names wrap and clip; `loses` (what a unit loses to) is called nowhere.

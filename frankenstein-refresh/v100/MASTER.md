@@ -678,7 +678,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1223** − leaves out the picked soldier nearest the Town Center; + adds the unpicked one of the wh
 - **E1224** the six orders: Hold, Defend and Retreat go on the tap; Attack and Move go on the map tap  · N396
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
-- **E1129** a cell made while the card's model is being built (K): its verb is noted, the chosen one ( · N390
+- **E1129** a cell made while the card's model is being built (K): its verb is noted, the chosen one ( · N397
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
 - **E195** the mold: a ribbon is an optional label and a strip of n equal cells; seg puts them in one
 - **E196** the mold: every screen is rows on one six-column grid (the Formation). A row holds cells a
@@ -702,7 +702,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1130** the building card's parts (Design 13, N390): KB its numbers and lists (SN47), KW its words · N390 · SN47 (N390) · J60 (N390)
 - **E1131** a walker's picture for a cell: its figure at SN47's fig, in your colour, drawn once a kind · SN47 (N390)
 - **E201** war mode: Albert's War rows. Left the people's orders, the middle box (map, squads and the
-- **E1104** the two look buttons beside Home on the top row: the alert red while something is under at · N378
+- **E1104** the two look buttons beside Home on the top row: the alert red while something is under at · N378 · N397
 - **E1003** picking soldiers on the board (a tap, a second tap, a dragged box) opens the Controller wi
 - **E1200** the mold (Design 14): every screen in play is one fixed line (Home, the path and name, a c
 - **E1201** who the mold is for: the army is the picked soldiers less support (priest, medic, spy); th
@@ -727,7 +727,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1210** the Squad tile: Save while the picked army differs from the saved squad, then Squad N; a t
 - **E1226** send: Attack goes through the tap rows (a foe is fought, the ground marched to); Move marc
 - **E1211** which card shows: ice, war, a crew, my building, any other subject, then Build or Jobs
-- **E1212** the fixed line: Home at the left; the alert circle when something of mine is attacked; War
+- **E1212** the fixed line: Home at the left; the alert circle when something of mine is attacked; War · N397
 - **E1213** under the line the control row and the tile row; empty rows keep their height so Home and 
 - **E735** the hammer carries the receding brown ring for every site going up (the mean of their prog · D309 (N205)
 - **E202** the top bar: Albert's two ribbons. The stores, sound, play, mail; the age, the clock, peop
@@ -970,7 +970,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E594** a fire burns its building and, every few seconds, may light a wooden neighbour; a building
 - **E595** in a summer storm lightning strikes a wooden building now and then, and a forge throws spa
 - **E596** sickness: a town's people near its seat or a depot; more cases from outside in summer and 
-- **E597** each health beat: cases from outside, the spread β S I / N (QAQ), and each sick one cured  · QAQ (N47, N48)
+- **E597** each health beat: cases from outside, the spread β S I / N (QAQ), and each sick one cured  · QAQ (N47, N48) · N47 · N397
 - **E509** A wild group's regard for each side (Mid's gangState, regardOf, addRegard, gangSync): peac · D282 (N198, N199, N201)
 - **E510** Gifts (Mid's giftGain, QCD): each gift in the window buys less regard than the last, as th · QCD (N201, N198)
 - **E511** Vassals and tribute (F28, Mid's 36-economy; Albert, Nov 5 11:16 (2): tribute, the tax rate · QCG (N198)
