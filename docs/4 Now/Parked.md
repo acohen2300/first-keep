@@ -904,3 +904,11 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 ## Cut in N74 (Nov 19, the land clean-up) [2026-11-19 14:20]
 - Rocks and crevices (E36, E37; D39 rocks, D40 rockR, D41 rockH, D42 crevices, D43 creviceW, D44 creviceFloor, D45 creviceL): stamped shapes with no math, 0.17% of the test map. Cut on Albert's go of Nov 19 12:52 (Draft 4). Draft 1's land would make its own steep ground. [2026-11-19 14:20]
 - The felling of the road's strip (the band, the oak's `spare` in PT1, the `felled` set): the Statute of Winchester read as written, the trees stand (Albert, Nov 19 11:51). t-n54's check `band` retired (test.py RETIRED); t-n74 holds the new rule. [2026-11-19 14:20]
+
+## Cut in N75 (Nov 19, the nature-made land; his go 14:59) [2026-11-19 15:40]
+- The made-up water: lakes placed by count and size (E31; D25 lakes, D26 lakeR, D28 shore), a river from each big lake to the nearest coast (E32; D30 riverW, D31 riverWander), hills as domes (E34; D36 hills, D37 hillR, D38 hillH) and a stream from each hill (E35; D34 stream, D35 streamDeep), marsh round two to four lakes (E145's old rule; D114 marshes, D115 marshW). Replaced by water found from the land's shape (Draft 1, D380). Hills no longer raise the ground: the relief is painted (the meadow's slope light) and walked flat until grading is built; sight over hills belongs to the line-of-sight element (Albert, Nov 19 09:16). [2026-11-19 15:40]
+- The pond's own maker `lake()` (E26, E775, E783) and its wavy rim: the pond is now one round bowl from the same `channel()` as the cove's channel. It no longer marks its radius for ice, so it freezes on its depth alone. [2026-11-19 15:40]
+- Brim ponds (D352 brim, the BRIM marks; Albert, Nov 8 14:16: "lakes full to grass in some cases"): found dead, nothing read BRIM since the paper ground. Logged for him to call back if wanted. [2026-11-19 15:40]
+- `landAt` (used only by the domes), STOPS and its why E952 (used only by the old lake placement). [2026-11-19 15:40]
+- The meadow's own relief and flow (D-meadow relief and slope; the soil's own D8 pass): the land's one relief and wetness (E32) feed it now. [2026-11-19 15:40]
+- makeShore's own step-count sweep (E556): now the one distance sweep `spread` (octile, in tiles). [2026-11-19 15:40]

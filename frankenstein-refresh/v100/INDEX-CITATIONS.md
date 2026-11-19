@@ -162,7 +162,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N59** Klatzky, Pai & Krotkov (2000), Presence 9 → QAY, HM1, HM2, HM3
 - **N60** Mandelbrot (1967), Science 156 → QAZ
 - **N61** Downing et al. (2006), lake sizes → QBA, QBH
-- **N62** Leopold & Maddock (1953), USGS Paper 252 → QBB
+- **N62** Leopold & Maddock (1953), USGS Paper 252 → QBB, D380
 - **N63** Hutchinson (1957), shoreline development → QBC
 - **N64** Beakawi Al-Hashemi, H. M. & Baghabra Al-Amoudi, O. S. (2018) A review on the angle of repose of granular mater → QBE, A3
 - **N65** Ettinger (2017), Mulberry32, a 32-bit generator; the seed of the day is the game's own rule → QBF
@@ -212,7 +212,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N109** N79 (stride: two steps of 30 in) → W1
 - **N110** N80 (centre of mass 0.55 of height; foot) → W1
 - **N111** Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn → W6
-- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D25, D26, D27, D28, D29, D30, D31, D32, D33, D34, D35, D36, D37, D38, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D352, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D114, D115, D116, D120, D169, D170, D230, D343, D365
+- **N112** Design: v100 floors, Nov 4 (Albert to confirm) → D1, D2, D3, D7, D8, D9, D10, D11, D12, D13, D14, D15, D16, D17, D18, D19, D20, D21, D22, D23, D24, D27, D29, D32, D33, D46, D47, D48, D50, D51, D52, D53, D54, D55, D56, D57, D58, D59, D60, D66, D67, D70, D73, D74, D75, D76, D77, D78, D79, D80, D81, D82, D83, D84, D85, D87, D89, D90, D91, D92, D93, D94, D95, D97, D98, D99, D100, D101, D103, D104, D105, D106, D107, D108, D112, D113, D116, D120, D169, D170, D230, D343, D365
 - **N113** Design: the figures' four-frame walk (preview 49) → D96
 - **N114** Design: v100 floors, Nov 5 (Albert to confirm) → D122, D126, D132, D133, D134, D137, D144, D145, D146, D147, D148, D157, D162, D164, P37
 - **N115** Design: Albert, Nov 5 (his screenshot of Base) → D165
@@ -367,7 +367,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N265** Beven, K. J. and Kirkby, M. J. (1979), A physically based, variable contributing area model of basin hydrology → D353
 - **N266** Liston, G. E. (2004), Representing subgrid snow cover heterogeneities in regional and global models, Journal o → D353
 - **N267** Cole, D. N. (1987), Research on soil and vegetation in wilderness: a state-of-knowledge review, USDA Forest Se → D353
-- **N268** Matérn, B. (1960), Spatial variation, Meddelanden från Statens Skogsforskningsinstitut 49: the cluster process → C25, D353
+- **N268** Matérn, B. (1960), Spatial variation, Meddelanden från Statens Skogsforskningsinstitut 49: the cluster process → C25, D353, D380
 - **N269** Lobell, D. B. and Asner, G. P. (2002), Moisture effects on soil reflectance, Soil Science Society of America J → D353
 - **N270** Mandelbrot, B. B. (1982), The Fractal Geometry of Nature (Freeman): natural surfaces as sums of octaves whose  → D353
 - **N271** Weaver, T. and Dale, D. (1978), Trampling effects of hikers, motorcycles and horses in meadows and forests, Jo → G11, G12
@@ -496,6 +496,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N399** Australian National University, Fenner School, Forest Mensuration (fennerschool-associated.anu.edu.au/mensurat → D345
 - **N400** Knapik, J. et al., Soldier Load Carriage: Historical, Physiological, Biomechanical and Medical Aspects (US Arm → D53
 - **N401** Soule, R. G. and Goldman, R. F. (1972), Terrain coefficients for energy cost prediction, Journal of Applied Ph → D106
+- **N402** Barnes, Lehman & Mulla (2014), Priority-Flood: an optimal depression-filling and watershed-labeling algorithm, → D380
+- **N403** Jefferson & McGee (2013), channel heads in the forested North Carolina Piedmont: A·S^1.27 >= 380 m² (100 heads → D380
+- **N404** Qiu, Lyon & Creveling (2020): the wetness index ln(a / tan b) > 10.5 matched the FEMA floodplain, New Jersey → D380
+- **N405** (to open) Huang & Turcotte (1989), fractal mapping of digitized images: topography's surface fractal dimension about 2.1 → D380
+- **N407** Albert, Nov 19 14:59: the nature-made land, go ("I like it. I would continue to proceed"); bridges at the cove → D379, D380, X145
 
 ## Named exceptions
 

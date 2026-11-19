@@ -786,3 +786,7 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 5. New faults found (not fixed): the delete button on a site reads "undefined" (menu.js:257); two errors leave an empty screen (index.html:427); a new game from War keeps War (menu.js:434); the 1,000 lot sale is gone (econ.js:362); 11 clipped tiles (Stable all five); 316 buttons under 44 px.
 6. Owed from Albert: rulings on the rout rule, on 11 against 12 px, and on whether the 1,000 lot cut was his.
 
+
+## 42. N75 built (preview n75): the nature-made land (Albert, Nov 19 14:59 "I like it. I would continue to proceed") [2026-11-19 15:55]
+1. BUILT: relief from the seed; the same plain at every home; pocket and middle flat; water found from the shape (lakes, rivers 2 tiles and up, marsh patches); cove with a ford at every corner; roads ford rivers; hills shown by slope light. Proof owed: his play. t-n75 passes (fails on N74).
+2. NOT BUILT (next land build, his word needed): grading, piers, causeways, a drawn timber bridge, hills that raise the ground.

@@ -1,4 +1,9 @@
-# First Keep: hand-off (Nov 19, 2026, 13:25) [2026-11-19 13:25]
+# First Keep: hand-off (Nov 19, 2026, 15:55) [2026-11-19 15:55]
+
+## Since 13:25 [2026-11-19 15:55]
+- N75 built and sealed: the nature-made land (Draft 1), preview n75. Not yet played by Albert. Next in his order: item 2, the clock. The land's next build (grading, piers, causeways) waits for his word.
+- Another chat was writing building-card drafts on this branch at the same time (14:36 to 14:57): fetch before pushing.
+
 
 Read this first in a fresh chat. Then `docs/3 Locks/Drafts/00 Index.md` and Drafts 1 to 6: they hold every ruling of Nov 19 with its time and source. [2026-11-19 13:25]
 
@@ -13,7 +18,7 @@ Read this first in a fresh chat. Then `docs/3 Locks/Drafts/00 Index.md` and Draf
 - He asked for the nature-made land FIRST. Claude built clean-up and trees first and stopped; he was not told the order. Do not repeat that. [2026-11-19 13:25]
 
 ## Next, in his order [2026-11-19 13:25]
-1. Nature-made land (Draft 1): pictures first in a game screen (home corner with its cove; the whole map; two or three seeds). The mock's maker is `nature.js` (not in the repo; rebuild from Draft 1's math: fBm relief, Priority-Flood, D8 flow, channel head A·S^1.27 ≥ 380, width ∝ √Q, TWI > 10.5). Then build: the land, water found from it, then ice, fish, fords, marsh and docks re-pointed at the new water (they read the lists `lakes` and `RIV` today), then the fairness sweep. Grading, piers and causeways are the build after. [2026-11-19 13:25]
+1. DONE AS N75 (built, not proven by his play). Nature-made land (Draft 1): pictures first in a game screen (home corner with its cove; the whole map; two or three seeds). The mock's maker is `nature.js` (not in the repo; rebuild from Draft 1's math: fBm relief, Priority-Flood, D8 flow, channel head A·S^1.27 ≥ 380, width ∝ √Q, TWI > 10.5). Then build: the land, water found from it, then ice, fish, fords, marsh and docks re-pointed at the new water (they read the lists `lakes` and `RIV` today), then the fairness sweep. Grading, piers and causeways are the build after. [2026-11-19 13:25]
 2. The clock (Draft 3, ruled): year 3,600 s, season 900 s, day 300 s (3 a season), night 25% of the day; the economy kept per minute of play; 36 entries to re-time. [2026-11-19 13:25]
 3. Baked ground and woods (woods repaint is 76 ms on the test machine with 7,654 trees; paint by 32-tile squares). The test patch is at preview `n73-baked`; its typed numbers must go to the book. [2026-11-19 13:25]
 4. Tools (Draft 6, ruled): bronze 6x stone and dear, iron the same speed and far cheaper, saw 1.9x. Flag: chopping starts six times slower than today; show him before it ships with anything else. [2026-11-19 13:25]

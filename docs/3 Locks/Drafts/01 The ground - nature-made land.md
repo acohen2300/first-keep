@@ -48,3 +48,7 @@ Why: the element-by-element audit started with the ground (Albert, 08:47). Today
 - Pictures only, nothing in the game changed: `mockups/land/` (nature.js = the maker, rebuilt from the math above and injected into the real v100; mock.py = the screens; sheet-*.png). Seeds 20261105, 3982373520, 3478130664 at roughness 10.
 - Seen in the pictures (Claude): (1) the cove's channel crosses the pocket from the coast, so the land behind it is reached only round the pond's end; (2) small streams draw as broken blue shards: one-tile rivers are below what the ground painter can draw; (3) the rolling land barely shows: the game colours by height band, not by slope, so hills read only as bare-dirt patches; (4) the trade roads are laid over the new water unchanged; (5) water ranges 3.2 to 7.9% by seed, one big lake system near the middle on 3478130664 (fairness unswept).
 - Waiting on Albert's word before any build.
+
+## Ruled and built (Nov 19 14:59 → N75) [2026-11-19 15:55]
+- His answers: 1. "Bridges" (the cove's crossing); 2. streams under 2 tiles: agreed; 3. hills shaded by slope: agreed; 4. roads round the water: "Ok"; 5. "It's fair because it's random". Then: "I like it. I would continue to proceed."
+- Built as N75, preview n75 (see v100/BUILDS.md). Grading, piers and causeways are the next land build; the hills are painted, not yet walked.

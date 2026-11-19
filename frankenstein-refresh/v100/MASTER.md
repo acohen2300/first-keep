@@ -53,20 +53,15 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E24** the four roads: corner to middle
 - **E25** every tile whose middle lies within r of a board point: fn(k, d, dx, dy)
 - **E768** the board point of each tile's middle stepped across the square, not turned afresh for eve
-- **E26** a lake: a bowl (deep at the middle, D27) inside a fractal shore (QAZ, D28); where the land · D27 (N112) · QAZ (N60) · D28 (N112) · QBG (N67) · D32 (N112, N303, N304) · D16 (N112)
-- **E775** a pond's bank: a short fall to the water on every side, the water filled near the brim (no
-- **E783** a pond's water marks the lake's radius on each of its tiles (for how late it freezes); a b
 - **E27** a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok · QAZ (N60)
 - **E28** a channel: discs along a line; w the half-width, deep the bed; the bank falls over D32 · D32 (N112, N303, N304)
-- **E29** a smooth hill: its steepest slope is 0.77 h / r, under the angle of repose at these number
-- **E30** The home pond: Who every corner · What one small lake · Where Z3, the same spot in each co · D51 (N112) · D52 (N112) · QAZ (N60)
-- **E31** Lakes: Who the map · What their number, size and place · Where Z4, off the roads and the m · D25 (N112) · QBA (N61) · QAZ (N60)
-- **E952** a lake keeps off the trade roads' stops, as it keeps off another lake: a stop is a place o
-- **E32** Rivers: Who the map · What one from each lake big enough, to the nearest free coast · Wher · QAZ (N60) · QBB (N62)
-- **E33** Fords (TC4): Who every river · What a shallow crossing · Where wherever a river crosses on · D33 (N112)
+- **E1259** the smallest-first queue, one home: the roads' search and the water's flood
+- **E1260** distance over the tiles from where src holds, out to lim
+- **E30** The home cove: every corner · the pond, a channel to the sea, a ford midway (his 'bridges' · N407
+- **E31** The land's shape: the seed's relief; the same plain at every home (Z3); the pocket and the · D380 (N407, N402, N403, N404, N405, N62, N268)
+- **E32** Water from the shape, once: Priority-Flood from the sea (N402), flow to the lowest neighbo · N402 · N403 · N404 · D32 (N112, N303, N304)
+- **E33** Fords (TC4): where a river crosses a lane from a home to the middle, and once along each r
 - **E1018** every lake has a ford (D374): a shallow bed through its middle, toward the middle of the m · D374 (N326)
-- **E34** Hills (TR1): Who the map · What a few smooth rises · Where Z4, clear of water and roads ·  · D36 (N112) · D37 (N112) · D38 (N112)
-- **E35** Streams (TC3): Who each hill · What a thin, wadeable run to the nearest lake · Where Z4 ·  · D34 (N112) · D35 (N112)
 - **E38** Forest (TF1): Who the map · What where the trees grow (the trees themselves come on floor  · D50 (N112) · D63 (N228, N242) · D66 (N112, N228) · QCP (N228, N231) · QAZ (N60) · D48 (N112)
 - **E720** the forest is Mid's (D345, N249): a jittered lattice scored by an organic field, thicker a · D345 (N256, N249, N362, N363, N398, N399) · N249 · D50 (N112)
 - **E1084** the woods' field reads the board's own coordinates (N362): one field over the whole land,  · N362
@@ -440,7 +435,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E729** the sky's washes (the dusk glow, the night blue, fog, rime, the flash, the visibility veil
 - **E561** the horizon: a band of sky along the top of the glass, coloured by the hour and the weathe
 - **E562** clouds cross the band with the wind
-- **E145** Marsh (TW1): Who the map · What a wet margin round a lake or two · Where Z4's lakes, the l · D115 (N112) · D114 (N112)
+- **E145** Marsh (TW1): the wet ground E32 found, less what the fords and roads made water · E32
 
 ## index.html#floor-7-display
 

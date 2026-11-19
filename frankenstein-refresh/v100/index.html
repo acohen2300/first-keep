@@ -78,7 +78,7 @@ function makeCoast(roll) {
 
 // ── The ground (E17)
 const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4), FOR = new Uint8Array(N * N); // E18
-let coast, seed, lakes = [], RIV = [], GLADES = [], ROADS = []; const MARSH = new Uint8Array(N * N), ROAD = new Uint8Array(N * N), STRIP = new Uint8Array(N * N), BRIM = new Uint8Array(N * N), LAKER = new Float32Array(N * N); // E19
+let coast, seed, lakes = [], RIV = [], GLADES = [], ROADS = []; const MARSH = new Uint8Array(N * N), ROAD = new Uint8Array(N * N), STRIP = new Uint8Array(N * N), LAKER = new Float32Array(N * N), RUN = new Uint8Array(N * N), RELIEF = new Float32Array(N * N); // E19
 function depthAt(bx, by) { // E20
   const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
   const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board);
@@ -86,7 +86,7 @@ function depthAt(bx, by) { // E20
   return [Math.min(dx, dy) - wander, e];
 }
 function makeGround(sd, saved = false) {
-  seed = sd; const roll = dice(sd); coast = makeCoast(roll); BRIM.fill(ZERO); ROAD.fill(ZERO); STRIP.fill(ZERO); LAKER.fill(ZERO);
+  seed = sd; const roll = dice(sd); coast = makeCoast(roll); ROAD.fill(ZERO); STRIP.fill(ZERO); LAKER.fill(ZERO);
   for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
     const [bx, by] = toBoard((i + 0.5) * D.tile, (j + 0.5) * D.tile), [depth, e] = depthAt(bx, by), run = D.beach + (D.cliff - D.beach) * e;
     DEP[j * N + i] = depth;
@@ -99,7 +99,7 @@ function makeGround(sd, saved = false) {
     const round = [[ci - 1, cj - 1, 3], [ci, cj - 1, 2], [ci - 1, cj, 1], [ci, cj, 0]].filter(([i, j]) => i >= 0 && j >= 0 && i < N && j < N).map(([i, j, slot]) => [dh(i, j), (j * N + i) * 4 + slot]).sort((a, b) => a[0] - b[0]);
     for (let a = 0; a < round.length; ) { let b = a + 1; while (b < round.length && round[b][0] - round[b - 1][0] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += round[q][0]; for (let q = a; q < b; q++) CH[round[q][1]] = sum / (b - a); a = b; }
   }
-  makeThings(roll); makeBuildings(); makeMarsh(roll); makeShore();
+  makeThings(roll); makeBuildings(); makeMarsh(); makeShore();
   if (!saved) renderGround(); // E976
   document.getElementById('seed').textContent = 'map ' + sd;
 }
@@ -111,7 +111,6 @@ const cornerDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => Math.hypot(
 const segDist = (px, py, ax, ay, bx, by) => { const vx = bx - ax, vy = by - ay, t = clamp(((px - ax) * vx + (py - ay) * vy) / (vx * vx + vy * vy), 0, 1); return Math.hypot(px - ax - t * vx, py - ay - t * vy); };
 const laneDist = (bx, by) => Math.min(...CORNERS.map(([cx, cy]) => segDist(bx, by, cx, cy, MID, MID))); // E24
 const tileAt = (bx, by) => { const [sx, sy] = fromBoard(bx, by); const i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile); return i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i; };
-const landAt = (bx, by) => { const k = tileAt(bx, by); return k >= 0 && H[k] >= D.land && FOR[k] === 0; };
 const inZ4 = (bx, by, r) => cornerDist(bx, by) >= D.zone[2] + r && depthAt(bx, by)[0] >= D.edge + r && Math.hypot(bx - MID, by - MID) >= D.middle + r && laneDist(bx, by) >= D.lane + r;
 function stamp(bx, by, r, fn) { // E25
   const box = [[bx - r, by - r], [bx + r, by - r], [bx - r, by + r], [bx + r, by + r]].map(([x, y]) => fromBoard(x, y));
@@ -121,14 +120,6 @@ function stamp(bx, by, r, fn) { // E25
   for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) { const dx = ax + i * (ix - ax) + j * (jx - ax) - bx, dy = ay + i * (iy - ay) + j * (jy - ay) - by, d = Math.hypot(dx, dy); if (d <= r) fn(j * N + i, d, dx, dy); }
 }
 const between = (roll, [lo, hi]) => lo + roll() * (hi - lo), count = (roll, [lo, hi]) => Math.floor(between(roll, [lo, hi + 1]));
-// E26
-function lake(bx, by, r, rim, deep, brim) {
-  stamp(bx, by, r * (1 + D.shore) + D.bank, (k, d, dx, dy) => {
-    const out = rim(Math.atan2(dy, dx)), edge = r * (1 + D.shore * out);
-    const h = d < edge ? -deep * (1 - (d / edge) ** 2) : (D.land * (d - edge)) / D.bank; // E775
-    H[k] = Math.min(H[k], h); if (d < edge) LAKER[k] = Math.max(LAKER[k], r / D.upm); else if (brim) BRIM[k] = ONE; // E783
-  });
-}
 // E27
 function wanderLine(roll, a, b, wander, ok) {
   const len = Math.hypot(b[0] - a[0], b[1] - a[1]), nx = -(b[1] - a[1]) / len, ny = (b[0] - a[0]) / len, f = fractal(roll, 6, 1.3), pts = [];
@@ -137,39 +128,39 @@ function wanderLine(roll, a, b, wander, ok) {
 }
 // E28
 const channel = (pts, w, deep) => { for (const [x, y] of pts) stamp(x, y, w + D.bank, (k, d) => { H[k] = Math.min(H[k], d < w ? -deep * (1 - (d / w) ** 2) : (D.land * (d - w)) / D.bank); }); };
-const dome = (bx, by, r, hgt) => stamp(bx, by, r, (k, d) => { H[k] = Math.max(H[k], D.land + hgt * (1 - (d / r) ** 2) ** 2); }); // E29
+const heapQ = () => { const Q = []; return { size: () => Q.length, push(e) { let i = Q.push(e) - ONE; while (i) { const p = (i - ONE) >> ONE; if (Q[p][ZERO] <= e[ZERO]) break; Q[i] = Q[p]; i = p; } Q[i] = e; }, pop() { const top = Q[ZERO], e = Q.pop(); if (Q.length) { let i = ZERO; for (;;) { let c = i + i + ONE; if (c >= Q.length) break; if (c + ONE < Q.length && Q[c + ONE][ZERO] < Q[c][ZERO]) c++; if (Q[c][ZERO] >= e[ZERO]) break; Q[i] = Q[c]; i = c; } Q[i] = e; } return top; } }; }; // E1259
+const ease = (a, b, x) => { const t = clamp((x - a) / (b - a), ZERO, ONE); return t * t * (3 - t - t); };
+const nbr = (k, fn) => { const i = k % N; for (const [di, dj] of D.ways) { const q = k + di + dj * N; if (i + di >= ZERO && i + di < N && q >= ZERO && q < N * N) fn(q, Math.hypot(di, dj) * D.tile); } }; // E1260
+function spread(src, lim) { const far = new Float32Array(N * N).fill(Infinity), F = []; for (let k = ZERO; k < N * N; k++) if (src(k)) { far[k] = ZERO; F.push(k); } for (const k of F) nbr(k, (q, d) => { if ((d += far[k]) < far[q] && d < lim) { far[q] = d; F.push(q); } }); return far; }
 function makeTerrain(roll) {
   // E30
-  const pondRim = fractal(roll, 8, 1.3);
-  for (let c = 0; c < 4; c++) lake(...corner(c, ...D.pond), D.pondR, pondRim, D.lakeDeep, roll() < D.brim);
+  const NA = D.nature, CV = NA.cove, [pu, pv] = D.pond, half = ONE / (ONE + ONE), wadeTo = (x, y, r, d) => stamp(x, y, r, (k) => { H[k] = Math.max(H[k], -d); });
+  for (let c = 0; c < 4; c++) { for (let v = pv; v >= CV.to; v -= CV.step) channel([corner(c, pu, v)], CV.w, D.riverDeep); channel([corner(c, pu, pv)], D.pondR, D.lakeDeep); wadeTo(...corner(c, pu, (pv - D.pondR) * half), CV.w + D.ford * half, D.wade * half); }
   // E31
-  lakes = []; RIV = []; const c = 1.06, amin = Math.PI * D.lakeR[0] ** 2, amax = Math.PI * D.lakeR[1] ** 2, STOPS = D.trade.routes.flatMap(([ax, ay]) => D.trade.stops.map((d) => [MID + ax * d * D.tile, MID + ay * d * D.tile])); // E952
-  for (let n = count(roll, D.lakes), tries = 0; lakes.length < n && tries < 200; tries++) {
-    const r = Math.sqrt(Math.min(amax, amin * roll() ** (-1 / c)) / Math.PI), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]), room = r * (1 + D.shore) + D.bank;
-    if (!inZ4(bx, by, room) || lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + room + 2 * D.beach) || STOPS.some(([x, y]) => Math.hypot(x - bx, y - by) < room)) continue;
-    lakes.push({ x: bx, y: by, r }); lake(bx, by, r, fractal(roll, 8, 1.3), D.lakeDeep, roll() < D.brim);
-  }
+  const n = N * N, T = D.tile, at = (k) => toBoard(((k % N) + half) * T, (Math.floor(k / N) + half) * T), own = fractal2(roll, NA.waves, NA.dim, NA.wave), wild = fractal2(roll, NA.waves, NA.dim, NA.wave), homes = RING.map((_, c) => corner(c, ...D.tc)), flat = new Uint8Array(n);
+  MARSH.fill(ZERO); RUN.fill(ZERO); MTWI.fill(ZERO); lakes = []; RIV = [];
+  for (let k = ZERO; k < n; k++) { const [bx, by] = at(k), b = H[k], ds = homes.map(([x, y]) => Math.hypot(bx - x, by - y)), d = Math.min(...ds), c = ds.indexOf(d), a = (A.corner + c * QT) * RAD, dx = bx - homes[c][ZERO], dy = by - homes[c][ONE];
+    if (b <= ZERO) { RELIEF[k] = b; continue; } const w = ease(D.zone[2], D.zone[2] + NA.blend, d), r0 = w < ONE ? own(dx * Math.cos(a) + dy * Math.sin(a), dy * Math.cos(a) - dx * Math.sin(a)) : ZERO, g = ONE - Math.min(ease(D.middle, D.middle + NA.blend, Math.hypot(bx - MID, by - MID)), ease(D.zone[ZERO], D.zone[ZERO] + NA.blend, d)), e = b + NA.relief * (NA.plain + (ONE - NA.plain) * w) * (r0 + ((w > ZERO ? wild(bx, by) : ZERO) - r0) * w) * Math.min(ONE, b / D.land) ** 2;
+    RELIEF[k] = e + (D.land - e) * g; flat[k] = g >= ONE; }
   // E32
-  const mouths = (bx, by) => { let best = null; for (const [sx, sy, ex, ey] of [[B0, B0 + 900, B0, B1 - 900], [B1, B0 + 900, B1, B1 - 900], [B0 + 900, B0, B1 - 900, B0], [B0 + 900, B1, B1 - 900, B1]]) { const t = clamp(((bx - sx) * (ex - sx) + (by - sy) * (ey - sy)) / ((ex - sx) ** 2 + (ey - sy) ** 2), 0, 1), px = sx + (ex - sx) * t, py = sy + (ey - sy) * t, d = Math.hypot(px - bx, py - by); if (!best || d < best[2]) best = [px, py, d]; } return best; };
-  const rivers = [];
-  for (const L of lakes) if (L.r >= D.lakeR[0] * 1.5) {
-    const [mx, my] = mouths(L.x, L.y), w = D.riverW * L.r, dx = mx - L.x, dy = my - L.y, len = Math.hypot(dx, dy);
-    const pts = wanderLine(roll, [L.x, L.y], [mx + (dx / len) * (D.wander + D.beach), my + (dy / len) * (D.wander + D.beach)], D.riverWander, (x, y) => cornerDist(x, y) >= D.zone[2] + w + D.bank && Math.hypot(x - MID, y - MID) >= D.middle);
-    if (pts) { channel(pts, w, D.riverDeep); rivers.push({ pts, w }); RIV.push({ pts, w }); }
-  }
+  const W = new Float32Array(n), to = new Int32Array(n).fill(-ONE), order = [], Q = heapQ(), S = new Float32Array(n), acc = new Float32Array(n).fill(ONE), CL = new Float32Array(n), up = new Uint8Array(n), cell = (T / D.upm) ** 2;
+  for (let k = ZERO; k < n; k++) if (H[k] <= ZERO) { to[k] = k; W[k] = RELIEF[k]; Q.push([W[k], k]); }
+  while (Q.size()) { const [lv, k] = Q.pop(); order.push(k); nbr(k, (q, d) => { S[k] = Math.max(S[k], (RELIEF[k] - RELIEF[q]) / d); if (to[q] < ZERO) { to[q] = k; W[q] = Math.max(RELIEF[q], lv); Q.push([W[q], q]); } }); }
+  for (let p = order.length - ONE; p >= ZERO; p--) if (H[order[p]] > ZERO) acc[to[order[p]]] += acc[order[p]];
+  const LK = Uint8Array.from(W, (w, k) => H[k] > ZERO && w - RELIEF[k] > NA.lake);
+  for (let k = ZERO; k < n; k++) if (H[k] > ZERO && !flat[k] && acc[k] * cell * Math.max(S[k], NA.flat) ** NA.slope >= NA.head) for (let q = k; H[q] > ZERO && !CL[q]; q = to[q]) CL[q] = ONE;
+  for (let k = ZERO; k < n; k++) { CL[k] = CL[k] && !LK[k] && !flat[k] ? NA.wide * Math.sqrt(acc[k] * cell) : ZERO; if (CL[k] < T) CL[k] = ZERO; else stamp(...at(k), CL[k], (q) => { if (H[q] > ZERO && !flat[q] && !LK[q]) RUN[q] = ONE; }); }
+  for (let k = ZERO; k < n; k++) { if (LK[k]) H[k] = RELIEF[k] - W[k]; else if (RUN[k]) H[k] = -D.riverDeep; else if (H[k] > ZERO) { MTWI[k] = Math.log((acc[k] * cell * D.upm) / T / Math.max(S[k], NA.flat)); MARSH[k] = !flat[k] && MTWI[k] > NA.wet; } if (CL[k] && CL[to[k]]) up[to[k]] = ONE; }
+  const wet = Uint8Array.from(MARSH); for (let k = ZERO; k < n; k++) if (wet[k]) { let m = ZERO; nbr(k, (q) => { m += wet[q]; }); MARSH[k] = m >= NA.patch; }
+  const bank = spread((k) => H[k] <= ZERO && RELIEF[k] > ZERO, D.bank), inner = spread((k) => !LK[k], Infinity);
+  for (let k = ZERO; k < n; k++) if (H[k] > ZERO && bank[k] < D.bank) H[k] = Math.min(H[k], (D.land * bank[k]) / D.bank);
+  // E31
+  for (let k = ZERO; k < n; k++) if (LK[k] && !LAKER[k]) { const all = [k]; let deep = k; LAKER[k] = ONE; for (const q of all) { if (inner[q] > inner[deep]) deep = q; nbr(q, (r) => { if (LK[r] && !LAKER[r]) { LAKER[r] = ONE; all.push(r); } }); }
+    const a = Math.sqrt((all.length * T * T) / Math.PI); for (const q of all) LAKER[q] = a / D.upm; if (all.length >= NA.least) { const [x, y] = at(deep); lakes.push({ x, y, r: inner[deep], a }); } }
+  for (let k = ZERO; k < n; k++) if (CL[k] && !up[k]) { const pts = []; let w = ZERO; for (let q = k; CL[q]; q = to[q]) { pts.push(at(q)); w += CL[q]; if (up[q] > ONE) break; up[q] = ONE + ONE; } if (pts.length > ONE) RIV.push({ pts, w: w / pts.length }); }
   // E33
-  for (const R of rivers) {
-    const spots = R.pts.filter(([x, y]) => laneDist(x, y) < D.lane); const one = R.pts[Math.floor(between(roll, [R.pts.length * 0.3, R.pts.length * 0.7]))];
-    for (const [x, y] of [...spots.filter((p, n) => n % 10 === 0), one]) stamp(x, y, R.w + D.ford / 2, (k) => { if (H[k] < -D.wade / 2) H[k] = -D.wade / 2; });
-  }
-  for (const L of lakes) { const a = Math.atan2(MID - L.y, MID - L.x), far = L.r * D.lakeFord.reach; for (let d = -far; d <= far; d += D.tile) stamp(L.x + Math.cos(a) * d, L.y + Math.sin(a) * d, D.ford * D.lakeFord.wide, (k) => { if (H[k] < -D.wade * D.lakeFord.deep) H[k] = -D.wade * D.lakeFord.deep; }); } // E1018
-  // E34
-  const hills = [];
-  for (let n = count(roll, D.hills), tries = 0; hills.length < n && tries < 100; tries++) { const r = between(roll, D.hillR), bx = between(roll, [B0, B1]), by = between(roll, [B0, B1]);
-    if (!inZ4(bx, by, r) || !landAt(bx, by) || !landAt(bx + r, by) || !landAt(bx - r, by) || !landAt(bx, by + r) || !landAt(bx, by - r)) continue; hills.push([bx, by, r]); dome(bx, by, r, D.hillH); }
-  // E35
-  for (const [hx, hy, hr] of hills) { let best = null; for (const L of lakes) { const d = Math.hypot(L.x - hx, L.y - hy); if (!best || d < best[1]) best = [L, d]; }
-    if (best) { const L = best[0], dx = L.x - hx, dy = L.y - hy, len = Math.hypot(dx, dy), pts = wanderLine(roll, [hx + (dx / len) * hr, hy + (dy / len) * hr], [L.x, L.y], D.riverWander / 2, (x, y) => cornerDist(x, y) >= D.zone[2]); if (pts) { channel(pts, D.stream, D.streamDeep); RIV.push({ pts, w: D.stream }); } } }
+  for (const R of RIV) for (const [x, y] of [...R.pts.filter(([x, y]) => laneDist(x, y) < D.lane).filter((p, i) => i % 10 === 0), R.pts[Math.floor(between(roll, [R.pts.length * 0.3, R.pts.length * 0.7]))]]) wadeTo(x, y, R.w + D.ford * half, D.wade * half);
+  for (const L of lakes) { const a = Math.atan2(MID - L.y, MID - L.x), far = L.a * D.lakeFord.reach; for (let d = -far; d <= far; d += T) wadeTo(L.x + Math.cos(a) * d, L.y + Math.sin(a) * d, D.ford * D.lakeFord.wide, D.wade * D.lakeFord.deep); } // E1018
 }
 function makeForest(roll) {
   // E38
@@ -185,7 +176,7 @@ function makeForest(roll) {
   if (P.length > ONE + ONE) for (let n = GL.links; n--; ) { const i = Math.floor(roll() * P.length); link(P[i], P[by(P[i])[ONE + ONE][ONE]]); } if (P.length) for (const h of homes) link(h, P[by(h)[ZERO][ONE]]);
   RING.forEach((_, c) => { const T = [];
     for (let v = D.edge + FR.edge; v < MID; v += FR.step) for (let u = D.edge + FR.edge; u < MID; u += FR.step) { const tu = u + jit(FR.jitter), tv = v + jit(FR.jitter), [bx, by] = corner(c, tu, tv), k = tileAt(bx, by);
-      if (k < null || H[k] !== D.land || Math.hypot(bx - MID, by - MID) < D.middle || DEP[k] < D.edge + D.tile || far(tu, tv) < FR.home || OPENED[k]) continue; T.push([field(bx, by, tu, tv), k]); }
+      if (k < null || H[k] !== D.land || MARSH[k] || Math.hypot(bx - MID, by - MID) < D.middle || DEP[k] < D.edge + D.tile || far(tu, tv) < FR.home || OPENED[k]) continue; T.push([field(bx, by, tu, tv), k]); }
     T.sort(([a], [b]) => b - a); for (const [, k] of T.slice(null, FR.trees)) FOR[k] = ONE; });
   for (let j = 1; j < N - 1; j++) for (let i = 1; i < N - 1; i++) { const k = j * N + i; if (FOR[k] && [k - 1, k + 1, k - N, k + N].some((q) => H[q] !== D.land)) FOR[k] = 2; } // E39
   for (let k = 0; k < N * N; k++) if (FOR[k] === 2) FOR[k] = 0;
@@ -238,17 +229,16 @@ function makeThings(roll) {
   things.sort((a, b) => a.vy - b.vy); // E50
 }
 function makeRoads(roll, at) {
-  const TR = D.trade, RD = D.road, NO = new Uint8Array(N * N), keep = (RD.w + RD.rim) * D.tile, pass = (k) => k >= ZERO && !NO[k] && H[k] >= D.sandTop, bend = fractal2(roll, RD.waves, RD.dim, RD.wave * D.tile);
-  for (let k = ZERO; k < N * N; k++) if (H[k] < D.sandTop && D.ways.some(([i, j]) => H[k + i + j * N] >= D.sandTop)) stamp(...at(k), keep, (q) => { NO[q] = ONE; }); for (const t of things) if (!FOR[t.k]) stamp(t.bx, t.by, ((KIND[t.kind] || {}).r || ZERO) + keep, (q) => { NO[q] = ONE; }); // E1108
-  const W = new Float32Array(N * N), dear = (k) => W[k] || (W[k] = ONE + (RD.cost * (ONE + bend(...at(k)))) / (ONE + ONE)), lay = (a, b) => { const G = new Float64Array(N * N).fill(Infinity), CAME = new Int32Array(N * N).fill(-ONE), Q = [], bi = b % N, bj = (b - bi) / N, oct = (k) => Math.hypot((k % N) - bi, Math.floor(k / N) - bj); // E1109
-    const push = (e) => { let i = Q.push(e) - ONE; while (i) { const p = (i - ONE) >> ONE; if (Q[p][ZERO] <= e[ZERO]) break; Q[i] = Q[p]; i = p; } Q[i] = e; }, pop = () => { const top = Q[ZERO], e = Q.pop(); if (Q.length) { let i = ZERO; for (;;) { let c = i + i + ONE; if (c >= Q.length) break; if (c + ONE < Q.length && Q[c + ONE][ZERO] < Q[c][ZERO]) c++; if (Q[c][ZERO] >= e[ZERO]) break; Q[i] = Q[c]; i = c; } Q[i] = e; } return top; };
-    G[a] = ZERO; push([ZERO, a]); while (Q.length) { const [f, k] = pop(); if (k === b) break; if (f > G[k] + oct(k)) continue; const i = k % N, j = (k - i) / N; for (const [di, dj] of D.ways) { const x = i + di, y = j + dj, q = y * N + x; if (x < ZERO || y < ZERO || x >= N || y >= N || (q !== b && !pass(q))) continue; const g = G[k] + (di && dj ? Math.SQRT2 : ONE) * dear(q); if (g < G[q]) { G[q] = g; CAME[q] = k; push([g + oct(q), q]); } } }
+  const TR = D.trade, RD = D.road, NO = new Uint8Array(N * N), keep = (RD.w + RD.rim) * D.tile, pass = (k) => k >= ZERO && !NO[k] && (H[k] >= D.sandTop || RUN[k]), bend = fractal2(roll, RD.waves, RD.dim, RD.wave * D.tile);
+  for (let k = ZERO; k < N * N; k++) if (H[k] < D.sandTop && !RUN[k] && D.ways.some(([i, j]) => H[k + i + j * N] >= D.sandTop)) stamp(...at(k), keep, (q) => { NO[q] = ONE; }); for (const t of things) if (!FOR[t.k]) stamp(t.bx, t.by, ((KIND[t.kind] || {}).r || ZERO) + keep, (q) => { NO[q] = ONE; }); // E1108
+  const W = new Float32Array(N * N), dear = (k) => W[k] || (W[k] = (ONE + (RD.cost * (ONE + bend(...at(k)))) / (ONE + ONE)) * (RUN[k] ? RD.ford : ONE)), lay = (a, b) => { const G = new Float64Array(N * N).fill(Infinity), CAME = new Int32Array(N * N).fill(-ONE), Q = heapQ(), bi = b % N, bj = (b - bi) / N, oct = (k) => Math.hypot((k % N) - bi, Math.floor(k / N) - bj); // E1109
+    G[a] = ZERO; Q.push([ZERO, a]); while (Q.size()) { const [f, k] = Q.pop(); if (k === b) break; if (f > G[k] + oct(k)) continue; nbr(k, (q, d) => { if (q !== b && !pass(q)) return; const g = G[k] + (d / D.tile) * dear(q); if (g < G[q]) { G[q] = g; CAME[q] = k; Q.push([g + oct(q), q]); } }); }
     if (!(G[b] < Infinity)) return null; const L = []; for (let k = b; k >= ZERO; k = CAME[k]) L.push(at(k)); return L.reverse(); };
   const soft = (L) => { let S = L; for (let n = RD.soft; n--; ) S = [S[ZERO], ...S.slice(ONE).flatMap((p, i) => [RD.cut, ONE - RD.cut].map((t) => [S[i][ZERO] + (p[ZERO] - S[i][ZERO]) * t, S[i][ONE] + (p[ONE] - S[i][ONE]) * t])), S.at(-ONE)]; return S.every(([x, y]) => pass(tileAt(x, y))) ? S : L; }; // E1110
-  const LAB = new Int32Array(N * N); let big = ZERO, most = ZERO; for (let k = ZERO, id = ONE; k < N * N; k++) if (pass(k) && !LAB[k]) { const F = [k]; let n = ZERO; LAB[k] = id; while (F.length) { const q = F.pop(), i = q % N; n++; for (const [di, dj] of D.ways) { const r = q + di + dj * N; if (i + di >= ZERO && i + di < N && pass(r) && !LAB[r]) { LAB[r] = id; F.push(r); } } } if (n > most) [most, big] = [n, id]; id++; } const on = (k) => LAB[k] === big; // E1111
+  const LAB = new Int32Array(N * N); let big = ZERO, most = ZERO; for (let k = ZERO, id = ONE; k < N * N; k++) if (pass(k) && !LAB[k]) { const F = [k]; let n = ZERO; LAB[k] = id; while (F.length) { n++; nbr(F.pop(), (r) => { if (pass(r) && !LAB[r]) { LAB[r] = id; F.push(r); } }); } if (n > most) [most, big] = [n, id]; id++; } const on = (k) => LAB[k] === big; // E1111
   ROADS = TR.routes.map(([ax, ay]) => { const reach = Math.max(...TR.stops) * D.tile, shore = (s) => { for (let t = MID; t > reach; t -= D.tile) { const k = tileAt(MID + s * ax * t, MID + s * ay * t); if (on(k)) return k; } return -ONE; }, near = (d) => { let best = null; stamp(MID + ax * d * D.tile, MID + ay * d * D.tile, TR.find * D.tile, (k, e) => { if (on(k) && (!best || e < best[ZERO])) best = [e, k]; }); return best ? best[ONE] : -ONE; };
     const P = [shore(-ONE), ...[...TR.stops].sort((a, b) => a - b).map(near), shore(ONE)].filter((k) => k >= ZERO); let L = [], at0 = P[ZERO]; for (const k of P.slice(ONE)) { const s = lay(at0, k); if (s) { L.push(...(L.length ? s.slice(ONE) : s)); at0 = k; } } return L.length ? soft(L) : L; }).filter((L) => L.length); // E1095
-  for (const L of ROADS) for (const [x, y] of L) { stamp(x, y, D.forest.path, (k) => { FOR[k] = null; }); stamp(x, y, (RD.w * D.tile) / (ONE + ONE), (k) => { ROAD[k] = ONE; }); }
+  for (const L of ROADS) for (const [x, y] of L) { stamp(x, y, D.forest.path, (k) => { FOR[k] = null; }); stamp(x, y, (RD.w * D.tile) / (ONE + ONE), (k) => { ROAD[k] = ONE; if (RUN[k]) H[k] = Math.max(H[k], -D.wade / (ONE + ONE)); }); }
   const far = new Float32Array(N * N).fill(Infinity), sweep = (a, b, s) => { const near = [[-s, ZERO, ONE], [ZERO, -s, ONE], [-s, -s, Math.SQRT2], [s, -s, Math.SQRT2]]; for (let j = a; j !== b; j += s) for (let i = a; i !== b; i += s) { const k = j * N + i; if (ROAD[k]) far[k] = ZERO; for (const [di, dj, w] of near) { const x = i + di, y = j + dj; if (x >= ZERO && y >= ZERO && x < N && y < N && far[y * N + x] + w < far[k]) far[k] = far[y * N + x] + w; } } }; // E1258
   sweep(ZERO, N, ONE); sweep(N - ONE, -ONE, -ONE); for (let k = ZERO; k < N * N; k++) STRIP[k] = +(far[k] <= RD.clear);
 }
@@ -348,11 +338,11 @@ function renderGround() {
   LEVELP = new Path2D(); LEVELE = new Path2D(); const LV = PL.level; // E918
   for (let j = ZERO; j < N - ONE; j++) for (let i = ZERO; i < N - ONE; i++) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], v = cell.map(([x, y]) => H[y * N + x]); if (Math.max(...v) <= ZERO || Math.min(...v) >= LV || cell.some(([x, y]) => FOR[y * N + x])) continue;
     const poly = []; cell.forEach(([x, y], n) => { const m = (n + ONE) % cell.length, [x2, y2] = cell[m], a = v[n], b = v[m]; if (a < LV) poly.push([x, y, a]); if ((a < LV) !== (b < LV)) { const t = (LV - a) / (b - a); poly.push([x + (x2 - x) * t, y + (y2 - y) * t, LV, ONE]); } });
-    if (poly.length < cell.length - ONE) continue; const at = ([x, y, h]) => P((x + DRW.half) * T, (y + DRW.half) * T, clamp(h, ZERO, LV)); poly.forEach((q, n) => (n ? LEVELP.lineTo : LEVELP.moveTo).call(LEVELP, ...at(q))); LEVELP.closePath(); const e = poly.filter((q) => q[3]); if (e.length === ONE + ONE) { LEVELE.moveTo(...at(e[ZERO])); LEVELE.lineTo(...at(e[ONE])); } }
+    if (poly.length < cell.length - ONE) continue; const at = ([x, y, h]) => P((x + DRW.half) * T, (y + DRW.half) * T, clamp(h, ZERO, LV)); poly.forEach((q, n) => (n ? LEVELP.lineTo : LEVELP.moveTo).call(LEVELP, ...at(q))); const e = poly.filter((q) => q[3]); if (e.length === ONE + ONE) { LEVELE.moveTo(...at(e[ZERO])); LEVELE.lineTo(...at(e[ONE])); } }
   const MS = PL.marsh, wetOf = (x, y) => (MARSH[y * N + x] && H[y * N + x] > ZERO ? dice(seed + y * N + x)() : -ONE); // E924
   for (let j = ZERO; j < N - ONE; j++) for (let i = ZERO; i < N - ONE; i++) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], v = cell.map(([x, y]) => wetOf(x, y)); if (Math.max(...v) <= MS.tussock) continue;
     const poly = []; cell.forEach(([x, y], n) => { const m = (n + ONE) % cell.length, [x2, y2] = cell[m], a = v[n], b = v[m]; if (a > MS.tussock) poly.push([x, y, H[y * N + x]]); if ((a > MS.tussock) !== (b > MS.tussock)) { const t = (MS.tussock - a) / (b - a); poly.push([x + (x2 - x) * t, y + (y2 - y) * t, H[y * N + x] + (H[y2 * N + x2] - H[y * N + x]) * t, ONE]); } });
-    const at = ([x, y, h]) => P((x + DRW.half) * T, (y + DRW.half) * T, Math.max(ZERO, h)); poly.forEach((q, n) => (n ? LEVELP.lineTo : LEVELP.moveTo).call(LEVELP, ...at(q))); LEVELP.closePath(); const e = poly.filter((q) => q[3]); if (e.length === ONE + ONE) { LEVELE.moveTo(...at(e[ZERO])); LEVELE.lineTo(...at(e[ONE])); } }
+    const at = ([x, y, h]) => P((x + DRW.half) * T, (y + DRW.half) * T, Math.max(ZERO, h)); poly.forEach((q, n) => (n ? LEVELP.lineTo : LEVELP.moveTo).call(LEVELP, ...at(q))); const e = poly.filter((q) => q[3]); if (e.length === ONE + ONE) { LEVELE.moveTo(...at(e[ZERO])); LEVELE.lineTo(...at(e[ONE])); } }
   makeBlades(); makeClouds();
   function reeds(i, j) { const g = RR, R = D.paper.reeds, r = NS_rng(j * N + i), T2 = D.tile; g.lineCap = 'round'; g.lineWidth = R.w; for (let n = R.n; n--; ) { const x = (i + r()) * T2, y = (j + r()) * T2, [px, py] = P(x, y, H[j * N + i]); g.strokeStyle = PC.reeds[Math.floor(r() * PC.reeds.length)]; g.beginPath(); g.moveTo(px, py); g.lineTo(px + (r() - DRW.half) * R.lean, py - R.tall[ZERO] - r() * R.tall[ONE]); g.stroke(); } } // E904
   function contour(i, j, pass) { const cell = [[i, j], [i + ONE, j], [i + ONE, j + ONE], [i, j + ONE]], ks = cell.map(([x, y]) => y * N + x), v = ks.map((k) => H[k]), up = v.map((h) => Math.max(null, h)), bs = v.map(stratum), lo = Math.min(...bs), hi = Math.max(...bs); // E759
@@ -361,7 +351,7 @@ function renderGround() {
     const fill = (poly, b) => { if (poly.length < cell.length - ONE) return; const col = b ? TOP[b] : WATER[ZERO], path = new PB(); poly.forEach((p, n) => (n ? path.lineTo : path.moveTo).call(path, ...at(p))); path.closePath(); for (const x of col === PC.grass ? [g, gm] : [g]) { x.fillStyle = x.strokeStyle = col; x.lineWidth = LAY.seam; x.fill(path); x.stroke(path); } };
     const above = (poly, L) => poly.flatMap((p, n) => { const q = poly[(n + ONE) % poly.length], out = p.h > L ? [p] : []; if ((p.h > L) !== (q.h > L)) { const t = (L - p.h) / (q.h - p.h); out.push({ x: p.x + (q.x - p.x) * t, y: p.y + (q.y - p.y) * t, h: L }); } return out; });
     const paint = (poly, f) => { if (poly.length < cell.length - ONE) return; g.fillStyle = g.strokeStyle = f; g.lineWidth = LAY.seam; g.beginPath(); poly.forEach((p, n) => (n ? g.lineTo : g.moveTo).call(g, ...at(p))); g.closePath(); g.fill(); g.stroke(); };
-    if (MASKS && !pass && !lo && ks.every((k) => DEP[k] >= D.edge)) { const add = (P2, poly) => { if (poly.length < cell.length - ONE) return; poly.forEach((p, n) => (n ? P2.lineTo : P2.moveTo).call(P2, ...at(p))); P2.closePath(); }; const chill = pts.map((p, n) => ({ ...p, h: -onsetOf(ks[n]) })); ICEP.forEach((P2, l) => add(P2, above(chill, (-ICE.span * (l + ONE)) / ICE.steps))); add(ICEP.land, above(pts, ZERO)); } // E782
+    if (MASKS && !pass && !lo && ks.every((k) => DEP[k] >= D.edge)) { const add = (P2, poly) => { if (poly.length < cell.length - ONE) return; poly.forEach((p, n) => (n ? P2.lineTo : P2.moveTo).call(P2, ...at(p))); }; const chill = pts.map((p, n) => ({ ...p, h: -onsetOf(ks[n]) })); ICEP.forEach((P2, l) => add(P2, above(chill, (-ICE.span * (l + ONE)) / ICE.steps))); add(ICEP.land, above(pts, ZERO)); } // E782
     if (!hi) { if (pass) return; const wb = ks.map(waterBand), a = Math.min(...wb), z = Math.max(...wb), far = pts.map((p, n) => ({ ...p, h: SHORE[ks[n]] })); if (a === z) return; g.ph = 'w' + a; paint(pts, WATER[a]); for (let w = a + ONE; w <= z; w++) { g.ph = 'w' + w; paint(above(far, D.paper.water[w - ONE]).map((p) => ({ ...p, h: -ONE })), WATER[w]); } g.ph = 'c' + pass; return; } // E776
     if (pass < lo || pass > hi) return; if (pass === lo) return fill(pts, lo); for (let b = pass; b === pass; b++) { const L = STRATA[b - ONE][ZERO], poly = above(pts, L), edge = poly.filter((p) => p.h === L), SH = D.paper.shadow; if (edge.length > ONE && !ks.some((k) => MARSH[k])) { const [a1, b1] = at(edge[ZERO]), [a2, b2] = at(edge[ONE]); g.strokeStyle = PC.shadow; g.lineWidth = SH.w; g.lineCap = 'butt'; g.beginPath(); g.moveTo(a1 + SH.dx, b1 + SH.dy); g.lineTo(a2 + SH.dx, b2 + SH.dy); g.stroke(); } fill(poly, b); if (!L && edge.length > ONE && Math.min(...v) < ZERO) { g.strokeStyle = C.ground.foam; g.lineWidth = LAY.foam; g.beginPath(); g.moveTo(...at(edge[ZERO])); g.lineTo(...at(edge[ONE])); g.stroke(); } } } // E905
   function face(x1, y1, x2, y2, topL, topR, botL, botR) { g.ph = gm.ph = 'face';
@@ -1377,8 +1367,7 @@ function turned(was, falling) { const name = K.bliz ? 'blizzard' : falling || (K
 // E555
 const flooded = (k) => K.flood > K.t && H[k] > 0 && BANK[k] <= FLD.rise, rutAt = (k) => Math.floor((k - (k % N)) / N / RU.cell) * RC + Math.floor((k % N) / RU.cell);
 const rutOf = (k) => RU.deep * Math.min(1, RUTS[rutAt(k)] / RU.n0) ** RU.pow, mudAt = (k) => Math.min(1, (flooded(k) ? ONE : wetAt(k)) * (1 + rutOf(k)));
-function makeShore() { const far = FLD.rise, q = []; BANK.fill(far + 1); H.forEach((h, k) => { if (h <= 0 && DEP[k] >= D.edge) { BANK[k] = 0; q.push(k); } }); // E556
-  for (const k of q) for (const [dx, dy] of D.ways) { const i = (k % N) + dx, j = (k - (k % N)) / N + dy, n = j * N + i, d = BANK[k] + 1; if (i >= 0 && j >= 0 && i < N && j < N && BANK[n] > d) { BANK[n] = d; if (d < far) q.push(n); } } }
+function makeShore() { const far = spread((k) => H[k] <= ZERO && DEP[k] >= D.edge, (FLD.rise + ONE) * D.tile); BANK.set(far.map((d) => Math.min(d / D.tile, FLD.rise + ONE))); } // E556
 function flooding() { const W = SKYW.water, [secs] = FLD.beat; for (const b of [...things]) if (b.kind === 'bld' && b.done >= 1 && SIDES[b.side] && !stat('', b.side, 'flood') && BANK[tileAt(b.bx, b.by)] < FLD.rise - b.n / 2) { harm(b, b.hpMax * FLD.hit * secs, 'flood'); // E557
     if (b.side === ME && every(FLD.say)) fire('say', W.replace('{b}', SH[b.code].name.toLowerCase()).replace('{at}', MENU.coord(b.bx, b.by))); if (b.hp <= 0) WAR.die(b); } }
 const flood = (secs = FLD.secs) => { K.flood = K.t + secs; };
@@ -1449,9 +1438,8 @@ function skyBand() { const nt = nightOf(), top = topOf(), [hf, hmax] = BD.h, h =
   const cover = CL.cover[kind] ?? CL.cover.other, dark = CL.dark[kind] ?? CL.dark.other, [sp, ds] = CL.speed, [xs, xw, xo] = CL.x, [y0, dy] = CL.y, [w0, dw] = CL.w, [t0, dt] = CL.tall, [pf, pu, pw, ph] = CL.puff, [m3, m4, m2] = CL.mod, drift = CL.calm + K.wind / WX.wind.most; // E562
   ctx.fillStyle = css(mixC(mixC(rgb(SKYC.cloud), rgb(SKYC.cloudDark), dark), rgb(SKYC.night), nt * CL.night), CL.a * cover);
   for (let i = 0; i < CL.n; i++) { const L = cw + xw, x = ((((i * xs + K.t * (sp + (i % m3) * ds) * drift) % L) + L) % L) - xo, y = top + y0 + (i % m3) * dy, rw = w0 + (i % m4) * dw; ctx.beginPath(); oval(ctx, x, y, rw, t0 + (i % m2) * dt); oval(ctx, x + rw * pf, y - pu, rw * pw, ph); ctx.fill(); } }
-function makeMarsh(roll) { // E145
-  const picks = lakes.slice().sort(() => roll() - 0.5).slice(0, count(roll, D.marshes));
-  for (const L of picks) stamp(L.x, L.y, L.r * (1 + D.shore) + D.marshW, (k) => { if (H[k] > 0 && H[k] <= D.land && OCC[k] === 0 && !FOR[k]) MARSH[k] = 1; });
+function makeMarsh() { // E145
+  for (let k = ZERO; k < N * N; k++) if (H[k] <= ZERO) MARSH[k] = ZERO;
 }
 // ── Floor 7, display (E146)
 const EYE = D.sight, SEEN = new Map(), TOPS = new Float32Array(N * N), cellOf = (t) => fromBoard(t.bx, t.by).map((v) => Math.floor(v / D.tile)); let seeT = 0, topN = -1; on('gone', (t) => { if (t && t.kind && t.kind !== 'tree' && t.kind !== 'unit') topN = -1; }); // E980
@@ -1688,12 +1676,8 @@ function makeSoil() { // E800
     for (let j = ZERO; j < N; j++) for (let i = ZERO; i < N; i++) { let v = ZERO; for (let n = o.length; n--; ) v += xs[n][i] * ys[n][j]; out[j * N + i] = v; } return out; };
   const score = (a) => { let s = ZERO, q = ZERO; for (const k of land) { s += a[k]; q += a[k] * a[k]; } const m = s / land.length, sd = Math.sqrt(Math.max(ZERO, q / land.length - m * m)) || ONE; for (const k of land) a[k] = (a[k] - m) / sd; };
   for (let k = ZERO; k < N * N; k++) { const h = H[k], s = layerOf(k), open = h > ZERO && !FOR[k] && !MARSH[k]; MLAND[k] = +(h > ZERO); MGRASS[k] = +(open && s === GRASS); if (h > ZERO) land.push(k); }
-  const MLEAN = new Float32Array(N * N), CS = CH.length / (N * N), [c0, c1, c2, c3] = Array.from({ length: CS }, (_, n) => n); for (const k of land) { const c = k * CS; MLEAN[k] = clamp(MDW.lit * ((CH[c + c0] + CH[c + c2] - CH[c + c1] - CH[c + c3]) / (ONE + ONE) + (CH[c + c2] + CH[c + c3] - CH[c + c0] - CH[c + c1]) / (ONE + ONE)), -D.lay.lean, D.lay.lean); }
-  const rel = field(oct(MDW.relief.octaves)); score(rel); const Z = Float32Array.from(H, (h, k) => h + rel[k] * MDW.relief.h), A = new Float32Array(N * N).fill(ONE), tan = new Float32Array(N * N);
-  for (const k of land.slice().sort((a, b) => Z[b] - Z[a])) { const i = k % N, j = (k - i) / N; let to = -ONE;
-    for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy; if (x < ZERO || y < ZERO || x >= N || y >= N) continue; const n = y * N + x, s = (Z[k] - Z[n]) / (Math.hypot(dx, dy) * T); if (s > tan[k]) { tan[k] = s; to = n; } }
-    if (to >= ZERO && H[to] > ZERO) A[to] += A[k]; }
-  MTWI.fill(ZERO); for (const k of land) MTWI[k] = Math.log((A[k] * T) / Math.max(tan[k], MDW.slope)); score(MTWI);
+  const MLEAN = new Float32Array(N * N), CS = CH.length / (N * N), [, c1, c2] = Array.from({ length: CS }, (_, n) => n); for (const k of land) { const c = k * CS; MLEAN[k] = clamp(MDW.lit * (CH[c + c2] - CH[c + c1] + (D.nature.lift * (RELIEF[k - ONE] - RELIEF[k + ONE] + RELIEF[k + N] - RELIEF[k - N])) / (ONE + ONE)), -D.lay.lean, D.lay.lean); }
+  const rel = Float32Array.from(RELIEF); score(rel); score(MTWI);
   const sg = Math.log(ONE + MDW.cv * MDW.cv); MDRIFT.fill(ONE); for (const k of land) MDRIFT[k] = Math.exp(-Math.sqrt(sg) * rel[k] - sg * half);
   const patch = field(oct()); score(patch); LIGHT.width = LIGHT.height = N; const lx = LIGHT.getContext('2d'), li = lx.createImageData(N, N), [sun, shade] = [SUN, SHADOW].map(hexRGB), A4 = sun.length + ONE; // E901
   for (const k of land) { const v = clamp((MLEAN[k] / D.lay.lean) * PL.light.slope + patch[k] * PL.light.patch, -PL.light.shade, PL.light.sun); li.data.set([...(v > ZERO ? sun : shade), Math.round(Math.abs(v) * D.meadow.opaque)], k * A4); }
