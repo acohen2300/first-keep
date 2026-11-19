@@ -714,3 +714,12 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
 - 19:38: "we designed it too well. It's so clean that I'm not used to it. So I keep looking for a menu that isn't there. So i tap town center, then the jobs / build and nothing happens. Which makes logical sense but not game play sense."
   - Read: the card draws Jobs | Build (menu.js:246, jb()) and mtab sets only S.tab (menu.js:157); the building stays picked, so the card stays (the last step unverified). Design 16 left the card "open, his".
   - Idea (Claude): with any card open, a tap on Jobs or Build closes the card and opens that page (as a phone's tab bar). 19:39, asked if that is what his thumb expected: "Yes." Not a go to build yet.
+- 19:44: "It's actually playing much better than other models so far. We have to clean up the taps and unify the top buttons like you said, but I think that's really it. It seems now it's more 'navigation' problems." Claude offered a route table (every screen by every button, read-only): his word owed.
+- 20:45: sent a match log with no words: `docs/4 Now/Match log - Nov 18 (107 min, n71).json` (seed 4063976774, golden). Read (side 0 is his; the log gives no ending):
+  - Ages reached at minute: his 12 / 33 / 58 / 97; the computers 4/8/16/30, 7/10/13/22, 5/9/31/82.
+  - Gold under 270 until minute 31 with 1 villager on gold until minute 27, while wood reached 4,288 and food 2,667.
+  - Villagers on `wait`: 28 at minute 17, 19 at 21, 17 at 30 (Handoff's open bug 3). 23 idle at minute 27.
+  - Food 3,995 at minute 55 to 0 at 63 and 64 (age 3 at 58, research 16,540 to 30,430, 48 soldiers, upkeep about 550 a minute); villagers 57 to 42, soldiers 48 to 42.
+  - His army lost: 30 to 9 (min 78 to 82), 43 to 16 (89 to 92), 30 to 0 (102 to 105).
+  - Computers: side 2 peaks at 148 villagers (his peak 65) and banks wood to 9,936; side 1 banks stone to 5,871. Cause unverified.
+  - Mail holds one line for the whole match.
