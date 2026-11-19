@@ -1,7 +1,7 @@
 'use strict';
 // E227
 window.WAR = (() => {
-const { D, C, W, K, A, SIDES, N } = FK, STD = []; // E961
+const { D, C, W, K, A, SIDES, N, isIdle } = FK, STD = []; // E961
 // E170
 const things = FK.rest, units = FK.units, T = D.tile, [ME] = D.players, MO = D.nerve, FL = D.flanking, AR = D.army, GR = D.ranks, FLY = D.flight, FM = D.forms, ST = FK.SPRITE, WD = fromBook('words').army;
 const HU = D.hud, CH = D.charge, FB = D.fallback, CK = D.choke, AM = D.ambush, FAM = D.familiar, DI = D.direct, WO = fromBook('words').orders, ORD = new Set(), MS = {}, AT = {}; // E406
@@ -55,7 +55,7 @@ function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) :
   if (t.kind === 'unit' && FK.inWoods(t.k)) { if (!melee) d *= Math.exp(-D.woods.stems * D.woods.trunk * FK.woodsLine(a, t)); // E875
     else { let n = ZERO; FK.unitsNear(t, FL.line * D.tile, (v) => { if (v.target === t && v.side === a.side && alive(v)) n++; }); d /= Math.max(ONE, n); } } // E876
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
-function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (v.job === 'idle' || v.job === 'hold') && temperOf(v) !== AR.temper.hold && !tame(v, a) && enemies(v, a)) { v.was = v.job === 'idle' ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019
+function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (isIdle(v) || v.job === 'hold') && temperOf(v) !== AR.temper.hold && !tame(v, a) && enemies(v, a)) { v.was = isIdle(v) ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019
   sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
   if (u && SIDES[a.side] && !SIDES[t.side]) ECON.struck(a.side, groupOf(t)); // E518
   if (u) { FK.impact(a, t); if (ranged(a)) shot(a, t, W[FK.SH[a.code].body].height); if (!SIDES[t.side]) { t.aggro = a; if (t.job !== 'fight' && stat(t).atk) fight(t, a); } if (t.kind === 'bld') ECON.shot(a, t, d); }
@@ -108,7 +108,7 @@ const tired = (S) => { for (const u of S) u.tire = CH.slow; }; // E806
 const drillOn = (u) => !!(u.drill && u.drill.until > K.t && u.goal === u.drill.k && (u.job === 'march' || u.job === 'hold')); // E393
 function drillHold(u) { const L = u.drill; if (!drillOn(u) || L.held) return; const [x, y] = FK.tileMid(u.goal), mine = far(u, { bx: x, by: y }) / D.upm / FK.pace(u); let foe = Infinity; for (const f of foesNear(u)) foe = Math.min(foe, far(f, u) / D.upm / FK.pace(f));
   if (foe < mine) { L.held = true; L.k = FK.tileAt(u.bx, u.by); Object.assign(u, { path: null, goal: L.k, job: 'hold' }); } }
-function formHome() { const at = new Map(); for (const u of units()) if (armed(u) && u.job === 'idle' && !u.target && !u.esc) { const b = u.hb && alive(u.hb) ? u.hb : home(u.side); if (!b) continue; const H = at.get(b) || at.set(b, new Map()).get(b), k = u.bn ?? u.code; (H.get(k) || H.set(k, []).get(k)).push(u); } // E394
+function formHome() { const at = new Map(); for (const u of units()) if (armed(u) && isIdle(u) && !u.target && !u.esc) { const b = u.hb && alive(u.hb) ? u.hb : home(u.side); if (!b) continue; const H = at.get(b) || at.set(b, new Map()).get(b), k = u.bn ?? u.code; (H.get(k) || H.set(k, []).get(k)).push(u); } // E394
   for (const [b, blocks] of at) { const [fx, fy] = GR.face, out = (half(b.n) + GR.yard) * T, list = [...blocks.keys()].sort((p, q) => String(p).localeCompare(String(q))).map((k) => blocks.get(k).sort((p, q) => ranged(p) - ranged(q)));
     const cols = list.map((a) => Math.min(GR.cols, Math.ceil(Math.sqrt(a.length * GR.block)))); let x0 = half(-(sum(cols, (c) => c + 1) - 1) * GR.gap);
     list.forEach((a, bi) => { a.forEach((u, i) => { const c = (x0 + ((i % cols[bi]) + 0.5) * GR.gap) * T, r = out + Math.floor(i / cols[bi]) * GR.gap * T; u.home = { bx: b.bx + fx * r - fy * c, by: b.by + fy * r + fx * c }; if (!u.path) [u.fx, u.fy] = [fx, fy]; }); x0 += (cols[bi] + 1) * GR.gap; }); } }
@@ -128,7 +128,7 @@ function brain(u, dt, look) { // E396
   nerve(u, dt); if (routing(u)) return true; drillHold(u); if (u.amb && ambushTick(u)) return true;
   if (u.chg && u.chg < K.t) { u.chg = null; u.tire = CH.slow; } if (u.tire) u.tire = FK.relax(u.tire, D.bases.pace, CH.tired, dt); // E408
   if (u.hp < u.hpMax && !u.target && !u.unfed && FK.bldsNear(u.bx, u.by, D.shelter.r * T, (b) => b.side === u.side && FK.has(b, 'Shelter') && up(b) && gap(u, b) < D.shelter.r)) u.hp = FK.relax(u.hp, u.hpMax, u.hpMax / FK.stat(u.code, u.side, 'garrison'), dt);
-  const s = stat(u), sight = FK.stat(u.code, u.side, 'sight'), atHome = u.job === 'idle' || (u.job === 'fight' && u.was == null), d = (v) => edgeDist(u, v); let t = u.target;
+  const s = stat(u), sight = FK.stat(u.code, u.side, 'sight'), atHome = isIdle(u) || (u.job === 'fight' && u.was == null), d = (v) => edgeDist(u, v); let t = u.target;
   if (u.focus && !(alive(u.focus) && enemies(u, u.focus))) u.focus = null;
   if (t && !(alive(t) && enemies(u, t) && (t === u.focus || d(t) < sight * AR.leash * temper(u).chase || (atHome && nearHome(u, t))))) t = null;
   if (look && !u.focus) { const it = intent(u), far = it === AR.intent.loose && onMarch(u) ? s.rng + AR.step : sight, cur = t && t.kind === 'unit' ? t : null;
@@ -142,12 +142,12 @@ function brain(u, dt, look) { // E396
   if (t && !u.focus && ((temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
   if (u.sent && onMarch(u)) t = null; // E1092
   u.pacex = shapeOf(u).spd * (marching(u) && u.slow ? u.slow : 1) * (u.chg ? CH.spd * FK.stat(u.code, u.side, 'charge') : u.tire ?? D.bases.pace);
-  if (t && u.target !== t) { if (u.job !== 'fight') u.was = u.job === 'idle' ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
+  if (t && u.target !== t) { if (u.job !== 'fight') u.was = isIdle(u) ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
   else if (!t && u.job === 'fight') { u.target = null; u.path = null; if (u.was != null) march(u, u.was); else u.job = 'idle'; u.was = null; }
   else if (onMarch(u) && !u.path) { if (u.goal == null || nearK(u.k, u.goal, FK.walkable(u.goal) ? 1 : 4)) { u.job = 'hold'; u.sent = false; } else if (due(u.rp)) { u.rp = D.repath; if (!FK.go(u, u.goal)) u.job = 'hold'; } }
   else if (u.esc && alive(u.esc) && !u.path && gap(u, u.esc) > D.trade.near * D.trade.keepUp && due(u.rp)) { u.rp = D.repath; if (u.job === 'hold') u.job = 'idle'; FK.go(u, FK.tileAt(u.esc.bx, u.esc.by)); } // E1046
-  else if (u.job === 'idle' && u.side === ME && u.home && !u.path && gap(u, u.home) > D.yard) Object.assign(u, { job: 'hold', goal: u.k }); // E1020
-  else if (u.job === 'idle' && u.home && !u.path && gap(u, u.home) > AR.near && due(u.rp)) { u.rp = D.repath; const hk = FK.tileAt(u.home.bx, u.home.by); if (FK.walkable(hk) && FK.go(u, hk)) { u.path.pop(); u.path.push([u.home.bx, u.home.by]); u.then = 'idle'; } else if (FK.walkTo(u, (q) => FK.walkable(q) && nearK(q, hk, AR.homeR), hk)) { const [bx, by] = FK.tileMid(u.path.at(-1)); u.home = { bx, by }; u.then = 'idle'; } else u.home = { bx: u.bx, by: u.by }; } // E1036
+  else if (isIdle(u) && u.side === ME && u.home && !u.path && gap(u, u.home) > D.yard) Object.assign(u, { job: 'hold', goal: u.k }); // E1020
+  else if (isIdle(u) && u.home && !u.path && gap(u, u.home) > AR.near && due(u.rp)) { u.rp = D.repath; const hk = FK.tileAt(u.home.bx, u.home.by); if (FK.walkable(hk) && FK.go(u, hk)) { u.path.pop(); u.path.push([u.home.bx, u.home.by]); u.then = 'idle'; } else if (FK.walkTo(u, (q) => FK.walkable(q) && nearK(q, hk, AR.homeR), hk)) { const [bx, by] = FK.tileMid(u.path.at(-1)); u.home = { bx, by }; u.then = 'idle'; } else u.home = { bx: u.bx, by: u.by }; } // E1036
   return false; }
 // E397
 const AN = (A.loose / A.round) * 2 * Math.PI, M = W.bow.blow, mpt = T / D.upm, reachs = new Map();
@@ -164,7 +164,7 @@ const centreOf = (S) => ({ bx: sum(S, (u) => u.bx) / S.length, by: sum(S, (u) =>
 function routeK(a, b, who, p0) { if (p0) [a] = p0; const p = a !== b && (p0 || FK.findPath(a, (q) => q === b, b, undefined, who)), prev = [a, ...(p || [])]; return p ? Math.min(HU.route, Math.max(HU.least, sum(p, (q) => tl(q, prev.shift())) / tl(a, b))) : HU.least; } // E410
 const etaOf = (S, k, rk) => Math.max(...S.map((u) => (far(u, mid(k)) / D.upm) * rk / FK.pace(u)));
 function mark(S, k, label, L) { const [u0] = S, O = { k, label, t: K.t, rk: routeK(kOf(centreOf(S)), k, u0, L), arrived: false }; ORD.add(O); for (const u of S) Object.assign(u, { ord: O, mvT: K.t }); if (u0.side === ME) say(WO.marching, { n: S.length, at: label }); return O; } // E411
-const status = (u) => (routing(u) ? 'rout' : u.target && alive(u.target) ? 'fight' : u.job === 'rout' ? 'rally' : u.job === 'march' ? (K.t - u.mvT > HU.still ? 'hold' : !u.ord && u.goal === SIDES[u.side].flag ? 'rally' : 'march') : u.job === 'idle' && u.home && gap(u, u.home) > HU.home ? 'rally' : 'hold'); // E412
+const status = (u) => (routing(u) ? 'rout' : u.target && alive(u.target) ? 'fight' : u.job === 'rout' ? 'rally' : u.job === 'march' ? (K.t - u.mvT > HU.still ? 'hold' : !u.ord && u.goal === SIDES[u.side].flag ? 'rally' : 'march') : isIdle(u) && u.home && gap(u, u.home) > HU.home ? 'rally' : 'hold'); // E412
 const sendable = () => armyOf(ME), idleSoldier = (u) => !(u.sent && u.bn == null) && ['hold', 'rally'].includes(status(u)), free = () => sendable().filter(idleSoldier);
 function freeWhy() { const S = sendable(), c = (k) => S.filter((u) => status(u) === k).length; if (!S.length) return WO.none; return WO.busy.replace('{list}', Object.keys(WO.states).filter(c).map((k) => WO.states[k].replace('{n}', c(k))).join(fromBook('words').list.and) || WO.guarding); }
 function walkTo(v, p) { Object.assign(v, { job: 'walk', then: 'idle', target: null }); if (!FK.toSpot(v, p)) v.job = 'idle'; }
@@ -274,7 +274,7 @@ FK.on('tick', (dt) => {
 FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size(), MK = ST.marks, [a0, a1] = MK.arc, B = MK.bar, at = (x, y, up = 0) => FK.toScreen(...FK.toView(x, y, Math.max(0, FK.H[FK.tileAt(x, y)]) + up));
   const seen = (x, y, m) => x > -m && x < cw + m && y > -m && y < ch + m, bar = FK.bar; // E1043
   const oval = (x, y, r, k, from = a0, to = a1) => { ctx.beginPath(); ctx.ellipse(x, y, r, r * k, a0, from, to); };
-  for (const u of units()) if (u.hp != null && u.hp < u.hpMax && FK.inSight(u)) { const [x, y] = FK.toScreen(u.vx, u.vy), [w, up, m] = B.unit; if (seen(x, y, m)) bar(x, y - up * s, w * s, u.hp / u.hpMax, SIDES[u.side] ? SIDES[u.side].col : C.white); }
+  for (const u of units()) if (FK.has(u, 'Health') && u.hp < u.hpMax && FK.inSight(u)) { const [x, y] = FK.toScreen(u.vx, u.vy), [w, up, m] = B.unit; if (seen(x, y, m)) bar(x, y - up * s, w * s, u.hp / u.hpMax, SIDES[u.side] ? SIDES[u.side].col : C.white); }
   for (const t of FK.blds()) if ((t.board || t.bp != null) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, , , m] = B.bld, W = t.n * w * s, n = D.prep.planks, f = t.board ? ONE : t.bp; if (!seen(x, y, m)) continue; ctx.save(); ctx.strokeStyle = C.pole; ctx.lineWidth = B.h; for (let i = ZERO; i < Math.ceil(n * f); i++) { const yy = y - (i + ONE) * B.h * (ONE + ONE) * s; ctx.beginPath(); ctx.moveTo(x - half(W), yy); ctx.lineTo(x + half(W), yy - B.h * s * (i % (ONE + ONE) ? ONE : -ONE)); ctx.stroke(); } ctx.restore(); } // E1034
   for (const t of FK.blds()) if (t.hp != null && t.hp < t.hpMax && up(t) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, up, plus, m] = B.bld; if (seen(x, y, m)) bar(x, y - (t.n * up + plus) * s, t.n * w * s, t.hp / t.hpMax, SIDES[t.side].col); }
   drawOrders(ctx, s, at, oval);
@@ -300,7 +300,7 @@ const ZE = D.zeal, CV = D.convert, SA = D.sab, [SOL, TOWER] = D.sab.seen, FO = D
 const troop = (u) => armed(u) || FK.has(u, 'Heal') || FK.has(u, 'Convert') || FK.has(u, 'Spy');
 const caught = (a, t) => t.kind === 'unit' && routing(t) && K.t - t.routAt > PR.after && gap(a, t) <= PR.r && !stat(a).bonly && !!SIDES[a.side] && !!SIDES[t.side]; // E466
 function support(u, dt, look) { if (u.job === 'school') return true; if (FK.has(u, 'Spy')) return spy(u, look); if (!FK.has(u, 'Convert') && !FK.has(u, 'Heal')) return false; // E467
-  if (u.job === 'convert') return convert(u, dt); if (look && (u.job === 'idle' || u.job === 'follow')) follow(u); return true; }
+  if (u.job === 'convert') return convert(u, dt); if (look && (isIdle(u) || u.job === 'follow')) follow(u); return true; }
 function follow(u) { let a = null; FK.unitsNear(u, FO.r * T, (v) => { if (v.side === u.side && armed(v) && alive(v) && (v.job === 'march' || v.job === 'fight') && (!a || gap(u, v) < gap(u, a))) a = v; }); // E468
   if (!a) { if (u.job === 'follow' && !u.path) u.job = 'idle'; return; } const k = FK.tileAt(a.bx - (a.fx || null) * FO.back * T, a.by - (a.fy || null) * FO.back * T); if (gap(u, mid(k)) > FO.near && FK.go(u, k)) Object.assign(u, { job: 'follow', then: 'follow' }); }
 function convert(u, dt) { const t = u.cv, full = !!t && (armed(t) ? ECON.armyFull(u.side) : ECON.popOf(u.side) >= ECON.popCap(u.side)); if (full && u.side === ME) say(TW.convert.full); // E469
@@ -318,7 +318,7 @@ const veilOf = (u) => { let w = false; FK.unitsNear(u, SOL * T, (v) => { w = w |
 function spy(u, look) { if (look) { u.veil = veilOf(u);
     let b = null; FK.bldsNear(u.bx, u.by, (SA.look + D.large) * T, (t) => !!(SIDES[t.side] && atWar(u.side, t.side) && alive(t) && edgeDist(u, t) < SA.look && (b = t))); if (b) ECON.intel(u.side, b.side); }
   if (u.job === 'sab') { const b = u.tid; if (!b || !alive(b) || !atWar(u.side, b.side)) Object.assign(u, { job: 'idle', tid: null }); else if (edgeDist(u, b) <= SA.at) sabotage(u, b); else if (!u.path && due(u.rp)) { u.rp = D.repath; FK.goBy(u, b); } return true; }
-  if (u.side !== ME && look && u.job === 'idle') { let b = null; FK.bldsNear(u.bx, u.by, FK.sightOf(u), (t) => !!(SIDES[t.side] && atWar(u.side, t.side) && alive(t) && FK.inSight(t, u.side, u) && SA.how[t.code] && !guarded(t) && (b = t))); if (b) Object.assign(u, { job: 'sab', tid: b }); } // E473
+  if (u.side !== ME && look && isIdle(u)) { let b = null; FK.bldsNear(u.bx, u.by, FK.sightOf(u), (t) => !!(SIDES[t.side] && atWar(u.side, t.side) && alive(t) && FK.inSight(t, u.side, u) && SA.how[t.code] && !guarded(t) && (b = t))); if (b) Object.assign(u, { job: 'sab', tid: b }); } // E473
   return true; }
 function sabotage(u, b) { const how = SA.how[b.code], W = TW.sab, name = FK.SH[b.code].name; if (!how) { u.job = 'idle'; return; } // E474
   if (how === 'burn') { FK.harm(b, b.hpMax * SA.burn, 'sabotage'); if (!alive(b)) die(b, null); else ECON.ignite(b, 'sabotage'); } else { b.stall = K.t + SA.stall; const c = (b.q || []).shift(); if (c && D.ages.includes(c)) SIDES[b.side].aging = null; const [nx] = b.q || []; if (nx) b.qt = ECON.timeOf(b.side, nx); }
@@ -328,7 +328,7 @@ const FD = D.finds, RD = D.raids, JN = D.wayfarer, WW = fromBook('words').wild, 
 const guardsLeft = (t) => units().some((v) => v.find === t && !SIDES[v.side] && alive(v) && FK.has(v, 'Fight')), besideK = (t) => { let b = null; FK.stamp(t.bx, t.by, FD.take * T, (k, d) => { if (FK.walkable(k) && (!b || d < b.d)) b = { d, k }; }); return b && b.k; };
 function wild(u, look) { if (u.back && K.t > u.back) Object.assign(u, { back: null, horde: false, home: u.camp, aggro: null }); // E583
   if (FK.has(u, 'Join')) { if (look) meet(u); return true; } const h = u.home;
-  if (!h) { if (FK.has(u, 'Fight') && u.job === 'idle' && !u.path && look) { const t = choose(u, D.wildAggro); if (t && t.kind !== 'bld') fight(u, t); } return false; } if (!FK.has(u, 'Fight')) return true;
+  if (!h) { if (FK.has(u, 'Fight') && isIdle(u) && !u.path && look) { const t = choose(u, D.wildAggro); if (t && t.kind !== 'bld') fight(u, t); } return false; } if (!FK.has(u, 'Fight')) return true;
   const rr = FD.raid[u.code], far = u.horde ? Infinity : (rr || L0) + L1; let t = u.target && alive(u.target) && !u.target.inside ? u.target : null;
   if (look) { t = u.aggro && alive(u.aggro) && !u.aggro.inside && gap(u.aggro, h) < far ? u.aggro : nearest(u, rr ? rr + FD.reach : FD.look, u, (v) => !!SIDES[v.side] && !v.inside && (u.horde || gap(v, h) < (rr && tagsOf(v).includes('civ') ? rr : FD.home)) && !(rr && ECON.guarded(v)));
     if (!t && u.horde) t = foeBld(u, FD.breaks); const W = FD.weigh[u.code];
@@ -349,14 +349,14 @@ function raids() { const [g0, g1] = RD.gap, wait = () => (g0 + FK.rng() * (g1 - 
   if (!M.length) return; const mark = M[roulette(w)], R = B.get(mark); raid.hit[mark.side] = K.t; for (const u of R) Object.assign(u, { camp: u.home, home: { bx: mark.bx, by: mark.by }, aggro: mark, horde: true, back: K.t + RD.secs });
   if (mark.side === ME) say(WW.raid, { name: FK.SH[mark.code].name.toLowerCase(), at: MENU.coord(mark.bx, mark.by) }); return mark; }
 function loot(o) { const L = FD.loot, P = D.ai.pers[D.ai.pers.of[o]], army = armyOf(o), seat = FK.seatOf(o); if (!seat || ECON.fell(o)) return; // E588
-  for (const t of things()) if ((rowOf(t) || {}).hire && !t.taken && SIDES[o].store.gold >= L.gold) ECON.hire(o, t); if (!P || !P.loot || army.length < L.army || waves[o]) return;
+  for (const t of things()) if (FK.has(t, 'Hire') && !t.taken && SIDES[o].store.gold >= L.gold) ECON.hire(o, t); if (!P || !P.loot || army.length < L.army || waves[o]) return;
   const out = army.filter((u) => u.loot); if (out.length) { const [u0] = out, f = u0.loot; if (f.gone || f.taken || (!guardsLeft(f) && K.t - u0.lootT > L.give)) { for (const u of out) u.loot = null; homeAll(out); } return; }
   let f = null; for (const t of things()) { const F = rowOf(t), d = F && gap(t, seat); if (F && !t.taken && (F.got || F.hire || (guardsLeft(t) && SIDES[o].age)) && d < (F.got || F.hire ? L.far : L.stop) && (!f || d < gap(f, seat))) f = t; }
-  const home = army.filter((u) => u.job === 'idle' && !stat(u).bonly && !u.esc), go = home.slice(null, Math.min(L.go, Math.ceil(home.length * L.share))), k = f && besideK(f); if (k == null || go.length < L.least) return;
+  const home = army.filter((u) => isIdle(u) && !stat(u).bonly && !u.esc), go = home.slice(null, Math.min(L.go, Math.ceil(home.length * L.share))), k = f && besideK(f); if (k == null || go.length < L.least) return;
   for (const u of go) { march(u, k); Object.assign(u, { loot: f, lootT: K.t }); } }
 function scout(u, look) { if (look) u.veil = !!u.sneak && veilOf(u); // E813
-  if (u.job === 'idle' && !u.path && !u.target) u.job = 'scout'; if (u.job !== 'scout') return false; if (u.path) return true; const S = FD.scout; // E589
-  if (look) { let f = null; for (const t of things()) { const F = rowOf(t); if (F && F.got && !t.taken && !guardsLeft(t) && gap(t, u) < S.far && !units().some((v) => SIDES[v.side] && v.side !== u.side && gap(v, t) < S.clear) && (!f || gap(t, u) < gap(f, u))) f = t; }
+  if (isIdle(u) && !u.path && !u.target) u.job = 'scout'; if (u.job !== 'scout') return false; if (u.path) return true; const S = FD.scout; // E589
+  if (look) { let f = null; for (const t of things()) { const F = rowOf(t); if (FK.has(t, 'Take') && !t.taken && !guardsLeft(t) && gap(t, u) < S.far && !units().some((v) => SIDES[v.side] && v.side !== u.side && gap(v, t) < S.clear) && (!f || gap(t, u) < gap(f, u))) f = t; }
     const k = f && besideK(f); if (k != null && FK.go(u, k)) { u.then = 'scout'; return true; } }
   if (!u.route) { const e = S.edge * T, j = () => (FK.rng() * (S.jit + S.jit) - S.jit) * T, c = [[FK.MID, FK.B1 - e], [FK.B1 - e, FK.MID], [FK.MID, FK.B0 + e], [FK.B0 + e, FK.MID], ...things().filter((t) => FK.has(t, 'Seat')).map((t) => [t.bx + Math.sign(FK.MID - t.bx) * S.keep * T, t.by + Math.sign(FK.MID - t.by) * S.keep * T]), [FK.MID - S.mid * T, FK.MID - S.mid * T], [FK.MID + S.mid * T, FK.MID + S.mid * T]];
     u.route = c.map(([x, y]) => ({ bx: x + j(), by: y + j() })).sort((a, b) => Math.atan2(a.by - FK.MID, a.bx - FK.MID) - Math.atan2(b.by - FK.MID, b.bx - FK.MID)); const ds = u.route.map((w) => gap(w, u)); u.wp = ds.indexOf(Math.min(...ds)); }

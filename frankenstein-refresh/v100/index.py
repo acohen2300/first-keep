@@ -153,10 +153,16 @@ for k, t in NOW.items():
         rule('comments', m, f'{k} comments in words, not by code: {c.group(1).strip()[:50]}')
         if m: e = m.group(1) or m.group(2); EUSE.setdefault(e, []).append(k); rule('comments', e in EC, f'{k} names {e}, not in the Comments book')
 for e in EC: rule('comments', e in EUSE, f'{e} is in the Comments book but no code names it')
+WHYS = RULES['whys']['value']; LONG = sum(1 for v in EC.values() if len(v['text']) > WHYS['line'])   # X140 whys (Albert, Nov 18 17:25, N395; Design 18, 7): a why is one line; the count of longer ones may only fall
+rule('whys', LONG <= WHYS['long'], f"{LONG} whys run past {WHYS['line']} characters; the rule allows {WHYS['long']}: say it shorter, never raise the count")
 for k, t in NOW.items():   # G1: the stats are read through FK.stat (and its row), never raw, outside the door that holds stat itself
     if k.startswith('code:') and k != 'code:index.html#the-door': rule('rawstats', not re.search(r'\bD\.stats\[|\bstats\[', t), f'{k} reads the raw stats table: ask FK.stat')
 for k, t in NOW.items():   # G1 (Albert, Nov 13): the menus and the logic hold no colour of their own; every colour lives in the Colours book (the brushes' and figures' own paint excepted, C header)
     if k in ('code:index.html#page',) or (k.startswith('code:') and not k.startswith('code:index.html')): rule('hues', not re.search(r'#[0-9a-fA-F]{6}\b', t), f'{k} holds a colour of its own: ' + ', '.join(re.findall(r'#[0-9a-fA-F]{6}\b', t)[:4]))
+SENT = re.compile(r"""['"`>}][A-Z][a-z']+:? [A-Za-z{$]""")   # X139 words (Albert, Nov 18 17:25, N395; Design 18, 2): a sentence typed in code; its home is the Words book
+for f in CODE:
+    for ln, line in enumerate(script(f).split('\n'), 1):
+        m = SENT.search(re.sub(r'(?<![:"\'\\])//.*$', '', line)); rule('words', not m, f'{f}:{ln} types a sentence: {m.group(0)[1:] if m else ""}…: it lives in the Words book')
 # X112 ecs (Albert, Nov 13 11:59, N346): everything is a shell, a tick, a state or a book; a law is written once for a tick. Code that asks a thing its name (its job, kind, civ or code) instead of its tick is drift, and so is a tick no law asks for: both counts may only fall
 LAWSRE = re.compile(r"\b(?:job|then|kind|civ|code)\s*[!=]==?\s*['\"]\w+['\"]"); JOINED = ''.join(text(f) for f in CODE)
 NAMED = len(LAWSRE.findall(JOINED)); DEAD = sorted(e['key'] for e in BOOKS['capabilities'].values() if not e['key'].startswith('layer') and e['key'] != 'shell' and f"'{e['key']}'" not in JOINED)
@@ -218,13 +224,12 @@ inv += ['', '## The rules', '', '| Code | Rule | Stage | Stops |', '|---|---|---
 inv += ['', f'{len(STAMP)} items sealed · {sum(len(es) for es in BOOKS.values())} book entries · {len(LAWS)} laws · {len(N)} citations, {sum(1 for e in N.values() if not e["opened"])} still to open · {len(known)} known']
 ci = ['# First Keep v100 · 2. the Citations', '', 'Written by `index.py` from `books/citations.js`, never by hand: every source by its code.', '', '| Code | Kind | Opened | Source |', '|---|---|---|---|'] + [f'| {n} | {e.get("kind", "source")} | {"yes" if e["opened"] else "to open"} | {e["text"]} |' for n, e in N.items()]
 KNOWN_CODES = set(HOME) | set(LAWS); codes_in = lambda t: [x for x in dict.fromkeys(re.findall(r'\b[A-Z]{1,3}\d*[A-Z]?\d*\b', t)) if x in KNOWN_CODES]
-cm = ['# First Keep v100 · 4. the Comments', '', 'Written by `index.py` from `books/comments.js`, never by hand: every why, by its code, and where the code names it.', '', '| Code | In | Why |', '|---|---|---|'] + [f'| {e} | {", ".join(dict.fromkeys(x[5:] for x in EUSE.get(e, [])))} | {v["text"].replace("|", "/")} |' for e, v in EC.items()]
 cites = lambda c: ', '.join(re.findall(r'N\d+', LAWS[c].split(' · ')[-1])) if c in LAWS else ', '.join(BOOKS[HOME[c]][c].get('cite', [])) if c in HOME and HOME[c] not in ('citations', 'comments') else ''
 ms = ['# First Keep v100 · 5. the Master (index, citations and comments)', '', 'Written by `index.py`, never by hand: each part of the code, the whys it carries (E), and the laws (Q) and book entries each why names, with their citations (N). From any line: why, by what math, from what source.', '']
 for k in [k for k in NOW if k.startswith('code:')]:
     es = [e for e, ks in EUSE.items() if k in ks]
     ms += ['', f'## {k[5:]}', ''] + [f'- **{e}** {EC[e]["text"][:90]}' + ''.join(f' · {c}{" (" + cites(c) + ")" if cites(c) else ""}' for c in codes_in(EC[e]['text'])) for e in es]
-PAGES = {'INDEX.md': pg, 'COMMENTS.md': cm, 'MASTER.md': ms, 'CITATIONS.md': ci, 'INDEX-CITATIONS.md': xc, 'INVENTORY.md': inv}
+PAGES = {'INDEX.md': pg, 'MASTER.md': ms, 'CITATIONS.md': ci, 'INDEX-CITATIONS.md': xc, 'INVENTORY.md': inv}
 for f, lines in PAGES.items():
     t = '\n'.join(lines) + '\n'
     if CI: rule('pages', text(f) == t, f'{f} is not what the books say: written by hand, or not rebuilt')
@@ -245,11 +250,11 @@ for f in CODE:
         if re.search(r'\bunits\.(push|unshift)\(', l) and 'jobDoor(' not in l: rule('door', False, f'{f}:{n} adds a unit without the job door')
 rule('door', 'jobDoor(u); place(u); units.push(u)' in text('index.html') and 'units.forEach(jobDoor)' in text('index.html'), 'the job door is missing from spawn or load')
 # ── 4. The List: DONE only with proof (X99, Albert Nov 12 15:08, N330)
-LIST = text('../../docs/4 Now/The List.md') or ''; TESTS = {e['key'] for e in BOOKS['rules'].values() if e['value']['stage'] == 'page'}
+LIST = text('../../docs/4 Now/The List.md') or ''; TESTS = {e['key'] for e in BOOKS['rules'].values() if e['value']['stage'] in ('page', 'retired')}   # a retired test keeps its entry (why, and what holds its ruling now): The List may still name it
 for m in re.finditer(r'(?m)^- ([A-Z]\d+b?) DONE(.*)$', LIST): rule('proof', 'nothing to build' in m.group(2) or ('planted' in m.group(2) and any(t in TESTS for t in re.findall(r'\bt-[a-z0-9-]+', m.group(2)))), f'The List {m.group(1)} is DONE without a test that fails with the old line planted')
 for t in sorted(set(re.findall(r'\bt-[a-z0-9]+(?:-[a-z0-9]+)*', LIST)) - TESTS): rule('proof', False, f'The List names {t}, which is not a test in the rules book')
 for k, e in RULES.items():
-    if e['value']['stage'] not in ('page', 'survey'): rule('rules', k in ran, f'rule {k} is in the book but nothing runs it')
+    if e['value']['stage'] not in ('page', 'survey', 'retired'): rule('rules', k in ran, f'rule {k} is in the book but nothing runs it')
 print(f'{PERMIT["build"] or "no permit"} · opens {len(OPEN)}/10 · {sum(len(es) for es in BOOKS.values())} entries, {len(LAWS)} laws, {len(N)} citations')
 print(f'MODIFIED ({len(changed)}):'); print('\n'.join(report) or '- nothing')
 print(f'LOCKED ({len(locked)} of {len(STAMP)}): byte for byte as sealed, {sum(STAMP[k]["bytes"] for k in locked):,} bytes')

@@ -1,7 +1,7 @@
 'use strict';
 // E213
 window.ECON = (() => {
-const { D, B, U, KIND, SIDES, OCC, H, N } = FK;
+const { D, B, U, KIND, SIDES, OCC, H, N, isIdle } = FK;
 // E170
 const YIELDS = ['food', 'wood', 'gold', 'stone', 'iron'];
 // E290
@@ -10,7 +10,7 @@ const fresh = () => ({ age: 0, aging: 0, civ: null, war: null, laurels: null, te
 for (const s of SIDES) Object.assign(s, fresh());
 let result = null, bell = 0, limit = D.bell, turned, harvest; // E214
 const all = FK.things, things = FK.rest, units = FK.units;
-const shaft = (t) => FK.has(t, 'Shaft') && !!FK.stat('', t.side, 'shaft'), yieldOf = (t) => (t.kind === 'bld' ? ((FK.has(t, 'Field') || FK.has(t, 'Make') || shaft(t)) && up(t) && !t.bare ? t.make || FK.SH[t.code].yield : null) : KIND[t.kind].yield);
+const shaft = (t) => FK.has(t, 'Shaft') && !!FK.stat('', t.side, 'shaft'), yieldOf = (t) => (t.kind === 'bld' ? ((FK.has(t, 'Field') || FK.has(t, 'Make') || shaft(t)) && up(t) && !t.bare ? t.make || FK.SH[t.code].yield : null) : (KIND[t.kind] || {}).yield);
 const rateOf = (t, side) => { if (FK.has(t, 'Make')) return makeOf(t).rate * FK.stat(yieldOf(t), side, 'make') * scaleOf(t, side); const r = FK.stat(t.code || KIND[t.kind].code, side, 'rate') * scaleOf(t, side); return FK.has(t, 'Flock') ? r * t.sheep : FK.has(t, 'Soil') ? r * D.seasons.farm[FK.season()] * harvest.m * t.fert : r; }; // E291
 const alive = (t) => !t.gone && !t.bare && (t.kind === 'bld' || t.amount > 0), up = (t) => t.done >= 1; // E215
 const dist = FK.dist;
@@ -42,18 +42,18 @@ const many = (side, c) => FK.blds().filter((t) => t.side === side && t.code === 
 const YAGE = {}, yieldAge = (y) => { if (y in YAGE) return YAGE[y]; let a = Infinity; const see = (cost, age) => { if (cost && y in cost && age < a) a = age; }; for (const c in D.cost) if (!FK.SH[c] || !FK.SH[c].civ) see(D.cost[c], D.bldAge[c] ?? (FK.SH[c] && FK.SH[c].age ? D.ages.indexOf(FK.SH[c].age) : ZERO)); for (const c in T) if (!T[c].value.civ) see(T[c].value.cost, T[c].value.age ?? ZERO); D.age.cost.forEach((cost, i) => see(cost, i - ONE)); return (YAGE[y] = a); }; // E734
 const limitOf = (side, c) => { const cp = Object.values(FK.stat(c, side, 'limit') || {}); return cp.length ? cp[SIDES[side].age] ?? cp.at(-1) : null; }; // E730
 function lockWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1); // E851
-  if (D.bldAge[c] > age) return `${D.ages[D.bldAge[c]]} age`; if (D.bldTech[c] && !SIDES[side].techs.has(TK[D.bldTech[c]])) return `Research ${T[TK[D.bldTech[c]]].name} first`; if (D.bldNeeds[c] && !things().some((t) => t.side === side && t.code === D.bldNeeds[c] && up(t))) return `Needs an ${FK.SH[D.bldNeeds[c]].name} standing`; return cp.length && !n ? 'A later age allows it' : ''; }
+  if (D.bldAge[c] > age) return `${D.ages[D.bldAge[c]]} age`; if (D.bldTech[c] && !SIDES[side].techs.has(TK[D.bldTech[c]])) return SAY.research.replace('{name}', T[TK[D.bldTech[c]]].name); if (D.bldNeeds[c] && !things().some((t) => t.side === side && t.code === D.bldNeeds[c] && up(t))) return SAY.standing.replace('{b}', FK.SH[D.bldNeeds[c]].name); return cp.length && !n ? SAY.laterAge : ''; }
 function capWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1), lock = lockWhy(side, c); // E313
-  if (lock) return lock; return !cp.length || many(side, c) < n ? '' : `At the limit of ${n}` + (cp[age + 1] > n ? '. A new age allows more' : ''); }
+  if (lock) return lock; return !cp.length || many(side, c) < n ? '' : SAY.limit.replace('{n}', n) + (cp[age + 1] > n ? SAY.more : ''); }
 const byWater = (i, j, n, r) => { for (let y = j - r; y < j + n + r; y++) for (let x = i - r; x < i + n + r; x++) if (x >= ZERO && y >= ZERO && x < N && y < N && (H[y * N + x] <= ZERO || FK.MARSH[y * N + x])) return true; return false; }; // E1068
 function placeWhy(side, c, i, j, capped, apart) { const [, n] = B[c], tick = apart ? 'Field' : 'Touch', snug = is(c, tick); let why = capped ? '' : capWhy(side, c); // E314
-  if (i < 0 || j < 0 || i + n > N || j + n > N) return 'Too close to the edge'; if (why) return why; if (is(c, 'Post') && !stops().some((f) => onStop({ i, j, n }, f) && !postOn(f))) return MW.stop; const shore = is(c, 'Shore'); if (shore && !byWater(i, j, n, D.fish.shore)) return SAY.shore;
-  for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) { const k = y * N + x; if (is(c, 'Gate') && (wallAt(k) || {}).side === side) continue; if (OCC[k] || FK.FOR[k]) return 'Something is in the way'; if (shore ? H[k] < -D.wade * P.half : !FK.free(k) || H[k] !== H[j * N + i]) return shore ? SAY.deep : 'It needs flat, open ground'; }
+  if (i < 0 || j < 0 || i + n > N || j + n > N) return SAY.edge; if (why) return why; if (is(c, 'Post') && !stops().some((f) => onStop({ i, j, n }, f) && !postOn(f))) return MW.stop; const shore = is(c, 'Shore'); if (shore && !byWater(i, j, n, D.fish.shore)) return SAY.shore;
+  for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) { const k = y * N + x; if (is(c, 'Gate') && (wallAt(k) || {}).side === side) continue; if (OCC[k] || FK.FOR[k]) return SAY.blocked; if (shore ? H[k] < -D.wade * P.half : !FK.free(k) || H[k] !== H[j * N + i]) return shore ? SAY.deep : SAY.flat; }
   if (!wallish({ code: c })) FK.bldsNear(...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile), (n + P.near + P.lane) * D.tile, (b) => { const gap = Math.max(b.i - i - n, i - b.i - b.n, b.j - j - n, j - b.j - b.n); if (gap >= P.lane) return;
     const on = (s, v) => v >= s && v < s + b.n, touch = on(b.i, i - 1) || on(b.i, i + n) || on(b.j, j - 1) || on(b.j, j + n);
-    why = !snug && !wallish(b) && !FK.has(b, tick) ? 'Leave a gap: two squares round each building' : touch && !wallish(b) && (D.trains[c] || D.trains[b.code]) ? 'Leave a lane around buildings that train people' : ''; return !!why; });
+    why = !snug && !wallish(b) && !FK.has(b, tick) ? SAY.gap : touch && !wallish(b) && (D.trains[c] || D.trains[b.code]) ? SAY.lane : ''; return !!why; });
   const off = (v, lo, hi) => Math.max(lo - v - P.half, v + P.half - hi, 0); // E315
-  for (let y = j - P.lane; y < j + n + P.lane && !why; y++) for (let x = i - P.lane; x < i + n + P.lane; x++) if (OCC[y * N + x] === 1 && Math.hypot(off(x, i, i + n), off(y, j, j + n)) < P.lane) return 'Leave two squares from trees and rocks';
+  for (let y = j - P.lane; y < j + n + P.lane && !why; y++) for (let x = i - P.lane; x < i + n + P.lane; x++) if (OCC[y * N + x] === 1 && Math.hypot(off(x, i, i + n), off(y, j, j + n)) < P.lane) return SAY.trees;
   return why || (FK.reached(side, { i, j, n }, ...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile)) ? '' : SAY.reach); }
 const canPlace = (code, i, j, side = ME, capped, apart) => !placeWhy(side, code, i, j, capped, apart);
 const around = [...new Set(D.ways.flat())].sort((a, b) => a - b);
@@ -121,7 +121,7 @@ function research(side, c) { if (researchWhy(side, c)) return false; const b = l
 const learn = (side, c) => { SIDES[side].techs.add(c); FK.learn(side, c); if (side === ME) FK.fire('event', 'research', null); if (T[c].value.age === D.age.hidden) enlightened(side); };
 // E220
 const jobOf = (u) => (u.target && (u.job === 'gather' || u.job === 'carry' || (u.job === 'walk' && (u.then === 'gather' || u.then === 'carry'))) ? u.carry || yieldOf(u.target) : u.job === 'build' || (u.job === 'walk' && u.then === 'build') ? 'build' : null);
-const jobs = (side) => { const n = Object.fromEntries([...YIELDS, 'build', 'idle'].map((k) => [k, 0])); for (const u of villagersOf(side)) { const j = jobOf(u); if (j) n[j]++; else if (idleU(u)) n.idle++; } return n; }, idleU = (u) => u.job === 'idle' || u.job === 'wait', idlers = (side) => villagersOf(side).filter((u) => !jobOf(u) && idleU(u) && !u.inside && !u.den); // E1249
+const jobs = (side) => { const n = Object.fromEntries([...YIELDS, 'build', 'idle'].map((k) => [k, 0])); for (const u of villagersOf(side)) { const j = jobOf(u); if (j) n[j]++; else if (idleU(u)) n.idle++; } return n; }, idleU = (u) => isIdle(u) || u.job === 'wait', idlers = (side) => villagersOf(side).filter((u) => !jobOf(u) && idleU(u) && !u.inside && !u.den); // E1249
 const findsOf = (y) => (y === KIND.tree.yield ? all() : things()).filter((t) => yieldOf(t) === y && alive(t) && (t.kind !== 'bld' || (SIDES[t.side] && !(t.amount <= 0))));
 // E306
 const WAY = new WeakMap(), FO = D.forage, SR = D.search, capOf = (t) => FO.cap[t.kind] ?? FK.ring(t).m;
@@ -155,7 +155,7 @@ function idle(u) { hist(u, 'idle'); u.job = 'idle'; u.then = null; u.tool = null
 function autoBuilder(side, t, by) { if (by && jobOf(by) === 'build' && by.target && by.target !== t && !up(by.target)) return void (by.sites = [...(by.sites || []), t]); if (by) return buildAt(by, t); // E945
   const vs = villagersOf(side).filter((v) => !posted(v));
   if (wallish(t) && wallsBusy(side)) return;
-  const free = vs.filter((v) => v.job === 'idle' || v.job === 'wait'), loose = vs.filter((v) => jobOf(v) && jobOf(v) !== 'build' && !focused(v) && v.att !== 'focus'), mob = loose.filter((v) => v.att === 'mobile'), busy = loose.length ? loose : vs.filter((v) => jobOf(v) && jobOf(v) !== 'build'), hand = side === ME && !free.length; // E1027
+  const free = vs.filter((v) => idleU(v)), loose = vs.filter((v) => jobOf(v) && jobOf(v) !== 'build' && !focused(v) && v.att !== 'focus'), mob = loose.filter((v) => v.att === 'mobile'), busy = loose.length ? loose : vs.filter((v) => jobOf(v) && jobOf(v) !== 'build'), hand = side === ME && !free.length; // E1027
   const [v] = mob.length && !free.length ? mob.sort((a, b) => dist(a, t) - dist(b, t)) : free.length || hand ? (hand ? busy : free).sort((a, b) => dist(a, t) - dist(b, t)) : busy.sort((a, b) => forageNow(a) - forageNow(b)); if (v) buildAt(v, t, hand); }
 const builder = (side) => villagersOf(side).find((v) => jobOf(v) === 'build' && v.target && !up(v.target) && !wallish(v.target)); // E1094
 const wallsBusy = (side) => things().filter((s) => s.side === side && !up(s) && wallish(s) && units().some((v) => v.target === s && jobOf(v) === 'build')).length >= D.builders.crew;
@@ -185,7 +185,7 @@ const sendOut = (t) => { const u = villagersOf(t.side).filter((v) => v.target ==
 function assign(side, y, n) { const rank = (v) => (v.att === 'mobile' ? -ONE : focused(v) || v.att === 'focus' ? ONE : ZERO), vs = villagersOf(side).sort((a, b) => rank(a) - rank(b)); // E1053
  
   if (n < 0) { const u = vs.find((v) => jobOf(v) === y); if (u) u.focus = null; if (!u) return false; u.load = ZERO; u.carry = null; idle(u); return true; } // E944
-  const u = vs.find((v) => v.att === 'mobile' && jobOf(v) !== y && jobOf(v) !== 'build' && !posted(v)) || vs.find((v) => v.job === 'idle' || v.job === 'wait') || vs.filter((v) => jobOf(v) && jobOf(v) !== y && jobOf(v) !== 'build' && !posted(v)).reduce((a, v) => (!a || forageNow(v) < forageNow(a) ? v : a), null); if (!u) return false;
+  const u = vs.find((v) => v.att === 'mobile' && jobOf(v) !== y && jobOf(v) !== 'build' && !posted(v)) || vs.find((v) => idleU(v)) || vs.filter((v) => jobOf(v) && jobOf(v) !== y && jobOf(v) !== 'build' && !posted(v)).reduce((a, v) => (!a || forageNow(v) < forageNow(a) ? v : a), null); if (!u) return false;
   return toJob(u, y); }
 function toJob(u, y) { const t = bestFind(u, y); if (!t) return false; u.focus = null; gatherAt(u, t); return true; } // E1237
 // E348
@@ -219,7 +219,7 @@ const replantCost = (t) => costBy(t, (n) => Math.round(n * D.plot.replant));
 const replantWhy = (side, t) => (!t.max ? SAY.none : t.amount ? SAY.growing : canPay(side, replantCost(t)) ? '' : 'cost');
 function replant(side, t) { if (replantWhy(side, t)) return false; pay(side, replantCost(t), 'buildings'); t.amount = t.max; return true; }
 const cutOut = (side, at) => things().filter((q) => q.side === side && q.max && !q.amount && (FK.SH[at.code].drop || []).includes(yieldOf(q))), replantAll = (side, at) => cutOut(side, at).sort((a, b) => dist(a, at) - dist(b, at)).filter((q) => replant(side, q)).length;
-function hunt(side, a, v) { const free = (q) => q.job === 'idle' || q.job === 'wait', u = v || villagersOf(side).filter((q) => !posted(q) && jobOf(q) !== 'build').sort((p, q) => free(q) - free(p) || dist(p, a) - dist(q, a)).shift(); if (u) { WAR.fight(u, a); u.then = 'fight'; } return u; } // E354
+function hunt(side, a, v) { const free = (q) => idleU(q), u = v || villagersOf(side).filter((q) => !posted(q) && jobOf(q) !== 'build').sort((p, q) => free(q) - free(p) || dist(p, a) - dist(q, a)).shift(); if (u) { WAR.fight(u, a); u.then = 'fight'; } return u; } // E354
 const stroke = (u, t, ev) => { u.face = t.bx < u.bx ? -1 : 1; const beat = Math.floor(u.t / D.beat); if (beat !== u.beat && beat % 2 === 0) FK.fire('event', ev, t, u); u.beat = beat; }; // E224
 const WK = []; FK.on('start', () => { WK.length = ZERO; for (const t of all()) { t.wk = t.crew = ZERO; t.wkd = false; } }); // E1008
 FK.on('tick', (dt) => {
@@ -227,7 +227,7 @@ FK.on('tick', (dt) => {
   for (const t of FK.blds()) if (t.q && t.q.length && up(t) && !(t.stall > FK.K.t)) { t.qt -= dt; const code = t.q[0]; if (D.ages.includes(code)) SIDES[t.side].aging = t.qt; if (t.qt <= 0) { const u = FK.SH[code] ? spawnBy(t, code) : null; if (FK.SH[code] && !u) continue; t.q.shift(); if (T[code]) learn(t.side, code); else if (code.plan) mustered(t, code); else if (!u) rise(t.side); if (u && t.side === ME) FK.fire('event', FK.has(u, 'Gather') ? 'trained' : 'trainedSol', u); const r = SIDES[t.side].rally; if (u && FK.has(u, 'Gather') && r) { const f = bestFind(u, r); if (f) gatherAt(u, f); } if (t.q.length) t.qt = timeOf(t.side, t.q[0]); } }
   nature(dt);
   for (const t of WK) t.wk = t.crew = ZERO; WK.length = ZERO; for (const u of units()) { const j = jobOf(u), t = u.target; if (!t || !(j || u.job === 'build')) continue; if (!t.wkd) { t.wkd = true; WK.push(t); } if (j && j !== 'build') t.wk++; else if (u.job === 'build') t.crew++; } for (const t of WK) t.wkd = false;
-  for (const u of units()) { if (u.inside && (u.inside.gone || u.job !== 'inside') && out(u) && FK.has(u, 'Gather') && u.job === 'idle') resume(u); if (u.job === 'shelter' && !u.path) enter(u); if (!FK.has(u, 'Gather') || u.path || u.inside || u.den) continue; const t = u.target;
+  for (const u of units()) { if (u.inside && (u.inside.gone || u.job !== 'inside') && out(u) && FK.has(u, 'Gather') && isIdle(u)) resume(u); if (u.job === 'shelter' && !u.path) enter(u); if (!FK.has(u, 'Gather') || u.path || u.inside || u.den) continue; const t = u.target;
     if (u.job === 'gather') { if (!t || !alive(t)) { lose(u); continue; } if (!beside(u, t)) { gatherAt(u, t); continue; }
       u.tool = FK.WORK[t.kind] ?? FK.WORK.other; stroke(u, t, 'work'); const cap = FK.stat(u.code, u.side, 'carry'), g = rateOf(t, u.side) * dt * hungerOf(u.side) * D.health.work ** (u.sick > FK.K.t) * D.events.rows.circus.mul ** (u.cheer > FK.K.t), n = Math.min(g, t.amount ?? g, cap - u.load); t.workT = bell; // E347
       if (FK.has(t, 'Make')) { make(u.side, t, g); continue; } if (FK.has(t, 'Flock')) { earn(u.side, 'food', g, 'gather'); continue; } if (FK.has(t, 'Store')) { earn(u.side, yieldOf(t), n, 'gather'); if (t.max) t.amount -= n; continue; } u.load += n; if (t.kind !== 'bld') FK.take(t, n); else if (t.max) { t.amount -= n; const root = FK.has(t, 'Regrow') && D.regrow[t.kind].root; if (root && t.amount <= ZERO) { t.amount = t.max * root; t.bare = true; } } if (u.load >= cap - 1e-6 || (!n && u.load)) carry(u); }
@@ -240,7 +240,7 @@ FK.on('tick', (dt) => {
       if (up(t)) { t.hp = t.hpMax; if (t.side === ME || !FK.fogOn()) FK.wear(t); if (FK.has(t, 'Wonder')) { t.held = bell + D.wonderHold; tell(EW.built[+(t.side !== ME)], { m: Math.round(D.wonderHold / MINUTE), side: EW.sides[t.side] }); } if (t.side === ME) FK.fire('event', wallish(t) || FK.trains(t.code).some((c) => !FK.SH[c].ticks.includes('Gather')) ? 'builtWar' : 'built', t); } }
     else if (u.job === 'board') boardStep(u, t, dt);
     else if (u.job === 'wait') { u.wait -= dt; if (u.wait <= 0) { if (u.load) carry(u); else if (u.lost) look(u); else idle(u); } }
-    else if (u.job === 'idle' && u.load) carry(u);
+    else if (isIdle(u) && u.load) carry(u);
   }
   burn(dt); if (FK.every(FD.beat)) finds(); if (FK.every(D.minute)) lightning(); if (FK.every(D.beats.health)) health();
   if (FK.every(DG.beat)) { dangerMap(); watch(); sites(); } if (FK.every(DG.look)) leave(); if (FK.every(FL.look)) for (const u of units()) if (FK.has(u, 'Gather') && SIDES[u.side]) fright(u, FK.seatOf(u.side)); if (FK.every(D.peaceBeat)) judge();
@@ -314,7 +314,7 @@ function watch() { const h = FK.seatOf(ME), mine = FK.blds().filter((t) => t.sid
 // E446
 function sites() { if (emg) return; for (const t of FK.blds()) if (SIDES[t.side] && !up(t) && !units().some((v) => v.target === t && jobOf(v) === 'build')) { const R = FK.reach(t.side);
   if (!FK.reached(t.side, t, t.bx, t.by)) { if (t.side === ME && !t.told) tell(SAY.site, { b: FK.SH[t.code].name }); t.told = true; continue; } t.told = false; if (wallish(t) && wallsBusy(t.side)) continue;
-  const [v] = villagersOf(t.side).filter((v) => (v.job === 'idle' || v.job === 'wait') && !v.inside && !v.den && !v.emg && R.has(v.k)).sort((a, b) => dist(a, t) - dist(b, t)); if (v) buildAt(v, t); } }
+  const [v] = villagersOf(t.side).filter((v) => (idleU(v)) && !v.inside && !v.den && !v.emg && R.has(v.k)).sort((a, b) => dist(a, t) - dist(b, t)); if (v) buildAt(v, t); } }
 // E447
 function fall(side, by) { fell.add(side); const s = SIDES[side]; if (SIDES[by] && by !== side) { const got = { ...s.store }; for (const t of things()) if (t.kind === 'bld' && t.side === side) for (const [y, n] of Object.entries(D.cost[t.code] || {})) add(got, y, Math.floor(n * D.plunder)); for (const y in got) { earn(by, y, got[y], 'loot'); spend(side, y, s.store[y], 'loot'); } }
   for (const u of units().filter((u) => u.side === side)) WAR.die(u); for (const t of FK.blds().filter((t) => t.side === side)) FK.unbuild(t);
@@ -436,7 +436,7 @@ function campWhyTrain(side, c) { const size = campOf(c), Q = CW.cap; if (!size) 
   if (!cap) return SIDES[side].age < CM[size].first ? Q.age.replace('{name}', FK.SH[c].name).replace('{age}', D.ages[CM[size].first]) : !things().some((t) => t.side === side && t.code === CM[size].need && up(t)) ? Q.store : Q.tech;
   return campsOut(side, size) >= cap ? (cap === CA.one ? Q.one : Q.two).replace('{what}', what) : ''; }
 // E500
-const needs = (b) => !up(b) || b.hp < b.hpMax * CA.mend, hands = (u) => CA.build * FK.stat('', u.side, 'campbuild'), raiser = (u) => WAR.armed(u) && !CA.not.includes(FK.SH[u.code].class) && !u.target && !u.chg && !u.goingHome && (u.job === 'idle' || u.job === 'hold');
+const needs = (b) => !up(b) || b.hp < b.hpMax * CA.mend, hands = (u) => CA.build * FK.stat('', u.side, 'campbuild'), raiser = (u) => WAR.armed(u) && !CA.not.includes(FK.SH[u.code].class) && !u.target && !u.chg && !u.goingHome && (isIdle(u) || u.job === 'hold');
 function campRaise(dt) { const S = things().filter((b) => b.camp && alive(b) && needs(b)), look = FK.every(CA.look), at1 = [];
   for (const u of units()) { if (u.job === 'raise') { const b = u.site; if (!b || b.gone || !needs(b) || u.target) { u.site = null; u.job = 'idle'; } else if (FK.atB(u, b)) { b.crew += hands(u); at1.push(u); } else if (!u.path && !FK.goBy(u, b)) u.job = 'idle'; continue; }
     if (!look || !S.length || !raiser(u)) continue; const taken = (b) => units().filter((v) => v.site === b && v.job === 'raise').length, by = (b) => dist(u, b) / D.tile + CA.crowd * taken(b), [b] = S.filter((q) => q.side === u.side && by(q) < CA.raise).sort((p, q) => by(p) - by(q));
@@ -492,11 +492,11 @@ function judgeEnvoy(to, from, u) { const A = RW.answer, ask = u.ask; if (WAR.sta
     makePeace(to, from); return reply(from, u, A.peace); }
   if (T.ally != null && T.ally !== from) return reply(from, u, A.taken, { other: nameOf2(T.ally) }); if (T.ally === from) return reply(from, u, A.yours);
   if (oddsOf(from, to) < RL.weak) return reply(from, u, A.weak); if (!busy && them > RL.strong + lift) return reply(from, u, A.alone); makeAlly(to, from); reply(from, u, A.yes); }
-function sendHelp(f, pt, told) { const mine = WAR.armyOf(f).filter((u) => u.job === 'idle' || u.job === 'hold'), keep = Math.ceil(mine.length * RL.help.keep), go = mine.filter((_, i) => i >= keep); if (!go.length || !pt) return false;
+function sendHelp(f, pt, told) { const mine = WAR.armyOf(f).filter((u) => isIdle(u) || u.job === 'hold'), keep = Math.ceil(mine.length * RL.help.keep), go = mine.filter((_, i) => i >= keep); if (!go.length || !pt) return false;
   for (const u of go) { WAR.march(u, FK.tileAt(pt.bx, pt.by)); u.helpT = FK.K.t; } if (told) tell(RW.help, { side: nameOf2(f), n: go.length }); return true; }
 // E590
 const FD = D.finds, WW = fromBook('words').wild, ONE = D.count.one, ZERO = D.count.zero, rowOf = FK.rowOf, list = (c) => Object.entries(c).map(([y, n]) => n + ' ' + y).join(fromBook('words').list.and);
-function finds() { for (const t of things()) { const F = rowOf(t); if (!F || !F.got || t.taken || t.gone || WAR.guardsLeft(t)) continue; let m = null;
+function finds() { for (const t of things()) { const F = rowOf(t); if (!FK.has(t, 'Take') || t.taken || t.gone || WAR.guardsLeft(t)) continue; let m = null;
     FK.unitsNear(t, FD.take * D.tile, (v) => { if (!m && SIDES[v.side] && !v.gone && v.hp > null && !v.inside && !FK.has(v, 'Envoy') && !FK.has(v, 'Trade') && dist(v, t) < FD.take * D.tile) m = v; }); if (!m) continue;
     const o = m.side, s = SIDES[o], got = {}; for (const y in F.got) got[y] = Math.round(F.got[y]); t.taken = true; for (const y in got) earn(o, y, got[y], 'finds', false); let extra = '';
     const c = F.tech && Object.keys(T).find((c) => !s.techs.has(c) && T[c].value.age <= s.age && !T[c].value.rank && needsOf(c).every((n) => s.techs.has(n)) && !things().some((b) => b.side === o && (b.q || []).includes(c))); if (c) { learn(o, c); extra = WW.scroll.replace('{name}', T[c].name); }
@@ -566,7 +566,7 @@ function demand(L, q, y) { if (demandWhy(L, q, y)) return false; const s = SIDES
 const menAt = (L, q) => { const k = FK.seatOf(q); return k ? WAR.armyOf(L).filter((u) => dist(u, k) < VA.r * D.tile).length : LO; };
 const tributeWhy = (L, q) => (!ruled(L, q) ? RW.why.now : SIDES[q].forced > FK.K.t ? RW.why.forced.replace('{n}', Math.ceil(SIDES[q].forced - FK.K.t)) : menAt(L, q) < DM.tributeMen ? RW.why.men2.replace('{n}', DM.tributeMen) : '');
 function forceTribute(L, q) { if (tributeWhy(L, q)) return false; const s = SIDES[q]; s.forced = FK.K.t + DM.tribute; s.unrest = Math.min(HI, s.unrest + DM.tributeUnrest); if (L === ME) tell(VW.forced, { side: nameOf2(q), n: DM.tribute / MINUTE }); return true; }
-const levyOf = (L, q) => units().filter((u) => u.side === L && u.levy === q), atHome1 = (q) => WAR.armyOf(q).filter((u) => u.job === 'idle' || u.job === 'hold'), levyRoom = (L, q) => Math.max(LO, Math.ceil((WAR.armyOf(q).length + levyOf(L, q).length) * DM.levyMax) - levyOf(L, q).length);
+const levyOf = (L, q) => units().filter((u) => u.side === L && u.levy === q), atHome1 = (q) => WAR.armyOf(q).filter((u) => isIdle(u) || u.job === 'hold'), levyRoom = (L, q) => Math.max(LO, Math.ceil((WAR.armyOf(q).length + levyOf(L, q).length) * DM.levyMax) - levyOf(L, q).length);
 const levyWhy = (L, q, n) => (!ruled(L, q) ? RW.why.now : !atHome1(q).length ? RW.why.home : n < DM.least || n > levyRoom(L, q) ? RW.why.half : '');
 function levy(L, q, n) { if (levyWhy(L, q, n)) return false; const go = atHome1(q).filter((_, i) => i < n), k = FK.seatOf(L); for (const u of go) { Object.assign(u, { side: L, levy: q, home: null, target: null }); if (k) WAR.march(u, FK.tileAt(k.bx, k.by)); } if (L === ME) { WAR.rebattalion(); tell(VW.levy, { n: go.length, side: nameOf2(q) }); } return true; }
 const releaseLevy = (u) => Object.assign(u, { side: u.levy, levy: null, job: 'idle', target: null, focus: null, bn: null, ord: null }), releaseAll = (L, q) => { const S = levyOf(L, q); S.forEach(releaseLevy); if (L === ME && S.length) tell(VW.home, { n: S.length, side: nameOf2(q) }); return S.length > LO; };

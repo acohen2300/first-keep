@@ -9,6 +9,9 @@ piece = lambda k: json.load(open(os.path.join(HERE, '../clean/numbers.json')))['
 RULES = {e['key']: e['name'] for e in book('rules').values() if e['value']['stage'] == 'page'}
 ONLY = sys.argv[sys.argv.index('--only') + 1].split(',') if '--only' in sys.argv else list(RULES)
 CHROME = next((p for p in ('/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser') if os.path.exists(p)), None); done = {}
+RETIRED = {   # N71 (Design 18, 6): the checks a later ruling replaced, by rule; each is logged in Parked.md ("Cut in N71"). live() leaves them out of a rule's verdict
+    't-n18b': ['people'], 't-n52': ['ring', 'fade'], 't-n43': ['woods'], 't-n26': ['tapMoves', 'aimWaits', 'peopleRed'], 't-n53': ['exit'], 't-n24': ['recall'], 't-n42': ['bulk'], 't-p2b': ['opens', 'arm', 'exit'], 't-n30': ['prepPlayed', 'alarm_split', 'alarm_lure', 'alarm_seek']}
+live = lambda key, v: {k: x for k, x in v.items() if k not in RETIRED[key]} if isinstance(v, dict) else tuple(k for k in v if k not in RETIRED[key])
 def ok(key, cond, got=''):
     if key not in ONLY: return   # a test of several rules says only those asked for
     done[key] = done.get(key, True) and bool(cond); print(('PASS ' if cond else 'FAIL ') + f'[{key}] {RULES[key]}' + ('' if cond else f'  [{got}]'), flush=True)
@@ -35,19 +38,10 @@ async def main(b):
     scr = await ev("fromBook('screen')")
     ok('t-version', await ev("document.title === 'First Keep v' + FK.D.version"))
     ok('t-top', await ev("[document.querySelectorAll('.topbar .strip').length, document.querySelectorAll('.topbar .strip .cell').length]") == [1, len(scr['top'])])
-    shown = await ev("(() => { MENU.S.tab = 'Build'; const out = {}; for (const g of Object.keys(MENU.SCR.tabs)) { MENU.S.group = g; FK.SIDES[0].age = FK.D.ages.length - 1; MENU.render(true); const all = document.querySelectorAll('#base > .row6:last-child [data-v^=pick], #base > .row6:last-child [data-v^=later]').length; FK.SIDES[0].age = 0; MENU.render(true); out[g] = [document.getElementById('base').offsetHeight, all, [...document.querySelectorAll('#base .tabs .cell')].map((c) => c.textContent).join(), document.querySelectorAll('#base > .row6:last-child > *').length]; } return out; })()")   # E853: the last age shows the whole tab (Show all cut, N24); E898: shut, the grid still keeps its six slots
-    ok('t-tabs', all(v[1] == len(scr['tabs'][g]) and v[2] == ','.join(scr['tabs']) and v[3] == len(scr['tabs'][g]) for g, v in shown.items()), shown)
     pages = {t: 'Tall' in v.get('ticks', []) for t, v in scr.items() if isinstance(v, dict) and 'ticks' in v}; size = "(() => { MENU.S.tab = '%s'; MENU.render(true); const p = document.getElementById('panel'); return [p.offsetHeight, p.style.height]; })()"
     heights = {t: await ev(size % t) for t in pages}
-    ok('t-height', len({v[0] for v in shown.values()} | {heights['Build'][0]}) == 1, [shown, heights])
     ok('t-tall', all(heights[t][1] == '' for t in pages if pages[t]), heights)
     ok('t-solid', await ev("(() => { MENU.S.tab = 'Back'; MENU.render(true); const b = getComputedStyle(document.getElementById('panel')).backgroundImage; return b.startsWith('linear-gradient(rgb(') && !b.includes('rgba('); })()"))   # SN35: the panel is a gradient of opaque colours, dark at the foot (Albert Nov 9); N64: asked on a sheet (Welcome back, the last page before Help was one): Help, the last page now, is drawn in the dock and leaves the panel shut
-    await ev("const s = FK.SIDES[0].store; s.food = s.wood = s.gold = s.stone = 2000; MENU.S.tab = null; FK.select(null); MENU.S.subject = FK.seatOf(0); for (let i = 0; i < 3; i++) MENU.act('people'); MENU.render(true)")
-    q = await ev("(() => { const c = document.querySelector('#base .tabs + .row6 [data-v^=\"train|\"]'), k = c.querySelector('.rk'); return [...[...c.children].filter((e) => e.matches('span, small')).map((e) => e.textContent).slice(0, 2), k && k.dataset.rs, document.querySelectorAll('#ui .q').length]; })()")
-    ok('t-queue', q == ['Villager', '×3', 'run', 0], q)   # N62 (N385): no queue row; the cell of what is queued rings and counts
-    rows = "(() => { FK.select(null); MENU.S.subject = %s; MENU.render(true); return [document.querySelectorAll('#card > *').length, [...document.querySelectorAll('#base > *')].map((e) => e.className).join(), document.querySelectorAll('#base .tabs + .row6 > *').length, document.querySelector('#rank .name').textContent]; })()"
-    cards = [await ev("MENU.S.tab = null; 0"), await ev(rows % 'ECON.villagersOf(0)[0]'), await ev(rows % "FK.things().find((t) => t.kind === 'tree')"), await ev(rows % "FK.things().find((t) => FK.has(t, 'Seat') && t.side === 0)")][1:]
-    ok('t-cards', cards == [[0, 'row6 tabs,row6', 6, 'Villager'], [0, 'row6 tabs,row6', 6, 'Tree'], [0, 'row6 tabs,row6', 6, 'Town Center']], cards)   # N62 (N385): every card is the dock's mold, tabs over six cells, its name in the top row; nothing on the sheet
     site = await ev("""(() => { MENU.S.subject = null; MENU.S.tab = 'Build'; MENU.S.group = 'Town'; MENU.render(true); const code = MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')); MENU.act('pick', code);
       const h = FK.things().find((t) => FK.has(t, 'Seat') && t.side === 0); const at = $ring(h, 8, 30, (i, j) => ECON.canPlace(code, i, j) && [i, j]); if (!at) return false; Object.assign(MENU.S.ghost, { i: at[0], j: at[1], ok: true }); MENU.act('build'); return FK.things().some((t) => t.code === code && t.done < 1); })()""")
     ok('t-place', site)
@@ -56,11 +50,11 @@ async def main(b):
         const at = ev.indexOf(P.dash.guide.join()); return at >= 0 && ev.slice(at + 1).findIndex((x) => x !== 'L') !== 0 && ev[at + 1] === 'L'; };
       FK.SIDES[0].store.wood = 2000; MENU.act('pick', code); const g = MENU.S.ghost, n = FK.B[code][1], h = FK.seatOf(0), hc = h.j + h.n * P.half, off = !FK.things().some((b) => b.kind === 'bld' && b.side === 0 && (b.i + b.n * P.half === g.i + n * P.half || b.j + b.n * P.half === g.j + n * P.half));
       const lone = ECON.guides(0, code, g.i, g.j).some((q) => !q.d) === (await frame()); /* a guide shows exactly when a line is met: E716 edges and centres, E816 snaps the ghost onto one */ const keep = [g.i, g.j]; g.j = hc - n * P.half; const lined = await frame(); [g.i, g.j] = keep;
-      return [MENU.S.tab, g.code === code && g.ok, lone && lined, !!document.querySelector('#card.on [data-v^="build|"]'), FK.things().filter((t) => t.code === code && t.done < 1 && t.side === 0).length]; })()""")
-    await ev("document.querySelector('#card [data-v^=\"build|\"]').click()"); await pg.wait_for_timeout(200)   # the tap on the bar's Build, through the menu's own click
+      return [MENU.S.tab, g.code === code && g.ok, lone && lined, !!document.querySelector('#base [data-v^="build|"]'), FK.things().filter((t) => t.code === code && t.done < 1 && t.side === 0).length]; })()""")
+    await ev("document.querySelector('#base [data-v^=\"build|\"]').click()"); await pg.wait_for_timeout(200)   # the tap on the bar's Build, through the menu's own click
     placed = await ev("FK.things().filter((t) => t.code === MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat')) && t.done < 1 && t.side === 0).length")   # yours: a computer may raise its own house in the wait (A1: their turns are spread)
     mid = open(os.path.join(HERE, '../mid/src/26-input.js')).read(); sp = mid[mid.index('function startPlace'):mid.index('function cancelPlace')]
-    ok('t-place', flow[:4] == [None, True, True, True] and placed == flow[4] + 1 and 'closeCard();' in sp and 'G.place = {' in sp, [flow, placed])   # C4 (Albert, Nov 6 19:09): Build gives the ghost and its guides with the menu closed, as Mid's startPlace; one tap on Build places
+    ok('t-place', flow[:4] == ['Build', True, True, True] and placed == flow[4] + 1 and 'closeCard();' in sp and 'G.place = {' in sp, [flow, placed])   # C4 (Albert, Nov 6 19:09): Build gives the ghost and its guides the crumb row showing (Design 16, the menu law; before N69 the menu closed, as Mid's startPlace); one tap on Build places
     start = await ev("JSON.stringify(FK.D.start)")
     await ev("FK.SIDES[0].store.food = 9999; FK.K.rain = 1; FK.restart()")   # #38 (Albert, Nov 10): a restart no longer rides on the address, so it is checked at once, before anyone can spend
     ok('t-start', await ev(f"(() => {{ const b = {start}; return [0, 2].every((s) => Object.keys(b).every((y) => Math.abs(FK.SIDES[s].store[y] - b[y]) < 1)) && FK.K.rain === 0; }})()"), await ev("[FK.SIDES[0].store, FK.K.rain, FK.SIDES[2].store]"))   # within the food the people ate since
@@ -1488,24 +1482,6 @@ async def n17(b):
     rep = sorted(c for c, e in SHELLS.items() if e.get('name') in ('Farm', 'Tree farm', 'Mint', 'Quarry', 'Mill', 'Lumber camp', 'Mining camp', 'Dwelling', 'Foundry', 'Wall', 'Palisade', 'Tower'))
     got = [v['stays'], v['next'], v['minus'][1] == v['minus'][0] - 1, v['hold'][0] > 0 and v['hold'][1] < 0.02 * v['hold'][0], v['repeat'] == rep, not v['reasons'], held == 1, not errs]
     ok('t-n17', all(got), [got, v, held, errs[:2]])
-N18JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), cs = (e) => getComputedStyle(e), px = (v) => parseFloat(v), cells = () => [...document.querySelectorAll('.cell')], by = (t) => cells().find((e) => e.textContent.trim().startsWith(t)), o = {};
- MENU.S.tab = 'Start'; MENU.render(true); await W(300);
- const seg = document.querySelector('.cells.seg'), first = seg.querySelector('.cell'), on = seg.querySelector('.cell.on'), rg = on.querySelector('svg.rg'), hair = px(cs(document.documentElement).getPropertyValue('--hair')), r = rg.getBoundingClientRect(), vb = rg.getAttribute('viewBox').split(' ').map(Number);
- o.curve = px(cs(first).borderTopLeftRadius) > 0 && px(cs(seg.querySelector('.cell:last-child')).borderBottomRightRadius) > 0;
- o.edge = Math.abs(r.width - on.offsetWidth - 2 * hair) < 0.5 && Math.abs(r.height - on.offsetHeight - 2 * hair) < 0.5 && vb[2] === Math.round(r.width) && vb[3] === Math.round(r.height);
- const lab = [...document.querySelectorAll('.lab')][0]; o.head = cs(lab).fontWeight === '600' && cs(lab).fontSize === '14px';
- o.opt = cs(by('Easy')).fontWeight === '400' && cs(by('Easy')).fontSize === '12px';
- by('Famine').click(); await W(150); const fr = by('Famine').querySelector('svg.rg path'); o.hazard = !!fr && fr.getAttribute('stroke').toLowerCase() === String(FK.C.rings.colour.white).toLowerCase(); by('Famine').click(); await W(100);
- const free = cs(by('Han')).backgroundImage; cells().filter((e) => e.textContent.trim() === 'On')[0].click(); await W(200); const lk = by('Han'); o.lock = lk.classList.contains('dim') && cs(lk).backgroundImage !== free && (!lk.querySelector('svg.rg') || cs(lk.querySelector('svg.rg')).display === 'none'); cells().filter((e) => e.textContent.trim() === 'Off')[0].click(); await W(100);
- MENU.act('start'); await W(400); FK.pause(true); MENU.render(true); await W(300);
- const pb = document.querySelector('.topbar [data-v^="pause|"]'), pr = pb && pb.querySelector('svg.rg'); o.play = !!pr && Math.abs(pr.getBoundingClientRect().width - pb.clientWidth) < 1;
- const pop = document.querySelector('.pop.on'), rib = document.querySelector('.topbar'); o.pop = !!pop && pop.getBoundingClientRect().top >= rib.getBoundingClientRect().bottom;
- FK.pause(false); MENU.S.qa = { k: FK.seatOf(0).k, px: 195, py: 400 }; MENU.render(true); await W(200);
- const qc = [...document.querySelectorAll('#qa .cell')].find((c) => c.querySelector('svg.rg')); o.qring = !qc || Math.abs(qc.querySelector('svg.rg').getBoundingClientRect().width - qc.offsetWidth) < 1;
- const was = JSON.stringify(MENU.S.qa); MENU.S.eat = true; const c0 = document.querySelector('#qa .cell'); if (c0) c0.click(); await W(100); o.eat = JSON.stringify(MENU.S.qa) === was; return o; })()"""
-async def n18(b):
-    pg, errs = await fresh(b); v = await pg.evaluate(N18JS); await pg.close()
-    ok('t-n18', all(v.values()) and not errs, [v, errs[:2]])
 N18BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); FK.fog(false); const h = FK.seatOf(0), N = FK.N;
  MENU.S.tab = null; FK.select(null); MENU.S.subject = h; MENU.render(true); await W(150); FK.SIDES[0].store.food = 5000; h.q = []; document.querySelector('[data-v^=train]').click(); MENU.S.subject = null; MENU.render(true); await W(300);
  const ring = () => { const r = document.querySelector('#base [data-v^="people|"] svg.rg .rr'); return r && r.getAttribute('stroke-dasharray'); }, r0 = ring(); await W(1200); o.people = !!r0 && r0 !== ring();
@@ -1524,7 +1500,7 @@ N18BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, m
  return o; })()"""
 async def n18b(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N18BJS); await pg.close()
-    ok('t-n18b', all(v.values()) and not errs, [v, errs[:2]])
+    ok('t-n18b', all(live('t-n18b', v).values()) and not errs, [v, errs[:2]])
 N18CJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); MENU.S.tab = null; MENU.render(true); await W(200); const h = FK.seatOf(0);
  await W(300); const z0 = FK.cam.z, T0 = performance.now(); let paints = 0, last = LANDS.t, n = 0; await new Promise((res) => { function f(t) { n++; FK.cam.z = z0 * (1 + 0.3 * Math.min(1, (t - T0) / 1500)); FK.dirty(); if (LANDS.t !== last) { paints++; last = LANDS.t; } if (t - T0 < 1500) requestAnimationFrame(f); else res(); } requestAnimationFrame(f); }); o.pinch = n > 10 && paints <= 3; await W(500); o.settle = LANDS.z === FK.cam.z;
  return o; })()"""
@@ -1573,7 +1549,7 @@ N24JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  const U = []; for (let d = 6; d < 30 && U.length < 3; d++) for (let a = -d; a <= d && U.length < 3; a += 2) { const k = (h.j + d) * N + h.i + a; if (FK.walkable(k)) U.push(FK.spawn('UM1', me, k, FK.rng)); }
  const f0 = FK.SIDES[me].store.food; WAR.order(U, far, null); for (let i = 0; i < 20; i++) FK.sim(0.1); o.far = U.every((u) => u.job === 'fight' && u.target === far && u.path && u.path.length > 50); o.free = FK.SIDES[me].store.food >= f0 - 1 && !ECON.orderCost;
  FK.select(U); const g = (h.j + 12) * N + h.i - 12, [gx, gy] = FK.toScreen(...FK.toView(...FK.tileMid(g), Math.max(D.land, FK.H[g]))); FK.fire('tap', g, null, gx, gy); o.kept = FK.picked().length === 0;
- FK.select(U.slice(0, 2)); const j2 = U[2].job; MENU.VERBS.recallP.run(); const said = fromBook('words').bar.said.recall.replace('{n}', 2); o.recall = U[0].job === 'rout' && U[2].job === j2 && (() => { const t0 = MENU.S.tab; MENU.S.tab = 'Mail'; MENU.render(true); const x = document.querySelector('#panel').textContent; MENU.S.tab = t0; MENU.render(true); return x; })().includes(said) || [U[0].job, U[2].job, j2, document.getElementById('toast').textContent, JSON.stringify(MENU.S.tq)];
+ FK.select(U.slice(0, 2)); const j2 = U[2].job; MENU.VERBS.recallP?.run(); const said = fromBook('words').bar.said.recall.replace('{n}', 2); o.recall = U[0].job === 'rout' && U[2].job === j2 && (() => { const t0 = MENU.S.tab; MENU.S.tab = 'Mail'; MENU.render(true); const x = (document.querySelector('#panel') || {}).textContent || ''; MENU.S.tab = t0; MENU.render(true); return x; })().includes(said) || [U[0].job, U[2].job, j2];
  o.ranged = typeof WAR.ranged === 'function'; try { ECON.alarm('hands'); o.hands = true; } catch (e) { o.hands = String(e); } ECON.allClear();
  FK.K.t = D.noon * D.day; o.clock = FK.clockOfDay().startsWith('12:');
  const L = (a) => lightAt(a), sl = (a, e) => (L(a + e) - L(a - e)) / (e + e); o.light = [-18, 20].every((a) => Math.abs(sl(a, 1e-3)) < 1e-2) && D.ramp.slice(1, -1).every(([a]) => Math.abs((L(a + 1e-3) - L(a)) - (L(a) - L(a - 1e-3))) < 1e-5) && [...Array(400)].every((_, i) => L(-20 + i * 0.1) <= L(-20 + (i + 1) * 0.1) + 1e-12);
@@ -1581,7 +1557,7 @@ N24JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  const e1 = FK.units().find((u) => u.side === 1); look(0.1); const c = CAST.get(1) && CAST.get(1).get(e1); o.circle = !!c && (c.skip || c.tiles.length === circle(e1, sightOf(e1)).length); return o; })()"""
 async def n24(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N24JS); await pg.close()
-    ok('t-n24', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
+    ok('t-n24', all(x is True for x in live('t-n24', v).values()) and not errs, [v, errs[:2]])
 N24BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); MENU.S.tab = null; MENU.render(true); const D = FK.D, h = FK.seatOf(0), st = FK.SIDES[0].store;
  o.sharp = nodeSprite('stone', 0, 3).q === nodeSprite('stone', 0, D.sharp).q && nodeSprite('stone', 0, 1).q < nodeSprite('stone', 0, D.sharp).q;
  await FK.save(true); const got = await new Promise((ok) => { const r = indexedDB.open(D.save.db); r.onsuccess = () => { const q = r.result.transaction(D.save.store).objectStore(D.save.store).getAllKeys(); q.onsuccess = () => ok(q.result); }; r.onerror = () => ok(null); });
@@ -1597,37 +1573,6 @@ N24BJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, m
 async def n24b(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N24BJS); await pg.close()
     ok('t-n24b', all(x is True for x in v.values()) and not errs, [v, errs[:2]])
-N25JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => [...document.querySelectorAll(s)];
- MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, S = MENU.S, mine = () => FK.units().filter((u) => u.side === 0 && WAR.armyOf(0).includes(u));
- o.peace = document.getElementById('base').className === 'jobs' && q('.ctop .dot').length === 6 && !q('.pad').length;
- let n = 0; $ring(h, 4, 14, (i, j) => { const k = j * N + i; if (FK.walkable(k) && n < 12) { FK.spawn(['UM1', 'UM6', 'UM2'][n % 3], 0, k, Math.random); n++; } return n >= 12; });
- const A = WAR.armyOf(0); o.spawned = A.length === 12;
- MENU.act('war'); o.open = S.war && q('.pad').length === 3 && FK.picked().length === 12 && !q('.exec.go').length && document.getElementById('base').className === 'ctlw';
- const cls = FK.SH[A[1].code].class; MENU.act('cwho', 'class', cls); o.cls = FK.picked().length > 0 && FK.picked().length < 12 && FK.picked().every((u) => FK.SH[u.code].class === cls);
- MENU.act('cwho', 'all'); o.all = FK.picked().length === 12; MENU.act('cpage', 'squad'); o.squadDim = !!q('.pad [data-v^="cpage|squad"].dim').length || !!q('.pad .dim[data-v^="cpage|squad"]').length;
- const R = FK.reach(0), LAND = [...Array(N * N).keys()].filter((k) => R.has(k)), far = LAND.filter((k) => { const d = Math.hypot(k % N - h.i, Math.floor(k / N) - h.j); return d > 22 && d < 30; })[0];
- MENU.act('cact', 'attack'); o.lit = S.ctl.act === 'attack' && !q('.exec.go').length; const p0 = A.map((u) => u.k).join();
- FK.fire('tap', far, null, 0, 0); o.aimed = S.ctl.spot === true && q('.exec.go').length === 1 && A.every((u) => u.job !== 'march');
- let full = 0, walks = 0; const fp = FK.findPath, wt = FK.walkTo, CY = FK.D.convoy; FK.findPath = (a, b, c, most, w) => { if (most == null || most > CY.tries) full++; return fp(a, b, c, most, w); }; FK.walkTo = (...a) => { walks++; return wt(...a); };
- const t0 = performance.now(); MENU.act('cexec'); const ms = performance.now() - t0; FK.findPath = fp; FK.walkTo = wt;
- o.oneRoute = full === 1 && walks === 0; o.sent = A.every((u) => u.job === 'march') && S.ctl.act === null; Object.assign(info, { full, walks, ms: Math.round(ms) });
- $run(40); const near = A.filter((u) => Math.hypot(u.k % N - far % N, Math.floor(u.k / N) - Math.floor(far / N)) <= 8).length; o.arrive = near === 12; info.near = near;
- let wet = -1; for (let k = 0; k < N * N && wet < 0; k++) if (!FK.walkable(k) && !R.has(k) && WAR.landK(k) !== k) wet = k; const t1 = performance.now(); MENU.act('cact', 'attack'); FK.fire('tap', wet, null, 0, 0); MENU.act('cexec'); o.wet = performance.now() - t1 < 80;
- MENU.act('cact', 'defend'); o.noAttack = true;
- MENU.act('cact', 'retreat'); o.retreat = A.every((u) => u.job === 'rout' || u.job === 'idle');
- MENU.act('cnav', 'hide'); o.hide = !q('.pad').length; MENU.act('cnav', 'hide'); o.show = q('.pad').length === 3;
- MENU.act('cpage', 'orders'); o.orders = q('.pad [data-v^="dial|"]').length >= 3 || q('.pad').length === 3; MENU.act('cnav', 'back'); o.back = S.ctl.page === null;
- MENU.act('war'); o.close = !S.war && !FK.picked().some((u) => A.includes(u)) && document.getElementById('base').className === 'jobs';
- $run(30); const u = A[0]; FK.fire('tap', u.k, u, 0, 0); o.tapOne = S.war && S.ctl.who === 'picked' && FK.picked().length === 1 && FK.picked()[0] === u;
- const k2 = LAND.filter((k) => { const d = Math.hypot(k % N - h.i, Math.floor(k / N) - h.j); return d > 10 && d < 14; })[0]; FK.fire('tap', k2, null, 0, 0); o.tapThere = u.job === 'march' && A.slice(1).every((v) => v.job !== 'march');
- MENU.act('war'); MENU.act('war'); $run(20); const v = FK.units().find((x) => x.side === 0 && !A.includes(x)), e = FK.spawn('UM1', 1, $ring({ i: v.k % N, j: Math.floor(v.k / N) }, 2, 9, (i, j) => (FK.walkable(j * N + i) ? j * N + i : null)), Math.random); WAR.fight(e, v);
- MENU.act('cwho', 'all'); const live = A.filter((x) => FK.units().includes(x)); MENU.act('cact', 'defend'); o.defend = live.length > 0 && live.every((x) => x.job === 'fight' && x.target === e); info.live = live.length;
- MENU.act('cact', 'retreat'); MENU.act('cact', 'attack'); FK.fire('tap', e.k, e, 0, 0); o.aimFoe = S.aim.t === e && S.ctl.spot === true; MENU.act('cexec'); o.attackFoe = live.every((x) => x.job === 'fight' && x.target === e);
- e.hp = e.hpMax = 5000; info.h = []; for (let z = 0; z < 25; z++) { $run(1); info.h.push(Math.round(e.hp)); } const dd = live.map((x) => Math.hypot(x.k % N - e.k % N, Math.floor(x.k / N) - Math.floor(e.k / N))); info.close = dd.filter((d, n) => d <= Math.max(6, D.stats[live[n].code].rng + 1)).length; info.jobs = live.filter((x) => x.job === 'fight' && x.target === e).length; info.odd = live.map((x, n) => [n, x.job, x.target === e, Math.round(dd[n]), x.code, !!x.path, x.stance || '', x.temper || '']).filter((r) => r[1] !== 'fight' || r[3] > Math.max(6, D.stats[r[4]].rng + 1)); info.e = [FK.units().includes(e), Math.round(e.hp), e.job, e.k, e.side, e.hitBy && e.hitBy.code, e.hitBy && e.hitBy.side]; o.fought = info.h.some((h) => h < 5000) && (!FK.units().includes(e) ? !!e.hitBy && e.hitBy.side === 0 : e.hp < 5000 && info.jobs === live.length && info.close === live.length); MENU.act('war');
- return [o, info]; })()"""
-async def n25(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(N25JS); await pg.close()
-    ok('t-n25', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
 N26JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms));
  MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, D = FK.D, S = MENU.S, st = FK.SIDES[0].store;
  o.restList = FK.rest().length * 4 < FK.things().length && FK.rest().every((t) => !FK.WOODS.has(t.kind));
@@ -1650,7 +1595,7 @@ N26JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) 
  return [o, info]; })()"""
 async def n26(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N26JS); await pg.close()
-    ok('t-n26', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
+    ok('t-n26', all(x is True for x in live('t-n26', v).values()) and not errs, [v, info, errs[:2]])
 N27JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms));
  MENU.act('start'); FK.fog(false); $calm(0, 1); await W(300); const h = FK.seatOf(0), N = FK.N, D = FK.D, S = MENU.S, st = FK.SIDES[0].store, card = document.getElementById('base'), tabTo = (n) => { const b = [...document.querySelectorAll('#base .tabs [data-v^="ctab|"]')].find((e) => e.textContent === n); if (b) b.click(); }; $rich(0);
  const V = () => FK.units().filter((u) => u.side === 0 && FK.has(u, 'Gather')), mine = () => FK.blds().filter((b) => b.side === 0);
@@ -1733,14 +1678,14 @@ N30JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) 
  const f0 = findPath; let big = 0; window.findPath = function (...q) { const t0 = performance.now(), r = f0.apply(this, q); big = Math.max(big, performance.now() - t0); return r; }; const ev = { kind: 'circus', t0: FK.K.t, until: FK.K.t + 60 }; FK.K.ev.cur = ev; EVS.circus.start(ev); $run(10); window.findPath = f0; info.bigSearch = +big.toFixed(1); o.legs = (ev.units || []).length > 0 && (ev.units || []).every((u) => u.to != null) && D.events.leg > 0;
  const mk = Object.keys(FK.SH).find((c) => FK.B[c] && FK.SH[c].ticks.includes('Trade')); $put(mk, 0, 6, 40, true); Object.assign(FK.SIDES[0].store, { cloth: 500, beer: 500, spice: 200 }); const stop = FK.things().filter((t) => t.kind === 'stop').sort((p, q) => FK.dist(p, h) - FK.dist(q, h))[0]; const cv = FK.spawn('UT1', 0, free(6, 12), Math.random), G = []; for (let i = 0; i < 4; i++) G.push(FK.spawn('UM1', 0, free(6, 14), Math.random)); ECON.setRoute(cv, stop, true, false); MENU.act('escort', cv); $run(120); info.escort = [WAR.guardsOf(cv).length, Math.round(Math.max(...WAR.guardsOf(cv).map((g) => FK.dist(g, cv) / D.tile)))]; o.escort = WAR.guardsOf(cv).length === 4 && WAR.guardsOf(cv).every((g) => FK.dist(g, cv) / D.tile <= D.trade.near * 1.5);
  const blds = FK.blds().filter((b) => b.side === 0 && b.done >= 1 && !FK.has(b, 'Line') && !FK.has(b, 'Field')); const cost0 = ECON.boardCost(blds[0]); for (const k of D.prep.techs) FK.SIDES[0].techs.add(FK.TK[k]); const cost1 = ECON.boardCost(blds[0]); info.prepCost = [cost0, cost1]; o.prepTechs = Object.values(cost1)[0] < Object.values(cost0)[0];
- const hp = new Map(blds.map((b) => [b, b.hpMax])); MENU.act('prep'); $run(50); const bd = blds.filter((b) => b.board); const raid = []; for (let i = 0; i < 6; i++) raid.push(FK.spawn('UM1', e, free(10, 16), Math.random)); for (const r of raid) WAR.fight(r, bd[0] || blds[0], true); $run(30); info.prep = [bd.length, ECON.villagersOf(0).filter((u) => u.inside).length]; o.prepPlayed = bd.length >= 2 && bd.every((b) => b.hpMax > hp.get(b)); ECON.allClear();
+ const hp = new Map(blds.map((b) => [b, b.hpMax])); if (MENU.VERBS.prep) MENU.act('prep'); $run(50); const bd = blds.filter((b) => b.board); const raid = []; for (let i = 0; i < 6; i++) raid.push(FK.spawn('UM1', e, free(10, 16), Math.random)); for (const r of raid) WAR.fight(r, bd[0] || blds[0], true); $run(30); info.prep = [bd.length, ECON.villagersOf(0).filter((u) => u.inside).length]; o.prepPlayed = bd.length >= 2 && bd.every((b) => b.hpMax > hp.get(b)); ECON.allClear();
  const twr = $put('BW3', 0, 10, 30, true), r2 = FK.spawn('UM1', e, $ring(twr, 3, 6, (i, j) => (FK.walkable(j * N + i) ? j * N + i : 0)), Math.random), r2hp = r2.hp; $run(10); o.towerPlayed = r2.gone || r2.hp < r2hp;
- const pos = () => ECON.villagersOf(0).map((u) => [u.bx, u.by, !!u.inside]); for (const k of ['split', 'lure', 'seek']) { const p0 = pos(); MENU.act('alarm', k); $run(8); const p1 = pos(); o['alarm_' + k] = p1.filter((q, i) => q[2] || Math.hypot(q[0] - p0[i][0], q[1] - p0[i][1]) > D.tile).length >= p1.length / 2; ECON.allClear(); $run(3); }
+ const pos = () => ECON.villagersOf(0).map((u) => [u.bx, u.by, !!u.inside]); for (const k of MENU.VERBS.alarm ? ['split', 'lure', 'seek'] : []) { const p0 = pos(); MENU.act('alarm', k); $run(8); const p1 = pos(); o['alarm_' + k] = p1.filter((q, i) => q[2] || Math.hypot(q[0] - p0[i][0], q[1] - p0[i][1]) > D.tile).length >= p1.length / 2; ECON.allClear(); $run(3); }
  const mill = $put('BI1', 0, 8, 40, true); FK.select(null); if (S.war) MENU.act('war'); S.subject = mill; MENU.render(true); const card = document.getElementById('base'), T = [...card.querySelectorAll('[data-v^="research|"]')].map((x) => x.dataset.v.split('|')[1]).filter((c) => !MENU.VERBS.research.whyNot(c)); MENU.act('research', T[0]); const q0 = mill.q[0]; $run((FK.stat(q0, 0, 'time') || BOOKS.tech[q0].value.time) + 2); o.techPlayed = FK.SIDES[0].techs.has(q0) && !mill.q.length;
  return [o, info]; })()"""
 async def n30(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N30JS); await pg.close()
-    ok('t-n30', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
+    ok('t-n30', all(x is True for x in live('t-n30', v).values()) and not errs, [v, info, errs[:2]])
 N31JS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms));
  MENU.act('start'); FK.fog(false); await W(300); const h = FK.seatOf(0), S = MENU.S; $rich(0); const code = MENU.SCR.tabs.Town.find((c) => FK.SH[c].ticks.includes('House') && !FK.SH[c].ticks.includes('Seat'));
  const spot = () => { for (let d = 6; d < 20; d++) for (let a = 0; a < 16; a++) { const i = Math.round(h.i + d * Math.cos(a)), j = Math.round(h.j + d * Math.sin(a)); if (ECON.canPlace(code, i, j)) return [i, j]; } return null; };
@@ -1783,24 +1728,7 @@ P2BJS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) 
  return [o, info]; })()"""
 async def p2b(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(P2BJS); await pg.close()
-    ok('t-p2b', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
-P2CJS = r"""(async () => { const o = {}, info = {}, W = (ms) => new Promise((r) => setTimeout(r, ms)), S = MENU.S;
- MENU.act('start'); FK.fog(false); await W(300); $rich(0); const h = FK.seatOf(0), V = ECON.villagersOf(0), tap = (t) => { S.tap = null; FK.fire('tap', FK.tileAt(t.bx, t.by), t, 0, 0); }, vs = (sel) => [...document.querySelectorAll(sel + ' [data-v]')].map((b) => b.dataset.v.split('|').slice(0, 2).join('|')), press = (v) => { const b = [...document.querySelectorAll('[data-v]')].find((x) => x.dataset.v.startsWith(v)); if (b) b.click(); return !!b; }, pill = () => (document.querySelector('#rank .exec') || {}).textContent || '';
- const near = (kind) => FK.things().filter((t) => t.kind === kind && t.amount > 0).sort((a, b) => FK.dist(a, h) - FK.dist(b, h)), free = (kind) => near(kind).find((t) => !ECON.isFull(V[0], t));
- S.more = false; FK.select(null); tap(V[0]); MENU.render(true); await W(30);
- o.ctl = document.getElementById('base').className === 'ctlw' && !/Attention/.test(document.getElementById('card').innerText) && pill().length > 0; info.pill0 = pill();
- const order = vs('#base'); info.order = order; o.clockwise = JSON.stringify(order) === JSON.stringify(['people|', 'vgar|', 'tab|Build', 'vdump|drop', 'vdump|destroy', 'vatt|mobile', 'vatt|focus', 'vgroup|', 'vstop|', 'vorder|', 'vpage|jobs']);
- press('vdump|destroy'); press('vatt|focus'); o.sets = V[0].dump === 'destroy' && V[0].att === 'focus' && /Drop → Focus → GO/.test(pill()); info.pill1 = pill();
- press('vreset|'); o.reset = V[0].dump === undefined && V[0].att === undefined && !/→/.test(pill());
- press('vgroup|'); const n = FK.picked().length; o.group = n >= 1 && S.more && pill().includes(String(n)); info.group = n; FK.select(null); S.more = false; S.vc = null;
- tap(V[0]); MENU.render(true); press('vpage|jobs'); o.jobsOpen = vs('#base').includes('vjob|hunt'); press('vjob|hunt'); const tree = free('tree'); tap(tree); o.jobRefuse = S.vc && S.vc.job === 'hunt' && FK.picked().includes(V[0]) && V[0].target !== tree; info.job = [S.vc && S.vc.job, V[0].target && V[0].target.kind];
- FK.select(null); S.vc = null; tap(V[1]); MENU.render(true); press('vorder|'); const t2 = free('bush'); tap(t2); o.order = V[1].plan && V[1].plan.length === 1; press('vgo|'); o.go = S.add === null; info.order = V[1].plan && V[1].plan.length;
- FK.select(null); tap(V[2]); MENU.render(true); press('vexit|'); o.armed = V[2].hp > 0 && S.exit === true; MENU.render(true); press('vexit|'); $run(1); o.exit = V[2].hp <= 0;
- tap(V[3]); MENU.render(true); press('vgo|'); o.goEnds = FK.picked().length === 0 && !S.vc;
- return [o, info]; })()"""
-async def p2c(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(P2CJS); await pg.close()
-    ok('t-p2c', all(x is True for x in v.values()) and not errs, [v, info, errs[:2]])
+    ok('t-p2b', all(x is True for x in live('t-p2b', v).values()) and not errs, [v, info, errs[:2]])
 FRZJS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), S = MENU.S, o = {}, info = {};
  S.tab = null; MENU.act('start'); FK.fog(false); await W(600); FK.K.snow = FK.G.snow.full; await W(800);
  const n0 = FK.lands(); await W(5000); const n1 = FK.lands(); o.still = n1 - n0 <= 2; info.still = n1 - n0;
@@ -1868,7 +1796,7 @@ N42JS = r"""(async () => { MENU.S.tab = null; MENU.act('start'); FK.fog(false); 
 async def n42(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N42JS); await pg.close()
     g = lambda k: v.get(k) or [0, 0, 0]; held = {'bulk': g('bulk')[0] == 1000 and g('bulk')[2] < g('bulk')[1] < 10 * g('bulk')[2], 'untimed': bool(v.get('untimed')), 'count': bool(v.get('count')), 'fx': bool(v.get('fx')), 'bush': 'bush' in v and all(v['bush']), 'call': bool(g('call')[1])}
-    ok('t-n42', all(held.values()) and not errs, [held, v, errs[:2]])
+    ok('t-n42', all(live('t-n42', held).values()) and not errs, [held, v, errs[:2]])
 N43JS = r"""(async () => { const o = {}, T = (f) => { try { f(); } catch (e) { o.err = (o.err || '') + e.message + ' | '; } }, px = (el, k) => getComputedStyle(el)[k];
  MENU.S.tab = null; MENU.act('start'); FK.fog(false); const D = FK.D;
  T(() => { const sea = FK.things().filter((t) => t.kind === 'fish' && Math.min(t.bx - FK.B0, FK.B1 - t.bx, t.by - FK.B0, FK.B1 - t.by) < D.beach + D.wander); const [sv] = ECON.villagersOf(0); o.sea = [sea.filter((t) => t.amount === D.fish.amt).length, sea.filter((t) => !FK.spotFor(sv, t)).length * 10 <= sea.length]; });
@@ -1878,7 +1806,7 @@ N43JS = r"""(async () => { const o = {}, T = (f) => { try { f(); } catch (e) { o
 async def n43(b):
     pg, errs = await fresh(b); v = await pg.evaluate(N43JS); await pg.close()
     held = {'sea': v.get('sea', [0])[0] >= 40 and v['sea'][1], 'stages': 'stages' in v and all(v['stages']), 'woods': 'woods' in v and all(v['woods'])}
-    ok('t-n43', all(held.values()) and not errs, [held, v, errs[:2]])
+    ok('t-n43', all(live('t-n43', held).values()) and not errs, [held, v, errs[:2]])
 N47JS = r"""(() => { MENU.S.tab = null; MENU.act('start'); FK.fog(false); const o = {}, D = FK.D, GL = D.forest.glade, N = FK.N, G = FK.glades(), T = FK.things(), rich = G.filter((g) => g.rich), homes = [0, 1, 2, 3].map((q) => FK.seatOf(q)), inG = (t, g, f = 1) => Math.hypot(t.bx - g.x, t.by - g.y) <= g.r * f;
  o.six = rich.length === 6; o.plain = G.length - rich.length >= GL.n * 0.7; o.open = !T.some((t) => t.kind === 'tree' && G.some((g) => inG(t, g, 0.9)));
  o.fair = rich.every((g) => { const d = homes.map((h) => Math.hypot(h.bx - g.x, h.by - g.y)).sort((a, b) => a - b); return d[1] <= d[0] * (1 + GL.fair) + 1; });
@@ -1933,7 +1861,7 @@ async def n51(b):
 N52JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S, D = FK.D, me = 0, N = FK.N, TB = BOOKS.tech, TV = (c) => TB[c].value, cells = () => [...document.querySelectorAll('#ui [data-v^="research|"]')], codeOf = (c) => c.dataset.v.split('|')[1], rkOf = (c) => { const k = c.querySelector('.rk'); return k ? [k.dataset.ring, k.dataset.rs] : []; }; const rgb = (hex) => { const h = hex.trim(); return 'rgb(' + [1, 3, 5].map((i) => parseInt(h.substr(i, 2), 16)).join(', ') + ')'; }, cssv = (k) => getComputedStyle(document.documentElement).getPropertyValue(k); S.tab = 'Start'; MENU.render(true); await W(100); const on = [...document.querySelectorAll('#panel .cells.seg .cell.on')]; o.ring = on.length >= 5 && on.every((c) => { const g = c.querySelector(':scope > svg.rg'); if (!g) return false; const [, , vw, vh] = g.getAttribute('viewBox').split(' ').map(Number), r = g.getBoundingClientRect(); const cs = getComputedStyle(c); return cs.zIndex !== 'auto' && cs.overflow === 'visible' && Math.abs(vw - r.width) < 0.6 && Math.abs(vh - r.height) < 0.6; }); const go = document.querySelector('#panel .cell.go'); o.start = /^600 14px/.test(getComputedStyle(go).font); o.solid = getComputedStyle(document.querySelector('#panel')).backdropFilter === 'none'; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false); const h = FK.seatOf(me), st = FK.SIDES[me].store, tile = D.tile, far = (a, b) => Math.hypot(a.bx - b.bx, a.by - b.by) / tile; const PK = D.pocket, want = Math.round((PK.home.bush[0] + PK.back.bushes) * 1.5), bushes = FK.things().filter((t) => t.kind === 'bush'); info.bush = []; o.bushes = D.players.every((p) => { const s = FK.seatOf(p); if (!s) return true; const near = bushes.slice().sort((a, b) => far(a, s) - far(b, s)), ten = near.slice(0, 10), c = { bx: ten.reduce((a, t) => a + t.bx, 0) / 10, by: ten.reduce((a, t) => a + t.by, 0) / 10 }, d = bushes.map((t) => far(t, c)).sort((a, b) => a - b); info.bush.push([+d[9].toFixed(1), +d[want - 1].toFixed(1)]); return d[want - 1] < 8; }); S.subject = S.cof = h; S.ctab = 'Learn'; S.tab = null; MENU.render(true); o.rest = !FK.fire('rest'); const c0 = cells().map(codeOf); o.hidden = c0.length > 0 && c0.every((c) => !(TV(c).age > FK.SIDES[me].age)); info.tech = [c0.length]; o.shown = !MENU.VERBS.alltech && !document.querySelector('[data-v^="alltech"]'); /* N62 (N385): Show tech is cut */ $rich(me); MENU.render(true); const open = cells().filter((c) => !ECON.researchWhy(me, codeOf(c))), shut0 = cells().filter((c) => ECON.researchWhy(me, codeOf(c))); Object.keys(st).forEach((y) => { st[y] = 0; }); MENU.render(true); const poor = cells().filter((c) => ECON.researchWhy(me, codeOf(c)) === 'cost'); o.blue = open.length > 0 && poor.length > 0 && [...open, ...poor, ...shut0].every((c) => !rkOf(c).length); /* N62 (N385): in the dock a research rings only at work */ info.rings = [open.map(rkOf).join(' '), poor.map(rkOf).join(' ')]; const tc = codeOf(poor[0]), price = ECON.priceOf(me, tc), colour = (k) => { Object.keys(st).forEach((y) => { st[y] = (price[y] || 0) * k; }); MENU.render(true); return cells().find((c) => codeOf(c) === tc).querySelector('small[style*="color"]').style.color; }; o.white = colour(1) === rgb(cssv('--rw')); o.green = colour(2) === rgb(cssv('--rg')) && colour(3) === rgb(cssv('--rg')); const mid = colour(1.5); o.fade = mid !== rgb(cssv('--rw')) && mid !== rgb(cssv('--rg')); o.red = colour(0) === rgb(cssv('--rr')); info.cost = [colour(1), mid, colour(2)]; $rich(me); MENU.render(true); MENU.act('research', tc); MENU.render(true); const run = cells().find((c) => codeOf(c) === tc); o.runs = !!run && rkOf(run).join() === 'green,run'; FK.SIDES[me].age = D.ages.length; const techs = Object.keys(TB), seat = h.code, mine = (code) => FK.blds().find((t) => t.side === me && t.code === code && t.done >= 1); const pair = techs.flatMap((c) => (TV(c).need || []).map((k) => [c, techs.find((x) => TB[x].key === k) || k])).find(([c, n]) => TB[n] && !TV(c).civ && !TV(n).civ && TV(n).at !== TV(c).at && TV(n).at !== seat && TV(c).at !== seat && !mine(TV(n).at) && D.cost[TV(n).at] && D.cost[TV(c).at]); if (pair) { const [c, n] = pair, learnAll = (x) => { for (const y of ECON.needsOf(x)) { learnAll(y); FK.SIDES[me].techs.add(y); } }; learnAll(n); for (const y of ECON.needsOf(c)) if (y !== n) { learnAll(y); FK.SIDES[me].techs.add(y); } const lab = mine(TV(c).at) || $put(TV(c).at, me, 6, 60, true); S.tab = null; S.subject = lab; MENU.render(true); info.pair = [TB[c].key, TB[n].key, ECON.researchWhy(me, c), !!lab]; MENU.act('research', c); o.toBuild = S.tab === 'Build' && S.arm === TV(n).at && (MENU.SCR.tabs[S.group] || []).includes(TV(n).at); const lab2 = $put(TV(n).at, me, 6, 60, true); S.tab = null; S.subject = lab; MENU.render(true); MENU.act('research', c); const ringed = cells().find((x) => codeOf(x) === n); o.toCard = !!lab2 && S.subject === lab2 && S.arm === n && !!ringed && rkOf(ringed)[1] === 'run'; } S.tab = null; S.subject = null; FK.select(null); MENU.render(true); const HOUSE = 'BR1', nH = FK.B[HOUSE][1], spot = $ring(h, 8, 60, (i, j) => [0, 1, 2].every((q) => ECON.canPlace(HOUSE, i + q * (nH + 2), j, me, true)) && [i, j]); const build = () => FK.blds().filter((t) => t.side === me && t.code === HOUSE && t.done < 1).sort((a, b) => a.laid - b.laid || a.i - b.i), builders = () => ECON.villagersOf(me).filter((v) => ECON.jobOf(v) === 'build'); if (spot) { for (let q = 0; q < 3; q++) { MENU.act('pick', HOUSE); Object.assign(S.ghost, { i: spot[0] + q * (nH + 2), j: spot[1], ok: true, why: '' }); MENU.act('build'); S.ghost = null; S.tab = null; } const B3 = build(), B1 = builders(); info.build = [B3.length, B1.length, B1[0] && (B1[0].sites || []).length]; o.one = B3.length === 3 && B1.length === 1 && B1[0].target === B3[0] && (B1[0].sites || []).join() === [B3[1], B3[2]].join() && B1[0].sites[0] === B3[1]; ECON.autoBuilder(me, B3[1]); o.helper = builders().length === 2 && builders().some((v) => v.target === B3[1]); const v3 = ECON.villagersOf(me).find((v) => ECON.jobOf(v) !== 'build'); FK.fire('tap', v3.k, v3, v3.bx, v3.by); S.tap = null; FK.fire('tap', FK.tileAt(B3[2].bx, B3[2].by), B3[2], B3[2].bx, B3[2].by); o.tapped = v3.target === B3[2]; } S.tab = null; S.subject = null; FK.select(null); S.tap = null; MENU.render(true); const g = $ring(h, 10, 60, (i, j) => { const k = j * N + i; return FK.walkable(k) && !FK.OCC[k] && !FK.inWoods(k) && ECON.canPlace(HOUSE, i - 1, j - 1, me, true) && k; }), [gx, gy] = FK.tileMid(g), [px, py] = FK.toScreen(...FK.toView(gx, gy, FK.H[g])); FK.fire('tap', g, null, px, py); MENU.render(true); o.noQuick = !S.qa && !document.querySelector('#qa').classList.contains('on') && !MENU.VERBS.qstep && !MENU.VERBS.qrally; const BAR = 'BM1', bar = $put(BAR, me, 8, 60, true), foot = FK.trains(BAR, me)[0]; $rich(me); for (let q = 0; q < 3; q++) ECON.queue(bar, foot); const born = []; for (let q = 0; q < 900 && born.length < 3; q++) { FK.sim(0.1); for (const u of FK.units()) if (u.hb === bar && !born.some(([v]) => v === u)) born.push([u, u.by]); } $run(25); o.south = born.length === 3 && born.every(([u, y0]) => y0 > bar.by && u.home && u.home.by > bar.by && u.fx === 0 && u.fy === 1 && u.by > bar.by); info.south = born.map(([u, y0]) => [Math.round(y0 - bar.by), Math.round(u.by - bar.by), u.fx, u.fy]); const touch = (code, other = code) => { const [, n] = FK.B[code], [, m] = FK.B[other], s = $ring(h, 8, 70, (i, j) => ECON.canPlace(code, i, j, me, true) && ECON.canPlace(other, i + n, j, me, true) && [i, j]); if (!s) return null; const t = FK.build(code, s[0], s[1], FK.SIDES[me].col); t.side = me; t.done = 1; t.hp = t.hpMax = WAR.hpMax(t); return ECON.placeWhy(me, other, s[0] + n, s[1], true); }; info.touch = [touch('BI6'), touch(HOUSE), touch('BI7'), touch('BI1', 'BCL1'), touch(BAR, HOUSE), touch('BP1')]; o.touch = info.touch.slice(0, 4).every((w) => w === '') && /lane/.test(info.touch[4] || '') && /gap/.test(info.touch[5] || ''); return [o, info]; })()"""
 async def n52(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N52JS); await pg.close()
-    ok('t-n52', all(v.get(k) for k in ('ring', 'start', 'solid', 'bushes', 'rest', 'hidden', 'shown', 'blue', 'white', 'green', 'fade', 'red', 'runs', 'toBuild', 'toCard', 'one', 'helper', 'tapped', 'noQuick', 'south', 'touch')) and not errs, [v, info, errs[:2]])
+    ok('t-n52', all(v.get(k) for k in live('t-n52', ('ring', 'start', 'solid', 'bushes', 'rest', 'hidden', 'shown', 'blue', 'white', 'green', 'fade', 'red', 'runs', 'toBuild', 'toCard', 'one', 'helper', 'tapped', 'noQuick', 'south', 'touch'))) and not errs, [v, info, errs[:2]])
 N57JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}; MENU.act('start'); await W(400);
  if (!FK.roads) return [{ api: false }, {}]; const R = FK.roads(), T = FK.D.tile, seg = (p, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / (dx * dx + dy * dy || 1))); return Math.hypot(p[0] - a[0] - t * dx, p[1] - a[1] - t * dy); };
  const S = FK.things().filter((t) => t.kind === 'stop'), M = FK.D.site / 2;
@@ -1951,59 +1879,6 @@ N57JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
 async def n57(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N57JS); await pg.close()
     ok('t-n57', all(v.get(k) for k in ('winds', 'dirt', 'stops', 'tab', 'shore', 'apart', 'clear', 'dry')) and not errs, [v, info, errs[:2]])
-N61JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S, q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)], shown = (e) => !!e && e.offsetHeight > 0, dots = () => qa('#rank .dot').map((d) => d.dataset.v);
- MENU.act('start'); await W(400); S.tab = null; MENU.render(true);
- const d0 = dots(); info.d0 = d0; o.rest = d0[0] === 'home||' && d0.at(-1) === 'war||' && d0.includes('look|alert|') && d0.includes('look|army|') && d0.includes('tab|Build|') && !q('#rank .name');
- const bd = q('#rank [data-v="tab|Build|"]'); if (bd) bd.click(); else { S.tab = 'Build'; MENU.render(true); } await W(60);
- o.dock = S.tab === 'Build' && !shown(q('#panel')) && shown(q('#base')) && qa('#base .tabs [data-v^="group|"]').length === 6;
- const rows = () => qa('#base > .row6'); o.six = rows().length === 2 && rows()[1].children.length === 6 && rows()[1].querySelectorAll('[data-v^="pick|"]').length > 0;
- const d1 = dots(); info.d1 = d1; o.open = shown(q('#rank .ctop')) && d1[0] === 'home||' && d1.at(-1) === 'war||' && d1.includes('back||') && d1.includes('close||') && !d1.includes('look|alert|') && !!q('#rank .name') && q('#rank .name').textContent === 'Build' && !!q('#rank [data-v="tab|Build|"].on');
- const cells = () => qa('#base [data-v^="pick|"]'), code = (e) => e.dataset.v.split('|')[1], once = [];
- for (const g of qa('#base .tabs [data-v^="group|"]').map((e) => e.dataset.v)) { q(`#base [data-v="${g}"]`).click(); await W(30); for (const e of cells()) if (ECON.limitOf(0, code(e)) === 1) once.push([code(e), e.textContent]); }
- info.once = once; o.one = once.length > 0 && once.every(([, x]) => !/\d\/1\b/.test(x));
- const bk = once.length ? once[0][0] : null, put = bk && $put(bk, 0); if (put) put.done = 1; MENU.render(true); let said = '';
- for (const g of qa('#base .tabs [data-v^="group|"]').map((e) => e.dataset.v)) { q(`#base [data-v="${g}"]`).click(); await W(30); const e = cells().find((x) => code(x) === bk); if (e) said = e.textContent; }
- info.said = said; o.built = !!put && said.includes('Built') && !/\d\/1\b/.test(said);
- const tabs = () => qa('#base .tabs [data-v^="group|"]'); tabs()[0].click(); await W(30); const home = rows()[1].textContent, g2 = tabs()[1].dataset.v; tabs()[1].click(); await W(30);
- o.tab = S.group === g2.split('|')[1] && rows()[1].textContent !== home && qa('#base .tabs .on').length === 1 && qa('#base .tabs .on')[0].dataset.v === g2;
- const jobs = qa('#rank .dot')[1]; jobs.click(); await W(60); o.jobs = S.tab == null && qa('#base [data-v^="yield|"]').length > 0 && !q('#rank .name') && dots().includes('look|alert|');
- return [o, info]; })()"""
-async def n61(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(N61JS); await pg.close()
-    ok('t-n61', all(v.get(k) for k in ('rest', 'dock', 'six', 'open', 'one', 'built', 'tab', 'jobs')) and not errs, [v, info, errs[:2]])
-N62JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S, V = MENU.VERBS, SH = BOOKS.shells, q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)], shown = (e) => !!e && e.offsetHeight > 0, dots = () => qa('#rank .dot').map((d) => d.dataset.v);
- const tabs = () => qa('#base .tabs [data-v^="ctab|"]'), names = () => tabs().map((e) => e.textContent).join(), tab = async (n) => { const b = tabs().find((e) => e.textContent === n); if (b) b.click(); await W(40); }, cells = () => [...q('#base .tabs + .row6').children], of = (v) => cells().filter((c) => (c.dataset.v || '').startsWith(v + '|')), LINE = 'small, span:not(.bar):not(.t)', lines = (c) => [...c.children].filter((e) => e.matches(LINE)).map((e) => e.textContent), byName = (n) => Object.keys(SH).find((c) => SH[c].name === n);
- MENU.act('start'); await W(400); S.tab = null; MENU.render(true); $rich(0); const h = FK.seatOf(0), open = async (t) => { FK.select(null); S.subject = t; S.tab = null; MENU.render(true); await W(60); }, back = async () => { q('#rank [data-v="mback||"]').click(); await W(40); };
- S.tap = null; FK.tap(...FK.toScreen(h.vx, h.vy)); await W(120); info.tabs = names();
- o.dock = S.subject === h && S.tab == null && !shown(q('#panel')) && !shown(q('#card')) && shown(q('#base')) && cells().length === 6 && !!q('#rank .name') && q('#rank .name').textContent === 'Town Center' && dots()[0] === 'home||' && dots().at(-1) === 'war||' && dots().includes('back||') && dots().includes('close||');
- o.tabs = info.tabs === 'Train,Learn,Relations,Misfits,Manage';
- await tab('Learn'); const tc = of('research').map(lines); info.learn = tc.slice(0, 3); o.three = tc.length > 0 && tc.every((L) => L.length === 3 && /^[A-Z][a-z' ]+( [+−]\d[\d.]*%?)?$/.test(L[1]) && /^(\d+[a-z])+$/.test(L[2])) && tc.some((L) => /^[A-Z][a-z ]+ [+−]\d/.test(L[1]));
- const st = FK.SIDES[0].store, code = of('research')[0].dataset.v.split('|')[1], [y, n] = Object.entries(ECON.priceOf(0, code)).find(([, v]) => v > 0), K = FK.C.cost, seen = [];
- for (const f of [0, 0.05, 0.3, 0.55, 0.8, 0.99, 1, 1.1, 1.3, 1.6, 1.9, 2, 5]) { for (const k in st) st[k] = 1e5; st[y] = n * f; MENU.render(true); seen.push(getComputedStyle(q(`#base [data-v="research|${code}|"] small[style*="color"]`)).color); }
- info.cols = [...new Set(seen)]; o.steps = info.cols.length <= 2 * K.steps + 1 && info.cols.length > 3 && seen[0] === seen[1] && seen[5] !== seen[6] && seen.at(-1) === seen.at(-2) && seen[0] !== seen.at(-1);
- $rich(0); h.q = []; await tab('Train'); for (let i = 0; i < 3; i++) { of('train')[0].click(); await W(30); } const vc = of('train')[0], rk = vc.querySelector('.rk'), rg = vc.querySelector('svg.rg'); info.q = (h.q || []).length;
- o.ring = info.q === 3 && !!rk && rk.dataset.rs === 'run' && !!rg && getComputedStyle(rg).display !== 'none' && lines(vc).includes('×3') && !q('#ui .q') && !V.unq && !V.untrain;
- await back(); o.back = (h.q || []).length === 2 && S.subject === h && lines(of('train')[0]).includes('×2');
- h.q = []; await tab('Learn'); const rv = of('research')[0].dataset.v; q(`#base [data-v="${rv}"]`).click(); await W(40); const r1 = q(`#base [data-v="${rv}"]`); o.tech = (h.q || []).length === 1 && !!r1.querySelector('.rk[data-rs="run"]') && !of('research').some((c) => c !== r1 && c.querySelector('svg.rg') && getComputedStyle(c.querySelector('svg.rg')).display !== 'none'); r1.click(); await W(40); o.untech = (h.q || []).length === 0;
- const eng = FK.trains(byName('Siege workshop'), 0).map((c) => SH[c].name), stb = FK.trains(byName('Stable'), 0).map((c) => SH[c].name), M = FK.D.market; info.eng = eng;
- o.cuts = !V.alltech && !q('[data-v^="alltech|"]') && eng.length === 6 && !eng.includes('Ram') && !BOOKS.measure.D291.value.siege.cycle.includes(byName('Ram')) && !stb.includes('Small camp wagon') && stb.includes('Large camp wagon') && !M.sells.includes('spice') && !M.buys.includes('spice') && !V.rally && !V.fold && !V.rest && !V.vlog;
- FK.SIDES[0].age = 5; await open($put(byName('Training tent'), 0, 8, 240)); await tab('Train'); const c6 = cells(), first = c6[0].textContent; info.tent = c6.map((c) => c.textContent);
- o.more = c6.length === 6 && of('train').length === 5 && (c6[5].dataset.v || '').startsWith('more|') && lines(c6[5])[0] === '+1'; c6[5].click(); await W(40); o.page = of('train').length === 2 && cells()[0].textContent !== first && of('more').length === 1;
- FK.SIDES[0].age = 0; await open(h); await tab('Relations'); o.peoples = of('who').length === 3 && !of('stance').length; of('who')[0].click(); await W(40); o.choices = of('stance').length === 4 && !of('who').length; await back(); o.stepBack = of('who').length === 3 && S.subject === h;
- FK.SIDES[0].age = 5; await open($put(byName('Market'), 0, 8, 240)); info.market = names(); o.market = info.market === 'Train,Learn,Sell,Buy,Bulk,Manage'; await tab('Sell'); o.noSpice = of('sell').length > 0 && !cells().some((c) => /spice/i.test(c.textContent));
- const bush = FK.things().filter((t) => t.kind === 'bush').sort((a, b) => FK.dist(a, h) - FK.dist(b, h))[0]; await open(bush); o.find = names() === 'Manage' && of('gather').length === 1 && of('send').length === 1 && q('#rank .name').textContent === 'Bush' && !shown(q('#card'));
- const car = FK.spawn(byName('Caravan'), 0, FK.tileAt(h.bx, h.by) + 5 * FK.N, Math.random); S.subject = null; FK.select(null); S.tap = null; FK.tap(...FK.toScreen(car.vx, car.vy)); await W(120);
- o.unit = S.subject === car && !shown(q('#card')) && of('route').length === 1 && of('exitU').length === 1 && cells().length === 6 && !of('more').length && !q('[data-v^="fold|"]');
- const F = MENU.SCR.dock.fit, pad = MENU.SCR.css.edge, tight = [], scan = (c) => { for (const e of c.children) if (e.matches(LINE) && (c.clientWidth - pad) / e.offsetWidth < F) tight.push(e.textContent); }, live = () => qa('#base .tabs .cell, #base .tabs + .row6 .cell, #rank .exec.name').forEach(scan);
- FK.SIDES[0].age = 5; $rich(0); await open(h); const probe = document.createElement('button'); probe.className = 'cell'; q('#base .tabs + .row6').appendChild(probe); const meas = (html) => { probe.innerHTML = html; for (const t of [...probe.childNodes]) if (t.nodeType === 3 && t.textContent.trim()) { const e = document.createElement('span'); t.replaceWith(e); e.append(t); } scan(probe); };
- let nT = 0; for (const c of Object.keys(BOOKS.tech)) if (BOOKS.tech[c].value.at) { meas(V.research.label(c)); nT++; } for (const c of Object.keys(SH)) { if (SH[c].layer === 120 && FK.D.train[c]) meas(V.train.label(c, h)); if (SH[c].layer === 110 && FK.D.cost[c]) meas(V.pick.label(c)); } probe.remove();
- for (const c of Object.keys(SH)) { if (SH[c].layer !== 110) continue; const t = FK.blds().find((b) => b.side === 0 && b.code === c) || $put(c, 0, 8, 240); if (!t) continue; await open(t); for (const v of tabs().map((e) => e.dataset.v)) { q(`#base [data-v="${v}"]`).click(); live(); for (let g = 0; g < 3 && of('more').length; g++) { of('more')[0].click(); live(); } } }
- S.subject = null; S.tab = 'Build'; MENU.render(true); for (const g of qa('#base .tabs [data-v^="group|"]').map((e) => e.dataset.v)) { q(`#base [data-v="${g}"]`).click(); live(); }
- info.tight = [...new Set(tight)].slice(0, 12); info.nT = nT; o.fits = nT > 200 && !tight.length;
- return [o, info]; })()"""
-async def n62(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(N62JS); await pg.close()
-    ok('t-n62', all(v.get(k) for k in ('dock', 'tabs', 'three', 'steps', 'ring', 'back', 'tech', 'untech', 'cuts', 'more', 'page', 'peoples', 'choices', 'stepBack', 'market', 'noSpice', 'find', 'unit', 'fits')) and not errs, [v, info, errs[:2]])
 N60JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}; MENU.act('start'); await W(400); if (!FK.roads) return [{ api: false }, {}];
  const D = FK.D, T = D.tile, RD = D.road, TR = D.trade, R = FK.roads(), M = D.site / 2, half = (RD.w / 2 + RD.rim) * T, wet = ([x, y], r) => [0, 0.5, 1].some((f) => Array.from({ length: 16 }, (_, a) => a / 8 * Math.PI).some((t) => FK.layer(x + Math.cos(t) * r * f, y + Math.sin(t) * r * f) === 0));
  const F = FK.things().filter((t) => !['tree', 'stop', 'bld'].includes(t.kind)), fr = (t) => ((FK.KIND[t.kind] || {}).r || 0), S = FK.things().filter((t) => t.kind === 'stop');
@@ -2023,20 +1898,6 @@ async def n60(b):   # five boards: a test that passes on one map is not proof (t
         for k in ('one', 'dry', 'clear', 'coasts', 'cross', 'stops'):
             if not v.get(k): bad.setdefault(k, []).append([sd, info])
     ok('t-n60', not bad and not errs, [bad, errs[:2]])
-N56JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false);
- const dots = () => [...document.querySelectorAll('.ctop .dot')].map((d) => d.dataset.v);
- o.two = dots().includes('look|alert|') && dots().includes('look|army|') && !!MENU.VERBS.look; if (!o.two) return [o, { dots: dots() }];
- const h = FK.seatOf(0), sol = Object.keys(FK.SH).find((c) => FK.SH[c].class === 'Foot' && FK.D.train[c]), mk = (side, x, y) => { const u = FK.spawn(sol, side, FK.tileAt(x, y), FK.rng); FK.place && FK.place(u); return u; };
- const A = [0, 1, 2].map((i) => mk(0, h.bx + 40 + i * 8, h.by + 40)), B = [0, 1].map((i) => mk(0, h.bx + 30 + i * 8, h.by - 40)), far = FK.D.zone[0] * 2;
- const dir = [Math.sign(FK.D.site / 2 - h.bx), Math.sign(FK.D.site / 2 - h.by)];
- WAR.order(A, null, FK.tileAt(h.bx + dir[0] * far, h.by + dir[1] * far)); WAR.order(B, null, FK.tileAt(h.bx + dir[0] * far, h.by)); $run(1);
- const cam = () => [FK.cam.tx ?? FK.cam.x, FK.cam.ty ?? FK.cam.y], before = cam(); MENU.VERBS.look.run('army'); const c1 = cam(); MENU.VERBS.look.run('army'); const c2 = cam(); MENU.VERBS.look.run('army'); const c3 = cam();
- o.cycle = String(c1) !== String(before) && String(c1) !== String(c2) && String(c3) === String(c1); info.cams = [before, c1, c2, c3];
- const foe = mk(1, h.bx - 20, h.by + 20); foe.target = A[0]; FK.camGo(FK.D.site / 2, FK.D.site / 2); MENU.VERBS.look.run('alert'); const [ax, ay] = FK.toView(A[0].bx, A[0].by, FK.D.land); o.alert = Math.hypot(cam()[0] - ax, cam()[1] - ay) < 1; info.alert = [cam(), [ax, ay]];
- return [o, info]; })()"""
-async def n56(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(N56JS); await pg.close()
-    ok('t-n56', all(v.get(k) for k in ('two', 'cycle', 'alert')) and not errs, [v, info, errs[:2]])
 N55JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S; MENU.act('start'); await W(400); S.tab = null; MENU.render(true); FK.fog(false);
  const mailText = () => { S.tab = 'Mail'; MENU.render(true); const x = document.querySelector('#panel').textContent; S.tab = null; MENU.render(true); return x; };
  o.noBar = !document.getElementById('toast'); FK.fire('event', 'short'); o.toMail = mailText().includes('Not enough to pay for repairs');
@@ -2078,90 +1939,18 @@ N53JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  const v = ECON.villagersOf(me)[0]; ECON.buildAt(v, w); for (let i = 0; i < 2400; i++) FK.sim(0.1); o.slow = w.done > 0 && w.done < 0.2; info.done = +w.done.toFixed(3);
  o.hold = D.wonderHold === 1000; w.done = 1; w.hp = w.hpMax = WAR.hpMax(w); const t0 = ECON.time(); w.held = t0 + D.wonderHold; for (let i = 0; i < 4900; i++) FK.sim(0.1); o.notYet = !ECON.result(); info.t = Math.round(ECON.time() - t0);
  o.ai = D.ai.turn.wonder.age === last && D.bldAge[WON] === last;
-  MENU.S.tab = null; MENU.render(true); const V = ECON.villagersOf(me).slice(0, 3), p0 = ECON.popOf(me); MENU.VERBS.exitU.run(V[0]); MENU.VERBS.exitU.run(V[0]); FK.select(V.slice(1)); MENU.VERBS.vexit.run(); MENU.VERBS.vexit.run(); for (let i = 0; i < 20; i++) FK.sim(0.1);
+  MENU.S.tab = null; MENU.render(true); const V = ECON.villagersOf(me).slice(0, 3), p0 = ECON.popOf(me); MENU.VERBS.exitU.run(V[0]); MENU.VERBS.exitU.run(V[0]); FK.select(V.slice(1)); MENU.VERBS.vexit?.run(); for (let i = 0; i < 20; i++) FK.sim(0.1);
  o.exit = V.every((u) => u.gone && !FK.units().includes(u)) && ECON.popOf(me) === p0 - 3; info.exit = [p0, ECON.popOf(me), V.map((u) => [u.hp, !!u.gone])];
  return [o, info]; })()"""
 async def n53(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N53JS); await pg.close()
-    ok('t-n53', all(v.get(k) for k in ('early', 'late', 'toldMe', 'toldAll', 'slow', 'hold', 'notYet', 'ai', 'exit')) and not errs, [v, info, errs[:2]])
+    ok('t-n53', all(v.get(k) for k in live('t-n53', ('early', 'late', 'toldMe', 'toldAll', 'slow', 'hold', 'notYet', 'ai', 'exit'))) and not errs, [v, info, errs[:2]])
 async def star(b):
     pg, errs = await fresh(b); v = await pg.evaluate(STARJS); await pg.close()
     ok('t-star', v['kind'] == 'meteor' and v['iron'] == 300 and v['gold'] == 100 and v['taken'] and not errs, [v, errs[:2]])
 async def freeze(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(FRZJS); await pg.close()
     ok('t-freeze', all(v.values()) and not errs, [v, info, errs[:2]])
-N63JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S, V = MENU.VERBS, SH = BOOKS.shells, D = FK.D, q = (s) => document.querySelector(s), byName = (n) => Object.keys(SH).find((c) => SH[c].name === n), MK = MENU.SCR.marks, LW = fromBook('words').card.loses; if (!MK || !LW) return [{ book: false }, {}];
- const tabs = () => [...document.querySelectorAll('#base .tabs [data-v^="ctab|"]')], tab = async (n) => { const b = tabs().find((e) => e.textContent === n); if (b) b.click(); await W(40); }, cells = () => [...q('#base .tabs + .row6').children], of = (v) => cells().filter((c) => (c.dataset.v || '').startsWith(v + '|')), LINE = 'small, span:not(.bar):not(.t)', lines = (c) => [...c.children].filter((e) => e.matches(LINE)), cellOf = (n) => of('train').find((c) => c.dataset.v.split('|')[1] === byName(n));
- MENU.act('start'); await W(400); S.tab = null; MENU.render(true); $rich(0); FK.SIDES[0].age = 5; const h = FK.seatOf(0), open = async (t) => { FK.select(null); S.subject = t; S.tab = null; MENU.render(true); await W(60); };
- const ST = BOOKS.measure.D138.value, CL = [...new Set(Object.values(D.trains).flat().filter((k) => !SH[k]))], kinds = CL.flatMap((cl) => Object.keys(SH).filter((c) => SH[c].class === cl && D.train[c] && !SH[c].civ)), mul = (a, t) => Math.max(...[t, SH[t].class, ...(ST[t].tags || [])].map((k) => (ST[a].vs || {})[k] || 1)), r1 = (x) => String((x || 0) < MK.whole ? +(x || 0).toFixed(1) : Math.round(x));
- const want = (c) => { let best = 1, k = null; for (const t of kinds) { const m = mul(c, t); if (m > best) { best = m; k = t; } } return ST[c].bonly || ST[c].bld > best ? MK.bld : k ? MK.class[SH[k].class] : null; };
- const range = $put(Object.keys(D.trains).find((b) => D.trains[b].join() === 'Archers'), 0, 8, 240); await open(range); await tab('Train');
- const red = (() => { const e = document.createElement('i'); e.style.color = 'var(--rr)'; document.body.appendChild(e); const c = getComputedStyle(e).color; e.remove(); return c; })();
- const read = (c) => { const L = lines(c), u = c.querySelector(':scope > span.u'), b = u && u.querySelector('b'), g = u && u.querySelector(':scope > svg'); return { n: L.length, m: (u && u.dataset.m) || null, gt: b ? b.textContent : null, col: b ? getComputedStyle(b).color : null, sym: g ? Math.round(g.getBoundingClientRect().height) : null, name: u ? u.childNodes[0].textContent : null, st: L[1] ? [...L[1].querySelectorAll('span')].map((s) => [!!s.querySelector('svg'), s.textContent]) : [], price: L[2] ? L[2].textContent : null }; };
- const A = read(cellOf('Archer')), mock = { Archer: 'Foot', Javelineer: 'Archers', Crossbowman: 'Riders', Arquebusier: 'Riders' }; info.archer = A;
- o.mark = Object.entries(mock).every(([n, cl]) => { const r = read(cellOf(n)); return r.m === MK.class[cl] && r.gt === '>' && r.col === red && r.sym === MENU.SCR.css.sym; }) && A.name === 'Archer';
- o.three = A.n === 3 && JSON.stringify(A.st) === JSON.stringify([[true, '30'], [true, '3.1'], [true, '9.5']]) && /^(\d+[a-z])+$/.test(A.price);
- range.q = []; for (let i = 0; i < 2; i++) { cellOf('Archer').click(); await W(30); } const Q = lines(cellOf('Archer')).map((e) => e.textContent); info.q = Q; o.count = (range.q || []).length === 2 && Q.length === 3 && Q[1] === '×2' && !!cellOf('Archer').querySelector('.u b');
- range.q = []; MENU.render(true); await W(30); o.uncount = read(cellOf('Archer')).st.length === 3;
- const all = Object.keys(SH).filter((c) => SH[c].layer === 120 && D.train[c]), bad = [], F = MENU.SCR.dock.fit, pad = MENU.SCR.css.edge, tight = [];
- const scan = (c, tag) => { for (const t of [...c.childNodes]) if (t.nodeType === 3 && t.textContent.trim()) { const e = document.createElement('span'); t.replaceWith(e); e.append(t); } for (const e of c.children) if (e.matches(LINE) && (c.clientWidth - pad) / e.offsetWidth < F) tight.push(tag + ':' + e.textContent); };
- await open(h); await tab('Train'); const vil = of('train')[0]; o.plain = !vil.querySelector('.u') && lines(vil).length === 2;
- const k0 = FK.tileAt(h.bx, h.by), foe = FK.spawn(byName('Cataphract'), 1, k0 + 6 * FK.N, Math.random), bow = FK.spawn(byName('Archer'), 1, k0 + 7 * FK.N, Math.random), own = FK.spawn(byName('Caravan'), 0, k0 + 5 * FK.N, Math.random);
- const lose = async (t) => { await open(t); const c = cells().find((e) => e.textContent.startsWith(LW)); if (!c) return null; scan(c, 'loses'); const u = c.querySelector('.u'); return [u ? u.textContent : '', u ? u.dataset.m : '', !!c.querySelector('.u svg')].join(); };
- info.loses = [await lose(foe), await lose(bow), await lose(own)]; o.loses = info.loses[0] === ['Spearman', MK.class.Foot, true].join() && info.loses[1] === ['Javelineer', MK.class.Archers, true].join() && info.loses[2] === null;
- await open(range); await tab('Train'); const pr = document.createElement('button'); pr.className = 'cell'; q('#base .tabs + .row6').appendChild(pr);
- for (const c of all) { pr.innerHTML = V.train.label(c, range); const u = pr.querySelector(':scope > span.u'), st = pr.querySelector(':scope > small.u'), cls = SH[c].class, m = cls ? want(c) : null, nums = cls ? [FK.stat(c, 0, 'hp'), FK.stat(c, 0, 'atk') / (FK.stat(c, 0, 'rof') || 1), FK.stat(c, 0, 'rng')].map(r1).join() : '';
-  if (((u && u.dataset.m) || null) !== m || (st ? [...st.children].map((s) => s.textContent).join() : '') !== nums) bad.push(SH[c].name); scan(pr, ''); }
- info.bad = bad; info.marks = Object.fromEntries(all.filter((c) => SH[c].class).map((c) => [SH[c].name, want(c)])); o.book = all.length > 20 && !bad.length;
- o.more = want(byName('Spearman')) === MK.class.Riders && want(byName('Catapult')) === MK.bld && want(byName('Siege tower')) === null && want(byName('Chariot')) === MK.class.Archers;
- let nR = 0; for (const c of Object.keys(BOOKS.tech)) if (BOOKS.tech[c].value.rank) { FK.learn(0, c); nR++; for (const k of all) { pr.innerHTML = V.train.label(k, range); scan(pr, BOOKS.tech[c].value.rank.name); } } pr.remove(); info.nR = nR;
- info.tight = [...new Set(tight)].slice(0, 12); o.fits = nR > 10 && !tight.length; o.dead = !V.kind;
- return [o, info]; })()"""
-async def n63(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(N63JS); await pg.close()
-    ok('t-n63', all(v.get(k) for k in ('mark', 'three', 'count', 'uncount', 'book', 'more', 'plain', 'loses', 'fits', 'dead')) and not errs, [v, info, errs[:2]])
-N64JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S, V = MENU.VERBS, SH = BOOKS.shells, T = BOOKS.tech, D = FK.D, q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)], byName = (n) => Object.keys(SH).find((c) => SH[c].name === n), HW = fromBook('words').helpbook, SCR = MENU.SCR; if (!HW || !SCR.Help) return [{ book: false }, {}];
- MENU.act('start'); await W(400); S.tab = null; MENU.render(true); $rich(0); FK.SIDES[0].age = 2; const me = FK.SIDES[0], tk = (n) => Object.keys(T).find((c) => T[c].name === n); for (const n of ['Shields', 'Spear wall']) { me.techs.add(tk(n)); FK.learn(0, tk(n)); }
- const barC = Object.keys(D.trains).find((b) => D.trains[b].join() === 'Foot'), bar = $put(barC, 0, 8, 240), snap = () => JSON.stringify([me.store, me.techs.size, me.aging, FK.blds().filter((t) => t.side === 0).map((t) => (t.q || []).length), FK.units().length, !!S.ghost, S.tab]);
- FK.pause(true); MENU.render(true); await W(60); const spd = q('#spd'), door = spd.querySelector('[data-v^="help|"]'), ng = spd.querySelector('[data-v^="newgame|"]');
- o.door = spd.classList.contains('on') && !!door && !!ng && door.parentElement === ng.parentElement && door.textContent === HW.title; if (!door) return [o, info]; door.click(); await W(60);
- const tabs = () => [...(q('#base .tabs') || { children: [] }).children], tab = async (n) => { tabs().find((e) => e.textContent === n).click(); await W(40); }, name = () => q('#rank .name').textContent, dot = (v) => q(`#rank [data-v^="${v}|"]`);
- info.tabs = tabs().map((e) => e.textContent).join(); o.card = S.tab === 'Help' && FK.paused() && name() === HW.title && !q('#panel').classList.contains('on') && info.tabs === 'Tips,Units,Buildings,Research,Ages,Peoples' && !spd.classList.contains('on') && !!dot('back') && !!dot('close');
- o.tick = ['Dock', 'Tall'].every((t) => SCR.Help.ticks.includes(t));
- const sel = () => qa('#base [data-v^="help|sel|"]'), ids = () => sel().map((c) => c.dataset.v.split('|')[2]), cellOf = (id) => sel().find((c) => c.dataset.v.split('|')[2] === String(id)), rd = () => q('#base .rd'), pr = document.createElement('button'), red = (() => { const e = document.createElement('i'); e.style.color = 'var(--rr)'; document.body.appendChild(e); const c = getComputedStyle(e).color; e.remove(); return c; })();
- const F = SCR.dock.fit, pad = SCR.css.edge, LINE = 'small, span:not(.bar):not(.t)', tight = [], tall = [], bar0 = q('.topbar').getBoundingClientRect().bottom;
- const scan = (tag) => { for (const c of qa('#base .cell')) { for (const t of [...c.childNodes]) if (t.nodeType === 3 && t.textContent.trim()) { const e = document.createElement('span'); t.replaceWith(e); e.append(t); } for (const e of c.children) if (e.matches(LINE) && (c.clientWidth - pad) / e.offsetWidth < F) tight.push(tag + ':' + e.textContent); }
-  const b = q('#base'), top = q('#rank').getBoundingClientRect().top; if (top < bar0 || b.scrollHeight > b.clientHeight + 1 || getComputedStyle(b).overflowY !== 'visible' || document.documentElement.scrollHeight > innerHeight) tall.push(tag + ':' + Math.round(top)); info.top = Math.min(info.top ?? 1e9, Math.round(top)); };
- await tab('Tips'); const G = MENU.guide(), TIP = fromBook('words').tips; info.tips = sel().length; scan('Tips'); o.tips = sel().length === Object.keys(TIP).length + G.rules.length && sel().length === 21 && !rd();
- cellOf(G.rules.length - 1).click(); await W(40); const r7 = G.rules.at(-1); info.rule = rd() && rd().textContent.slice(0, 60); o.rule = !!rd() && rd().textContent.includes(r7.when) && rd().textContent.includes(r7.then.slice(0, 40)) && cellOf(G.rules.length - 1).classList.contains('on'); scan('Tips.rule');
- cellOf('hungry').click(); await W(40); const t1 = rd().textContent; cellOf('idle').click(); await W(40); const t2 = rd().textContent; info.tip = [t1, t2]; o.tip = t1.includes(TIP.hungry.slice(1)) && !t1.includes('!Hungry') && !/[{}]/.test(t2) && t2.includes('villagers idle');
- await tab('Units'); const want = G.units.filter((u) => !u.civ).map((u) => FK.civKind(u.id, 0)), mark = (n) => { pr.innerHTML = V.train.label(byName(n), null); return pr.querySelector('.u svg').outerHTML; }, same = (c) => { pr.innerHTML = V.train.label(c.dataset.v.split('|')[2], null); return c.textContent === pr.textContent && ((c.querySelector('.u') || {}).dataset || {}).m === ((pr.querySelector('.u') || {}).dataset || {}).m; };
- info.units = [ids().length, want.length]; o.units = want.length > 20 && ids().length === want.length && want.every((c) => ids().includes(c)) && sel().every(same) && !ids().includes(byName('Ram')) && !ids().includes(byName('Small camp wagon')) && !rd(); scan('Units');
- const tri = q('#base .blurb'), sv = [...tri.querySelectorAll('.u svg')].map((e) => e.outerHTML), gts = [...tri.querySelectorAll('.u b')]; info.tri = tri.textContent.slice(0, 80);
- o.tri = JSON.stringify(sv) === JSON.stringify(['Archer', 'Spearman', 'Chariot', 'Archer', 'Swordsman', 'Catapult'].map(mark)) && gts.length === 4 && gts.every((b) => b.textContent === '>' && getComputedStyle(b).color === red) && /Spearmen\s*>\s*riders\s*>\s*archers\s*>\s*spearmen\.\s*Engines\s*>\s*buildings/.test(tri.textContent.replace(/\s+/g, ' '));
- let s0 = snap(); cellOf(byName('Archer')).click(); await W(40); info.read = rd() && rd().textContent.slice(0, 70); o.read = !!rd() && rd().querySelector('b').textContent === 'Archer' && /Range/.test(rd().textContent) && /Bronze age/.test(rd().textContent) && cellOf(byName('Archer')).classList.contains('on') && snap() === s0 && !(bar.q || []).length; scan('Units.read');
- await tab('Buildings'); const GR = Object.keys(SCR.tabs), g2 = () => [...qa('#base .tabs')[1].children]; o.groups = qa('#base .tabs').length === 2 && g2().map((e) => e.textContent).join() === GR.join() && ids().join() === SCR.tabs[GR[0]].join();
- for (const g of GR) { g2().find((e) => e.textContent === g).click(); await W(30); scan('Buildings.' + g); if (ids().join() !== SCR.tabs[g].join()) o.groups = false; }
- g2().find((e) => e.textContent === 'Military').click(); await W(30); s0 = snap(); cellOf(barC).click(); await W(40); o.place = !!rd() && rd().querySelector('b').textContent === SH[barC].name && rd().textContent.includes('Spearman') && snap() === s0 && S.tab === 'Help' && !S.ghost; scan('Buildings.read');
- await tab('Research'); const labs = [...new Set(Object.keys(T).map((c) => T[c].value.at).filter(Boolean))], steps = (b) => Object.keys(T).filter((c) => T[c].value.at === b && (!T[c].value.civ || T[c].value.civ === me.civ)), has = (c) => me.techs.has(c), lc = () => qa('#base [data-v^="help|sub|"]'), labOf = (c) => c.dataset.v.split('|')[2];
- info.labs = [lc().length, labs.length]; o.labs = labs.length === 28 && lc().length === labs.length && lc().every((c) => c.querySelector('small').textContent === `${steps(labOf(c)).filter(has).length}/${steps(labOf(c)).length}`) && steps(barC).filter(has).length === 2 && !sel().length; scan('Research');
- const trees = []; for (const b of labs) { lc().find((c) => labOf(c) === b).click(); await W(30); const L = [...new Set(steps(b).map((c) => T[c].value.line))], okTree = name() === (fromBook('words').brief[SH[b].name] || SH[b].name) && ids().length === steps(b).length && steps(b).every((c) => ids().includes(c)) && qa('#base .hl').map((e) => e.textContent).join() === L.join() && !lc().length; if (!okTree) trees.push(SH[b].name); scan('tree.' + SH[b].name);
-  if (b === barC) { const late = steps(b).find((c) => T[c].value.age > me.age && !has(c)), lateC = cellOf(late), last = [...lateC.querySelectorAll('small')].at(-1), known = cellOf(tk('Shields')), order = L.every((ln) => { const A = ids().filter((c) => T[c].value.line === ln).map((c) => T[c].value.age); return A.every((a, i) => !i || A[i - 1] <= a); });
-   info.late = [T[late].name, last.textContent, known.textContent]; o.tree = okTree && order && last.textContent === `${D.ages[T[late].value.age]} age` && getComputedStyle(last).color === red && known.textContent === (fromBook('words').brief.Shields || 'Shields') + HW.learned;
-   s0 = snap(); const open = steps(b).find((c) => !has(c) && T[c].value.age <= me.age && !ECON.researchWhy(0, c)); cellOf(open).click(); await W(40); cellOf(open).click(); await W(40); info.open = T[open].name; o.nobuy = !!open && snap() === s0 && !has(open) && !(bar.q || []).length && !ECON.queuedAt(0, open) && !!rd() && rd().querySelector('b').textContent === T[open].name; scan('tree.read'); }
-  dot('back').click(); await W(30); if (lc().length !== labs.length || name() !== HW.title || S.tab !== 'Help') trees.push('back:' + SH[b].name); }
- info.trees = trees; o.trees = !trees.length;
- await tab('Ages'); const eat = Math.round(FK.units().filter((u) => u.side === 0).reduce((a, u) => a + ECON.eats(u), 0) * D.minute[0]), nx = G.ages[me.age + 1], lead = q('#base .blurb').textContent; info.ages = [sel().length, eat, lead.slice(0, 90)]; scan('Ages');
- o.ages = sel().length === D.ages.length && eat > 0 && lead.includes(String(eat)) && lead.includes(nx.name) && lead.includes(nx.cost) && lead.includes(nx.secs); cellOf('age1').click(); await W(40); o.age = !!rd() && rd().textContent.includes(G.ages[1].name) && rd().textContent.includes(G.ages[1].cost) && rd().textContent.includes(G.ages[1].opens.units[0]); scan('Ages.read');
- await tab('Peoples'); info.peoples = sel().length; scan('Peoples'); o.peoples = sel().length === G.civs.length + G.finds.length && G.civs.length === 6 && G.finds.length === 9; cellOf(G.civs[0].id).click(); await W(40); o.people = !!rd() && rd().textContent.includes(G.civs[0].unit) && rd().textContent.includes(G.civs[0].wonder); scan('Peoples.read'); cellOf(G.finds[0].id).click(); await W(40); o.find = !!rd() && rd().querySelector('b').textContent === G.finds[0].name;
- info.tight = [...new Set(tight)].slice(0, 14); info.tall = tall.slice(0, 8); o.fits = !tight.length; o.static = !tall.length;
- const U = G.units.map((u) => u.name), md = MENU.guideMd(); o.guide = !U.includes('Ram') && !U.includes('Small camp wagon') && U.includes('Envoy') && U.includes('Large camp wagon') && U.includes('Villager') && !/^\| (Ram|Small camp wagon) \|/m.test(md) && /^\| Envoy \|/m.test(md);
- dot('close').click(); await W(40); o.close = S.tab === null && FK.paused() && q('#spd').classList.contains('on'); q('#spd [data-v^="help|"]').click(); await W(40); await tab('Research'); lc()[0].click(); await W(30); dot('back').click(); await W(30); const mid = S.tab === 'Help'; dot('back').click(); await W(30); o.back = mid && S.tab === null && FK.paused();
- q('#spd [data-v^="help|"]').click(); await W(40); o.fresh = tabs().find((e) => e.classList.contains('on')).textContent === 'Tips' && !rd() && !!q('#rank [data-v="tab|Build|"]') && !q('#rank [data-v="tab|Build|"]').classList.contains('on');
- return [o, info]; })()"""
-async def n64(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(N64JS); await pg.close()
-    ok('t-n64', all(v.get(k) for k in ('door', 'card', 'tick', 'tips', 'rule', 'tip', 'units', 'tri', 'read', 'groups', 'place', 'labs', 'tree', 'nobuy', 'trees', 'ages', 'age', 'peoples', 'people', 'find', 'fits', 'static', 'guide', 'close', 'back', 'fresh')) and not errs, [v, info, errs[:2]])
 N65JS = r"""(async () => { const o = {}, info = {}, D = FK.D, SH = BOOKS.shells, SP = FK.SPRITE, [ME, foe] = D.players, N = FK.N, byName = (n) => Object.keys(SH).find((c) => SH[c].name === n), look = (n) => SH[byName(n)].shot;
  const shooters = Object.keys(SH).filter((c) => (SH[c].ticks || []).includes('Shoot')); info.shooters = shooters.length;
  o.slot = shooters.length >= 18 && shooters.every((c) => SH[c].shot && !!SP[SH[c].shot]) && Object.keys(SH).every((c) => !SH[c].shot || shooters.includes(c));
@@ -2202,25 +1991,6 @@ N65JS = r"""(async () => { const o = {}, info = {}, D = FK.D, SH = BOOKS.shells,
 async def n65(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N65JS); await pg.close()
     ok('t-n65', all(v.get(k) for k in ('slot', 'kinds', 'flies', 'lands', 'turns', 'scale', 'fixed', 'flame', 'distinct', 'engines', 'trail', 'ball', 'fire', 'tower')) and not errs, [v, info, errs[:2]])
-N66JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), o = {}, info = {}, S = MENU.S, SH = BOOKS.shells, q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)], shown = (e) => !!e && e.offsetHeight > 0, code = (n) => Object.keys(SH).find((c) => SH[c].name === n), box = (s) => { const e = q(s); return e ? e.getBoundingClientRect() : { top: 0, height: 0, width: 0 }; };
- MENU.act('start'); await W(400); S.tab = null; MENU.render(true); $rich(0); FK.SIDES[0].age = 5; FK.pause(true); const open = async (t) => { FK.select(null); S.subject = t; S.tab = null; MENU.render(true); await W(60); }, cell = (w) => qa('#base .kr .cell').find((c) => c.textContent.trim().startsWith(w));
- await open(null); const J = [box('#rank'), box('#base')], bar = $put(code('Barracks'), 0, 8, 60, true), lib = $put(code('Library'), 0, 8, 60, true), farm = $put(code('Farm'), 0, 8, 60, true);
- await open(bar); const K = [box('#rank'), box('#base')]; info.foot = [J.map((r) => [r.top, r.height]), K.map((r) => [r.top, r.height])];
- o.bar = !!q('#rank .kbar .kn') && q('#rank .kn').textContent === 'Barracks' && !q('#rank .ctop') && !q('#base .tabs') && !!q('#rank [data-v^="raise|"]') && !!q('#rank [data-v^="scrap|"]') && !q('#rank [data-v="mback||"]');
- o.rows = !!q('#base .kr.T') && !!q('#base .kr.L') && q('#base .kr.T').children.length === 6 && !!q('#base .kr.T [data-v^="train|"]') && !!q('#base .kr.L [data-v^="research|"]');
- o.foot = Math.abs(J[0].top - K[0].top) < 1.5 && Math.abs(J[0].height - K[0].height) < 1.5 && Math.abs(J[1].top - K[1].top) < 1.5 && Math.abs(J[1].height - K[1].height) < 1.5;
- const c1 = q('#base .kr.T [data-v^="train|"]'), id = c1.dataset.v; c1.click(); await W(60); o.select = !(bar.q || []).length && !!q('#rank .kgo') && !q('#rank .kn') && !!q('#base .cell.sel') && q('#base .cell.sel').dataset.v === id;
- q('#base .cell.sel').click(); await W(60); q('#base .cell.sel').click(); await W(60); o.buy = (bar.q || []).length === 2; info.q = (bar.q || []).length;
- q('#rank .kgo').click(); await W(60); o.cancel = (bar.q || []).length === 1; q('#rank [data-v="kx||"]').click(); await W(60); o.x1 = S.subject === bar && !!q('#rank .kn'); q('#rank [data-v="kx||"]').click(); await W(60); o.x2 = S.subject == null;
- await open(lib); const kb = box('#base'); info.lib = [qa('#base .kr').length, kb.width, K[1].width]; o.one = qa('#base .kr').length === 1 && !!q('#base .kr.L') && Math.abs(kb.top + kb.height - K[1].top - K[1].height) < 1.5;
- o.small = q('#base').classList.contains('s3') && kb.width < K[1].width * 0.6 && q('#base .kr').children.length === 3 && Math.abs(box('#rank .kbar').width - kb.width) < 1.5;
- await open(farm); const dots = qa('#qa .dot').map((d) => d.dataset.v.split('|')[0]); info.dots = dots; o.float = S.subject === farm && !q('#rank .kbar') && q('#base').className === 'jobs' && q('#qa').className === 'on' && dots.join() === 'send,raise,scrap';
- const v = FK.units().find((u) => u.side === 0 && FK.has(u, 'Gather')); v.job = 'idle'; v.target = null; q('#qa [data-v^="send|"]').click(); await W(60); o.send = v.target === farm; info.send = [v.job, v.then];
- q('#qa [data-v^="scrap|"]').click(); await W(60); o.arm = FK.things().includes(farm) && q('#qa [data-v^="scrap|"]').classList.contains('on'); await W(500); q('#qa [data-v^="scrap|"]').click(); await W(60); o.gone = !FK.things().includes(farm) && q('#qa').className !== 'on';
- return [o, info]; })()"""
-async def n66(b):
-    pg, errs = await fresh(b); v, info = await pg.evaluate(N66JS); await pg.close()
-    ok('t-n66', all(v.get(k) for k in ('bar', 'rows', 'foot', 'select', 'buy', 'cancel', 'x1', 'x2', 'one', 'small', 'float', 'send', 'arm', 'gone')) and not errs, [v, info, errs[:2]])
 N70JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => document.querySelector(s), qa = (s) => [...document.querySelectorAll(s)], o = {}, info = {}, R = () => MENU.render(true), S = MENU.S, CL = (s) => { const b = q(s); if (b) b.click(); return !!b; }, byName = (n) => Object.keys(FK.SH).find((c) => FK.SH[c].name === n), cs = (e, p) => e && getComputedStyle(e)[p];
  $rich(0); S.tab = null; FK.select(null); S.subject = null; R();
  const home = q('#rank .mline [data-v^="mhome|"]'), war = q('#rank .mline [data-v^="war|"]'); o.glow = cs(home, 'boxShadow') !== 'none' && cs(war, 'boxShadow') !== 'none'; info.glow = [cs(home, 'boxShadow'), cs(war, 'boxShadow')];
@@ -2287,6 +2057,19 @@ N67JS = r"""(async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms
  const old = WAR.attacked; WAR.attacked = () => [{ target: h }]; R(); o.alert = !!q('.mline [data-v="look|alert|"]'); WAR.attacked = old; MENU.act('war'); R();
  o.fixed = spots.every((s) => s === spots[0]) && spots[0] !== 'none'; info.spots = spots;
  return [o, info]; })()"""
+N71JS = r"""(() => { const v = {}, info = {}, W = fromBook('words').say, L = typeof FK.things === 'function' ? FK.things() : FK.things;
+  $calm(0); const V = ECON.villagersOf(0), find = L.find((t) => FK.has(t, 'Yield')), seat = FK.seatOf(0); V.forEach((u) => ECON.idle(u));
+  const all = ECON.idlers(0).length; V[0].inside = seat; const less = ECON.idlers(0).length; V.forEach((u) => (u.inside = seat)); const why = MENU.VERBS.mgather.whyNot(find); V.forEach((u) => (u.inside = null));
+  info.idle = [V.length, all, less, why]; v.idle = typeof FK.isIdle === 'function' && FK.isIdle(V[0]) && all === V.length && less === all - 1 && !!why && !MENU.VERBS.mgather.whyNot(find);
+  const I = MENU.SCR.icons; info.icons = Object.keys(I).length; v.icons = !!(I.close && I.back && I.food && I.people && I.pin) && !!document.querySelector('.topbar svg');
+  MENU.S.ghost = null; info.words = [MENU.VERBS.build.whyNot(), MENU.VERBS.stop.whyNot(V[0])]; v.words = !!W.blocked && info.words[0] === W.pick && info.words[1] === W.idle && document.title === W.title + FK.D.version;
+  const o = { ...MENU.S.opt }; MENU.S.opt.scen = 1; info.opts = [MENU.scen(), MENU.VERBS.opt.label('len', 2), MENU.VERBS.opt.label('hazard', 1)]; Object.assign(MENU.S.opt, o);
+  v.opts = info.opts[0] === 'siege' && info.opts[1] === '30 min' && info.opts[2] === 'Famine' && (MENU.SCR.opts || {}).len?.[2] === 1800;
+  info.ticks = [FK.ticked('Carry').length, FK.ticked('Repair').length, FK.ticked('Yield').length]; v.ticks = !info.ticks[0] && !info.ticks[1] && info.ticks[2] > 0;
+  return [v, info]; })()"""
+async def n71(b):
+    pg, errs = await fresh(b); v, info = await pg.evaluate(N71JS); await pg.close()
+    ok('t-n71', all(v.get(k) for k in ('idle', 'icons', 'words', 'opts', 'ticks')) and not errs, [v, info, errs[:2]])
 async def n70(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N70JS); await pg.close()
     ok('t-n70', all(v.get(k) for k in ('glow', 'dim', 'hint', 'fold', 'people', 'idle', 'rally', 'cost', 'vfix', 'ghost', 'site', 'card', 'train', 'war', 'pause', 'ribbon', 'halo')) and not errs, [v, info, errs[:2]])
@@ -2299,14 +2082,25 @@ async def n68(b):
 async def n67(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N67JS); await pg.close()
     ok('t-n67', all(v.get(k) for k in ('jobs', 'build', 'card', 'oneTap', 'crew', 'war', 'alert', 'fixed')) and not errs, [v, info, errs[:2]])
-PAGED = {'t-n70': n70, 't-n69': n69, 't-n68': n68, 't-n67': n67, 't-n66': n66, 't-n65': n65, 't-n64': n64, 't-n63': n63, 't-n62': n62, 't-n61': n61, 't-n60': n60, 't-n57': n57, 't-n56': n56, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18': n18, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n25': n25, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-p2c': p2c, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+PAGED = {'t-n71': n71, 't-n70': n70, 't-n69': n69, 't-n68': n68, 't-n67': n67, 't-n65': n65, 't-n60': n60, 't-n57': n57, 't-n55': n55, 't-n54': n54, 't-n53': n53, 't-ground': ground, 't-n18b': n18b, 't-n18c': n18c, 't-n19': n19, 't-n20': n20, 't-n21': n21, 't-n22': n22, 't-n23': n23, 't-n24': n24, 't-n24b': n24b, 't-n26': n26, 't-n27': n27, 't-n29': n29, 't-n30': n30, 't-n31': n31, 't-n43': n43, 't-n47': n47, 't-n48': n48, 't-n49': n49, 't-n50': n50, 't-n51': n51, 't-n52': n52, 't-p2': p2, 't-p2b': p2b, 't-freeze': freeze, 't-idle': idle, 't-load': load, 't-buffer': buffer, 't-star': star, 't-n42': n42, 't-rank': rank, 't-store': store, 't-dock': dock, 't-n15': n15, 't-n16': n16, 't-n17': n17, 't-a1': a1, 't-guide': guidebook, 't-land': land, 't-save': saving, 't-peace': peace, 't-civs': civs, 't-dew': dew, 't-sight': sight, 't-stage': stage, 't-wild': wild, 't-fire': blaze, 't-mind': mind, 't-realm': realm, 't-trade': trade, 't-troops': troops, 't-alarm': alarm, 't-orders': orders, 't-war': war, 't-kinds': kinds, 't-pace': pace, 't-physics': physics, 't-food': food, 't-same': same, 't-ledger': ledger, 't-effects': effects, 't-odds': odds, 't-foe': foe, 't-research': research, 't-gather': gather, 't-walls': walls}   # each on its own page
+def stepped(f):   # N71 (Design 18, 6): each top-level statement of a test runs alone, in one shared namespace; one that throws fails the rules it names (or the next that need what it made), and the rest run on
+    import ast, inspect, textwrap
+    src = textwrap.dedent(inspect.getsource(f)); body = ast.parse(src).body[0].body
+    async def run(b):
+        ns = dict(globals(), b=b)
+        for st in body:
+            try:
+                r = eval(compile(ast.Module([st], []), f'<{f.__name__}:{st.lineno}>', 'exec', flags=ast.PyCF_ALLOW_TOP_LEVEL_AWAIT), ns)
+                if inspect.iscoroutine(r): await r
+            except Exception as e:
+                for k in dict.fromkeys(re.findall(r"ok\('(t-[\w-]+)'", ast.get_source_segment(src, st) or '')): ok(k, False, f'its step threw: {type(e).__name__}: {str(e)[:160]}')
+    return run
 PLAIN = {'t-match': match, 't-proof': proof}   # no page; every other rule is main's
 async def page():
     async with async_playwright() as p:
         b = await p.chromium.launch(executable_path=CHROME, args=['--no-sandbox', '--allow-file-access-from-files'])
         if any(k not in PAGED and k not in PLAIN for k in ONLY):
-            try: await main(b)   # N67: main's old checks no longer stop the suite
-            except Exception as e: print(f'main threw: {type(e).__name__}: {str(e)[:200]}')
+            await stepped(main)(b)   # N71: a step of main that throws fails its own rules; the rest run on
         for k, f in PAGED.items():   # a test that throws is that rule's FAIL, and the suite runs on (Nov 10: one stale key stopped every rule after it)
             if k in ONLY:
                 try: await f(b)

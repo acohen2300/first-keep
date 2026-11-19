@@ -42,3 +42,6 @@ Albert asked for this at 17:17, from dinner. Read only: nothing in the game chan
 5. Size: no more grants; the next build must come out smaller.
 6. Tests: the 55 red ones rewritten or retired, so "right" can be proven.
 7. Paperwork diet: the Comments book is bigger than menu.js; a lighter form.
+
+## After (N71, the same day)
+His word, 17:25: "Do it all." Built as N71: see BUILDS.md N71 and The List 34 for what is done, part done and still red.

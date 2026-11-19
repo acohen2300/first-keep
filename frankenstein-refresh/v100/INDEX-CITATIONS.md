@@ -38,7 +38,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QCB** Pace → N13, N181, N19, N179, N185 · used by G9, G10, W1, W24, D224, D247, D355, X54, X56, O81, O84, O85, O86, O87, O106, O107, O110, O112, O113, O114, O131
 - **QCI** Standing spots → N165 · used by SC2, D196, X51
 - **QCJ** Separation → N163, N167 · used by D196, D377, X51
-- **QCK** Mending → N168 · used by SC5, D201, X52
+- **QCK** Mending → N168 · used by D201, X52
 - **QCL** Weather → N9, N10, N180, N182, N183, N184, N186, N187, N210, N211, N212, N213, N214 · used by D103, D229, X56, X68
 - **QCE** Trade pay → N195, N197 · used by SC19, D278
 - **QCF** Returns → N195 · used by D274, D275
@@ -80,7 +80,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **QBK** The art frame → N66
 - **QBL** The way → N74 · used by SC1, D198, D207, D230, D247, X52
 - **QBM** Walking → N71, N72, N73, N79 · used by SC1
-- **QBN** Gathering → N70 · used by SC2, SC3, SC12, SC16, SC17, D88, D197, X51
+- **QBN** Gathering → N70 · used by SC2, SC12, SC16, SC17, D88, D197, X51
 - **QCP** The woods' edge → N228, N231 · used by D63, D64, D65, D66, X71
 - **QCQ** The way home → N229, N233 · used by X71
 - **QCR** Frame budget → N237 · used by D339
@@ -195,7 +195,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N92** Design: Albert, Nov 5 (the mold) → SC0, SC01, SC02, SC03
 - **N93** Design: Albert, Nov 5 (menus are shells) → SC04
 - **N94** Design: v100 floor 5, Nov 4 → SC1, SC9, SC10
-- **N95** Design: v100 floor 9, Nov 5 → SC2, SC3, SC4, SC5, SC11, SC13, SC14, SC15, SC16
+- **N95** Design: v100 floor 9, Nov 5 → SC2, SC4, SC11, SC13, SC14, SC15, SC16
 - **N96** Design: v100 floor 10, Nov 5 → SC6, SC7
 - **N97** Design, Nov 5 → SC8, W14, HE1, HX5
 - **N98** Design: v100 floor 4, Nov 4 → SC12
@@ -268,7 +268,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N165** Hall, E. T. (1966) The Hidden Dimension, Doubleday/Anchor; hex packing density pi/(2 sqrt 3) (Lagrange 1773, l → QCI, D196
 - **N166** 29 CFR 1910.266(d)(6)(ii); 29 CFR 1910.142(b)(3): Adjacent occupied work areas at least two tree lengths apart → D195, D196
 - **N167** Moussaid, Helbing, Garnier, Johansson, Combe & Theraulaz (2009) Proc. R. Soc. B 276:2755-2762 (arXiv:0908.3131 → QCJ, D196
-- **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC5, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
+- **N168** Design: Mid's builders, repair, limits, taking down, placing and walls (11-orders.js autoBuilder, sendBuilder, → QCK, SC4, SC21, SC22, D123, D125, D199, D200, D201, D202, D203, D204, D205, D206, D207, D208, D209, D210, X52
 - **N169** Design: Albert, Nov 5 10:06–10:28: build and train times Mid's; every building's health v100's → D124, D125, D139
 - **N170** Design: Mid's food, farms, seasons, hunting and fishing (36-economy.js shareOf, orderCost, hungerOf, upkeepTic → QBP, A4, SC03, SC10, SC16, SC23, SC24, SC25, SC26, W17, W18, D86, D131, D138, D139, D211, D212, D214, D215, D216, D217, D218, D219, D220, D221, D222, D223, X53, SN4, R6, MW1, BCL1, BCL2, BCL3, BCT2, UV, UM1, UM6, UM2, UM7, UM8, UM9, UM10, UM3, UM11, UM12, UM4, UM13, UM5, UM14, UM15, UM16, US1, US2, US3, US4, UT1, MW3, MW7, MW8, UM17, UM18, UM19, UM20, UM21, UM22, I4, PN1, P20, P21, PB14, PB15, PB16, O46, O64, O65, O66, O67, O68, O69, O70, O71, O72, O73, O74, O75, O76, O77, O78, O79, J7, J8, J9
 - **N171** Keys et al. (1950) The Biology of Human Starvation, Univ. of Minnesota Press; via Hargrove, Heinz & Heinz (200 → QBP, D212
@@ -489,6 +489,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N393** Albert, Nov 18 08:12 to 10:31 (Design 16; The List 30; mocks 175 to 197). 08:40 "Top row is Home | Jobs/Build  → X137, SN50
 - **N392** Albert, Nov 17 17:38 to 19:00, his play of n67 (Design 15; The List 28 holds every word; mocks mockups/dock/15 → X136, SN49, SN48, P38
 - **N391** Albert, Nov 17 08:24 to 15:40 (Design 14, the mold: new game, Jobs, Build, the building card, the villager car → X135, SN48, J61
+- **N395** Albert, Nov 18 17:17 and 17:25 (Design 18, the Nov 18 audit fixes; docs/4 Now/Audit - Nov 18.md). 17:17: "can  → X25, X26, X29, X30, X82, X92, X103, X126, X129, X130, X131, X132, X134, X139, X140, X141, SN51, J9
 
 ## Named exceptions
 

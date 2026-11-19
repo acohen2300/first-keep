@@ -698,3 +698,12 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
 - Claude's call, his to overrule: Repair shows only on a hurt building (the crumb row overflowed with a queue).
 - Not in N70: Quit (what it does, his); the War menu under the law; the shell/ring/text audit (SOON; a queued tile's cost is clipped under "×1"); a hints setting (LATER); the n67 end-game slowdown (his ?fps shot); the halo on a House and a Barracks (his play).
 
+
+## 34. N71 built (preview n71): the Nov 18 audit fixes (Albert, Nov 18 17:17 "can you do a 12 core values audit as well as a code attitude test"; 17:25 "Do it all.") [2026-11-18 19:10]
+- The audit: `docs/4 Now/Audit - Nov 18.md`. The spec: `docs/3 Locks/Designs/18 The Nov 18 audit fixes.md`. What is in: BUILDS.md N71. Cuts: Parked.md "Cut in N71".
+- Built, proven by t-n71 (fails on N70's code): one idle; the words in the Words book; the icons in the Screen book; the dead functions and doors out; four dead ticks wired, Carry and Repair cut.
+- Built, the gate holds it: no grant, every code file smaller; ecs named 293 → 250, dead 6 → 0; rules `words` and `whys`.
+- Part done: the red tests. 55 red at N70; 27 red at N71 (named in BUILDS.md N71). 13 retired, 17 checks retired inside 9 tests, t-place moved to the menu law. Each of the 27 needs a trace to tell a stale test from a game fault; the 19 held to Mid need his word where v100 differs from Mid (drift or ruling).
+- Part done: the Comments book. The copy page is gone and long whys are capped; the 109 long ones are not rewritten.
+- Claude's calls, his to overrule: "send an idle villager" no longer takes a posted or garrisoned one, and the idle tip no longer counts the garrisoned; Carry and Repair cut, not wired; t-n63 and t-n64 retired with new tests owed (the unit cell's lines, the Help card); the icons' home is the Screen book.
+- Still his from N70: his n70 play notes; Quit; the War menu under the law; the shell/ring/text audit; the n67 slowdown (?fps).

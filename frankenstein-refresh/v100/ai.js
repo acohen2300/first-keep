@@ -1,7 +1,7 @@
 'use strict';
 // E241
 window.AI = (() => {
-const { D, B, SIDES, N } = FK;
+const { D, B, SIDES, N, isIdle } = FK;
 // E170
 const whole = FK.things, things = FK.rest, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
 const clock = SIDES.map(() => 0), rates = new Map(), mind = SIDES.map(() => ({})), of = (x) => x || 0, per = (side) => A.pers[A.pers.of[side]];
@@ -16,7 +16,7 @@ let DF;
 function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);
   for (let r = rmin; r < rmax; r++) for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i += j === cj - r || j === cj + r ? 1 : 2 * r) if (ECON.canPlace(code, i, j, side, true, true)) return [i, j]; return null; }
 function raise(side, code, bx, by, rmin, rmax) { if (!ECON.canPay(side, D.cost[code] || {}) || ECON.capWhy(side, code)) return null; const at = spot(code, bx, by, rmin, side, rmax); // E686
-  if (!at) return null; const t = ECON.plan(side, code, ...at); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (u.job === 'idle' || u.job === 'wait' || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
+  if (!at) return null; const t = ECON.plan(side, code, ...at); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (isIdle(u) || u.job === 'wait' || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
 function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n * H, cj = h.j + h.n * H, mid = FK.MID / D.tile, base = Math.atan2(mid - cj, mid - ci), off = new Map(); let pi = null, pj = null; // E331
   const add = (i, j) => { const a = Math.atan2(j + H - cj, i + H - ci) - base; if (!off.has(j * N + i)) off.set(j * N + i, Math.abs(Math.atan2(Math.sin(a), Math.cos(a)))); };
   for (let s = -WP.steps; s <= WP.steps; s++) { const a = base + s * WP.step, i = Math.floor(ci + Math.cos(a) * R), j = Math.floor(cj + Math.sin(a) * R); if (pi !== null && i !== pi && j !== pj) add(i, pj); add(i, j); [pi, pj] = [i, j]; }
@@ -29,7 +29,7 @@ function gapOnRoad(a, b) { const T = D.tile, L = dist(a, b), ux = (b.bx - a.bx) 
     if (w >= AB.min && w <= AB.max && (!best || w < best.w)) best = { x, y, w, f: [ux, uy] }; }
   return best; }
 function chokeClaim(side, enemy) { const t = FK.K.t; if (claimT.get(side) > t) return; claimT.set(side, t + AB.every); const k = home(side), f = home(enemy); if (!k || !f) return; // E435
-  const foot = WAR.armyOf(side).filter((u) => u.job === 'idle' && !u.target && !AB.not.includes(FK.SH[u.code].class)); if (foot.length < AB.foot) return; const g = gapOnRoad(k, f); if (!g) return;
+  const foot = WAR.armyOf(side).filter((u) => isIdle(u) && !u.target && !AB.not.includes(FK.SH[u.code].class)); if (foot.length < AB.foot) return; const g = gapOnRoad(k, f); if (!g) return;
   WAR.dress(foot.filter((_, i) => i < g.w * AB.files), FK.tileAt(g.x, g.y), 'choke', { t0: t, until: t + AB.hold, cols: Math.min(CK.max, Math.max(CK.min, g.w)), f: g.f }); }
 // E525
 const total = (xs, f) => xs.reduce((n, x) => n + f(x), 0), pos = (x) => Math.max(0, x), up = ECON.up;
@@ -108,7 +108,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
   yield; if (!saving && WAR.knows(side, 'muster') && inArmy(side) + AT.muster <= aim(side)) { const want = (m.want = bestCounter(side)); if (want) ECON.muster(side, { [want]: AT.muster }); }
   if (!saving && inArmy(side) < aim(side) && vs.length >= P.early) { const want = (m.want = bestCounter(side)); if (want) train(side, want); }
   yield; const goal = goalOf(side, P, saving), all = ECON.addRes({ ...(goal ? goal.cost : {}) }, due), plan = needOf(side, vs, all, draw), famine = famineNear(side, plan, eat); // E539
-  const order = Y.filter((y) => plan[y].t || (famine && y === FOOD)).sort((a, b) => (famine && (b === FOOD) - (a === FOOD)) || plan[b].t - plan[a].t), [first] = order, idle = vs.find((v) => v.job === 'idle'); Object.assign(m, { goal: goal && goal.what, need: first || null, plan });
+  const order = Y.filter((y) => plan[y].t || (famine && y === FOOD)).sort((a, b) => (famine && (b === FOOD) - (a === FOOD)) || plan[b].t - plan[a].t), [first] = order, idle = vs.find((v) => isIdle(v)); Object.assign(m, { goal: goal && goal.what, need: first || null, plan });
   yield; const move = (u, y) => { const f = u && ECON.bestFind(u, y); if (f) ECON.gatherAt(u, f); }, giver = (y) => vs.find((v) => ECON.jobOf(v) === y && of(v.load) < AT.carry && !(ECON.posted(v) && FK.has(v.target, 'Make')));
   if (first) { const tb = famine && first === FOOD ? Infinity : plan[first].t; if (idle) move(idle, first);
     else { let d = null, dv = -Infinity; for (const y of Y) { const Q = plan[y], gain = Q.inc - Q.rho; if (y === first || !Q.n || (famine && y === FOOD)) continue; const after = Q.short && (pos(gain) ? Q.short / gain : Infinity); // E540
@@ -116,7 +116,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
       if (d) move(giver(d), first); } }
   else { const X = AT.mix, M0 = Object.fromEntries(Y.map((y, i) => [y, P.mix[i]])), M1 = s.age ? M0 : young(M0, X.stone), M = s.age < X.iron ? young(M1, X.early) : P.wonder ? Object.fromEntries(Y.map((y) => [y, M1[y] + X.wonder])) : M1; // E541
     const all = total(Y, (y) => M[y]) || 1, [[top, gap], ...rest] = Y.map((y) => [y, (M[y] / all) * vs.length - plan[y].n]).sort((a, b) => b[1] - a[1]), [low] = rest.at(-1); if (idle) move(idle, top); else if (gap >= 1) move(giver(low), top); }
-  yield; s.rally = first || FOOD; for (const v of vs) if ((v.job === 'wait' && (!v.target || v.lost)) || v.job === 'idle') { yield; const by = (r) => { const f = ECON.bestFind(v, r); return of(f && ECON.forage(v, f, FK.dropFor(v, r))); }, y = order.find((r) => ECON.bestFind(v, r)) || Y.slice().sort((a, b) => by(b) - by(a)).find(by); if (y) move(v, y); } // E542
+  yield; s.rally = first || FOOD; for (const v of vs) if ((v.job === 'wait' && (!v.target || v.lost)) || isIdle(v)) { yield; const by = (r) => { const f = ECON.bestFind(v, r); return of(f && ECON.forage(v, f, FK.dropFor(v, r))); }, y = order.find((r) => ECON.bestFind(v, r)) || Y.slice().sort((a, b) => by(b) - by(a)).find(by); if (y) move(v, y); } // E542
   yield; for (const u of WAR.armyOf(side)) if (u.job === 'hold' && ((u.drill && u.drill.until <= FK.K.t) || (u.helpT != null && FK.K.t - u.mvT > DP.help.stay))) Object.assign(u, { job: 'idle', drill: null, goal: null, helpT: null }); // E688
   if (P.bold < AT.never) decideWar(side, P); if (!WAR.waves[side]) chokeClaim(side, D.players.find((p) => WAR.atWar(side, p) && home(p)));
   yield; if (P.diplo) diplomacy(side, P); allyDuty(side); }

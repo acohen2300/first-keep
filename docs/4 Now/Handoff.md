@@ -1,4 +1,11 @@
-# First Keep: hand-off (Nov 18, 2026, 16:30)
+# First Keep: hand-off (Nov 18, 2026)
+
+## START HERE (2026-11-18 19:10): N71 BUILT (preview n71): Design 18, the Nov 18 audit fixes. His n70 play notes are still next
+- His go (Nov 18 17:25): "Do it all." on the seven fixes of `docs/4 Now/Audit - Nov 18.md`. What is in: BUILDS.md N71; The List 34; cuts: Parked.md "Cut in N71". No play change meant: n71 should play as n70.
+- Tests: t-n71, t-n70, t-n69 pass. Full suite 62 of 89 (13 rules retired, stage "retired" in the Rules book). The 27 red are the baseline now: t-civs, t-fire, t-food, t-gather, t-kinds, t-land, t-mind, t-n17, t-n24b, t-n27, t-n29, t-n30, t-n42, t-odds, t-orders, t-p2, t-peace, t-physics, t-realm, t-research, t-same, t-sight, t-stage, t-trade, t-walls, t-war, t-wild. t-n57 and t-n60 come and go with the board; t-a1 and t-n22 with load.
+- Owed: the 27 traced one by one (stale test or game fault; the Mid ones need his word); new tests for the unit cell's lines (was t-n63) and the Help card (was t-n64); the 109 long whys.
+- New in the gate: `words` (a sentence typed in code stops the build), `whys`; ecs ceilings 250 / 32 / 0. test.py: `stepped` runs main a statement at a time; `RETIRED` lists the checks left out of a verdict.
+- Open, his, from N70: his n70 play notes (talk first); Quit; the War menu under the law; the shell/ring/text audit (SOON); the n67 slowdown (?fps).
 
 ## START HERE (2026-11-18 16:00): N70 BUILT (preview n70): Design 17, the n69 play fixes. His play is next
 - His go (Nov 18 14:51): "Go go go go go go do it". Rulings 12:53 to 14:51: The List 32; spec `docs/3 Locks/Designs/17 The n69 play fixes.md`; mocks `mockups/dock/200` to `221`.
