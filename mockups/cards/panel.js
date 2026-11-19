@@ -3,6 +3,7 @@ window.fkPanel = (sp, taps) => {
   const css = `
   .fk{position:relative;width:390px;height:150px;font-family:'Barlow Semi Condensed',sans-serif;color:#efe6d2;background:linear-gradient(#3a2c20,#241a12 30%);border-top:1px solid #5a4632;box-sizing:border-box;overflow:hidden}
   .fk.fix{position:fixed;left:0;bottom:0;z-index:99999}
+  .fk.clear{background:none;border-top:none;text-shadow:0 1px 2px #000,0 0 5px #000c}.fk.clear .hm,.fk.clear .w:not(.won),.fk.clear .tile,.fk.clear .fg,.fk.clear .tt,.fk.clear .ex span,.fk.clear .fpm span{background:#1c140ea8}.fk.fade{background:linear-gradient(#0000,#140e0a99 45%);border-top:none;text-shadow:0 1px 2px #000}
   .fk .r1{position:absolute;left:3px;right:3px;top:6px;height:44px;display:flex;align-items:center;gap:8px}
   .fk .hm,.fk .w{width:38px;height:38px;border-radius:50%;border:1.5px solid #8a7660;background:#2b2018;display:grid;place-items:center;flex:none}
   .fk .w{color:#e8604c;font-size:18px;font-weight:700}.fk .w.won{background:#e8604c;color:#fff;border-color:#e8604c}
@@ -27,7 +28,7 @@ window.fkPanel = (sp, taps) => {
   r2.push('<div class="fsp"></div>'); if (sp.hint) r2.push(s(sp.hint, 'nt hint')); if (sp.pm) r2.push(s('<span>−</span>', 'fpm'), s('<span>+</span>', 'fpm'));
   for (const a of sp.acts || []) r2.push(s(a === 'Exit' ? '<span>Exit</span>' : a, a === 'Exit' ? 'ex fp' : a === 'Demolish' ? 'dm fp' : 'fp'));
   const tile = (t) => t.war ? `<div class="tile twar ${t.c || ''}">${t.i ? `<svg viewBox="0 0 24 24">${t.i}</svg>` : ''}${t.n}</div>` : `<div class="tile ${t.c || ''}">${t.n}${t.s ? `<small>${t.s}</small>` : ''}</div>`;
-  const d = document.createElement('div'); d.className = 'fk' + (taps ? ' taps' : '') + (sp.fix ? ' fix' : '');
+  const d = document.createElement('div'); d.className = 'fk' + (taps ? ' taps' : '') + (sp.fix ? ' fix' : '') + (sp.look ? ' ' + sp.look : '');
   d.innerHTML = `<style>${css}</style><div class="r1"><div class="hm"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#efe6d2" stroke-width="1.6"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg></div><div class="way">Home<i>|</i>${sp.way === 'Jobs' ? '<b>Jobs</b>' : 'Jobs'}<i>|</i>${sp.way === 'Build' ? '<b>Build</b>' : 'Build'}</div><div class="tt">${sp.title}</div><div class="w ${sp.war ? 'won' : ''}">W</div></div>
     <div class="r2">${r2.join('')}</div><div class="r3">${(sp.tiles || []).map(tile).join('')}</div>${sp.info ? `<div class="inf">${sp.info.map((t) => `<b>${t}</b>`).join('<i>|</i>')}</div>` : ''}`;
   document.body.append(d);
