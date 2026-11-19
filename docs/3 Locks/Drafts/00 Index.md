@@ -8,3 +8,4 @@ A draft becomes a Design (`docs/3 Locks/Designs/`) only on Albert's word. [2026-
 4. `04 The rest of the land.md`: AUDIT of grass, dirt, ice, snow, rock, fish, roads: what is real math, what is not, what has two homes. Nothing ruled. [2026-11-19 12:10]
 5. `05 Core values check.md`: Drafts 1-4 against the 12 core values: fails, open points, passes. [2026-11-19 12:14]
 6. `06 Open items - sources and calls.md`: sources found Nov 19, what was not found, the three calls that close the clock items. [2026-11-19 12:24]
+7. `07 The building card.md`: the card as four elements (way, title with its pages, breadcrumb, Exit), mocked on n74. [2026-11-19 14:38]
