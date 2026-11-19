@@ -22,3 +22,10 @@ STATUS: OPEN TALK (Albert, Nov 19 11:25-11:36). Nothing ruled. Came out of trees
 - Precedent (from memory, NOT opened): map symbols drawn larger than scale, the legend carries the truth; Kriegsspiel 1824 and miniature wargames keep separate figure, ground and time scales; "representative days" in energy models (a year shown by a few sample days).
 - Walking stays at figure scale (what the eye sees), the one declared exception.
 - Rough: assumes chopping without trips, every day of the year.
+
+## 11:39-11:42 [2026-11-19 11:43]
+- Albert 11:39: "Forget the wood for a second. We need to sort time warping." 11:39: "A day is too short. A season is too long. There is no rhyme or reason and no math."
+- Tried: days a year as the one free number (6 today, 16 by the exponent, 365 real); one day = one season (day 360, year 1,440).
+- Albert 11:42: "What if we make minute seconds?" = 60x: hour 60 s, day 1,440 s (24 min); a straight 60x season is 36.5 h. Ground at 1:60 makes real-pace walking true (map about 30 km).
+- RULING (Albert 11:42): "A day is 1440 seconds". One real minute = one game second. Was 240 (D.day), 6x longer.
+- Open: the season and the year. Today's year (1,440 s) now equals one day; today's season (360 s) equals a quarter day (6 game hours).
