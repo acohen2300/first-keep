@@ -808,3 +808,4 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 3. OPEN: t-n47 `six` (5 rich clearings on the test seed, a land matter), t-n24 `far` and t-n60, t-p2 unsteady; the effect and stat lines have no place in the mold yet.
 - N79 built (preview n79): clear fills on the boxes and tiles, Train and Learn tiles filled (Albert, 17:36). Proof owed: his play. Open with him: the dark glow (17:37); whether the Home and W circles go clear too. [2026-11-19 19:40]
 - N80 built (preview n80): Jobs' tiles filled; the fill has one home, N79's override removed (Albert, 17:41). Proof owed: his play. [2026-11-19 20:00]
+- N81 built (preview n81): Build's tiles filled (Albert, 18:51). Proof owed: his play. Open with him: every tile filled, and a dark shadow on rows 1 and 2. [2026-11-19 20:20]

@@ -409,3 +409,4 @@ Written by `index.py` from `books/citations.js`, never by hand: every source by 
 | N410 | design | yes | Albert, Nov 19 13:39 to 17:03 (Drafts 7 and 8): the new HUD, one mold: Home | Jobs | Build, a gold title, W; row 2 the breadcrumb, the pages, Repair | Demolish | Exit; War Command; item cards ("Add a villager"); clear over the game as today; "Sounds good. Go for it" on the plan of 16:57 |
 | N411 | design | yes | Albert, Nov 19 17:36: "The fill in all the buttons and outlines are to be clear. Except for the tiles for tech and train." |
 | N412 | design | yes | Albert, Nov 19 17:41: "jobs too needs to be filled"; "please don't build patches. I assume you are fixing code each time" |
+| N413 | design | yes | Albert, Nov 19 18:51, with a screen of Build's clear tiles over the grass: "Can you fix the build tiles too?" |

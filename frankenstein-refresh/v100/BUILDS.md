@@ -5697,3 +5697,11 @@ Opened: code:menu.js, book:citations, book:rules, tool:test.py.
 - Jobs' tiles (the Jobs page and a villager's job tiles) are a filled row (J).
 - Gate: PASS. Size: menu.js 128,010 → 127,997 bytes (−13). ecs unchanged.
 - Tests: t-n78 `clear` now also asks that Jobs' tiles are filled and that Build's dimmed and locked tiles are clear; it fails on N79's menu.js. t-n78, t-n77, t-n76, t-n70, t-n69, t-n67 pass. The full suite was not run.
+
+## N81: Build's tiles filled · 2026-11-19 20:20
+Albert, Nov 19 18:51, with a screen of Build's clear tiles over the grass: "Can you fix the build tiles too?" (N413).
+Opened: code:menu.js, book:citations, book:rules, tool:test.py.
+- Build's tile row is a filled row (B) in the one rule of N80. Clear rows left: War's orders, Plant, Make, Sell, Buy, Relations.
+- Gate: PASS. Size: menu.js 127,997 → 127,996 bytes (−1; two `.pmb .bx` rules merged). ecs unchanged.
+- Tests: t-n78 `clear` asks that Build's tiles are filled; fails on N80's menu.js. t-n78, t-n77, t-n69, t-n67 pass. The full suite was not run.
+- Talk, his question "Or do we just do a shadow?": mock `mockups/cards/tiles-shadow.png` (top: N81; bottom: every tile filled and a dark shadow on the words and boxes of rows 1 and 2). Claude's advice: every tile filled (one rule, no list of exceptions), rows 1 and 2 clear with the shadow. His word owed.
