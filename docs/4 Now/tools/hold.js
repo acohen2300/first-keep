@@ -1,0 +1,5 @@
+(() => { FK.reset(); Object.assign(FK.K, { rain: 0, snowing: 0, temp: 15 }); WAR.treaty(0, 1, 'war'); const h = FK.seatOf(0), k0 = (h.j + h.n + 14) * FK.N + h.i, mine = [], foe = [], T = FK.D.tile;
+ for (let i = 0; i < 20; i++) mine.push(FK.spawn('UM1', 0, k0 + (i % 10) + Math.floor(i / 10) * FK.N, FK.rng)); for (let i = 0; i < 6; i++) foe.push(FK.spawn('UM2', 1, k0 + i + 8 * FK.N, FK.rng));
+ for (const u of mine) { Object.assign(u, { path: null, goal: u.k, job: 'hold', target: null, ord: null }); u.$x = u.bx; u.$y = u.by; } const log = [];
+ for (let t = 0; t <= 1200; t++) { FK.sim(0.1); if (t % 150 === 0) { const L = mine.filter((u) => !u.gone), J = {}; for (const u of L) J[u.job] = (J[u.job] || 0) + 1; log.push([t / 10, JSON.stringify(J), 'far>3 tiles: ' + L.filter((u) => Math.hypot(u.bx - u.$x, u.by - u.$y) > 3 * T).length, 'max ' + Math.round(Math.max(...L.map((u) => Math.hypot(u.bx - u.$x, u.by - u.$y))) / T), 'foe left ' + foe.filter((v) => !v.gone).length].join(' | ')); } }
+ return log; })()

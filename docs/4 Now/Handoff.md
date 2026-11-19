@@ -1,5 +1,11 @@
 # First Keep: hand-off (Nov 18, 2026)
 
+## START HERE (2026-11-18 22:40): N73 BUILT (preview n73, holds N72 too). His play is next. Then mocks 4 and 5, with him
+- His go (Nov 18 22:02, The List 37): sickness immune for good, the yellow alert, white tile text. What is in: BUILDS.md N73; Design 20; The List 38. Cuts: Parked.md "Cut in N73".
+- Tests: t-n73 passes, fails on N72. The full suite ran on N72: 62 of 90, no new failure (`docs/4 Now/Traces - Nov 18.md`, 6). NOT run on N73.
+- Traced, causes only, his rulings owed (`docs/4 Now/Traces - Nov 18.md`): Hold does not hold (proven); nerve routs a winning group after about 30% dead near; a gatherer on `wait` counts as idle (econ.js:124); a crowd costs about 18% a head.
+- OWED, not done in that chat (it ran long): the mock of a flag on a worked plot (his 4: "Ok"); the mock of archers forming up and footmen making a wall (his 5: "Yes we have to mock it"); his 6 to 8 explained in chat, no rulings; the 26 red tests traced; tests for the unit cell and the Help card; the 109 long whys; the shell, ring and text audit; population (needs his example); the 28 on `wait` at minute 17.
+- Found, not fixed: Learn tiles wrap and clip two-word names; `loses` (what a unit loses to) is called nowhere.
 ## START HERE (2026-11-18 22:00): N72 BUILT (preview n72): Design 19, the line keeps its word and War answers. His play is next
 - His go (Nov 18 21:29): "2. Go 3. Go". What is in: BUILDS.md N72; The List 36; cuts: Parked.md "Cut in N72". Code: menu.js `note` (S.re), `act`, `mtab`, `heard`, `mord`, `cact`, the Controller's mold (S.ro).
 - Tests: t-n72 passes and fails on N71; t-n71, t-n70, t-n69, t-n68, t-n67, t-guide, t-ledger pass. The FULL SUITE WAS NOT RUN: owed (baseline: the 27 red named under N71 below).
