@@ -42,3 +42,10 @@ STATUS: DRAFT (Albert, Nov 19 11:20: "we are done with trees then. We have a new
 
 ## 11:51 [2026-11-19 11:52]
 - RULING confirmed (Albert 11:51): the road strip goes by the law as written: the trees stay, the strip is clear underneath (no cover, no hiding). No longer to confirm.
+
+## The wood unit [2026-11-19 11:55]
+- RULING (Albert 11:54): "Ok let's set 2.5kg now". 1 wood = 2.5 kg, set by the load: a villager carries 10 wood (D carry) = 25 kg, about a third of body weight (source NOT opened; to open before it enters a book).
+- Gives: forest tree 100 wood = 250 kg = 0.26 m3 green (950 kg/m3) = a 10 m tree about 26 cm across; home tree 690 = 1.7 t; a cord (1.4 t) = 560 wood.
+- Today (seed 3982373520): 2,148 forest trees at 100, 204 at 600 (Z3), 260 at 690 (home), all drawn one size: against "wood follows size". Home trees drawn about 1.9x taller, or more trees.
+- Felling 0.75 wood/s = 1.9 kg/s, about 24x a real woodcutter (2.8 t over a 10 h day, the 10 h assumed): the work clock, on hold with Draft 3.
+- Building costs (D123) stay game numbers, flagged NOT REAL, until the buildings element: a house at 30 wood would be 75 kg. No unit makes loads and buildings both real.
