@@ -806,3 +806,4 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 1. BUILT, proof owed (his play): every building's card, Build, villagers and units, War Command and the item cards in the mold; Jobs as today under the new line. t-n78 passes (fails on N77).
 2. DIFFERENT FROM THE PLAN: the fold's − stays above the line's right end (no room after Build beside the longest title); an item card says "2 working", not "2 of 4"; War's next-step word shows in the title.
 3. OPEN: t-n47 `six` (5 rich clearings on the test seed, a land matter), t-n24 `far` and t-n60, t-p2 unsteady; the effect and stat lines have no place in the mold yet.
+- N79 built (preview n79): clear fills on the boxes and tiles, Train and Learn tiles filled (Albert, 17:36). Proof owed: his play. Open with him: the dark glow (17:37); whether the Home and W circles go clear too. [2026-11-19 19:40]

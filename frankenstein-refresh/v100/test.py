@@ -2071,12 +2071,13 @@ N78JS = r"""(() => { const S = MENU.S, v = {}, info = {}, q = (s) => document.qu
   FK.pause(false); S.tab = null; S.subject = h; R(); const pages = qa('.mctl .gw button').map(tx), on = q('.mctl .gw button.on');
   info.card = [tx(q('.mline .tt')), tx(q('.mctl .cb.big')), pages, tx(q('.mctl .ex')), qa('#rank .mline .jb button').map(tx)];
   v.card = info.card[0] === 'Town Center' && info.card[1] === 'Town Center' && pages.join() === 'Train,Learn,Relations' && !!on && !!on.querySelector('.bx') && info.card[3] === 'Exit' && info.card[4].join() === 'Home,Jobs,Build' && !q('.mline .gw');
+  const bg = (e) => getComputedStyle(e).backgroundImage + getComputedStyle(e).backgroundColor, clear = (e) => bg(e) === 'nonergba(0, 0, 0, 0)'; v.clear = clear(q('.mline .tt')) && clear(q('.mctl .bx')) && clear(q('.mctl .ex .bx')) && !clear(q('#base .mt .cell')); MENU.act('ctab', 'Talk'); R(); v.clear = v.clear && clear(q('#base .mt .cell')); MENU.act('ctab', 'Train'); R();
   const rep = q('.mctl [data-v^="raise|"]'); v.repair = !!rep && !vis(rep); h.hp = h.hpMax / 2; R(); v.repair = v.repair && vis(q('.mctl [data-v^="raise|"]')); h.hp = h.hpMax; R();
   v.taps = qa('.mctl .row2 button').every((b) => b.getBoundingClientRect().width >= 43.5) && q('.mctl .row2').scrollWidth <= q('.mctl .row2').clientWidth; info.taps = qa('.mctl .row2 button').map((b) => Math.round(b.getBoundingClientRect().width));
   v.left = q('#base .mt .cell').getBoundingClientRect().left < 20; MENU.act('ctab', 'Learn'); R(); v.tiles = qa('#base .mt .cell').length > 1 && !q('#base .mt .cell small.c');
   const H = Object.keys(FK.SH).find((c) => FK.SH[c].name === 'House'); let hs = null; for (let d = 5; d < 40 && !hs; d++) { hs = FK.build(H, h.i + d, h.j + d, FK.SIDES[0].col); if (hs) { hs.side = 0; hs.done = 1; hs.hp = hs.hpMax = WAR.hpMax(hs); } }
   S.subject = hs; R(); const dm = () => q('.mctl [data-v^="scrap|"]'); info.dm = [tx(dm())]; dm().click(); R(); info.dm.push(tx(dm()), FK.things().includes(hs)); v.sure = info.dm[0] === 'Demolish' && info.dm[1] === 'Sure?' && info.dm[2] === true;
-  S.dm = null; S.subject = null; R(); MENU.act('war'); R(); const tiles = qa('#base .mt .cell'), al = () => tiles.length && qa('#base .mt .cell').at(-1);
+  S.dm = null; S.subject = null; R(); MENU.act('war'); R(); v.clear = v.clear && clear(q('#base .mt .cell')); const tiles = qa('#base .mt .cell'), al = () => tiles.length && qa('#base .mt .cell').at(-1);
   info.war = [tx(q('.mline .tt')), q('.mline .tt').className, qa('.mctl .who button').length, tiles.length, tiles.slice(0, 5).every((c) => !!c.querySelector('svg')), al().dataset.v, tx(al())];
   ECON.alarm('shelter'); R(); info.war.push(al().dataset.v, tx(al())); ECON.allClear(); R();
   v.war = info.war[0] === 'War Command' && /red/.test(info.war[1]) && info.war[2] === 7 && info.war[3] === 6 && info.war[4] && info.war[5] === 'shelter||' && info.war[6] === 'Garrison villagers' && info.war[7] === 'work||' && info.war[8] === 'Back to work' && !q('[data-v^="out|"]') && tx(q('.mctl .ex')) === 'Exit';
@@ -2086,7 +2087,7 @@ N78JS = r"""(() => { const S = MENU.S, v = {}, info = {}, q = (s) => document.qu
   return [v, info]; })()"""
 async def n78(b):
     pg, errs = await fresh(b, 2500); v, info = await pg.evaluate(N78JS); await pg.close()
-    ok('t-n78', all(v.get(k) for k in ('card', 'repair', 'taps', 'left', 'tiles', 'sure', 'war', 'item')) and not errs, [v, info, errs[:2]])
+    ok('t-n78', all(v.get(k) for k in ('card', 'clear', 'repair', 'taps', 'left', 'tiles', 'sure', 'war', 'item')) and not errs, [v, info, errs[:2]])
 N77JS = r"""async () => { const W = (ms) => new Promise((r) => setTimeout(r, ms)), S = MENU.S, v = {}, info = {}, h = FK.seatOf(0), sites = () => FK.blds().filter((t) => t.side === 0 && t.done < 1).length;
   FK.pause(false); FK.SIDES[0].age = D.ages.length - 1; const name = (c) => FK.SH[c].name;
   info.repeat = Object.keys(FK.SH).filter((c) => FK.has({ code: c }, 'Repeat')).map(name).sort(); v.six = info.repeat.join() === 'Farm,Foundry,House,Mint,Quarry,Tree farm';

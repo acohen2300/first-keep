@@ -5679,3 +5679,13 @@ Opened: code:menu.js, book:words, book:screen, book:citations, book:comments, bo
 - Gate: PASS. Size: menu.js 128,043 → 128,014 bytes (−29). ecs: named 249 → 249.
 - Tests: t-n78 (X148) passes; it fails on N77. Moved to the new mold: t-n67 to t-n72 and t-n76 (the pages and readings read from row 2 and the title; Relations; seven who-buttons; the alarm tile; a hidden button is not a dead one). Retired with the ruling: t-n70 `hint` (the swap hint), t-n69 `crumb` and `cancel` (the old crumb row). Pass: t-n78, t-n77, t-n76, t-n73 to t-n65, t-n57, t-n55 to t-n48, t-n43, t-n31, t-n17, t-p2, t-p2b, t-freeze, t-idle, t-load, t-save, t-buffer, t-dock. Smoke 6/6.
 - OPEN, not from this build: t-n47 `six`: on the test seed the land lays 5 rich clearings, not 6 (read on N77's and N78's files alike; the check passed in some runs and failed in others: not traced). t-n24 `far` failed 1 run of 3. t-n42 `fx` fails on N77 too. The full suite was not run.
+
+## N79: clear fills · 2026-11-19 19:40
+Albert, Nov 19 17:36: "The fill in all the buttons and outlines are to be clear. Except for the tiles for tech and train." (N411).
+Opened: code:menu.js, book:citations, book:rules, tool:test.py.
+- No fill in the title box, the row-2 boxes (name, picked page, − and +, Exit) or the tiles of Build, Jobs, War, Plant, Make, Sell, Buy and Relations. Train's and Learn's tiles keep their fill. The title's words get the line's dark text glow.
+- Left as they were (Claude's reading, said in the report): the Home and W circles, the alert circle, Jobs' Idle button.
+- Cut: two dead styles (`.dot.brown`, a duplicate; `.mctl .who::before`) and `.acts .dot`'s margin.
+- Gate: PASS. Size: menu.js 128,014 → 128,010 bytes (−4). ecs unchanged.
+- Tests: t-n78's new check `clear` passes and fails on N78's menu.js; t-n78, t-n77, t-n76, t-n70, t-n68, t-n67 pass. The full suite was not run.
+- Talk, not built (17:37): a dark glow for contrast. Mock `mockups/cards/glow.png` (top: N79 as built; bottom: a dark glow behind the boxes, tiles and words).

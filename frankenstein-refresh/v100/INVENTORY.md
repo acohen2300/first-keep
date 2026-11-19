@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,547 | 649,039 | 649,181 |
-| Books | 2675 | 0 | 921,734 | 922,717 |
+| Game code | 31 | 3,547 | 649,035 | 649,177 |
+| Books | 2676 | 0 | 922,012 | 922,995 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,585 | 439,389 | 439,645 |
+| Tools | 5 | 2,586 | 439,825 | 440,081 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 51 | 9,447 | 9,451 | 0 |
 | index.html#the-woods-cache | 41 | 5,996 | 6,000 | 24 |
 | index.html#touch | 54 | 9,946 | 9,950 | 54 |
-| menu.js | 494 | 127,978 | 128,014 | 154 |
+| menu.js | 494 | 127,974 | 128,010 | 154 |
 | econ.js | 631 | 119,676 | 119,676 | 70 |
 | combat.js | 381 | 65,429 | 65,429 | 83 |
 | ai.js | 172 | 27,499 | 27,499 | 25 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 56 | 17,305 |
-| citations | 403 | 124,717 |
+| citations | 404 | 124,898 |
 | colours | 34 | 10,478 |
 | comments | 1073 | 213,477 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 322 | 205,093 |
-| rules | 145 | 67,249 |
+| rules | 145 | 67,357 |
 | screen | 34 | 29,545 |
 | shells | 111 | 24,324 |
 | sides | 7 | 1,869 |
@@ -222,6 +222,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X145 | t-n75 | page | N75 (N407; Draft 1, the nature-made land): the land has relief and every home pocket is graded flat at the land's height; the land within Z3 is the same at all four homes; every corner has a cove with water at the pond and a wadeable ford midway on its channel; every drawn river is 2 tiles wide or more; lakes and rivers hold water, each lake's centre in water; both trade roads are laid and every river tile a road crosses is wadeable; the marsh lies in patches: under a tenth of its tiles stand alone |
 | X146 | t-n76 | page | N76 (N408): a touch on the menu's empty space reaches the map: on the closed line, a building's card, Jobs, Build, War and the folded menu, every point of the menu's rows that is not a button lands on the map, and every button still takes its own tap |
 | X147 | t-n77 | page | N77 (N409): only House, Farm, Tree farm, Quarry, Mint and Foundry tick Repeat; after Build on a House the ghost waits on the next spot and is still there, with the Build menu, past the settle time; after Build on a Mill the ghost is gone and the menu closes; a still tap on a set ghost builds, and a drag moves it without building |
-| X148 | t-n78 | page | N78 (N410; Drafts 7 and 8): a building's card is in the mold: the line reads Home, Jobs, Build and the title; row 2 the name in its box, the pages Train, Learn, Relations with the picked one boxed, and Exit; Repair keeps its slot, hidden until the building is hurt; every row-2 button is 44 px wide or more and the row fits; the tiles start at the left and a research tile carries no effect line; Demolish asks Sure? before it demolishes; War Command's title is red-lined, its row has seven groups, its five orders carry icons and the sixth tile turns from Garrison villagers to Back to work with the alarm, with no Out; an item card names the find, says Add a villager, counts who works it, and its plus and minus add and take a villager |
+| X148 | t-n78 | page | N78 (N410; Drafts 7 and 8): a building's card is in the mold: the line reads Home, Jobs, Build and the title; row 2 the name in its box, the pages Train, Learn, Relations with the picked one boxed, and Exit; Repair keeps its slot, hidden until the building is hurt; every row-2 button is 44 px wide or more and the row fits; the tiles start at the left and a research tile carries no effect line; Demolish asks Sure? before it demolishes; War Command's title is red-lined, its row has seven groups, its five orders carry icons and the sixth tile turns from Garrison villagers to Back to work with the alarm, with no Out; an item card names the find, says Add a villager, counts who works it, and its plus and minus add and take a villager; N79 (N411): the title, the boxes and Exit have no fill, nor do the tiles, save Train's and Learn's |
 
-2805 items sealed · 2675 book entries · 94 laws · 403 citations, 37 still to open · 0 known
+2806 items sealed · 2676 book entries · 94 laws · 404 citations, 37 still to open · 0 known

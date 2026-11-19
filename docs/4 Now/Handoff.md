@@ -1,7 +1,7 @@
 # First Keep: hand-off (Nov 19, 2026, 15:55) [2026-11-19 15:55]
 
 ## Since 13:25 [2026-11-19 15:55]
-- N78 built and sealed (the new HUD, one mold: Drafts 7 and 8; preview n78; his play owed). Next in his order: the clock (Draft 3), overnight. Open: t-n47 six (5 rich clearings on the test seed since the N75 land), unsteady t-n24, t-n60, t-p2.
+- N79 built and sealed (clear fills, preview n79; his play owed; the dark glow is talk, not built). N78 built and sealed (the new HUD, one mold: Drafts 7 and 8; his play owed, in n79). Next in his order: the clock (Draft 3), overnight. Open: t-n47 six (5 rich clearings on the test seed since the N75 land), unsteady t-n24, t-n60, t-p2.
 - N77 built and sealed (the ghost waits on six repeatable builds, a tap on the ghost builds; preview n77; his play owed). N76 built and sealed (touches pass through the menu; his play owed, in n77 too). Open: t-n60 and t-p2 unsteady, not traced. N75 built and sealed: the nature-made land (Draft 1), preview n75. Not yet played by Albert. Next in his order: item 2, the clock. The land's next build (grading, piers, causeways) waits for his word.
 - Another chat was writing building-card drafts on this branch at the same time (14:36 to 14:57): fetch before pushing.
 
