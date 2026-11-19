@@ -1018,7 +1018,6 @@ BOOK("comments", {
  "E1201": {"text": "who the mold is for: the army is the picked soldiers less support (priest, medic, spy); the crew is any picked walker of mine that is not army (villagers, support, carts): they get the villager card"},
  "E1202": {"text": "a building's Build group is where it sits in the tabs; a tile may wear a short name from the screen book"},
  "E1203": {"text": "a pill is a word button drawn small with a 44 tap area; a toggle is the pill track whose lit thumb is the side shown"},
- "E1204": {"text": "the path: › the group word (tap: back to that Build group), › the name"},
  "E1205": {"text": "a tile row: six at most; over six the sixth is More and pages the rest; fewer than six sit at the right (the card shrinks right)"},
  "E1206": {"text": "a card's sides are its ticks' rows in the screen book's order; a side that plants or builds from the card reads Plant when all it makes are fields, else Build"},
  "E1207": {"text": "the reading on the line: health when hurt, a site's percent, what is left of a find, sheep, and for a foe what the spies saw"},
@@ -1030,7 +1029,6 @@ BOOK("comments", {
  "E1213": {"text": "under the line the control row and the tile row; empty rows keep their height so Home and War never move"},
  "E1214": {"text": "a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villagers go there)"},
  "E1216": {"text": "the Jobs | Build toggle; with a card open it closes the card and opens the page, a picked villager keeping his rows (N396, Design 19 A)"},
- "E1217": {"text": "the path's group word: back to Build on that group"},
  "E1218": {"text": "Home: closes whatever is open; with nothing open it takes the camera home"},
  "E1219": {"text": "Cancel on a one-line card: let go of the pick and close"},
  "E1220": {"text": "Gather on a find: the nearest idle villager goes"},
@@ -1073,5 +1071,6 @@ BOOK("comments", {
  "E1258": {"text": "the road's strip: every tile within the road book's clear of a road tile, by one two-way distance sweep (a chamfer); woods there give no cover (N374, N398)"},
  "E1259": {"text": "the smallest-first queue, one home: the roads' search and the water's flood"},
  "E1260": {"text": "distance over the tiles from where src holds, out to lim"},
- "E27": {"text": "a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok"}
+ "E27": {"text": "a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok"},
+ "E1262": {"text": "the item card's −: the last villager working this find goes idle (N410)"}
 });

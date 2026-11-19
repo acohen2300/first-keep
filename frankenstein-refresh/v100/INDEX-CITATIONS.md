@@ -503,6 +503,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N407** Albert, Nov 19 14:59: the nature-made land, go ("I like it. I would continue to proceed"); bridges at the cove → D379, D380, X145
 - **N408** Albert, Nov 19 16:20 and 16:32: a touch on the empty space between the menu's words cannot scroll the map; "Le → X146
 - **N409** Albert, Nov 19 16:34 and 16:45: the ghost steps to the next spot, then vanishes; repeatable builds are House,  → X78, X147
+- **N410** Albert, Nov 19 13:39 to 17:03 (Drafts 7 and 8): the new HUD, one mold: Home | Jobs | Build, a gold title, W; r → X148, SN20, SN48, J61
 
 ## Named exceptions
 

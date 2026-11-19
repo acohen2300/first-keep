@@ -508,7 +508,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E612** theatrics: one pop curve (a finished building and a newborn swell and settle), ripples whe
 - **E934** an order's target answers: a unit glows, a thing ripples in the done colour (Albert, Nov 1
 - **E613** words on the map keep one size whatever the zoom, as the screen's own words; a label is a 
-- **E867** words drawn on the map at the head type (SN20), never a size typed in the code · SN20 (N283, N285, N287)
+- **E867** words drawn on the map at the head type (SN20), never a size typed in the code · SN20 (N283, N285, N287, N410)
 - **E614** the dressing: a site staked out and rising with the work, a finished building's pop and fr
 - **E1074** a building going up, as in real life (Albert, Nov 13 22:51, N355: "Foundation, frame, fini · N355 · E1076
 - **E615** a building site: the stakes round its footprint, the walls rising with the work between tw
@@ -662,9 +662,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1245** a picked villager's job tile: tap to pick, tap again to drop
 - **E1246** Go: the picked villagers go to the picked job, then the menu closes
 - **E1247** the one Cancel (Design 16): drops the last crumb; a crumb tapped drops all after it
-- **E1217** the path's group word: back to Build on that group
 - **E1218** Home: closes whatever is open; with nothing open it takes the camera home
 - **E1219** Cancel on a one-line card: let go of the pick and close
+- **E1262** the item card's −: the last villager working this find goes idle (N410) · N410
 - **E1220** Gather on a find: the nearest idle villager goes
 - **E1221** remember the ice answer this winter or this game
 - **E1222** the who-line: All, a class, or Idle picks those soldiers
@@ -701,7 +701,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1201** who the mold is for: the army is the picked soldiers less support (priest, medic, spy); th
 - **E1202** a building's Build group is where it sits in the tabs; a tile may wear a short name from t
 - **E1203** a pill is a word button drawn small with a 44 tap area; a toggle is the pill track whose l
-- **E1204** the path: › the group word (tap: back to that Build group), › the name
 - **E1205** a tile row: six at most; over six the sixth is More and pages the rest; fewer than six sit
 - **E1206** a card's sides are its ticks' rows in the screen book's order; a side that plants or build
 - **E1207** the reading on the line: health when hurt, a site's percent, what is left of a find, sheep

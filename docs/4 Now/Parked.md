@@ -920,3 +920,10 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - Repeat on the Mill, Lumber camp, Mining camp, Tower, Wall and Palisade (Albert, 16:45: "One is enough"): after Build their ghost no longer steps to a next spot. [2026-11-19 17:40]
 - The verb `mx` (menu.js, E1233: "the row's ✕ (Design 15 D): the rows go and the map is clear, what was picked is let go; Home brings Jobs back"): no button drew it. The style `.prog` (a progress bar under a cell): no markup used it. [2026-11-19 17:40]
 - Found, not cut: `loses` (menu.js; the "loses to" line of a unit, Design 12 F3) is defined and called nowhere: a ruled feature that no longer shows. For the ledger. [2026-11-19 17:40]
+
+## Cut in N78 (Nov 19, the new HUD; his go 17:03) [2026-11-19 19:10]
+- A research tile's effect line ("Train Time −25%"; his Nov 15 18:11 wish to see what things do on the cell) and a unit tile's stat line (Design 12 F3): off the tiles, as his final mock and the plan he approved (name and cost only). The code that makes them stays (`hintOf`, `unit()`'s second value). To bring back: a place for them in the mold. [2026-11-19 19:10]
+- Out (the alarm's third state; Albert, 15:49: "Not needed"): the verb `out`, the words out and noneIn. Back to work lets the sheltered out as before. [2026-11-19 19:10]
+- The hint "tap Build to switch" on Jobs (no room on the line beside the title). The other hints moved to row 2. [2026-11-19 19:10]
+- The queue's word in the crumb ("2 Villager"): the tile's ring and count say it; Stop stays in row 2. [2026-11-19 19:10]
+- Dead with the old line: the verbs `crumb` (E1217) and `cancel`, `path()` (E1204), `pillB`, the styles .mn, .mw, .mrd, .mr, .hint, .mp, .tg.who; `hint1`. [2026-11-19 19:10]

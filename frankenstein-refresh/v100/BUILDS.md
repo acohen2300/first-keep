@@ -5664,3 +5664,18 @@ Opened: code:menu.js, book:shells, book:citations, book:comments, book:rules, to
 - Cut, logged in Parked.md: the verb `mx` (E1233; no button drew it), the style `.prog`.
 - Gate: PASS. Size: menu.js 128,183 → 128,043 bytes (−140). ecs unchanged.
 - Tests: t-n77 (X147) passes; on N76's menu and Shells book its checks six, waits, one and tap fail. With it: t-n76, t-n73, t-n72, t-n71, t-n70, t-n69, t-n68, t-n67, t-n65, t-n43, t-p2b, t-idle pass; t-n17 passes (red before: its Repeat list named 'Dwelling'; now the six, X78). t-p2 failed 1 run of 3 (focusHome, full): unsteady as in N76, OPEN. The full suite was not run.
+
+## N78: the new HUD, one mold · 2026-11-19 19:10
+Albert, Nov 19 17:03: "Sounds good. Go for it" (N410; Drafts 7 and 8, the plan of 16:57). 17:21, mid-build, with his old mock: War Command's title white with the red line, not gold; the orders white with red icons.
+Opened: code:menu.js, book:words, book:screen, book:citations, book:comments, book:rules, tool:test.py.
+- The line: Home | Jobs | Build (Home does what the Home circle does), the title in its box (gold; red-lined for War Command), the alert, W. The fold's − stays where it was, above the line's right end (Claude told him "after Build": wrong, corrected in the report).
+- Row 2, one builder (`row2`): the name in its box, the pages with the picked one boxed (green, Learn blue), then Repair | Demolish | Exit. Repair keeps its slot, hidden until hurt. Demolish reads "Sure?" when armed. Exit is the old Cancel. Talk reads Relations. Row 2 is 13 px (SN type.row) with 44 px slots: all 50 buildings' rows fit 390 px.
+- Tiles start at the left, outlined white; name and cost only: the effect line of a research tile and a unit's stat line are off the tile (logged in Parked.md).
+- Build: the groups in row 2; while placing, the building's name is the title and the ghost's line sits in row 2.
+- Villagers and units: name as title and in its box, the state word, the hint in italics, their actions, Exit; in Build the groups take row 2 and the actions wait.
+- War Command: the who-row All | Foot | Bow | Cav | Siege | Idle | Squad with one number (picked, or the total when none), − and +, Exit; the next-step reading shows in the title; five orders with red icons; the sixth tile Garrison villagers / Back to work (the alarm). Out is cut.
+- Item cards (`find`): the find's name (a bush reads Berries), "Add a villager" − +, Exit; "Food 3,245 left | 2 working" where the tiles would be. + sends the nearest idle villager (mgather); − sends the last one working it to idle (mless, E1262). No "of 4": the game has no count of a find's places to read.
+- Cut, logged in Parked.md: the verbs crumb, cancel, out; pillB; the styles .mn, .mw, .mrd, .mr, .hint, .mp, .tg.who; the hint "tap Build to switch"; the words out, noneIn.
+- Gate: PASS. Size: menu.js 128,043 → 128,014 bytes (−29). ecs: named 249 → 249.
+- Tests: t-n78 (X148) passes; it fails on N77. Moved to the new mold: t-n67 to t-n72 and t-n76 (the pages and readings read from row 2 and the title; Relations; seven who-buttons; the alarm tile; a hidden button is not a dead one). Retired with the ruling: t-n70 `hint` (the swap hint), t-n69 `crumb` and `cancel` (the old crumb row). Pass: t-n78, t-n77, t-n76, t-n73 to t-n65, t-n57, t-n55 to t-n48, t-n43, t-n31, t-n17, t-p2, t-p2b, t-freeze, t-idle, t-load, t-save, t-buffer, t-dock. Smoke 6/6.
+- OPEN, not from this build: t-n47 `six`: on the test seed the land lays 5 rich clearings, not 6 (read on N77's and N78's files alike; the check passed in some runs and failed in others: not traced). t-n24 `far` failed 1 run of 3. t-n42 `fx` fails on N77 too. The full suite was not run.

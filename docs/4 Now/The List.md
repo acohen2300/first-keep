@@ -801,3 +801,8 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 - Fix idea (Claude, waits for his word): when the ghost has stepped to a next spot, the settle timer does not start; the menu stays on the ghost until he builds again, cancels or exits. A one-of-a-kind building (no next spot) closes as today.
 - Also his: tapping the ghost after a drag should build (ruled Nov 18 13:28, The List 32). Whether it works today: unverified.
 - RULED (Albert, 16:45) and BUILT as N77 (preview n77), proof owed, his play: six repeatable builds keep their ghost with no timer; the others place one; a tap on the ghost builds. t-n77 passes (fails on N76). [2026-11-19 17:40]
+
+## 45. N78 built (preview n78): the new HUD, one mold (Albert, Nov 19 17:03 "Sounds good. Go for it"; 17:21 War's title white and red) [2026-11-19 19:10]
+1. BUILT, proof owed (his play): every building's card, Build, villagers and units, War Command and the item cards in the mold; Jobs as today under the new line. t-n78 passes (fails on N77).
+2. DIFFERENT FROM THE PLAN: the fold's − stays above the line's right end (no room after Build beside the longest title); an item card says "2 working", not "2 of 4"; War's next-step word shows in the title.
+3. OPEN: t-n47 `six` (5 rich clearings on the test seed, a land matter), t-n24 `far` and t-n60, t-p2 unsteady; the effect and stat lines have no place in the mold yet.
