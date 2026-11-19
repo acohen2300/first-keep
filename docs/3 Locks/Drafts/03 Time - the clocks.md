@@ -34,3 +34,8 @@ STATUS: OPEN TALK (Albert, Nov 19 11:25-11:36). Nothing ruled. Came out of trees
 - Albert clarified 11:43: the day ruling meant a straight factor of 60. Straight factors: 60 = day 24 min, year 146 h; 600 = day 2.4 min, year 14.6 h; 6,000 = day 14.4 s, year 88 min. Day 60 / season 600 / year 6,000 fails (season longer than the year).
 - RULING (Albert 11:45): "I want 4 seasons in an hour". Year = 3,600 s, season = 900 s (15 min). Year factor 8,760 (was about 21,900: year 1,440 s, season 360 s).
 - Clash to settle: a 1,440 s day (11:42) is longer than a 900 s season. The day must divide the season: 900 s (1 a season, 4 a year), 450 s (2, 8), 300 s (3, 12).
+
+## 11:46 [2026-11-19 11:47]
+- RULING (Albert 11:46): "My problem is days.. there are too many of them and night can only be 25% of a day". Fewer days; night = a quarter of the day.
+- Night at 25% is a game rule (real night averages half the day over a year): night hours squeezed 3x harder than daylight hours.
+- Fits with 4 seasons an hour: 4 days a year (day 15 min: light 11.25, night 3.75); 2 a year (30 min: 22.5 / 7.5); 1 a year (60 min: 45 / 15, and then night = winter, both a quarter).
