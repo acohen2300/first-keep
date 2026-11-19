@@ -745,3 +745,12 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
 - BUILT, proven by t-n72 (fails on N71's code): Jobs or Build closes an open card and opens the page; a card opened from a page closes the page; a picked villager keeps his rows; War's line reads an order's answer and a taken order lights its tile, both gone at the next tap.
 - NOT proven by his play yet. The full suite was not run (light tests): owed.
 - Claude's calls, his to overrule: a find's card closes the page too; the light means "just taken"; only War's line reads the answer.
+
+## 37. His rulings of Nov 18 22:02 (on the open list of 21:58) — "Ok go"
+- 1 Sickness, the recovered immune for good: "Yes". A go.
+- 2 Alerts: "Yellow = health crisis / orange kill for now". A go for yellow; orange is cut (Parked).
+- 3 Tile text white, only the cost shifting red to white to green: "Confirmed". A go (supersedes Nov 17 05:27, the name shifting).
+- 4 A flag on a worked plot: "Ok" (to be designed: a mock first).
+- 5 Archers form up and hold, footmen a wall: "Yes we have to mock it".
+- 6 The route map's leftovers: "I lost you here." (to be explained again, plainly; no ruling). 7: "What's the menu law?" (to be explained). 8 The 19 red tests held to Mid: "No idea." (Claude traces each and brings him only the real differences.)
+- "You'll do the next through 27.. Ok go": read as items 9 to 21 of that list (it ended at 21): the traces, the full suite, the owed tests and audit.
