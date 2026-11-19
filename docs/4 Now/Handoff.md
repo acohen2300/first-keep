@@ -5,6 +5,7 @@
 - Tests: t-n71, t-n70, t-n69 pass. Full suite 62 of 89 (13 rules retired, stage "retired" in the Rules book). The 27 red are the baseline now: t-civs, t-fire, t-food, t-gather, t-kinds, t-land, t-mind, t-n17, t-n24b, t-n27, t-n29, t-n30, t-n42, t-odds, t-orders, t-p2, t-peace, t-physics, t-realm, t-research, t-same, t-sight, t-stage, t-trade, t-walls, t-war, t-wild. t-n57 and t-n60 come and go with the board; t-a1 and t-n22 with load.
 - Owed: the 27 traced one by one (stale test or game fault; the Mid ones need his word); new tests for the unit cell's lines (was t-n63) and the Help card (was t-n64); the 109 long whys.
 - New in the gate: `words` (a sentence typed in code stops the build), `whys`; ecs ceilings 250 / 32 / 0. test.py: `stepped` runs main a statement at a time; `RETIRED` lists the checks left out of a verdict.
+- TONIGHT (Albert, Nov 18 19:17 to 19:24, after playing n71): "There are a lot of bugs. Not sure what to do"; n70 against n71: "It's hard to tell they are about the same I think" (so they are n70's bugs, not N71's; unverified, no list given yet); "I'm overwhelmed.."; then "Let's try to change a few easy things". NEXT: take his easy things one at a time (one line or one screenshot each), talk first, small builds, bugs only, no new design. Do not ask him for a full list.
 - Open, his, from N70: his n70 play notes (talk first); Quit; the War menu under the law; the shell/ring/text audit (SOON); the n67 slowdown (?fps).
 
 ## START HERE (2026-11-18 16:00): N70 BUILT (preview n70): Design 17, the n69 play fixes. His play is next
