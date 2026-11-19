@@ -41,3 +41,13 @@ STATUS: DESIGN TALK, mocked on the n74 screen; not built. Albert, Nov 19 13:39 t
 - Open for the build: the breadcrumb's building box quieter than the page box?; long building names in row 1's gold box (shrink to fit); Home | Jobs | Build order (his 14:40 sketch wrote Home | Build | Jobs); a script "Welcome to" parked until a font is added.
 - One mold for every building's card (one home), not the Town Center alone.
 - Final mocks, full screen (15:04): `07 card final - Train.png`, `07 card final - Learn.png`. [2026-11-19 15:06]
+
+## His answers, Nov 19 15:49 (on Claude's 12 questions) [2026-11-19 15:55]
+1. The name twice is right: "One is the title one is a breadcrumb." 2. The breadcrumb's boxes stay as designed. 3. Demolish stays left of Exit. 4. "Show me at 44" (the tap areas). 5. "Show me the longest" (the longest building name in the title box). 6. Home | Jobs | Build (a); "I'm not sure what home does but I needed build and jobs to have a third". 7. "Gold everywhere. Red is just for war."
+
+## Every card in the mold, mocked (Albert, 15:51: "Can you mock all menu cards? Building cards? Item cards. Berries etc?") [2026-11-19 16:35]
+- `mockups/cards/` (panel.js = the mold, mock.py = the sheets, screens.py = three full game screens; harvest.json and menus.json = every card's real pages and tiles, read from v100 at the last age). `mockups/card44/` = his Q4 and Q5 (44 px tap areas; the longest name).
+- Q4 at 44 px: every building's row 2 fits if the chevron (not tappable) takes no 44 px slot; the Market's Learn page is 1 px over and the Town Center's Relations page 4 px over. War Command's row (7 groups, −, +, Exit) is 59 px over at 44 px.
+- Q5: the longest name on the Build list is "Siege workshop": 113 px at 18 px in the title; it fits row 1 and row 2.
+- Found: the Market has four pages (Train, Sell, Buy, Learn), not three; other first pages are Plant (Mill, Lumber camp), Build (Mining camp, Wall), Make (Foundry, Workshop). 21 of 50 buildings have no page (only Repair, Demolish, Exit). Long tile names (Armed caravans, Dugout canoes, Seed selection, Timber framing, Weighted loom) shrink to about 8 px in a 61 px tile.
+- Item cards (Berries, Tree, Gold, Stone, Iron, Fish) are Claude's proposal, no card exists today: the name as title and breadcrumb; "240 food left | 2 of 4 working"; − and + step the workers; Exit. Jobs in the mold (pick a resource tile, − and + in row 2) is also a proposal. Not ruled.
