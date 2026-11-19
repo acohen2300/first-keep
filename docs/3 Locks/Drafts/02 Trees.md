@@ -39,3 +39,6 @@ STATUS: DRAFT (Albert, Nov 19 11:20: "we are done with trees then. We have a new
 - Felling today: D88 tree 0.75/s, the old game's number. Real: felling time follows the stump diameter / area of the cut (Univ. Brasov study); about two cords a woodcutter a day; tool ratios as above. Needs the time rule.
 - Materials today: D123 costs (Town Center 400 wood...), from Mid / AoE, not real. Real: Rackham, Cressing Temple barn: 600 timbers from 480 mostly small oaks; a 10-acre coppice-with-standards wood grows that every 50 years (robin-wood.co.uk). Rackham's Stanton house count (1972): not opened. Coppice grows about 2.5 t dry wood/ha/yr (oak, ash, birch...), poplar and willow about 6 (Conservation Handbooks): the tree farm's real rate.
 - Needed first: 1 wood = 1 kg (proposed) and one time rule.
+
+## 11:51 [2026-11-19 11:52]
+- RULING confirmed (Albert 11:51): the road strip goes by the law as written: the trees stay, the strip is clear underneath (no cover, no hiding). No longer to confirm.
