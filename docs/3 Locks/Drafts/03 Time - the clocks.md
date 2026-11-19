@@ -44,3 +44,6 @@ STATUS: OPEN TALK (Albert, Nov 19 11:25-11:36). Nothing ruled. Came out of trees
 - RULING (Albert 11:48): "The year as an hour works." Year = 3,600 s, season = 900 s.
 - Albert 11:48: "The issues is the cycle between day and night is disorienting". Asked 11:46: "What if days were really weeks?" (52 an hour, 69 s each: more days, not fewer).
 - Claude's proposal, not ruled: one day a season, in step with it; night is the curtain between seasons (the season turns in the dark; baked woods and ground repaint then). Fallback: no daily cycle, light by season only (Age of Empires II has none).
+
+## ON HOLD (Albert 11:49: "Let's put this on hold and go back to wood") [2026-11-19 11:50]
+- Ruled so far: the year is an hour; 4 seasons an hour; fewer days; night a quarter of a day. Open: how many days, and how night falls (the cycle is disorienting).
