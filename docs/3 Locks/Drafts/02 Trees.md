@@ -33,3 +33,9 @@ STATUS: DRAFT (Albert, Nov 19 11:20: "we are done with trees then. We have a new
 - Better: the forest kept (about 3x), real rules, one home for the no-trees rule.
 - Cheaper but modest: about 330 ms off map making (~55 ms phone); a tree touch from a whole repaint (~10 ms phone) to about 1 ms. More trees cost more first paint and memory.
 - Not shown: that trees are a phone heat or speed problem. Proof before build: the ?fps meter with woods repaint times, 10 villagers chopping a minute.
+
+## Density, felling, materials: real or not (11:22, Albert asked) [2026-11-19 11:24]
+- Density today: a design lattice (D345 step, 3.25 m), not forestry. Real: Reineke 1933, N = k x d^-1.605 in fully stocked even-aged stands; exponents per species (Pretzsch & Biber 2005): beech -1.789, spruce -1.664, pine -1.593, oak -1.424. Size sets density: bigger trees, fewer. k (max SDI) per species: not yet opened.
+- Felling today: D88 tree 0.75/s, the old game's number. Real: felling time follows the stump diameter / area of the cut (Univ. Brasov study); about two cords a woodcutter a day; tool ratios as above. Needs the time rule.
+- Materials today: D123 costs (Town Center 400 wood...), from Mid / AoE, not real. Real: Rackham, Cressing Temple barn: 600 timbers from 480 mostly small oaks; a 10-acre coppice-with-standards wood grows that every 50 years (robin-wood.co.uk). Rackham's Stanton house count (1972): not opened. Coppice grows about 2.5 t dry wood/ha/yr (oak, ash, birch...), poplar and willow about 6 (Conservation Handbooks): the tree farm's real rate.
+- Needed first: 1 wood = 1 kg (proposed) and one time rule.
