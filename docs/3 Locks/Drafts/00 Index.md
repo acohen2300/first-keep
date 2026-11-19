@@ -9,3 +9,4 @@ A draft becomes a Design (`docs/3 Locks/Designs/`) only on Albert's word. [2026-
 5. `05 Core values check.md`: Drafts 1-4 against the 12 core values: fails, open points, passes. [2026-11-19 12:14]
 6. `06 Open items - sources and calls.md`: sources found Nov 19, what was not found, the three calls that close the clock items. [2026-11-19 12:24]
 7. `07 The building card.md`: the card as four elements (way, title with its pages, breadcrumb, Exit), mocked on n74. [2026-11-19 14:38]
+8. `08 War Command.md`: War in the card mold, renamed War Command, the unit selector in row 2. [2026-11-19 15:12]
