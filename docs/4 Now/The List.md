@@ -723,3 +723,4 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
   - His army lost: 30 to 9 (min 78 to 82), 43 to 16 (89 to 92), 30 to 0 (102 to 105).
   - Computers: side 2 peaks at 148 villagers (his peak 65) and banks wood to 9,936; side 1 banks stone to 5,871. Cause unverified.
   - Mail holds one line for the whole match.
+- 20:46: "One of the biggest problems is that the villages just drop dead on their own" (villagers). The log agrees it is not hunger: 65 to 46 villagers (min 49 to 57) with food never under 2,196; 65 to 47 (min 72 to 82) with food never under 169 and nothing trained. First suspect, NOT proven: ordinary sickness (econ.js:531 to 537; D311 in measure.js:287: R0 2, death 0.004 a beat, sick 60 s; the cap `plagueCap` holds only plague deaths, econ.js:537). Owed: a count of deaths by cause on this seed.
