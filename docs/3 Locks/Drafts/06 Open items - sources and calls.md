@@ -25,3 +25,7 @@ Albert, Nov 19 12:17: "You can find sources.. and I don't want anything punted. 
 - RULING: days 3 a season; night 25% of the day. With the year an hour: day 300 s (5 min), 12 days a year, night 75 s.
 - RULING: work speed kept (about 24x real), a declared game rule.
 - Tools, his question: "Do the metals have different weights? Maybe the efficiencies are there?" Open, see chat.
+
+## 12:47 [2026-11-19 12:48]
+- RULING (Albert 12:47, "Ok. Good."): tools by the real ratios: bronze axes 6x stone, dear; iron axes the same speed, far cheaper; the saw 1.9x. Iron wins on cost, as in history.
+- All calls closed. Next: the build, on his go.
