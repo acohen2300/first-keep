@@ -794,3 +794,9 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 ## 43. N76 built (preview n76): touches pass through the menu's empty space (Albert, Nov 19 16:32, a trial for his play) [2026-11-19 17:00]
 1. BUILT: a drag on the empty space between the menu's words scrolls the map; buttons unchanged. Proof owed: his play. t-n76 passes (fails on N75).
 2. OPEN: t-n60 `cross` and t-p2 `focusHome` unsteady (see BUILDS N76); not traced.
+
+## 44. His play note, Nov 19 16:34: the ghost steps to the next spot, then vanishes — traced, not fixed [2026-11-19 17:10]
+- His words: "I tap build. I tap town. I tap house. Ghost comes up. I drag it to the spot. I tap build… the ghost moves over to the next one… Then.. it vanishes."
+- Reproduced on n76 (House, BR1): the build tap lays the site and the ghost steps to the next free spot (menu.js:308-309, the Repeat rule, E336, N17 #17); the same tap calls `finish('build')` (menu.js:115), whose timer closes the menu and clears the ghost after the settle time (menu.js:238, E1241). Seen: ghost still there at +1.0 s, gone by +2.5 s. Two rules collide; the later one (close after settle) kills what the earlier one promised (the ghost waits on the next spot).
+- Fix idea (Claude, waits for his word): when the ghost has stepped to a next spot, the settle timer does not start; the menu stays on the ghost until he builds again, cancels or exits. A one-of-a-kind building (no next spot) closes as today.
+- Also his: tapping the ghost after a drag should build (ruled Nov 18 13:28, The List 32). Whether it works today: unverified.
