@@ -809,3 +809,8 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 - N79 built (preview n79): clear fills on the boxes and tiles, Train and Learn tiles filled (Albert, 17:36). Proof owed: his play. Open with him: the dark glow (17:37); whether the Home and W circles go clear too. [2026-11-19 19:40]
 - N80 built (preview n80): Jobs' tiles filled; the fill has one home, N79's override removed (Albert, 17:41). Proof owed: his play. [2026-11-19 20:00]
 - N81 built (preview n81): Build's tiles filled (Albert, 18:51). Proof owed: his play. Open with him: every tile filled, and a dark shadow on rows 1 and 2. [2026-11-19 20:20]
+
+## 46. His play note, Nov 19 18:53 (n80): "jobs lost people icon and also the plus and minuses" — traced, nothing changed [2026-11-19 20:30]
+- His screen: the title reads Villager: a villager is picked, so the menu is the villager's card on the Jobs tab (his job tiles, first slot empty until a job is picked), not the Jobs page. Read on n81: with nobody picked, Jobs shows the people tile and its 11 − and + buttons; with a villager picked it shows the five job tiles and none. N77 (before the new HUD) does the same (read with N77's menu.js).
+- Likely why it surprised him: the villager was picked by a tap that fell through the menu's empty space to the map (N76, his pick 1), or the new title makes the state look like a page.
+- Idea (Claude, his word needed): a tap on Jobs always opens the Jobs page and lets the picked villager go (as Jobs and Build already close a building's card, N72); a picked villager shows his job tiles at once, with no Jobs tap.
