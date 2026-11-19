@@ -17,7 +17,11 @@ STATUS: DESIGN TALK, mocked on the n74 screen; not built. Albert, Nov 19 13:39 t
 
 ## Open
 - Demolish: no place yet (Claude's idea: a long press on Exit, with a confirm).
-- Exit: red outline or white outline.
 - The breadcrumb's first box quieter than the second (so the tappable one reads)?
 - Long names: "Town Center" fills the line at 390 px; longer names must shrink or wrap.
 - One mold for every building's card, not the Town Center alone (one home).
+
+## Rows, his sketch of 14:40 [2026-11-19 14:45]
+- Row 1: the way (house, Home | Jobs | Build), the title, W. Row 1.A: the pages under the title, their left edge on the title's (his vertical line, "Align"). Row 2: the breadcrumb, and Exit under W. Row 3: the tiles. Mock: `07 card mock - Nov 19 14-40.png`.
+- RULING (14:40): Exit, red, white letters. Read as a red outline with white letters (his 14:31: "I meant outline").
+- His sketch writes Home | Build | Jobs; the game's order is Home | Jobs | Build: to confirm.
