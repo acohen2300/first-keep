@@ -490,6 +490,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N392** Albert, Nov 17 17:38 to 19:00, his play of n67 (Design 15; The List 28 holds every word; mocks mockups/dock/15 → X136, SN49, SN48, P38
 - **N391** Albert, Nov 17 08:24 to 15:40 (Design 14, the mold: new game, Jobs, Build, the building card, the villager car → X135, SN48, J61
 - **N395** Albert, Nov 18 17:17 and 17:25 (Design 18, the Nov 18 audit fixes; docs/4 Now/Audit - Nov 18.md). 17:17: "can  → X25, X26, X29, X30, X82, X92, X103, X126, X129, X130, X131, X132, X134, X139, X140, X141, SN51, J9
+- **N396** Albert, Nov 18 19:38 to 21:29 (Design 19, the n71 play fixes; The List 35; docs/4 Now/Route map - Nov 18.md).  → X142
 
 ## Named exceptions
 

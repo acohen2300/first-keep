@@ -467,6 +467,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N392 |  | Albert, Nov 17 17:38 to 19:00, his play of n67 (Design 15; The List 28 holds every word; mocks mockups/dock/158 to 172). 18:12 \All you need | opened |
 | N391 |  | Albert, Nov 17 08:24 to 15:40 (Design 14, the mold: new game, Jobs, Build, the building card, the villager card, the army Controller, the al | opened |
 | N395 |  | Albert, Nov 18 17:17 and 17:25 (Design 18, the Nov 18 audit fixes; docs/4 Now/Audit - Nov 18.md). 17:17: \can you do a 12 core values audit  | opened |
+| N396 |  | Albert, Nov 18 19:38 to 21:29 (Design 19, the n71 play fixes; The List 35; docs/4 Now/Route map - Nov 18.md). 19:38: \i tap town center, the | opened |
 
 ## colours
 
@@ -1387,7 +1388,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E949 |  | a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall clock so game speed does not hurry it; the flame's hei |  |
 | E950 |  | campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work together at night a campfire is lit among them, and s |  |
 | E953 |  | a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS's audio interrupted and a resume that fails stays |  |
-| E954 |  | note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one (N377) |  |
+| E954 |  | note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one (N377), and kept as the last answer (S.re) for War |  |
 | E955 |  | the base and the rank row are drawn once a render and that one drawing is both compared and shown (Albert, Nov 10, N17 #11: People's ring di |  |
 | E956 |  | a soldier trained while a rally flag stands joins the ones already marching to it or holding it, and they are dressed into one formation the |  |
 | E957 |  | a sprite is cached at the next size up the √2 ladder, never the one below: drawn smaller it stays sharp, drawn larger it went soft and block |  |
@@ -1528,7 +1529,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1121 |  | what to build, told on the cell (N386): top, the trained kind of your side that scores highest over one (none if none does); beats, the symb |  |
 | E1122 |  | Help, a card in the dock (N387, mock 7): one function a tab, each giving its body and what the reading box says of the chosen cell; a cell o |  |
 | E1123 |  | Help's verb (N387): with no word it opens Help on its first tab, from the pause drop, the game left paused; with one it sets that part of He |  |
-| E1124 |  | the X of the building card (N390): with a cell chosen it steps back to the building's bar; with none it closes the card (back is gone; Claud |  |
 | E1125 |  | the button on a unit at work: it takes the last one of that kind out of the line and says so (E1112's words) |  |
 | E1127 |  | Repair (N390): no villager need be picked: the picked one if there is one, else autoBuilder's own choice (the nearest free hand), for a site |  |
 | E1128 |  | Demolish (N390: \tap the icon once, red fill, tap again\): the first tap arms it (S.dm), the second takes the building down; a second tap so |  |
@@ -1551,7 +1551,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1212 |  | the fixed line: Home at the left; the alert circle when something of mine is attacked; War at the right (red, an X while the Controller is o |  |
 | E1213 |  | under the line the control row and the tile row; empty rows keep their height so Home and War never move |  |
 | E1214 |  | a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villagers go there) |  |
-| E1216 |  | the Jobs / Build toggle |  |
+| E1216 |  | the Jobs / Build toggle; with a card open it closes the card and opens the page, a picked villager keeping his rows (N396, Design 19 A) |  |
 | E1217 |  | the path's group word: back to Build on that group |  |
 | E1218 |  | Home: closes whatever is open; with nothing open it takes the camera home |  |
 | E1219 |  | Cancel on a one-line card: let go of the pick and close |  |
@@ -2127,6 +2127,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X139 | no sentence typed in code (N395; Design 18, 2): a quoted text that begins with a capitalised word and goes on to a second word lives in the Words book, once | {stage: code} | N395 |
 | X140 | a why is one line (N395; Design 18, 7): the count of Comments entries longer than the line may only fall | {stage: code, line: 320, long: 109} | N395 |
 | X141 | N71 (N395; Design 18, the Nov 18 audit fixes): an idle villager is one thing (the Idle box, the tip and the send-an-idle-villager verb read ECON.idlers; a garrisoned villager is none of them); the menu draws every icon from the Screen book; the refusals read from the Words book (a blocked site, a full line, no villagers); the new game's options keep their words and values; a find with a yield is told by its Yield tick; Carry and Repair are ticked nowhere | {stage: page} | N395 |
+| X142 | N72 (N396; Design 19, the n71 play fixes): with a building's card open, Jobs or Build closes the card and opens that page; a card opened from Jobs or Build closes the page and leaves nothing lit; a picked villager keeps his rows; in War an order's answer is read on the line (Hold, Retreat, a refusal) and a taken order lights its tile; Defend with no one under attack lights nothing and says why; the answer and the light go at the next tap | {stage: page} | N396 |
 
 ## screen
 

@@ -738,3 +738,10 @@ Not in N70: the shell/ring/text audit (1, 15, 20, 22: SOON); the War menu under 
   9. "If a food villager gets stuck for a moment- it turns them into the idle counter." (N71 made idle one law: check whether N71 brought this.)
 - 20:58: "It would be nice to get a warning. We have the red alert. We should have a yellow and orange" (talk; what trips each level not yet said).
 - The route map is made: `docs/4 Now/Route map - Nov 18.md` (61 screens, 1,155 taps, read-only; tools in `docs/4 Now/tools/`). Eight findings; the first four are checked against the code or by hand. His rulings owed.
+- 21:29, on the three rulings offered: "1. Is there math for that? 2. Go 3. Go". 1 is a question (answered in chat: Kermack and McKendrick's SIR, 1927; ruling owed). 2 and 3 are the go for N72.
+
+## 36. N72 built (preview n72): the line keeps its word, War answers (Albert, Nov 18 21:29 "2. Go 3. Go") [2026-11-18 22:00]
+- Spec: `docs/3 Locks/Designs/19 The n71 play fixes - the line and War.md`. What is in: BUILDS.md N72. Cuts: Parked.md "Cut in N72".
+- BUILT, proven by t-n72 (fails on N71's code): Jobs or Build closes an open card and opens the page; a card opened from a page closes the page; a picked villager keeps his rows; War's line reads an order's answer and a taken order lights its tile, both gone at the next tap.
+- NOT proven by his play yet. The full suite was not run (light tests): owed.
+- Claude's calls, his to overrule: a find's card closes the page too; the light means "just taken"; only War's line reads the answer.

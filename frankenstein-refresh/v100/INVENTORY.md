@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,564 | 649,712 | 649,858 |
-| Books | 2682 | 0 | 915,415 | 916,428 |
+| Game code | 31 | 3,562 | 649,657 | 649,803 |
+| Books | 2683 | 0 | 916,528 | 917,541 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,480 | 420,686 | 420,942 |
+| Tools | 5 | 2,498 | 423,804 | 424,060 |
 
 ## The trades (code)
 
@@ -39,7 +39,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 55 | 10,104 | 10,108 | 0 |
 | index.html#the-woods-cache | 41 | 5,940 | 5,944 | 24 |
 | index.html#touch | 54 | 9,911 | 9,915 | 54 |
-| menu.js | 500 | 128,348 | 128,388 | 161 |
+| menu.js | 498 | 128,293 | 128,333 | 161 |
 | econ.js | 631 | 119,630 | 119,630 | 70 |
 | combat.js | 381 | 65,427 | 65,427 | 83 |
 | ai.js | 172 | 27,499 | 27,499 | 25 |
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 56 | 17,305 |
-| citations | 389 | 120,318 |
+| citations | 390 | 120,784 |
 | colours | 34 | 10,478 |
-| comments | 1082 | 215,449 |
+| comments | 1081 | 215,580 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 341 | 205,654 |
-| rules | 138 | 63,378 |
+| rules | 139 | 63,904 |
 | screen | 34 | 29,294 |
 | shells | 111 | 24,384 |
 | sides | 7 | 1,869 |
@@ -216,5 +216,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X139 | words | code | no sentence typed in code (N395; Design 18, 2): a quoted text that begins with a capitalised word and goes on to a second word lives in the Words book, once |
 | X140 | whys | code | a why is one line (N395; Design 18, 7): the count of Comments entries longer than the line may only fall |
 | X141 | t-n71 | page | N71 (N395; Design 18, the Nov 18 audit fixes): an idle villager is one thing (the Idle box, the tip and the send-an-idle-villager verb read ECON.idlers; a garrisoned villager is none of them); the menu draws every icon from the Screen book; the refusals read from the Words book (a blocked site, a full line, no villagers); the new game's options keep their words and values; a find with a yield is told by its Yield tick; Carry and Repair are ticked nowhere |
+| X142 | t-n72 | page | N72 (N396; Design 19, the n71 play fixes): with a building's card open, Jobs or Build closes the card and opens that page; a card opened from Jobs or Build closes the page and leaves nothing lit; a picked villager keeps his rows; in War an order's answer is read on the line (Hold, Retreat, a refusal) and a taken order lights its tile; Defend with no one under attack lights nothing and says why; the answer and the light go at the next tap |
 
-2812 items sealed · 2682 book entries · 94 laws · 389 citations, 36 still to open · 0 known
+2813 items sealed · 2683 book entries · 94 laws · 390 citations, 36 still to open · 0 known

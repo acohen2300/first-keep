@@ -5591,3 +5591,13 @@ Albert, Nov 18 14:51: "Go go go go go go do it" (N394; his rulings 12:53 to 14:5
 - Gate: PASS. ecs: named 293 → 250; named2 32 → 32; dead 6 → 0 (the ceilings are lowered to these).
 - Tests: t-n71 (X141) passes; fails on N70's code, all five parts (run on N70's files). Full suite on a frozen copy: 62 of 89 hold (N70: 46 of 101). No new failure. t-n57 fails about one run in six on N70 and N71 alike (a board without a shore end).
 - Still red, 27, not traced in this build: t-n24b (byAge), t-n27, t-n29 (crosshairWaits), t-n30 (throws in ECON.labOf, econ.js:116), t-n42 (fx), t-n17, t-orders, t-p2 (focusHome: the N47 fault), and the tests held to Mid: t-civs, t-fire, t-food, t-gather, t-kinds, t-land, t-mind, t-odds, t-peace, t-physics, t-realm, t-research, t-same, t-sight, t-stage, t-trade, t-walls, t-war, t-wild.
+
+## N72: the n71 play fixes — the line keeps its word, War answers (Design 19; The List 35) · 2026-11-18 22:00
+Albert, Nov 18 21:29: "2. Go 3. Go" (N396; his words 19:38 to 21:29; the route map `docs/4 Now/Route map - Nov 18.md`, findings 1, 2 and 4).
+- Line (E1216; `heard`): with a card open, Jobs or Build closes the card and opens the page; a card opened from Jobs or Build (a building, a site, a find) closes the page, so nothing stays lit behind it. A picked villager keeps his rows.
+- War (E954, E1224, the Controller's mold): an order's answer is read on War's line where "Attack: tap a target" is read ("3 holding here.", "3 fall back home", "No one is under attack", "No soldiers picked"): `note` keeps the last answer (S.re) and still files it in Mail. A taken order lights its tile (S.ro): Hold, Retreat, Defend when someone went. Both go at the next tap, on a button or the map.
+- Claude's calls, his to overrule: a find's card closes the page too; the light means "just taken", not "still holding"; only War's line reads the answer.
+- Cut and logged in Parked.md ("Cut in N72"): the verb `kx`, the helper `doing` (both used nowhere).
+- Not in N72: sickness (his question on the math; ruling owed); his other notes of 20:55 and 20:58; route map findings 3 and 5 to 8.
+- Gate: PASS. ecs: named 250 → 250; named2 32 → 32; dead 0 → 0. Size: menu.js 128,388 → 128,333 (−55); no grant for game code (test.py +3,118 under a permit).
+- Tests: t-n72 (X142) passes; fails on N71's code (jobs, build, open, hold, defend, retreat, none). Run with it, all pass: t-n71, t-n70, t-n69, t-n68, t-n67, t-guide, t-ledger. The full suite was NOT run (light tests by his way of working tonight): owed.

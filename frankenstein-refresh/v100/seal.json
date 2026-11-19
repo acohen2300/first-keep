@@ -1924,6 +1924,11 @@
 "bytes": 431,
 "numbers": 0
 },
+"book:citations:N396": {
+"sha": "1e288f1cb72b3757e92853ab4ad6006b67731015ce49139ab6a9bc672b73dccd",
+"bytes": 455,
+"numbers": 0
+},
 "book:citations:N4": {
 "sha": "1efae3fb7ebae5d562c12f80419c090a7286c15ec8b3acc3143f7000fcbf6617",
 "bytes": 67,
@@ -3034,11 +3039,6 @@
 "bytes": 355,
 "numbers": 0
 },
-"book:comments:E1124": {
-"sha": "186b77f12f56041a373abc8e04266e8a4b42e818744071033e031f66aef02386",
-"bytes": 186,
-"numbers": 0
-},
 "book:comments:E1125": {
 "sha": "bce19713496cd0dbd31812933677b5751d97b9aea1980f1afa18087989aec3e8",
 "bytes": 120,
@@ -3200,8 +3200,8 @@
 "numbers": 0
 },
 "book:comments:E1216": {
-"sha": "0249645a3a6dcc969114d047eb1e455e68f418e77b78312f8021752326210d50",
-"bytes": 35,
+"sha": "e1145356e6bb14612aaf74b7270bd463d53531585f7f5bd421517216387560df",
+"bytes": 147,
 "numbers": 0
 },
 "book:comments:E1217": {
@@ -3245,8 +3245,8 @@
 "numbers": 0
 },
 "book:comments:E1224": {
-"sha": "20a754601f25d0712abf31a25fee0a75a7998f6ac3d6b8f676e912127f516f41",
-"bytes": 154,
+"sha": "a88461a53569ccc5597c461aec92d4bcc27a72e52962cd71a26ea9834bbb8d86",
+"bytes": 273,
 "numbers": 0
 },
 "book:comments:E1225": {
@@ -7600,8 +7600,8 @@
 "numbers": 0
 },
 "book:comments:E954": {
-"sha": "59267af58104d964e0c069347f697b7221e214d4f384954577bb3c68263fbd20",
-"bytes": 108,
+"sha": "e53851d6556a9fe6ed1ed4eae79e7cc684f8b7f9dbd84aae93116b3dab41bf28",
+"bytes": 206,
 "numbers": 0
 },
 "book:comments:E955": {
@@ -9947,6 +9947,11 @@
 "book:rules:X141": {
 "sha": "da7745a0506fd2c265e73882725f3580e2cbf042d94be7cb25f79acef6e6429b",
 "bytes": 532,
+"numbers": 0
+},
+"book:rules:X142": {
+"sha": "2cecc5c4f32505da0da8b9f52c4e10893aa7073a44c54efb792941a57279a79b",
+"bytes": 515,
 "numbers": 0
 },
 "book:rules:X15": {
@@ -13555,8 +13560,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "ca3067c24e89433678bb4eac3d735a8aee109a60cb5f6a9cb6ee6332db86c39a",
-"bytes": 128388,
+"sha": "8f4e28a7f864cdcea603b4cd94381e4a3138f2378d7af5e501813f7b53fdf165",
+"bytes": 128333,
 "numbers": 161
 },
 "code:sound.js": {
@@ -14055,8 +14060,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "dd6fa4fe57df5f4d7f41a4c79f80a8177b2dd4745c8625e47e34add3e75580b3",
-"bytes": 381677,
+"sha": "e23ac39ab488fade819fabf26c7be2725b17b1506eeb0a56d3ee59ee267c6206",
+"bytes": 384795,
 "numbers": 0
 }
 }

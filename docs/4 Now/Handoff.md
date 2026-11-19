@@ -1,5 +1,10 @@
 # First Keep: hand-off (Nov 18, 2026)
 
+## START HERE (2026-11-18 22:00): N72 BUILT (preview n72): Design 19, the line keeps its word and War answers. His play is next
+- His go (Nov 18 21:29): "2. Go 3. Go". What is in: BUILDS.md N72; The List 36; cuts: Parked.md "Cut in N72". Code: menu.js `note` (S.re), `act`, `mtab`, `heard`, `mord`, `cact`, the Controller's mold (S.ro).
+- Tests: t-n72 passes and fails on N71; t-n71, t-n70, t-n69, t-n68, t-n67, t-guide, t-ledger pass. The FULL SUITE WAS NOT RUN: owed (baseline: the 27 red named under N71 below).
+- Owed, his: the sickness ruling (he asked for the math: SIR, Kermack and McKendrick 1927; the recovered immune; answered in chat); his nine other notes (The List 35), none traced; route map findings 3 and 5 to 8.
+- How he works now: one at a time, small builds, bugs first, no new design; what he reports is not a go.
 ## START HERE (2026-11-18 21:20): TALK ONLY since N71. Nothing built. Three things found, his rulings owed
 - Read The List 35 first: his words of Nov 18 19:27 to 20:58, in order. He could not finish a game on n71 (stopped at minute 107: `docs/4 Now/Match log - Nov 18 (107 min, n71).json`).
 - PROVEN, not fixed: villagers die of ordinary sickness that never ends (econ.js:535, no immunity; D311 R0 2). 37 of 60 dead in 45 minutes with full food. Rerun: `docs/4 Now/tools/sick.py <v100 dir> 45 54`. Idea offered: the recovered stay immune (a real SIR). His call.

@@ -595,7 +595,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287, N386)
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
-- **E954** note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one  · N377
+- **E954** note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one  · N377 · N396
 - **E837** a help line wider than its bar shows the chevron; the chevron opens it to two lines and cl
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
@@ -651,7 +651,6 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1058** the villager Controller (Design 08 section 8, N333): a called villager (or a group of them · N333 · N371 · N62 · N385
 - **E1055** the unit card of the call (Design 08, P2b): a called unit's card opens with its status and · N371 · N62 · N385
 - **E1113** a card's tab: choosing one shows its cells from the first page and lets go of a chosen peo · N385
-- **E1124** the X of the building card (N390): with a cell chosen it steps back to the building's bar; · N390 · C1 (N102)
 - **E1125** the button on a unit at work: it takes the last one of that kind out of the line and says  · E1112
 - **E1123** Help's verb (N387): with no word it opens Help on its first tab, from the pause drop, the  · N387
 - **E1114** the More cell, in the sixth place only when a tab holds more than six: it says how many mo · N385
@@ -664,7 +663,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1229** the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) 
 - **E1214** a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villag
 - **E1250** the − above the line hides Jobs | Build and closes the rows; the + after Home brings them 
-- **E1216** the Jobs | Build toggle
+- **E1216** the Jobs | Build toggle; with a card open it closes the card and opens the page, a picked  · N396
 - **E1244** one job's − or + from the floating row (People: + trains a villager)
 - **E1245** a picked villager's job tile: tap to pick, tap again to drop
 - **E1246** Go: the picked villagers go to the picked job, then the menu closes
@@ -677,7 +676,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1221** remember the ice answer this winter or this game
 - **E1222** the who-line: All, a class, or Idle picks those soldiers
 - **E1223** − leaves out the picked soldier nearest the Town Center; + adds the unpicked one of the wh
-- **E1224** the six orders: Hold, Defend and Retreat go on the tap; Attack and Move go on the map tap 
+- **E1224** the six orders: Hold, Defend and Retreat go on the tap; Attack and Move go on the map tap  · N396
 - **E193** the cells: one mold; a verb's cell is dim when its whyNot says so, and a dim cell only say
 - **E1129** a cell made while the card's model is being built (K): its verb is noted, the chosen one ( · N390
 - **E194** a cell's object arguments live here by key, since the DOM holds strings (the hold verbs ar
