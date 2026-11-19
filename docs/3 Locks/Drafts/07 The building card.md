@@ -40,3 +40,4 @@ STATUS: DESIGN TALK, mocked on the n74 screen; not built. Albert, Nov 19 13:39 t
 - Text 13 px on row 2 so all of it fits at 390 px (ends at 379 of 386).
 - Open for the build: the breadcrumb's building box quieter than the page box?; long building names in row 1's gold box (shrink to fit); Home | Jobs | Build order (his 14:40 sketch wrote Home | Build | Jobs); a script "Welcome to" parked until a font is added.
 - One mold for every building's card (one home), not the Town Center alone.
+- Final mocks, full screen (15:04): `07 card final - Train.png`, `07 card final - Learn.png`. [2026-11-19 15:06]
