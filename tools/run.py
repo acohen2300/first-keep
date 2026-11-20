@@ -34,9 +34,9 @@ def served(root=ROOT):
     finally: s.shutdown()
 
 @contextlib.asynccontextmanager
-async def game(seed=1, root=ROOT, setup=(), test=False, cover=False):
+async def game(seed=1, root=ROOT, setup=(), test=False, cover=False, begin=True):
     """A page with a match begun from `seed` and held still: nothing moves until step() is called.
-    setup: labels to tap on the new-game screen first. test: the game's own test mode (full stores). cover: record which functions run."""
+    setup: labels to tap on the new-game screen first. begin=False stops on that screen. test: the game's own test mode (full stores). cover: record which functions run."""
     with served(root) as url:
         async with async_playwright() as p:
             b = await p.chromium.launch(channel='chrome', args=['--no-sandbox', '--enable-unsafe-swiftshader'])
@@ -53,8 +53,9 @@ async def game(seed=1, root=ROOT, setup=(), test=False, cover=False):
             for label in setup:
                 try: await tap(pg, label)
                 except RuntimeError as e: pg.errors.append(str(e))
-            await pg.locator('button:has-text("Start")').first.tap()
-            await pg.evaluate(f'fk.reset({int(seed)}); fk.pause(true);')
+            if begin:
+                await pg.locator('button:has-text("Start")').first.tap()
+                await pg.evaluate(f'fk.reset({int(seed)}); fk.pause(true);')
             try: yield pg
             finally: await b.close()
 
