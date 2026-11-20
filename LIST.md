@@ -6,11 +6,11 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 
 - [x] Build 1: publish from `fresh`, the check, comments and citations books back
 - [ ] Build 2 (must play the same): cut what is ruled Cut below · 0 and 1 back in place of ZERO, ONE and null · the 14 loose numbers and the missing book entries behind the fallbacks · units for the 120 "unset" · restart leaves clock and upkeep state behind
-- [ ] Simulation speed: path-finding, animals and menus rebuilding every tick (the likely cause of freezing)
 - [ ] Sources: every number Sourced, Derived or Chosen with its reason; open reasons listed for Albert
 - [ ] Build 3 (look): one palette (554 colours today), then the typed art into the books
 - [ ] Build 4: pictures in memory (the big sheets first), cap the cache
-- [ ] Build 5: menus as static shells; the screen audit's findings (9 text styles, 40-high control row, narrow tap targets)
+- [ ] Build 5: menus as static shells (also stops them rebuilding every tick); the screen audit's findings (9 text styles, 40-high control row, narrow tap targets)
+- [ ] Simulation speed, last: no freezing on the phone since about Nov 16 (Albert, Nov 20). Measured on a desktop: late Hard games with about 320 units cost 15 to 24 s of computer time a game minute, mostly path-finding and animals. Phone test with the frame meter first
 - [ ] Prose out of the books into the comments book, with index numbers; lock finished parts byte for byte
 
 ## Function rulings (Albert, Nov 20)
