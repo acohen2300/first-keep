@@ -927,3 +927,7 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 - The hint "tap Build to switch" on Jobs (no room on the line beside the title). The other hints moved to row 2. [2026-11-19 19:10]
 - The queue's word in the crumb ("2 Villager"): the tile's ring and count say it; Stop stays in row 2. [2026-11-19 19:10]
 - Dead with the old line: the verbs `crumb` (E1217) and `cancel`, `path()` (E1204), `pillB`, the styles .mn, .mw, .mrd, .mr, .hint, .mp, .tg.who; `hint1`. [2026-11-19 19:10]
+
+## Cut in N82 (Nov 19) [2026-11-19 21:00]
+- A picked villager's Jobs tab (his rows under Jobs; N396, Design 19 A3): Jobs is always the Jobs page now (Albert, 18:54). The hint word "choose a task". [2026-11-19 21:00]
+- Clear tiles (N79 to N81; Albert, 17:36 and 18:51): every tile is filled; the title, the boxes and Exit stay clear. [2026-11-19 21:00]

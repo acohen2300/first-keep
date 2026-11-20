@@ -410,3 +410,5 @@ Written by `index.py` from `books/citations.js`, never by hand: every source by 
 | N411 | design | yes | Albert, Nov 19 17:36: "The fill in all the buttons and outlines are to be clear. Except for the tiles for tech and train." |
 | N412 | design | yes | Albert, Nov 19 17:41: "jobs too needs to be filled"; "please don't build patches. I assume you are fixing code each time" |
 | N413 | design | yes | Albert, Nov 19 18:51, with a screen of Build's clear tiles over the grass: "Can you fix the build tiles too?" |
+| N414 | design | yes | Albert, Nov 19 18:53 and 18:54: "jobs lost people icon and also the plus and minuses"; "Jobs doesn't need a breadcrumb bc there's no menu. It's not different pages" |
+| N415 | design | yes | Albert, Nov 19 18:51 to 18:59: Build's clear tiles unreadable over the grass, "Or do we just do a shadow? Help me out", "How do other apps handle translucent menus?", then "go ahead" on Claude's pick: a dark fade of about 30% behind the rows, a shadow on the words, every tile filled. Material Design (Imagery): dark scrims 20 to 40% opacity; Apple HIG (Materials): the regular material where a component holds much text |

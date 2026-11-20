@@ -2024,6 +2024,16 @@
 "bytes": 157,
 "numbers": 0
 },
+"book:citations:N414": {
+"sha": "0fec5b03e1d5a7036137d2d5130be08d13b204595a54921f8601520ed01b9bbc",
+"bytes": 214,
+"numbers": 0
+},
+"book:citations:N415": {
+"sha": "865a8a5cbeac530c5dff1f8072629e2a9231f61e55b88a2cd342a37bb7ace55d",
+"bytes": 472,
+"numbers": 0
+},
 "book:citations:N42": {
 "sha": "ae5b7ffdc5da587a6f83c3aae11f23613a728a9461deea6cd6989d6d905bdd9f",
 "bytes": 55,
@@ -3275,8 +3285,8 @@
 "numbers": 0
 },
 "book:comments:E1216": {
-"sha": "e1145356e6bb14612aaf74b7270bd463d53531585f7f5bd421517216387560df",
-"bytes": 147,
+"sha": "7193f48200735464c29e53f92267b2daa6626253b25e2128a10ffca82e7179fd",
+"bytes": 207,
 "numbers": 0
 },
 "book:comments:E1218": {
@@ -3375,8 +3385,8 @@
 "numbers": 0
 },
 "book:comments:E1236": {
-"sha": "ec24e64af2fac57ad39ad8c61e4d3cff64c255f48c2ce5751b12beee8084751f",
-"bytes": 117,
+"sha": "90e8f48fed94584158300b0009cccb0484dee6b3533101135c053298cbe1f7c1",
+"bytes": 127,
 "numbers": 0
 },
 "book:comments:E1237": {
@@ -9925,8 +9935,8 @@
 "numbers": 0
 },
 "book:rules:X148": {
-"sha": "0035bdb0648c8203e8a044950eebc8bd27a362fadc64c7a0d9c82cd51dc7c150",
-"bytes": 1010,
+"sha": "1c3eede99319dcf72a9ed3c68457942ac06f4b804f098f5e52919ed5747e8624",
+"bytes": 1135,
 "numbers": 0
 },
 "book:rules:X15": {
@@ -10525,8 +10535,8 @@
 "numbers": 0
 },
 "book:screen:SN48": {
-"sha": "12cb3d0b86d279f30152aaa0efe159e99021feb42522077f7dbc2d2592c22ced",
-"bytes": 1516,
+"sha": "8bc3898467ff973930bdd87bcee3ab7d17161639fa72ab4087d04aa06263589c",
+"bytes": 1631,
 "numbers": 0
 },
 "book:screen:SN49": {
@@ -13370,8 +13380,8 @@
 "numbers": 0
 },
 "book:words:J61": {
-"sha": "af1a3db32c75debfa89db0d3c8c8daba7837f038a664ec5360adf504082efa54",
-"bytes": 2697,
+"sha": "b2338cfaa5c477e289e495a30f1ca9d5648479c1050be811a646ca9bc7e891d4",
+"bytes": 2680,
 "numbers": 0
 },
 "book:words:J7": {
@@ -13535,8 +13545,8 @@
 "numbers": 54
 },
 "code:menu.js": {
-"sha": "9aa2bc7669bc7a6ff0e9758aef9a5ededb45c383c46455dd9e57cf7fa1e2d83b",
-"bytes": 127996,
+"sha": "9ec4cb76be7004ce0a59ca465677f819a9881a1f1737c5f4fe3aad3c5decbc40",
+"bytes": 127984,
 "numbers": 154
 },
 "code:sound.js": {
@@ -14035,8 +14045,8 @@
 "numbers": 0
 },
 "tool:test.py": {
-"sha": "92b875cfba0d3a0270d3b830d2600ce48fbd8f3f37a53d126b00c85109e0573f",
-"bytes": 401081,
+"sha": "4e9e07fc45bbca657c6ba6d1a6f9b57a4511738cb8cf3d7c94c38a766b4b152a",
+"bytes": 401674,
 "numbers": 0
 }
 }

@@ -657,7 +657,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1229** the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) 
 - **E1214** a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villag
 - **E1250** the − above the line hides Jobs | Build and closes the rows; the + after Home brings them 
-- **E1216** the Jobs | Build toggle; with a card open it closes the card and opens the page, a picked  · N396
+- **E1216** the Jobs | Build toggle; with a card open it closes the card and opens the page; Jobs lets · N396 · N414
 - **E1244** one job's − or + from the floating row (People: + trains a villager)
 - **E1245** a picked villager's job tile: tap to pick, tap again to drop
 - **E1246** Go: the picked villagers go to the picked job, then the menu closes
@@ -714,7 +714,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1243** Build (Design 16): the group words on the line, Build → group → building in the crumb row,
 - **E1253** a site of one's own: a tap picks it and arms its trash (red, a small trash by the tap); a 
 - **E1254** the building card under the law: Train | Learn | Talk on the line; the crumb row with the 
-- **E1236** a picked villager: its line over the Jobs | Build rows, Build first; its ✕ at the row end 
+- **E1236** a picked villager: his name, state and actions in row 2; his job tiles at once, Build's ti · N410 · N414
 - **E1230** whether a Rules pad is lit
 - **E1210** the Squad tile: Save while the picked army differs from the saved squad, then Squad N; a t
 - **E1226** send: Attack goes through the tap rows (a foe is fought, the ground marched to); Move marc

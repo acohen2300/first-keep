@@ -5705,3 +5705,13 @@ Opened: code:menu.js, book:citations, book:rules, tool:test.py.
 - Gate: PASS. Size: menu.js 127,997 → 127,996 bytes (−1; two `.pmb .bx` rules merged). ecs unchanged.
 - Tests: t-n78 `clear` asks that Build's tiles are filled; fails on N80's menu.js. t-n78, t-n77, t-n69, t-n67 pass. The full suite was not run.
 - Talk, his question "Or do we just do a shadow?": mock `mockups/cards/tiles-shadow.png` (top: N81; bottom: every tile filled and a dark shadow on the words and boxes of rows 1 and 2). Claude's advice: every tile filled (one rule, no list of exceptions), rows 1 and 2 clear with the shadow. His word owed.
+
+## N82: Jobs is always the Jobs page; a fade behind the rows, every tile filled · 2026-11-19 21:00
+Albert, Nov 19 18:53: "jobs lost people icon and also the plus and minuses"; 18:54: "Jobs doesn't need a breadcrumb bc there's no menu. It's not different pages" (N414). 18:51 to 18:59: Build's clear tiles unreadable, "Or do we just do a shadow? Help me out", "How do other apps handle translucent menus?", then "Sorry go ahead" on Claude's pick (N415). Sealed at 19:07 for his play tonight; the fade's strength and shape are still in talk (he liked the darker fade to the bottom of `mockups/cards/overlay.png`).
+Opened: code:menu.js, book:words, book:screen, book:citations, book:comments, book:rules, tool:test.py.
+- Jobs (E1216): a tap on Jobs lets the picked go and always shows the Jobs page (people tile, − and +, no breadcrumb). This replaces "a picked villager keeps his rows" for Jobs (N396, Design 19 A3); Build still keeps the picked villagers as its builders.
+- A picked villager (E1236): his job tiles show at once, with the hint "choose a job below"; on Build, Build's tiles. The word "choose a task" is cut.
+- Every tile is filled again, from the one rule `.mt .cell` (N80's row list and N81's B are gone: no list of exceptions). The title, the boxes and Exit stay clear.
+- A fade behind the rows (SN mold2.scrim, 30%): clear to tint down row 1, flat behind rows 2 and 3; the words of the rows carry the dark text glow.
+- Gate: PASS. Size: menu.js 127,996 → 127,984 bytes (−12). ecs unchanged.
+- Tests: t-n78 (`jobs`, `clear` rewritten to the ruling) passes and fails on N81's menu.js. Moved to the ruling: t-n72 `crew`, t-n69 `vil`, `vjobs`, `vcancel`, `go`, t-n68 `vj` (a villager's job tiles need no Jobs tap; Jobs lets him go). Pass: t-n78, t-n77, t-n76, t-n73 to t-n65, t-n43, t-n17, t-p2, t-p2b, t-idle. Smoke 6/6. The full suite was not run.
