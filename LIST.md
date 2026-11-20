@@ -12,7 +12,8 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 - [ ] Talk session, decisions only (before the standards step of Build 3): what red, green, blue, gold and cream mean; one look each for chosen, ready and unavailable; the text sizes; tap size 44
 - [ ] Build 3, the menu build: what each menu holds becomes lists in the Screen book, every screen identical (proven by `tools/screens.py`, 173 screens)
   - [x] part 1: the control row's actions (SN52), the tile rows for jobs, build, a crew and ice (SN53), the card sections (SN54)
-  - [ ] part 2: the war controls (who row, order tiles), the jobs plus and minus row, the resource card's line, the top line, the top bar
+  - [x] part 2: the top bar is a single strip again (Albert, Nov 20): five stores, people, pause, Mail. The war controls and the jobs row are unique and stay as they are (Albert, Nov 20). Left to convert: the resource card's line, the top line
+  - [ ] homes to find (Albert to say where): clock and season, time left, age, idle count, army count, rank, score. The Score sheet has no door until rank and score have a home
   - [ ] part 3: the seven sheets (new game, Build, Help, Stores, Score, Mail, Pause)
   - [ ] part 4: the screen built once and updated in place, not reassembled as text
   - [ ] then the standards, as edits to those lists and the stylesheet: colour meanings, one look each for chosen, ready and unavailable, the text sizes, tap size 44

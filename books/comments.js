@@ -1070,5 +1070,6 @@ BOOK("comments", {
  "E1267": {"text": "the lists the game gives a row of tiles: the six jobs, the jobs a villager can be sent to, the buildings of the open group that this side may still raise, the ways across ice"},
  "E1268": {"text": "a state's tile row, read from the Screen book's tiles list: a row shows when its facts hold, makes one tile a thing in its list (or one tile alone), and takes the look of the first fact in clsIf that holds for that thing; blank is the empty place kept so the row does not shift"},
  "E1269": {"text": "a card section's tiles for a finished building of one's own, read from the Screen book's cardRows list; the sections and the tick each needs are the book's card list"},
- "E1270": {"text": "the one part of a card kept as code: the people a seat can talk to (the three rivals and the four groups of misfits), or one of them with the stances to choose"}
+ "E1270": {"text": "the one part of a card kept as code: the people a seat can talk to (the three rivals and the four groups of misfits), or one of them with the stances to choose"},
+ "E1271": {"text": "a cell of the single strip is thinner than a finger, so each cell that can be tapped takes taps a full slot tall, reaching below the strip (Albert, Nov 20: the top bar back to a single strip; his 44 tap size)"}
 });
