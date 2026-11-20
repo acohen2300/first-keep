@@ -815,3 +815,12 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 - Likely why it surprised him: the villager was picked by a tap that fell through the menu's empty space to the map (N76, his pick 1), or the new title makes the state look like a page.
 - Idea (Claude, his word needed): a tap on Jobs always opens the Jobs page and lets the picked villager go (as Jobs and Build already close a building's card, N72); a picked villager shows his job tiles at once, with no Jobs tap.
 - N82 built (preview n82): Jobs always the Jobs page; a picked villager shows his job tiles at once; every tile filled; a 30% fade behind the rows (Albert, 18:53 to 18:59). Proof owed: his play tonight, his notes to follow. Open: the fade's strength and shape (he liked the darker fade to the bottom); the Home and W circles' fill. [2026-11-19 21:00]
+
+## 47. His match log, Nov 19 20:15 (119 min, seed 1458651260, sent with no words; file `Match log - Nov 19 (119 min).json`) — read, nothing changed [2026-11-19 21:20]
+1. Side 2's gold: 77 at minute 32, 3,522 at 33, then about 8,500 a minute to 150,136 at minute 50, then flat. No other side or resource moves like it. He looted it at minute 84 (his gold 28,420 to 189,003).
+2. His villagers in "wait": 10 or more in 24 of the minutes from 64 on; 17 of 93 from minute 89 to 105.
+3. His stock never spent: food 15,000 and wood 9,000 by minute 58 (before any loot); after the loot wood 50,000+, gold 180,000+ to the end.
+4. Ages: he reached age 1 at minute 15, 2 at 19, 3 at 58, 4 at 100. The three computers were at age 4 by minutes 18 to 24.
+5. Two computers fell (minutes 72 and 84); the third stood at 119 with 51 villagers and 19 soldiers. The log has no end.
+6. Mail: all 15 lines are "Your … is attacked at …".
+Causes not traced. His notes owed.
