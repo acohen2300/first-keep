@@ -5,7 +5,8 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 ## Cleanup
 
 - [x] Build 1: publish from `fresh`, the check, comments and citations books back
-- [ ] Build 2 (must play the same): cut what is ruled Cut below · 0 and 1 back in place of ZERO, ONE and null · the 14 loose numbers and the missing book entries behind the fallbacks · units for the 120 "unset" · restart leaves clock and upkeep state behind
+- [x] Build 2 (plays the same, proven on four seeded matches): restart no longer inherits the last game's unpaid upkeep · 0 and 1 back (1,552 uses) · null as zero gone (105) · the build ghost, two fallbacks and the load tolerance · the 120 unset units · the two debug overlays cut
+- [ ] Left over from Build 2: 2,259 numbers inside book tables have no unit said (the 120 were only the labelled ones) · about 50 measured numbers still typed in `index.html` outside the art (the sun's tilt 23.44 among them) · book entries nothing reads (next, single, forestScale, sea and others) · some null may still stand for a number
 - [ ] Sources: every number Sourced, Derived or Chosen with its reason; open reasons listed for Albert
 - [ ] Build 3 (look): one palette (554 colours today), then the typed art into the books
 - [ ] Build 4: pictures in memory (the big sheets first), cap the cache
@@ -15,7 +16,9 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 
 ## Function rulings (Albert, Nov 20)
 
-Cut: rebellion (nothing can reach it until towns can be taken) · debug overlays, each confirmed first · the replant button, if it duplicates the tap
+Cut: the two debug overlays (done)
+
+Not cut, for Albert to rule again: rebellion is a vassal rising against its lord, not a captured town; it runs whenever a vassal's unrest tops out and is woven through the vassal code (kept under Diplomacy) · the replant button calls the same one function as the tap and is the only place the price shows
 
 Keep, works: garrison · ice and floods · copy log · replant all · later-age building art · fronts (finds the army's groups for the look button) · unit history on the card
 
