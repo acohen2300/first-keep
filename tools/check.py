@@ -60,6 +60,9 @@ async def play(after_another=False):
     async with run.game(SEED) as pg:
         if after_another: await pg.evaluate(f"fk.reset(99); for (let n = 0; n < 400; n++) sim(1 / D.step.hz); fk.reset({SEED}); fk.pause(true);")
         food0 = await pg.evaluate('SIDES[0].store.food + SIDES[0].store.wood')
+        if not after_another:
+            lack = await pg.evaluate("[...Object.keys(D.cost).filter((c) => fk.SH[c] && fk.SH[c].layer === 110 && !(fk.stat(c, 0, 'build') > 0 && fk.stat(c, 0, 'hp') > 0)), ...Object.keys(D.stats).filter((c) => !(D.stats[c].hp > 0))]")
+            rule('every building that can be built has a build time and health, every unit has health', not lack, ', '.join(lack[:10]))
         await run.step(pg, MINUTES * 60)
         return await run.fingerprint(pg), await pg.evaluate('SIDES[0].store.food + SIDES[0].store.wood') - food0, await pg.evaluate('units.length'), list(pg.errors)
 
@@ -71,10 +74,17 @@ async def deep():
             rule(f'deep match, seed {seed}, {minutes} minutes, no errors', not pg.errors, '; '.join(pg.errors[:2]))
     return out
 
+MINE = "things.filter((t) => t.side === 0).length"
 async def draw():
     async with run.game(SEED) as pg:
-        await run.release(pg); await pg.wait_for_timeout(20000)
-        return await run.pictures(pg), list(pg.errors)
+        await run.release(pg); await pg.wait_for_timeout(1000)
+        before = await pg.evaluate(MINE); steps = []
+        for v in ('mtab', 'pick', 'build'):
+            done = await pg.evaluate("(v) => { const all = [...document.querySelectorAll('[data-v]')].filter((b) => b.offsetParent !== null && !b.disabled && b.dataset.v.split('|')[0] === v); const b = v === 'mtab' ? all.find((b) => b.dataset.v.includes('Build')) : all[0]; if (b) b.click(); return !!b; }", v)
+            steps.append(done); await pg.wait_for_timeout(400)
+        placed = await pg.evaluate(MINE) - before
+        await pg.wait_for_timeout(18000)
+        return await run.pictures(pg), list(pg.errors), placed, steps
 
 async def check_game():
     a, gathered, people, errs = await play()
@@ -83,7 +93,8 @@ async def check_game():
     rule('villagers gather', gathered > 0, f'food and wood up {gathered:.0f}')
     b, *_ = await play(after_another=True)
     rule('the same seed plays the same match, even straight after another game', a == b, a if a == b else f'{a} then {b}')
-    pics, errs = await draw()
+    pics, errs, placed, steps = await draw()
+    rule('a building can be picked and placed from the Build menu', placed == 1, f'{placed} placed, taps landed: {steps}')
     rule('20 seconds on screen, no errors', not errs, '; '.join(errs[:2]))
     rule(f'pictures in memory under {PICTURES_MB} MB', pics['mb'] <= PICTURES_MB, f"{pics['count']} pictures, {pics['mb']} MB")
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}

@@ -6,7 +6,7 @@ const { D, C, W, K, A, SIDES, N, isIdle } = FK, STD = []; // E961
 const things = FK.rest, units = FK.units, T = D.tile, [ME] = D.players, MO = D.nerve, FL = D.flanking, AR = D.army, GR = D.ranks, FLY = D.flight, FM = D.forms, ST = FK.SPRITE, WD = fromBook('words').army;
 const HU = D.hud, CH = D.charge, FB = D.fallback, CK = D.choke, AM = D.ambush, FAM = D.familiar, DI = D.direct, WO = fromBook('words').orders, ORD = new Set(), MS = {}, AT = {}; // E406
 const stat = (u) => FK.statRow(u.code, u.side);
-const hpMax = (t) => FK.stat(t.code, t.side, 'hp') ?? 400;
+const hpMax = (t) => FK.stat(t.code, t.side, 'hp');
 const armed = (u) => !!SIDES[u.side] && FK.has(u, 'Fight') && !FK.has(u, 'Gather');
 const SB = fromBook('sides'), rel = new Map(); // E285
 const groupOf = (x) => (SIDES[x.side] ? null : SB.beasts.includes(x.code) ? 'beast' : x.horde && !x.back ? 'out' : Object.keys(SB.groups).find((g) => SB.groups[g].includes(x.code)) || 'nat'); // E286
