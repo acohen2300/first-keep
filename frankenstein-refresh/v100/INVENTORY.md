@@ -4,10 +4,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
-| Game code | 31 | 3,547 | 648,668 | 648,810 |
-| Books | 2687 | 0 | 924,981 | 925,962 |
+| Game code | 31 | 3,548 | 649,099 | 649,241 |
+| Books | 2690 | 0 | 927,175 | 928,156 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,611 | 444,823 | 445,079 |
+| Tools | 5 | 2,634 | 449,441 | 449,697 |
 
 ## The trades (code)
 
@@ -39,10 +39,10 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | index.html#the-ground-s-soil-and-paper | 51 | 9,447 | 9,451 | 0 |
 | index.html#the-woods-cache | 41 | 5,996 | 6,000 | 24 |
 | index.html#touch | 54 | 9,946 | 9,950 | 54 |
-| menu.js | 494 | 127,615 | 127,651 | 154 |
-| econ.js | 631 | 119,668 | 119,668 | 70 |
-| combat.js | 381 | 65,429 | 65,429 | 83 |
-| ai.js | 172 | 27,499 | 27,499 | 25 |
+| menu.js | 495 | 127,766 | 127,802 | 154 |
+| econ.js | 631 | 119,708 | 119,708 | 70 |
+| combat.js | 381 | 65,663 | 65,663 | 83 |
+| ai.js | 172 | 27,505 | 27,505 | 25 |
 | sound.js | 58 | 6,440 | 6,440 | 66 |
 
 ## The books
@@ -51,13 +51,13 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 |---|---|---|
 | angles | 6 | 1,006 |
 | capabilities | 55 | 16,913 |
-| citations | 414 | 127,501 |
+| citations | 416 | 128,869 |
 | colours | 34 | 10,478 |
-| comments | 1073 | 213,691 |
+| comments | 1073 | 214,006 |
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 322 | 204,999 |
-| rules | 147 | 68,249 |
+| rules | 148 | 68,793 |
 | screen | 34 | 29,647 |
 | shells | 111 | 24,216 |
 | sides | 7 | 1,869 |
@@ -225,5 +225,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X148 | t-n78 | page | N78 (N410; Drafts 7 and 8): a building's card is in the mold: the line reads Home, Jobs, Build and the title; row 2 the name in its box, the pages Train, Learn, Relations with the picked one boxed, and Exit; Repair keeps its slot, hidden until the building is hurt; every row-2 button is 44 px wide or more and the row fits; the tiles start at the left and a research tile carries no effect line; Demolish asks Sure? before it demolishes; War Command's title is red-lined, its row has seven groups, its five orders carry icons and the sixth tile turns from Garrison villagers to Back to work with the alarm, with no Out; an item card names the find, says Add a villager, counts who works it, and its plus and minus add and take a villager; N82 (N415): the title, the boxes and Exit have no fill, every tile is filled, and a dark fade of 20 to 40% lies behind the rows; N82 (N414): a picked villager shows his job tiles at once, and a tap on Jobs lets him go and shows the Jobs page with the people tile and its minus and plus, with no breadcrumb |
 | X149 | t-n83 | page | N83 (N416 to N420): no fade and no tint behind the menu's rows, the words keep their dark glow; War Command's title reads the same with an order armed and after a reply; after a building is placed the Build page is open again; the Pause menu sits right under the top bar; the book of the open card is drawn gold |
 | X150 | t-n84 | page | N84 (N421): no building may be placed touching another (the farms, camps, mints, foundries and dwellings too); a House a lane from a House may; no shell ticks Touch |
+| X151 | t-n86 | page | N86 (N422, N423): left alone four minutes, every computer has built a house; a caravan standing at an ally's Market that has not been home is paid nothing, and one that loads at home is paid its cargo once; soldiers sent to a spot and shot at on the way kill the archer and march on, still sent; eight soldiers sent one at a time to one spot each hold their own slot, none within three quarters of a tile; a row word's tap area is the mold's slot tall |
 
-2817 items sealed · 2687 book entries · 94 laws · 414 citations, 37 still to open · 0 known
+2820 items sealed · 2690 book entries · 94 laws · 416 citations, 37 still to open · 0 known

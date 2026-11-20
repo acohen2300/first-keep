@@ -918,3 +918,19 @@ Not done, and why:
 - The match log's five items (section 47) and the clock (Draft 3): untouched.
 - The full suite [2026-11-19 22:29]: N82 baseline 30 red of 96; N84 32 red of 98 (both run side by side, so under load; the Handoff's count of open tests was lower, and how many of the 30 are the load is not known). Red only on N84: t-n72 (it read War's changing title: moved to the ruling in N85), t-n51 and t-n52 (pass alone). Red on both, not traced: t-a1 t-alarm t-civs t-fire t-food t-gather t-kinds t-land t-mind t-n24b t-n27 t-n29 t-n30 t-n42 t-n47 t-n60 t-odds t-orders t-peace t-physics t-realm t-research t-same t-sight t-stage t-trade t-walls t-war t-wild (t-n57 red on N82 only). One clean run of the suite alone is owed to tell load from fault.
 - From note 6, his word owed: a refused order (nobody picked, nobody to defend) now says nothing on screen; it only goes to Mail.
+
+## 52. The Nov 20 audit and N86 (Albert, Nov 20 03:16 "Want to run some audits on first keep code while I sleep?"; 04:59 "Can you fix it all?"; 05:01 his answers 4, 5, 7) [2026-11-20 05:45]
+Audit: `docs/4 Now/Audit - Nov 20.md`. His words at 05:01: "4. If they are attacked they should kill the thing and keep going. 5. Fix it 6. I don't understand. I didn't even see an outpost wagon 7. Can we fix it". 05:03: "We have like 50 chats and the same issues keep on coming. Nothing ever gets solved. Just lists and lists." 05:06: "So where are the mock ups? Are all 48 items from my list done? If not why?"
+Built in N86 (preview n86), each a check of t-n86 that fails on N85's code (BUILT, not DONE: his play owed):
+1. The computers build houses again (N84's fault: two of three sat at 10 people). Check `grow`.
+2. A caravan is paid only for a run it walked (the runaway gold of section 47, item 1). Checks `stood`, `walked`.
+3. His 4 (note 22): soldiers on a Move who are struck kill the one who struck and march on. Check `struck`.
+4. His 5 (note 23): soldiers sent one at a time to one spot form up, each in a slot. Check `spot`.
+5. His 7, in part: the row's words have a 44 tap area, nothing moved. Check `tap`.
+Not done, and why:
+- His 6 (note 16): no "outpost wagon" exists (the small one was cut Nov 15; the Stable's tile reads "Camp wagon"). Asked him which tile he tapped. Two faults stand: a refused tap says nothing on screen; the wagon opens the villager card with no Unpack.
+- His 7, the type sizes (11, 13, 14, 17 and a stray Arial against his 14/600 and 12/400): every row's fit changes; a mock first (his own rule for the menus).
+- Three of 30 in one group order never reach their slot: seen on random maps, not traced.
+- The mocks (2 and 9, 3, 4, 7, 10, 12, 14, 15): not started. The talk items (18, 19, 24, 27, 31): his. Of the 48 notes: built 1, 6, 8, 11, 13, 46 (N83, N84), 22 and 23 (N86); the rest wait on a mock, a talk, or a trace; none is proven by his play yet.
+- 21 red tests untraced; note 37's audit not started: Claude stopped the night's audit at 70 minutes of the three hours; nothing blocked it. [2026-11-20 05:45]
+

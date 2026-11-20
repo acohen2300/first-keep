@@ -5742,3 +5742,15 @@ Albert, Nov 19 21:29, note 6 (N417). Opened: tool:test.py. No game code changed.
 - t-n72's War checks (`hold`, `defend`, `retreat`, `clear`, `none`) asked that the title read the order or the refusal (N396, Design 19 B). Moved to the ruling: the title reads War Command throughout; the lit tile is checked as before. Claude's miss in N83: its neighbour run stopped at a wrong test name (t-n66) and ran nothing, so this was not seen until the full suite.
 - Consequence for Albert to rule on: a refused order (nobody picked, nobody to defend) now says nothing on screen; it only goes to Mail.
 - The full suite, run on frozen copies side by side (so under load): N82 baseline 66 of 96 rules hold, 30 red; N84 66 of 98, 32 red. Red only on N84: t-n72 (fixed here), t-n51 and t-n52 (both pass when run alone). Red only on N82: t-n57 (known to fail one run in six). The other 29 red are the same on both: not caused by N83 or N84, not traced.
+
+## N86: the computers build again; a caravan is paid for a walked run; struck soldiers fight and go on; one spot, one formation; the row's tap area · 2026-11-20 05:45
+Albert, Nov 20 04:59 "Can you fix it all?" (N422, the audit's items 1 and 2); 05:01 his 4, 5 and 7 (N423). Audit: docs/4 Now/Audit - Nov 20.md.
+Opened: code:econ.js, code:ai.js, code:combat.js, code:menu.js, book:comments, book:citations, book:rules, tool:test.py.
+- Computers (N84's fault, Claude's): ai.js raise() passes the search's own pass to plan(); econ.js plan() hands it to placeWhy. Before, the search took a spot beside the Farm and the build refused it every turn: two computers of three stayed at 10 people (his seed 1458651260). With the fix the 30 minutes equal n82's to the digit.
+- Caravan: econ.js run() starts a run only at home. Before, a caravan with no way home was paid 80 gold each 1.2 s where it stood by an ally's Market.
+- Struck on a Move (his 4): combat.js hit(): the cry reaches the sent marchers too; the look: a sent soldier who has fought the one who struck looks for no other and marches on, still sent.
+- One spot (his 5): combat.js order(): soldiers sent to ground fall in with their own already holding or marching to within the widest rank of that spot; one formation.
+- Tap area (his 7, in part): menu.js: a row word's unseen pad reaches up to the mold's slot (44); .mpath clips sideways only. Nothing moved.
+- Gate: PASS. Size, under the permit's grant: econ.js 119,668 → 119,708; ai.js 27,499 → 27,505; combat.js 65,429 → 65,663; menu.js 127,651 → 127,802 (431 bytes more). Whys past 320: 109 → 108. ecs within the rule.
+- Tests: t-n86 new (grow, stood, walked, struck, spot, tap): passes; grow, stood, struck, spot and tap each fail on N85's code. Pass beside it: t-n84 t-n83 t-n78 t-n77 t-n72 t-n69 t-n55 t-n53 t-n51 t-n26 t-n24 t-n20 t-wait t-place; t-n52 passes alone. t-n60 red as before (open). The full suite: run after the seal; result in The List 52.
+

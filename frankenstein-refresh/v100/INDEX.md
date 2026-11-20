@@ -491,6 +491,8 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N419 |  | Albert, Nov 19 20:37, note 11: \The pause menu needs to be near the pause button.\; 21:29: \Easy fix\ | opened |
 | N420 |  | Albert, Nov 19 20:37, note 13: \When you tap the book for research it needs a better indicator that you taped it.\; 21:29: \Easy fix\. Claud | opened |
 | N421 |  | Albert, Nov 19 20:37, note 46: \I want a space back between buildings and houses - it's too weird putting them right next to each other.\; 2 | opened |
+| N422 |  | Albert, Nov 20 03:16: \Want to run some audits on first keep code while I sleep?\; the audit (docs/4 Now/Audit - Nov 20.md, items 1 and 2) f | opened |
+| N423 |  | Albert, Nov 20 05:01, on the audit's items: \4. If they are attacked they should kill the thing and keep going. 5. Fix it ... 7. Can we fix  | opened |
 
 ## colours
 
@@ -1095,7 +1097,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E485 |  | trade: the stops on the two routes, held by the post standing on them; a good's price at a place is its base, more where wanted, × the going |  |
 | E486 |  | a caravan walks to a building's side or onto a stop; a way it cannot walk ends its run, and it waits a beat |  |
 | E487 |  | a caravan on a route: load at its Market, sell at the far end (a keeper's cut), buy spice at a stop if told, bring it home, again if it repe |  |
-| E488 |  | a caravan with no route runs to the farthest ally's Market or Town Center for distance² pay (QCE), then home |  |
+| E488 |  | a caravan with no route runs to the farthest ally's Market or Town Center for distance² pay (QCE), then home; a run starts at home, where th |  |
 | E489 |  | robbers leave a caravan alone near its side's trade post or tower, or with a soldier of its side beside it |  |
 | E490 |  | each frame the caravans; each beat a stop's holder, an armed caravan's blow and a whole route's pay; each slow beat the prices settle and ve |  |
 | E491 |  | a caravan taken by a side pays its cargo and goods to the taker; one killed by the wild is robbed (the robbers' hoard waits for their camps) |  |
@@ -1286,7 +1288,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E683 |  | the computers' clocks start spread over one turn (react ÷ how many), so no two think on the same frame; each keeps its own turn |  |
 | E684 |  | the work queue: slow jobs, each a generator that yields where it may stop; one job of a key at a time (a computer whose last turn is still r |  |
 | E685 |  | a frame runs the queue's jobs in turn, a slice each, up to D339's slices (QCR: counted, not timed, so the game does not depend on the machin |  |
-| E686 |  | a site the computer cannot pay for, or may not build, is not searched for: plan() would refuse it after the search (the same answer, without |  |
+| E686 |  | a site the computer cannot pay for, or may not build, is not searched for; the search asks each tile only about the ground, and the build is |  |
 | E680 |  | the Guide as Markdown (Mid's guideMd): one table a part, its headings from the words, a bar in a cell made a slash |  |
 | E800 |  | made once a map: which tiles are grass, bare or other land; a micro-relief, and on it each tile's flow by the steepest of the eight ways, th |  |
 | E803 |  | the flowers and pebbles close up: each cluster's offspring from its own seed, as many open as its season allows, none under snow or on a tro |  |
@@ -1335,7 +1337,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E863 |  | the woods: walkable for a person or a rider at the woods' pace (D360), never for engines or wagons; the path pays the time lost, so the edge |  |
 | E864 |  | a tap anywhere on a building's drawn shape is the building: the front-most whose picture is solid under the finger (Albert, Nov 9 item 8.7) |  |
 | E865 |  | a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it |  |
-| E866 |  | the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) |  |
+| E866 |  | the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35); a row word's tap area reaches up to the mold's s |  |
 | E867 |  | words drawn on the map at the head type (SN20), never a size typed in the code |  |
 | E868 |  | the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL); the buildings a side has seen stay as it saw th |  |
 | E869 |  | an eye's tiles: every tile in its reach whose ground, a body high, its line clears over the tops between (trees and buildings by height); ca |  |
@@ -1397,7 +1399,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E943 |  | menus are not redrawn while a finger is down on a button (Albert, Nov 10, N17 #7: taps pressed but did nothing): a redraw replaced the butto |  |
 | E944 |  | minus on a job acts at once: the villager drops what it carries and stands idle, so the count falls on the tap (Albert, Nov 10, N17 #10: plu |  |
 | E945 |  | first placed, first built (Albert, Nov 10, N17 #4; AoE2's build queue): a site placed with a builder picked who is still raising another joi |  |
-| E946 |  | an order you give marks each unit sent: its foot ring stays green from the order until its walk ends (Albert, Nov 10, N17 #9) |  |
+| E946 |  | an order you give marks each unit sent: its foot ring stays green from the order until its walk ends (Albert, Nov 10, N17 #9); soldiers sent |  |
 | E947 |  | your people under the canopy drawn as a flat ghost in your side's colour, the figure's outline only, with the ring at the feet (Albert, Nov  |  |
 | E949 |  | a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall clock so game speed does not hurry it; the flame's hei |  |
 | E950 |  | campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work together at night a campfire is lit among them, and s |  |
@@ -1454,7 +1456,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1016 |  | a light's glow painted once a kind and stamped at its size and the night's strength; before, a fresh gradient for every light every frame |  |
 | E1017 |  | ice-shy (Albert, Nov 11: \They see their comrades fall through the ice and they just continue\): when ice cracks under a side or one of its  |  |
 | E1018 |  | every lake has a ford (D374): a shallow bed through its middle, toward the middle of the map, laid without the dice so a map's other rolls a |  |
-| E1019 |  | a struck soldier is heard: his own within crowd tiles (D-nerve) who stand idle or hold with no foe, and are not told to hold, turn on the at |  |
+| E1019 |  | a struck soldier is heard: his own within crowd tiles (D-nerve) who stand idle, hold, or march sent, with no foe and not told to hold, turn  |  |
 | E1020 |  | my soldier left idle far from his post (past the yard, D-yard) holds where he stands and does not walk home alone (Albert, Nov 10: soldiers  |  |
 | E1021 |  | a computer thinks in slices across steps (E684): its hall can fall between two slices, and the next slice then asked a hall that was gone fo |  |
 | E1022 |  | the Market sells and buys by the lot at the going price (D270, D271), the Workshop is set to cloth or beer, a mercenary camp is hired from i |  |
@@ -1513,7 +1515,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1089 |  | the focus rule in one home (Albert, Nov 11: a focused unit stays on its job; its find gone, it walks to the Town Center): it held only when  |  |
 | E1090 |  | the mine shaft (N366): once a side has Blasting, its Mining camps are worked in place for gold, one miner each, straight to the stores (the  |  |
 | E1091 |  | the Pioneer (N367): a unit that carries the Fell tick walks into the woods though its body is an engine's, at the woods' own pace, and fells |  |
-| E1092 |  | an order to ground is obeyed (N368): a soldier sent by the player to a spot (sent) looks for no foe while he marches there, so one pulled ou |  |
+| E1092 |  | an order to ground is obeyed (N368): a soldier sent to a spot looks for no foe while he marches there; the mark is cleared when he arrives a |  |
 | E1094 |  | the side's builder: a villager raising (or walking to raise) a building that is not a wall. The menu hands him the next site placed, so one  |  |
 | E1095 |  | the trade roads: each route one road from the last open land of the main land (E1111) on its coast, through the open tile nearest each stop' |  |
 | E1096 |  | one ground law: a tile's top layer is its stratum, except that worn road shows dirt where grass would grow (a road is a cut through the gras |  |
@@ -2132,6 +2134,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X148 | N78 (N410; Drafts 7 and 8): a building's card is in the mold: the line reads Home, Jobs, Build and the title; row 2 the name in its box, the pages Train, Learn, Relations with the picked one boxed, and Exit; Repair keeps its slot, hidden until the building is hurt; every row-2 button is 44 px wide or more and the row fits; the tiles start at the left and a research tile carries no effect line; Demolish asks Sure? before it demolishes; War Command's title is red-lined, its row has seven groups, its five orders carry icons and the sixth tile turns from Garrison villagers to Back to work with the alarm, with no Out; an item card names the find, says Add a villager, counts who works it, and its plus and minus add and take a villager; N82 (N415): the title, the boxes and Exit have no fill, every tile is filled, and a dark fade of 20 to 40% lies behind the rows; N82 (N414): a picked villager shows his job tiles at once, and a tap on Jobs lets him go and shows the Jobs page with the people tile and its minus and plus, with no breadcrumb | {stage: page} | N410; N414; N415 |
 | X149 | N83 (N416 to N420): no fade and no tint behind the menu's rows, the words keep their dark glow; War Command's title reads the same with an order armed and after a reply; after a building is placed the Build page is open again; the Pause menu sits right under the top bar; the book of the open card is drawn gold | {stage: page} | N416; N417; N418; N419; N420 |
 | X150 | N84 (N421): no building may be placed touching another (the farms, camps, mints, foundries and dwellings too); a House a lane from a House may; no shell ticks Touch | {stage: page} | N421 |
+| X151 | N86 (N422, N423): left alone four minutes, every computer has built a house; a caravan standing at an ally's Market that has not been home is paid nothing, and one that loads at home is paid its cargo once; soldiers sent to a spot and shot at on the way kill the archer and march on, still sent; eight soldiers sent one at a time to one spot each hold their own slot, none within three quarters of a tile; a row word's tap area is the mold's slot tall | {stage: page} | N422; N423 |
 
 ## screen
 

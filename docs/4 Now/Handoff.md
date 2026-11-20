@@ -1,4 +1,13 @@
-# First Keep: hand-off (Nov 19, 2026) [2026-11-19 21:42]
+# First Keep: hand-off (Nov 20, 2026) [2026-11-20 05:45]
+
+## START HERE: where things stand [2026-11-20 05:45]
+- Last build N86, sealed. Preview n86: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n86/ . His play owed. Do not send him to n84: its computers do not grow.
+- Read The List section 52 and `docs/4 Now/Audit - Nov 20.md`. His complaint of Nov 20 05:03: lists and no closing. Close things: a failing test, the fix, the preview; fewer reports.
+- Open, in order: his answer on which tile the "outpost wagon" was; the refused tap that says nothing on screen (every dim cell); the wagon's card (no Unpack); the mocks he asked for (2 and 9, 3, 4, 7, 10, 12, 14, 15, and the type sizes); the 21 red tests; note 37's audit; the clock (Draft 3).
+- The suite alone on N85: 70 of 98 hold, 28 red (the list is in the audit, C). t-n52 and t-n60 are unsteady in a batch.
+- Probes must not call `MENU.act('start')`: it re-rolls the seed. Use `FK.reset()`.
+
+## The Nov 19 21:42 hand-off (older)
 
 ## START HERE: where things stand [2026-11-19 21:42]
 - Last build N84, sealed. Preview n84: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n84/ . His play owed.

@@ -586,7 +586,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E819** the villager's square (Albert, Nov 8 21:35-21:46): a tap on your villager opens four boxes
 - **E181** the colours: the menus read every colour from the Colours book (C38 the menus' own, the ri · C38 (N336)
 - **E839** a font from the type rule: its weight and size, in the face named
-- **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287, N386)
+- **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287, N386) · N423
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
 - **E954** note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one  · N377 · N417
@@ -936,7 +936,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E485** trade: the stops on the two routes, held by the post standing on them; a good's price at a · QCE (N195, N197)
 - **E486** a caravan walks to a building's side or onto a stop; a way it cannot walk ends its run, an
 - **E487** a caravan on a route: load at its Market, sell at the far end (a keeper's cut), buy spice 
-- **E488** a caravan with no route runs to the farthest ally's Market or Town Center for distance² pa · QCE (N195, N197)
+- **E488** a caravan with no route runs to the farthest ally's Market or Town Center for distance² pa · QCE (N195, N197) · N422
 - **E489** robbers leave a caravan alone near its side's trade post or tower, or with a soldier of it
 - **E490** each frame the caravans; each beat a stop's holder, an armed caravan's blow and a whole ro
 - **E491** a caravan taken by a side pays its cargo and goods to the taker; one killed by the wild is
@@ -1014,7 +1014,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E355** QBO the blow on a unit: × the counter; a villager's javelin on game × D221; on a soldier,  · QBO (N69, N188) · D221 (N170) · D231 (N188, N76, N16) · D228 (N176) · D141 (N188) · D355 (N278, N279, N280)
 - **E875** in the woods a missile is stopped by the trunks with chance 1 - e^(-stems x trunk x L), L 
 - **E876** in the woods the line breaks into one-on-one duels (Lanchester's ancient model, the Linear
-- **E1019** a struck soldier is heard: his own within crowd tiles (D-nerve) who stand idle or hold wit
+- **E1019** a struck soldier is heard: his own within crowd tiles (D-nerve) who stand idle, hold, or m · N423
 - **E231** a blow lands (QBO); it shakes the struck one's nerve by where it comes from (QAI), sends i · QBO (N69, N188) · QAI (N76, N188) · QBT (N81, N82, N83, N18)
 - **E518** A blow on a shooter's stake, or on one of a wild group (its regard falls).
 - **E1017** ice-shy (Albert, Nov 11: "They see their comrades fall through the ice and they just conti · E1018
@@ -1048,7 +1048,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E396** a soldier's day (Mid's solTick): nerve, healing by a shelter (QP), its drill; it keeps its · QP (N16) · D238 (N188, N36, N37) · D132 (N114, N164)
 - **E408** a charge spent: the pace drops to D249 slow and settles back to the walker's own (QP, N16) · D249 (N190, N191, N16, N82) · QP (N16) · N16
 - **E936** your soldiers leave a wild animal alone unless it is after one of yours or you sent them a
-- **E1092** an order to ground is obeyed (N368): a soldier sent by the player to a spot (sent) looks f · N368
+- **E1092** an order to ground is obeyed (N368): a soldier sent to a spot looks for no foe while he ma · N368 · E1019 · N423
 - **E1020** my soldier left idle far from his post (past the yard, D-yard) holds where he stands and d
 - **E1036** an idle soldier walks home once: if his home spot cannot be stood on (built over, a tree, 
 - **E397** QAJ the missile: projectile motion with quadratic drag (the arrow's, W10), loosed at D245' · QAJ (N39, N40) · W10 (N85, N189) · D245 (N188, N39, N40, N388) · N388
@@ -1058,7 +1058,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E411** a group's order you can follow (Mid's march): its tile, label, start and walk ratio; each 
 - **E412** each soldier's one word (Mid's armyStatus): rout, fight, rally (sent home, walking to the  · D247 (N190)
 - **E413** the obvious order for what is picked (Mid's order, Albert Nov 2): a foe is fought, a beast
-- **E946** an order you give marks each unit sent: its foot ring stays green from the order until its · N17
+- **E946** an order you give marks each unit sent: its foot ring stays green from the order until its · N17 · N423
 - **E475** a support troop told: a priest at a foe converts, a spy at a foe building sabotages, else 
 - **E1002** Defend (Albert Nov 11, N325: 'Defend goes right to the attack', no spot to pick): of the f · N325 · D373 (N325)
 - **E1101** what of mine is under attack: every hostile whose target is mine and alive (one finder for · N378
@@ -1121,7 +1121,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E243** the shells a side can pay for that tick a capability
 - **E244** each yield's camp: the drop-off that takes it in
 - **E245** a spot: the nearest free footprint to a point, searched in rings, kept off the home's own 
-- **E686** a site the computer cannot pay for, or may not build, is not searched for: plan() would re
+- **E686** a site the computer cannot pay for, or may not build, is not searched for; the search asks · N422 · N84
 - **E331** an arc of wall round the Town Center facing the middle, four-connected; its two squares ne
 - **E434** the narrowest gap on the road to a foe (Mid's gapOnRoad): from D251 ai.from tiles out to h · D251 (N190)
 - **E435** the computer holds a gap (Mid's chokeClaim): once each D251 ai.every, with enough idle foo · D251 (N190)

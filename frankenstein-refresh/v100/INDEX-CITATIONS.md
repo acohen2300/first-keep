@@ -515,6 +515,8 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N419** Albert, Nov 19 20:37, note 11: "The pause menu needs to be near the pause button."; 21:29: "Easy fix" → X149
 - **N420** Albert, Nov 19 20:37, note 13: "When you tap the book for research it needs a better indicator that you taped  → X149
 - **N421** Albert, Nov 19 20:37, note 46: "I want a space back between buildings and houses - it's too weird putting them → X150
+- **N422** Albert, Nov 20 03:16: "Want to run some audits on first keep code while I sleep?"; the audit (docs/4 Now/Audit → X151
+- **N423** Albert, Nov 20 05:01, on the audit's items: "4. If they are attacked they should kill the thing and keep going → X151
 
 ## Named exceptions
 
