@@ -15,8 +15,8 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
     (12, ['Easy', 'Han', '30 min', 'Siege'], 20),
     (13, ['Hard', 'Persian', 'Conquest', 'Silk Road', 'Hardest', 'Famine', 'Weather', 'Drought', 'Outlaws', 'Plague'], 25),
 ]
+NO_UNIT = 2259
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
-UNSET_UNITS = 120             # open work (cleanup item 7): may only go down
 
 fails = []
 def rule(name, ok, detail=''):
@@ -54,7 +54,13 @@ def check_books():
     print(f'note  {len(set(N) - cited)} of {len(N)} citations are named by no entry')
     # units
     unset = sum(1 for e in B['measure'].values() for u in (e['unit'].values() if isinstance(e.get('unit'), dict) else [e.get('unit')]) if u == 'unset')
-    rule(f'units: no more than {UNSET_UNITS} unset', unset <= UNSET_UNITS, f'{unset} unset')
+    rule('units: none unset', unset == 0, f'{unset} unset')
+    def leaves(v): return 0 if isinstance(v, bool) else 1 if isinstance(v, (int, float)) else sum(leaves(x) for x in (v.values() if isinstance(v, dict) else v)) if isinstance(v, (dict, list)) else 0
+    bare = 0
+    for e in B['measure'].values():
+        v, u = e['value'], e.get('unit'); n = leaves(v)
+        bare += 0 if isinstance(u, str) or (isinstance(v, list) and u) else n - sum(leaves(x) for k, x in v.items() if k in u) if isinstance(v, dict) and isinstance(u, dict) else n
+    rule(f'units: no more than {NO_UNIT} numbers inside tables with no unit said (open work; may only go down)', bare <= NO_UNIT, f'{bare}')
 
 async def play(after_another=False):
     async with run.game(SEED) as pg:
