@@ -10439,11 +10439,6 @@
 "bytes": 334,
 "numbers": 0
 },
-"book:rules:X99": {
-"sha": "9eff9755cc17f05030c782c77cffeedfb6fb7f45792d882c70f015fd0ac752ab",
-"bytes": 321,
-"numbers": 0
-},
 "book:screen:SN1": {
 "sha": "186d3a5d2e8147201f56c24ac2ba525b66e6a3fff1d4f5a68cdc76cdd75ef277",
 "bytes": 561,
@@ -14075,8 +14070,8 @@
 "numbers": 0
 },
 "tool:index.py": {
-"sha": "c0f83ee738f1441f15941f0f50a40cf667bd5454a74492588838b4e3fa5e3bbc",
-"bytes": 32993,
+"sha": "290697223a005913d955aaa499fa11848bded79ce75c68311d0cfcd5cfd0ffdc",
+"bytes": 32208,
 "numbers": 0
 },
 "tool:pages.yml": {

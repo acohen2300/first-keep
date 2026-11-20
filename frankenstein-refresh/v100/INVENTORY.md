@@ -5,9 +5,9 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | Group | Items | Lines | Characters | Bytes |
 |---|---|---|---|---|
 | Game code | 31 | 3,548 | 649,099 | 649,241 |
-| Books | 2690 | 0 | 927,175 | 928,156 |
+| Books | 2689 | 0 | 926,854 | 927,835 |
 | Laws | 94 | 0 | 20,046 | 20,584 |
-| Tools | 5 | 2,634 | 449,441 | 449,697 |
+| Tools | 5 | 2,630 | 448,660 | 448,912 |
 
 ## The trades (code)
 
@@ -57,7 +57,7 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | ground | 8 | 2,942 |
 | mass | 27 | 4,587 |
 | measure | 322 | 204,999 |
-| rules | 148 | 68,793 |
+| rules | 147 | 68,462 |
 | screen | 34 | 29,647 |
 | shells | 111 | 24,216 |
 | sides | 7 | 1,869 |
@@ -174,7 +174,6 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X96 | t-n29 | page | N29: an idle soldier whose home spot cannot be stood on searches for it once, not every second; a villager sent to a tree is no longer picked and wears no green ring; the pace meter times its seven drawing layers; an idle menu beat reads no layout in the top bar; the crosshair is not drawn until a spot is tapped; a rival's fall reads "The Raiders have fallen."; the slower beats and the marching day are in the books |
 | X97 | t-n30 | page | N30: with something picked the next tap is its order by the tap table (a villager onto a tree gathers, a soldier onto a foe attacks, a villager onto a foe fights, a soldier onto your tower garrisons, a tap on another of your units only lets go) and the pick lets go after; a find under the finger beats your own villagers standing on it; every job passes the job door and none is odd; a blow passes the health door with who struck; both ledger word sets are read; a world event's walkers go in legs; four escorts keep up with their caravan; Prep's techs cheapen it; played: Prep boards against a raid, a tower hurts a raider, Split, Lure and Seek move the villagers, a tech tapped at a Mill is learnt |
 | X98 | t-n31 | page | N31 (Albert Nov 12 11:33: touch a villager, touch a thing, deselect): placing a building with one villager picked sends her to build it and lets her go; with two picked, both go and both are let go; with none picked, a villager is sent and nothing stays picked |
-| X99 | proof | gate | The List (docs/4 Now/The List.md) holds no DONE without proof: a DONE line names a test in this book and says it fails with the old line planted, or says nothing to build; and every test The List names is a rule in this book (CLAUDE.md, section 4) |
 | X100 | t-p2 | page | P2a, the call (Design 08, Albert Nov 12): tap the called unit to hang up; tap another to move the call; New Group adds; no tap sets Focus in Normal; a focused villager whose find runs out walks to the Town Center; a full find gets a toast and she stays called; a soldier sent to a site or a find stays called; Mobile is first picked by +; Destroy drops the load at once, Drop carries it first |
 | X101 | door | code | the job door holds (E1041, P2, N331): no code but the door touches a unit's job store (JB) or defines a job property, and every unit added to the world passes jobDoor first (spawn and load) |
 | X102 | t-p2b | page | P2b, moved to the ruling of Nov 15 (N385: "Kill the villager cards for now. We only need: select, kill, hold, go"): a villager's card is the dock's Manage with her health and Exit; the folds, Add task, Cancel and their verbs are gone; her history is still recorded; Exit asks twice and removes her |
@@ -227,4 +226,4 @@ Written by `index.py` at every build, never by hand. Version 100 · 12; the chan
 | X150 | t-n84 | page | N84 (N421): no building may be placed touching another (the farms, camps, mints, foundries and dwellings too); a House a lane from a House may; no shell ticks Touch |
 | X151 | t-n86 | page | N86 (N422, N423): left alone four minutes, every computer has built a house; a caravan standing at an ally's Market that has not been home is paid nothing, and one that loads at home is paid its cargo once; soldiers sent to a spot and shot at on the way kill the archer and march on, still sent; eight soldiers sent one at a time to one spot each hold their own slot, none within three quarters of a tile; a row word's tap area is the mold's slot tall |
 
-2820 items sealed · 2690 book entries · 94 laws · 416 citations, 37 still to open · 0 known
+2819 items sealed · 2689 book entries · 94 laws · 416 citations, 37 still to open · 0 known

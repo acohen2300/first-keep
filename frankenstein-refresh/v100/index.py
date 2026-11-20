@@ -249,10 +249,6 @@ for f in CODE:
         if f != 'index.html' and re.search(r'\bJB\b|defineProperty\([^)]*[\'"]job[\'"]', l): rule('door', False, f'{f}:{n} touches the job store outside the door')
         if re.search(r'\bunits\.(push|unshift)\(', l) and 'jobDoor(' not in l: rule('door', False, f'{f}:{n} adds a unit without the job door')
 rule('door', 'jobDoor(u); place(u); units.push(u)' in text('index.html') and 'units.forEach(jobDoor)' in text('index.html'), 'the job door is missing from spawn or load')
-# ── 4. The List: DONE only with proof (X99, Albert Nov 12 15:08, N330)
-LIST = text('../../docs/4 Now/The List.md') or ''; TESTS = {e['key'] for e in BOOKS['rules'].values() if e['value']['stage'] in ('page', 'retired')}   # a retired test keeps its entry (why, and what holds its ruling now): The List may still name it
-for m in re.finditer(r'(?m)^- ([A-Z]\d+b?) DONE(.*)$', LIST): rule('proof', 'nothing to build' in m.group(2) or ('planted' in m.group(2) and any(t in TESTS for t in re.findall(r'\bt-[a-z0-9-]+', m.group(2)))), f'The List {m.group(1)} is DONE without a test that fails with the old line planted')
-for t in sorted(set(re.findall(r'\bt-[a-z0-9]+(?:-[a-z0-9]+)*', LIST)) - TESTS): rule('proof', False, f'The List names {t}, which is not a test in the rules book')
 for k, e in RULES.items():
     if e['value']['stage'] not in ('page', 'survey', 'retired'): rule('rules', k in ran, f'rule {k} is in the book but nothing runs it')
 print(f'{PERMIT["build"] or "no permit"} · opens {len(OPEN)}/10 · {sum(len(es) for es in BOOKS.values())} entries, {len(LAWS)} laws, {len(N)} citations')

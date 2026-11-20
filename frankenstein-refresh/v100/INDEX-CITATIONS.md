@@ -429,7 +429,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N327** Day for night, Wikipedia (opened Nov 12, 2026): a night scene shot by day is typically underexposed by about t → D292
 - **N328** Tharion, Lieberman, Montain, Young, Baker-Fulco, Delany, Hoyt, Energy requirements of military personnel, Appe → D224
 - **N329** Albert, Nov 12, 2026, 08:12-11:33, in chat: "Tap item 1: item 1 is now selected. Tap item 2: item 1 actions, a → X98
-- **N330** Albert, Nov 12, 2026, 14:59-15:08, in chat: rules for the next chat, so it is competent and does not "tell me  → X99
+- **N330** Albert, Nov 12, 2026, 14:59-15:08, in chat: rules for the next chat, so it is competent and does not "tell me  → unused
 - **N331** Albert, Nov 12, 2026, 15:53-16:46, in chat and his notebook: the call. Tap a unit: it is ready to do what you  → X100, X101, J54
 - **N332** Albert, Nov 12, 2026, 17:48-17:52, on the card mock: "Make them folded collapsible menus. Chevron opens minus  → X102, J55
 - **N333** Albert, Nov 12, 2026, 19:31-22:00, napkins and chat: the villager card becomes the Controller. Top: Home, Exit → X103, J56
