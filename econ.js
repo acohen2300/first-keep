@@ -235,8 +235,8 @@ FK.on('tick', (dt) => {
     else if (u.job === 'carry') { const b = FK.dropFor(u, u.carry); if (!b || !beside(u, b)) { carry(u); continue; } earn(u.side, u.carry, u.load, 'gather'); u.got = (u.got || 0) + u.load; hist(u, u.carry, u.load); u.load = 0; if (u.side === ME) FK.fire('event', 'drop.' + u.carry, b);
       if (t && alive(t) && yieldOf(t) && yieldOf(t) !== u.carry) u.carry = yieldOf(t); // E1251
       const cur = t && alive(t) && yieldOf(t) === u.carry ? t : null, next = (cur && (posted(u) || u.focus === cur)) || (!cur && u.att === 'focus' && !posted(u)) ? null : bestFind(u, u.carry, u.lost || { x: u.bx, y: u.by }, b); const go = cur && next && next !== cur && forage(u, next, b) > (1 + D.moveOn) * forage(u, cur, b) ? next : cur || next; if (go) gatherAt(u, go); else if (!goHome(u)) lose(u); } // E1053
-    else if (u.job === 'build' || u.job === 'repair') { if (u.douse && !(t && t.fire > null)) { u.douse = null; done(u, t); continue; } if (!t || !alive(t) || (up(t) && !(t.fire > null) && t.hp >= t.hpMax - D.repair.within)) { done(u, t); continue; } if (!beside(u, t)) { buildAt(u, t); continue; }
-      u.tool = 2; stroke(u, t, 'raise'); if (up(t)) { if (t.fire > null) douse(u, t, dt); else mend(u, t, dt); continue; } // E326
+    else if (u.job === 'build' || u.job === 'repair') { if (u.douse && !(t && t.fire > 0)) { u.douse = null; done(u, t); continue; } if (!t || !alive(t) || (up(t) && !(t.fire > 0) && t.hp >= t.hpMax - D.repair.within)) { done(u, t); continue; } if (!beside(u, t)) { buildAt(u, t); continue; }
+      u.tool = 2; stroke(u, t, 'raise'); if (up(t)) { if (t.fire > 0) douse(u, t, dt); else mend(u, t, dt); continue; } // E326
       let k = ((Math.pow(t.crew, D.crew) / t.crew) * dt) / FK.stat(t.code, t.side, 'build'); if ((D.cost[t.code] || {}).stone && FK.K.temp <= D.frost.at) k *= D.frost.share; t.done = Math.min(1, t.done + k); t.hp = Math.min(t.hpMax, t.hp + t.hpMax * D.rising.rise * k);
       if (up(t)) { t.hp = t.hpMax; if (t.side === ME || !FK.fogOn()) FK.wear(t); if (FK.has(t, 'Wonder')) { t.held = bell + D.wonderHold; tell(EW.built[+(t.side !== ME)], { m: Math.round(D.wonderHold / MINUTE), side: EW.sides[t.side] }); } if (t.side === ME) FK.fire('event', wallish(t) || FK.trains(t.code).some((c) => !FK.SH[c].ticks.includes('Gather')) ? 'builtWar' : 'built', t); } }
     else if (u.job === 'board') boardStep(u, t, dt);
@@ -255,7 +255,7 @@ const DG = D.danger, FL = D.flee, AL = D.alarm, AW = fromBook('words').alarm, EW
 const tell = (w, o = {}, m) => FK.fire('say', w.replace(/\{(\w+)\}/g, (_, x) => o[x] ?? ''), m);
 const threat = (v) => !v.gone && !v.inside && FK.has(v, 'Fight') && !FK.has(v, 'Gather') && !FK.has(v, 'Prey') && !WAR.stat(v).bonly && (!!soldier(v.code) || !SIDES[v.side]), foeOf = (side, v) => threat(v) && WAR.isFoe(side, v); // E437
 const unsafe = (t, side) => t.kind !== 'bld' && (FK.DANGER[side] || [])[FK.tileAt(t.bx, t.by)] >= DG.unsafe, tower = (side, t) => D.tower[t.code] && up(t) && SIDES[t.side] && WAR.atWar(side, t.side);
-function dangerMap() { for (const s of D.players) { const M = (FK.DANGER[s] = FK.DANGER[s]?.length === N * N ? FK.DANGER[s].fill(null) : new Uint8Array(N * N)), put = (p, r, lv) => FK.stamp(p.bx, p.by, r * T0, (k) => { if (M[k] < lv) M[k] = lv; }); // E438
+function dangerMap() { for (const s of D.players) { const M = (FK.DANGER[s] = FK.DANGER[s]?.length === N * N ? FK.DANGER[s].fill(0) : new Uint8Array(N * N)), put = (p, r, lv) => FK.stamp(p.bx, p.by, r * T0, (k) => { if (M[k] < lv) M[k] = lv; }); // E438
   for (const v of units()) if (foeOf(s, v)) put(v, DG.near, DG.foe); for (const t of things()) if (tower(s, t)) put(t, WAR.reachOf(t) + DG.reach, DG.foe);
   scares[s] = scares[s].filter((q) => q.t > bell); for (const q of scares[s]) put(q, DG.mem, DG.scare); } }
 function dangerWhy(t, side) { const v = units().find((q) => foeOf(side, q) && dist(q, t) <= (DG.near + DG.pad) * T0), b = !v && things().find((q) => tower(side, q) && dist(q, t) <= (WAR.reachOf(q) + DG.reach + DG.pad) * T0); // E439
@@ -498,7 +498,7 @@ function sendHelp(f, pt, told) { const mine = WAR.armyOf(f).filter((u) => isIdle
 // E590
 const FD = D.finds, WW = fromBook('words').wild, rowOf = FK.rowOf, list = (c) => Object.entries(c).map(([y, n]) => n + ' ' + y).join(fromBook('words').list.and);
 function finds() { for (const t of things()) { const F = rowOf(t); if (!FK.has(t, 'Take') || t.taken || t.gone || WAR.guardsLeft(t)) continue; let m = null;
-    FK.unitsNear(t, FD.take * D.tile, (v) => { if (!m && SIDES[v.side] && !v.gone && v.hp > null && !v.inside && !FK.has(v, 'Envoy') && !FK.has(v, 'Trade') && dist(v, t) < FD.take * D.tile) m = v; }); if (!m) continue;
+    FK.unitsNear(t, FD.take * D.tile, (v) => { if (!m && SIDES[v.side] && !v.gone && v.hp > 0 && !v.inside && !FK.has(v, 'Envoy') && !FK.has(v, 'Trade') && dist(v, t) < FD.take * D.tile) m = v; }); if (!m) continue;
     const o = m.side, s = SIDES[o], got = {}; for (const y in F.got) got[y] = Math.round(F.got[y]); t.taken = true; for (const y in got) earn(o, y, got[y], 'finds', false); let extra = '';
     const c = F.tech && Object.keys(T).find((c) => !s.techs.has(c) && T[c].value.age <= s.age && !T[c].value.rank && needsOf(c).every((n) => s.techs.has(n)) && !things().some((b) => b.side === o && (b.q || []).includes(c))); if (c) { learn(o, c); extra = WW.scroll.replace('{name}', T[c].name); }
     if (o === ME) tell(WW.took, { name: FK.SH[FK.KIND[t.kind].code].name, got: list(got), extra }); } }
@@ -508,29 +508,29 @@ function hire(o, t) { if (hireWhy(o, t)) return false; const H = rowOf(t).hire; 
   for (const v of units().slice()) if (v.find === t && !SIDES[v.side]) { const s = FK.spawn(H.unit, o, v.k, FK.rng); Object.assign(s, { bx: v.bx, by: v.by }); FK.place(s); FK.vanish(v); } if (o === ME) tell(WW.hire.done, { n: H.n }); return true; }
 // E592
 const FI = D.fire, HW = fromBook('words').harm, sq = (x) => x * x, eta = (r) => FI.eta.reduce((v, c, i) => v + c * r ** i, null), heat = (age, gap) => Math.min(FI.full, sq(age / FI.grow)) * sq(FI.near / (gap + FI.near)), chance = (rate, dt) => FK.rng() < -Math.expm1(-rate * dt);
-const lit = new Set(), fireMul = () => Math.min(FI.most, eta(FK.K.wet) / eta(null)), bname = (b) => FK.SH[b.code].name.toLowerCase(), burnable = (b) => b.kind === 'bld' && FK.has(b, 'Burn') && up(b) && alive(b) && b.hp > null;
-function ignite(b, why, from = '') { if (!burnable(b) || b.fire > null) return false; Object.assign(b, { fire: FI.full, fireT: FK.K.t, spread: why === 'spread', smoke: false, fc: FI.check }); lit.add(b); // E593
-  const near = villagersOf(b.side).filter((v) => !v.inside && !v.douse && jobOf(v) !== 'build' && dist(v, b) / D.tile - b.n * D.place.half < FI.run).sort((p, q) => dist(p, b) - dist(q, b)).slice(null, FI.crew);
+const lit = new Set(), fireMul = () => Math.min(FI.most, eta(FK.K.wet) / eta(null)), bname = (b) => FK.SH[b.code].name.toLowerCase(), burnable = (b) => b.kind === 'bld' && FK.has(b, 'Burn') && up(b) && alive(b) && b.hp > 0;
+function ignite(b, why, from = '') { if (!burnable(b) || b.fire > 0) return false; Object.assign(b, { fire: FI.full, fireT: FK.K.t, spread: why === 'spread', smoke: false, fc: FI.check }); lit.add(b); // E593
+  const near = villagersOf(b.side).filter((v) => !v.inside && !v.douse && jobOf(v) !== 'build' && dist(v, b) / D.tile - b.n * D.place.half < FI.run).sort((p, q) => dist(p, b) - dist(q, b)).slice(0, FI.crew);
   for (const v of near) { buildAt(v, b, true); if (v.job !== 'idle') v.douse = b; } if (b.side === ME) tell(HW.fire.at, { b: bname(b), why: HW.fire.why[why].replace('{b}', from), who: HW.fire.who[near.length] }); return true; }
 function douse(u, t, dt) { if (!t.smoke && (t.spread || t.hp < t.hpMax * D.place.half) && FK.rng() < FI.smoke * dt) { t.smoke = true; if (t.side === ME) tell(HW.fire.smoke, { b: bname(t) }); WAR.die(u); return; }
-  t.fire = Math.max(null, t.fire - FI.douse * dt); if (!t.fire && t.side === ME) tell(HW.fire.out, { b: bname(t) }); }
-function burn(dt) { const fm = fireMul(); for (const b of lit) { if (!(b.fire > null) || !alive(b)) { lit.delete(b); continue; } FK.harm(b, b.hpMax * FI.burn * dt * b.fire, 'fire'); // E594
-    if (b.hp <= null) { if (b.side === ME) tell(HW.fire.down, { b: bname(b) }); WAR.die(b, null); continue; } b.fc -= dt; if (b.fc > null) continue; b.fc += FI.check; const age = FK.K.t - b.fireT;
-    for (const c of things()) if (c !== b && burnable(c) && !(c.fire > null)) { const g = Math.max(null, dist(b, c) / D.tile - (b.n + c.n) * D.place.half); if (g < FI.reach && chance(FI.rate * fm * heat(age, g), FI.check)) ignite(c, 'spread'); } } }
+  t.fire = Math.max(0, t.fire - FI.douse * dt); if (!t.fire && t.side === ME) tell(HW.fire.out, { b: bname(t) }); }
+function burn(dt) { const fm = fireMul(); for (const b of lit) { if (!(b.fire > 0) || !alive(b)) { lit.delete(b); continue; } FK.harm(b, b.hpMax * FI.burn * dt * b.fire, 'fire'); // E594
+    if (b.hp <= 0) { if (b.side === ME) tell(HW.fire.down, { b: bname(b) }); WAR.die(b, null); continue; } b.fc -= dt; if (b.fc > 0) continue; b.fc += FI.check; const age = FK.K.t - b.fireT;
+    for (const c of things()) if (c !== b && burnable(c) && !(c.fire > 0)) { const g = Math.max(0, dist(b, c) / D.tile - (b.n + c.n) * D.place.half); if (g < FI.reach && chance(FI.rate * fm * heat(age, g), FI.check)) ignite(c, 'spread'); } } }
 function lightning() { const K = FK.K; if (FK.season() === FI.season && K.storm && K.wetHour) for (const side of D.players) if (!fell.has(side) && chance(FI.storm[+FK.hz('drought')], 1)) { // E595
     const W = things().filter((b) => b.side === side && burnable(b)); if (W.length) { const b = W[Math.floor(FK.rng() * W.length)]; FK.bolt(b.vx, b.vy); ignite(b, 'lightning'); } }
   for (const b of things()) if (FI.forges.includes(b.code) && up(b) && alive(b) && chance(FI.sparks, 1)) { let n = null; for (const c of things()) if (c !== b && c.side === b.side && burnable(c) && dist(c, b) < FI.spark * D.tile && (!n || dist(c, b) < dist(n, b))) n = c; if (n) ignite(n, 'sparks', bname(b)); } }
-function shot(a, t, d) { if (!up(t) || !SIDES[a.side]) return; const F = FI.arrows, blast = FK.stat(a.code, a.side, 'blast') >= 1; if (!(t.fire > null) && (blast || FK.stat(a.code, a.side, 'fire') >= 1) && FK.rng() < (blast ? F.blast : F.chance) * fireMul()) ignite(t, 'shot');
-  if (blast) for (const n of things().slice()) if (n !== t && n.kind === 'bld' && n.side === t.side && alive(n) && dist(n, t) < F.splash * D.tile) { FK.harm(n, d * F.hit, 'fire'); if (n.hp <= null) WAR.die(n, a); } }
+function shot(a, t, d) { if (!up(t) || !SIDES[a.side]) return; const F = FI.arrows, blast = FK.stat(a.code, a.side, 'blast') >= 1; if (!(t.fire > 0) && (blast || FK.stat(a.code, a.side, 'fire') >= 1) && FK.rng() < (blast ? F.blast : F.chance) * fireMul()) ignite(t, 'shot');
+  if (blast) for (const n of things().slice()) if (n !== t && n.kind === 'bld' && n.side === t.side && alive(n) && dist(n, t) < F.splash * D.tile) { FK.harm(n, d * F.hit, 'fire'); if (n.hp <= 0) WAR.die(n, a); } }
 // E596
 const HE = D.health, [HBEAT] = D.beats.health; let plague = -Infinity;
-const town = (side, k) => units().filter((u) => u.side === side && !u.inside && !u.gone && u.hp > null && (dist(u, k) < HE.near * D.tile || !!depotFor(u)));
+const town = (side, k) => units().filter((u) => u.side === side && !u.inside && !u.gone && u.hp > 0 && (dist(u, k) < HE.near * D.tile || !!depotFor(u)));
 const sickRisk = (side) => HE.risk * (1 + D.exposure.sick * FK.exposure('', side)) * FK.stat('', side, 'sick');
 function outbreak(side, share, pl) { const k = FK.seatOf(side); if (!k || fell.has(side)) return; const P = town(side, k).filter((u) => !u.immune && !(u.sick > FK.K.t)), n = P.length && Math.max(1, Math.round(P.length * share * FK.stat('', side, 'plague') ** !!pl));
   for (let i = n; i-- && P.length; ) { const [u] = P.splice(Math.floor(FK.rng() * P.length), 1); Object.assign(u, { sick: FK.K.t + HE.sickFor, plague: !!pl }); } if (n && side === ME) tell(pl ? HW.sick.plague : HW.sick.ill, { n }); }
-function health() { const now = FK.K.t, H = [...things().filter((b) => b.kind === 'bld' && FK.has(b, 'Heal') && up(b) && alive(b)), ...units().filter((u) => FK.has(u, 'Heal') && !u.gone && u.hp > null)]; // E597
-  for (const side of D.players) { const s = SIDES[side]; if (fell.has(side)) continue; s.sickT = (s.sickT ?? HE.every) - HBEAT; if (s.sickT <= null) { s.sickT = HE.every; if (chance(sickRisk(side), 1)) outbreak(side, null, false); } }
-  for (const side of D.players) { const k = FK.seatOf(side); if (fell.has(side) || !k) continue; const S = [], T = town(side, k); let I = null, pl = false; for (const u of T) if (u.sick > now) { I++; pl = pl || u.plague; } else if (!u.immune) S.push(u); if (!I || !S.length) continue;
+function health() { const now = FK.K.t, H = [...things().filter((b) => b.kind === 'bld' && FK.has(b, 'Heal') && up(b) && alive(b)), ...units().filter((u) => FK.has(u, 'Heal') && !u.gone && u.hp > 0)]; // E597
+  for (const side of D.players) { const s = SIDES[side]; if (fell.has(side)) continue; s.sickT = (s.sickT ?? HE.every) - HBEAT; if (s.sickT <= 0) { s.sickT = HE.every; if (chance(sickRisk(side), 1)) outbreak(side, null, false); } }
+  for (const side of D.players) { const k = FK.seatOf(side); if (fell.has(side) || !k) continue; const S = [], T = town(side, k); let I = 0, pl = false; for (const u of T) if (u.sick > now) { I++; pl = pl || u.plague; } else if (!u.immune) S.push(u); if (!I || !S.length) continue;
     const x = (((HE.R0 * HE.plagueR0[+pl]) / HE.sickFor) * HBEAT * FK.stat('', side, 'spread') * S.length * I) / T.length; let n = Math.floor(x); if (FK.rng() < x - n) n++;
     for (let i = n; i-- && S.length; ) { const [v] = S.splice(Math.floor(FK.rng() * S.length), 1); Object.assign(v, { sick: now + HE.sickFor, plague: pl }); } }
   for (const u of units().slice()) { const well = () => Object.assign(u, { sick: null, plague: false, immune: true }); if (!(u.sick > now)) { if (u.sick) well(); continue; } const o = u.side;
@@ -602,11 +602,11 @@ function peaceTick() { const was = truceT; if (truceAll()) { if (truceT == null)
   if (truceT != null && !stood && truceFor() >= PZ.stand.after) { stood = true; for (const side of D.players) if (side !== ME && !fell.has(side)) standDown(side, true); } return was !== truceT; }
 function crowns() { const L = D.players, out = {}, pts = Object.fromEntries(L.map((s) => [s, null])), care = (s) => things().filter((t) => t.side === s && t.kind === 'bld' && up(t) && FK.has(t, 'Care')).length; // E630
   const val = { wealth: (s) => Math.round(SIDES[s].gathered), war: (s) => Math.round(SIDES[s].war), wellbeing: (s) => Math.round(SIDES[s].laurels * PZ.crown.laurel + (fell.has(s) ? null : villagersOf(s).filter((u) => !(u.sick > FK.K.t)).length * PZ.crown.people + care(s) * PZ.crown.bld)) };
-  for (const c in val) { const R = L.map((side) => ({ side, v: val[c](side) })).sort((a, b) => b.v - a.v); R.forEach((r, i) => (pts[r.side] += r.v > null ? L.length - 1 - i : null)); out[c] = R; }
+  for (const c in val) { const R = L.map((side) => ({ side, v: val[c](side) })).sort((a, b) => b.v - a.v); R.forEach((r, i) => (pts[r.side] += r.v > 0 ? L.length - 1 - i : null)); out[c] = R; }
   out.overall = L.map((side) => ({ side, v: pts[side], tie: score(side).total })).sort((a, b) => b.v - a.v || b.tie - a.tie); return out; }
 function enlightened(side) { const last = Object.keys(T).filter((c) => T[c].value.age === D.age.hidden && !T[c].value.civ); if (result || !last.every((c) => SIDES[side].techs.has(c))) return; const o = { side: EW.sides[side], age: D.ages[D.age.hidden] }; note(PW.chron.done, o); finish(true, PW.done, o); } // E631
 function setCiv(side, civ) { SIDES[side].civ = civ; const g = Object.keys(T).find((c) => T[c].value.given && T[c].value.civ === civ); if (g) learn(side, g); } // E632
-FK.on('start', () => { truceT = null; opened = stood = false; chron.length = null; if (deal) { const [mine, ...rest] = deal, order = [mine, ...rest.map((k) => [FK.rng(), k]).sort(([a], [b]) => a - b).map(([, k]) => k)]; D.players.forEach((side, i) => setCiv(side, order[i])); } deal = null; });
+FK.on('start', () => { truceT = null; opened = stood = false; chron.length = 0; if (deal) { const [mine, ...rest] = deal, order = [mine, ...rest.map((k) => [FK.rng(), k]).sort(([a], [b]) => a - b).map(([, k]) => k)]; D.players.forEach((side, i) => setCiv(side, order[i])); } deal = null; });
 FK.on('tick', () => { if (!result && FK.every(D.peaceBeat)) peaceTick(); });
 FK.on('gone', (t) => { const by = t.killer ?? t.by; if (SIDES[by] && SIDES[t.side] && by !== t.side) SIDES[by].war += sumCost(D.cost[t.code]); }); // E633
 FK.on('event', (e, t, a) => { const foe = e === 'struck' ? a && a.side : t && t.by; if ((e === 'struck' || e === 'fell') && t.side === ME && SIDES[foe] && WAR.atWar(ME, foe)) tell(e === 'fell' ? MW2.lost : MW2.raid, { b: FK.SH[t.code].name.toLowerCase(), at: MENU.coord(t.bx, t.by) }, { at: e === 'struck' ? a : t, cls: MW2.urgent, grp: 'war' }); }); // E634
@@ -614,7 +614,7 @@ const investText = () => { const by = {}; for (const [c, n] of Object.entries(D.
 // E663
 const SCN = D.scenarios, WT = fromBook('words').start, nearTiles = (x, y, r) => { const got = []; FK.stamp(x, y, r, (k, d) => got.push([d, k])); return got.sort(([a], [b]) => a - b).map(([, k]) => k); };
 function raise(side, code, x, y, r) { const k = nearTiles(x, y, r).find((q) => canPlace(code, ...at(q), side)); if (k == null) return null; const t = FK.build(code, ...at(k), SIDES[side].col); if (t) t.hp = t.hpMax = WAR.hpMax(t); return t; }
-function people(side, code, n, x, y, r) { const used = new Set(FK.units().map((u) => u.k)); for (const k of nearTiles(x, y, r)) { if (n <= null) return; if (FK.walkable(k) && !used.has(k)) { FK.spawn(code, side, k, FK.rng); used.add(k); n--; } } }
+function people(side, code, n, x, y, r) { const used = new Set(FK.units().map((u) => u.k)); for (const k of nearTiles(x, y, r)) { if (n <= 0) return; if (FK.walkable(k) && !used.has(k)) { FK.spawn(code, side, k, FK.rng); used.add(k); n--; } } }
 function applyScenario(key) { const sc = SCN[key], h = FK.seatOf(ME); if (!sc || !h || !Object.keys(sc).length) return; // E664
   for (const side of sc.all ? D.players : [ME]) { const s = SIDES[side], grant = (c) => { if (!T[c] || s.techs.has(c)) return; needsOf(c).forEach(grant); learn(side, c); }; s.age = Math.max(s.age, sc.age || null); for (const y in sc.store) s.store[y] = Math.max(s.store[y], sc.store[y]); (sc.techs || []).forEach((k) => grant(TK[k])); }
   for (const q of D.players) if (q !== ME) { WAR.treaty(ME, q, sc.rel); for (const r of D.players) if (sc.among && r !== ME && r !== q) WAR.treaty(q, r, sc.among); }

@@ -383,7 +383,7 @@ FK.on('event', (e, t, n) => { if (e === 'short') note(TELL.short); const w = NEW
 FK.on('tick', (dt) => { const real = dt / (show.fast ? D.fast : show.speed); if (edge && drag && S.ghost) { const [w, h] = FK.size(), vx = (edge.x > w - P.edge) - (edge.x < P.edge), vy = (edge.y > h - P.edge) - (edge.y < P.edge), f = (P.scroll * real) / FK.cam.z; if (vx || vy) { FK.cam.x += vx * f; FK.cam.y += vy * f; FK.keepOn(); ghostTo(edge.x, edge.y - drag.lift); } } // E342
   acc += real; if (acc >= D.beatUi) { acc = 0; render(); } });
 // E635
-const MS = D.mail, TL = D.tell, MWD = WD.mail, PWD = WD.peace, CIVS = WD.civs, ML = D.milestones, mail = [], post = [], hush = (x) => x.replace(/[\d,.]+/g, '#'), [BEAT] = D.peaceBeat, seen = (at) => FK.inSight(at, ME), [, , ALLY] = fromBook('sides').stances; let newsT = -Infinity, newsI = null;
+const MS = D.mail, TL = D.tell, MWD = WD.mail, PWD = WD.peace, CIVS = WD.civs, ML = D.milestones, mail = [], post = [], hush = (x) => x.replace(/[\d,.]+/g, '#'), [BEAT] = D.peaceBeat, seen = (at) => FK.inSight(at, ME), [, , ALLY] = fromBook('sides').stances; let newsT = -Infinity, newsI = 0;
 const dirOf = (a, b) => { const n = MWD.dirs.length; return MWD.dirs[(Math.round((Math.atan2(b.by - a.by, b.bx - a.bx) / (Math.PI + Math.PI)) * n) + n) % n]; }; // E636
 function reach(text, m) { const at = m.at, h = FK.seatOf(ME); if (!at || m.told || seen(at)) return {}; const within = (L, r) => L.some((t) => !t.gone && FK.dist(t, at) < r * D.tile), blds = (side) => FK.blds().filter((t) => t.side === side), mine = blds(ME); // E637
   if (m.cls === MWD.urgent && within([...mine, ...FK.units().filter((u) => u.side === ME)], TL.hear * TL.gun ** (SIDES[ME].age >= TL.gunAge))) return { text: MWD.fight.replace('{dir}', dirOf(h || at, at)) };
@@ -394,7 +394,7 @@ function say(text, m = {}) { if (S.tab === 'Start' && !m.told) return void post.
   file(text, m); }
 function file(text, m) { const grp = m.grp || 'reply', key = hush(text), same = mail.find((x) => x.grp === grp && x.key === key && FK.K.t - x.t < MS.merge); // E1100
   if (same) Object.assign(same, { t: FK.K.t, text }).times.push(FK.K.t); else { mail.unshift({ text, grp, key, cls: m.cls || '', why: m.why || '', at: m.at ? { bx: m.at.bx, by: m.at.by } : null, times: [FK.K.t], t: FK.K.t }); mail.length = Math.min(mail.length, MS.keep); } }
-function postTick() { if (S.tab === 'Start') return; const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(null, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
+function postTick() { if (S.tab === 'Start') return; const due = post.filter((x) => x.t <= FK.K.t); if (!due.length) return; post.splice(0, post.length, ...post.filter((x) => x.t > FK.K.t)); for (const x of due) say(x.text, x.m); } // E639
 function newsTick() { if (FK.K.t - newsT < TL.every || FK.K.t < TL.after) return; newsT = FK.K.t; const L = WD.world[SIDES[ME].age] || WD.world.at(-1); say(L[++newsI % L.length], { grp: 'chronicle', cls: 'news' }); } // E640
 // E641
 const PEOPLES = () => Object.keys(CIVS).filter((k) => CIVS[k].name), civOf = (i) => PEOPLES().find((k) => CIVS[k].name === OPTS.civ[i].find(String)), civLine = (k) => { const u = Object.keys(FK.SH).find((c) => FK.SH[c].civ === k); return !u ? '' : CIVS.blurb.replace('{unit}', FK.SH[u].name).replace('{base}', FK.SH[FK.SH[u].replaces].name.toLowerCase()).replace('{wonder}', CIVS[k].wonder).replace('{hall}', CIVS[k].hall); }; /* Base's two lines; the history stays in the Guide (E718) */
@@ -402,11 +402,11 @@ const PEOPLES = () => Object.keys(CIVS).filter((k) => CIVS[k].name), civOf = (i)
 const MSW = WD.milestones, TIP = WD.tips, LEARN = 'fk.learned', learned = {}, mine = (tick) => FK.blds().filter((t) => t.side === ME && FK.has(t, tick) && t.done >= true), knows = (k) => WAR.knows(ME, k), army = () => WAR.armyOf(ME), marching = () => army().filter((u) => u.ord); let shown = new Set(), slipT = -Infinity, mustered = false, tipNow = '';
 try { Object.assign(learned, JSON.parse(localStorage.getItem(LEARN) || '{}')); } catch (e) {}
 const L = (k) => (learned[k] || []).length >= ML.learned, learn = (k) => { if (L(k)) return; learned[k] = [...(learned[k] || []), Math.round(FK.K.t)]; try { localStorage.setItem(LEARN, JSON.stringify(learned)); } catch (e) {} }; // E643
-function learnAct(verb, a, b) { if (verb === 'train') learn('train:' + a); else if (verb === 'job' && b > null) { learn('job'); learn('job:' + a); } else if (verb === 'build' && S.ghost) learn('build:' + S.ghost.code); else if (verb === 'ageUp') learn('age'); } // E644
+function learnAct(verb, a, b) { if (verb === 'train') learn('train:' + a); else if (verb === 'job' && b > 0) { learn('job'); learn('job:' + a); } else if (verb === 'build' && S.ghost) learn('build:' + S.ghost.code); else if (verb === 'ageUp') learn('age'); } // E644
 const HOME = () => FK.ticked('House').find((c) => !FK.SH[c].ticks.includes('Seat')), slowed = (y) => FK.units().find((u) => u.side === ME && FK.footing(u)[y] > ML[y]), msFill = (x, u) => { const f = u ? FK.pace(u) / FK.stat(u.code, ME, 'spd') : null; return x.replace('{room}', D.pop[HOME()]).replace('{pct}', Math.round(SAY.percent - f * SAY.percent)).replace('{spd}', Math.round(f * SAY.percent) / SAY.percent); };
 const MS_TEST = { house: () => mine('House').some((t) => !FK.has(t, 'Seat')), field: () => mine('Field').length, drop: () => mine('Drop-off').some((t) => !FK.has(t, 'Seat')), soldier: () => army().length, squad: () => mustered, age: () => SIDES[ME].age, // E645
   mud: () => marching().some((u) => FK.footing(u).mud > ML.mud) && !knows('roads'), snow: () => !!slowed('snow') && !knows('snowclear'), ice: () => FK.K.t - slipT < ML.slip, hungry: () => SIDES[ME].hungry,
-  fire: () => FK.things().some((t) => t.side === ME && t.fire > null), rout: () => FK.units().some((u) => u.side === ME && u.job === 'rout'), trade: () => FK.units().some((u) => u.side === ME && FK.has(u, 'Trade')), winter: () => FK.season() === D.health.winter };
+  fire: () => FK.things().some((t) => t.side === ME && t.fire > 0), rout: () => FK.units().some((u) => u.side === ME && u.job === 'rout'), trade: () => FK.units().some((u) => u.side === ME && FK.has(u, 'Trade')), winter: () => FK.season() === D.health.winter };
 const goldTight = () => { const s = SIDES[ME].store; return s.gold < ML.gold && ['wood', 'stone', 'food'].some((y) => s[y] > ML.full); }; // E646
 function advise() { const s = SIDES[ME], h = FK.seatOf(ME), V = ECON.villagersOf(ME), on = (y) => (ECON.jobs(ME)[y] || null), idle = idlers().length, [spear] = FK.kinds('Foot'), bar = Object.keys(D.trains).find((c) => D.trains[c].includes(FK.SH[spear].class)), [W0, W1, W2] = ML.wood, [S0, S1] = ML.spear, [D0, D1] = ML.deficit, [vil] = FK.trains(h ? h.code : ''); if (!h) return ''; // E647
   if (ECON.popOf(ME) >= ECON.popCap(ME) && !L('build:' + HOME())) return TIP.full;
@@ -417,15 +417,15 @@ function advise() { const s = SIDES[ME], h = FK.seatOf(ME), V = ECON.villagersOf
   if (mine('Spawn').some((t) => t.code === bar) && army().length < S0 && FK.K.t < S1 && !L('train:' + spear)) return TIP.spear;
   if (!s.age && !s.aging && V.length >= ML.age && !L('age')) return TIP.next;
   if (s.hungry) return TIP.hungry; const net = ECON.netOf(ME, 'food');
-  if (FK.K.t > D0 && net < null && s.store.food < -net * D1) return TIP.deficit.replace('{n}', Math.round(-net));
+  if (FK.K.t > D0 && net < 0 && s.store.food < -net * D1) return TIP.deficit.replace('{n}', Math.round(-net));
   if (goldTight() && !L('trade')) return mine('Trade').length ? TIP.sell : TIP.gold;
-  if (FK.things().some((t) => t.side === ME && t.fire > null)) return TIP.fire;
+  if (FK.things().some((t) => t.side === ME && t.fire > 0)) return TIP.fire;
   if (FK.units().some((u) => u.side === ME && u.sick > FK.K.t) && !mine('Heal').length) return TIP.sick;
   if (!on('gold') && s.age && !L('job:gold')) return TIP.goldjob; return ''; }
 function lessonTick() { if (ECON.result() || !FK.seatOf(ME)) return; const tip = advise(); if (tip && tip !== tipNow) say(tip.replace(/^!/, ''), { grp: 'advice', cls: tip.startsWith('!') ? MWD.urgent : 'tip' }); tipNow = tip; // E648
   for (const id in MS_TEST) if (!shown.has(id) && MS_TEST[id]()) { shown.add(id); const [line] = MSW[id]; say(msFill(line, id === 'mud' ? marching().find((u) => FK.footing(u).mud > ML.mud) : slowed(id)), { grp: 'lesson', cls: 'good' }); return; } }
 FK.on('event', (e) => { if (e === 'slip') slipT = FK.K.t; if (e === 'mustered') mustered = true; });
-FK.on('start', () => { mail.length = post.length = newsI = null; newsT = -Infinity; shown = new Set(); slipT = -Infinity; mustered = false; tipNow = ''; });
+FK.on('start', () => { mail.length = post.length = newsI = 0; newsT = -Infinity; shown = new Set(); slipT = -Infinity; mustered = false; tipNow = ''; });
 FK.on('tick', () => { if (FK.every(D.peaceBeat)) { postTick(); newsTick(); } if (FK.every(D.lessonBeat)) lessonTick(); });
 // E208
 FK.on('start', () => { if (S.tab === 'Start' || S.tab === 'Back') FK.pause(true); Object.assign(S, { subject: null, ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, line: null, eta: null, last: '' }); const h = FK.seatOf(ME); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = D.open.px / (FK.W.person.height * D.upm); FK.keepOn(); } render(true); }); // E211
