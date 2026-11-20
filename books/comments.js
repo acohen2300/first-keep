@@ -1070,5 +1070,8 @@ BOOK("comments", {
  "E1260": {"text": "distance over the tiles from where src holds, out to lim"},
  "E27": {"text": "a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok"},
  "E1262": {"text": "the item card's −: the last villager working this find goes idle (N410)"},
- "E1263": {"text": "a new game owes no upkeep and remembers no reach: the last game's unpaid seconds and its reach are dropped (Nov 20: a restart paid the last game's unpaid upkeep in its first beat, so one seed played two ways)"}
+ "E1263": {"text": "a new game owes no upkeep and remembers no reach: the last game's unpaid seconds and its reach are dropped (Nov 20: a restart paid the last game's unpaid upkeep in its first beat, so one seed played two ways)"},
+ "E1264": {"text": "the facts a row of the book may ask for, each about the mold's subject (the thing or the unit the mold is showing): the book says which facts, this says how each is told"},
+ "E1265": {"text": "where a row's arg comes from: the thing's key, the unit's key, whichever of the two the subject is, or the last item queued"},
+ "E1266": {"text": "the control row's actions for a state of the mold, read from the Screen book's acts list: the rows whose facts all hold, each made by the one button maker (ab, or dot for a round one), its word found in the Words book by its place"}
 });

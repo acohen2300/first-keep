@@ -15,7 +15,8 @@ async def walk(root):
     async def snap(pg, name):
         n, k = name, 2
         while n in shots: n = f'{name} ({k})'; k += 1
-        shots[n] = await pg.evaluate(SHOT)
+        seen = {}   # a unit's handle is a running number; only which buttons share one matters, so number them as met
+        shots[n] = re.sub(r'\|U(\d+)\|', lambda m: '|U%d|' % seen.setdefault(m.group(1), len(seen) + 1), await pg.evaluate(SHOT))
     async def click(pg, key, name=None, wait=0):
         ok = await pg.evaluate(CLICK, key)
         if wait: await pg.wait_for_timeout(wait)
