@@ -157,8 +157,6 @@ BOOK("comments", {
  "E66": {"text": "event: a named happening (a blow, a drop, a raise) that the sound and the feel answer, by the names in books/sound.js HE1"},
  "E67": {"text": "a slow beat's turn (D182–D184): the step whose seconds played cross it, its phase in Mid's frames (D98)"},
  "E68": {"text": "the screen jolts with a heavy impact (QBT)"},
- "E69": {"text": "the walking grid, at the land's height, clipped to the played ground: the coast's line brought D7 in (L6)"},
- "E70": {"text": "Z1 to Z4 from each corner (D3 to D6), at the land's height (L11: a rule drawn on the ground, not ground)"},
  "E71": {"text": "The brushes (preview 49, 18-figures.js): a polygon, an ellipse, a line, two gradients; g is the canvas being painted"},
  "E72": {"text": "The building art (preview 49, 19-building-art.js; Nov 3, the last build before the camera turn): every piece drawn from its own point lists, in units, feet at (0, 0), the front edge along x, the back up and to the right. A building's level and its research footing are skins (PB3, PB4, PB6, PB12); civs, seasons and flags are cut."},
  "E73": {"text": "a building picture's height, from its look"},

@@ -379,7 +379,7 @@ function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; 
   for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); scarX.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }
 // ── The view (E63)
 const canvas = document.getElementById('map'); let ctx = canvas.getContext('2d');
-const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), P: /[?&]fps\b/.test(location.search), G: false, Z: false, T: true, B: true, U: true, K: true, V: true, fast: false }; // E64
+const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(null), P: /[?&]fps\b/.test(location.search), T: true, B: true, U: true, K: true, V: true, fast: false }; // E64
 let cw, ch, dpr, zmin, zmax = D.open.most / (W.person.height * D.upm), want = true, camSeen = '';
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
@@ -464,34 +464,12 @@ function draw() {
   want = false; lap(true);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
-  seasonNow(); slideSheet(LANDS, [show.K, show.G, SEASON.key, snowStep(), BLOOMY, SCARV].join(), // E1061
-  () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawPaper(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); if (show.G && cam.z * D.tile >= D.lod) drawGrid(); }, D.landCache.ms); lap(); // E880
+  seasonNow(); slideSheet(LANDS, [show.K, SEASON.key, snowStep(), BLOOMY, SCARV].join(), // E1061
+  () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * (ONE + ONE), ch + D.landCache.margin * (ONE + ONE)); drawGround(gx, gy); drawPaper(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); }, D.landCache.ms); lap(); // E880
   drawGlints(); drawClouds(); lap(); drawThings(); drawUnder(); lap(); const mk = K.beta > ZERO ? `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}` : ''; if (FOGON) slideSheet(FOGS, FOGV + '|' + mk, () => { if (mk) drawMist(); drawFog(); }); else if (mk) slideSheet(MISTS, mk, drawMist); lap(); fire('draw', ctx, cam.z); lap(); // E975
-  if (show.Z) drawZones();
   if (show.K) { drawSky(frameDt); lap(); drawLights(cam.z); lap(); } fire('over', ctx, cam.z);
 }
 function path(points) { ctx.beginPath(); points.forEach((p, n) => (n ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); }
-let playPoly = null;
-function drawGrid() { // E69
-  if (!playPoly) { playPoly = []; const inset = (side, pos) => D.edge + coast(side, pos)[0];
-    for (let p = 80; p <= D.board - 80; p += 20) playPoly.push([B0 + inset(0, p), B0 + p]);
-    for (let p = 80; p <= D.board - 80; p += 20) playPoly.push([B0 + p, B1 - inset(3, p)]);
-    for (let p = D.board - 80; p >= 80; p -= 20) playPoly.push([B1 - inset(1, p), B0 + p]);
-    for (let p = D.board - 80; p >= 80; p -= 20) playPoly.push([B0 + p, B0 + inset(2, p)]); }
-  ctx.save(); path(playPoly.map(([bx, by]) => toScreen(...toView(bx, by, D.land)))); ctx.clip();
-  ctx.strokeStyle = C.white; ctx.globalAlpha = 0.18; ctx.lineWidth = 1; ctx.beginPath();
-  for (let n = 0; n <= N; n++) { const a = S(n * D.tile, 0, D.land), b = S(n * D.tile, D.site, D.land), c = S(0, n * D.tile, D.land), d = S(D.site, n * D.tile, D.land); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.moveTo(c[0], c[1]); ctx.lineTo(d[0], d[1]); }
-  ctx.stroke(); ctx.restore();
-}
-function drawZones() { // E70
-  ctx.save(); ctx.strokeStyle = C.white; ctx.fillStyle = C.white; ctx.globalAlpha = 0.4; ctx.lineWidth = 1; ctx.setLineDash([6, 6]); ctx.font = headFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  for (const [cx, cy, a0] of [[B0, B0, 0], [B1, B0, 90], [B1, B1, 180], [B0, B1, 270]]) {
-    for (const r of D.zone) { const pts = []; for (let a = a0; a <= a0 + 90; a += 3) pts.push(toScreen(...toView(cx + r * Math.cos(a * RAD), cy + r * Math.sin(a * RAD), D.land))); path(pts); ctx.stroke(); }
-    const ux = Math.cos((a0 + 45) * RAD), uy = Math.sin((a0 + 45) * RAD);
-    [150, 450, 750, 1050].forEach((r, n) => { const [x, y] = toScreen(...toView(cx + r * ux, cy + r * uy, D.land)); ctx.fillText('Z' + (n + 1), x, y); });
-  }
-  ctx.restore();
-}
 // ── The brushes (E71)
 let g = null;
 let RIM = false; const CUT = SPRITE.cut, ink = (f, s, w) => (RIM && s === INK ? [typeof f === 'string' && f.length === CUT.rim.hex ? shade(f, CUT.rim.k) : CUT.rim.ink, (w || CUT.rim.base) * CUT.rim.w] : [s, w || CUT.rim.base]); // E763
@@ -1794,7 +1772,7 @@ on('draw', (c) => { if (!press || press.moved) return; const f = (performance.no
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); camStop(); keepOn(); dirty(); }, { passive: false });
 // E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start(sd, S = null) { playPoly = null; FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; DEEPV++; for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today(), !!S); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
+function start(sd, S = null) { FOR.fill(0); OCC.fill(0); MARSH.fill(0); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; DEEPV++; for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today(), !!S); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
 const boot = async () => { await openDb(); migrate(); slot = Number(STORE.get(NOW)) || D.count.zero; if (BC) BC.postMessage(TAB.id); for (const [n, k] of (TEST ? [] : slotKeys()).entries()) { const S = openSave(k); if (!S) continue; try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); if (n) fire('say', WS.older.replace('{why}', saveWhy || WS.saveGone)); return; } catch (e) { saveWhy = String(e.message || e).split('\n')[ZERO]; fault(e); } } start(TEST ? D.testField.seed : null); }; // E662
 addEventListener('resize', resize);
 window.FK = { layer: (bx, by) => layerOf(tileAt(bx, by)), roads: () => ROADS, lands: () => LANDS.n || ZERO, bar, harm, jobWas: (u) => ({ ...jobRec(u) }), isIdle, jobOdd: () => [...ODD], glades: () => GLADES, cover: (k) => FOR[k] && !STRIP[k], inWoods, woodsLine: (a, t) => { const [i0, j0] = cellOf(a), [i1, j1] = cellOf(t), n = Math.max(Math.abs(i1 - i0), Math.abs(j1 - j0), ONE); let w = ZERO; for (let s = ZERO; s <= n; s++) if (inWoods(Math.round(j0 + ((j1 - j0) * s) / n) * N + Math.round(i0 + ((i1 - i0) * s) / n))) w++; return (w * Math.hypot(i1 - i0, j1 - j0) * D.tile) / (n + ONE) / D.upm; }, fog: (on) => { FOGON = on; VIS.clear(); CAST.clear(); fogPaint(); }, fogOn: () => FOGON, bars, fam, exposure, clearIce, offIce, iceReport, year, onIce, evKnob, statRow, TK, glance, look, sightOf, tops, TOPS, camGo, camStop, followCam, lightsOf, kelvinRGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), mini: () => MINI, miniBox, miniAt, tag, DRAW, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, store: STORE, pack, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, iced, B, U, K, KIND, SIDES, OCC, H, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, keepOn, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, stageOf, take, vanish, rowOf, put, hz, level, levelMul, events, bolt, EVS, stat, learn, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
