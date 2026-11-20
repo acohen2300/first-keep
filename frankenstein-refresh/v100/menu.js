@@ -301,7 +301,7 @@ const PW = WD.place, ghostSay = (g) => { const name = ECON.nameOf(g.code); if (l
 function place(g) { const [first] = Object.keys(D.cost[g.code] || {}); // E336
   if (line(g.code)) { const r = ECON.lay(ME, g.code, g.cells); note(r.built ? TELL.up.replace('{n}', r.built).replace('{b}', some(r.built, ECON.nameOf(g.code).toLowerCase())) + (r.blocked ? TELL.upBlocked.replace('{n}', r.blocked) : '') + (r.broke ? TELL.upBroke.replace('{y}', first) : '') : r.broke ? TELL.piece.replace('{cost}', costText(D.cost[g.code])) : TELL.blocked); g.pts = []; wallSet(g); return; }
   const t = ECON.plan(ME, g.code, g.i, g.j); if (!t) return note(g.why || TELL.notHere); const V = FK.picked().filter(isVil); if (V.length) tapDo(V, t, t.k); else { ECON.autoBuilder(ME, t, ECON.builder(ME)); letGo(); } // E1050
-  const k = t.n + (FK.has(t, 'Touch') ? ZERO : P.next[FK.SH[t.code].material]), at = FK.has({ code: g.code }, 'Repeat') && !ECON.capWhy(ME, g.code) && ECON.canPay(ME, D.cost[g.code] || {}) && D.ways.filter(([a, b]) => !a || !b).map(([a, b]) => [t.i + a * k, t.j + b * k]).find(([i, j]) => ECON.canPlace(g.code, i, j));
+  const k = t.n + P.next[FK.SH[t.code].material], at = FK.has({ code: g.code }, 'Repeat') && !ECON.capWhy(ME, g.code) && ECON.canPay(ME, D.cost[g.code] || {}) && D.ways.filter(([a, b]) => !a || !b).map(([a, b]) => [t.i + a * k, t.j + b * k]).find(([i, j]) => ECON.canPlace(g.code, i, j));
   if (at) { [g.i, g.j] = at; g.ok = true; g.why = ''; } else S.ghost = null; FK.dirty(); }
 let drag = null, edge = null;
 for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel']) canvas.addEventListener(ev, (e) => { const g = S.ghost; if (!g) { drag = edge = null; return; } // E337

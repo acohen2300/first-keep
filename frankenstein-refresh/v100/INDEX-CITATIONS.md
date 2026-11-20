@@ -463,7 +463,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N366** Albert, Nov 14, 2026, 09:52: "to solve late game gold… when we hit gun powder age how about gold mining? ... y → SC51, X119, O31
 - **N367** Albert, Nov 14, 2026, 10:16: "figure out a way to build a unit, maybe in the siege workshop that cuts down tre → SC52, D286, D360, X120, UM23, O262
 - **N368** Albert, Nov 11, 2026 (N24): an order means go where he taps, period. Nov 14, 2026, 16:09, after a 121-minute g → X121
-- **N369** (to open) Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then "Go build"): the new game's option rings a → SC53, C27, C34, D62, D206, D241, D340, X81, X122, SN32
+- **N369** (to open) Albert, Nov 14, 2026, 16:45 to 17:56 (talk mode, his fix list, then "Go build"): the new game's option rings a → C27, C34, D62, D206, D241, D340, X81, X122, SN32
 - **N370** Albert, Nov 14, 2026, 21:49 to 21:52, after a 144-minute game: "They always win with the wonder." Claude put f → D125, D200, D257, D291, X123, J13
 - **N371** Albert, Nov 14, 2026, 22:05: "I meant my villagers wouldn't die. I needed them gone. But killing them with the → X123
 - **N372** Albert, Nov 15, 2026, 05:46: "Can you do 9?" (his list of Nov 14 22:05, item 9: "The trade routes need to come → D379, X124
@@ -514,6 +514,7 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N418** Albert, Nov 19 20:37, note 8: "say I want to build a castle then a tower. The menu doesn't stay open."; 21:29: → X149
 - **N419** Albert, Nov 19 20:37, note 11: "The pause menu needs to be near the pause button."; 21:29: "Easy fix" → X149
 - **N420** Albert, Nov 19 20:37, note 13: "When you tap the book for research it needs a better indicator that you taped  → X149
+- **N421** Albert, Nov 19 20:37, note 46: "I want a space back between buildings and houses - it's too weird putting them → X150
 
 ## Named exceptions
 

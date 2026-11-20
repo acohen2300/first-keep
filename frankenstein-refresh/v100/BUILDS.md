@@ -5716,7 +5716,7 @@ Opened: code:menu.js, book:words, book:screen, book:citations, book:comments, bo
 - Gate: PASS. Size: menu.js 127,996 → 127,984 bytes (−12). ecs unchanged.
 - Tests: t-n78 (`jobs`, `clear` rewritten to the ruling) passes and fails on N81's menu.js. Moved to the ruling: t-n72 `crew`, t-n69 `vil`, `vjobs`, `vcancel`, `go`, t-n68 `vj` (a villager's job tiles need no Jobs tap; Jobs lets him go). Pass: t-n78, t-n77, t-n76, t-n73 to t-n65, t-n43, t-n17, t-p2, t-p2b, t-idle. Smoke 6/6. The full suite was not run.
 
-## N83: the fade cut, War's title fixed, Build stays open, Pause under its button, the open card's book gold · 2026-11-19 22:20
+## N83: the fade cut, War's title fixed, Build stays open, Pause under its button, the open card's book gold · 2026-11-19 21:35
 Albert, Nov 19 21:29 (The List 50), on his play notes 1, 6, 8, 11 and 13 (N416 to N420): "Remove it as well as the background tint / fade."; "Easy fix." four times.
 Opened: code:menu.js, book:screen, book:words, book:comments, book:citations, book:rules, tool:test.py.
 - Note 1: the fade of N82 is gone at its source: `--scrim`, the gradient on `.mline`, the tint on `#base` and SN mold2.scrim are cut. The words keep the dark glow. No tint, so no band and no empty tinted box.
@@ -5726,3 +5726,13 @@ Opened: code:menu.js, book:screen, book:words, book:comments, book:citations, bo
 - Note 13: the book of the open card is gold with a white edge for as long as the card is open (was a 1.2 s white edge). The flash's own state (S.bookOn, S.bookT, its timer) is cut. Claude's pick of the look; his play judges it.
 - Gate: PASS. Size: menu.js 127,984 → 127,681 bytes (−303). ecs within the rule (not raised).
 - Tests: t-n83 new (fade, war, build, pause, book): passes, and every one of its five checks fails on N82's menu.js. Moved to the rulings: t-n78 `clear` (no tint, no gradient) and its War `arm` check (the title stays War Command), t-n77 `one` (Build stays open after a Mill). Pass: t-n83, t-n78, t-n77, t-n76, t-n73 to t-n67, t-n65, t-p2, t-p2b, t-idle. The full suite: see N84.
+
+## N84: the space back between buildings · 2026-11-19 21:42
+Albert, Nov 19 20:37, note 46: "I want a space back between buildings and houses - it's too weird putting them right next to each other."; 21:29: "Should be easy. Yes." (N421). Reverses his Nov 14 side-by-side ruling (N369).
+Opened: code:menu.js, code:econ.js, book:shells, book:capabilities, book:measure, book:comments, book:citations, book:rules, tool:test.py.
+- The lane (D206 lane, 2 tiles) stands round every building again. The Touch tick is cut from its twelve shells (House, Apartment, Farm, Tree farm, Pasture, Quarry, Dock, Mill, Lumber camp, Mining camp, Mint, Foundry) and from the capabilities book (SC53); placeWhy no longer asks for it. Walls and gates may still touch.
+- The ghost snaps a lane from one of yours, never touching (D206 gaps [0, 2] to [2]); the waiting ghost of a Repeat building steps a gap away.
+- The computers' own choice of spot is unchanged (apart: only their fields touch, as before N52).
+- Flag for Albert: his farms no longer touch each other either. Say if fields should.
+- Gate: PASS. Size: econ.js 119676 → 119668 bytes; menu.js 127681 → 127651 bytes. ecs within the rule (not raised); one tick fewer.
+- Tests: t-n84 new (touch, lane, tick): passes, and fails on N83's code. Moved to the ruling: t-n52 `touch` (every pair now says gap or lane). Pass: t-n84, t-n83, t-n78, t-n77, t-n52, t-dock. t-p2 fails as before N83 (open since N75, Handoff). The full suite: running at the seal; result in The List 51.

@@ -895,3 +895,24 @@ Claude's flags: 6 undoes N78's reading-in-the-title (Claude's call); 8 goes past
 - New note 49: "Trade routes need to be fixed and we have to see the caravans going on it so we know they are stopping by us."
 - 16 (the outpost wagon): no answer given.
 - Claude's flags: 1 removes the fade he liked at 19:07 and the tint under the words of note 9; readability then rests on 12's dark glow (mock owed). Sections 47 and 48 are stamped an hour ahead (said 20:15 to 20:40).
+
+## 51. N83 and N84 built (preview n84): his six easy fixes; the reads he asked for [2026-11-19 21:42]
+Built, not proven by his play (BUILT, not DONE):
+1. Note 1: the white line, the tint and the fade are gone (N83; test t-n83 `fade`).
+2. Note 6: War Command's title never changes (N83; t-n83 `war`). Still changing in that menu, his word owed: the Squad word (menu.js sqWord) and the sixth tile GARRISON VILLAGERS / BACK TO WORK (his own ruling of Nov 19 15:26).
+3. Note 8: the Build page stays open after a building is placed (N83; t-n83 `build`).
+4. Note 11: the Pause menu sits under the top bar by the pause button (N83; t-n83 `pause`).
+5. Note 13: the open card's research book is gold for as long as the card is open (N83; t-n83 `book`). Claude's pick of the look.
+6. Note 46: the 2-tile lane round every building again (N84; t-n84). His farms no longer touch each other either: his word owed.
+Read and reported (nothing changed):
+- 17 (runs away): already proven in Audit - Nov 19, 2.A.3: each death near takes 1 / (0.3 × (n + 1)) nerve from every soldier within 10 tiles (combat.js:66, D142); a kill gives 0.04 to the killer only (combat.js:62). A group breaks at about 30% dead whoever is winning. His ruling owed.
+- 22 (dies on the march): read, not proven. A marching soldier looks for foes each look (combat.js:134 to 135). When a comrade is struck, only idle or holding soldiers answer the cry, not marching ones (combat.js:58). Whether the struck marcher himself turns and fights is unverified: one page probe owed.
+- 23 (all on one spot): the code says otherwise, so the cause is not found. A Move order dresses the army in a grid 1.5 tiles apart (combat.js:183 and :100, D241 ranks). A probe or his screen owed.
+- 29 (crowded gathering): already traced in Traces - Nov 18, 4: a find holds a set number (D.forage.hold: bush 2, tree 4, gold 4, stone 3, iron 3); 36 on one berry plot gather 18% less a head than 12, and 25 to 28 of the 36 are walking: the walk to the drop-off is the larger loss.
+- 35 (zeal): it does. At the Temple for 60 gold the squad's soldiers strike × 1.2 for 45 s, then the Temple rests 120 s; a priest has to be with them (combat.js:45, D266; research Rites +15 s, Sacred games and Reformation cut its cost and rest). The verb is at menu.js:145.
+Not done, and why:
+- Mocks owed (his word "mock first"): 2 and 9, 3, 4, 7, 10, 12 (with a dark glow), 14, 15. Not started: the builds came first.
+- Talk owed: 18, 19, 24, 27, 31, and 23's logic.
+- 16 (the outpost wagon): he gave no answer; not traced.
+- 49 (trade routes, caravans seen on them): new; not traced.
+- The match log's five items (section 47) and the clock (Draft 3): untouched.

@@ -46,12 +46,12 @@ function lockWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') |
 function capWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1), lock = lockWhy(side, c); // E313
   if (lock) return lock; return !cp.length || many(side, c) < n ? '' : SAY.limit.replace('{n}', n) + (cp[age + 1] > n ? SAY.more : ''); }
 const byWater = (i, j, n, r) => { for (let y = j - r; y < j + n + r; y++) for (let x = i - r; x < i + n + r; x++) if (x >= ZERO && y >= ZERO && x < N && y < N && (H[y * N + x] <= ZERO || FK.MARSH[y * N + x])) return true; return false; }; // E1068
-function placeWhy(side, c, i, j, capped, apart) { const [, n] = B[c], tick = apart ? 'Field' : 'Touch', snug = is(c, tick); let why = capped ? '' : capWhy(side, c); // E314
+function placeWhy(side, c, i, j, capped, apart) { const [, n] = B[c], snug = apart && is(c, 'Field'); let why = capped ? '' : capWhy(side, c); // E314
   if (i < 0 || j < 0 || i + n > N || j + n > N) return SAY.edge; if (why) return why; if (is(c, 'Post') && !stops().some((f) => onStop({ i, j, n }, f) && !postOn(f))) return MW.stop; const shore = is(c, 'Shore'); if (shore && !byWater(i, j, n, D.fish.shore)) return SAY.shore;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) { const k = y * N + x; if (is(c, 'Gate') && (wallAt(k) || {}).side === side) continue; if (OCC[k] || FK.FOR[k]) return SAY.blocked; if (shore ? H[k] < -D.wade * P.half : !FK.free(k) || H[k] !== H[j * N + i]) return shore ? SAY.deep : SAY.flat; }
   if (!wallish({ code: c })) FK.bldsNear(...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile), (n + P.near + P.lane) * D.tile, (b) => { const gap = Math.max(b.i - i - n, i - b.i - b.n, b.j - j - n, j - b.j - b.n); if (gap >= P.lane) return;
     const on = (s, v) => v >= s && v < s + b.n, touch = on(b.i, i - 1) || on(b.i, i + n) || on(b.j, j - 1) || on(b.j, j + n);
-    why = !snug && !wallish(b) && !FK.has(b, tick) ? SAY.gap : touch && !wallish(b) && (D.trains[c] || D.trains[b.code]) ? SAY.lane : ''; return !!why; });
+    why = !snug && !wallish(b) && !(apart && FK.has(b, 'Field')) ? SAY.gap : touch && !wallish(b) && (D.trains[c] || D.trains[b.code]) ? SAY.lane : ''; return !!why; });
   const off = (v, lo, hi) => Math.max(lo - v - P.half, v + P.half - hi, 0); // E315
   for (let y = j - P.lane; y < j + n + P.lane && !why; y++) for (let x = i - P.lane; x < i + n + P.lane; x++) if (OCC[y * N + x] === 1 && Math.hypot(off(x, i, i + n), off(y, j, j + n)) < P.lane) return SAY.trees;
   return why || (FK.reached(side, { i, j, n }, ...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile)) ? '' : SAY.reach); }

@@ -72,7 +72,6 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | SC49 | a find that grows back each spring toward its own full amount by the logistic law (QY) at D378's rate for its kind; one with a root is never removed: picked out it stands bare until spring (fish, bushes) | {by: econ.js, law: [QY], needs: [amount], may: []} | N353 |
 | SC51 | a building that is worked for its yield, one worker, only once its side has learned the research that sinks the shaft (the stat shaft: Blasting); its stock is a plot's (D222 lasts at its rate) and is sunk again at the replant's share of its price (Repeat) | {by: econ.js, law: [], needs: [yield, rate], may: [amount]} | N366 |
 | SC52 | it may enter the woods whatever its body, and fells every tree within D360 fell's lane of itself as it moves: the tree lies where it stood, blocks no one, and keeps its wood for whoever gathers it; the lane stays for good (the Pioneer) | {by: index.html, law: [], needs: [], may: []} | N367 |
-| SC53 | may be built touching another building, and another against it (never one that trains): the farms, pastures, quarries and docks, the mill and the camps, the mint and the foundry, the dwellings (Albert, Nov 14, N369; was the Field tick's) | {by: econ.js placeWhy, menu.js place, law: [], needs: [], may: []} | N369 |
 
 ## citations
 
@@ -491,6 +490,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N418 |  | Albert, Nov 19 20:37, note 8: \say I want to build a castle then a tower. The menu doesn't stay open.\; 21:29: \Easy fix\ | opened |
 | N419 |  | Albert, Nov 19 20:37, note 11: \The pause menu needs to be near the pause button.\; 21:29: \Easy fix\ | opened |
 | N420 |  | Albert, Nov 19 20:37, note 13: \When you tap the book for research it needs a better indicator that you taped it.\; 21:29: \Easy fix\. Claud | opened |
+| N421 |  | Albert, Nov 19 20:37, note 46: \I want a space back between buildings and houses - it's too weird putting them right next to each other.\; 2 | opened |
 
 ## colours
 
@@ -933,7 +933,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E313 |  | how many of a building a side may have now: its age's limit with research added (D199), none before its age (D200); why not, in Mid's words  |  |
 | E314 |  | why a building may not stand here, Mid's rules in order: the edge, the limit, the ground under it (a gate may take its owner's wall piece),  |  |
 | E315 |  | two squares from every find too, measured from the footprint's edge to the find's middle (Mid's nodesNear) |  |
-| E316 |  | the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apart, edges or middles in line) or in line with one  |  |
+| E316 |  | the ghost snaps to the nearest spot that fits beside one of yours (a lane apart, edges or middles in line; N421) or in line with one farther |  |
 | E317 |  | taking a building down pays back half its price, all of it early in the build; its line is paid back in full first (Mid's shellBack, refundO |  |
 | E318 |  | a wall dragged from corner to corner: a straight run of tiles, four-connected so nothing slips through a diagonal (Mid's wallLine); laid pie |  |
 | E319 |  | the walk starts on the Town Center's own floor; walls being laid count as built; everything is put back after |  |
@@ -1817,7 +1817,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | D203 | a line of wall gets crew builders at most, who work down it; a builder done takes the next wall piece within wall tiles, else a site nobody raises within site tiles, else goes back to its work (Mid's 60 and 220 units in its 10-unit squares) | {crew: 2, wall: 6, site: 22} | N168 |
 | D204 | done: the share at which a site stands finished; a site stands at start of its health and gains rise of it as it is raised (Mid's mkBld and bldTick) | {start: 0.1, rise: 0.9, done: 1} | N168 |
 | D205 | a building that costs stone rises at share in frost, the air at or under at °C: mortar will not set (Mid's frost weather) | {share: 0.5, at: 0} | N168 |
-| D206 | placing, in tiles unless said: lane tiles round every building and from every find (walls, gates and the buildings ticked Touch may touch; nothing touches one that trains); the next one of a building ticked Touch waits touching the last; grab: a touch within this share of the footprint (or lift px) grabs the ghost, farther away it looks around (Mid's nearGhost); the ghost snaps beside one of yours, touching or a lane apart (gaps), within near, or in line with one within guide along the board's rows (align: centre to centre, edge to edge, flush, as the ghost's side then its, in footprints; the guide drawn pad past both), to the nearest spot within tol (least, or zoom ÷ the zoom), start from the screen's middle; a find stands half a tile in; on a phone the ghost waits lift px above the finger; within edge px of the screen the map scrolls scroll px a second; a wall corner is caught within hit px, and a drag nearly flat or upright, under 1 in flat, is made so; after a building the next spot is its size and next for its material away (timber leaves a gap for fire); the tint and the ghost's alpha; a corner's knob, the lines' widths and dashes in px; a tile's corners in order (Mid's) | {lane: 2, gaps: [0, 2], near: 4, half: 0.5, guide: 26, align: [[0, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]], pad: 1.2, tol: {least: 1.4, zoom | N168; N369 |
+| D206 | placing, in tiles unless said: lane tiles round every building and from every find (walls and gates may touch; Albert, Nov 19 21:29: the space is back, N416); grab: a touch within this share of the footprint (or lift px) grabs the ghost, farther away it looks around (Mid's nearGhost); the ghost snaps beside one of yours, a lane apart (gaps), within near, or in line with one within guide along the board's rows (align: centre to centre, edge to edge, flush, as the ghost's side then its, in footprints; the guide drawn pad past both), to the nearest spot within tol (least, or zoom ÷ the zoom), start from the screen's middle; a find stands half a tile in; on a phone the ghost waits lift px above the finger; within edge px of the screen the map scrolls scroll px a second; a wall corner is caught within hit px, and a drag nearly flat or upright, under 1 in flat, is made so; after a building the next spot is its size and next for its material away (timber leaves a gap for fire); the tint and the ghost's alpha; a corner's knob, the lines' widths and dashes in px; a tile's corners in order (Mid's) | {lane: 2, gaps: [2], near: 4, half: 0.5, guide: 26, align: [[0, 0], [-1, -1], [1, 1], [-1, 1], [1, -1]], pad: 1.2, tol: {least: 1.4, zoom: 2 | N168; N369 |
 | D207 | while walls are laid: a foe's walk out from the Town Center reaching reach tiles is a way in, shown, else Sealed; looked again every seconds (Mid's SEAL) | {reach: 38, every: 0.3} | N168 |
 | D208 | the computer's wall ring: ring tiles out from its Town Center, an arc of ± steps of step rad facing the middle, its gates the two squares nearest the middle and laid first; from age, with stone, up to pieces a round while it keeps that much stone (Mid's WALL_R, 260 units in its 10-unit squares, and wallPlan; the balanced computer walls) | {ring: 26, steps: 66, step: 0.019, gates: 2, age: 1, stone: 60, keep: 40, pieces: 3} | N168 |
 | D209 | what fits a tapped spot, in tiles and scores: a drop-off for finds within near × r with none within dropR; more of what stands within r (a home: a home; a field: a mill, then a field; an army building: the one you lack; a wall: a gate; the Town Center: a home, keep); a narrow way, its disc of area tiles between choke solid: a wall, or a gate beside your wall; a home when room is short (Mid's SUGGEST) | {r: 14, near: 0.85, dropR: 11, drop: 3, kin: 3.5, keep: 1, area: 4, choke: {lo: 0.35, hi: 0.75}, chokeW: 4, room: 2, short: 1.5} | N168 |
@@ -2131,6 +2131,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X147 | N77 (N409): only House, Farm, Tree farm, Quarry, Mint and Foundry tick Repeat; after Build on a House the ghost waits on the next spot and is still there, with the Build menu, past the settle time; after Build on a Mill the ghost is gone and the menu closes; a still tap on a set ghost builds, and a drag moves it without building | {stage: page} | N409 |
 | X148 | N78 (N410; Drafts 7 and 8): a building's card is in the mold: the line reads Home, Jobs, Build and the title; row 2 the name in its box, the pages Train, Learn, Relations with the picked one boxed, and Exit; Repair keeps its slot, hidden until the building is hurt; every row-2 button is 44 px wide or more and the row fits; the tiles start at the left and a research tile carries no effect line; Demolish asks Sure? before it demolishes; War Command's title is red-lined, its row has seven groups, its five orders carry icons and the sixth tile turns from Garrison villagers to Back to work with the alarm, with no Out; an item card names the find, says Add a villager, counts who works it, and its plus and minus add and take a villager; N82 (N415): the title, the boxes and Exit have no fill, every tile is filled, and a dark fade of 20 to 40% lies behind the rows; N82 (N414): a picked villager shows his job tiles at once, and a tap on Jobs lets him go and shows the Jobs page with the people tile and its minus and plus, with no breadcrumb | {stage: page} | N410; N414; N415 |
 | X149 | N83 (N416 to N420): no fade and no tint behind the menu's rows, the words keep their dark glow; War Command's title reads the same with an order armed and after a reply; after a building is placed the Build page is open again; the Pause menu sits right under the top bar; the book of the open card is drawn gold | {stage: page} | N416; N417; N418; N419; N420 |
+| X150 | N84 (N421): no building may be placed touching another (the farms, camps, mints, foundries and dwellings too); a House a lane from a House may; no shell ticks Touch | {stage: page} | N421 |
 
 ## screen
 
@@ -2193,16 +2194,16 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BTC6 | Training tent | [Spawn, Health, Burn] | N144; N198; N206 |
 | BTC7 | Mess tent | [Shelter, Health, Burn] | N144; N198; N206 |
 | BTC8 | Camp tower | [Shoot, Health, Burn] | N144; N198; N206 |
-| BR1 | House | [House, Health, Burn, Research, Repeat, Touch] | N144; N206 |
-| BR2 | Apartment | [House, Health, Touch] | N144; N235 |
+| BR1 | House | [House, Health, Burn, Research, Repeat] | N144; N206 |
+| BR2 | Apartment | [House, Health] | N144; N235 |
 | BCR1 | Market | [Trade, Spawn, Burn, Health, Research] | N144; N195; N206 |
 | BCR2 | Bar | [Burn, Care, Health] | N144; N206 |
-| BCL1 | Farm | [Field, Health, Soil, Repeat, Touch] | N144; N170 |
-| BCL2 | Tree farm | [Field, Health, Repeat, Touch] | N144; N170 |
-| BCL3 | Pasture | [Field, Health, Flock, Touch] | N144; N170 |
-| BCL4 | Quarry | [Field, Health, Research, Repeat, Store, Touch] | N144; N235; N342 |
+| BCL1 | Farm | [Field, Health, Soil, Repeat] | N144; N170 |
+| BCL2 | Tree farm | [Field, Health, Repeat] | N144; N170 |
+| BCL3 | Pasture | [Field, Health, Flock] | N144; N170 |
+| BCL4 | Quarry | [Field, Health, Research, Repeat, Store] | N144; N235; N342 |
 | BCT1 | Trade post | [Post, Shoot, Health, Research] | N144; N195 |
-| BCT2 | Dock | [Drop-off, Health, Shore, Burn, Research, Field, Regrow, Touch] | N144; N170; N206 |
+| BCT2 | Dock | [Drop-off, Health, Shore, Burn, Research, Field, Regrow] | N144; N170; N206 |
 | BP1 | School | [Teach, Health, Research] | N144; N194 |
 | BP2 | Library | [Health, Research] | N144 |
 | BP3 | Temple | [Spawn, Zeal, Care, Health, Research] | N144; N194 |
@@ -2213,13 +2214,13 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | BP8 | Courthouse | [Spawn, Shoot, Health, Research] | N144; N194 |
 | BP9 | Hall | [Health, Research] | N144 |
 | BP10 | War Council | [Squad, Health, Research] | N144 |
-| BI1 | Mill | [Drop-off, Health, Burn, Research, Touch] | N144; N206 |
-| BI2 | Lumber camp | [Drop-off, Health, Burn, Research, Touch] | N144; N206 |
-| BI3 | Mining camp | [Drop-off, Health, Research, Shaft, Store, Touch] | N144 |
+| BI1 | Mill | [Drop-off, Health, Burn, Research] | N144; N206 |
+| BI2 | Lumber camp | [Drop-off, Health, Burn, Research] | N144; N206 |
+| BI3 | Mining camp | [Drop-off, Health, Research, Shaft, Store] | N144 |
 | BI4 | Store | [Health, Research] | N144 |
 | BI5 | Depot | [Drop-off, Supply, Health, Burn] | N144; N198; N206 |
-| BI6 | Mint | [Make, Health, Research, Repeat, Touch] | N144; N195 |
-| BI7 | Foundry | [Make, Health, Research, Repeat, Touch] | N144; N195 |
+| BI6 | Mint | [Make, Health, Research, Repeat] | N144; N195 |
+| BI7 | Foundry | [Make, Health, Research, Repeat] | N144; N195 |
 | BI8 | Workshop | [Make, Burn, Health, Research] | N144; N195; N206 |
 | BI9 | Smith | [Health, Research] | N144 |
 | BM1 | Barracks | [Spawn, Health, Shelter, Burn, Research] | N144; N206 |

@@ -1,4 +1,14 @@
-# First Keep: hand-off (Nov 19, 2026, 20:45) [2026-11-19 20:45]
+# First Keep: hand-off (Nov 19, 2026) [2026-11-19 21:42]
+
+## START HERE: where things stand [2026-11-19 21:42]
+- Last build N84, sealed. Preview n84: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n84/ . His play owed.
+- His answers on the 48 play notes are The List section 50; what was built and read from them is section 51. Read those two first.
+- Built from his "easy fix" notes: 1, 6, 8, 11, 13 (N83) and 46 (N84).
+- Next, in his words: mocks first for 2 and 9, 3, 4, 7, 10, 12 (with a dark glow), 14, 15, each drawn in a game screen; talk for 18, 19, 23, 24, 27, 31; his rulings owed on 17 (the rout rule), the Squad word and the garrison toggle (note 6), and whether farms may touch (note 46).
+- Not traced: 16 (outpost wagon), 22 (one probe owed), 49 (trade routes and caravans), the match log's five items (section 47). The clock (Draft 3) is still owed.
+- His style: short replies, plain words, no patches (fix the code at its source), no helpers. A permit opens at most ten items: split a build that needs more.
+
+## The Nov 19 20:45 hand-off (older)
 
 ## START HERE: his order of Nov 19 20:41 [2026-11-19 20:45]
 - His words: "My personal order is to fix all at once and then I'll play your fixes and see if I like them." Then 20:45: fresh chat, hand-off now. The old chat built nothing after this.

@@ -834,9 +834,9 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E851** what a side cannot build yet (age, research, a building it needs, a later age): the locks 
 - **E313** how many of a building a side may have now: its age's limit with research added (D199), no · D199 (N168, N198) · D200 (N168, N198, N370)
 - **E1068** by water (N341): any water or marsh tile within r tiles of a footprint; a Shore building n · N341
-- **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · N369 · N52
+- **E314** why a building may not stand here, Mid's rules in order: the edge, the limit, the ground u · N421 · N369 · N52
 - **E315** two squares from every find too, measured from the footprint's edge to the find's middle (
-- **E316** the ghost snaps to the nearest spot that fits beside one of yours (touching, or a lane apa
+- **E316** the ghost snaps to the nearest spot that fits beside one of yours (a lane apart, edges or  · N421
 - **E816** where the finger leaves the ghost: Mid's snap first; if nothing caught it and it stands on
 - **E852** a building raised into another where it stands (the Gate's way over a wall): taken down, t
 - **E1090** the mine shaft (N366): once a side has Blasting, its Mining camps are worked in place for  · N366

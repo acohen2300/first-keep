@@ -417,3 +417,4 @@ Written by `index.py` from `books/citations.js`, never by hand: every source by 
 | N418 | design | yes | Albert, Nov 19 20:37, note 8: "say I want to build a castle then a tower. The menu doesn't stay open."; 21:29: "Easy fix" |
 | N419 | design | yes | Albert, Nov 19 20:37, note 11: "The pause menu needs to be near the pause button."; 21:29: "Easy fix" |
 | N420 | design | yes | Albert, Nov 19 20:37, note 13: "When you tap the book for research it needs a better indicator that you taped it."; 21:29: "Easy fix". Claude's pick: the book is gold for as long as its card is open (his Nov 19 15:49 "Gold everywhere") |
+| N421 | design | yes | Albert, Nov 19 20:37, note 46: "I want a space back between buildings and houses - it's too weird putting them right next to each other."; 21:29: "Should be easy. Yes." Reverses his Nov 14 side-by-side ruling (N369): the lane (D206 lane, 2 tiles) stands round every building again; walls and gates may still touch |
