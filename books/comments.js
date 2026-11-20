@@ -1073,5 +1073,7 @@ BOOK("comments", {
  "E1263": {"text": "a new game owes no upkeep and remembers no reach: the last game's unpaid seconds and its reach are dropped (Nov 20: a restart paid the last game's unpaid upkeep in its first beat, so one seed played two ways)"},
  "E1264": {"text": "the facts a row of the book may ask for, each about the mold's subject (the thing or the unit the mold is showing): the book says which facts, this says how each is told"},
  "E1265": {"text": "where a row's arg comes from: the thing's key, the unit's key, whichever of the two the subject is, or the last item queued"},
- "E1266": {"text": "the control row's actions for a state of the mold, read from the Screen book's acts list: the rows whose facts all hold, each made by the one button maker (ab, or dot for a round one), its word found in the Words book by its place"}
+ "E1266": {"text": "the control row's actions for a state of the mold, read from the Screen book's acts list: the rows whose facts all hold, each made by the one button maker (ab, or dot for a round one), its word found in the Words book by its place"},
+ "E1267": {"text": "the lists the game gives a row of tiles: the six jobs, the jobs a villager can be sent to, the buildings of the open group that this side may still raise, the ways across ice"},
+ "E1268": {"text": "a state's tile row, read from the Screen book's tiles list: a row shows when its facts hold, makes one tile a thing in its list (or one tile alone), and takes the look of the first fact in clsIf that holds for that thing; blank is the empty place kept so the row does not shift"}
 });

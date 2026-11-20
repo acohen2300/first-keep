@@ -62,6 +62,7 @@ async def walk(root):
             await snap(pg, f'Card: {name}')
             for k in await pg.evaluate(KEYS, 'ctab'): await click(pg, k, f'Card: {name} › {k}')
             for k in (await pg.evaluate(KEYS, 'who'))[:2]: await click(pg, k, f'Card: {name} › {k}')
+            for k in (await pg.evaluate(KEYS, 'vjob'))[:2]: await click(pg, k, f'Card: {name} › {k}')
             await pg.evaluate("fk.select(null); MENU.S.subject = null; MENU.S.who = null; MENU.render(true)")
         # the war controls
         if await click(pg, 'war', 'War'):
