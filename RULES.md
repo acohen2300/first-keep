@@ -4,7 +4,7 @@ Read this before any work. Nothing else is required reading.
 
 ## Code
 
-1. One home for everything. No copies, no loose numbers in code.
+1. One home for everything. No copies. No measured or chosen number in code; 0 and 1 for counting are allowed.
 2. Shared parts first: group what's common, reuse before writing new.
 3. Real-world math and science by default. Frame rate and playability win ties.
 4. Real numbers are cited and indexed. Balance numbers are marked as tuning, with the reason.
@@ -22,4 +22,5 @@ Read this before any work. Nothing else is required reading.
 - Talk and build are separate. Nothing is built until Albert says "build".
 - One build between previews. Each change inside it is its own commit, so one can be undone without the rest.
 - No changing a call mid-build. A changed call goes in the next build.
-- Before publishing: quick check (loads, match starts, frame rate holds, villagers gather).
+- Before publishing: `python3 tools/check.py` must print PASS. `python3 tools/publish.py "what it is"` runs it and puts the build on the phone at `/first-keep/fresh/`.
+- No helper agents unless Albert asks for one.
