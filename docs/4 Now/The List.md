@@ -885,3 +885,13 @@ Claude's flags: 6 undoes N78's reading-in-the-title (Claude's call); 8 goes past
 ## 49. His order, Nov 19 20:41 (talk mode ends): fix all at once [2026-11-19 20:45]
 - His words: "My personal order is to fix all at once and then I'll play your fixes and see if I like them. You are fable 5.2 after all. That should be within your capabilities." 20:45: "You're about to compact. We need a fresh chat hand off asap."
 - Nothing built in the old chat after this. The run is laid out at the top of Handoff.md. Not done: all of section 48, because the chat ran out of room.
+
+## 50. His answers on the 48 notes, Nov 19 21:29 (new chat; his words) [2026-11-19 21:35]
+- Go, build: 1 "Remove it as well as the background tint / fade." 6 "Easy fix." 8 "Easy fix" 11 "Easy fix" 13 "Easy fix" 46 "Should be easy. Yes."
+- Mock first: 2 "You can mock this first." 3 "mock this first" 4 "Mock this first." 7 "It does. Requires a mock" 9 "Same as 2." 10 "Needs a mock" 12 "Fix with mock and a dark glow." 14 "Mock maybe, or atleast talk." 15 "Mock"
+- Read the code and report: 17 "You have to review code first" 22 "Look into this and report back." 23 "Look up, discuss logic, and we fix together" 29 "Check code and report back" 35 "Does it? And how?"
+- Talk: 18 "Talk and mock" 19 "Talk and mock" 24 "Talk" 27 "Talk and maybe it's a timing issue" 31 "Talk, mock and sort"
+- His word on the rest: 5 "This is the audit for the whole app." 20 "* walks over water - we need bridges." 21 "It's true" 25 "Or it's not seen." 26 "Same" 28 "It's true but it's more than that." 30 "It's true" 32 "This is true. We have bits of this- just need to expand it." 33 "Yes why not. The code is already there." 34 "Yes." 36 "Markers for buildings and control of the buildings. ie: beer, cloth, spices, cattle in the pasture." 37 "Important" 38 "You did it on purpose. Need to fix." 39 "It's true." 40 "That's life. / rain should also pool for mud and the grass shouldn't be green if it's mud." 41 "True." 42 "True" 43 "Yes" 44 "Yes" 45 "Yes" 47 "Why not?" 48 "If possible."
+- New note 49: "Trade routes need to be fixed and we have to see the caravans going on it so we know they are stopping by us."
+- 16 (the outpost wagon): no answer given.
+- Claude's flags: 1 removes the fade he liked at 19:07 and the tint under the words of note 9; readability then rests on 12's dark glow (mock owed). Sections 47 and 48 are stamped an hour ahead (said 20:15 to 20:40).
