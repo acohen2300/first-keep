@@ -2,6 +2,7 @@
 #   python3 tools/check.py              books, then the game
 #   python3 tools/check.py --same-play  also fail if the match plays differently from the kept one (for builds that must not change play)
 #   python3 tools/check.py --accept     keep this build's match as the new one to compare against (for builds meant to change play)
+#   python3 tools/check.py --deep       also replay three longer matches (other peoples, scenarios, every hazard); slow, for builds that touch much
 import asyncio, json, pathlib, re, sys
 import run
 
@@ -9,6 +10,11 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 KEPT = ROOT / 'tools' / 'kept.json'
 CODE = ['index.html', 'menu.js', 'econ.js', 'combat.js', 'ai.js', 'sound.js']
 SEED, MINUTES = 7, 5          # the match every build replays
+DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
+    (11, [], 20),
+    (12, ['Easy', 'Han', '30 min', 'Siege'], 20),
+    (13, ['Hard', 'Persian', 'Conquest', 'Silk Road', 'Hardest', 'Famine', 'Weather', 'Drought', 'Outlaws', 'Plague'], 25),
+]
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
 UNSET_UNITS = 120             # open work (cleanup item 7): may only go down
 
@@ -57,6 +63,14 @@ async def play(after_another=False):
         await run.step(pg, MINUTES * 60)
         return await run.fingerprint(pg), await pg.evaluate('SIDES[0].store.food + SIDES[0].store.wood') - food0, await pg.evaluate('units.length'), list(pg.errors)
 
+async def deep():
+    out = []
+    for seed, setup, minutes in DEEP:
+        async with run.game(seed, setup=setup) as pg:
+            await run.step(pg, minutes * 60); out.append(await run.fingerprint(pg))
+            rule(f'deep match, seed {seed}, {minutes} minutes, no errors', not pg.errors, '; '.join(pg.errors[:2]))
+    return out
+
 async def draw():
     async with run.game(SEED) as pg:
         await run.release(pg); await pg.wait_for_timeout(20000)
@@ -73,10 +87,14 @@ async def check_game():
     rule('20 seconds on screen, no errors', not errs, '; '.join(errs[:2]))
     rule(f'pictures in memory under {PICTURES_MB} MB', pics['mb'] <= PICTURES_MB, f"{pics['count']} pictures, {pics['mb']} MB")
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
+    d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:
-        KEPT.write_text(json.dumps({'seed': SEED, 'minutes': MINUTES, 'match': a}) + '\n'); print(f'note  match {a} kept')
-    elif '--same-play' in sys.argv: rule('plays exactly as the kept match', a == kept['match'], f"{a} against kept {kept['match']}")
-    else: print('note  ' + ('plays exactly as the kept match' if a == kept['match'] else f"plays differently from the kept match ({a} against {kept['match']})"))
+        KEPT.write_text(json.dumps({'seed': SEED, 'minutes': MINUTES, 'match': a, 'deep': d or kept.get('deep')}) + '\n'); print(f'note  match {a} kept' + (f', deep {d}' if d else ''))
+        return
+    same = a == kept['match'] and (d is None or d == kept.get('deep'))
+    detail = f"{a} against kept {kept['match']}" + (f"; deep {d} against {kept.get('deep')}" if d else '')
+    if '--same-play' in sys.argv: rule('plays exactly as the kept match' + ('es' if d else ''), same, detail)
+    else: print('note  ' + ('plays exactly as kept' if same else 'plays differently from kept: ' + detail))
 
 check_books()
 asyncio.run(check_game())
