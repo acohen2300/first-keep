@@ -196,6 +196,7 @@ const shoal = (b) => things().filter((t) => FK.has(t, 'Catch') && !t.shoal && re
 const inReach = (side) => { const R = D.hunger.reach * D.upm, drops = FK.blds().filter((b) => b.side === side && up(b) && (([, , , , y]) => (y || []).includes('food'))(FK.B[b.code])), near = (t) => drops.some((b) => Math.hypot(b.bx - t.bx, b.by - t.by) < R); return findsOf('food').some((t) => (t.kind !== 'bld' || t.side === side) && docked(side, t) && near(t)) || units().some((u) => FK.has(u, 'Prey') && near(u)); }; // E981
 const fromFind = (u) => FK.has(u, 'Gather') && u.target && !u.target.gone && (jobOf(u) === 'food' || FK.has(u.target, 'Prey')) && !FK.has(u.target, 'Flock'); // E349
 const REACH = {}, reachNow = (side) => { const r = REACH[side]; if (r && r.t === Math.floor(bell)) return r.v; return (REACH[side] = { t: Math.floor(bell), v: inReach(side) }).v; }; // E1011
+FK.on('start', () => { for (const k in REACH) delete REACH[k]; }); // E1263
 function upkeep(dt) { const needs = {}; for (const u of units()) { if (!SIDES[u.side]) continue; const e = eats(u) * dt; u.ate = (u.ate || ZERO) + e; if (!fromFind(u)) needs[u.side] = (needs[u.side] || ZERO) + e - camped(u, e); else if (KIND[u.target.kind]) FK.take(u.target, Math.min(u.target.amount, e)); }
   for (const side of D.players) { const s = SIDES[side], need = needs[side] || ZERO;
   if (!s.hungry || reachNow(side)) s.famine = null; else if (s.famine == null) { s.famine = bell; if (side === ME) FK.fire('event', 'famine', null); }

@@ -50,8 +50,9 @@ def check_books():
     unset = sum(1 for e in B['measure'].values() for u in (e['unit'].values() if isinstance(e.get('unit'), dict) else [e.get('unit')]) if u == 'unset')
     rule(f'units: no more than {UNSET_UNITS} unset', unset <= UNSET_UNITS, f'{unset} unset')
 
-async def play():
+async def play(after_another=False):
     async with run.game(SEED) as pg:
+        if after_another: await pg.evaluate(f"fk.reset(99); for (let n = 0; n < 400; n++) sim(1 / D.step.hz); fk.reset({SEED}); fk.pause(true);")
         food0 = await pg.evaluate('SIDES[0].store.food + SIDES[0].store.wood')
         await run.step(pg, MINUTES * 60)
         return await run.fingerprint(pg), await pg.evaluate('SIDES[0].store.food + SIDES[0].store.wood') - food0, await pg.evaluate('units.length'), list(pg.errors)
@@ -66,8 +67,8 @@ async def check_game():
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
     rule(f'{MINUTES} minutes of play, no errors', not errs, '; '.join(errs[:2]))
     rule('villagers gather', gathered > 0, f'food and wood up {gathered:.0f}')
-    b, *_ = await play()
-    rule('the same seed plays the same match', a == b, a if a == b else f'{a} then {b}')
+    b, *_ = await play(after_another=True)
+    rule('the same seed plays the same match, even straight after another game', a == b, a if a == b else f'{a} then {b}')
     pics, errs = await draw()
     rule('20 seconds on screen, no errors', not errs, '; '.join(errs[:2]))
     rule(f'pictures in memory under {PICTURES_MB} MB', pics['mb'] <= PICTURES_MB, f"{pics['count']} pictures, {pics['mb']} MB")

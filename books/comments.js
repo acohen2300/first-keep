@@ -1072,5 +1072,6 @@ BOOK("comments", {
  "E1259": {"text": "the smallest-first queue, one home: the roads' search and the water's flood"},
  "E1260": {"text": "distance over the tiles from where src holds, out to lim"},
  "E27": {"text": "a wandering line (QAZ) from a to b, pinned at both ends; null when any point fails ok"},
- "E1262": {"text": "the item card's −: the last villager working this find goes idle (N410)"}
+ "E1262": {"text": "the item card's −: the last villager working this find goes idle (N410)"},
+ "E1263": {"text": "a new game owes no upkeep and remembers no reach: the last game's unpaid seconds and its reach are dropped (Nov 20: a restart paid the last game's unpaid upkeep in its first beat, so one seed played two ways)"}
 });
