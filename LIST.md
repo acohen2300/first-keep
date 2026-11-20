@@ -28,7 +28,7 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 
 Cut: the two debug overlays (done)
 
-Not cut, for Albert to rule again: rebellion is a vassal rising against its lord, not a captured town; it runs whenever a vassal's unrest tops out and is woven through the vassal code (kept under Diplomacy) · the replant button calls the same one function as the tap and is the only place the price shows
+Kept (Albert, Nov 20, ruled again): rebellion, it goes with vassals · the replant button, it is not a duplicate
 
 Keep, works: garrison · ice and floods · copy log · replant all · later-age building art · fronts (finds the army's groups for the look button) · unit history on the card
 
