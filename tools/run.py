@@ -34,8 +34,9 @@ def served(root=ROOT):
     finally: s.shutdown()
 
 @contextlib.asynccontextmanager
-async def game(seed=1, root=ROOT):
-    """A page with a match begun from `seed` and held still: nothing moves until step() is called."""
+async def game(seed=1, root=ROOT, setup=(), test=False, cover=False):
+    """A page with a match begun from `seed` and held still: nothing moves until step() is called.
+    setup: labels to tap on the new-game screen first. test: the game's own test mode (full stores). cover: record which functions run."""
     with served(root) as url:
         async with async_playwright() as p:
             b = await p.chromium.launch(channel='chrome', args=['--no-sandbox', '--enable-unsafe-swiftshader'])
@@ -44,11 +45,34 @@ async def game(seed=1, root=ROOT):
             pg.on('pageerror', lambda e: pg.errors.append(str(e)[:300]))
             pg.on('console', lambda m: pg.errors.append(m.text[:300]) if m.type == 'error' and 'favicon' not in m.text and '404' not in m.text else None)
             await pg.add_init_script(WATCH + HOLD)
-            await pg.goto(f'{url}/index.html')
+            if cover:
+                pg.cdp = await pg.context.new_cdp_session(pg)
+                await pg.cdp.send('Profiler.enable'); await pg.cdp.send('Profiler.startPreciseCoverage', {'callCount': True, 'detailed': False})
+            await pg.goto(f'{url}/index.html' + ('?test' if test else ''))
+            await pg.locator('button:has-text("Start")').first.wait_for()
+            for label in setup:
+                try: await tap(pg, label)
+                except RuntimeError as e: pg.errors.append(str(e))
             await pg.locator('button:has-text("Start")').first.tap()
             await pg.evaluate(f'fk.reset({int(seed)}); fk.pause(true);')
             try: yield pg
             finally: await b.close()
+
+async def tap(pg, label):
+    """Taps the visible button whose text is `label`, or starts with it before a number or sign (Hardest+3)."""
+    ok = await pg.evaluate("(l) => { const b = [...document.querySelectorAll('button')].find((b) => b.offsetParent !== null && (b.textContent.trim() === l || (b.textContent.trim().startsWith(l) && !/[a-z]/.test(b.textContent.trim()[l.length])))); if (b) b.click(); return !!b; }", label)
+    if not ok: raise RuntimeError(f'no button "{label}"')
+
+async def covered(pg):
+    """Every named function seen so far: {(file, start, end, name): times run}."""
+    out = {}
+    for s in (await pg.cdp.send('Profiler.takePreciseCoverage'))['result']:
+        if '127.0.0.1' not in s['url']: continue
+        f = s['url'].split('/')[-1].split('?')[0]
+        for fn in s['functions']:
+            r = fn['ranges'][0]
+            if fn['functionName']: out[(f, r['startOffset'], r['endOffset'], fn['functionName'])] = r['count']
+    return out
 
 async def step(pg, seconds):
     """Runs the match `seconds` of game time, in the game's own fixed steps."""
