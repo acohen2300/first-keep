@@ -1,4 +1,20 @@
-# First Keep: hand-off (Nov 19, 2026, 15:55) [2026-11-19 15:55]
+# First Keep: hand-off (Nov 19, 2026, 20:45) [2026-11-19 20:45]
+
+## START HERE: his order of Nov 19 20:41 [2026-11-19 20:45]
+- His words: "My personal order is to fix all at once and then I'll play your fixes and see if I like them." Then 20:45: fresh chat, hand-off now. The old chat built nothing after this.
+- Read as: his 48 play notes (The List section 48) are the list; fix them in one run; he plays after. Not confirmed by him beyond those words: the new chat's first reply is a short numbered plan (what will be fixed in the run, what cannot and why), then build without waiting unless a note needs a design answer.
+- Everything is sealed and pushed. Last build N82. Preview: https://acohen2300.github.io/first-keep/frankenstein-refresh/preview-n82/
+- His style: replies at a quarter of the usual length, plain words, no patches (fix the code at its source), no helpers.
+
+## The run, in the order asked of him (menus first, then army; he did not answer the order) [2026-11-19 20:45]
+1. The white line (note 1): N82 laid the fade on two pieces (`.mline` and `#base` in menu.js's css); the gap shows, and `#base` is tinted when empty. Fix: one fade, one piece, only as tall as the rows showing. Fade strength unanswered: he liked the darker fade to the bottom (`mockups/cards/overlay.png`); Claude's offer was 40% running to the bottom.
+2. Notes that undo recent work: War Command words never change (the reading comes out of the title); the Build menu stays open after a non-repeat building; the research effect line needs a place on screen; the gap between buildings back (reverses Nov 14).
+3. The other menu notes, then army, then the rest of section 48. Notes that are design questions (formations, ambush, throne and natives, misfits, camera, artistic pass, v80/base/mid audit) need his rulings or a mock first: say so in the plan, do not guess.
+4. From the match log (section 47), untraced: runaway computer gold, villagers stuck in "wait", unspent stock, late ages, no ending.
+5. Still owed after that: the clock (Draft 3), which he had set for overnight.
+- Open tests: t-n47 six (5 rich clearings on the test seed since N75), unsteady t-n24 far, t-n60 cross, t-p2 focusHome, t-n42 fx. The full suite was not run on N75 to N82.
+- Preview push that works: force-fetch `+main:refs/remotes/origin/main`, a detached worktree, copy the game files and books to `frankenstein-refresh/preview-nNN/`, push `HEAD:main`.
+
 
 ## Since 13:25 [2026-11-19 15:55]
 - N82 built and sealed (Jobs always the Jobs page; every tile filled; a 30% fade behind the rows; preview n82). He plays it tonight and will bring notes. Open: the fade (he liked the darker one, overlay.png bottom row). N80 built and sealed (clear fills from one rule; Train, Learn and Jobs tiles filled; his play owed; the dark glow is talk, not built). His word, Nov 19 17:41: no patches, fix the code at its source. N78 built and sealed (the new HUD, one mold: Drafts 7 and 8; his play owed, in n79). Next in his order: the clock (Draft 3), overnight. Open: t-n47 six (5 rich clearings on the test seed since the N75 land), unsteady t-n24, t-n60, t-p2.
