@@ -824,3 +824,59 @@ Findings: `docs/4 Now/Audit - Nov 19.md`. Tools and raw results: `docs/4 Now/too
 5. Two computers fell (minutes 72 and 84); the third stood at 119 with 51 villagers and 19 soldiers. The log has no end.
 6. Mail: all 15 lines are "Your … is attacked at …".
 Causes not traced. His notes owed.
+
+## 48. His play notes, Nov 19 20:37 (after the 119-minute game on n82; talk mode; his words; nothing is a go) [2026-11-19 21:40]
+Menus and the Controller
+1. "The white line near the controller I don't like."
+2. "The font in the controller is too small."
+3. "The build button after you have a ghost building in the controller is in a weird place. My finger expected it be somewhere else."
+4. "When you go to build something and you can't you shouldn't be able to tap it.. it should be dim. If it's waiting on tech it should take you to that tech."
+5. "There are white rings.. green rings.. blue rings.. red rings… none of it makes sense."
+6. "The changing words in war controller are distractions. Words should never change in that menu."
+7. "The army selection bar needs fine tuning."
+8. "The build menu disappears when you are finished building an item.. which we did last round but this is a different problem.. say I want to build a castle then a tower. The menu doesn't stay open."
+9. "The words on the bottom are too hard to read."
+10. "It would be cool if there was a line about what the research does and why. We have this somewhere but it would be cool to have it on screen."
+11. "The pause menu needs to be near the pause button."
+12. "The build menu is hard to see and navigate."
+13. "When you tap the book for research it needs a better indicator that you taped it."
+14. "We should consider a single screen for buildings with not a lot of tech or people.. it's silly to tap learn or train in the church for example."
+15. "We need a button, tap size, tile, ring, active / inactive - grammar, hygiene audit."
+16. "I taped to build an outpost wagon and I didn't see it."
+Army
+17. "The army is still big babies and they run away all the time."
+18. "We have to consider formations for army control." "You need a way to have different formations like aoe- box or line or like alternating rows of a group." "Archers need a line." "Foot need a wall."
+19. "There is no way to isolate knights from elephants.. etc."
+20. "The army just wants over water."
+21. "The wars aren't coordinated enough. They look silly. Just a bunch of little figurines running away from each other or being confused."
+22. "When I tell the army to go somewhere and something attacks them on the way, they just die instead of killing it and moving on."
+23. "The units get confused when they go to a spot I pick. The try to all be in the one spot. We need a 'rest' concept and a space per unit concept so they don't allow each other up."
+24. "Something about the towers the other players use for defense are killers. I don't know what tower that is."
+25. "There is no way to utilize the home field defensive advantage.. it would be good to see it."
+26. "There is no way to use the ambush. That is a cool feature but there isn't much opportunity to use it."
+Balance and pace
+27. "For some reason this game was too easy for me to win this round." "I was able to kill all three sides in about 10 mins."
+28. "The pace of the game is too fast to appreciate the depth."
+29. "The players gather slowly when there are a lot ln a single gather node."
+Guidance and features
+30. "We get too much mail which renders it pointless."
+31. "There is no clear way to set up vassals, tax, market, trade, none of that. It's just there but you can't figure out how to get there and there is no icon to teach you."
+32. "The game should push you or suggest what to do and when." "We should have a motivation system, like an iPhone, when you can do something like start a caravan. Or an info button somewhere that tells you things."
+33. "We need the throne and natives back."
+34. "We need to bring back the misfits. They don't do anything anymore."
+35. "Does zeal do anything?"
+36. "We need markers to know if villagers are working buildings like pastures and quarries and foundries and mints… we also need a way to control what is happening in those buildings."
+37. "We need an audit from v80, base, mid, and current to see where we are ahead and where we are behind."
+World and looks
+38. "I don't like the uniformity of the home pond."
+39. "There are too many trees in general."
+40. "Winter season is weird. All of a sudden there is snow on the ground.. shouldn't it snow first?"
+41. "The buildings don't 'glo up' with ages."
+42. "We need an artistic pass to level it up."
+43. "The trees glitch as you pan."
+44. "There is an aurora but it's not clear."
+45. "The gas has lost some detail - it looks like a still image which I guess is the point."
+46. "I want a space back between buildings and houses - it's too weird putting them right next to each other."
+47. "If the ground is going to get muddy or freeze or whatever we need the appropriate sound effects. Or a Picture in Picture closeup of what the problem is a watching a unit fix it."
+48. "It would be cool if there were some ways to 'pan camera' or 'change camera angles' like 36\" view or what they do at football games to see cool events."
+Claude's flags: 6 undoes N78's reading-in-the-title (Claude's call); 8 goes past N77's "one is enough" (the ghost goes, the menu should stay); 10 asks back the effect line cut in N78; 46 reverses his Nov 14 side-by-side ruling; 4 was ruled Nov 14 (locked tech opens its prerequisite); 41 is the glo-up on hold since Nov 16; 27 and the log disagree on timing (the log shows the falls at minutes 72 and 84). To ask him: what the white line in 1 is; whether "gas" in 45 is grass.
