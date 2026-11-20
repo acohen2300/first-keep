@@ -486,6 +486,11 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | N413 |  | Albert, Nov 19 18:51, with a screen of Build's clear tiles over the grass: \Can you fix the build tiles too?\ | opened |
 | N414 |  | Albert, Nov 19 18:53 and 18:54: \jobs lost people icon and also the plus and minuses\; \Jobs doesn't need a breadcrumb bc there's no menu. I | opened |
 | N415 |  | Albert, Nov 19 18:51 to 18:59: Build's clear tiles unreadable over the grass, \Or do we just do a shadow? Help me out\, \How do other apps h | opened |
+| N416 |  | Albert, Nov 19 21:29, on his note 1 (\The white line near the controller I don't like\): \Remove it as well as the background tint / fade.\  | opened |
+| N417 |  | Albert, Nov 19 20:37, note 6: \The changing words in war controller are distractions. Words should never change in that menu.\; 21:29: \Easy | opened |
+| N418 |  | Albert, Nov 19 20:37, note 8: \say I want to build a castle then a tower. The menu doesn't stay open.\; 21:29: \Easy fix\ | opened |
+| N419 |  | Albert, Nov 19 20:37, note 11: \The pause menu needs to be near the pause button.\; 21:29: \Easy fix\ | opened |
+| N420 |  | Albert, Nov 19 20:37, note 13: \When you tap the book for research it needs a better indicator that you taped it.\; 21:29: \Easy fix\. Claud | opened |
 
 ## colours
 
@@ -544,7 +549,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E699 |  | the ghost carries its own label on the map, as Base and Mid: its name and price where it fits, else why not; the player never has to look do |  |
 | E700 |  | only a touch on or near the ghost moves it; a touch away from it falls through to the camera, so the player can look around while placing (M |  |
 | E701 |  | the top bar's cells by the Screen book: pause and the small map are live controls; a cell that does nothing is not shown (Base's bar had non |  |
-| E702 |  | pause stops the clock and opens the Pause screen; the same cell resumes |  |
+| E702 |  | pause stops the clock and opens the Pause menu right under the top bar, by the pause button (N419); the same cell resumes |  |
 | E703 |  | New game asks twice, so a stray tap cannot end a match; then the Start sheet |  |
 | E705 |  | a hazard switched on adds its points to the level (the measure book's hazards.pts); the Start sheet's picks are a setting, copied into the m |  |
 | E706 |  | as Base (Albert, Nov 7 20:48: all Base): a pause has no page, it drops the speeds, New game and the volumes under the pause button and says  |  |
@@ -1397,7 +1402,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E949 |  | a flame's flicker by the real puffing rate (QCV, about 5 Hz for a torch), on the wall clock so game speed does not hurry it; the flame's hei |  |
 | E950 |  | campfires after dark (Albert, Nov 10, N17 #12): where two or more people stand or work together at night a campfire is lit among them, and s |  |
 | E953 |  | a sound that will not come back (Albert, Nov 10, N17 #10 and #19): a phone call leaves iOS's audio interrupted and a resume that fails stays |  |
-| E954 |  | note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one (N377), and kept as the last answer (S.re) for War |  |
+| E954 |  | note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one (N377); War's title no longer reads it (N417) |  |
 | E955 |  | the base and the rank row are drawn once a render and that one drawing is both compared and shown (Albert, Nov 10, N17 #11: People's ring di |  |
 | E956 |  | a soldier trained while a rally flag stands joins the ones already marching to it or holding it, and they are dressed into one formation the |  |
 | E957 |  | a sprite is cached at the next size up the √2 ladder, never the one below: drawn smaller it stays sharp, drawn larger it went soft and block |  |
@@ -1573,21 +1578,21 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | E1229 |  | the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) each tap on and off |  |
 | E1230 |  | whether a Rules pad is lit |  |
 | E1231 |  | Albert, Nov 17 15:36 (The List 26 item 7): when a side reaches an age, every unit of its line upgrades to the next kind that age opens (AoE  |  |
-| E1234 |  | a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins over what is under it, its tap area the slot |  |
+| E1234 |  | a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins over what is under it, its tap area the slot; the boo |  |
 | E1235 |  | a picked building glows faintly gold from behind (Design 15 F): drawn on the back hook, before the building |  |
 | E1236 |  | a picked villager: his name, state and actions in row 2; his job tiles at once, Build's tiles on Build (N410, N414) |  |
 | E1237 |  | one home for sending a villager to a job: the best find of that kind (Jobs' +, and a Jobs tile with villagers picked) |  |
 | E1238 |  | a floating action word (Design 16): dim when it cannot run |  |
 | E1239 |  | the line's parts (Design 16): Jobs / Build, the group words split by bars, the italic hint centred in the free span |  |
 | E1240 |  | the crumb row (Design 16): crumbs, the first large, each tappable back to it; a quiet note in the middle; the actions with pipes |  |
-| E1241 |  | a unit's state word for the crumb; finish: the crumb reads Going or Building, then the menu closes after settle |  |
+| E1241 |  | a unit's state word for the crumb; finish: the crumb reads Going or Building, then after settle the menu closes, or goes to the page named ( |  |
 | E1242 |  | Jobs (Design 16): floating − + over each job, a + alone over People; nothing open shows only the line |  |
 | E1243 |  | Build (Design 16): the group words on the line, Build → group → building in the crumb row, Build and Cancel |  |
 | E1244 |  | one job's − or + from the floating row (People: + trains a villager) |  |
 | E1245 |  | a picked villager's job tile: tap to pick, tap again to drop |  |
 | E1246 |  | Go: the picked villagers go to the picked job, then the menu closes |  |
 | E1247 |  | the one Cancel (Design 16): drops the last crumb; a crumb tapped drops all after it |  |
-| E1248 |  | Build placed: the menu closes after the crumb reads Building, unless the ghost waits on a next spot (Repeat, N409) |  |
+| E1248 |  | Build placed: the crumb reads Building, then the Build page stays open for the next building (N418); the ghost waits on a next spot for the  |  |
 | E1249 |  | the idle villagers (idle or waiting, not inside); Idle n over People: a tap jumps the camera to the next and picks it (Design 17, 27) |  |
 | E1250 |  | the − above the line hides Jobs / Build and closes the rows; the + after Home brings them back (Design 17, 11) |  |
 | E1251 |  | at the drop a villager sent to a find of another kind takes that kind (Design 17, 3: sent to wood from gathering food, it went back to food) |  |
@@ -2125,6 +2130,7 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | X146 | N76 (N408): a touch on the menu's empty space reaches the map: on the closed line, a building's card, Jobs, Build, War and the folded menu, every point of the menu's rows that is not a button lands on the map, and every button still takes its own tap | {stage: page} | N408 |
 | X147 | N77 (N409): only House, Farm, Tree farm, Quarry, Mint and Foundry tick Repeat; after Build on a House the ghost waits on the next spot and is still there, with the Build menu, past the settle time; after Build on a Mill the ghost is gone and the menu closes; a still tap on a set ghost builds, and a drag moves it without building | {stage: page} | N409 |
 | X148 | N78 (N410; Drafts 7 and 8): a building's card is in the mold: the line reads Home, Jobs, Build and the title; row 2 the name in its box, the pages Train, Learn, Relations with the picked one boxed, and Exit; Repair keeps its slot, hidden until the building is hurt; every row-2 button is 44 px wide or more and the row fits; the tiles start at the left and a research tile carries no effect line; Demolish asks Sure? before it demolishes; War Command's title is red-lined, its row has seven groups, its five orders carry icons and the sixth tile turns from Garrison villagers to Back to work with the alarm, with no Out; an item card names the find, says Add a villager, counts who works it, and its plus and minus add and take a villager; N82 (N415): the title, the boxes and Exit have no fill, every tile is filled, and a dark fade of 20 to 40% lies behind the rows; N82 (N414): a picked villager shows his job tiles at once, and a tap on Jobs lets him go and shows the Jobs page with the people tile and its minus and plus, with no breadcrumb | {stage: page} | N410; N414; N415 |
+| X149 | N83 (N416 to N420): no fade and no tint behind the menu's rows, the words keep their dark glow; War Command's title reads the same with an order armed and after a reply; after a building is placed the Build page is open again; the Pause menu sits right under the top bar; the book of the open card is drawn gold | {stage: page} | N416; N417; N418; N419; N420 |
 
 ## screen
 
@@ -2760,5 +2766,5 @@ Written by `index.py` from `books/*.js`, never by hand: every entry of every boo
 | J58 | short names for a cell of the dock: a name too wide for a cell even drawn narrower (SN44) is shown by its short form here; the full name stays in its own book, the messages and the Guide (Albert, Nov 15, N385: "Shorten them as needed. Use & for and if required") | {Charcoal burning: Charcoal, Threshing sledge: Threshing, Rollers and sledges: Rollers, Treadwheel crane: Treadwheel, Chimney and fireplace: | N385 |
 | J59 | the Help card's words (N64, N387; mock 7): its title and the door's word; its six tabs, in order; a short name for a cell for each tip (J25, by its key) and each rule of the Guide (J27, in its order: "the 7 rules get short names for cells"); n, what stands for a tip's number when it is read in Help; tri, the triangle as one line ({Foot}, {Riders}, {Archers}, {Engines} and {Buildings} are the class symbols of SN45, {gt} the red >; t-n64 holds the order to the cells' own marks, so the words cannot drift from D138); the lead lines of Units and Research; learned, on a step you have; the reading box's words (becomes: a unit's ranks; needs: the step before; steps: how much research; opens: what an age opens); now, the Ages tab's lead: what your people eat a minute and the next age (the Town Center's info page, cut in N62), and what it says in the last age | {title: Help, tabs: [Tips, Units, Buildings, Research, Ages, Peoples], tips: {full: Dwellings, more: Villagers, wood: Wood, idle: Idle, barr | N387 |
 | J60 | the building card's words (Design 13, N390): say, the button's word for the chosen cell's verb (go for any other); cancel, the button on a cell at work; noIdle and full, what Send a villager says when it cannot | {say: {train: Train, research: Learn, ageUp: Learn, pick: Place, sell: Sell, sellK: Sell, buy: Buy, zeal: Call, muster: Muster, fromCard: Bu | N390 |
-| J61 | the mold's words (Design 14, N391): the Jobs | Build toggle, the left word of a card that plants (all fields) or builds, the villager card's buttons, the Controller's who-line (Foot, Bow, Cav, Siege) and its six orders, the Squad tile, the ice reading (Gold's formula: safe under the safe load, maybe under the failing load, unsafe over it); N78 (N410): Exit for Cancel, War Command, a page's shown name (Talk reads Relations), the item card's line and count, Demolish's Sure?, the alarm tile's two words | {next: {attack: Attack: tap a target, move: Move: tap a spot, spot: Spot set: tap Attack or Move}, modes: [Jobs, Build], w: W, build: Build, | N391; N410; N414 |
+| J61 | the mold's words (Design 14, N391): the Jobs | Build toggle, the left word of a card that plants (all fields) or builds, the villager card's buttons, the Controller's who-line (Foot, Bow, Cav, Siege) and its six orders, the Squad tile, the ice reading (Gold's formula: safe under the safe load, maybe under the failing load, unsafe over it); N78 (N410): Exit for Cancel, War Command, a page's shown name (Talk reads Relations), the item card's line and count, Demolish's Sure?, the alarm tile's two words | {modes: [Jobs, Build], w: W, build: Build, go: Go, cancel: Exit, del: Delete, pause: {paused: Paused, pause: Pause, settings: Settings, new: | N391; N410; N414 |
 

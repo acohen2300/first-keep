@@ -509,6 +509,11 @@ Written by `index.py`, never by hand. Every law and every entry matched to its c
 - **N413** Albert, Nov 19 18:51, with a screen of Build's clear tiles over the grass: "Can you fix the build tiles too?" → unused
 - **N414** Albert, Nov 19 18:53 and 18:54: "jobs lost people icon and also the plus and minuses"; "Jobs doesn't need a br → X148, J61
 - **N415** Albert, Nov 19 18:51 to 18:59: Build's clear tiles unreadable over the grass, "Or do we just do a shadow? Help → X148, SN48
+- **N416** Albert, Nov 19 21:29, on his note 1 ("The white line near the controller I don't like"): "Remove it as well as → X149
+- **N417** Albert, Nov 19 20:37, note 6: "The changing words in war controller are distractions. Words should never chang → X149
+- **N418** Albert, Nov 19 20:37, note 8: "say I want to build a castle then a tower. The menu doesn't stay open."; 21:29: → X149
+- **N419** Albert, Nov 19 20:37, note 11: "The pause menu needs to be near the pause button."; 21:29: "Easy fix" → X149
+- **N420** Albert, Nov 19 20:37, note 13: "When you tap the book for research it needs a better indicator that you taped  → X149
 
 ## Named exceptions
 

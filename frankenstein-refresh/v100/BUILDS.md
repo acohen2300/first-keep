@@ -5715,3 +5715,14 @@ Opened: code:menu.js, book:words, book:screen, book:citations, book:comments, bo
 - A fade behind the rows (SN mold2.scrim, 30%): clear to tint down row 1, flat behind rows 2 and 3; the words of the rows carry the dark text glow.
 - Gate: PASS. Size: menu.js 127,996 → 127,984 bytes (−12). ecs unchanged.
 - Tests: t-n78 (`jobs`, `clear` rewritten to the ruling) passes and fails on N81's menu.js. Moved to the ruling: t-n72 `crew`, t-n69 `vil`, `vjobs`, `vcancel`, `go`, t-n68 `vj` (a villager's job tiles need no Jobs tap; Jobs lets him go). Pass: t-n78, t-n77, t-n76, t-n73 to t-n65, t-n43, t-n17, t-p2, t-p2b, t-idle. Smoke 6/6. The full suite was not run.
+
+## N83: the fade cut, War's title fixed, Build stays open, Pause under its button, the open card's book gold · 2026-11-19 22:20
+Albert, Nov 19 21:29 (The List 50), on his play notes 1, 6, 8, 11 and 13 (N416 to N420): "Remove it as well as the background tint / fade."; "Easy fix." four times.
+Opened: code:menu.js, book:screen, book:words, book:comments, book:citations, book:rules, tool:test.py.
+- Note 1: the fade of N82 is gone at its source: `--scrim`, the gradient on `.mline`, the tint on `#base` and SN mold2.scrim are cut. The words keep the dark glow. No tint, so no band and no empty tinted box.
+- Note 6: War Command's title always reads "War Command". The readings ("Attack: tap a target", "Move: tap a spot", "Spot set…", a reply) are cut with their words (J61 mold.next) and the state that held the reply (S.re). The armed order's lit tile stays (N72).
+- Note 8: after a building is placed the Build page stays open (finish takes the page to go to). Repeat buildings keep their waiting ghost (N77).
+- Note 11: the Pause menu sits right under the top bar, by the pause button (was fixed to the bottom of the screen).
+- Note 13: the book of the open card is gold with a white edge for as long as the card is open (was a 1.2 s white edge). The flash's own state (S.bookOn, S.bookT, its timer) is cut. Claude's pick of the look; his play judges it.
+- Gate: PASS. Size: menu.js 127,984 → 127,681 bytes (−303). ecs within the rule (not raised).
+- Tests: t-n83 new (fade, war, build, pause, book): passes, and every one of its five checks fails on N82's menu.js. Moved to the rulings: t-n78 `clear` (no tint, no gradient) and its War `arm` check (the title stays War Command), t-n77 `one` (Build stays open after a Mill). Pass: t-n83, t-n78, t-n77, t-n76, t-n73 to t-n67, t-n65, t-p2, t-p2b, t-idle. The full suite: see N84.

@@ -589,7 +589,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E866** the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35) · SN35 (N283, N287, N386)
 - **E718** the Start sheet as Base's: the Start button one slot tall, the people's blurb two lines (t
 - **E182** the glass's own state, nothing of the world's
-- **E954** note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one  · N377 · N396
+- **E954** note: a tap or an order's answer, filed in Mail as a letter, with its place if it has one  · N377 · N417
 - **E837** a help line wider than its bar shows the chevron; the chevron opens it to two lines and cl
 - **E272** the words helpers: numbers shortened (1.2k, 12k), plurals, 'a, b or c', a percent slower,  · D191 (N132)
 - **E273** the first ending in the Words book (J5) that fits the name · J5 (N132)
@@ -636,8 +636,8 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E191** tap a yield: new villagers go there (the ring)
 - **E739** research, as Base's techBtn: its name and cost; a step that cannot start says why on the b · N17 · N369
 - **E192** tap picks, slide places the ghost, tap again builds. N61 (N384): a place holds three lines · N61 · N384
-- **E1248** Build placed: the menu closes after the crumb reads Building, unless the ghost waits on a  · N409
-- **E702** pause stops the clock and opens the Pause screen; the same cell resumes
+- **E1248** Build placed: the crumb reads Building, then the Build page stays open for the next buildi · N418 · N409
+- **E702** pause stops the clock and opens the Pause menu right under the top bar, by the pause butto · N419
 - **E792** the ice card's answers: a way to cross for the units asked about, remembered for this wint
 - **E838** the chevron's tap: open or close the help lines
 - **E1103** look: the camera jumps to the next spot of its kind, alert or army; the same button again  · N378
@@ -708,7 +708,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1238** a floating action word (Design 16): dim when it cannot run
 - **E1239** the line's parts (Design 16): Jobs | Build, the group words split by bars, the italic hint
 - **E1240** the crumb row (Design 16): crumbs, the first large, each tappable back to it; a quiet note
-- **E1241** a unit's state word for the crumb; finish: the crumb reads Going or Building, then the men
+- **E1241** a unit's state word for the crumb; finish: the crumb reads Going or Building, then after s · N418
 - **E1209** the six cards the mold draws: Jobs, Build, a building, a crew, a find, ice and the Control
 - **E1242** Jobs (Design 16): floating − + over each job, a + alone over People; nothing open shows on
 - **E1243** Build (Design 16): the group words on the line, Build → group → building in the crumb row,
@@ -761,7 +761,7 @@ Written by `index.py`, never by hand: each part of the code, the whys it carries
 - **E1252** placing: a still tap on the green ghost builds it; a tap elsewhere moves it (Design 17, 4,
 - **E1047** one tap rule on the war page too: a tap on a villager (or any of yours that is not a soldi · N30
 - **E1006** a tap on the board while the Controller is open: on my own soldier it picks or lets go; wi
-- **E1234** a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins ove
+- **E1234** a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins ove · N420
 - **E341** a tap on open ground while the Build page is open marks what fits there (Base: the suggest
 - **E429** Albert's one rule for the finger (Build 40, Nov 2): a tap picks yours, a second tap opens 
 - **E1051** the call (Design 08, N331): with no New Group, a tap on the unit you called hangs up (the  · N331

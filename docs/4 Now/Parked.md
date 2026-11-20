@@ -931,3 +931,8 @@ Albert, Nov 16 11:58: "I would leave it out for now for the lighting the ground 
 ## Cut in N82 (Nov 19) [2026-11-19 21:00]
 - A picked villager's Jobs tab (his rows under Jobs; N396, Design 19 A3): Jobs is always the Jobs page now (Albert, 18:54). The hint word "choose a task". [2026-11-19 21:00]
 - Clear tiles (N79 to N81; Albert, 17:36 and 18:51): every tile is filled; the title, the boxes and Exit stay clear. [2026-11-19 21:00]
+
+## Cut in N83 (Nov 19; his answers of 21:29) [2026-11-19 22:20]
+- The fade behind the menu's rows (N82, N415: a 30% dark fade, SN mold2.scrim). His word: "Remove it as well as the background tint / fade."
+- War Command's readings in the title: "Attack: tap a target", "Move: tap a spot", "Spot set: tap Attack or Move", and the last reply (N396, Design 19 B). His word: "Words should never change in that menu." Replies still go to Mail.
+- The book's 1.2 s white flash on a tap (S.bookOn): replaced by gold for as long as the card is open.
