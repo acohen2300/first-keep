@@ -1,5 +1,0 @@
-(() => { const out = {}, T = FK.D.tile; const run = (split) => { FK.reset(); Object.assign(FK.K, { rain: 0, snowing: 0, temp: 15 }); const h = FK.seatOf(0), d = (a, b) => Math.hypot(a.bx - b.bx, a.by - b.by) / T, bushes = FK.things().filter((t) => t.kind === 'bush').sort((a, b) => d(a, h) - d(b, h)), A = bushes[0], near = bushes.filter((b) => d(b, A) < 6), B = bushes.find((b) => d(b, A) > 12);
-   const V = ECON.villagersOf(0); while (V.length < 36) V.push(FK.spawn(V[0].code, 0, (h.j + h.n + 1) * FK.N + h.i + V.length, FK.rng)); V.forEach((u, i) => ECON.gatherAt(u, split && i % 2 ? B : A)); const f0 = FK.SIDES[0].store.food, log = [];
-   for (let t = 1; t <= 1800; t++) { FK.sim(0.1); if (t % 600 === 0) { const J = {}; for (const u of V) J[u.job] = (J[u.job] || 0) + 1; log.push(JSON.stringify(J) + ' idleBox ' + ECON.idlers(0).length); } }
-   return { bushesInPlot: near.length, plotBdist: B ? Math.round(d(B, h)) : null, plotAdist: Math.round(d(A, h)), food3min: Math.round(FK.SIDES[0].store.food - f0), log }; };
- out['36 on one plot (15 bushes)'] = run(false); return out; })()
