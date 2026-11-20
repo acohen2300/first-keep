@@ -2189,11 +2189,11 @@ N72JS = r"""(() => { const v = {}, info = {}, S = MENU.S, q = (s) => document.qu
   Object.assign(S, { tab: null, subject: null }); const u = ECON.villagersOf(0)[0]; FK.select([u]); R(); v.crew = !!q('#base [data-v^="vjob|"]'); MENU.act('mtab', 'Jobs'); R(); v.crew = v.crew && !FK.picked().length && S.tab === 'Jobs' && !!q('#base [data-v^="jsel|people"]');   /* A3: a picked villager keeps his rows */
   FK.select(null); S.tab = null; const code = Object.keys(FK.SH).find((c) => FK.SH[c].class === 'Foot'), sold = [0, 1, 2].map((n) => FK.spawn(code, 0, (h.j + h.n + 2) * FK.N + h.i + n, FK.rng));
   MENU.act('war'); MENU.act('mwho', ''); R(); const line = () => (q('.mline .tt') || {}).textContent || '', lit = (o) => !!q(`#base [data-v="mord|${o}|"].sel`), n = FK.picked().length; info.n = n;
-  MENU.act('mord', 'hold'); info.hold = [line(), lit('hold')]; v.hold = n === 3 && line() === W.bar.said.hold.replace('{n}', n) && lit('hold');   /* B1, B2: Hold is read and lit */
-  MENU.act('mord', 'defend'); info.defend = [line(), lit('defend'), lit('hold')]; v.defend = line() === CW.why.noAttack && !lit('defend') && !lit('hold');   /* B2: nobody to defend lights nothing and says why; B3: Hold's light is gone */
-  MENU.act('mord', 'retreat'); info.retreat = [line(), lit('retreat')]; v.retreat = line() === CW.said.retreat.replace('{n}', n) && lit('retreat');
-  const [gx, gy] = FK.toScreen(...FK.toView(...FK.tileMid((h.j + h.n + 6) * FK.N + h.i), FK.D.land)); S.tap = null; FK.tap(gx, gy); R(); info.clear = [line(), lit('retreat')]; v.clear = line() !== CW.said.retreat.replace('{n}', n) && !lit('retreat');   /* B3: gone at the next tap on the map */
-  FK.select(null); MENU.act('mord', 'hold'); R(); info.none = line(); v.none = line() === CW.why.none;   /* B1: a refusal is read too */
+  MENU.act('mord', 'hold'); info.hold = [line(), lit('hold')]; v.hold = n === 3 && line() === MENU.WD.mold.war && lit('hold');   /* B2: Hold is lit; N83 (N417): the title never changes, so nothing is read there */
+  MENU.act('mord', 'defend'); info.defend = [line(), lit('defend'), lit('hold')]; v.defend = line() === MENU.WD.mold.war && !lit('defend') && !lit('hold');   /* B2: nobody to defend lights nothing and says why; B3: Hold's light is gone */
+  MENU.act('mord', 'retreat'); info.retreat = [line(), lit('retreat')]; v.retreat = line() === MENU.WD.mold.war && lit('retreat');
+  const [gx, gy] = FK.toScreen(...FK.toView(...FK.tileMid((h.j + h.n + 6) * FK.N + h.i), FK.D.land)); S.tap = null; FK.tap(gx, gy); R(); info.clear = [line(), lit('retreat')]; v.clear = line() === MENU.WD.mold.war && !lit('retreat');   /* B3: gone at the next tap on the map */
+  FK.select(null); MENU.act('mord', 'hold'); R(); info.none = line(); v.none = line() === MENU.WD.mold.war;   /* N83 (N417): a refusal is no longer read in the title; it goes to Mail */
   MENU.act('war'); return [v, info]; })()"""
 async def n72(b):
     pg, errs = await fresh(b); v, info = await pg.evaluate(N72JS); await pg.close()

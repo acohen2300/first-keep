@@ -5736,3 +5736,9 @@ Opened: code:menu.js, code:econ.js, book:shells, book:capabilities, book:measure
 - Flag for Albert: his farms no longer touch each other either. Say if fields should.
 - Gate: PASS. Size: econ.js 119676 → 119668 bytes; menu.js 127681 → 127651 bytes. ecs within the rule (not raised); one tick fewer.
 - Tests: t-n84 new (touch, lane, tick): passes, and fails on N83's code. Moved to the ruling: t-n52 `touch` (every pair now says gap or lane). Pass: t-n84, t-n83, t-n78, t-n77, t-n52, t-dock. t-p2 fails as before N83 (open since N75, Handoff). The full suite: running at the seal; result in The List 51.
+
+## N85: t-n72 moved to the ruling of N83; the full suite on N84 · 2026-11-19 22:29
+Albert, Nov 19 21:29, note 6 (N417). Opened: tool:test.py. No game code changed.
+- t-n72's War checks (`hold`, `defend`, `retreat`, `clear`, `none`) asked that the title read the order or the refusal (N396, Design 19 B). Moved to the ruling: the title reads War Command throughout; the lit tile is checked as before. Claude's miss in N83: its neighbour run stopped at a wrong test name (t-n66) and ran nothing, so this was not seen until the full suite.
+- Consequence for Albert to rule on: a refused order (nobody picked, nobody to defend) now says nothing on screen; it only goes to Mail.
+- The full suite, run on frozen copies side by side (so under load): N82 baseline 66 of 96 rules hold, 30 red; N84 66 of 98, 32 red. Red only on N84: t-n72 (fixed here), t-n51 and t-n52 (both pass when run alone). Red only on N82: t-n57 (known to fail one run in six). The other 29 red are the same on both: not caused by N83 or N84, not traced.

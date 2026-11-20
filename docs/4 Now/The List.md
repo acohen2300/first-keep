@@ -916,3 +916,5 @@ Not done, and why:
 - 16 (the outpost wagon): he gave no answer; not traced.
 - 49 (trade routes, caravans seen on them): new; not traced.
 - The match log's five items (section 47) and the clock (Draft 3): untouched.
+- The full suite [2026-11-19 22:29]: N82 baseline 30 red of 96; N84 32 red of 98 (both run side by side, so under load; the Handoff's count of open tests was lower, and how many of the 30 are the load is not known). Red only on N84: t-n72 (it read War's changing title: moved to the ruling in N85), t-n51 and t-n52 (pass alone). Red on both, not traced: t-a1 t-alarm t-civs t-fire t-food t-gather t-kinds t-land t-mind t-n24b t-n27 t-n29 t-n30 t-n42 t-n47 t-n60 t-odds t-orders t-peace t-physics t-realm t-research t-same t-sight t-stage t-trade t-walls t-war t-wild (t-n57 red on N82 only). One clean run of the suite alone is owed to tell load from fault.
+- From note 6, his word owed: a refused order (nobody picked, nobody to defend) now says nothing on screen; it only goes to Mail.
