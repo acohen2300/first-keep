@@ -17,7 +17,7 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 
 Cut: rebellion (nothing can reach it until towns can be taken) · debug overlays, each confirmed first · the replant button, if it duplicates the tap
 
-Keep, works: garrison · ice and floods · copy log · replant all · later-age building art
+Keep, works: garrison · ice and floods · copy log · replant all · later-age building art · fronts (finds the army's groups for the look button) · unit history on the card
 
 Keep, to fix after cleanup (lost features):
 - Camps and wagons: tried, does not work
@@ -29,7 +29,8 @@ Keep, to fix after cleanup (lost features):
 - Guide and help: not built out
 - Trade: works, hard to use; must explain itself
 - Hunt: design needs correcting
+- Bank: keep; redesign (today it only pays interest on gold held, 1% a minute, at most 40)
 - Repair: untested
 - Army orders and commands as a whole: a pain point; nothing cut until the control redesign
 
-Open: bank, fronts, history (what each does is reported; rulings pending) · about 217 functions not yet sorted, waiting on a test that plays the human side
+Open: about 217 functions not yet sorted, waiting on a test that plays the human side
