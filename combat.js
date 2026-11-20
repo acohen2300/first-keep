@@ -49,11 +49,11 @@ function fromWhere(t, a) { // E387
   const free = t.fx == null || !((t.target && t.target !== a) || t.stuck > K.t || routing(t)), [dx, dy] = dir(a.bx - t.bx, a.by - t.by); let [fx, fy] = [t.fx, t.fy], cover = false;
   if (!free) FK.unitsNear(t, FL.line * T, (v) => { if (v.side !== t.side || !armed(v) || !alive(v) || v.fx == null) return; fx += v.fx; fy += v.fy; const [ex, ey, e] = dir(v.bx - t.bx, v.by - t.by); if (e < FL.cover * T && ex * dx + ey * dy > FL.cos) cover = true; });
   const [gx, gy] = dir(fx, fy); return free || cover ? MO.front : dx * gx + dy * gy; }
-function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) : {}, melee = A.rng <= FL.melee; if (t.kind === 'bld') return base * FK.stat(a.code, a.side, 'bld'); let d = base * vs(a, t) * (a.kind === 'unit' ? ONE - FAM.fight * (ONE - (a.fam ?? ONE)) : ONE); // E355
+function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) : {}, melee = A.rng <= FL.melee; if (t.kind === 'bld') return base * FK.stat(a.code, a.side, 'bld'); let d = base * vs(a, t) * (a.kind === 'unit' ? 1 - FAM.fight * (1 - (a.fam ?? 1)) : 1); // E355
   if (FK.has(t, 'Prey') && FK.has(a, 'Gather')) d *= D.hunt.blow;
   if (armed(t)) { const F = shapeOf(t); if (beast(a)) d *= MO.wild; if (routing(t)) d *= MO.routHit; if (t.fb > K.t) d *= FB.hit; d *= FK.stat(t.code, t.side, 'armor') * F.hit * (rider(a) ? F.vsRiders : 1); if (melee && fromWhere(t, a) < FL.behind) d *= D.flank; }
   if (t.kind === 'unit' && FK.inWoods(t.k)) { if (!melee) d *= Math.exp(-D.woods.stems * D.woods.trunk * FK.woodsLine(a, t)); // E875
-    else { let n = ZERO; FK.unitsNear(t, FL.line * D.tile, (v) => { if (v.target === t && v.side === a.side && alive(v)) n++; }); d /= Math.max(ONE, n); } } // E876
+    else { let n = 0; FK.unitsNear(t, FL.line * D.tile, (v) => { if (v.target === t && v.side === a.side && alive(v)) n++; }); d /= Math.max(1, n); } } // E876
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
 function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (isIdle(v) || v.job === 'hold' || (v.sent && onMarch(v))) && temperOf(v) !== AR.temper.hold && !tame(v, a) && enemies(v, a)) { v.was = isIdle(v) ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019
   sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
@@ -82,17 +82,17 @@ function fight(u, t, told) { u.job = 'fight'; u.target = t; u.then = null; u.foc
 const nearK = (q, k, r) => Math.abs(q % N - k % N) <= r && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= r;
 const atK = (k) => (q) => q === k || nearK(q, k, FK.walkable(k) ? 0 : 4);
 function march(u, k) { u.mvT = K.t; u.job = 'march'; u.goal = k; u.target = null; u.then = 'march'; if (!FK.walkTo(u, atK(k), k)) { u.job = 'idle'; block(u); } } // E237
-const CY = D.convoy, onWay = (u, p, then) => Object.assign(u, { path: p, at: Math.min(ONE, p.length - ONE), then }), lineUp = (u, g, p, n) => { Object.assign(u, { mvT: K.t, job: 'march', goal: g, target: null, path: null, then: 'march' }); if (p) onWay(u, p, 'march'); else u.rp = Math.min(CY.most, n * CY.stagger); }; // E999
-function join(u, L, g) { let j = ZERO, bd = Infinity; L.forEach((q, n) => { const d = tl(u.k, q); if (d < bd) [j, bd] = [n, d]; }); if (bd > CY.near) return null;
+const CY = D.convoy, onWay = (u, p, then) => Object.assign(u, { path: p, at: Math.min(1, p.length - 1), then }), lineUp = (u, g, p, n) => { Object.assign(u, { mvT: K.t, job: 'march', goal: g, target: null, path: null, then: 'march' }); if (p) onWay(u, p, 'march'); else u.rp = Math.min(CY.most, n * CY.stagger); }; // E999
+function join(u, L, g) { let j = 0, bd = Infinity; L.forEach((q, n) => { const d = tl(u.k, q); if (d < bd) [j, bd] = [n, d]; }); if (bd > CY.near) return null;
   const on = new Map(L.slice(j).map((q, n) => [q, j + n])), a = bd ? FK.findPath(u.k, (q) => on.has(q), L[j], CY.tries, u) : [u.k]; if (!a) return null;
-  const end = L[L.length - ONE], z = g == null || g === end ? null : FK.findPath(end, (q) => q === g, g, CY.tries, u); return [...a, ...L.slice(on.get(a[a.length - ONE]) + ONE), ...(z ? z.slice(ONE) : [])]; }
+  const end = L[L.length - 1], z = g == null || g === end ? null : FK.findPath(end, (q) => q === g, g, CY.tries, u); return [...a, ...L.slice(on.get(a[a.length - 1]) + 1), ...(z ? z.slice(1) : [])]; }
 function convoy(S, goal, near) { const c = centreOf(S), lead = S.reduce((a, b) => (far(a, c) <= far(b, c) ? a : b)); return FK.findPath(lead.k, goal, near, D.tries.way, lead); } // E1000
-function landK(k) { const R = FK.reach(ME), i0 = k % N, j0 = (k - i0) / N; if (R.has(k)) return k; let best = k, bd = Infinity; for (let dj = -CY.snap; dj <= CY.snap; dj++) for (let di = -CY.snap; di <= CY.snap; di++) { const i = i0 + di, j = j0 + dj, d = Math.hypot(di, dj); if (i >= ZERO && j >= ZERO && i < N && j < N && d < bd && R.has(j * N + i)) [best, bd] = [j * N + i, d]; } return best; } // E1001
+function landK(k) { const R = FK.reach(ME), i0 = k % N, j0 = (k - i0) / N; if (R.has(k)) return k; let best = k, bd = Infinity; for (let dj = -CY.snap; dj <= CY.snap; dj++) for (let di = -CY.snap; di <= CY.snap; di++) { const i = i0 + di, j = j0 + dj, d = Math.hypot(di, dj); if (i >= 0 && j >= 0 && i < N && j < N && d < bd && R.has(j * N + i)) [best, bd] = [j * N + i, d]; } return best; } // E1001
 const block = (u) => { const b = foeBld(u, FL.melee); if (b) fight(u, b); }; // E391
 function recall(side) { waves[side] = null; homeAll(orders(side)); }
 const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { const room = t && D.trade.guard - guardsOf(t).length; S.filter((u) => armed(u) && u.esc !== t).filter((u, i) => !t || i < room).forEach((u) => Object.assign(u, { esc: t, home: t })); }; // E493
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
-FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= ZERO) { const G = guardsOf(c).filter(alive); c.convoy = G.length > ZERO && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046
+FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= 0) { const G = guardsOf(c).filter(alive); c.convoy = G.length > 0 && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046
 function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
 function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; dress(army, k); if (side === ME) FK.fire('event', 'march', army[0]); return army.length; }
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
@@ -113,7 +113,7 @@ function formHome() { const at = new Map(); for (const u of units()) if (armed(u
     const cols = list.map((a) => Math.min(GR.cols, Math.ceil(Math.sqrt(a.length * GR.block)))); let x0 = half(-(sum(cols, (c) => c + 1) - 1) * GR.gap);
     list.forEach((a, bi) => { a.forEach((u, i) => { const c = (x0 + ((i % cols[bi]) + 0.5) * GR.gap) * T, r = out + Math.floor(i / cols[bi]) * GR.gap * T; u.home = { bx: b.bx + fx * r - fy * c, by: b.by + fy * r + fx * c }; if (!u.path) [u.fx, u.fy] = [fx, fy]; }); x0 += (cols[bi] + 1) * GR.gap; }); } }
 // E239
-function nerve(u, dt) { let m = u.mor; const full = MO.full * (ONE - D.exposure.nerve * FK.exposure(u.code, u.side)); // E809
+function nerve(u, dt) { let m = u.mor; const full = MO.full * (1 - D.exposure.nerve * FK.exposure(u.code, u.side)); // E809
   if (!u.target) { const near = FK.bldsNear(u.bx, u.by, MO.shelterR * T, (b) => b.side === u.side && up(b) && (FK.has(b, 'Shoot') || FK.has(b, 'Line') || FK.has(b, 'Gate')) && gap(u, b) < MO.shelterR); m = FK.relax(m, full, MO.tau / FK.stat(u.code, u.side, 'rest') / (near ? MO.shelter * FK.stat(u.code, u.side, 'shelter') : MO.front), dt); }
   else { const us = [u], them = []; FK.unitsNear(u, MO.crowd * T, (v) => { if (armed(v) && alive(v)) (v.side === u.side ? us : atWar(u.side, v.side) ? them : []).push(v); }); if (them.length > us.length * MO.outnumbered) m -= MO.odds * dt; }
   u.mor = Math.min(full, Math.max(0, m)); if (u.mor > 0 || stat(u).bonly || u.fb > K.t) return;
@@ -155,9 +155,9 @@ function fly(v, h) { const k = M.drag / M.kg, P = []; let x = 0, y = h, vx = v *
   for (P.push([x, y]); y >= 0; ) { const s = Math.hypot(vx, vy); vx -= k * s * vx * FLY.dt; vy -= (D.g + k * s * vy) * FLY.dt; [px, py] = [x, y]; x += vx * FLY.dt; y += vy * FLY.dt; P.push([x, y]); }
   P.land = px + ((x - px) * py) / (py - y); P.pop(); P.push([P.land, 0]); return P; }
 function speedFor(d, h) { let lo = 0, hi = D.g; while (fly(hi, h).land < d) hi *= 2; for (let i = FLY.tries; i--; ) { const v = half(lo + hi); if (fly(v, h).land < d) lo = v; else hi = v; } return half(lo + hi); }
-const hillReach = (rng, h, dh) => { const key = [rng, h, Math.round(dh)].join(); if (!reachs.has(key)) reachs.set(key, fly(speedFor(rng * mpt, ZERO), h + Math.max(ZERO, Math.round(dh))).land / mpt); return reachs.get(key); }; // E983
-const tileOf = (a) => a.k ?? FK.tileAt(a.bx, a.by), dropTo = (a, b) => (FK.H[tileOf(a)] - (b ? FK.H[tileOf(b)] : ZERO)) / D.upm, reachOf = (t, u = null) => { const w = D.tower[t.code]; return hillReach(w.bow, w.h * mpt, u ? dropTo(t, u) : Math.max(ZERO, dropTo(t))) + FK.stat(t.code, t.side, 'rng'); };
-function shot(a, t, h) { const k = FK.SH[a.code].shot; if (k) tracers.push({ k, lv: +(FK.stat(a.code, a.side, 'fire') >= ONE), x: a.bx, y: a.by, u: dir(t.bx - a.bx, t.by - a.by), P: fly(speedFor(gap(a, t) * mpt, h), h), t0: K.t }); }
+const hillReach = (rng, h, dh) => { const key = [rng, h, Math.round(dh)].join(); if (!reachs.has(key)) reachs.set(key, fly(speedFor(rng * mpt, 0), h + Math.max(0, Math.round(dh))).land / mpt); return reachs.get(key); }; // E983
+const tileOf = (a) => a.k ?? FK.tileAt(a.bx, a.by), dropTo = (a, b) => (FK.H[tileOf(a)] - (b ? FK.H[tileOf(b)] : 0)) / D.upm, reachOf = (t, u = null) => { const w = D.tower[t.code]; return hillReach(w.bow, w.h * mpt, u ? dropTo(t, u) : Math.max(0, dropTo(t))) + FK.stat(t.code, t.side, 'rng'); };
+function shot(a, t, h) { const k = FK.SH[a.code].shot; if (k) tracers.push({ k, lv: +(FK.stat(a.code, a.side, 'fire') >= 1), x: a.bx, y: a.by, u: dir(t.bx - a.bx, t.by - a.by), P: fly(speedFor(gap(a, t) * mpt, h), h), t0: K.t }); }
 // E409
 const say = (w, o = {}) => FK.fire('say', w.replace(/\{(\w+)\}/g, (_, x) => o[x] ?? '')), mid = (k) => { const [bx, by] = FK.tileMid(k); return { bx, by }; }, kOf = (p) => FK.tileAt(p.bx, p.by), far = FK.dist;
 const centreOf = (S) => ({ bx: sum(S, (u) => u.bx) / S.length, by: sum(S, (u) => u.by) / S.length }), tl = (a, b) => Math.hypot((a % N) - (b % N), Math.floor(a / N) - Math.floor(b / N));
@@ -180,12 +180,12 @@ function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.
   for (const u of S.filter((v) => FK.has(v, 'Unpack'))) ECON.sendWagon(u, k ?? kOf(t));
   if (!sol.length) return null; if (!t) k = landK(k); const goal = t ? kOf(t) : k; let L = null;
   if (theirs) { L = convoy(sol, ...ringOf(sol.reduce((a, b) => (stat(a).rng <= stat(b).rng ? a : b)), t)); sol.forEach((u, n) => { fight(u, t, true); u.sent = false; const p = L && join(u, L); if (p) onWay(u, p, 'fight'); else u.rp = Math.min(CY.most, n * CY.stagger); }); }
-  else { sol.push(...armyOf(sol[ZERO].side).filter((v) => !sol.includes(v) && !v.target && v.goal != null && (v.job === 'hold' || onMarch(v)) && nearK(v.goal, goal, GR.most * GR.gap))); L = dress(sol, goal); if (!L) { say(fromBook('words').controller.why.noWay); return null; } for (const u of sol) u.sent = !t; }
+  else { sol.push(...armyOf(sol[0].side).filter((v) => !sol.includes(v) && !v.target && v.goal != null && (v.job === 'hold' || onMarch(v)) && nearK(v.goal, goal, GR.most * GR.gap))); L = dress(sol, goal); if (!L) { say(fromBook('words').controller.why.noWay); return null; } for (const u of sol) u.sent = !t; }
   return mark(sol, goal, t ? FK.rankName(t.code || FK.KIND[t.kind].code, t.side) : MENU.coord(...FK.tileMid(k)), L); }
 function defend(S) { const DF = D.defend, val = (t) => (FK.has(t, 'Seat') ? DF.seat : t.kind === 'bld' ? DF.bld : armed(t) ? DF.soldier : DF.folk), F = attacked(); if (!F.length) return null; // E1002
-  const G = S.filter((u) => !['fight', 'rout'].includes(status(u))); if (!G.length) return ZERO; const c = centreOf(G), [f] = F.sort((a, b) => val(b.target) - val(a.target) || far(a, c) - far(b, c)), at = f.target; order(G, f); return { n: G.length, at: FK.rankName(at.code || FK.KIND[at.kind].code, ME) }; }
+  const G = S.filter((u) => !['fight', 'rout'].includes(status(u))); if (!G.length) return 0; const c = centreOf(G), [f] = F.sort((a, b) => val(b.target) - val(a.target) || far(a, c) - far(b, c)), at = f.target; order(G, f); return { n: G.length, at: FK.rankName(at.code || FK.KIND[at.kind].code, ME) }; }
 const attacked = () => units().filter((v) => hostile(v) && v.target && v.target.side === ME && alive(v.target)); // E1101
-const fronts = () => { const h = FK.seatOf(ME), G = new Map(); for (const u of units()) if (u.side === ME && troop(u) && alive(u) && !u.inside && (u.ord != null || !h || far(u, h) > D.zone[ZERO])) G.set(u.ord ?? h, [...(G.get(u.ord ?? h) || []), u]); return [...G.values()].map(centreOf); }; // E1102
+const fronts = () => { const h = FK.seatOf(ME), G = new Map(); for (const u of units()) if (u.side === ME && troop(u) && alive(u) && !u.inside && (u.ord != null || !h || far(u, h) > D.zone[0])) G.set(u.ord ?? h, [...(G.get(u.ord ?? h) || []), u]); return [...G.values()].map(centreOf); }; // E1102
 // E414
 const mUnits = (m) => units().filter((u) => u.side === ME && u.ord === m.ord && alive(u)), out = (slot) => MS[slot] && !MS[slot].end;
 const hostile = (v) => v.side !== ME && alive(v) && isFoe(ME, v) && (armed(v) || beast(v));
@@ -228,7 +228,7 @@ const DIRECTS = { // E419
 function direct(cls, aim) { const [id, , snd, said] = WO.direct[cls], S = ofKind(cls), [u0] = S; if (!S.length) return say(WO.why.none); // E420
   const w = DIRECTS[id](S, aim, said); if (!w.endsWith('!')) return say(w); tired(S); say(w); FK.fire('event', snd, u0); }
 const directWait = (cls) => { const [id] = WO.direct[cls]; return wait(id); };
-function narrowAt(k, [fx, fy]) { const [cx, cy] = FK.tileMid(k), most = CK.max * GR.gap; let w = ZERO; for (const s of [ONE, -ONE]) for (let d = ONE; d <= most; d++) { if (!FK.walkable(FK.tileAt(cx - fy * d * T * s, cy + fx * d * T * s))) break; w++; } // E421
+function narrowAt(k, [fx, fy]) { const [cx, cy] = FK.tileMid(k), most = CK.max * GR.gap; let w = 0; for (const s of [1, -1]) for (let d = 1; d <= most; d++) { if (!FK.walkable(FK.tileAt(cx - fy * d * T * s, cy + fx * d * T * s))) break; w++; } // E421
   return w < most + most ? Math.min(CK.max, Math.max(CK.min, Math.round(w / GR.gap))) : null; }
 function coverNear(k) { const ci = k % N, cj = Math.floor(k / N), R = Math.ceil(AM.find), C0 = AM.cover, inN = (v) => v >= C0 && v < N - C0; let best = null, bd = Infinity; // E422
   for (let j = cj - R; j <= cj + R; j++) for (let i = ci - R; i <= ci + R; i++) { const q = j * N + i, d = Math.hypot(i - ci, j - cj); if (!inN(i) || !inN(j) || !FK.walkable(q) || d >= bd || d > AM.find) continue;
@@ -253,7 +253,7 @@ const fill = (t) => { t.hpMax = hpMax(t); t.hp = t.done >= 1 ? t.hpMax : 1; };
 FK.on('tick', (dt) => {
   if (ECON.result()) return; heal(dt); if (FK.every(TP.beat)) traps(); homeT -= dt; if (due(homeT)) { homeT = D.scan; formHome(); }
   for (const t of FK.blds()) { if (t.hpMax == null) fill(t);
-    const tw = D.tower[t.code]; if (!tw || !up(t)) continue; t.cd = (t.cd || ZERO) - dt; if (!due(t.cd)) continue; const reach = reachOf(t); let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (SIDES[u.side] && isFoe(t.side, u, t) && FK.inSight(u, t.side, t) && !u.veil && !FK.has(u, 'Envoy') && (!tw.only || FK.has(u, tw.only)) && edgeDist(u, t) <= reachOf(t, u) && (!best || edgeDist(u, t) < edgeDist(best, t))) best = u; }); // E1026
+    const tw = D.tower[t.code]; if (!tw || !up(t)) continue; t.cd = (t.cd || 0) - dt; if (!due(t.cd)) continue; const reach = reachOf(t); let best = null; FK.unitsNear(t, (reach + t.n) * T, (u) => { if (SIDES[u.side] && isFoe(t.side, u, t) && FK.inSight(u, t.side, t) && !u.veil && !FK.has(u, 'Envoy') && (!tw.only || FK.has(u, tw.only)) && edgeDist(u, t) <= reachOf(t, u) && (!best || edgeDist(u, t) < edgeDist(best, t))) best = u; }); // E1026
     if (best) { FK.fire('event', 'shot', t); shot(t, best, tw.h * mpt); hit(t, best, FK.stat(t.code, t.side, 'atk') + ECON.within(t)); t.cd = FK.stat(t.code, t.side, 'rof'); } }
   for (const v of units()) if (v.back != null && !v.path && !FK.onIce(v) && alive(v)) { const k = v.back; v.back = null; march(v, k); }
   const prey = new Map(); for (const b of units()) if (!SIDES[b.side] && b.job === 'fight' && b.target && !prey.has(b.target)) prey.set(b.target, b); // E1010
@@ -264,7 +264,7 @@ FK.on('tick', (dt) => {
     else if (!armed(u)) { if (u.job !== 'fight') { const w = prey.get(u); if (w && alive(w)) fight(u, w); else continue; } }
     else if (brain(u, dt, look)) continue;
     if (u.job !== 'fight') continue; const t = u.target; if (u.path && armed(u)) u.then = 'fight'; if (!t || !alive(t)) { u.target = null; u.path = null; if (u.was != null && armed(u)) march(u, u.was); else u.job = 'idle'; continue; }
-    if (edgeDist(u, t) <= (ranged(u) ? hillReach(s.rng, ZERO, dropTo(u, t)) : s.rng) + 0.5) { if (u.kT > K.t - D.kite.hold && u.path) continue; u.path = null; [u.fx, u.fy] = dir(t.bx - u.bx, t.by - u.by); u.face = Math.sign(u.fx) || u.face; // E398
+    if (edgeDist(u, t) <= (ranged(u) ? hillReach(s.rng, 0, dropTo(u, t)) : s.rng) + 0.5) { if (u.kT > K.t - D.kite.hold && u.path) continue; u.path = null; [u.fx, u.fy] = dir(t.bx - u.bx, t.by - u.by); u.face = Math.sign(u.fx) || u.face; // E398
       const f = look && !due(u.cd) && kiteOf(u) && nearest(u, D.kite.near, u, (v) => !ranged(v)); if (f) { const [dx, dy] = dir(u.bx - f.bx, u.by - f.by), x = u.bx + dx * D.kite.back * T, y = u.by + dy * D.kite.back * T; if (FK.walkable(FK.tileAt(x, y))) { Object.assign(u, { path: [[x, y]], at: 0, then: 'fight', kT: K.t }); continue; } }
       if (due(u.cd)) { hit(u, t); u.cd = s.rof; } } else if (!u.path && due(u.rp)) { u.rp = D.repath; if (!toward(u, t)) { u.target = null; u.job = 'idle'; u.rp = 3 * D.repath; block(u); } else if (armed(u)) u.then = 'fight'; } }
   ordT -= dt; if (due(ordT)) { ordT = HU.beat; ordersTick(); } if (FK.every(D.beats.natives)) raids(); if (FK.every(D.beats.slow)) for (const o of D.players) if (o !== ME) loot(o);
@@ -275,17 +275,17 @@ FK.on('draw', (ctx, s) => { if (!FK.show.U) return; const [cw, ch] = FK.size(), 
   const seen = (x, y, m) => x > -m && x < cw + m && y > -m && y < ch + m, bar = FK.bar; // E1043
   const oval = (x, y, r, k, from = a0, to = a1) => { ctx.beginPath(); ctx.ellipse(x, y, r, r * k, a0, from, to); };
   for (const u of units()) if (FK.has(u, 'Health') && u.hp < u.hpMax && FK.inSight(u)) { const [x, y] = FK.toScreen(u.vx, u.vy), [w, up, m] = B.unit; if (seen(x, y, m)) bar(x, y - up * s, w * s, u.hp / u.hpMax, SIDES[u.side] ? SIDES[u.side].col : C.white); }
-  for (const t of FK.blds()) if ((t.board || t.bp != null) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, , , m] = B.bld, W = t.n * w * s, n = D.prep.planks, f = t.board ? ONE : t.bp; if (!seen(x, y, m)) continue; ctx.save(); ctx.strokeStyle = C.pole; ctx.lineWidth = B.h; for (let i = ZERO; i < Math.ceil(n * f); i++) { const yy = y - (i + ONE) * B.h * (ONE + ONE) * s; ctx.beginPath(); ctx.moveTo(x - half(W), yy); ctx.lineTo(x + half(W), yy - B.h * s * (i % (ONE + ONE) ? ONE : -ONE)); ctx.stroke(); } ctx.restore(); } // E1034
+  for (const t of FK.blds()) if ((t.board || t.bp != null) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, , , m] = B.bld, W = t.n * w * s, n = D.prep.planks, f = t.board ? 1 : t.bp; if (!seen(x, y, m)) continue; ctx.save(); ctx.strokeStyle = C.pole; ctx.lineWidth = B.h; for (let i = 0; i < Math.ceil(n * f); i++) { const yy = y - (i + 1) * B.h * 2 * s; ctx.beginPath(); ctx.moveTo(x - half(W), yy); ctx.lineTo(x + half(W), yy - B.h * s * (i % 2 ? 1 : -1)); ctx.stroke(); } ctx.restore(); } // E1034
   for (const t of FK.blds()) if (t.hp != null && t.hp < t.hpMax && up(t) && FK.inSight(t)) { const [x, y] = FK.toScreen(t.vx, t.vy), [w, up, plus, m] = B.bld; if (seen(x, y, m)) bar(x, y - (t.n * up + plus) * s, t.n * w * s, t.hp / t.hpMax, SIDES[t.side].col); }
   drawOrders(ctx, s, at, oval);
   const dots = FLY.dots.map((d) => d * s); ctx.lineWidth = s; for (const r of tracers.slice()) { const P = r.P, n = P.length - 1, p = (K.t - r.t0) / (n * FLY.dt); if (p >= 1) { tracers.splice(tracers.indexOf(r), 1); continue; } // E399
     const [ux, uy] = r.u, v = ST[r.k], q = s * D.upm * v.m, pt = (f) => { const [x, y] = P[Math.round(Math.max(0, f) * n)], m = (x / mpt) * T; return at(r.x + ux * m, r.y + uy * m, y * D.upm); }, [x0, y0] = pt(p - FLY.tail), [x, y] = pt(p);
     if (v.trail) { ctx.strokeStyle = v.trail; ctx.setLineDash(dots); ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]); }
-    if (v.brush) { ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(y - y0, x - x0)); FK.blit(FK.figure(r.k, C.white, r.lv, ZERO, q, ZERO), ZERO, ZERO, q); ctx.restore(); } }
+    if (v.brush) { ctx.save(); ctx.translate(x, y); ctx.rotate(Math.atan2(y - y0, x - x0)); FK.blit(FK.figure(r.k, C.white, r.lv, 0, q, 0), 0, 0, q); ctx.restore(); } }
   const K0 = ST.spark; ctx.save(); ctx.strokeStyle = C.flame; ctx.lineWidth = K0.line * s; for (const k of sparks) { const a = (K.t - k.t) / FLY.spark; if (a < 0 || a >= 1) continue; const [x, y] = at(k.x, k.y, K0.lift), g = (K0.to + a * K0.grow) * s; ctx.globalAlpha = 1 - a; ctx.beginPath(); // E400
     for (let i = K0.rays; i--; ) { const an = i * K0.turn + k.t * K0.spin, c = Math.cos(an), e = Math.sin(an); ctx.moveTo(x + c * K0.from * s, y + e * K0.from * s); ctx.lineTo(x + c * g, y + e * g); } ctx.stroke(); } ctx.restore();
 // E960
-  const S0 = ST.standard, grp = new Map(); STD.length = ZERO; if (FK.cam.z < S0.zoom) return; for (const u of units()) if (armed(u) && alive(u) && !engine(u) && (u.job === 'march' || u.job === 'hold' || u.was != null) && FK.inSight(u)) { const key = u.side + ' ' + (u.ord ?? u.rally ?? u.was ?? u.goal), g = grp.get(key) || grp.set(key, { o: u.side, us: [] }).get(key); g.us.push(u); } // E401
+  const S0 = ST.standard, grp = new Map(); STD.length = 0; if (FK.cam.z < S0.zoom) return; for (const u of units()) if (armed(u) && alive(u) && !engine(u) && (u.job === 'march' || u.job === 'hold' || u.was != null) && FK.inSight(u)) { const key = u.side + ' ' + (u.ord ?? u.rally ?? u.was ?? u.goal), g = grp.get(key) || grp.set(key, { o: u.side, us: [] }).get(key); g.us.push(u); } // E401
   for (const { o, us } of grp.values()) { if (us.length < S0.least) continue; const [x, y] = at(sum(us, (u) => u.bx) / us.length, sum(us, (u) => u.by) / us.length), h = S0.pole * s, [r0, r1] = S0.ring, r = r0 * s + r1, col = SIDES[o].col, [fw, f1, f2, f3] = S0.flag.map((v) => v * s), [sp, sw, tail] = S0.wave, a = Math.sin(K.t * sp + o) * sw * s, top = S0.top; STD.push({ pole: S0.pole, vx: sum(us, (u) => u.vx) / us.length, vy: sum(us, (u) => u.vy) / us.length, i: o + us.length });
     ctx.lineWidth = S0.line * s; ctx.save(); ctx.strokeStyle = C.shade; ctx.globalAlpha = S0.alpha; oval(x, y, r, S0.tilt); ctx.stroke(); ctx.restore(); ctx.strokeStyle = col; oval(x, y, r, S0.tilt, top, top + (sum(us, (u) => u.hp) / sum(us, (u) => u.hpMax)) * a1); ctx.stroke();
     ctx.strokeStyle = C.pole; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - h); ctx.stroke(); ctx.fillStyle = col; ctx.strokeStyle = C.shade; ctx.lineWidth = s; ctx.beginPath(); ctx.moveTo(x, y - h); ctx.quadraticCurveTo(x + half(fw), y - h + a, x + fw, y - h + f1 + a * tail); ctx.lineTo(x + fw, y - h + f2 + a * tail); ctx.quadraticCurveTo(x + half(fw), y - h + f2 + a, x, y - h + f3); ctx.closePath(); ctx.fill(); ctx.stroke(); }
@@ -324,7 +324,7 @@ function sabotage(u, b) { const how = SA.how[b.code], W = TW.sab, name = FK.SH[b
   if (how === 'burn') { FK.harm(b, b.hpMax * SA.burn, 'sabotage'); if (!alive(b)) die(b, null); else ECON.ignite(b, 'sabotage'); } else { b.stall = K.t + SA.stall; const c = (b.q || []).shift(); if (c && D.ages.includes(c)) SIDES[b.side].aging = null; const [nx] = b.q || []; if (nx) b.qt = ECON.timeOf(b.side, nx); }
   if (b.side === ME) say(W[how], { at: MENU.coord(b.bx, b.by), name, n: SA.stall }); else if (u.side === ME) say(how === 'burn' ? W.didBurn : W.didStall, { name: name.toLowerCase() }); die(u, null); }
 // E582
-const FD = D.finds, RD = D.raids, JN = D.wayfarer, WW = fromBook('words').wild, ONE = D.count.one, ZERO = D.count.zero, raid = { hit: {} }, [L0, L1] = FD.leash, codeOf = (t) => (FK.KIND[t.kind] || {}).code, rowOf = FK.rowOf;
+const FD = D.finds, RD = D.raids, JN = D.wayfarer, WW = fromBook('words').wild, raid = { hit: {} }, [L0, L1] = FD.leash, codeOf = (t) => (FK.KIND[t.kind] || {}).code, rowOf = FK.rowOf;
 const guardsLeft = (t) => units().some((v) => v.find === t && !SIDES[v.side] && alive(v) && FK.has(v, 'Fight')), besideK = (t) => { let b = null; FK.stamp(t.bx, t.by, FD.take * T, (k, d) => { if (FK.walkable(k) && (!b || d < b.d)) b = { d, k }; }); return b && b.k; };
 function wild(u, look) { if (u.back && K.t > u.back) Object.assign(u, { back: null, horde: false, home: u.camp, aggro: null }); // E583
   if (FK.has(u, 'Join')) { if (look) meet(u); return true; } const h = u.home;
@@ -338,12 +338,12 @@ function wild(u, look) { if (u.back && K.t > u.back) Object.assign(u, { back: nu
 function meet(u) { let m = null; FK.unitsNear(u, JN.meet * T, (v) => { if (!m && SIDES[v.side] && alive(v) && !v.inside && !FK.has(v, 'Envoy') && gap(u, v) < JN.meet) m = v; }); if (!m) return; // E585
   const o = m.side, n = JN.joins[u.code], seat = FK.seatOf(o); for (let i = n; i--; ) { if (!seat || ECON.popOf(o) >= ECON.popCap(o)) { ECON.earn(o, 'food', JN.food, 'finds', false); continue; }
     const [vil] = FK.trains(seat.code), v = FK.spawn(vil, o, u.k, FK.rng), r = SIDES[o].rally, f = r && ECON.bestFind(v, r); v.bx += i * JN.gap * T; FK.place(v); if (f) ECON.gatherAt(v, f); }
-  if (o === ME) say(n > ONE ? WW.wayfarer.many : WW.wayfarer.one); FK.vanish(u); }
+  if (o === ME) say(n > 1 ? WW.wayfarer.many : WW.wayfarer.one); FK.vanish(u); }
 function roulette(w) { let x = FK.rng() * sum(w, (v) => v); const i = w.findIndex((v) => (x -= v) <= null); return ~i ? i : ~-w.length; } // E586
-function raids() { const [g0, g1] = RD.gap, wait = () => (g0 + FK.rng() * (g1 - g0)) / (FK.hz('horde') ? RD.horde : ONE); // E587
+function raids() { const [g0, g1] = RD.gap, wait = () => (g0 + FK.rng() * (g1 - g0)) / (FK.hz('horde') ? RD.horde : 1); // E587
   if (raid.at == null) raid.at = RD.from + (D.ai.diff[MENU.S.game.diff].safe ?? null) + wait() * RD.first; if (K.t < raid.at) return; raid.at = K.t + wait();
   const M = [], w = [], B = new Map(); for (const side of D.players) { const k = FK.seatOf(side); if (!k || ECON.fell(side) || !atWar(side, 'rob')) continue; const [f] = things().filter((t) => codeOf(t) === RD.camp && guardsLeft(t)).sort((a, b) => gap(a, k) - gap(b, k)); if (!f) continue;
-    const R = units().filter((u) => u.find === f && alive(u) && stat(u).atk).slice(null, RD.n + SIDES[side].age), band = sum(R, power1), again = ONE + RD.again[ZERO] * Math.exp(-(K.t - (raid.hit[side] ?? -Infinity)) / RD.again[ONE]);
+    const R = units().filter((u) => u.find === f && alive(u) && stat(u).atk).slice(null, RD.n + SIDES[side].age), band = sum(R, power1), again = 1 + RD.again[0] * Math.exp(-(K.t - (raid.hit[side] ?? -Infinity)) / RD.again[1]);
     for (const v of R.length ? units() : []) { if (v.side !== side || !alive(v) || v.inside || !(FK.has(v, 'Gather') || FK.has(v, 'Trade'))) continue; let guard = null; FK.unitsNear(v, RD.group * T, (s) => { if (s.side === side && armed(s) && alive(s) && !s.inside && gap(s, v) < RD.group) guard += power1(s); });
       const c = power1(v) + guard; if ((band * band) / (band * band + c * c) <= RD.beat) continue; const load = (v.load || null) + sum(Object.values(v.goods || {}), (x) => x); M.push(v); B.set(v, R); w.push((again * (D.carry + RD.load * load) * band) / (D.carry * (band + RD.guard * guard))); } }
   if (!M.length) return; const mark = M[roulette(w)], R = B.get(mark); raid.hit[mark.side] = K.t; for (const u of R) Object.assign(u, { camp: u.home, home: { bx: mark.bx, by: mark.by }, aggro: mark, horde: true, back: K.t + RD.secs });
