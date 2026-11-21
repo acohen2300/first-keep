@@ -129,7 +129,7 @@ function brain(u, dt, look) { // E396
   if (u.chg && u.chg < K.t) { u.chg = null; u.tire = CH.slow; } if (u.tire) u.tire = FK.relax(u.tire, D.bases.pace, CH.tired, dt); // E408
   if (u.hp < u.hpMax && !u.target && !u.unfed && FK.bldsNear(u.bx, u.by, D.shelter.r * T, (b) => b.side === u.side && FK.has(b, 'Shelter') && up(b) && gap(u, b) < D.shelter.r)) u.hp = FK.relax(u.hp, u.hpMax, u.hpMax / FK.stat(u.code, u.side, 'garrison'), dt);
   const s = stat(u), sight = FK.stat(u.code, u.side, 'sight'), atHome = isIdle(u) || (u.job === 'fight' && u.was == null), d = (v) => edgeDist(u, v); let t = u.target;
-  if (u.focus && !(alive(u.focus) && enemies(u, u.focus))) u.focus = null;
+  if (u.focus && !(alive(u.focus) && enemies(u, u.focus))) { if (alive(u.focus) && u.was == null) u.was = u.focus.k; u.focus = null; } // E1278
   if (t && !(alive(t) && enemies(u, t) && (t === u.focus || d(t) < sight * AR.leash * temper(u).chase || (atHome && nearHome(u, t))))) t = null;
   if (look && !u.focus) { const it = intent(u), far = it === AR.intent.loose && onMarch(u) ? s.rng + AR.step : sight, cur = t && t.kind === 'unit' ? t : null;
     let c = s.bonly || (it === AR.intent.bld && foeBld(u, far)) ? foeBld(u, far) : bestFoe(u, far);
@@ -180,7 +180,7 @@ function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.
   for (const u of S.filter((v) => FK.has(v, 'Unpack'))) ECON.sendWagon(u, k ?? kOf(t));
   if (!sol.length) return null; if (!t) k = landK(k); const goal = t ? kOf(t) : k; let L = null;
   if (theirs) { L = convoy(sol, ...ringOf(sol.reduce((a, b) => (stat(a).rng <= stat(b).rng ? a : b)), t)); sol.forEach((u, n) => { fight(u, t, true); u.sent = false; const p = L && join(u, L); if (p) onWay(u, p, 'fight'); else u.rp = Math.min(CY.most, n * CY.stagger); }); }
-  else { const near = armyOf(sol[0].side).filter((v) => !sol.includes(v) && !v.target && v.goal != null && (v.job === 'hold' || onMarch(v))), at = (v) => nearK(v.goal, goal, GR.gap), joins = new Set(near.filter(at).map((v) => v.ord)); sol.push(...near.filter((v) => (v.ord == null ? at(v) : joins.has(v.ord)))); L = dress(sol, goal); if (!L) { say(fromBook('words').controller.why.noWay); return null; } for (const u of sol) u.sent = !t; }
+  else { const near = armyOf(sol[0].side).filter((v) => !sol.includes(v) && !v.target && v.goal != null && (v.job === 'hold' || onMarch(v))), at = (v) => nearK(v.goal, goal, GR.gap), joins = new Set(near.filter(at).map((v) => v.ord)); sol.push(...near.filter((v) => v.ord != null && joins.has(v.ord))); L = dress(sol, goal); if (!L) { say(fromBook('words').controller.why.noWay); return null; } for (const u of sol) u.sent = !t; }
   return mark(sol, goal, t ? FK.rankName(t.code || FK.KIND[t.kind].code, t.side) : MENU.coord(...FK.tileMid(k)), L); }
 function defend(S) { const DF = D.defend, val = (t) => (FK.has(t, 'Seat') ? DF.seat : t.kind === 'bld' ? DF.bld : armed(t) ? DF.soldier : DF.folk), F = attacked(); if (!F.length) return null; // E1002
   const G = S.filter((u) => !['fight', 'rout'].includes(status(u))); if (!G.length) return 0; const c = centreOf(G), [f] = F.sort((a, b) => val(b.target) - val(a.target) || far(a, c) - far(b, c)), at = f.target; order(G, f); return { n: G.length, at: FK.rankName(at.code || FK.KIND[at.kind].code, ME) }; }

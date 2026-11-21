@@ -11,10 +11,12 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 - [ ] Army control, first (Albert, Nov 20 21:25: "Most important. Army control. Terrible")
   - [x] two groups keep their own orders (an order no longer sweeps in every soldier within 21 tiles; it joins a group only when its spot lands inside it). In the check
   - [x] Wall connected (it was in the code, nothing called it): the picked foot lock a line, the picked archers hold theirs behind, until the next order or a second tap. Its button took the place of Exit on the war control line (Exit repeated the W circle beside it); Garrison villagers keeps its tile. Loose (the volley) and Charge are still not connected
-  - [ ] test attack, defend, hold and retreat the same way
+  - [x] attack, hold and retreat tested with two groups (Nov 21). Found and fixed: soldiers told to attack a foe who walked out of sight stopped where they stood and said they had arrived; they now go on to where he was last seen (in the check). An order tapped beside a held or walled group pulled single soldiers out of it; it no longer does. Wall tested under attack: it held, all still in the wall after the fight
+  - [ ] defend not tested (it needs an enemy attacking; the test field's rival walks home)
+  - [ ] tapping one of your own soldiers while giving an order changes the pick instead of setting the spot
   - [ ] draft a force by type and number (2 of 6 catapults; knights, not elephants), groups that keep their own order, formation by type (foot, archers, siege behind), hold where sent. Albert's scenario, Nov 20 21:34; design not settled
   - [ ] soldiers less wimpy, more common sense (Albert to give examples)
-- [x] The copy log tracks more (Albert, Nov 20 22:36): the build, his orders, losses and to whom, refused taps, how it ended, errors, slowest frame, news with repeats folded, each rival's army by kind, people against room, army aim, goal, attacks. The three long matches' kept marks are stale since the log is part of the mark: run `tools/check.py --deep --accept` once
+- [x] The copy log tracks more (Albert, Nov 20 22:36): the build, his orders, losses and to whom, refused taps, how it ended, errors, slowest frame, news with repeats folded, each rival's army by kind, people against room, army aim, goal, attacks.
 - [ ] Human-side test: a test that plays as a person (every age, building, unit, card and button). It is the proof for the menu build, shrinks the 217 unsorted functions, and later proves each lost feature fixed
 - [ ] Talk session, decisions only (before the standards step of Build 3): what red, green, blue, gold and cream mean; one look each for chosen, ready and unavailable; the text sizes; tap size 44
 - [ ] Build 3, the menu build: what each menu holds becomes lists in the Screen book, every screen identical (proven by `tools/screens.py`, 173 screens)
