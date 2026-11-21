@@ -184,6 +184,22 @@ async def rings():
         await run.step(pg, 2)
         return await pg.evaluate("[...WAR.ORD].filter((O) => O.n).map((O) => !!O.foe).sort()")
 
+async def told():
+    """Villagers carrying stone, sent to a berry bush away from home, keep to it after dropping the stone; a villager working a farm stays at it when raiders come."""
+    STICK = """(() => { const h = fk.seatOf(0), d = (t) => fk.dist(t, h) / fk.D.tile, wild = (b) => units.some((u) => u.side !== 0 && u.hp > 0 && fk.has(u, 'Fight') && fk.dist(u, b) < 30 * fk.D.tile);
+  const clr = (b) => Math.min(...units.filter((u) => u.side !== 0 && u.hp > 0 && fk.has(u, 'Fight')).map((u) => fk.dist(u, b))), B = fk.things().filter((t) => t.kind === 'bush' && d(t) > 30 && d(t) < 125).sort((a, b) => clr(b) - clr(a))[0], st = fk.things().filter((t) => t.kind === 'stone').sort((a, b) => d(a) - d(b))[0];
+  const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).slice(0, 4); for (const u of V) ECON.gatherAt(u, st); window.ZQB = B; window.ZQV = V; return Math.round(d(B)); })()"""
+    POST = """(() => { const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by); let F = null; for (let r = 7; r < 30 && !F; r++) for (let dd = -r; dd <= r && !F; dd++) for (const [i, j] of [[k0 % N + dd, Math.floor(k0 / N) - r], [k0 % N + dd, Math.floor(k0 / N) + r]]) if (!F && ECON.canPlace('BCL1', i, j)) { F = fk.build('BCL1', i, j, fk.SIDES[0].col); F.done = 1; F.hp = F.hpMax = fk.stat('BCL1', 0, 'hp'); }
+  const v = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).sort((a, b) => fk.dist(a, F) - fk.dist(b, F))[5]; ECON.gatherAt(v, F); window.ZQF = F; window.ZQW = v; return !!F; })()"""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 5); await pg.evaluate(STICK); await run.step(pg, 25)
+        await pg.evaluate("WAR.order(ZQV, ZQB, fk.tileAt(ZQB.bx, ZQB.by))"); await run.step(pg, 120)
+        kept = await pg.evaluate("[ZQV.filter((u) => u.target && u.target.kind === 'bush' && fk.dist(u.target, ZQB) < 6 * fk.D.tile).length, ZQV.length]")
+        await pg.evaluate(POST); await run.step(pg, 30)
+        await pg.evaluate("(() => { const e = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot'); for (let n = 0; n < 3; n++) fk.spawn(e.code, 2, fk.tileAt(ZQW.bx + 30 + 10 * n, ZQW.by + 20), fk.rng); })()")
+        await run.step(pg, 6)
+        return kept, await pg.evaluate("[ZQW.target === ZQF, !!(ZQW.scared || ZQW.inside || ZQW.den)]")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -210,6 +226,8 @@ async def check_game():
     rule('every order ends the pick: a War move, a War hold, villagers sent to a bush', pe[2] == 0 and pe[4] == 0 and pe[5][0] == 3 and pe[5][1] == 0 and pe[5][2] > 0, f'picked before and after (archers, move, foot, hold, villagers [before, after, went]): {pe}')
     rg = await rings()
     rule('an order at a foe draws no ring where the foe stood; a move keeps its ring', rg == [False, True], f'live orders, marked foe: {rg}')
+    tk, tp = await told()
+    rule('villagers keep to the find they were sent to, and a worker at a farm stays when raiders come', tk[0] == tk[1] and tp == [True, False], f'on the told bush after two minutes: {tk[0]} of {tk[1]}; farm worker still at the farm, ran: {tp}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()
