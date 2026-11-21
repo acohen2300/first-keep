@@ -1049,7 +1049,7 @@ BOOK("comments", {
  "E1250": {"text": "the − above the line hides Jobs | Build and closes the rows; the + after Home brings them back (Design 17, 11)"},
  "E1251": {"text": "at the drop a villager sent to a find of another kind takes that kind (Design 17, 3: sent to wood from gathering food, it went back to food)"},
  "E1252": {"text": "placing: a still tap on the green ghost builds it; a tap elsewhere moves it (Design 17, 4, 16)"},
- "E1253": {"text": "a site of one's own: a tap picks it and arms its trash (red, a small trash by the tap); a second tap takes it down, the share not built paid back (Design 17, 16, 18)"},
+ "E1253": {"text": "a site of one's own: a tap only picks it and opens its card; a second tap does nothing more; Delete is on the card (N434, which overrules Design 16 to 18: no trash by the finger, no second tap that takes the site down)"},
  "E1254": {"text": "the building card under the law: Train | Learn | Talk on the line; the crumb row with the queue, Stop, Repair, Demolish and Cancel; a unit tile tapped trains one (Design 17, 26, 19)"},
  "E1255": {"text": "every villager inside or sheltering comes out to its work"},
  "E1256": {"text": "War: Shelter, Work and Out (Design 17, 5, 6)"},

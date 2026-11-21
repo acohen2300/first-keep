@@ -152,6 +152,17 @@ async def troops():
         got.append(await pg.evaluate(TAP, 'mscr|1|')); got.append(await pg.evaluate(TAP, 'mscr|1|'))
         return got
 
+async def site_taps():
+    """A tap on one's own site, twice: the site stands, its card is open, no trash pops up by the finger and no word 'undefined' shows anywhere."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 5)
+        await pg.evaluate("""(() => { const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by); for (let r = 8; r < 30; r++) for (let d = -r; d <= r; d++) for (const [i, j] of [[k0 % N + d, Math.floor(k0 / N) - r], [k0 % N + d, Math.floor(k0 / N) + r]]) if (ECON.canPlace('BR1', i, j)) { window.ZQS = ECON.site(0, 'BR1', i, j); return; } })()""")
+        xy = await pg.evaluate("(() => { fk.cam.x = ZQS.vx; fk.cam.y = ZQS.vy; MENU.render(true); return fk.toScreen(ZQS.vx, ZQS.vy); })()")
+        for _ in range(2):
+            await pg.evaluate("([x, y]) => { fk.tap(x, y); MENU.render(true); }", xy); await pg.wait_for_timeout(700)
+        await run.step(pg, 1)
+        return await pg.evaluate("[fk.things().includes(ZQS), MENU.S.subject === ZQS, document.querySelectorAll('.trash').length, /undefined/.test(document.body.innerText)]")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -174,6 +185,8 @@ async def check_game():
     rule('a band that breaks does not walk back into the building one at a time', lost['tower'] > 0 and lost['broke'] > 0 and lost['onIt'] == 0 and lost['near'] == 0, f"six foot at a tower: the tower at {lost['tower']}, {lost['alive']} alive, {lost['broke']} of them broken, {lost['onIt']} back on it, {lost['near']} within 15 tiles")
     foot, bow = await defends()
     rule('Defend sends the picked soldiers at whoever is attacking the town, and nobody else', foot > 0 and bow == 0, f'{foot} foot on the raiders five seconds on, {bow} archers')
+    st = await site_taps()
+    rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
