@@ -3,7 +3,7 @@
 #   python3 tools/check.py --same-play  also fail if the match plays differently from the kept one (for builds that must not change play)
 #   python3 tools/check.py --accept     keep this build's match as the new one to compare against (for builds meant to change play)
 #   python3 tools/check.py --deep       also replay three longer matches (other peoples, scenarios, every hazard); slow, for builds that touch much
-import asyncio, json, pathlib, re, sys
+import math, asyncio, json, pathlib, re, sys
 import run
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -92,6 +92,16 @@ async def draw():
         await pg.wait_for_timeout(18000)
         return await run.pictures(pg), list(pg.errors), placed, steps
 
+async def orders():
+    """Two groups, two orders: the foot to one spot, then the archers to another. Each must end at its own spot, and soldiers never picked must not move."""
+    WHERE = "(() => { const at = (f) => { const U = units.filter((u) => u.side === 0 && f(fk.SH[u.code].class)); return [U.reduce((a, u) => a + u.bx, 0) / U.length, U.reduce((a, u) => a + u.by, 0) / U.length]; }; return { foot: at((c) => c === 'Foot'), archers: at((c) => c === 'Archers'), rest: at((c) => c === 'Riders' || c === 'Engines'), tile: fk.D.tile }; })()"
+    SEND = "([who, x, y]) => { const tap = (v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); tap('mwho|' + who + '|'); const spot = fk.tileMid(fk.hitAt(x, y)[0]); fk.tap(x, y); tap('mord|move|'); return spot; }"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); await pg.evaluate("document.querySelector('[data-v=\"war||\"]').click()"); was = await pg.evaluate(WHERE)
+        a = await pg.evaluate(SEND, ['Foot', 70, 250]); await run.step(pg, 30); b = await pg.evaluate(SEND, ['Archers', 320, 250]); await run.step(pg, 40); now = await pg.evaluate(WHERE)
+        far = lambda p, q: math.hypot(p[0] - q[0], p[1] - q[1]) / now['tile']
+        return far(now['foot'], a), far(now['archers'], b), far(now['rest'], was['rest']), far(a, b)
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -103,6 +113,8 @@ async def check_game():
     rule('a building can be picked and placed from the Build menu', placed == 1, f'{placed} placed, taps landed: {steps}')
     rule('20 seconds on screen, no errors', not errs, '; '.join(errs[:2]))
     rule(f'pictures in memory under {PICTURES_MB} MB', pics['mb'] <= PICTURES_MB, f"{pics['count']} pictures, {pics['mb']} MB")
+    fa, ab, moved, apart = await orders()
+    rule('two groups keep their own orders: each ends at its own spot, soldiers never picked stay put', max(fa, ab) < apart / 2 and moved < 1, f'foot {fa:.1f} tiles from its spot, archers {ab:.1f} from theirs, the spots {apart:.1f} apart; the rest moved {moved:.1f}')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
     d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:

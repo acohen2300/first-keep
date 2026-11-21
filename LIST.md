@@ -8,6 +8,11 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 - [x] Build 2 (plays the same, proven on four seeded matches): restart no longer inherits the last game's unpaid upkeep · 0 and 1 back (1,552 uses) · null as zero gone (105) · the build ghost, two fallbacks and the load tolerance · the 120 unset units · the two debug overlays cut
 - [ ] Left over from Build 2: 2,259 numbers inside book tables have no unit said (the 120 were only the labelled ones) · about 50 measured numbers still typed in `index.html` outside the art (the sun's tilt 23.44 among them) · book entries nothing reads (next, single, forestScale, sea and others) · some null may still stand for a number
 - [x] Menu audit: the menus were already one mold (a fixed line, a control row, a tile row) with one cell maker; what was left in code was what each menu holds
+- [ ] Army control, first (Albert, Nov 20 21:25: "Most important. Army control. Terrible")
+  - [x] two groups keep their own orders (an order no longer sweeps in every soldier within 21 tiles; it joins a group only when its spot lands inside it). In the check
+  - [ ] test attack, defend, hold and retreat the same way
+  - [ ] draft a force by type and number (2 of 6 catapults; knights, not elephants), groups that keep their own order, formation by type (foot, archers, siege behind), hold where sent. Albert's scenario, Nov 20 21:34; design not settled
+  - [ ] soldiers less wimpy, more common sense (Albert to give examples)
 - [ ] Human-side test: a test that plays as a person (every age, building, unit, card and button). It is the proof for the menu build, shrinks the 217 unsorted functions, and later proves each lost feature fixed
 - [ ] Talk session, decisions only (before the standards step of Build 3): what red, green, blue, gold and cream mean; one look each for chosen, ready and unavailable; the text sizes; tap size 44
 - [ ] Build 3, the menu build: what each menu holds becomes lists in the Screen book, every screen identical (proven by `tools/screens.py`, 173 screens)
