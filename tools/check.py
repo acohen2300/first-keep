@@ -275,6 +275,18 @@ async def patched():
         white = [o for l, r, o in got if r <= cut]; dark = [o for l, r, o in got if l >= cut]; half = [o for l, r, o in got if l < cut < r and (cut - l) / (r - l) >= 0.5]
         return white, dark, half, [o for _, _, o in got] == [o for _, _, o in again], most
 
+async def pressed():
+    """A tapped button is pressed the moment the finger lands and let go after it leaves; a tap that redraws the button (Foot becomes boxed) still shows the press on the new button, and nothing is left pressed."""
+    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); }"
+    PRESS = """(() => { const find = () => [...document.querySelectorAll('[data-v]')].find((x) => x.dataset.v === 'mwho|Foot|'), b = find(), o = { bubbles: true, pointerId: 1 };
+  b.dispatchEvent(new PointerEvent('pointerdown', o)); const down = b.classList.contains('pr'); window.dispatchEvent(new PointerEvent('pointerup', o)); b.click(); const nb = find();
+  return [down, nb !== b, nb.classList.contains('pr')]; })()"""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); await pg.evaluate(TAP, 'war||')
+        got = await pg.evaluate(PRESS)
+        await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
+        return got, await pg.evaluate("document.querySelectorAll('.pr').length")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -315,6 +327,8 @@ async def check_game():
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     pw, pd, ph, pk, pm = await patched()
     rule('a word over white gets the dark patch, a word over dark ground none, a word half over white counts as over white, a redrawn card keeps its patches', pw and all(o == pm for o in pw) and pd and not any(pd) and all(o > 0 for o in ph) and pk, f'over white {pw}, over dark {pd}, half over white {ph}, same after a redraw: {pk}')
+    pr, pl = await pressed()
+    rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
