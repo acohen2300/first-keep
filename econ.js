@@ -170,7 +170,7 @@ function mend(u, t, dt) { const M = t.hpMax, heal = Math.min(M - t.hp, (M / D.bu
   t.rd = {}; for (const y in due) { spend(u.side, y, Math.floor(due[y]), 'repairs'); t.rd[y] = due[y] - Math.floor(due[y]); } t.hp += heal; }
 // E308
 const goHome = (u) => { const h = u.att === 'focus' && !posted(u) && FK.seatOf(u.side); if (h) walkTo(u, h.bx, h.by); return !!h; }, lose = (u) => { u.lost = u.lost || { x: u.bx, y: u.by, t: bell }; if (u.load) carry(u); else if (!goHome(u)) look(u); }; // E1089
-function look(u) { const n = bestFind(u, u.carry, u.lost); if (n) return gatherAt(u, n); if (u.patch) return unbox(u); u.job = u.then = 'wait'; u.wait = SR.again + FK.rng(); const b = FK.dropFor(u, u.carry); if (b) FK.toSpot(u, b); }
+function look(u) { const n = bestFind(u, u.carry, u.lost); if (n) return gatherAt(u, n); if (u.patch) return unbox(u); idle(u); } // E1299
 // E309
 function startWork(u, b) { if (post(b)) { if (full(u, b)) return false; gatherAt(u, b); return true; } const ys = FK.SH[b.code].drop || [], t = ys.length < YIELDS.length && ys.map((y) => bestFind(u, y)).find(Boolean); if (t) gatherAt(u, t); return !!t; }
 // E310
@@ -245,7 +245,7 @@ FK.on('tick', (dt) => {
     else if (isIdle(u) && u.load) carry(u);
   }
   burn(dt); if (FK.every(FD.beat)) finds(); if (FK.every(D.minute)) lightning(); if (FK.every(D.beats.health)) health();
-  if (FK.every(DG.beat)) { dangerMap(); watch(); sites(); } if (FK.every(DG.look)) leave(); if (FK.every(FL.look)) for (const u of units()) if (FK.has(u, 'Gather') && SIDES[u.side]) fright(u, FK.seatOf(u.side)); if (FK.every(D.peaceBeat)) judge();
+  if (FK.every(DG.beat)) { dangerMap(); watch(); sites(); homeIdle(); } if (FK.every(DG.look)) leave(); if (FK.every(FL.look)) for (const u of units()) if (FK.has(u, 'Gather') && SIDES[u.side]) fright(u, FK.seatOf(u.side)); if (FK.every(D.peaceBeat)) judge();
 });
 FK.on('gone', (t) => { t.gone = true; });
 FK.on('gone', (t) => { if (FK.has(t, 'Wonder') && t.held != null) tell(EW.lost[+(t.side !== ME)], { side: EW.sides[t.side] }); if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side) || fell.has(t.side) || things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) return; fall(t.side, t.by); });
@@ -261,6 +261,8 @@ function dangerMap() { for (const s of D.players) { const M = (FK.DANGER[s] = FK
   scares[s] = scares[s].filter((q) => q.t > bell); for (const q of scares[s]) put(q, DG.mem, DG.scare); } }
 function dangerWhy(t, side) { const v = units().find((q) => foeOf(side, q) && dist(q, t) <= (DG.near + DG.pad) * T0), b = !v && things().find((q) => tower(side, q) && dist(q, t) <= (WAR.reachOf(q) + DG.reach + DG.pad) * T0); // E439
   return v ? (SIDES[v.side] ? AW.nearOf : AW.near).replace('{who}', FK.rankName(v.code, v.side)).replace('{side}', EW.sides[v.side]) : b ? AW.tower.replace('{side}', EW.sides[b.side]).replace('{bld}', FK.SH[b.code].name.toLowerCase()) : AW.scare; }
+function homeIdle() { const IH = D.idle; for (const u of units()) { if (!SIDES[u.side] || !FK.has(u, 'Gather') || !FK.isIdle(u) || u.inside || u.path || FK.K.t - FK.jobWas(u).t < IH.home || FK.K.t - (u.homeT ?? -Infinity) < IH.home) continue; // E1300
+  if (u.park != null) { const [pi, pj] = at(u.park), [ui, uj] = at(u.k); if (Math.max(Math.abs(pi - ui), Math.abs(pj - uj)) <= IH.park) continue; } const [h] = FK.blds().filter((b) => b.side === u.side && FK.has(b, 'Seat') && up(b)).sort((a, b) => dist(u, a) - dist(u, b)); u.homeT = FK.K.t; if (h && !FK.atB(u, h)) FK.goBy(u, h); } }
 function leave() { let said = false; for (const u of units()) { const t = u.target, y = jobOf(u); if (!y || y === 'build' || !SIDES[u.side] || !unsafe(t, u.side) || u.told === t) continue; // E440
   if (u.side === ME && !said) said = tell(AW.leave, { why: dangerWhy(t, ME), find: FK.SH[t.code || KIND[t.kind].code].name.toLowerCase() }) || true; u.target = null; if (u.job === 'gather' || u.then === 'gather') { u.path = null; lose(u); } } }
 const hold = (b) => FK.stat(b.code, b.side, 'hold'), inN = (b) => units().filter((u) => u.inside === b || u.den === b).length, within = (b) => Math.min(hold(b), units().filter((u) => u.inside === b).length);

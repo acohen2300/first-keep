@@ -1093,5 +1093,8 @@ BOOK("comments", {
  "E1295": {"text": "your own workplaces show whether anyone works them (N439): a worked farm, pasture, tree farm, quarry, mint or foundry flies a flag in its colour (farm and pasture green, the rest what they yield), a worked mint or foundry glows as if lit within, and an empty one shows the idle z"},
  "E1296": {"text": "what befalls a band under an order is counted on the order (foe dead, lost sight, no way, broke, new order, dead); what D335 say names is logged at once, once an order (N440)"},
  "E1297": {"text": "the copy log counts each side's losses, villagers and soldiers: by the killer's side, or with no killer by the cause the death named (removed by you, drowned, sickness, stampede, trap, rebelled, fell with its side, stood down, sabotage; N440)"},
- "E1298": {"text": "the copy log writes what befalls a band the moment it matters (D335 say), and each band order's end: how long it ran, when it arrived, and what happened to it (N440)"}
+ "E1298": {"text": "the copy log writes what befalls a band the moment it matters (D335 say), and each band order's end: how long it ran, when it arrived, and what happened to it (N440)"},
+ "E1299": {"text": "a find nobody can have (all run out, full or out of reach) leaves the villager idle, where you can see her, instead of waiting at the drop-off for ever (Albert, Nov 21, N441)"},
+ "E1300": {"text": "idle villagers go home: idle a minute (D382 home), a villager walks to the nearest town center of her side and stands beside it; one you walked to a spot stays while she is there; a worker set to a farm, quarry, mint or the like never comes here, she waits at it (N441)"},
+ "E1301": {"text": "a villager you walk to a spot yourself remembers it (park), so she is not sent home from it when idle (N441)"}
 });

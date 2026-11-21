@@ -246,6 +246,18 @@ async def logs():
         lost = {k: v for r in L['rows'] for k, v in (r.get('lost') or {}).get('0', {}).items()}
         return (end[-1][3] if end else None), lost
 
+async def home():
+    """A stone miner whose last stone runs out, far from home: he goes idle at the mining camp (not waiting there for ever), and a minute later walks home to the town center."""
+    SET = """(() => { const h = fk.seatOf(0), N = fk.N, S = fk.things().filter((t) => t.kind === 'stone').sort((a, b) => fk.dist(a, h) - fk.dist(b, h));
+  let st = null, camp = null; for (const t of S) { if (fk.dist(t, h) < 25 * fk.D.tile) continue; const k0 = fk.tileAt(t.bx, t.by); for (let r = 2; r < 8 && !camp; r++) for (let d = -r; d <= r && !camp; d++) for (const [i, j] of [[k0 % N + d, Math.floor(k0 / N) - r], [k0 % N + d, Math.floor(k0 / N) + r]]) if (!camp && ECON.canPlace('BI3', i, j)) { camp = fk.build('BI3', i, j, fk.SIDES[0].col); camp.done = 1; camp.hp = camp.hpMax = fk.stat('BI3', 0, 'hp'); } if (camp) { st = t; break; } }
+  for (const t of S) if (t !== st) t.amount = 0; st.amount = 4;
+  const u = units.filter((u) => u.side === 0 && fk.has(u, 'Gather'))[0]; Object.assign(u, { bx: st.bx + 15, by: st.by + 15, path: null, load: 0, carry: null }); fk.place(u); ECON.gatherAt(u, st); window.ZQU = u; window.ZQH = h; window.ZQC = camp; return [Math.round(fk.dist(st, h) / fk.D.tile), Math.round(fk.dist(camp, st) / fk.D.tile)]; })()"""
+    LOOK = "[ZQU.job, Math.round(fk.dist(ZQU, ZQH) / fk.D.tile)]"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 5); await pg.evaluate(SET); await run.step(pg, 30)
+        a = await pg.evaluate(LOOK); await run.step(pg, 100)
+        return a, await pg.evaluate(LOOK)
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -280,6 +292,8 @@ async def check_game():
     rule('your workplaces show who works them: the board draws the flags, glow and idle marks with no error', mk == [True, False, True, False, True, True] and not me, f'worked (farm, quarry, mint, foundry, pasture, tree farm): {mk}; errors: {me[:2]}')
     le, ll = await logs()
     rule('the copy log says how a band order ended and what killed anyone with no killer', bool(le) and le.get('foe dead') and le.get('new order') and ll.get('villagers: removed by you') == 1, f'last order ended: {le}; your losses: {ll}')
+    h0, h1 = await home()
+    rule('a villager whose find runs out goes idle, and a minute idle walks home to the town center', h0[0] == 'idle' and h1[0] == 'idle' and h1[1] < h0[1] - 20, f'job and tiles from the town center, just after and 100 s on: {h0}, {h1}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()
