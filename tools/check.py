@@ -142,6 +142,16 @@ async def defends():
         await run.step(pg, 5)
         return await pg.evaluate(LOOK)
 
+async def troops():
+    """The Troops controller: a class trimmed with minus keeps its count when another class is added, All brings everyone back, and with the army out of view the On Screen box alone picks nobody."""
+    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return fk.picked().length; }"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); got = []
+        for v in ('war||', 'mwho|Riders|', 'mview|troops|', 'mtyp|UM10|-1', 'mwho|Foot|', 'mwho||'): got.append(await pg.evaluate(TAP, v))
+        await pg.evaluate("(() => { fk.cam.x += 3 * fk.size()[0] / fk.cam.z; MENU.render(true); })()")
+        got.append(await pg.evaluate(TAP, 'mscr|1|')); got.append(await pg.evaluate(TAP, 'mscr|1|'))
+        return got
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -164,6 +174,8 @@ async def check_game():
     rule('a band that breaks does not walk back into the building one at a time', lost['tower'] > 0 and lost['broke'] > 0 and lost['onIt'] == 0 and lost['near'] == 0, f"six foot at a tower: the tower at {lost['tower']}, {lost['alive']} alive, {lost['broke']} of them broken, {lost['onIt']} back on it, {lost['near']} within 15 tiles")
     foot, bow = await defends()
     rule('Defend sends the picked soldiers at whoever is attacking the town, and nobody else', foot > 0 and bow == 0, f'{foot} foot on the raiders five seconds on, {bow} archers')
+    tr = await troops()
+    rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
     d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:

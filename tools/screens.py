@@ -68,7 +68,10 @@ async def walk(root):
         if await click(pg, 'war', 'War'):
             for k in await pg.evaluate(KEYS, 'mwho'): await click(pg, k, f'War › {k}')
             for k in await pg.evaluate(KEYS, 'mord'): await click(pg, k, f'War › {k}')
-            for k in await pg.evaluate(KEYS, 'mstep'): await click(pg, k, f'War › {k}')
+            for k in await pg.evaluate(KEYS, 'mscr'): await click(pg, k, f'War › {k}')
+            if await click(pg, 'mview|troops|', 'War › troops'):
+                for k in await pg.evaluate(KEYS, 'mtyp'): await click(pg, k, f'War › {k}')
+                await click(pg, 'mview|mission|', 'War › mission')
             await click(pg, 'shelter', 'War › shelter'); await click(pg, 'work', 'War › work')
             await click(pg, 'war', 'War closed')
         shots['errors'] = '\n'.join(pg.errors)
