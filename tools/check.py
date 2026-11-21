@@ -102,6 +102,17 @@ async def orders():
         far = lambda p, q: math.hypot(p[0] - q[0], p[1] - q[1]) / now['tile']
         return far(now['foot'], a), far(now['archers'], b), far(now['rest'], was['rest']), far(a, b)
 
+async def stands():
+    """The picked foot make a wall and keep it; soldiers not picked do not; a new order drops it."""
+    WALL = "(() => { const n = (c) => units.filter((u) => u.side === 0 && fk.SH[u.code].class === c && u.wall).length; return [n('Foot'), n('Archers')]; })()"
+    TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40)
+        for v in ('war||', 'mwho|Foot|', 'stand||'): await pg.evaluate(TAP, v)
+        await run.step(pg, 120); held = await pg.evaluate(WALL)
+        await pg.evaluate("fk.tap(70, 250)"); await pg.evaluate(TAP, 'mord|move|'); await run.step(pg, 5)
+        return held, await pg.evaluate(WALL)
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -115,6 +126,8 @@ async def check_game():
     rule(f'pictures in memory under {PICTURES_MB} MB', pics['mb'] <= PICTURES_MB, f"{pics['count']} pictures, {pics['mb']} MB")
     fa, ab, moved, apart = await orders()
     rule('two groups keep their own orders: each ends at its own spot, soldiers never picked stay put', max(fa, ab) < apart / 2 and moved < 1, f'foot {fa:.1f} tiles from its spot, archers {ab:.1f} from theirs, the spots {apart:.1f} apart; the rest moved {moved:.1f}')
+    held, after = await stands()
+    rule('a wall stands until the next order: the picked foot hold it two minutes on, the archers never picked do not, a move drops it', held[0] > 0 and held[1] == 0 and after[0] == 0, f'{held[0]} foot in the wall after two minutes, {held[1]} archers; {after[0]} after a move')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
     d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:

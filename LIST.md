@@ -10,6 +10,7 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 - [x] Menu audit: the menus were already one mold (a fixed line, a control row, a tile row) with one cell maker; what was left in code was what each menu holds
 - [ ] Army control, first (Albert, Nov 20 21:25: "Most important. Army control. Terrible")
   - [x] two groups keep their own orders (an order no longer sweeps in every soldier within 21 tiles; it joins a group only when its spot lands inside it). In the check
+  - [x] Wall connected (it was in the code, nothing called it): the picked foot lock a line, the picked archers hold theirs behind, until the next order or a second tap. Its button took the place of Exit on the war control line (Exit repeated the W circle beside it); Garrison villagers keeps its tile. Loose (the volley) and Charge are still not connected
   - [ ] test attack, defend, hold and retreat the same way
   - [ ] draft a force by type and number (2 of 6 catapults; knights, not elephants), groups that keep their own order, formation by type (foot, archers, siege behind), hold where sent. Albert's scenario, Nov 20 21:34; design not settled
   - [ ] soldiers less wimpy, more common sense (Albert to give examples)

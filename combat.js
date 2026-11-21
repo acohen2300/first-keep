@@ -24,9 +24,9 @@ const TK = FK.TK, knows = (side, k) => !!SIDES[side] && SIDES[side].techs.has(TK
 // E383
 const SQ = { plan: [], form: [], temper: [], intent: [], sel: null }, SHAPES = Object.keys(FM).filter((k) => k !== 'column'), DIAL = { temper: WD.tempers, form: SHAPES, intent: WD.intents };
 const fresh = () => { SQ.plan = WD.squads.map(() => ({})); SQ.temper = WD.squads.map(() => AR.temper.guard); SQ.form = WD.squads.map(() => SHAPES.indexOf('line')); SQ.intent = WD.squads.map(() => AR.intent.engage); SQ.sel = null; };
-const mine = (u) => u.side === ME && u.bn != null, temperOf = (u) => (u.wall > K.t ? AR.temper.hold : mine(u) ? SQ.temper[u.bn] : AR.temper.guard), temper = (u) => D.tempers[temperOf(u)], intent = (u) => (mine(u) ? SQ.intent[u.bn] : AR.intent.engage);
+const mine = (u) => u.side === ME && u.bn != null, temperOf = (u) => (u.wall ? AR.temper.hold : mine(u) ? SQ.temper[u.bn] : AR.temper.guard), temper = (u) => D.tempers[temperOf(u)], intent = (u) => (mine(u) ? SQ.intent[u.bn] : AR.intent.engage);
 const formOf = (u) => (mine(u) && knows(ME, 'formations') ? SHAPES[SQ.form[u.bn]] : 'line'), onMarch = (u) => u.job === 'march', marching = (u) => onMarch(u) && !u.target && !!u.path;
-const shapeOf = (u) => FM[u.wall > K.t ? DI.wall.shape : drillOn(u) ? u.drill.shape : marching(u) && knows(u.side, 'formations') ? 'column' : formOf(u)];
+const shapeOf = (u) => FM[u.wall ? DI.wall.shape : drillOn(u) ? u.drill.shape : marching(u) && knows(u.side, 'formations') ? 'column' : formOf(u)];
 const kiteOf = (u) => !!stat(u).kite || (knows(u.side, 'engage') && (stat(u).tags || []).includes('ranged') && temperOf(u) !== AR.temper.press);
 const dialOf = (key, a) => { const [v, ...more] = a == null ? new Set(SQ[key]) : [SQ[key][a]]; return more.length ? null : v; };
 const cycle = (key, a) => { const nx = ((dialOf(key, a) ?? -1) + 1) % DIAL[key].length; if (a == null) SQ[key] = SQ[key].map(() => nx); else SQ[key][a] = nx; };
@@ -93,7 +93,7 @@ function recall(side) { waves[side] = null; homeAll(orders(side)); }
 const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { const room = t && D.trade.guard - guardsOf(t).length; S.filter((u) => armed(u) && u.esc !== t).filter((u, i) => !t || i < room).forEach((u) => Object.assign(u, { esc: t, home: t })); }; // E493
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
 FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= 0) { const G = guardsOf(c).filter(alive); c.convoy = G.length > 0 && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046
-function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
+function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, wall: false, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
 function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; dress(army, k); if (side === ME) FK.fire('event', 'march', army[0]); return army.length; }
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
 // E392
@@ -105,7 +105,7 @@ function dress(S, k, form, drill) { const L = drill ? null : convoy(S, atK(k), k
     if (drill && drill.arc) { const R = drill.arc.r, a = ((i - half(n)) * GR.gap + half(GR.gap)) / R; [c, r] = [Math.sin(a) * R, R - Math.cos(a) * R]; } // E407
     const g = FK.tileAt(tx + (fx * r - fy * c) * T, ty + (fy * r + fx * c) * T); Object.assign(u, { fx, fy, slow: Math.min(1, slow / FK.stat(u.code, u.side, 'spd')), sent: false, drill: drill && { ...drill, shape, k: FK.walkable(g) ? g : k, from: { bx: u.bx, by: u.by } } }); if (u.drill) march(u, u.drill.k); else { const to = FK.walkable(g) ? g : k; lineUp(u, to, join(u, L, to), i); } }); return L; }
 const tired = (S) => { for (const u of S) u.tire = CH.slow; }; // E806
-const drillOn = (u) => !!(u.drill && u.drill.until > K.t && u.goal === u.drill.k && (u.job === 'march' || u.job === 'hold')); // E393
+const drillOn = (u) => !!(u.drill && (u.drill.until ?? Infinity) > K.t && u.goal === u.drill.k && (u.job === 'march' || u.job === 'hold')); // E393
 function drillHold(u) { const L = u.drill; if (!drillOn(u) || L.held) return; const [x, y] = FK.tileMid(u.goal), mine = far(u, { bx: x, by: y }) / D.upm / FK.pace(u); let foe = Infinity; for (const f of foesNear(u)) foe = Math.min(foe, far(f, u) / D.upm / FK.pace(f));
   if (foe < mine) { L.held = true; L.k = FK.tileAt(u.bx, u.by); Object.assign(u, { path: null, goal: L.k, job: 'hold' }); } }
 function formHome() { const at = new Map(); for (const u of units()) if (armed(u) && isIdle(u) && !u.target && !u.esc) { const b = u.hb && alive(u.hb) ? u.hb : home(u.side); if (!b) continue; const H = at.get(b) || at.set(b, new Map()).get(b), k = u.bn ?? u.code; (H.get(k) || H.set(k, []).get(k)).push(u); } // E394
@@ -169,7 +169,7 @@ const sendable = () => armyOf(ME), idleSoldier = (u) => !(u.sent && u.bn == null
 function freeWhy() { const S = sendable(), c = (k) => S.filter((u) => status(u) === k).length; if (!S.length) return WO.none; return WO.busy.replace('{list}', Object.keys(WO.states).filter(c).map((k) => WO.states[k].replace('{n}', c(k))).join(fromBook('words').list.and) || WO.guarding); }
 function walkTo(v, p) { Object.assign(v, { job: 'walk', then: 'idle', target: null }); if (!FK.toSpot(v, p)) v.job = 'idle'; }
 function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.has(u, 'Gather')), theirs = t && t.side !== ME; // E413
-  for (const u of S) u.go = true; // E946
+  for (const u of S) { u.go = true; u.wall = false; } // E946
   if (theirs && SIDES[t.side] && !atWar(ME, t.side)) { say(WO.foeFirst); return null; }
   for (const v of vil) v.focus = null; // E1027
   if (theirs && t.kind === 'unit') { if (FK.has(t, 'Prey')) for (const v of vil) ECON.hunt(ME, t, v); }
@@ -219,7 +219,7 @@ function charge(S) { const [s0] = S; AT['charge' + s0.side] = K.t + CH.cd * FK.s
 function fallBack(S) { const h = home(ME); if (!h || !S.length) return false; for (const u of S) { const f = nearest(u, FB.look), [dx, dy] = f ? dir(u.bx - f.bx, u.by - f.by) : dir(h.bx - u.bx, h.by - u.by), k = FK.tileAt(u.bx + dx * FB.back * T, u.by + dy * FB.back * T);
   Object.assign(u, { fb: K.t + FB.secs, target: null, focus: null, ord: null, sent: false }); march(u, FK.walkable(k) ? k : u.k); } return true; }
 const DIRECTS = { // E419
-  wall: (S, aim, said) => { const c = centreOf(S), F = foesNear(c), to = F.length ? centreOf(F) : mid(aimK(aim)), f = dir(to.bx - c.bx, to.by - c.by), k = kOf(c), cols = narrowAt(k, f); for (const u of S) Object.assign(u, { wall: K.t + DI.wall.secs, focus: null, target: null }); dress(S, k, cols ? 'choke' : DI.wall.lay, { t0: K.t, until: K.t + DI.wall.secs, f, cols }); return cols ? WO.narrow.replace('{n}', cols) : said; },
+  wall: (S, aim, said) => { const c = centreOf(S), F = foesNear(c), to = F.length ? centreOf(F) : aim ? mid(aimK(aim)) : null, [s0] = S, f = to ? dir(to.bx - c.bx, to.by - c.by) : [s0.fx ?? GR.face[0], s0.fy ?? GR.face[1]], k = kOf(c), cols = narrowAt(k, f); for (const u of S) Object.assign(u, { wall: true, focus: null, target: null, ord: null }); dress(S, k, cols ? 'choke' : DI.wall.lay, { t0: K.t, f, cols }); return cols ? WO.narrow.replace('{n}', cols) : said; },
   loose: (S, aim, said) => { if (AT.loose > K.t) return WO.why.reload.replace('{n}', wait('loose')); const c = centreOf(S), F = foesNear(c);
     if (F.length) { const f = centreOf(F), r = Math.min(...S.map((u) => stat(u).rng)) * DI.arc, [dx, dy] = dir(c.bx - f.bx, c.by - f.by); dress(S, FK.tileAt(f.bx + dx * r * T, f.by + dy * r * T), 'line', { t0: K.t, until: K.t + DI.arcSecs, f: [-dx, -dy], arc: { r } }); } else order(S, aim.t, aim.k);
     for (const u of S) u.cd = null; AT.loose = K.t + DI.loose; return said; },
@@ -227,6 +227,8 @@ const DIRECTS = { // E419
 };
 function direct(cls, aim) { const [id, , snd, said] = WO.direct[cls], S = ofKind(cls), [u0] = S; if (!S.length) return say(WO.why.none); // E420
   const w = DIRECTS[id](S, aim, said); if (!w.endsWith('!')) return say(w); tired(S); say(w); FK.fire('event', snd, u0); }
+function stand(P, aim) { const S = P.filter((u) => armed(u) && WO.stand[clsOf(u.code)]), [u0] = S, [, , snd, said] = WO.direct.Foot; if (!S.length) return say(WO.why.none); // E1276
+  if (S.every((u) => u.wall)) { for (const u of S) Object.assign(u, { wall: false, drill: null }); return say(WO.atEase.replace('{n}', S.length)); } say(DIRECTS.wall(S, aim, said)); FK.fire('event', snd, u0); }
 const directWait = (cls) => { const [id] = WO.direct[cls]; return wait(id); };
 function narrowAt(k, [fx, fy]) { const [cx, cy] = FK.tileMid(k), most = CK.max * GR.gap; let w = 0; for (const s of [1, -1]) for (let d = 1; d <= most; d++) { if (!FK.walkable(FK.tileAt(cx - fy * d * T * s, cy + fx * d * T * s))) break; w++; } // E421
   return w < most + most ? Math.min(CK.max, Math.max(CK.min, Math.round(w / GR.gap))) : null; }
@@ -377,5 +379,5 @@ function spring(b, v, kind, E) { const horse = FK.SH[v.code].mount ? 'horse' : '
 FK.on('save', (X) => { X.war = { waves, homeT, routSaid, ordT, ORD, MS, AT, rel, SQ, raid }; }); // E667
 FK.on('load', ({ war: W }) => { ({ homeT, routSaid, ordT } = W); const keep = { waves, ORD, MS, AT, rel, SQ, raid }; for (const k in keep) FK.refill(keep[k], W[k]); });
 const take = (t) => { for (const u of units()) if (u.target === t) u.target = null; FK.vanish(t); }; // E691
-return { defend, landK, ranged, hillReach, standards: STD, chargeWhy, take, wild, meet, raids, loot, scout, roulette, guardsLeft, besideK, traps, shown, spring, guard, guardsOf, order, send, go, callHome, everyHome, reinforcePlan, reinforce, direct, directWait, ambushAt, foesNear, status, free, freeWhy, sendable, centreOf, routeK, etaOf, mixOf, chance, homeAll, charge, fallBack, ORD, MS, attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, power1, odds, waves, armed, troop, attacked, fronts, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat, vs, fromWhere, reachOf, fly, speedFor, dress, drillOn, rebattalion, plan, squad, lack, cycle, dialOf, temperOf, shapeOf, formOf, kiteOf, SQ, DIAL, SHAPES, bestFoe, canBeat, worth, formHome, wear, dmgOf, knows };
+return { defend, landK, ranged, hillReach, standards: STD, chargeWhy, take, wild, meet, raids, loot, scout, roulette, guardsLeft, besideK, traps, shown, spring, guard, guardsOf, order, send, go, callHome, everyHome, reinforcePlan, reinforce, direct, stand, directWait, ambushAt, foesNear, status, free, freeWhy, sendable, centreOf, routeK, etaOf, mixOf, chance, homeAll, charge, fallBack, ORD, MS, attack, recall, fight, march, hit, damage, die, armyOf, armyFree, power, power1, odds, waves, armed, troop, attacked, fronts, enemies, isFoe, groupOf, stance, treaty, atWar, friendly, hpMax, stat, vs, fromWhere, reachOf, fly, speedFor, dress, drillOn, rebattalion, plan, squad, lack, cycle, dialOf, temperOf, shapeOf, formOf, kiteOf, SQ, DIAL, SHAPES, bestFoe, canBeat, worth, formHome, wear, dmgOf, knows };
 })();
