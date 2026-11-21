@@ -110,7 +110,7 @@ async def stands():
         await run.step(pg, 40)
         for v in ('war||', 'mwho|Foot|', 'stand||'): await pg.evaluate(TAP, v)
         await run.step(pg, 120); held = await pg.evaluate(WALL)
-        await pg.evaluate("fk.tap(70, 250)"); await pg.evaluate(TAP, 'mord|move|'); await run.step(pg, 5)
+        await pg.evaluate(TAP, 'mwho|Foot|'); await pg.evaluate("fk.tap(70, 250)"); await pg.evaluate(TAP, 'mord|move|'); await run.step(pg, 5)
         return held, await pg.evaluate(WALL)
 
 async def chase():
@@ -163,6 +163,18 @@ async def site_taps():
         await run.step(pg, 1)
         return await pg.evaluate("[fk.things().includes(ZQS), MENU.S.subject === ZQS, document.querySelectorAll('.trash').length, /undefined/.test(document.body.innerText)]")
 
+async def picks_end():
+    """Every order ends the pick: a move and a hold from the War card, and villagers sent to a bush from the map."""
+    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return fk.picked().length; }"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); got = []
+        for v in ('war||', 'mwho|Archers|'): got.append(await pg.evaluate(TAP, v))
+        await pg.evaluate("fk.tap(70, 250)"); got.append(await pg.evaluate(TAP, 'mord|move|'))
+        got.append(await pg.evaluate(TAP, 'mwho|Foot|')); got.append(await pg.evaluate(TAP, 'mord|hold|'))
+        await pg.evaluate(TAP, 'war||')
+        got.append(await pg.evaluate("""(() => { const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).slice(0, 3), b = fk.things().filter((t) => t.kind === 'bush').sort((a, c) => fk.dist(a, V[0]) - fk.dist(c, V[0]))[0]; fk.select(V); MENU.render(true); fk.cam.x = b.vx; fk.cam.y = b.vy; MENU.render(true); const [x, y] = fk.toScreen(b.vx, b.vy); const n = fk.picked().length; if (fk.paused()) fk.pause(false); fk.tap(x, y); return [n, fk.picked().length, V.filter((u) => u.target === b).length]; })()"""))
+        return got
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -185,6 +197,8 @@ async def check_game():
     rule('a band that breaks does not walk back into the building one at a time', lost['tower'] > 0 and lost['broke'] > 0 and lost['onIt'] == 0 and lost['near'] == 0, f"six foot at a tower: the tower at {lost['tower']}, {lost['alive']} alive, {lost['broke']} of them broken, {lost['onIt']} back on it, {lost['near']} within 15 tiles")
     foot, bow = await defends()
     rule('Defend sends the picked soldiers at whoever is attacking the town, and nobody else', foot > 0 and bow == 0, f'{foot} foot on the raiders five seconds on, {bow} archers')
+    pe = await picks_end()
+    rule('every order ends the pick: a War move, a War hold, villagers sent to a bush', pe[2] == 0 and pe[4] == 0 and pe[5][0] == 3 and pe[5][1] == 0 and pe[5][2] > 0, f'picked before and after (archers, move, foot, hold, villagers [before, after, went]): {pe}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()
