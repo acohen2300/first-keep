@@ -233,6 +233,19 @@ async def marks():
         for _ in range(3): await pg.evaluate("draw()"); await run.step(pg, 0.5)
         return await pg.evaluate("ZQM.map((b) => !!b.wk)"), errs
 
+async def logs():
+    """The copy log says how a band order ended (here: its foe dead, then a new order) and names the cause of a death with no killer."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40)
+        await pg.evaluate("""(() => { const F = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot'), e = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot'); const z = fk.spawn(e.code, 2, fk.tileAt(F[0].bx + 60, F[0].by), fk.rng); WAR.order(F, z, fk.tileAt(z.bx, z.by)); })()""")
+        await run.step(pg, 20)
+        await pg.evaluate("(() => { const F = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot'); WAR.order(F, null, fk.tileAt(F[0].bx - 60, F[0].by)); const v = units.find((u) => u.side === 0 && fk.has(u, 'Gather')); fk.harm(v, v.hp); WAR.die(v, null, 'removed by you'); })()")
+        await run.step(pg, 64)
+        L = json.loads(await pg.evaluate("MENU.logText()"))
+        end = [r for r in L['orders'] if r[1] == 'ended']
+        lost = {k: v for r in L['rows'] for k, v in (r.get('lost') or {}).get('0', {}).items()}
+        return (end[-1][3] if end else None), lost
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -265,6 +278,8 @@ async def check_game():
     rule('fields may touch each other, a house keeps one tile from a house and two from the rest', gf == {'farmFarm0': True, 'farmMint0': True, 'farmHouse0': False, 'farmHouse2': True} and gh == {'house0': False, 'house1': True, 'barracks1': False, 'barracks2': True}, f'may stand there: {gf}, {gh}')
     mk, me = await marks()
     rule('your workplaces show who works them: the board draws the flags, glow and idle marks with no error', mk == [True, False, True, False, True, True] and not me, f'worked (farm, quarry, mint, foundry, pasture, tree farm): {mk}; errors: {me[:2]}')
+    le, ll = await logs()
+    rule('the copy log says how a band order ended and what killed anyone with no killer', bool(le) and le.get('foe dead') and le.get('new order') and ll.get('villagers: removed by you') == 1, f'last order ended: {le}; your losses: {ll}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()
