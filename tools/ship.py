@@ -12,6 +12,10 @@ def book(text):
         for k in ('cite', 'law', 'unit', 'subject') + (() if name in SHOWN else ('name',)): e.pop(k, None)
     return f'BOOK("{name}",{json.dumps(entries, ensure_ascii=False, separators=(",", ":"))});'
 
+def stamp():
+    import subprocess
+    return subprocess.run(['git', 'log', '-1', '--format=%h %cd: %s', '--date=format:%b %d %H:%M'], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+
 def page():
     p = (ROOT / 'index.html').read_text(encoding='utf-8')
     def js(m):
@@ -21,7 +25,7 @@ def page():
     p = re.sub(r'<script src="([\w/.-]+\.js)"></script>', js, p)
     p = p.replace('<link rel="stylesheet" href="fonts.css">', '<style>' + (ROOT / 'fonts.css').read_text(encoding='utf-8') + '</style>')
     assert '<script src=' not in p and 'href="fonts.css"' not in p
-    return p
+    return p.replace('<script>', f'<script>window.BUILD = {json.dumps(stamp())};</script><script>', 1)
 
 def ship(out):
     out = pathlib.Path(out); out.mkdir(parents=True, exist_ok=True)

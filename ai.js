@@ -168,5 +168,5 @@ FK.on('start', () => { rates.clear(); rings.clear(); // E683
 FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] -= DF.react; FK.task('think' + side, whileHome(side, thinking(side))); } } });
 FK.on('save', (X) => { X.ai = { clock, rings, claimT, helped, league, mind }; }); // E668
 FK.on('load', ({ ai: M }) => { league = M.league; const keep = { clock, rings, claimT, helped, mind }; for (const k in keep) FK.refill(keep[k], M[k]); rates.clear(); level(); });
-return { think: (side) => FK.finish(thinking(side)), mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim };
+return { think: (side) => FK.finish(thinking(side)), mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim, goal: (side) => (goalOf(side, per(side), false) || {}).what || null };
 })();

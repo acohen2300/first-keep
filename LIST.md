@@ -14,6 +14,7 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
   - [ ] test attack, defend, hold and retreat the same way
   - [ ] draft a force by type and number (2 of 6 catapults; knights, not elephants), groups that keep their own order, formation by type (foot, archers, siege behind), hold where sent. Albert's scenario, Nov 20 21:34; design not settled
   - [ ] soldiers less wimpy, more common sense (Albert to give examples)
+- [x] The copy log tracks more (Albert, Nov 20 22:36): the build, his orders, losses and to whom, refused taps, how it ended, errors, slowest frame, news with repeats folded, each rival's army by kind, people against room, army aim, goal, attacks. The three long matches' kept marks are stale since the log is part of the mark: run `tools/check.py --deep --accept` once
 - [ ] Human-side test: a test that plays as a person (every age, building, unit, card and button). It is the proof for the menu build, shrinks the 217 unsorted functions, and later proves each lost feature fixed
 - [ ] Talk session, decisions only (before the standards step of Build 3): what red, green, blue, gold and cream mean; one look each for chosen, ready and unavailable; the text sizes; tap size 44
 - [ ] Build 3, the menu build: what each menu holds becomes lists in the Screen book, every screen identical (proven by `tools/screens.py`, 173 screens)
