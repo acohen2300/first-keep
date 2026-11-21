@@ -103,12 +103,13 @@ async def orders():
         return far(now['foot'], a), far(now['archers'], b), far(now['rest'], was['rest']), far(a, b)
 
 async def stands():
-    """The picked foot make a wall and keep it; soldiers not picked do not; a new order drops it."""
+    """The picked foot make a wall and keep it; soldiers not picked do not; a new order drops it. (The Wall button is gone until Mode is built: the wall is called straight.)"""
     WALL = "(() => { const n = (c) => units.filter((u) => u.side === 0 && fk.SH[u.code].class === c && u.wall).length; return [n('Foot'), n('Archers')]; })()"
     TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40)
-        for v in ('war||', 'mwho|Foot|', 'stand||'): await pg.evaluate(TAP, v)
+        for v in ('war||', 'mwho|Foot|'): await pg.evaluate(TAP, v)
+        await pg.evaluate('WAR.stand(fk.picked(), null)')
         await run.step(pg, 120); held = await pg.evaluate(WALL)
         await pg.evaluate(TAP, 'mwho|Foot|'); await pg.evaluate("fk.tap(70, 250)"); await pg.evaluate(TAP, 'mord|move|'); await run.step(pg, 5)
         return held, await pg.evaluate(WALL)
@@ -148,9 +149,10 @@ async def troops():
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40); got = []
         for v in ('war||', 'mwho|Riders|', 'mview|troops|', 'mtyp|UM10|-1', 'mwho|Foot|', 'mwho||'): got.append(await pg.evaluate(TAP, v))
+        words = await pg.evaluate("[...document.querySelectorAll('#base .mctl .who button')].map((b) => b.textContent.trim())")
         await pg.evaluate("(() => { fk.cam.x += 3 * fk.size()[0] / fk.cam.z; MENU.render(true); })()")
         got.append(await pg.evaluate(TAP, 'mscr|1|')); got.append(await pg.evaluate(TAP, 'mscr|1|'))
-        return got
+        return got, words
 
 async def site_taps():
     """A tap on one's own site, twice: the site stands, its card is open, no trash pops up by the finger and no word 'undefined' shows anywhere."""
@@ -296,8 +298,9 @@ async def check_game():
     rule('a villager whose find runs out goes idle, and a minute idle walks home to the town center', h0[0] == 'idle' and h1[0] == 'idle' and h1[1] < h0[1] - 20, f'job and tiles from the town center, just after and 100 s on: {h0}, {h1}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
-    tr = await troops()
+    tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
+    rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
     d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:
