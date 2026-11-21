@@ -34,6 +34,21 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
     - Found in step 3, his to rule: "idle" counts soldiers he has placed and left standing (anyone not marching or fighting), so Idle will pull a group he posted on purpose
     - Open: what Focused courage does; where Garrison villagers goes; Priest, Medic, Spy have no class; targets have no tile; the screen boxes are under the 44 tap size; Jobs keeps − + above its tiles
   - [ ] soldiers less wimpy, more common sense (Albert to give examples)
+- [x] His bug list from the 125-minute match (Albert, Nov 21 12:07; answers 14:25 to 14:38), one commit each, each in the check:
+  - [x] a tap on your own building site only picks it: no "undefined" circle (the trash icon was looked up in the wrong table), no second tap that takes it down; Delete is on the card (N434)
+  - [x] every order ends the pick, soldiers and villagers alike; villagers sent to a full find go to the nearest of its kind instead of staying picked (N435)
+  - [x] an order at a foe leaves no dashed ring or line behind; the short flash on the target stays; a move keeps its ring (N436)
+  - [x] villagers keep to the find you sent them to (a load no longer makes them forget; no switching at drop-offs; the danger map does not pull them off; back to it after sheltering); the Jobs row can still move them. Workers at a farm, pasture, tree farm, quarry, mint or foundry stay when raiders come, wait at it if it stops, go back to it after the Alarm. Sent where no path reaches, they say so (N437)
+  - [x] farm, tree farm, pasture, quarry, mint and foundry may touch one another; a house keeps 1 tile from another house, 2 from the rest (N438)
+  - [x] workplaces show who works them: worked, a flag in its colour (farm and pasture green, the rest what they yield) and a glow on the mint and foundry; empty, the idle z (N439)
+  - [x] the copy log says how each band order ended (foe dead, lost sight, no way, broke, new order, dead; 'no way' and 'broke' logged at once) and what killed anyone with no killer (removed by you, drowned, sickness and the rest) (N440)
+  - [x] a villager with nothing left to gather goes idle, not waiting for ever; idle a minute, she walks to the nearest town center; one you walked to a spot stays; workers at their building wait there (N441)
+  - Found while tracing, open:
+    - [ ] long detours fail: a way is given up after 20,000 tiles searched (D230), so a place that needs a long way round (a bush 165 tiles off needed 334 steps round a lake: 70,000 searched) cannot be reached; villagers now say so, soldiers say "They can't get there". The likely cause of things stopping on long orders. A real fix is a coarse route layer (plan the way by regions, then walk it), its own build; a bigger budget alone costs 35 ms a villager
+    - [ ] a soldier whose chase finds no way drops his target and stands idle (now logged as 'no way'); the archers stuck between stone and forest are the case to look for in his next log
+    - [ ] the computers still place their own fields against any building (their own rule since before Nov 19); bring them in line with his? (N438)
+    - [ ] a villager told to a find still runs from attackers there and goes back after, so robbers at the find make her shuttle
+    - [ ] the flag's place, size and the glow's strength are Claude's; look at them on the phone
 - [x] The copy log tracks more (Albert, Nov 20 22:36): the build, his orders, losses and to whom, refused taps, how it ended, errors, slowest frame, news with repeats folded, each rival's army by kind, people against room, army aim, goal, attacks.
 - [ ] Human-side test: a test that plays as a person (every age, building, unit, card and button). It is the proof for the menu build, shrinks the 217 unsorted functions, and later proves each lost feature fixed
 - [ ] Talk session, decisions only (before the standards step of Build 3): what red, green, blue, gold and cream mean; one look each for chosen, ready and unavailable; the text sizes; tap size 44
