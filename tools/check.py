@@ -200,6 +200,24 @@ async def told():
         await run.step(pg, 6)
         return kept, await pg.evaluate("[ZQW.target === ZQF, !!(ZQW.scared || ZQW.inside || ZQW.den)]")
 
+async def gaps():
+    """Farms, tree farms, pastures, quarries, mints and foundries may stand side by side; a house keeps one tile from another house and two from anything else."""
+    GAPS = """(() => { const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by), ci = k0 % N, cj = Math.floor(k0 / N), col = fk.SIDES[0].col;
+  const room = (i, j, w, hgt) => { for (let y = j - 3; y < j + hgt + 3; y++) for (let x = i - 3; x < i + w + 3; x++) if (!fk.free(y * N + x)) return false; return true; };
+  let at = null; for (let r = 12; r < 60 && !at; r++) for (let d = -r; d <= r && !at; d++) for (const [i, j] of [[ci + d, cj - r], [ci + d, cj + r], [ci - r, cj + d], [ci + r, cj + d]]) if (!at && room(i, j, 14, 3) && ECON.canPlace('BCL1', i, j)) at = [i, j];
+  if (!at) return 'no room'; const [i, j] = at, out = {};
+  const A = fk.build('BCL1', i, j, col), n = A.n; A.done = 1;
+  out.farmFarm0 = ECON.canPlace('BCL1', i + n, j); out.farmMint0 = ECON.canPlace('BI6', i + n, j); out.farmHouse0 = ECON.canPlace('BR1', i + n, j); out.farmHouse2 = ECON.canPlace('BR1', i + n + 2, j);
+  return [n, out]; })()"""
+    HOUSES = """(() => { const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by), ci = k0 % N, cj = Math.floor(k0 / N), col = fk.SIDES[0].col;
+  const room = (i, j, w, hgt) => { for (let y = j - 3; y < j + hgt + 3; y++) for (let x = i - 3; x < i + w + 3; x++) if (!fk.free(y * N + x)) return false; return true; };
+  let at = null; for (let r = 12; r < 70 && !at; r++) for (let d = -r; d <= r && !at; d++) for (const [i, j] of [[ci + d, cj - r], [ci + d, cj + r], [ci - r, cj + d], [ci + r, cj + d]]) if (!at && room(i, j, 14, 3) && ECON.canPlace('BR1', i, j)) { const ok = ['BR1'].every(() => true); if (ok) at = [i, j]; }
+  const [i, j] = at, out = {}; const A = fk.build('BR1', i, j, col), n = A.n; A.done = 1;
+  out.house0 = ECON.canPlace('BR1', i + n, j); out.house1 = ECON.canPlace('BR1', i + n + 1, j); out.barracks1 = ECON.canPlace('BM1', i + n + 1, j); out.barracks2 = ECON.canPlace('BM1', i + n + 2, j); return [n, out]; })()"""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 2)
+        return (await pg.evaluate(GAPS))[1], (await pg.evaluate(HOUSES))[1]
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -228,6 +246,8 @@ async def check_game():
     rule('an order at a foe draws no ring where the foe stood; a move keeps its ring', rg == [False, True], f'live orders, marked foe: {rg}')
     tk, tp = await told()
     rule('villagers keep to the find they were sent to, and a worker at a farm stays when raiders come', tk[0] == tk[1] and tp == [True, False], f'on the told bush after two minutes: {tk[0]} of {tk[1]}; farm worker still at the farm, ran: {tp}')
+    gf, gh = await gaps()
+    rule('fields may touch each other, a house keeps one tile from a house and two from the rest', gf == {'farmFarm0': True, 'farmMint0': True, 'farmHouse0': False, 'farmHouse2': True} and gh == {'house0': False, 'house1': True, 'barracks1': False, 'barracks2': True}, f'may stand there: {gf}, {gh}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()

@@ -46,10 +46,11 @@ function lockWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') |
 function capWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1), lock = lockWhy(side, c); // E313
   if (lock) return lock; return !cp.length || many(side, c) < n ? '' : SAY.limit.replace('{n}', n) + (cp[age + 1] > n ? SAY.more : ''); }
 const byWater = (i, j, n, r) => { for (let y = j - r; y < j + n + r; y++) for (let x = i - r; x < i + n + r; x++) if (x >= 0 && y >= 0 && x < N && y < N && (H[y * N + x] <= 0 || FK.MARSH[y * N + x])) return true; return false; }; // E1068
+const TOUCH = new Set(P.touch), laneOf = (c) => P.lanes[c] ?? P.lane, gapOf = (c, d) => (TOUCH.has(c) && TOUCH.has(d) ? 0 : Math.max(laneOf(c), laneOf(d))); // E1294
 function placeWhy(side, c, i, j, capped, apart) { const [, n] = B[c], snug = apart && is(c, 'Field'); let why = capped ? '' : capWhy(side, c); // E314
   if (i < 0 || j < 0 || i + n > N || j + n > N) return SAY.edge; if (why) return why; if (is(c, 'Post') && !stops().some((f) => onStop({ i, j, n }, f) && !postOn(f))) return MW.stop; const shore = is(c, 'Shore'); if (shore && !byWater(i, j, n, D.fish.shore)) return SAY.shore;
   for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) { const k = y * N + x; if (is(c, 'Gate') && (wallAt(k) || {}).side === side) continue; if (OCC[k] || FK.FOR[k]) return SAY.blocked; if (shore ? H[k] < -D.wade * P.half : !FK.free(k) || H[k] !== H[j * N + i]) return shore ? SAY.deep : SAY.flat; }
-  if (!wallish({ code: c })) FK.bldsNear(...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile), (n + P.near + P.lane) * D.tile, (b) => { const gap = Math.max(b.i - i - n, i - b.i - b.n, b.j - j - n, j - b.j - b.n); if (gap >= P.lane) return;
+  if (!wallish({ code: c })) FK.bldsNear(...FK.toBoard((i + n * P.half) * D.tile, (j + n * P.half) * D.tile), (n + P.near + P.lane) * D.tile, (b) => { const gap = Math.max(b.i - i - n, i - b.i - b.n, b.j - j - n, j - b.j - b.n); if (gap >= gapOf(c, b.code)) return;
     const on = (s, v) => v >= s && v < s + b.n, touch = on(b.i, i - 1) || on(b.i, i + n) || on(b.j, j - 1) || on(b.j, j + n);
     why = !snug && !wallish(b) && !(apart && FK.has(b, 'Field')) ? SAY.gap : touch && !wallish(b) && (D.trains[c] || D.trains[b.code]) ? SAY.lane : ''; return !!why; });
   const off = (v, lo, hi) => Math.max(lo - v - P.half, v + P.half - hi, 0); // E315
@@ -60,7 +61,7 @@ const around = [...new Set(D.ways.flat())].sort((a, b) => a - b);
 function snap(side, c, i, j, tol) { const [, n] = B[c]; let best = [i, j], bd = tol; if (wallish({ code: c })) return best; // E316
   const take = (x, y) => { const d = Math.hypot(x - i, y - j); if (d < bd && canPlace(c, x, y, side)) [best, bd] = [[x, y], d]; };
   for (const b of things()) if (b.kind === 'bld' && b.side === side && !wallish(b)) { const h = (b.n - n) * P.half, ci = b.i + h, cj = b.j + h, R = (b.n + n) * P.half + tol + P.near;
-    if (Math.abs(ci - i) <= R && Math.abs(cj - j) <= R) for (const g of P.gaps) { for (const x of [b.i - n - g, b.i + b.n + g]) for (const y of [Math.round(cj), b.j, b.j + b.n - n, j]) take(x, y); for (const y of [b.j - n - g, b.j + b.n + g]) for (const x of [Math.round(ci), b.i, b.i + b.n - n, i]) take(x, y); }
+    if (Math.abs(ci - i) <= R && Math.abs(cj - j) <= R) for (const g of new Set([gapOf(c, b.code), ...P.gaps])) { for (const x of [b.i - n - g, b.i + b.n + g]) for (const y of [Math.round(cj), b.j, b.j + b.n - n, j]) take(x, y); for (const y of [b.j - n - g, b.j + b.n + g]) for (const x of [Math.round(ci), b.i, b.i + b.n - n, i]) take(x, y); }
     if (Number.isInteger(h) && Math.abs(ci - i) < P.guide && Math.abs(cj - j) < P.guide) { for (const d of around) { take(ci, j + d); take(i + d, cj); } } } // E716
   return best; }
 function guides(side, c, i, j) { const [, n] = B[c], g = [i + i + n, j + j + n], out = []; if (wallish({ code: c })) return out; // E716
