@@ -22,6 +22,8 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
     - Opens ready: Troops, All, both screen boxes, Fight boxed; mission tiles showing; Attack glowing
     - Same footprint as the other cards (130) in every state
     - Build order: 1 Troops, 2 Mode (Hold and Wall move here), 3 Mission and the markers, 4 Custom+ groups
+    - Nov 21 08:43, Albert: back to the card as it stood before Google's audit, the iteration without underlines. Not taken: pills, readouts on the top line, the single Map pill, stance moved into Mode, changes to the other cards. His objective: the most control in one area without overwhelming, and everything in the right order; clarity was never his problem
+    - Asked, not yet answered: should a troop word only pick, and leave the mission tiles in place (Bow, Move, the spot), with the type tiles opening from the word Troops
     - Open: what Focused courage does; where Garrison villagers goes; Priest, Medic, Spy have no class; targets have no tile; the screen boxes are under the 44 tap size; Jobs keeps − + above its tiles
   - [ ] soldiers less wimpy, more common sense (Albert to give examples)
 - [x] The copy log tracks more (Albert, Nov 20 22:36): the build, his orders, losses and to whom, refused taps, how it ended, errors, slowest frame, news with repeats folded, each rival's army by kind, people against room, army aim, goal, attacks.
