@@ -218,6 +218,21 @@ async def gaps():
         await run.step(pg, 2)
         return (await pg.evaluate(GAPS))[1], (await pg.evaluate(HOUSES))[1]
 
+async def marks():
+    """Your farm, quarry, mint, foundry, pasture and tree farm, four of them worked: the board draws their flags, glow and idle marks with no error."""
+    SET = """(() => { const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by), ci = k0 % N, cj = Math.floor(k0 / N), col = fk.SIDES[0].col, made = [];
+          const room = (i, j, w, hgt) => { for (let y = j - 2; y < j + hgt + 2; y++) for (let x = i - 2; x < i + w + 2; x++) if (!fk.free(y * N + x)) return false; return true; };
+          let at = null; for (let r = 8; r < 60 && !at; r++) for (let d = -r; d <= r && !at; d++) for (const [i, j] of [[ci + d, cj - r], [ci + d, cj + r], [ci - r, cj + d], [ci + r, cj + d]]) if (!at && room(i, j, 12, 6)) at = [i, j];
+          const [i, j] = at; const put = (code, x, y) => { const b = fk.build(code, x, y, col); b.done = 1; b.hp = b.hpMax = fk.stat(code, 0, 'hp'); made.push(b); return b; };
+          const F = put('BCL1', i, j), Q = put('BCL4', i + 3, j), M = put('BI6', i + 6, j), Fo = put('BI7', i + 9, j), P = put('BCL3', i, j + 3), T = put('BCL2', i + 3, j + 3);
+          const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).sort((a, b) => fk.dist(a, F) - fk.dist(b, F)); ECON.gatherAt(V[0], F); ECON.gatherAt(V[1], M); ECON.gatherAt(V[2], P); ECON.gatherAt(V[3], T);
+          window.ZQM = made; fk.cam.x = (F.vx + Fo.vx) / 2; fk.cam.y = (F.vy + T.vy) / 2; return made.map((b) => b.code); })()"""
+    async with run.game(SEED, test=True) as pg:
+        errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+        await run.step(pg, 2); await pg.evaluate(SET); await run.step(pg, 25)
+        for _ in range(3): await pg.evaluate("draw()"); await run.step(pg, 0.5)
+        return await pg.evaluate("ZQM.map((b) => !!b.wk)"), errs
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -248,6 +263,8 @@ async def check_game():
     rule('villagers keep to the find they were sent to, and a worker at a farm stays when raiders come', tk[0] == tk[1] and tp == [True, False], f'on the told bush after two minutes: {tk[0]} of {tk[1]}; farm worker still at the farm, ran: {tp}')
     gf, gh = await gaps()
     rule('fields may touch each other, a house keeps one tile from a house and two from the rest', gf == {'farmFarm0': True, 'farmMint0': True, 'farmHouse0': False, 'farmHouse2': True} and gh == {'house0': False, 'house1': True, 'barracks1': False, 'barracks2': True}, f'may stand there: {gf}, {gh}')
+    mk, me = await marks()
+    rule('your workplaces show who works them: the board draws the flags, glow and idle marks with no error', mk == [True, False, True, False, True, True] and not me, f'worked (farm, quarry, mint, foundry, pasture, tree farm): {mk}; errors: {me[:2]}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()

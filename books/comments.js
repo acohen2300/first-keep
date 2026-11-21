@@ -1089,5 +1089,6 @@ BOOK("comments", {
  "E1291": {"text": "an order at a foe (a unit, building or wild thing not one's own) is marked foe: its band draws no dashed ring or line where the target stood, since the target moves and the ring would be left behind on empty ground; the short aim flash on the target is all it shows (N436)"},
  "E1292": {"text": "an order marked foe has no ring on the map, so a tap there cannot pick its band either (N436)"},
  "E1293": {"text": "villagers sent to a find no path reaches within the search (D230) are told so at once, rather than going quietly to another find (N437)"},
- "E1294": {"text": "how far apart two buildings stand: the wider of their two lanes (D206 lanes, else lane), or none between two that may touch (D206 touch); one rule for every side (N438)"}
+ "E1294": {"text": "how far apart two buildings stand: the wider of their two lanes (D206 lanes, else lane), or none between two that may touch (D206 touch); one rule for every side (N438)"},
+ "E1295": {"text": "your own workplaces show whether anyone works them (N439): a worked farm, pasture, tree farm, quarry, mint or foundry flies a flag in its colour (farm and pasture green, the rest what they yield), a worked mint or foundry glows as if lit within, and an empty one shows the idle z"}
 });
