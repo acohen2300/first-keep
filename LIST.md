@@ -23,7 +23,9 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
     - Same footprint as the other cards (130) in every state
     - Build order: 1 Troops, 2 Mode (Hold and Wall move here), 3 Mission and the markers, 4 Custom+ groups
     - Nov 21 08:43, Albert: back to the card as it stood before Google's audit, the iteration without underlines. Not taken: pills, readouts on the top line, the single Map pill, stance moved into Mode, changes to the other cards. His objective: the most control in one area without overwhelming, and everything in the right order; clarity was never his problem
-    - Asked, not yet answered: should a troop word only pick, and leave the mission tiles in place (Bow, Move, the spot), with the type tiles opening from the word Troops
+    - Missions, the same six for every troop (Albert, Nov 21 08:46): Attack, Move, Hold, Defend, Fall back, Retreat. No Patrol. The mission tiles stay in place when a troop word is tapped; the type tiles open from the word Troops (Claude's reading of "the same for every unit", to confirm in play)
+    - Hold is stand your ground and works in both domains: the tile stops them where they stand and sets the stance Hold. Defend and Guard are the same thing in the two domains: the Defend tile sets the stance Guard (Albert, 08:48). So three missions set a stance (Attack: Fight, Hold: Hold, Defend: Guard) and three only move (Move, Fall back, Retreat)
+    - Fall back (new; Albert, 08:48): take 4 steps back, quickly form up, re-engage. A step read as one rank's spacing until he says otherwise
     - Open: what Focused courage does; where Garrison villagers goes; Priest, Medic, Spy have no class; targets have no tile; the screen boxes are under the 44 tap size; Jobs keeps − + above its tiles
   - [ ] soldiers less wimpy, more common sense (Albert to give examples)
 - [x] The copy log tracks more (Albert, Nov 20 22:36): the build, his orders, losses and to whom, refused taps, how it ended, errors, slowest frame, news with repeats folded, each rival's army by kind, people against room, army aim, goal, attacks.
