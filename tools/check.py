@@ -122,6 +122,26 @@ async def chase():
         idle, gone = await pg.evaluate("[WHO.filter((u) => u.job === 'idle').length, Math.hypot(WHO[0].bx - FROM[0], WHO[0].by - FROM[1]) / fk.D.tile]")
         return far, idle, gone
 
+async def tower(n):
+    """The first n foot are ordered at an enemy tower raised 30 tiles from home; three minutes on, what is left of the tower and of them."""
+    SET = "(n) => { const h = fk.seatOf(0), k0 = fk.tileAt(h.bx, h.by - 300), N = fk.N; let t = null; for (let d = 0; d < 40 && !t; d++) for (let dx = -d; dx <= d && !t; dx++) for (const dy of [-d, d]) { t = fk.build('BW3', k0 % N + dx, Math.floor(k0 / N) + dy, fk.SIDES[2].col); if (t) break; } t.done = 1; t.hp = t.hpMax = WAR.hpMax(t); window.ITS = t; window.ITSAT = [t.bx, t.by]; window.MEN = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot').slice(0, n); WAR.order(MEN, t, fk.tileAt(t.bx, t.by)); }"
+    LOOK = "(() => { const A = MEN.filter((u) => units.includes(u)); return { tower: things.includes(ITS) && ITS.hp > 0 ? Math.round(ITS.hp) : 0, alive: A.length, onIt: A.filter((u) => u.target === ITS).length, near: A.filter((u) => Math.hypot(u.bx - ITSAT[0], u.by - ITSAT[1]) < 15 * fk.D.tile).length, broke: A.filter((u) => u.broke).length }; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); await pg.evaluate(SET, n); await run.step(pg, 180)
+        return await pg.evaluate(LOOK)
+
+async def defends():
+    """The army stands 60 tiles from home; ten raiders fall on the town centre; the foot are picked and told Defend through the war menu."""
+    RAID = "(() => { const h = fk.seatOf(0), code = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot').code, k0 = fk.tileAt(h.bx, h.by - 60), N = fk.N; window.RAIDERS = []; for (let d = 0; d < 10 && RAIDERS.length < 10; d++) for (let dx = -d; dx <= d && RAIDERS.length < 10; dx++) { const k = k0 + dx - d * N; if (fk.walkable(k) && !units.some((u) => u.k === k)) { const e = fk.spawn(code, 2, k, fk.rng); if (e) RAIDERS.push(e); } } for (const e of RAIDERS) WAR.fight(e, h, true); })()"
+    LOOK = "(() => { const on = (c) => units.filter((u) => u.side === 0 && fk.SH[u.code].class === c && RAIDERS.includes(u.target)).length; return [on('Foot'), on('Archers')]; })()"
+    TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); await pg.evaluate("(() => { const h = fk.seatOf(0); WAR.order(units.filter((u) => u.side === 0 && fk.SH[u.code].class), null, fk.tileAt(h.bx, h.by - 600)); })()"); await run.step(pg, 80)
+        await pg.evaluate(RAID); await run.step(pg, 3)
+        for v in ('war||', 'mwho|Foot|', 'mord|defend|'): await pg.evaluate(TAP, v)
+        await run.step(pg, 5)
+        return await pg.evaluate(LOOK)
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -139,6 +159,11 @@ async def check_game():
     rule('a wall stands until the next order: the picked foot hold it two minutes on, the archers never picked do not, a move drops it', held[0] > 0 and held[1] == 0 and after[0] == 0, f'{held[0]} foot in the wall after two minutes, {held[1]} archers; {after[0]} after a move')
     far, idle, gone = await chase()
     rule('soldiers told to attack a foe who walks out of sight keep going to where he was last seen', idle == 0 and gone > 20, f'the foe {far:.0f} tiles off; a minute on, {idle} archers idle, the first {gone:.0f} tiles from where he started')
+    won, lost = await tower(10), await tower(6)
+    rule('a band winning against the building it was sent at stays and brings it down', won['tower'] == 0 and won['alive'] > 0, f"ten foot at a tower: the tower at {won['tower']}, {won['alive']} alive")
+    rule('a band that breaks does not walk back into the building one at a time', lost['tower'] > 0 and lost['broke'] > 0 and lost['onIt'] == 0 and lost['near'] == 0, f"six foot at a tower: the tower at {lost['tower']}, {lost['alive']} alive, {lost['broke']} of them broken, {lost['onIt']} back on it, {lost['near']} within 15 tiles")
+    foot, bow = await defends()
+    rule('Defend sends the picked soldiers at whoever is attacking the town, and nobody else', foot > 0 and bow == 0, f'{foot} foot on the raiders five seconds on, {bow} archers')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
     d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:
