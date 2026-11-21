@@ -175,6 +175,15 @@ async def picks_end():
         got.append(await pg.evaluate("""(() => { const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).slice(0, 3), b = fk.things().filter((t) => t.kind === 'bush').sort((a, c) => fk.dist(a, V[0]) - fk.dist(c, V[0]))[0]; fk.select(V); MENU.render(true); fk.cam.x = b.vx; fk.cam.y = b.vy; MENU.render(true); const [x, y] = fk.toScreen(b.vx, b.vy); const n = fk.picked().length; if (fk.paused()) fk.pause(false); fk.tap(x, y); return [n, fk.picked().length, V.filter((u) => u.target === b).length]; })()"""))
         return got
 
+async def rings():
+    """An order at a foe leaves no ring on the map; a move keeps its ring."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40)
+        await pg.evaluate("""(() => { const mine = (c) => units.filter((u) => u.side === 0 && fk.SH[u.code].class === c), foe = units.filter((u) => u.side === 2 && u.hp > 0).sort((a, b) => fk.dist(a, mine('Archers')[0]) - fk.dist(b, mine('Archers')[0]))[0], F = mine('Foot');
+          WAR.order(mine('Archers'), foe, fk.tileAt(foe.bx, foe.by)); WAR.order(F, null, fk.tileAt(F[0].bx + 120, F[0].by - 80)); })()""")
+        await run.step(pg, 2)
+        return await pg.evaluate("[...WAR.ORD].filter((O) => O.n).map((O) => !!O.foe).sort()")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -199,6 +208,8 @@ async def check_game():
     rule('Defend sends the picked soldiers at whoever is attacking the town, and nobody else', foot > 0 and bow == 0, f'{foot} foot on the raiders five seconds on, {bow} archers')
     pe = await picks_end()
     rule('every order ends the pick: a War move, a War hold, villagers sent to a bush', pe[2] == 0 and pe[4] == 0 and pe[5][0] == 3 and pe[5][1] == 0 and pe[5][2] > 0, f'picked before and after (archers, move, foot, hold, villagers [before, after, went]): {pe}')
+    rg = await rings()
+    rule('an order at a foe draws no ring where the foe stood; a move keeps its ring', rg == [False, True], f'live orders, marked foe: {rg}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
     tr = await troops()

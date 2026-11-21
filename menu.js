@@ -362,7 +362,7 @@ FK.on('tick', () => { if (S.crack && FK.K.t - S.crack.t > CR.show && !units().so
 function pickToggle(u) { const P = FK.picked(); FK.select(S.more ? (P.includes(u) ? P.filter((v) => v !== u) : [...P, u]) : P.length === 1 && P.includes(u) ? null : [u]); // E1051
   S.subject = callOf(); S.exit = null; { const VV = vsel(); if (!VV.length) S.vc = null; else if (!S.vc || !VV.includes(S.vc.lead)) S.vc = { lead: VV[0], snap: VV.map((v) => [v, v.att, v.dump]), crumbs: [], page: null, job: null, hide: false }; } // E1058
   if (S.add && !FK.picked().includes(S.add)) S.add = null; ctlPick(); render(true); } // E1055
-const ordAt = (px, py) => { let best = null, bd = TO.ord; for (const O of WAR.ORD) { const d = O.n ? Math.hypot(...onMap(O.k).map((v, n) => v - [px, py][n])) : Infinity; if (d < bd) [best, bd] = [O, d]; } return best; };
+const ordAt = (px, py) => { let best = null, bd = TO.ord; for (const O of WAR.ORD) { const d = O.n && !O.foe ? Math.hypot(...onMap(O.k).map((v, n) => v - [px, py][n])) : Infinity; if (d < bd) [best, bd] = [O, d]; } return best; }; // E1292
 const aimK = () => (!S.aim ? null : S.aim.t ? FK.tileAt(S.aim.t.bx, S.aim.t.by) : S.aim.k);
 const onB = (k) => k !== -1; // E433
 function aimSpot(k, u) { const t = u || (onB(k) && FK.inSight(under(k)) ? under(k) : null); S.aim = { k: onB(k) ? k : (S.aim || {}).k, t: t && !own(t) && (t.kind === 'unit' || t.kind === 'bld' || isFind(t)) ? t : null }; } // E430
