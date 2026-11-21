@@ -260,6 +260,21 @@ async def home():
         a = await pg.evaluate(LOOK); await run.step(pg, 100)
         return a, await pg.evaluate(LOOK)
 
+async def patched():
+    """Words over white get the dark patch and words over dark ground none, a word half over white counts as over white, and a redrawn card keeps its patches (no blink)."""
+    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); }"
+    # the ground behind the card painted by hand: dark everywhere, white from the left edge to six tenths across the word Foot; the War card's line words are read back
+    PAINT = """(() => { const c = document.getElementById('map'), q = c.getContext('2d'); q.save(); q.setTransform(1, 0, 0, 1, 0, 0); q.fillStyle = '#24402a'; q.fillRect(0, 0, c.width, c.height); const f = document.querySelector('[data-v="mwho|Foot|"] .bx').getBoundingClientRect(), x = f.left + 0.6 * f.width; q.fillStyle = '#eef3f6'; q.fillRect(0, 0, x * c.width / innerWidth, c.height); q.restore(); window.ZQX = x; })()"""
+    READ = "[...document.querySelectorAll('#patch i')].filter((p) => !p.classList.contains('o')).map((p) => { const r = p.getBoundingClientRect(); return [r.left, r.right, +p.style.opacity]; })"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40)
+        await pg.evaluate(TAP, 'war||'); await pg.evaluate('MENU.render(true)'); await pg.evaluate(PAINT); await pg.evaluate('MENU.patches(true)')
+        got, cut = await pg.evaluate(READ), await pg.evaluate('ZQX')
+        await pg.evaluate('MENU.render(true)'); again = await pg.evaluate(READ)
+        most = await pg.evaluate('MENU.SCR.patch.most')
+        white = [o for l, r, o in got if r <= cut]; dark = [o for l, r, o in got if l >= cut]; half = [o for l, r, o in got if l < cut < r and (cut - l) / (r - l) >= 0.5]
+        return white, dark, half, [o for _, _, o in got] == [o for _, _, o in again], most
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -298,6 +313,8 @@ async def check_game():
     rule('a villager whose find runs out goes idle, and a minute idle walks home to the town center', h0[0] == 'idle' and h1[0] == 'idle' and h1[1] < h0[1] - 20, f'job and tiles from the town center, just after and 100 s on: {h0}, {h1}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
+    pw, pd, ph, pk, pm = await patched()
+    rule('a word over white gets the dark patch, a word over dark ground none, a word half over white counts as over white, a redrawn card keeps its patches', pw and all(o == pm for o in pw) and pd and not any(pd) and all(o > 0 for o in ph) and pk, f'over white {pw}, over dark {pd}, half over white {ph}, same after a redraw: {pk}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
