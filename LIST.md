@@ -14,7 +14,7 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
   - [x] part 1: the control row's actions (SN52), the tile rows for jobs, build, a crew and ice (SN53), the card sections (SN54)
   - [x] part 2: the top bar is a single strip again (Albert, Nov 20): five stores, people, pause, Mail. The war controls and the jobs row are unique and stay as they are (Albert, Nov 20). Left to convert: the resource card's line, the top line
   - [x] homes found (Albert, Nov 20): bar = readings only (five stores, villagers and army, season with time left or hour, rank that opens Score); pause and Mail are clear circles under the bar at the right; age on the Stores sheet; idle on the Jobs row. The score number reads only on the Score sheet
-  - [ ] part 3: the seven sheets (new game, Build, Help, Stores, Score, Mail, Pause)
+  - [x] part 3: the sheets as lists of parts in the Screen book (SN56): new game, Help, Stores, Score, Mail, Back, and the pause banner's buttons and tiles. Still code: the Help book's pages, the two tables' columns
   - [ ] part 4: the screen built once and updated in place, not reassembled as text
   - [ ] then the standards, as edits to those lists and the stylesheet: colour meanings, one look each for chosen, ready and unavailable, the text sizes, tap size 44
   - Not covered by the screens test (no such thing on the board in its match): the Make, Sell and Buy sections, the ice menu, later-age buildings

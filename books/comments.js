@@ -78,7 +78,6 @@ BOOK("comments", {
 "E747": {"text": "the mirage's dots on the small map, in the colour of what is coming"},
  "E735": {"text": "the hammer carries the receding brown ring for every site going up (the mean of their progress; Albert, Nov 10, #21: the Build button is the aggregator of all builds), People the green ring while the seat trains, and People is ringed blue while anyone stands idle (Base, items 19 and 20); with no hazard ticked each is drawn by lot at D309 lot odds, Base's HZ_ODDS, and the first message says the level (item 5)"},
 "E734": {"text": "a yield's first age is the earliest age of anything that costs it (units, buildings, research, the ages themselves), Base's firstAge; a job is locked until then and a tap on it says when it opens (the Nov 7 re-read, item 21)"},
-"E732": {"text": "the Mail door on the top bar with its unread count opens the Mail card: the messages newest first, each with its group, a tap on one with a place goes there (Base, the Nov 7 re-read item 13)"},
  "E731": {"text": "the Controller's parts (Albert Nov 11, N325): its words J50, its sizes SN41, its thin icons SN42, its tints C37; 'soldiers' are the picked that are armed; a pad cell is one button, dimmed when its verb says why not. Before N25 the war station's middle was the small map with five pages (Train, Squad, Set up, Direct, Field): parked, see Parked.md"},
 "E730": {"text": "the Build card as Base's: opening it reads the middle of the view and opens the tab of what fits there, marked blue with Fits here; a second tap on the Build tab closes it; each row is the name, built/limit (limitOf), the price in green or the lock (its age, research, need) in grey; tapping the picked building again cancels the ghost"},
 "E729": {"text": "the sky's washes (the dusk glow, the night blue, fog, rime, the flash, the visibility veil) are composed into one colour and laid in one pass, exactly as the six would have painted in turn (each over the last: c = cᵢaᵢ + c(1 − aᵢ), a = aᵢ + a(1 − aᵢ)); the top bar's height is measured once, not read from the layout every frame (SoRen 70-render; the Nov 7 read); with no top bar (a full card open) the sky's band starts at the top of the glass"},
@@ -1056,8 +1055,6 @@ BOOK("comments", {
  "E1254": {"text": "the building card under the law: Train | Learn | Talk on the line; the crumb row with the queue, Stop, Repair, Demolish and Cancel; a unit tile tapped trains one (Design 17, 26, 19)"},
  "E1255": {"text": "every villager inside or sheltering comes out to its work"},
  "E1256": {"text": "War: Shelter, Work and Out (Design 17, 5, 6)"},
- "E1257": {"text": "the score: the ribbon's score cell opens it apart from the stores (Design 17, 7, 8)"},
- "E1232": {"text": "the score table, one home: under the stores on the Stores sheet and on the pause screen (The List 26 item 16)"},
  "E1258": {"text": "the road's strip: every tile within the road book's clear of a road tile, by one two-way distance sweep (a chamfer); woods there give no cover (N374, N398)"},
  "E1259": {"text": "the smallest-first queue, one home: the roads' search and the water's flood"},
  "E1260": {"text": "distance over the tiles from where src holds, out to lim"},
@@ -1072,5 +1069,7 @@ BOOK("comments", {
  "E1269": {"text": "a card section's tiles for a finished building of one's own, read from the Screen book's cardRows list; the sections and the tick each needs are the book's card list"},
  "E1270": {"text": "the one part of a card kept as code: the people a seat can talk to (the three rivals and the four groups of misfits), or one of them with the stances to choose"},
  "E1271": {"text": "a cell of the single strip is thinner than a finger, so each cell that can be tapped takes taps a full slot tall, reaching below the strip (Albert, Nov 20: the top bar back to a single strip; his 44 tap size)"},
- "E1272": {"text": "the top corners carry two round controls under the bar at the right, pause then Mail, clear with only the icon drawn: circles are controls, the bar is readings (Albert, Nov 20 17:17 and 17:19: both on the right, clear, just the icon)"}
+ "E1272": {"text": "the top corners carry two round controls under the bar at the right, pause then Mail, clear with only the icon drawn: circles are controls, the bar is readings (Albert, Nov 20 17:17 and 17:19: both on the right, clear, just the icon)"},
+ "E1273": {"text": "the sheets as shells: each sheet is a list of parts in the Screen book (SN56), and SHEET holds one maker for each kind of part: welcome, toggle, pair of pads, cells, head, table, blurb, list, wide, part"},
+ "E1274": {"text": "the two tables a sheet can hold, Stores and Score: the columns are worked out here, the words come from the Words book"}
 });
