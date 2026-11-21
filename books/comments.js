@@ -1071,5 +1071,6 @@ BOOK("comments", {
  "E1271": {"text": "a cell of the single strip is thinner than a finger, so each cell that can be tapped takes taps a full slot tall, reaching below the strip (Albert, Nov 20: the top bar back to a single strip; his 44 tap size)"},
  "E1272": {"text": "the top corners carry two round controls under the bar at the right, pause then Mail, clear with only the icon drawn: circles are controls, the bar is readings (Albert, Nov 20 17:17 and 17:19: both on the right, clear, just the icon)"},
  "E1273": {"text": "the sheets as shells: each sheet is a list of parts in the Screen book (SN56), and SHEET holds one maker for each kind of part: welcome, toggle, pair of pads, cells, head, table, blurb, list, wide, part"},
- "E1274": {"text": "the two tables a sheet can hold, Stores and Score: the columns are worked out here, the words come from the Words book"}
+ "E1274": {"text": "the two tables a sheet can hold, Stores and Score: the columns are worked out here, the words come from the Words book"},
+ "E1275": {"text": "the screen is updated in place: put() compares the new markup with what each part was last built from and swaps only the parts that changed; a part with text of its own, a ring or a button is swapped whole, a plain holder is kept and its children compared in turn, so a button that did not change stays the same button under the finger"}
 });
