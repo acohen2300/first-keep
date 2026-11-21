@@ -14,7 +14,15 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
   - [x] attack, hold and retreat tested with two groups (Nov 21). Found and fixed: soldiers told to attack a foe who walked out of sight stopped where they stood and said they had arrived; they now go on to where he was last seen (in the check). An order tapped beside a held or walled group pulled single soldiers out of it; it no longer does. Wall tested under attack: it held, all still in the wall after the fight
   - [ ] defend not tested (it needs an enemy attacking; the test field's rival walks home)
   - [ ] tapping one of your own soldiers while giving an order changes the pick instead of setting the spot
-  - [ ] draft a force by type and number (2 of 6 catapults; knights, not elephants), groups that keep their own order, formation by type (foot, archers, siege behind), hold where sent. Albert's scenario, Nov 20 21:34; design not settled
+  - [ ] the War card (Albert, Nov 21 07:51: "I think this is the card"). Drawn, not built: https://claude.ai/artifact/RgaC4KuRTnHPbwcLBmFkN4
+    - Title line: Home, Troops | Mode | Mission, On Screen and Off Screen boxes, W. No "War" box
+    - Control line: All | Idle | Foot | Bow | Cav | Siege | Custom+ at the left; Fight | Hold | Guard at the right
+    - Six tiles below change with the controller: troops (classes, or a class's types, − + inside each tile), mode (Line, Wall, Wedge; Normal, Focused, To death), mission (Attack, Move, Defend, Retreat, Patrol later)
+    - Signals: red box = chosen, on the choice and on its controller; gold glow = tap me now; three boxes = complete, tap the map. No underlines, no GO button
+    - Opens ready: Troops, All, both screen boxes, Fight boxed; mission tiles showing; Attack glowing
+    - Same footprint as the other cards (130) in every state
+    - Build order: 1 Troops, 2 Mode (Hold and Wall move here), 3 Mission and the markers, 4 Custom+ groups
+    - Open: what Focused courage does; where Garrison villagers goes; Priest, Medic, Spy have no class; targets have no tile; the screen boxes are under the 44 tap size; Jobs keeps − + above its tiles
   - [ ] soldiers less wimpy, more common sense (Albert to give examples)
 - [x] The copy log tracks more (Albert, Nov 20 22:36): the build, his orders, losses and to whom, refused taps, how it ended, errors, slowest frame, news with repeats folded, each rival's army by kind, people against room, army aim, goal, attacks.
 - [ ] Human-side test: a test that plays as a person (every age, building, unit, card and button). It is the proof for the menu build, shrinks the 217 unsorted functions, and later proves each lost feature fixed
