@@ -2,6 +2,29 @@
 
 Agreed Nov 20. One build between previews. Order is top to bottom.
 
+## Handoff, Nov 22 (after his 277-minute match, a win; logs read in chat)
+
+Read this first. The reviewers' 18 reports are on the branch `fresh-notes`, folder `review/`.
+
+What the match showed, worst first: armies broke all at once at every Town Center (no courage, Hold does not hold); the economy did not run itself (idle villagers, winter starvation until he doubled food workers by hand, 300k banked with nothing to buy, pop cap 180, "That line is full" 553 times); no information (no scout report, no warning before winter, a resource running out or a break); orders that never arrived (T27 sat 46 min, V25 12 min; "no way" on 79 men at 98:32); rivals sat on hoards and did not attack for long stretches; freezes up to 1.5 s in fights.
+
+Build order agreed (Albert, Nov 22 14:03 "Build"), one area per build, one preview each:
+1. The army: War card Step 5 Mode (formations and courage, his Nov 21 design below), Hold that holds (die in place), stuck orders and "no way"
+2. The economy: idle villagers find work, a winter food target, low-resource warnings, training that does not jam, the pop cap
+3. Freezes in fights; rival passivity and hoards
+4. Small: the fallen-building alert names the wrong place ("attacked at I28", "fallen at I1"); "Your cataphract" when he had none; the Pioneer has no order of its own and a tap sends it to whatever is under the finger; tapping your own soldier during an order changes the pick
+
+His calls, open:
+1. Season rhythm (winter to build and research, spring to war): yes or no
+2. Steward (rations, stores, routes, idle villagers, each showing its effect in numbers): a Town Center tab or its own building
+3. Forward base: A, a Camp he places (rally, supply, healing, status), or B, any castle far from home counts
+4. Surplus: keep "no surplus selling" (Nov 5, N202) or give it an outlet; the rivals selling surplus is held back for this
+5. Garrison villagers' slot on the War card; Idle pulling a posted group; box-select starting with a touch-and-hold (his no long press rule)
+6. The night's found list (under The night push) and the two specs (roads, camera)
+7. Soldiers "less wimpy": his examples, or today's logs
+
+Talked through Nov 22, nothing decided, nothing built: the Steward; the season rhythm; a Surveyor (reports soil, mud, towers) and route options like a maps app (time, food, why; every number from the real pathfinder, run only when asked); the Pioneer's own "Clear road" order and a card that says what it does; walls drawn by drag, allowed to touch trees, rocks and water, with gaps shown; the forward base; an audit table of every hardship (its warning, its lever, its cost)
+
 ## Cleanup
 
 - [x] Build 1: publish from `fresh`, the check, comments and citations books back
