@@ -1236,5 +1236,6 @@ BOOK("comments", {
  "E2680": {"text": "Taking something out of the lists twice takes out nothing more (review idx4.md 9): splice at indexOf -1 removed the last unit or thing, an unrelated one"},
  "E2681": {"text": "New game and Delete confirm only on a second tap that is not a double tap, as Demolish does; Delete disarms itself after a while (review menu1.md 4; Albert: no double taps)"},
  "E2682": {"text": "The more tile counts what this page does not show (review menu1.md 11): it showed the same count on every page"},
- "E2683": {"text": "A finger on a button is kept by its pointer: a second finger touching the map or lifting no longer clears it, so the button under the thumb is not redrawn away (review menu2.md 11)"}
+ "E2683": {"text": "A finger on a button is kept by its pointer: a second finger touching the map or lifting no longer clears it, so the button under the thumb is not redrawn away (review menu2.md 11)"},
+ "E2684": {"text": "A march picked up again walks to its goal as march() does, near it when the goal tile cannot be stood on (review v-routes.md 7): it asked for exactly the goal tile, so a march on a building never got there and each try searched the whole map"}
 });
