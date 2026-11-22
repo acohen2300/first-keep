@@ -213,7 +213,7 @@ function makeThings(roll) {
   // E48
   const guarded = (kind) => !!(FN.rows[KIND[kind].code] || {}).guard, ring = (x, y, f) => stamp(x, y, (FN.ring + 1) * D.tile, f), clearing = (kind, [x, y]) => { if (guarded(kind)) ring(x, y, (k) => { if (FOR[k]) FOR[k] = OCC[k] = null; }); }; // E674
   const open = (kind, x, y) => { let ok = true; if (guarded(kind)) ring(x, y, (k) => { if (H[k] < D.land || (OCC[k] && !FOR[k])) ok = false; }); return ok; };
-  const spot = (r, roll2 = roll, kind = null) => { for (let t = 0; t < 200; t++) { const bx = between(roll2, [B0, B1]), by = between(roll2, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r) && (!kind || open(kind, bx, by))) return [bx, by, k]; } return null; };
+  const spot = (r, roll2 = roll, kind = null) => { for (let t = 0; t < D.spotTries; t++) { const bx = between(roll2, [B0, B1]), by = between(roll2, [B0, B1]), k = tileAt(bx, by); if (inZ4(bx, by, r + D.tile) && free(k) && clear(bx, by, r) && (!kind || open(kind, bx, by))) return [bx, by, k]; } return null; };
   for (const [kind, n] of [['gold', 'goldZ4'], ['stone', 'stoneZ4'], ['iron', 'ironZ4'], ['ruins', 'ruins'], ['cemetery', 'cemeteries'], ['campfire', 'campfires'], ['treasure', 'treasures']])
     for (let m = count(roll, D[n]); m > 0; m--) { const s = spot(KIND[kind].r, roll, kind); if (s) { put(kind, s[2], roll); clearing(kind, s); } }
   for (let m = count(roll, D.patches); m > 0; m--) { const s = spot(2 * D.tile); if (s) cluster('bush', s[0], s[1], count(roll, D.patch), roll); }

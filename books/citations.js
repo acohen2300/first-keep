@@ -112,6 +112,7 @@ BOOK("citations", {
  "N110": {"text":"N80 (centre of mass 0.55 of height; foot)","opened":true,"kind":"design"},
  "N111": {"text":"Design, Nov 5: a timber engine about 1.7 m³ (W12 × volume); stride a wheel's turn","opened":true,"kind":"design"},
  "N112": {"text":"Design: v100 floors, Nov 4 (Albert to confirm)","opened":true,"kind":"design"},
+ "N528": {"text": "The code's own number, moved to the Measure book unchanged (measure book hunt, Nov 21): world-making's tries for a find of the wilds to land on a free spot (index.html, spot)", "opened": true, "kind": "chosen"},
  "N113": {"text":"Design: the figures' four-frame walk (preview 49)","opened":true,"kind":"design"},
  "N114": {"text":"Design: v100 floors, Nov 5 (Albert to confirm)","opened":true,"kind":"design"},
  "N115": {"text":"Design: Albert, Nov 5 (his screenshot of Base)","opened":true,"kind":"design"},
