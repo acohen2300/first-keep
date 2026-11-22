@@ -75,7 +75,7 @@ function bestFoe(u, r) { let best = null, bv = -Infinity, bb = false; FK.unitsNe
 const nearest = (u, r, at = u, ok = alive) => { let best = null; FK.unitsNear(at, r * T, (v) => { if (enemies(u, v) && alive(v) && ok(v) && gap(at, v) < r && (!best || gap(at, v) < gap(at, best))) best = v; }); return best; };
 const foeBld = (u, r) => { let best = null; FK.bldsNear(u.bx, u.by, (r + D.large) * T, (t) => { if (SIDES[t.side] && enemies(u, t) && alive(t) && edgeDist(u, t) <= r && (!best || edgeDist(u, t) < edgeDist(u, best))) best = t; }); return best; };
 function choose(u, r) { let best = null; FK.unitsNear(u, r * T, (t) => { if (enemies(u, t) && alive(t) && edgeDist(u, t) <= r && (SIDES[t.side] || t.target === u) && (!best || worth(u, t, edgeDist(u, t)) > worth(u, best, edgeDist(u, best)))) best = t; }); return best; }
-const ringOf = (u, t) => { const r = Math.max(1, stat(u).rng); return [t.kind === 'bld' ? (q) => { const i = q % N, j = (q - i) / N; return i >= t.i - r && i < t.i + t.n + r && j >= t.j - r && j < t.j + t.n + r; } : (q) => q !== t.k && nearK(q, t.k, r), t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k]; }, toward = (u, t) => { return FK.walkTo(u, ...ringOf(u, t), u.focus === t ? D.tries.way : D.chase); }; // E234
+const ringOf = (u, t) => { const r = Math.max(1, stat(u).rng); return [t.kind === 'bld' ? (q) => { const i = q % N, j = (q - i) / N; return i >= t.i - r && i < t.i + t.n + r && j >= t.j - r && j < t.j + t.n + r; } : (q) => q !== t.k && nearK(q, t.k, r), t.kind === 'bld' ? FK.tileAt(t.bx, t.by) : t.k]; }, toward = (u, t) => { return FK.walkTo(u, ...ringOf(u, t), u.focus === t ? undefined : D.chase); }; // E234
 const home = (side) => FK.seatOf(side) || things().find((t) => t.kind === 'bld' && t.side === side); // E235
 const nearHome = (u, t) => (u.home && gap(t, u.home) < D.yard) || (!!home(u.side) && gap(t, home(u.side)) < D.yard); // E390
 const waves = SIDES.map(() => null); // E236
@@ -87,7 +87,7 @@ const CY = D.convoy, onWay = (u, p, then) => Object.assign(u, { path: p, at: Mat
 function join(u, L, g) { let j = 0, bd = Infinity; L.forEach((q, n) => { const d = tl(u.k, q); if (d < bd) [j, bd] = [n, d]; }); if (bd > CY.near) return null;
   const on = new Map(L.slice(j).map((q, n) => [q, j + n])), a = bd ? FK.findPath(u.k, (q) => on.has(q), L[j], CY.tries, u) : [u.k]; if (!a) return null;
   const end = L[L.length - 1], z = g == null || g === end ? null : FK.findPath(end, (q) => q === g, g, CY.tries, u); return [...a, ...L.slice(on.get(a[a.length - 1]) + 1), ...(z ? z.slice(1) : [])]; }
-function convoy(S, goal, near) { const c = centreOf(S), lead = S.reduce((a, b) => (far(a, c) <= far(b, c) ? a : b)); return FK.findPath(lead.k, goal, near, D.tries.way, lead); } // E1000
+function convoy(S, goal, near) { const c = centreOf(S), lead = S.reduce((a, b) => (far(a, c) <= far(b, c) ? a : b)); return FK.findPath(lead.k, goal, near, undefined, lead); } // E1000
 function landK(k) { const R = FK.reach(ME), i0 = k % N, j0 = (k - i0) / N; if (R.has(k)) return k; let best = k, bd = Infinity; for (let dj = -CY.snap; dj <= CY.snap; dj++) for (let di = -CY.snap; di <= CY.snap; di++) { const i = i0 + di, j = j0 + dj, d = Math.hypot(di, dj); if (i >= 0 && j >= 0 && i < N && j < N && d < bd && R.has(j * N + i)) [best, bd] = [j * N + i, d]; } return best; } // E1001
 const block = (u) => { const b = foeBld(u, FL.melee); if (b) fight(u, b); }; // E391
 function recall(side) { waves[side] = null; homeAll(orders(side)); }

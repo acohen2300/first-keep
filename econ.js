@@ -84,7 +84,7 @@ const wallLine = (a, b) => { const [ai, aj] = at(a), [bi, bj] = at(b), n = Math.
 function lay(side, c, cells) { const built = [], blocked = []; let broke = false; for (const k of cells) { if (!canPay(side, D.cost[c] || {})) { broke = true; break; } const t = plan(side, c, ...at(k)); if (t) { built.push(t); autoBuilder(side, t); } else blocked.push(k); } return { built: built.length, blocked: blocked.length, broke }; }
 function sealPath(side, extra) { const h = FK.seatOf(side); if (!h) return null; const ks = [], ci = h.i + h.n * P.half, cj = h.j + h.n * P.half, from = Math.floor(cj) * N + Math.floor(ci), shut = OCC[from]; // E319
   for (let y = h.j; y < h.j + h.n; y++) for (let x = h.i; x < h.i + h.n; x++) ks.push(y * N + x); const add = extra.filter((k) => !OCC[k]), was = [...ks, ...add].map((k) => OCC[k]);
-  ks.forEach((k) => (OCC[k] = 0)); add.forEach((k) => (OCC[k] = shut)); const p = FK.findPath(from, (k) => { const [x, y] = at(k); return Math.hypot(x - ci, y - cj) >= D.seal.reach; }, from);
+  ks.forEach((k) => (OCC[k] = 0)); add.forEach((k) => (OCC[k] = shut)); const p = FK.findPath(from, (k) => { const [x, y] = at(k); return Math.hypot(x - ci, y - cj) >= D.seal.reach; }, from, D.tries.way);
   [...ks, ...add].forEach((k, n) => (OCC[k] = was[n])); return p || []; }
 // E218
 const timeOf = (side, c) => (c.plan ? c.t : T[c] ? FK.stat(c, side, 'time') : D.ages.includes(c) ? D.age.time[D.ages.indexOf(c)] : FK.stat(c, side, 'train')), nameOf = (c) => (c.plan ? fromBook('words').army.muster : T[c] ? T[c].name : FK.SH[c] ? FK.SH[c].name : c);

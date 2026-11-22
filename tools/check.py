@@ -283,6 +283,14 @@ async def pressed():
         await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
         return got, await pg.evaluate("document.querySelectorAll('.pr').length")
 
+async def farway():
+    """On his Timberland map (seed 3382234986), six foot ordered from beside his town centre (D28) at the rival town centre at D4, 380 steps round the forest, all set off on the way; before, the search gave up at 20,000 tiles and they said 'no way'."""
+    async with run.game(3382234986) as pg:
+        await run.step(pg, 2)
+        return await pg.evaluate("""(() => { const N = fk.N, me = fk.seatOf(0), t = fk.seatOf(1), k0 = fk.tileAt(me.bx, me.by), code = Object.keys(fk.SH).find((c) => fk.SH[c].class === 'Foot'), S = [];
+          for (let r = 4; r < 30 && S.length < 6; r++) for (let d = -r; d <= r && S.length < 6; d++) { const k = k0 + d + r * N; if (fk.walkable(k) && !units.some((u) => u.k === k)) { const u = fk.spawn(code, 0, k, fk.rng); if (u) S.push(u); } }
+          WAR.order(S, t, fk.tileAt(t.bx, t.by)); return [MENU.coord(t.bx, t.by), S.map((u) => (u.path ? u.path.length : 0))]; })()""")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -325,6 +333,8 @@ async def check_game():
     rule('every word floating over the map has its dark patch at the book strength, and a redrawn card keeps them in place', len(pg_) >= pn and all(abs(o - pm) < 0.01 for _, _, o in pg_) and pk, f'{len(pg_)} patches for {pn} troop words and the rest, strengths {sorted({o for _, _, o in pg_})}, same after a redraw: {pk}')
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
+    fw = await farway()
+    rule('a band ordered at a town centre far round a forest finds the way (his Timberland map, D28 to D4)', fw[0] == 'D4' and len(fw[1]) == 6 and min(fw[1]) > 300, f'to {fw[0]}: steps on each soldier\'s way {fw[1]}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
