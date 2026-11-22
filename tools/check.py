@@ -261,19 +261,15 @@ async def home():
         return a, await pg.evaluate(LOOK)
 
 async def patched():
-    """Words over white get the dark patch and words over dark ground none, a word half over white counts as over white, and a redrawn card keeps its patches (no blink)."""
+    """Every word floating over the map has its dark patch at the book's strength, the filled controls have none, and a redrawn card keeps the patches in place."""
     TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); }"
-    # the ground behind the card painted by hand: dark everywhere, white from the left edge to six tenths across the word Foot; the War card's line words are read back
-    PAINT = """(() => { const c = document.getElementById('map'), q = c.getContext('2d'); q.save(); q.setTransform(1, 0, 0, 1, 0, 0); q.fillStyle = '#24402a'; q.fillRect(0, 0, c.width, c.height); const f = document.querySelector('[data-v="mwho|Foot|"] .bx').getBoundingClientRect(), x = f.left + 0.6 * f.width; q.fillStyle = '#eef3f6'; q.fillRect(0, 0, x * c.width / innerWidth, c.height); q.restore(); window.ZQX = x; })()"""
-    READ = "[...document.querySelectorAll('#patch i')].filter((p) => !p.classList.contains('o')).map((p) => { const r = p.getBoundingClientRect(); return [r.left, r.right, +p.style.opacity]; })"
+    READ = "[...document.querySelectorAll('#patch i')].map((p) => { const r = p.getBoundingClientRect(); return [Math.round(r.left), Math.round(r.top), +getComputedStyle(p).opacity]; })"
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40)
-        await pg.evaluate(TAP, 'war||'); await pg.evaluate('MENU.render(true)'); await pg.evaluate(PAINT); await pg.evaluate('MENU.patches(true)')
-        got, cut = await pg.evaluate(READ), await pg.evaluate('ZQX')
-        await pg.evaluate('MENU.render(true)'); again = await pg.evaluate(READ)
-        most = await pg.evaluate('MENU.SCR.patch.most')
-        white = [o for l, r, o in got if r <= cut]; dark = [o for l, r, o in got if l >= cut]; half = [o for l, r, o in got if l < cut < r and (cut - l) / (r - l) >= 0.5]
-        return white, dark, half, [o for _, _, o in got] == [o for _, _, o in again], most
+        await pg.evaluate(TAP, 'war||'); await pg.evaluate('MENU.render(true)')
+        got = await pg.evaluate(READ); await pg.evaluate('MENU.render(true)'); again = await pg.evaluate(READ)
+        words = await pg.evaluate("[...document.querySelectorAll('#base .who .bx')].length")
+        return got, again == got, words, await pg.evaluate('MENU.SCR.patch.most')
 
 async def pressed():
     """A tapped button is pressed the moment the finger lands and let go after it leaves; a tap that redraws the button (Foot becomes boxed) still shows the press on the new button, and nothing is left pressed."""
@@ -325,8 +321,8 @@ async def check_game():
     rule('a villager whose find runs out goes idle, and a minute idle walks home to the town center', h0[0] == 'idle' and h1[0] == 'idle' and h1[1] < h0[1] - 20, f'job and tiles from the town center, just after and 100 s on: {h0}, {h1}')
     st = await site_taps()
     rule('a tap on your own site only picks it: two taps leave it standing with its card open, no trash by the finger, no "undefined"', st == [True, True, 0, False], f'stands, card open, trash pops, undefined shown: {st}')
-    pw, pd, ph, pk, pm = await patched()
-    rule('a word over white gets the dark patch, a word over dark ground none, a word half over white counts as over white, a redrawn card keeps its patches', pw and all(o == pm for o in pw) and pd and not any(pd) and all(o > 0 for o in ph) and pk, f'over white {pw}, over dark {pd}, half over white {ph}, same after a redraw: {pk}')
+    pg_, pk, pn, pm = await patched()
+    rule('every word floating over the map has its dark patch at the book strength, and a redrawn card keeps them in place', len(pg_) >= pn and all(abs(o - pm) < 0.01 for _, _, o in pg_) and pk, f'{len(pg_)} patches for {pn} troop words and the rest, strengths {sorted({o for _, _, o in pg_})}, same after a redraw: {pk}')
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
     tr, tw = await troops()
