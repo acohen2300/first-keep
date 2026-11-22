@@ -171,7 +171,7 @@ async def picks_end():
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40); got = []
         for v in ('war||', 'mwho|Archers|'): got.append(await pg.evaluate(TAP, v))
-        await pg.evaluate("fk.tap(70, 250)"); got.append(await pg.evaluate(TAP, 'mord|move|'))
+        await pg.evaluate(TAP, 'mord|move|'); await pg.evaluate("fk.tap(70, 250)"); got.append(await pg.evaluate("fk.picked().length"))
         got.append(await pg.evaluate(TAP, 'mwho|Foot|')); got.append(await pg.evaluate(TAP, 'mord|hold|'))
         await pg.evaluate(TAP, 'war||')
         got.append(await pg.evaluate("""(() => { const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).slice(0, 3), b = fk.things().filter((t) => t.kind === 'bush').sort((a, c) => fk.dist(a, V[0]) - fk.dist(c, V[0]))[0]; fk.select(V); MENU.render(true); fk.cam.x = b.vx; fk.cam.y = b.vy; MENU.render(true); const [x, y] = fk.toScreen(b.vx, b.vy); const n = fk.picked().length; if (fk.paused()) fk.pause(false); fk.tap(x, y); return [n, fk.picked().length, V.filter((u) => u.target === b).length]; })()"""))

@@ -1148,5 +1148,6 @@ BOOK("comments", {
  "E1404": {"text": "villagers stop at the personality's cap times its match share, and never past the room the army aim needs under the most people, so a full town still has room for soldiers (D391, N460: 146 villagers at 180 people with an army aim)"},
  "E1405": {"text": "the class it likes this match (D390): with no foe in sight every other soldier is of it, and with foes its kinds are scored liking times higher"},
  "E1406": {"text": "the side it bears a grudge against this match (D390): its odds on that side read grudge times higher, so which side it marches on differs from game to game"},
- "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"}
+ "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"},
+ "E1445": {"text": "the War button: opening the War card (his call 9, Nov 21 18:22) picks All when no soldier is picked, as the All word and a mission tapped with nobody picked do, and arms Attack when there are soldiers, so Attack glows and the hint says to tap the map; closing it drops the soldiers from the pick and resets the who-line"}
 });
