@@ -300,6 +300,19 @@ async def front_line():
         first = await pg.evaluate(LOOK); most, deep = 0, first[4]
         for _ in range(30): await run.step(pg, 2); got = await pg.evaluate(LOOK); most, deep = max(most, got[0]), max(deep, got[4])
         return first[3], deep, most, got[1], got[2]
+async def full_lines():
+    """Two barracks of yours: a Train tap on one whose line is full goes to the other's line, with a note naming where it went; with both full it is refused."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 1)
+        return await pg.evaluate("""(() => { for (const u of fk.units().filter((v) => v.side === 0 && ECON.soldier(v.code))) fk.vanish(u);
+  const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by), [H] = fk.bought('House'), put = (code) => { for (let r = 8; r < 40; r++) for (let d = -r; d <= r; d++) for (const [i, j] of [[k0 % N + d, Math.floor(k0 / N) - r], [k0 % N + d, Math.floor(k0 / N) + r], [k0 % N - r, Math.floor(k0 / N) + d], [k0 % N + r, Math.floor(k0 / N) + d]]) if (ECON.canPlace(code, i, j)) { const t = ECON.site(0, code, i, j); t.done = 1; return t; } return null; };
+  const b1 = put('BM1'), b2 = put('BM1'), [c] = fk.trains('BM1', 0).filter((x) => fk.aged(x, 0)), cap = fk.stat('BM1', 0, 'queue'), got = [cap];
+  for (let n = 0; n < 9 && ECON.popCap(0) < ECON.popOf(0) + 2 * cap + 1; n++) put(H);
+  for (let n = 0; n < cap; n++) ECON.queue(b1, c);
+  got.push(b1.q.length, MENU.act('train', c, b1), b1.q.length, b2.q.length, MENU.mail[0] && MENU.mail[0].text);
+  for (let n = 1; n < cap; n++) MENU.act('train', c, b1);
+  got.push(b2.q.length, MENU.act('train', c, b2), b1.q.length, b2.q.length, MENU.log.no['train: ' + MENU.WD.say.lineFull] || 0, MENU.WD.say.lineOther.replace('{b}', ECON.nameOf('BM1').toLowerCase()));
+  return got; })()"""), pg.errors
 
 async def check_game():
     a, gathered, people, errs = await play()
@@ -347,6 +360,8 @@ async def check_game():
     rule('a band ordered at a town centre far round a forest finds the way (his Timberland map, D28 to D4)', fw[0] == 'D4' and len(fw[1]) == 6 and min(fw[1]) > 300, f'to {fw[0]}: steps on each soldier\'s way {fw[1]}')
     fb, fd, fp, fm, ff = await front_line()
     rule('a tap on one man of a group coming on: nobody goes for the man tapped at the back, every soldier fights a man of its front, never one deeper', fb == 0 and fd == 0, f'on the man tapped: {fb}; most on a man deeper than the front: {fd}; most of ours past their front: {fp}; a minute on, lost {fm} of 20, they lost {ff} of 20')
+    fl, fe = await full_lines()
+    rule('a Train tap on a full line goes to the least busy barracks with room, says so in a note, and is refused only when every line is full', fl[1:5] == [fl[0], True, fl[0], 1] and fl[5] == fl[11] and fl[6:11] == [fl[0], False, fl[0], fl[0], 1] and not fe, f'line size, first filled, tap taken, the two lines, the note, second filled, last tap taken, the two lines, refused: {fl}; errors: {fe[:2]}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')

@@ -1113,5 +1113,10 @@ BOOK("comments", {
  "E1564": {"text": "a soldier's man: the one nearest him on the group's front, never one deeper than front.deep past its nearest; between looks he keeps his man while that man is still on the front"},
  "E1565": {"text": "a soldier on an order at a group fights his man on its front (E1564) in place of the one tapped; with no front left he falls back to the order's own target and the usual checks"},
  "E1566": {"text": "while the group closes, the band holds its ground and lets it come: a soldier whose man is out of reach does not walk (no path, his path check waits) but still strikes or shoots once the man is in reach; an archer stepping back from foot (kite) is let be; when the group stops or pulls back, he walks to his man as usual"},
- "E1567": {"text": "the order is marked; an order at a foe is marked foe (E1291) and, when the foe is a unit in a group, carries the group (band, E1561) that its soldiers fight by the front"}
+ "E1567": {"text": "the order is marked; an order at a foe is marked foe (E1291) and, when the foe is a unit in a group, carries the group (band, E1561) that its soldiers fight by the front"},
+ "E1520": {"text": "the line a train order goes to (N480): the tapped building's own while it has room, else the least busy building of the same kind standing for that side with room that trains the unit; none when every such line is full; the same for every side"},
+ "E1521": {"text": "a train order queues at the line with room (E1520) and pays that line's price; it gives back the building it went to, or false when refused"},
+ "E1522": {"text": "lineAt shared with the menu, so a Train tap is refused only when the order itself would be"},
+ "E1523": {"text": "Train (N480): refused as That line is full only when every line of that building's kind is full, the price read at the line it would go to; the card stays on the tapped building, and when the unit goes to another one a note says so and points at it"},
+ "E1524": {"text": "the people button trains through the Train verb, so it gets the same lines and the same note"}
 });
