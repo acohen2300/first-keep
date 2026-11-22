@@ -108,17 +108,19 @@ async def stands():
     WALL = "(() => { const n = (c) => units.filter((u) => u.side === 0 && fk.SH[u.code].class === c && u.wall).length; return [n('Foot'), n('Archers')]; })()"
     TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
     async with run.game(SEED, test=True) as pg:
+        await pg.evaluate("[1, 2, 3].forEach((s) => WAR.treaty(0, s, 'peace'))")  # the computers' dealt plans attack early; this test is about our wall
         await run.step(pg, 40)
         for v in ('war||', 'mwho|Foot|'): await pg.evaluate(TAP, v)
         await pg.evaluate('WAR.stand(fk.picked(), null)')
         await run.step(pg, 120); held = await pg.evaluate(WALL)
-        await pg.evaluate(TAP, 'mwho|Foot|'); await pg.evaluate("fk.tap(70, 250)"); await pg.evaluate(TAP, 'mord|move|'); await run.step(pg, 5)
+        await pg.evaluate(TAP, 'mwho|Foot|'); await pg.evaluate(TAP, 'mord|move|'); await pg.evaluate("fk.tap(70, 250)"); await run.step(pg, 5)
         return held, await pg.evaluate(WALL)
 
+CALM = "[1, 2, 3].forEach((s) => { const p = AI.per(s); if (p) p.waveMin = 1e9; })"  # the computers' dealt plans send waves early; checks of our own soldiers' orders run with the rivals' waves held back
 async def chase():
     """Archers told to attack the farthest enemy soldier, who is walking away and out of sight: they must keep going to where he was last seen, not stop."""
     async with run.game(SEED, test=True) as pg:
-        await run.step(pg, 40)
+        await pg.evaluate(CALM); await run.step(pg, 40)
         far = await pg.evaluate("(() => { const A = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Archers'), [a] = A, E = units.filter((u) => u.side !== 0 && fk.SIDES[u.side] && fk.SH[u.code].class).sort((p, q) => Math.hypot(q.bx - a.bx, q.by - a.by) - Math.hypot(p.bx - a.bx, p.by - a.by)), [e] = E; window.WHO = A; window.FROM = [a.bx, a.by]; WAR.order(A, e, e.k); return Math.hypot(e.bx - a.bx, e.by - a.by) / fk.D.tile; })()")
         await run.step(pg, 60)
         idle, gone = await pg.evaluate("[WHO.filter((u) => u.job === 'idle').length, Math.hypot(WHO[0].bx - FROM[0], WHO[0].by - FROM[1]) / fk.D.tile]")
@@ -129,7 +131,7 @@ async def tower(n):
     SET = "(n) => { const h = fk.seatOf(0), k0 = fk.tileAt(h.bx, h.by - 300), N = fk.N; let t = null; for (let d = 0; d < 40 && !t; d++) for (let dx = -d; dx <= d && !t; dx++) for (const dy of [-d, d]) { t = fk.build('BW3', k0 % N + dx, Math.floor(k0 / N) + dy, fk.SIDES[2].col); if (t) break; } t.done = 1; t.hp = t.hpMax = WAR.hpMax(t); window.ITS = t; window.ITSAT = [t.bx, t.by]; window.MEN = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot').slice(0, n); WAR.order(MEN, t, fk.tileAt(t.bx, t.by)); }"
     LOOK = "(() => { const A = MEN.filter((u) => units.includes(u)); return { tower: things.includes(ITS) && ITS.hp > 0 ? Math.round(ITS.hp) : 0, alive: A.length, onIt: A.filter((u) => u.target === ITS).length, near: A.filter((u) => Math.hypot(u.bx - ITSAT[0], u.by - ITSAT[1]) < 15 * fk.D.tile).length, broke: A.filter((u) => u.broke).length }; })()"
     async with run.game(SEED, test=True) as pg:
-        await run.step(pg, 40); await pg.evaluate(SET, n); await run.step(pg, 180)
+        await pg.evaluate(CALM); await run.step(pg, 40); await pg.evaluate(SET, n); await run.step(pg, 180)
         return await pg.evaluate(LOOK)
 
 async def defends():
@@ -138,7 +140,7 @@ async def defends():
     LOOK = "(() => { const on = (c) => units.filter((u) => u.side === 0 && fk.SH[u.code].class === c && RAIDERS.includes(u.target)).length; return [on('Foot'), on('Archers')]; })()"
     TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
     async with run.game(SEED, test=True) as pg:
-        await run.step(pg, 40); await pg.evaluate("(() => { const h = fk.seatOf(0); WAR.order(units.filter((u) => u.side === 0 && fk.SH[u.code].class), null, fk.tileAt(h.bx, h.by - 600)); })()"); await run.step(pg, 80)
+        await pg.evaluate(CALM); await run.step(pg, 40); await pg.evaluate("(() => { const h = fk.seatOf(0); WAR.order(units.filter((u) => u.side === 0 && fk.SH[u.code].class), null, fk.tileAt(h.bx, h.by - 600)); })()"); await run.step(pg, 80)
         await pg.evaluate(RAID); await run.step(pg, 3)
         for v in ('war||', 'mwho|Foot|', 'mord|defend|'): await pg.evaluate(TAP, v)
         await run.step(pg, 5)
