@@ -1391,10 +1391,11 @@ function events(roll = rng) { const V = K.ev; if (V.next == null) V.next = K.t +
   else if (!V.warned && K.t >= V.next - EV.warn) { V.warned = pickEv(roll); const [warn] = WL.events[V.warned]; fire('say', warn); }
   else if (V.warned && K.t >= V.next) { const k = V.warned; V.warned = null; if (!canEv(k)) V.next = K.t + EV.retry; else { const e = (V.cur = { kind: k, t0: K.t, until: K.t + (ER[k].secs || FLD.secs) }); V.last = k; if (EVS[k].start) EVS[k].start(e); if (!EVS[k].says) fire('say', WL.events[k][1].replace('{n}', J.joins[ER.wagon.code]), WL.why[k]); } }
   horde(roll); arrivals(); for (const u of units.filter((u) => u.herd && !u.path)) if (u.k === u.to || !leg(u)) vanish(u); }
-function horde(roll) { const H = HZD.horde, W = WL.horde, seat = things.find((t) => t.side === ME && has(t, 'Seat')); if (!hz('horde') || K.horde === false) return; // E574
+function horde(roll) { const H = HZD.horde, W = WL.horde; if (!hz('horde') || K.horde === false) return; // E574
   if (!K.horde) { K.horde = { at: wait(roll, H.mean, H.min), said: null }; return; } const left = K.horde.at - K.t;
   H.warn.forEach((w, i) => { if (~~K.horde.said <= i && left <= w * D.season) { K.horde.said = -~i; fire('say', W[i]); } }); if (left > 0) return;
-  if (!seat || !WAR.atWar(ME, 'out')) { K.horde = false; return; } const [fx, fy] = roll() < H.edge ? edgeSpot() : wildSpot(), n = H.n + H.perAge * SIDES[ME].age, j = () => between(rng, [-H.spread, H.spread]) * D.tile;
+  const S = D.players.filter((q) => !ECON.fell(q) && FK.seatOf(q) && WAR.atWar(q, 'out')), pw = (q) => WAR.power(WAR.armyOf(q)), q = S.reduce((a, p) => (pw(p) < pw(a) ? p : a), S[0]), seat = q != null && FK.seatOf(q); // E2520
+  if (!seat) { K.horde = false; return; } const [fx, fy] = roll() < H.edge ? edgeSpot() : wildSpot(), n = H.n + H.perAge * SIDES[q].age, j = () => between(rng, [-H.spread, H.spread]) * D.tile;
   for (let i = n; i--; ) { const k = near1([fx + j(), fy + j()], H.spread); if (~k) Object.assign(spawn(H.kinds[i % H.kinds.length], -1, k, rng), { home: seat, horde: true }); }
   fire('say', W.at(-1)); K.horde = false; }
 function arrivals() { if (K.t < K.wayT) return; K.wayT = K.t + J.every; const e = J.edge * D.tile, E = [[MID, B0 + e], [B1 - e, MID], [MID, B1 - e], [B0 + e, MID]], a = E[K.wayI++ % E.length]; // E575
