@@ -1088,14 +1088,14 @@ function reach(side) { const h = things.find((t) => t.side === side && has(t, 'S
   for (const k of Q) around(k, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who);
   const set = { has: (k) => !!seen[k] }; REACH.set(side, { key, set, seen, who, v: WALKV, t: K.t }); return set; }
 function opened(k) { labOpen(k); for (const r of REACH.values()) { const { seen, who } = r; if (seen[k] || !walkable(k, who)) continue; let joined = false; around(k, (q) => { joined = joined || !!seen[q]; }, who); if (!joined) continue; const Q = [k]; seen[k] = true; for (const p of Q) around(p, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who); } } // E978
-const LAB = new Int32Array(N * N), LABQ = new Int32Array(N * N), LDX = D.ways.map(([x]) => x), LDY = D.ways.map(([, y]) => y); let LABV = -1, LABI = null; // E2580
+const LAB = new Int32Array(N * N), LABQ = new Int32Array(N * N), LDX = D.ways.map(([x]) => x), LDY = D.ways.map(([, y]) => y); let LABV = -1, LABI = null; const mayWalk = (k, top, a2) => (H[k] > -D.wade / 2 || (H[k] <= 0 && DEP[k] >= D.edge && ICE.load.fail * a2 * Math.max(0, top - onsetOf(k)) >= W.person.kg)) && (OCC[k] === 0 || OCC[k] === 3 || inWoods(k) || GATES.has(k)), ICEA = () => Math.max(ICE.alpha.bare, ICE.alpha.snow) ** 2; // E2580
 function regions() { const s = Math.floor(fddDays() / ICE.key); if (LABV === WALKV && LABI === s) return LAB; LABV = WALKV; LABI = s; // E2581
-  const top = (s + 1) * ICE.key, a2 = Math.max(ICE.alpha.bare, ICE.alpha.snow) ** 2; let id = 0;
-  for (let k = 0; k < N * N; k++) LAB[k] = (H[k] > -D.wade / 2 || (H[k] <= 0 && DEP[k] >= D.edge && ICE.load.fail * a2 * Math.max(0, top - onsetOf(k)) >= W.person.kg)) && (OCC[k] === 0 || OCC[k] === 3 || inWoods(k) || GATES.has(k)) ? -1 : 0;
+  const top = (s + 1) * ICE.key, a2 = ICEA(); let id = 0;
+  for (let k = 0; k < N * N; k++) LAB[k] = mayWalk(k, top, a2) ? -1 : 0;
   for (let k0 = 0; k0 < N * N; k0++) { if (LAB[k0] !== -1) continue; LAB[k0] = ++id; let a = 0, b = 0; LABQ[b++] = k0;
     while (a < b) { const k = LABQ[a++], i = k % N, j = (k - i) / N; for (let w = 0; w < LDX.length; w++) { const x = i + LDX[w], y = j + LDY[w], q = y * N + x; if (x >= 0 && y >= 0 && x < N && y < N && LAB[q] === -1) { LAB[q] = id; LABQ[b++] = q; } } } }
   return LAB; }
-function labOpen(k) { if (!LAB[k]) LABV = -1; } function labKeep() { if (LABV === WALKV - 1) LABV = WALKV; } // E2583
+function labOpen(k) { if (!LAB[k] && (LABI === null || mayWalk(k, (LABI + 1) * ICE.key, ICEA()))) LABV = -1; } function labKeep() { if (LABV === WALKV - 1) LABV = WALKV; } // E2583
 function apart(from, goal, near) { if (from < 0 || goal(from)) return false; const L = regions(), fi = from % N, fj = (from - fi) / N, S = []; // E2582
   for (const [dx, dy] of [[0, 0], ...D.ways]) { const x = fi + dx, y = fj + dy, r = x >= 0 && y >= 0 && x < N && y < N ? L[y * N + x] : 0; if (r > 0 && !S.includes(r)) S.push(r); } if (!S.length) return true;
   const ni = near % N, nj = (near - ni) / N, R0 = Math.max(1, D.army.homeR); let any = false; const at = (x, y) => { if (x < 0 || y < 0 || x >= N || y >= N) return false; const q = y * N + x; if (!goal(q)) return false; any = true; return S.includes(L[q]); };
