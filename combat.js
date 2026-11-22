@@ -220,8 +220,11 @@ function reinforce(S, m) { const U = mUnits(m); if (!U.length) return; const O =
 const ofKind = (cls) => sendable().filter((u) => clsOf(u.code) === cls), aimK = (aim) => (aim.t ? kOf(aim.t) : aim.k), wait = (k) => Math.ceil(Math.max(K.t, AT[k] ?? K.t) - K.t);
 const chargeWhy = (S) => (!S.some((u) => !stat(u).bonly) ? WO.why.charge : AT['charge' + ME] > K.t ? WO.why.winded.replace('{n}', wait('charge' + ME)) : '');
 function charge(S) { const [s0] = S; AT['charge' + s0.side] = K.t + CH.cd * FK.stat('', s0.side, 'chargecd'); for (const u of S) if (!stat(u).bonly) { u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } }
-function fallBack(S) { const h = home(ME); if (!h || !S.length) return false; for (const u of S) { const f = nearest(u, FB.look), [dx, dy] = f ? dir(u.bx - f.bx, u.by - f.by) : dir(h.bx - u.bx, h.by - u.by), k = FK.tileAt(u.bx + dx * FB.back * T, u.by + dy * FB.back * T);
-  Object.assign(u, { fb: K.t + FB.secs, target: null, focus: null, ord: null, sent: false }); march(u, FK.walkable(k) ? k : u.k); } return true; }
+function fallBack(S) { const G = S.filter((u) => armed(u) && alive(u)); if (!G.length) return null; const [g] = G, c = centreOf(G), f = nearest(g, FB.look, c); if (!f) return 0; const F = []; FK.unitsNear(f, AR.group * T, (v) => { if (enemies(g, v) && alive(v)) F.push(v); }); // E1430
+  const out = Math.max(...F.map((v) => stat(v).rng)) + FB.ranks * GR.gap, [dx, dy] = dir(c.bx - f.bx, c.by - f.by); if (!dress(G, FK.tileAt(f.bx + dx * out * T, f.by + dy * out * T))) return 0; // E1431
+  for (const u of G) Object.assign(u, { fall: F, fb: Infinity, focus: null, ord: null, sent: false }); return G.length; } // E1432
+function fallTick() { const by = new Map(); for (const u of units()) if (u.fall && alive(u)) (by.get(u.fall) || by.set(u.fall, []).get(u.fall)).push(u); // E1433
+  for (const [F, G] of by) if (!G.some((u) => status(u) === 'march')) { const L = F.filter(alive); for (const u of G) { Object.assign(u, { fall: null, fb: null }); if (L.length) fight(u, L.reduce((a, b) => (gap(u, a) <= gap(u, b) ? a : b)), true); } } } // E1434
 const DIRECTS = { // E419
   wall: (S, aim, said) => { const c = centreOf(S), F = foesNear(c), to = F.length ? centreOf(F) : aim ? mid(aimK(aim)) : null, [s0] = S, f = to ? dir(to.bx - c.bx, to.by - c.by) : [s0.fx ?? GR.face[0], s0.fy ?? GR.face[1]], k = kOf(c), cols = narrowAt(k, f); for (const u of S) Object.assign(u, { wall: true, focus: null, target: null, ord: null }); dress(S, k, cols ? 'choke' : DI.wall.lay, { t0: K.t, f, cols }); return cols ? WO.narrow.replace('{n}', cols) : said; },
   loose: (S, aim, said) => { if (AT.loose > K.t) return WO.why.reload.replace('{n}', wait('loose')); const c = centreOf(S), F = foesNear(c);
@@ -273,7 +276,7 @@ FK.on('tick', (dt) => {
     if (edgeDist(u, t) <= (ranged(u) ? hillReach(s.rng, 0, dropTo(u, t)) : s.rng) + 0.5) { if (u.kT > K.t - D.kite.hold && u.path) continue; u.path = null; [u.fx, u.fy] = dir(t.bx - u.bx, t.by - u.by); u.face = Math.sign(u.fx) || u.face; // E398
       const f = look && !due(u.cd) && kiteOf(u) && nearest(u, D.kite.near, u, (v) => !ranged(v)); if (f) { const [dx, dy] = dir(u.bx - f.bx, u.by - f.by), x = u.bx + dx * D.kite.back * T, y = u.by + dy * D.kite.back * T; if (FK.walkable(FK.tileAt(x, y))) { Object.assign(u, { path: [[x, y]], at: 0, then: 'fight', kT: K.t }); continue; } }
       if (due(u.cd)) { hit(u, t); u.cd = s.rof; } } else if (!u.path && due(u.rp)) { u.rp = D.repath; if (!toward(u, t)) { befall(u.ord, 'no way'); u.target = null; u.job = 'idle'; u.rp = 3 * D.repath; block(u); } else if (armed(u)) u.then = 'fight'; } }
-  ordT -= dt; if (due(ordT)) { ordT = HU.beat; ordersTick(); } if (FK.every(D.beats.natives)) raids(); if (FK.every(D.beats.slow)) for (const o of D.players) if (o !== ME) loot(o);
+  ordT -= dt; if (due(ordT)) { ordT = HU.beat; ordersTick(); fallTick(); } if (FK.every(D.beats.natives)) raids(); if (FK.every(D.beats.slow)) for (const o of D.players) if (o !== ME) loot(o); // E1435
   waves.forEach((w, side) => { if (!w) return; w.t += dt; if (armyFree(side, 'rout').length < D.breakAt * w.n0) recall(side); });
 });
 // E240

@@ -1103,5 +1103,19 @@ BOOK("comments", {
  "E1305": {"text": "floaters: every floating word and clear icon now on screen, keyed by its button's code and its text so a redrawn card finds its old patch. A word inside a ring box (.bx) or the title box takes the box; a bare word takes its letters plus the box's padding and edge, so every patch is the size a ring would be"},
  "E1306": {"text": "patches: lays a patch under each floater and drops the patches of words that went; run after every card is drawn, so a patch never lags its word. Nothing reads the screen (the per-word brightness look cost frames on his phone, Nov 21)"},
  "E1307": {"text": "the press's look (SN58): every button grows and brightens while pressed and springs back when let go; growing is quick (down), the way back slower on the spring curve (up)"},
- "E1308": {"text": "the press (N445): lift lets the pressed button go, but only the press it was set for, so a newer tap is never cut short; repress puts a press back on a button the card just redrew (put), so the spring back still shows when the tap changed the button"}
+ "E1308": {"text": "the press (N445): lift lets the pressed button go, but only the press it was set for, so a newer tap is never cut short; repress puts a press back on a button the card just redrew (put), so the spring back still shows when the tap changed the button"},
+ "E1430": {"text": "Fall back (N465): the picked soldiers that fight find the nearest enemy within look tiles of their middle, and the enemies grouped round it; none near, nothing happens"},
+ "E1431": {"text": "Fall back: the spot is straight away from that enemy, past the farthest reach among them plus ranks rank spacings; the soldiers re-form there (dress), or nothing happens when they cannot get there"},
+ "E1432": {"text": "Fall back: each soldier remembers the enemies it left (one shared list, so the group is known), falls back in order until it arrives (fb: fewer blows, no rout) and drops any squad order"},
+ "E1433": {"text": "Fall back's beat: the soldiers falling back, grouped by the enemies they left"},
+ "E1434": {"text": "Fall back's beat: once none of a group is still marching they have re-formed, so each goes back in at the nearest of the enemies they left still alive; the same rule for every side"},
+ "E1435": {"text": "the war beat: squad orders, then those falling back"},
+ "E1436": {"text": "the War card's missions that act at once (Defend, Fall back, Retreat, and Attack's arming): Fall back says how many fall back, or that no enemy is near"},
+ "E1438": {"text": "a row of tiles, paged when it has more than six; a narrow tail tile (the War card's bell) comes after, not counted"},
+ "E1439": {"text": "the War card's mission row (N465): the six missions in order with their icons, then the alarm as a narrow tile showing only the bell, green when on"},
+ "E1440": {"text": "the War card's top line Troops | Mode | Mission: the open controller at full strength, the others' letters dimmed, the red box meaning set; the eye (N465) in place of the two screen boxes: plain, all troops count, tapped (red ring), only those on screen; the hint over the top line says the next step"},
+ "E1441": {"text": "the mold's top line: the home circle, the hint and the top line (War: Troops | Mode | Mission and the eye), the alert, the War button"},
+ "E1442": {"text": "what floats over the map gets a dark patch: the rank and the card's words, the War hint; the clear icons (pause, mail, the eye) a round one"},
+ "E1443": {"text": "the War card's look (N465): the mission row six tiles and a half-wide bell; the eye a clear round icon like pause and mail, red ring when set; the hint in the italic hint style above the top line; a closed controller dims its letters, not its box"},
+ "E1444": {"text": "a mission tile (N465): tapped with nobody picked it first picks All, as the All word does (the War card's opening default), then acts: Squad saves or picks the squad, Hold holds, Defend, Fall back and Retreat act at once, Attack and Move arm and wait for the map; refused only with no soldiers at all"}
 });

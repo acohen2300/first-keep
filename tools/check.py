@@ -283,6 +283,32 @@ async def pressed():
         await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
         return got, await pg.evaluate("document.querySelectorAll('.pr').length")
 
+async def missions():
+    """The War card's mission row and its eye: the six missions in order, then the bell tile; with the army out of view the eye drops every count to the soldiers on screen, and a second tap brings them back."""
+    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return fk.picked().length; }"
+    ALL = "(() => [document.querySelector('#base .mctl .who button').textContent.trim(), !!document.querySelector('.mpath .eye.on')])()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); await pg.evaluate(TAP, 'war||')
+        row = await pg.evaluate("[...document.querySelectorAll('#base .mt.M .cell')].map((b) => b.textContent.trim() || (b.querySelector('svg') && b.classList.contains('bell') ? 'bell' : ''))")
+        await pg.evaluate("(() => { fk.cam.x += 3 * fk.size()[0] / fk.cam.z; MENU.render(true); })()")
+        seen = [await pg.evaluate(ALL)]
+        for _ in range(2): await pg.evaluate(TAP, 'mscr|1|'); seen.append(await pg.evaluate(ALL))
+        await pg.evaluate("fk.select(null)"); n = await pg.evaluate(TAP, 'mord|move|')
+        armed = await pg.evaluate("[...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === 'mord|move|').classList.contains('sel')")
+        return row, seen, (n, armed)
+
+async def falls():
+    """Fall back: three enemy foot stand three tiles from the foot; the foot are picked and told Fall back through the war menu: they walk away from the enemies, re-form, then go back in at the enemies they left."""
+    TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
+    GAP = "(() => { const F = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot' && u.hp > 0), m = (S) => [S.reduce((a, u) => a + u.bx, 0) / S.length, S.reduce((a, u) => a + u.by, 0) / S.length], [ax, ay] = m(F), L = FOES.filter((u) => u.hp > 0), [bx, by] = L.length ? m(L) : [ax, ay]; return [Math.hypot(ax - bx, ay - by) / fk.D.tile, F.filter((u) => u.fall).length, F.filter((u) => FOES.includes(u.target)).length]; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40)
+        await pg.evaluate("(() => { const F = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot'), e = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot'), c = F[0], T = fk.D.tile; window.FOES = []; for (let n = 0; n < 3; n++) { const z = fk.spawn(e.code, 2, fk.tileAt(c.bx + (3 + n) * T, c.by), fk.rng); if (z) FOES.push(z); } })()")
+        for v in ('war||', 'mwho|Foot|', 'mord|fall|'): await pg.evaluate(TAP, v)
+        seen = []
+        for _ in range(6): seen.append(await pg.evaluate(GAP)); await run.step(pg, 2)
+        return seen
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -326,8 +352,14 @@ async def check_game():
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
     tr, tw = await troops()
-    rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
+    rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
+    mr, me, ma = await missions()
+    rule('a mission tapped with nobody picked first picks All, then arms', ma == (24, True), f'picked, Move armed: {ma}')
+    rule('the mission row reads Attack, Move, Hold, Defend, Fall back, Retreat, then the bell tile', mr == ['Attack', 'Move', 'Hold', 'Defend', 'Fall back', 'Retreat', 'bell'], f'row: {mr}')
+    rule('the eye: with the army out of view, tapped it drops the counts to the soldiers on screen and shows set; tapped again, all count', [w.split()[-1] for w, _ in me] == ['24', '0', '24'] and [on for _, on in me] == [False, True, False], f'All word and eye set, before and after two taps: {me}')
+    fb = await falls()
+    rule('Fall back: the picked foot walk away from a nearby enemy group, re-form, then go back in at the enemies they left', fb[0][1] > 0 and max(g for g, _, _ in fb) > fb[0][0] + 2 and fb[-1][1] == 0 and fb[-1][2] > 0, f'gap in tiles, falling back, fighting those left, every 2 s: {[(round(g, 1), a, b) for g, a, b in fb]}')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
     d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:
