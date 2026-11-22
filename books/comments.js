@@ -1155,6 +1155,8 @@ BOOK("comments", {
  "E1405": {"text": "the class it likes this match (D390): with no foe in sight every other soldier is of it, and with foes its kinds are scored liking times higher"},
  "E1406": {"text": "the side it bears a grudge against this match (D390): its odds on that side read grudge times higher, so which side it marches on differs from game to game"},
  "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"},
+ "E2460": {"text": "after every side's plan is dealt, each draws more from the same stream (D390), so the plans dealt before stay as they were for the same seed: its town's facing (east or west first, north or south first, along rows or columns: the eight ways a square can be turned or mirrored)"},
+ "E2461": {"text": "a spot (D390, Albert Nov 21: the enemies do the same thing every game): each ring round the point is searched from the corner, and along the rows or columns, that the side's dealt facing says, so each rival town is laid out its own way each game; a side with no plan (yours) searches from the north-west along rows"},
  "E2463": {"text": "with no wave out it holds a choke on the road to the side it bears the grudge against (D390), while at war with it; else on the road to the first side it is at war with"},
  "E1590": {"text": "a stat is looked up by its unit and then its name, two steps, not by a name strung together each time: in a big battle the joined name was built and hashed on every blow (5.8% of a heavy late-game step, Nov 21); same numbers, same memo, cleared the same way"},
  "E1591": {"text": "one side's remembered stats, one row a unit: stat keeps each number under its name, statRow keeps the whole row under *"},

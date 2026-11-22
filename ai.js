@@ -14,15 +14,16 @@ const dist = FK.dist, tick = (c, k) => FK.has({ code: c }, k), kindOf = (k) => O
 let DF;
 const V = A.vary, U = A.unstick; let hand = null; // E1400
 function deal(seed) { const r = FK.NS_rng(seed + V.seed), span = ([lo, hi]) => lo + r() * (hi - lo), one = (xs) => xs[Math.floor(r() * xs.length)]; for (let n = V.burn; n > 0; n--) r(); // E1400
-  return SIDES.map((_, side) => { if (!A.pers.of[side]) return null; const name = one(V.pick), P = { ...structuredClone(A.pers[name]), name, vills: U.vills[name] }; // E1400
+  const H = SIDES.map((_, side) => { if (!A.pers.of[side]) return null; const name = one(V.pick), P = { ...structuredClone(A.pers[name]), name, vills: U.vills[name] }; // E1400
     for (const [k, R] of Object.entries(V.by)) { const f = (x) => (Number.isInteger(x) ? Math.round(x * span(R)) : x * span(R)); if (k in P) P[k] = Array.isArray(P[k]) ? P[k].map(f) : f(P[k]); } // E1400
     for (const [k, c] of Object.entries(V.flip)) if (r() < c) P[k] = !P[k]; // E1400
     if (r() < V.shuffle) for (let i = P.goals.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [P.goals[i], P.goals[j]] = [P.goals[j], P.goals[i]]; } // E1400
-    return Object.assign(P, { likes: one(V.likes), liking: span(V.liking), foe: one(D.players.filter((q) => q !== side)), grudge: span(V.grudge) }); }); } // E1400
+    return Object.assign(P, { likes: one(V.likes), liking: span(V.liking), foe: one(D.players.filter((q) => q !== side)), grudge: span(V.grudge) }); }); // E1400
+  for (const P of H) if (P) Object.assign(P, { face: [one([1, -1]), one([1, -1]), one([false, true])] }); return H; } // E2460
 const dealt = (side) => { const sd = FK.seed(); if (!hand || hand.seed !== sd) hand = { seed: sd, P: deal(sd) }; return hand.P[side]; }; // E1401
 // E245
-function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);
-  for (let r = rmin; r < rmax; r++) for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i += j === cj - r || j === cj + r ? 1 : 2 * r) if (ECON.canPlace(code, i, j, side, true, true)) return [i, j]; return null; }
+function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2), [fx, fy, cols] = (per(side) || {}).face || [1, 1, false], at = (a, b) => (cols ? [ci + fx * b, cj + fy * a] : [ci + fx * a, cj + fy * b]); // E2461
+  for (let r = rmin; r < rmax; r++) for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i += j === -r || j === r ? 1 : 2 * r) { const [x, y] = at(i, j); if (ECON.canPlace(code, x, y, side, true, true)) return [x, y]; } return null; }
 function raise(side, code, bx, by, rmin, rmax) { if (!ECON.canPay(side, D.cost[code] || {}) || ECON.capWhy(side, code)) return null; const at = spot(code, bx, by, rmin, side, rmax); // E686
   if (!at) return null; const t = ECON.plan(side, code, ...at, true); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (isIdle(u) || u.job === 'wait' || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
 function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n * H, cj = h.j + h.n * H, mid = FK.MID / D.tile, base = Math.atan2(mid - cj, mid - ci), off = new Map(); let pi = null, pj = null; // E331
