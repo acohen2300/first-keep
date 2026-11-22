@@ -451,6 +451,7 @@ BOOK("comments", {
  "E368": {"text": "a look by its rank: level 0 the look itself, level n the nth of its rank list, past the list its last (Mid's LOOKS by tier)"},
  "E369": {"text": "the Unit shell's classes: a class's kinds in book order; what a building trains (D133: a shell, or a class's kinds); a kind is open from its age (D130); a side's civilisation trains its own kind in place of the common one it replaces (Mid's civKind), and no other side trains it"},
  "E370": {"text": "a kind's ranks (Mid's tiers): the steps whose rank names it, learned, in book order, give its level and its name; the kit is how many armour steps a soldier's side has learned"},
+ "E2402": {"text": "every unit's picture asks its rank and kit every frame: both counts are kept per side and kind (E2400), not filtered again each time (two lists and an empty set for a side with no research, per unit per frame); same numbers"},
  "E371": {"text": "the army's ceiling: soldiers (a kind with a class), queued ones counted, against D226 (Mid's ARMYMAX; a fallen side's share, capA, joins it with M30)"},
  "E372": {"text": "the army: a side's soldiers, the kinds with a class (Mid's armyOf); BUSY names who keeps to its own work and armyFree leaves them out (the routed now; the spy, the shrine, the escort and the school with their modules)"},
  "E373": {"text": "why a kind waits: the age it opens in (Mid's trainWhy)"},
