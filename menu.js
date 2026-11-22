@@ -437,7 +437,7 @@ FK.on('event', (e) => { if (e === 'slip') slipT = FK.K.t; if (e === 'mustered') 
 FK.on('start', () => { mail.length = post.length = newsI = 0; newsT = -Infinity; shown = new Set(); slipT = -Infinity; mustered = false; tipNow = ''; });
 FK.on('tick', () => { if (FK.every(D.peaceBeat)) { postTick(); newsTick(); } if (FK.every(D.lessonBeat)) lessonTick(); });
 // E208
-FK.on('start', () => { if (S.tab === 'Start' || S.tab === 'Back') FK.pause(true); Object.assign(S, { subject: null, ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, line: null, eta: null, last: '' }); const h = FK.seatOf(ME); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = D.open.px / (FK.W.person.height * D.upm); FK.keepOn(); } render(true); }); // E211
+FK.on('start', () => { if (S.tab === 'Start' || S.tab === 'Back') FK.pause(true); Object.assign(S, { subject: null, ghost: null, aim: null, qa: null, tool: null, more: false, tap: null, line: null, eta: null, last: '', ice: null, crack: null, sq: null }); const h = FK.seatOf(ME); if (h) { const [cw] = FK.size(); FK.cam.x = h.vx; FK.cam.y = h.vy; FK.cam.z = D.open.px / (FK.W.person.height * D.upm); FK.keepOn(); } render(true); }); // E211
 $('ver').textContent = 'v' + D.version; document.title = TELL.title + D.version; // E212
 // E670
 const WT = fromBook('words').start, LOG = { rows: [], orders: [], no: {}, news: [], lost: {}, wave: {}, errs: [], slow: {}, last: 0 }, TAPS = (() => { try { return JSON.parse(localStorage.getItem(D.log.taps)) || {}; } catch (e) { return {}; } })();
