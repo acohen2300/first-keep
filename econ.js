@@ -272,6 +272,7 @@ function enter(u) { if (u.target) u.stay = posted(u) || u.told === u.target ? u.
   Object.assign(u, { inside: b, den: null, hid: true, job: 'inside', then: null, path: null, target: null, spot: null }); }
 const out = (u) => Object.assign(u, { inside: null, hid: false, emg: false, scared: false, job: u.job === 'inside' ? 'idle' : u.job }), focused = (u) => !!(u.focus && alive(u.focus)), resume = (u) => { const s = u.stay; u.stay = null; if (s && alive(s)) { if (!u.load) return gatherAt(u, s); u.target = s; return carry(u); } return u.load ? carry(u) : focused(u) ? gatherAt(u, u.focus) : u.carry ? look(u) : idle(u); }; // E1027
 function fright(u, h) { if (!h) return; if (u.inside) { if (!u.emg && !units().some((v) => foeOf(u.side, v) && dist(v, u.inside) < FL.clear * T0)) resume(out(u)); return; } if (posted(u) && !u.emg) { u.scared = false; return; } // E442
+  // E2500
   if (u.emg === true && !u.den && !u.path && isIdle(u)) { if (!shelter(u) && !FK.atB(u, h)) seat(u); return; } // E1503
   const was = u.scared, r = (was ? FL.flee * FL.wide : FL.flee) * T0; const near = []; FK.unitsNear(u, r, (v) => { if (foeOf(u.side, v) && dist(u, v) < r) near.push(v); }); const foe = near.filter((v) => SIDES[v.side]).length, wild = near.length - foe;
   u.scared = !!(u.emg || foe || (wild && (wild >= FL.raid || FK.K.t - (u.hurtT ?? -Infinity) < FL.hurt)));
