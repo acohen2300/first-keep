@@ -1026,7 +1026,7 @@ function build(code, i, j, col = C.blue) {
   const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, side: SIDES.findIndex((q) => q.col === col), size: 1, done: 1 };
   if (has(t, 'Gate')) GATES.set(j * N + i, t.side); { const at = things.findIndex((x) => x.vy > t.vy); things.splice(at < 0 ? things.length : at, 0, t); } TV++; return t; // E710
 }
-function unbuild(t) { WALKV++; GATES.delete(t.j * N + t.i); for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; things.splice(things.indexOf(t), 1); TV++; fire('gone', t); }
+function unbuild(t) { WALKV++; GATES.delete(t.j * N + t.i); for (let y = t.j; y < t.j + t.n; y++) for (let x = t.i; x < t.i + t.n; x++) OCC[y * N + x] = 0; unlist(things, t); TV++; fire('gone', t); }
 function makeBuildings() { // E81
   for (let c = 0; c < 4; c++) { const seat = ticked('Seat')[0], [sx, sy] = fromBoard(...corner(c, ...D.tc)), n = B[seat][1]; build(seat, Math.round(sx / D.tile - n / 2), Math.round(sy / D.tile - n / 2), SIDES[c].col); }
 }
@@ -1152,7 +1152,7 @@ function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.
 function fell(t) { if (t.down) return; t.down = true; FOR[t.k] = OCC[t.k] = 0; t.size *= D.woods.fell.low; TV++; WALKV++; if (LAB[t.k]) labKeep(); opened(t.k); if (topN >= 0) cutTop(t.k); wake(t); } // E1091
 on('tick', () => { for (const u of units) if (u.path && has(u, 'Fell')) woodsNear(u.bx, u.by, D.woods.fell.lane, (t) => { if (Math.hypot(t.bx - u.bx, t.by - u.by) <= D.woods.fell.lane) fell(t); }); });
 function take(t, n) { const root = has(t, 'Regrow') && D.regrow[t.kind].root; if (root) t.max = Math.max(t.max || 0, t.amount); t.amount -= n; if (t.deep && t.amount > 0) wake(t); if (root && t.amount <= 0) { t.amount = t.max * root; t.bare = true; return; } // E1072
-  if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); TV++; opened(t.k); if (t.kind === 'tree' && topN >= 0) cutTop(t.k); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
+  if (t.amount <= 0) { OCC[t.k] = 0; unlist(things, t); TV++; opened(t.k); if (t.kind === 'tree' && topN >= 0) cutTop(t.k); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
 function stride(u, [tx, ty], dt, near = 0) { // E100
   if (u.stuck > K.t) return false; if (SIDES[u.side]) RUTS[rutAt(u.k)] += dt * tread(u); const dx = tx - u.bx, dy = ty - u.by, d = Math.hypot(dx, dy); u.ux = d && dx / d; const g = footing(u, tileAt(tx, ty)), beat = Math.floor(u.t / SLIP.every); // E363
   if (!g.ice) u.wary = false; else if (beat !== u.tread) { u.tread = beat; const on = rng() < g.ice; if (!u.wary && g.need > (on ? g.on : g.ground)) { u.stuck = K.t + SLIP.secs; u.wary = on; if (u.side === ME && !(K.told > K.t - SLIP.tell)) { K.told = K.t; fire('event', 'slip', u); } return false; } } // E362
@@ -1205,7 +1205,7 @@ function makeUnits(roll) {
 function guard(t, roll) { const F = rowOf(t) || {}, R = FN.ring * D.tile, at = (code, x, y) => { const k = near1([x, y], FN.ring); if (~k) Object.assign(spawn(code, -1, k, roll), { home: t, find: t }); }; // E565
   if (F.guard) { const [g, n] = F.guard; for (let i = n; i--; ) { const a = (i / n) * A.round * RAD + roll(); at(g, t.bx + Math.cos(a) * R, t.by + Math.sin(a) * R); } }
   if (F.hire) { const [dx, dy] = FN.row; for (let i = F.hire.n; i--; ) at(FN.drifter, t.bx + ~-i * dx * D.tile, t.by + dy * D.tile); } }
-const vanish = (u) => { u.gone = true; units.splice(units.indexOf(u), 1); }, drop = (t) => { t.amount = null; take(t, null); }; // E566
+const unlist = (L, x) => { const i = L.indexOf(x); if (i >= 0) L.splice(i, 1); }, /* E2680 */ vanish = (u) => { u.gone = true; unlist(units, u); }, drop = (t) => { t.amount = null; take(t, null); }; // E566
 const gait = (code) => W[SH[code].mount || SH[code].body]; // E110
 // ── The body's laws (E111)
 const massOf = (code) => { const e = SH[code]; let m = W[e.body].kg + (e.mount ? W[e.mount].kg : 0); for (const k of e.kit || []) m += W[k].kg; return m; };

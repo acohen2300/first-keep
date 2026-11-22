@@ -1232,5 +1232,6 @@ BOOK("comments", {
  "E2676": {"text": "The tapped man counts in his own group (review combat.md 4): unitsNear skips the one it measures from, so a front man was never his band's target and a pair read as a man alone"},
  "E2677": {"text": "Spice a caravan buys is priced for its own side, so the side's trade-price research (band) counts here as at the market (review econ.md 10)"},
  "E2678": {"text": "A ruins scroll teaches only research the finder's own civilization may learn, as researchWhy asks (review econ.md 12)"},
- "E2679": {"text": "A soldier stood down at peace leaves without a death: no fall, no blood scar, not counted among the lost (review idx6.md 14); he is turned into a villager on the spot"}
+ "E2679": {"text": "A soldier stood down at peace leaves without a death: no fall, no blood scar, not counted among the lost (review idx6.md 14); he is turned into a villager on the spot"},
+ "E2680": {"text": "Taking something out of the lists twice takes out nothing more (review idx4.md 9): splice at indexOf -1 removed the last unit or thing, an unrelated one"}
 });
