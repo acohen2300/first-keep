@@ -108,7 +108,7 @@ const VERBS = {
   route: { label: () => WT_.route, whyNot: (c) => (nearStop(c) ? '' : WT_.noStop), run: (c) => { const f = nearStop(c); ECON.setRoute(c, f, true, false); letGo(); note(WT_.routed.replace('{at}', coord(f.bx, f.by))); } }, // E1023
   stance: { label: (k) => WS.labels[k], whyNot: (k, q) => (k === 'gift' ? WT_.later : k === 'bribe' ? ECON.giftWhy(ME, D.regard.giftStep, q) : ECON.relWhy(ME, q, WS.want[k])), run: (k, q) => { const ok = k === 'bribe' ? ECON.giveGift(ME, D.regard.giftStep, q) : ECON.setRel(ME, q, WS.want[k]); if (!ok) note(VERBS.stance.whyNot(k, q) || WS.not); } }, // E1024
   book: { label: () => SVG.book, whyNot: () => (S.game ? '' : WS.noGame), run: () => { S.prev = S.tab; S.tab = 'Back'; S.subject = null; FK.pause(true); } }, // E845
-  vol: { label: (c, ic) => `${ic ? `<span class="t">${SVG[FK.HB.mix.icons[c]]}</span>` : FK.HB.mix.names[c]} <small>${SOUND.mix(c)}</small>`, whyNot: () => '', run: (c) => SOUND.step(c) }, // E187
+  vol: { label: (c) => `${FK.HB.mix.names[c]} <small>${SOUND.mix(c)}</small>`, whyNot: () => '', run: (c) => SOUND.step(c) }, // E187
   work: { label: () => `<span class="t">${SVG[AW.cells.work.icon]}</span>${AW.cells.work.name}`, whyNot: () => (ECON.alarmOn() ? '' : MW.calm), run: () => ECON.allClear() },
   shelter: { label: () => '', whyNot: () => (FK.seatOf(ME) ? '' : AW.noSeat), run: () => ECON.alarm('shelter') }, // E1256
   later: { label: (t) => SVG[t] || `${t}<small>${TELL.later}</small>`, whyNot: () => WD.trading.later, run: () => {} }, // E189
