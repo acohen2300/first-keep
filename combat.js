@@ -11,8 +11,9 @@ const armed = (u) => !!SIDES[u.side] && FK.has(u, 'Fight') && !FK.has(u, 'Gather
 const SB = fromBook('sides'), rel = new Map(); // E285
 const GROUP = new Map(Object.keys(SB.groups).flatMap((g) => SB.groups[g].map((c) => [c, g])).reverse()); // E2202
 const groupOf = (x) => (SIDES[x.side] ? null : SB.beasts.includes(x.code) ? 'beast' : x.horde && !x.back ? 'out' : GROUP.get(x.code) || 'nat'); // E286
-const stance = (a, b) => (a === b ? null : rel.get(a + ' ' + b) ?? SB.start), treaty = (a, b, s) => { if (SB.stances.includes(s)) { rel.set(a + ' ' + b, s); rel.set(b + ' ' + a, s); } }; // E287
+const stance = (a, b) => (a === b ? null : rel.get(a + ' ' + b) ?? SB.start), treaty = (a, b, s) => { if (SB.stances.includes(s)) { rel.set(a + ' ' + b, s); rel.set(b + ' ' + a, s); allySlot(a, b, s); } }; // E287
 const [WARS, , ALLY] = SB.stances, atWar = (a, b) => stance(a, b) === WARS, friendly = (a, b) => a === b || stance(a, b) === ALLY; // E2200
+const allySlot = (a, b, s) => { if (SIDES[a] && SIDES[b]) for (const [x, y] of [[a, b], [b, a]]) if (s === ALLY) SIDES[x].ally = y; else if (SIDES[x].ally === y) SIDES[x].ally = null; }; // E2521
 function isFoe(o, x, me) { if (x.side === o) return false; if (!SIDES[x.side]) { const g = groupOf(x); return g === 'beast' || atWar(o, g); } if (SIDES[o]) return atWar(o, x.side); // E288
   const g = (me && groupOf(me)) || 'nat'; return g === 'beast' || (atWar(x.side, g) && x.side === ME); } // E289
 const tame = (u, v) => u.side === ME && v.kind === 'unit' && !SIDES[v.side] && !(v.target && v.target.side === ME); // E937
@@ -84,7 +85,7 @@ function fight(u, t, told) { u.job = 'fight'; u.target = t; u.then = null; u.foc
 const nearK = (q, k, r) => Math.abs(q % N - k % N) <= r && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= r;
 const atK = (k) => (q) => q === k || nearK(q, k, FK.walkable(k) ? 0 : 4);
 function march(u, k) { u.mvT = K.t; u.job = 'march'; u.goal = k; u.target = null; u.then = 'march'; if (!FK.walkTo(u, atK(k), k)) { u.job = 'idle'; block(u); } } // E237
-const CY = D.convoy, onWay = (u, p, then) => Object.assign(u, { path: p, at: Math.min(1, p.length - 1), then }), lineUp = (u, g, p, n) => { Object.assign(u, { mvT: K.t, job: 'march', goal: g, target: null, path: null, then: 'march' }); if (p) onWay(u, p, 'march'); else u.rp = Math.min(CY.most, n * CY.stagger); }; // E999
+const CY = D.convoy, turnOf = (n) => (n * CY.stagger) % CY.most, onWay = (u, p, then) => Object.assign(u, { path: p, at: Math.min(1, p.length - 1), then }), lineUp = (u, g, p, n) => { Object.assign(u, { mvT: K.t, job: 'march', goal: g, target: null, path: null, then: 'march' }); if (p) onWay(u, p, 'march'); else u.rp = turnOf(n); }; // E999
 function join(u, L, g) { let j = 0, bd = Infinity; L.forEach((q, n) => { const d = tl(u.k, q); if (d < bd) [j, bd] = [n, d]; }); if (bd > CY.near) return null;
   const on = new Map(L.slice(j).map((q, n) => [q, j + n])), a = bd ? FK.findPath(u.k, (q) => on.has(q), L[j], CY.tries, u) : [u.k]; if (!a) return null;
   const end = L[L.length - 1], z = g == null || g === end ? null : FK.findPath(end, (q) => q === g, g, CY.tries, u); return [...a, ...L.slice(on.get(a[a.length - 1]) + 1), ...(z ? z.slice(1) : [])]; }
@@ -100,7 +101,7 @@ function backOff(u) { const S = inReach(u); if (!S.length) return false; const c
 function breach(u, t) { const w = inWay(u, t); if (w) { u.aim = { ...(u.aim && u.aim.w === t ? u.aim : { t, told: u.focus === t }), w }; fight(u, w, true); return; } // E1485
   befall(u.ord, 'no way'); Object.assign(u, { target: null, aim: null, job: 'idle', rp: BR.wait * D.repath }); if (!backOff(u)) block(u); } // E1489
 FK.on('gone', (b) => { if (b.kind !== 'bld') return; for (const u of units()) if (u.aim && u.target === u.aim.w && u.aim.w.side === b.side) { const { t, told } = u.aim; u.aim = null; if (alive(t)) { fight(u, t, told); u.path = null; } } }); // E1486
-function recall(side) { waves[side] = null; homeAll(orders(side)); }
+function recall(side) { const w = waves[side]; waves[side] = null; homeAll(w && w.S ? w.S.filter((u) => !u.gone && u.side === side) : orders(side)); } // E2466
 const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { const room = t && D.trade.guard - guardsOf(t).length; S.filter((u) => armed(u) && u.esc !== t).filter((u, i) => !t || i < room).forEach((u) => Object.assign(u, { esc: t, home: t })); }; // E493
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
 FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= 0) { const G = guardsOf(c).filter(alive); c.convoy = G.length > 0 && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046
@@ -108,7 +109,7 @@ function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign
 function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; dress(army, k); if (side === ME) FK.fire('event', 'march', army[0]); return army.length; }
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
 // E392
-function dress(S, k, form, drill) { const L = drill ? null : convoy(S, atK(k), k); if (!drill && !L) { for (const u of S) u.job = 'idle'; return false; } const [s0] = S, shape = form || formOf(s0), [tx, ty] = FK.tileMid(k), h = home(s0.side) || { bx: tx, by: ty }, [fx, fy] = (drill && drill.f) || dir(tx - h.bx, ty - h.by), n = S.length, slow = Math.min(...S.filter((u) => !engine(u)).map((u) => FK.stat(u.code, u.side, 'spd')));
+function dress(S, k, form, drill) { const L = drill ? null : convoy(S, atK(k), k); if (!drill && !L) return false; const [s0] = S, shape = form || formOf(s0), [tx, ty] = FK.tileMid(k), h = home(s0.side) || { bx: tx, by: ty }, [fx, fy] = (drill && drill.f) || dir(tx - h.bx, ty - h.by), n = S.length, slow = Math.min(...S.filter((u) => !engine(u)).map((u) => FK.stat(u.code, u.side, 'spd')));
   S.sort((a, b) => (a.bn ?? n) - (b.bn ?? n) || ranged(a) - ranged(b)); const nf = sum(S, (u) => !ranged(u)), turn = 2 * Math.PI, ring = (Math.max(nf, GR.ring) * GR.gap) / turn;
   const cols = { column: Math.min(n, GR.column), square: Math.ceil(Math.sqrt(n)), front: n, choke: (drill && drill.cols) || GR.choke }[shape] || Math.min(GR.most, Math.max(1, Math.round(Math.sqrt(n * GR.rows))));
   S.forEach((u, i) => { let c, r; if (shape === 'support') { const on = i < nf, m = Math.max(1, on ? nf : n - nf), j = on ? i : i - nf, rr = on ? ring : Math.max(0, ring - GR.gap) * Math.sqrt((j + 0.5) / m); [c, r] = [Math.cos((j / m) * turn) * rr, Math.sin((j / m) * turn) * rr]; }
@@ -140,7 +141,7 @@ function brain(u, dt, look) { // E396
   if (u.chg && u.chg < K.t) { u.chg = null; u.tire = CH.slow; } if (u.tire) u.tire = FK.relax(u.tire, D.bases.pace, CH.tired, dt); // E408
   if (u.hp < u.hpMax && !u.target && !u.unfed && FK.bldsNear(u.bx, u.by, D.shelter.r * T, (b) => b.side === u.side && FK.has(b, 'Shelter') && up(b) && gap(u, b) < D.shelter.r)) u.hp = FK.relax(u.hp, u.hpMax, u.hpMax / FK.stat(u.code, u.side, 'garrison'), dt);
   const s = stat(u), sight = FK.stat(u.code, u.side, 'sight'), atHome = isIdle(u) || (u.job === 'fight' && u.was == null), d = (v) => edgeDist(u, v); let t = u.target;
-  const B = u.ord && u.ord.band; if (B) { const f = onFront(u, look); if (f) t = u.focus = f; } // E1565
+  const B = u.ord && u.ord.band; if (B) { const f = onFront(u, look); if (f) t = u.focus = f; else if (u.focus) t = u.focus = null; } // E1565
   if (u.focus && !(alive(u.focus) && enemies(u, u.focus))) { befall(u.ord, alive(u.focus) ? 'lost sight' : 'foe dead'); if (alive(u.focus) && u.was == null) u.was = u.focus.k; u.focus = null; } // E1278
   if (t && !(alive(t) && enemies(u, t) && (t === u.focus || d(t) < sight * AR.leash * temper(u).chase || (atHome && nearHome(u, t))))) t = null;
   if (look && !u.focus) { const it = intent(u), far = it === AR.intent.loose && onMarch(u) ? s.rng + AR.step : sight, cur = t && t.kind === 'unit' ? t : null;
@@ -161,7 +162,7 @@ function brain(u, dt, look) { // E396
   else if (u.esc && alive(u.esc) && !u.path && gap(u, u.esc) > D.trade.near * D.trade.keepUp && due(u.rp)) { u.rp = D.repath; if (u.job === 'hold') u.job = 'idle'; FK.go(u, FK.tileAt(u.esc.bx, u.esc.by)); } // E1046
   else if (isIdle(u) && u.side === ME && u.home && !u.path && gap(u, u.home) > D.yard) Object.assign(u, { job: 'hold', goal: u.k }); // E1020
   else if (isIdle(u) && u.home && !u.path && gap(u, u.home) > AR.near && due(u.rp)) { u.rp = D.repath; const hk = FK.tileAt(u.home.bx, u.home.by); if (FK.walkable(hk) && FK.go(u, hk)) { u.path.pop(); u.path.push([u.home.bx, u.home.by]); u.then = 'idle'; } else if (FK.walkTo(u, (q) => FK.walkable(q) && nearK(q, hk, AR.homeR), hk)) { const [bx, by] = FK.tileMid(u.path.at(-1)); u.home = { bx, by }; u.then = 'idle'; } else u.home = { bx: u.bx, by: u.by }; } // E1036
-  if (B && B.come && t && t === u.target && d(t) > s.rng && !(u.kT > K.t - D.kite.hold)) { u.path = null; u.rp = D.repath; } // E1566
+  if (B && B.come && t && t === u.target && d(t) > s.rng && !met(t, u.ord) && !(u.kT > K.t - D.kite.hold)) { u.path = null; u.rp = D.repath; } // E1566
   return false; }
 // E397
 const AN = (A.loose / A.round) * 2 * Math.PI, M = W.bow.blow, mpt = T / D.upm, reachs = new Map();
@@ -184,10 +185,11 @@ const sendable = () => armyOf(ME), idleSoldier = (u) => !(u.sent && u.bn == null
 function freeWhy() { const S = sendable(), c = (k) => S.filter((u) => status(u) === k).length; if (!S.length) return WO.none; return WO.busy.replace('{list}', Object.keys(WO.states).filter(c).map((k) => WO.states[k].replace('{n}', c(k))).join(fromBook('words').list.and) || WO.guarding); }
 function walkTo(v, p) { Object.assign(v, { job: 'walk', then: 'idle', target: null }); if (!FK.toSpot(v, p)) v.job = 'idle'; }
 // E1560
-const FR = D.front, bandOn = (u0, t) => { const G = []; FK.unitsNear(t, FR.group * T, (v) => { if (v.side === t.side && alive(v) && enemies(u0, v) && gap(t, v) < FR.group) G.push(v); }); return G.length > 1 ? { foes: G, side: t.side, f: centreOf(G), t0: K.t, come: false } : null; }; // E1561
-function frontOf(O) { const B = O.band; if (B.at === K.t) return B; const us = units().filter((v) => v.ord === O && alive(v)), F = B.foes.filter((v) => alive(v) && v.side === B.side); Object.assign(B, { at: K.t, live: F, c: null }); if (!F.length || !us.length) return B; // E1562
-  const c = centreOf(us), f = centreOf(F), [dx, dy] = dir(c.bx - f.bx, c.by - f.by), dt = K.t - B.t0; if (dt >= FR.span) Object.assign(B, { come: ((f.bx - B.f.bx) * dx + (f.by - B.f.by) * dy) / T / dt > FR.come, f, t0: K.t }); return Object.assign(B, { c, near: Math.min(...F.map((v) => gap(c, v))) }); } // E1563
-function onFront(u, look) { const B = frontOf(u.ord), F = B.c ? B.live.filter((v) => enemies(u, v) && gap(B.c, v) <= B.near + FR.deep) : []; if (!look && F.includes(u.focus)) return u.focus; return F.reduce((a, v) => (!a || gap(u, v) < gap(u, a) ? v : a), null); } // E1564
+const inTown = (v) => (!!home(v.side) && gap(v, home(v.side)) < D.yard) || !!FK.bldsNear(v.bx, v.by, D.yard * T, (b) => b.side === v.side && !!D.tower[b.code] && up(b) && edgeDist(v, b) <= reachOf(b, v)), met = (v, O) => !!v.target && v.target.ord === O && !v.path; // E1568
+const FR = D.front, bandOn = (u0, t) => { const G = []; FK.unitsNear(t, FR.group * T, (v) => { if (v.side === t.side && alive(v) && enemies(u0, v) && gap(t, v) < FR.group) G.push(v); }); return G.length > 1 ? { foes: G, side: t.side, town: inTown(t), f: centreOf(G), t0: K.t, come: false } : null; }; // E1561
+function frontOf(O) { const B = O.band; if (B.at === K.t) return B; const us = units().filter((v) => v.ord === O && alive(v)), F = B.foes.filter((v) => alive(v) && v.side === B.side && (B.town || !inTown(v))); Object.assign(B, { at: K.t, live: F, c: null }); if (!F.length || !us.length) return B; // E1562
+  const c = centreOf(us), f = centreOf(F), [dx, dy] = dir(c.bx - f.bx, c.by - f.by), dt = K.t - B.t0, near = Math.min(...F.map((v) => gap(c, v))); if (dt >= FR.span) Object.assign(B, { come: ((f.bx - B.f.bx) * dx + (f.by - B.f.by) * dy) / T / dt > FR.come, f, t0: K.t }); return Object.assign(B, { c, near, front: F.filter((v) => gap(c, v) <= near + FR.deep) }); } // E1563
+function onFront(u, look) { const B = frontOf(u.ord), h = u.hitBy, F = B.c ? B.front : []; if (h && h.kind === 'unit' && K.t - u.hitT < D.scan && alive(h) && enemies(u, h) && edgeDist(u, h) <= Math.max(stat(u).rng, FL.melee)) return h; if (!look && F.includes(u.focus) && enemies(u, u.focus)) return u.focus; return F.reduce((a, v) => (enemies(u, v) && (!a || gap(u, v) < gap(u, a)) ? v : a), null); } // E1564
 function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.has(u, 'Gather')), theirs = t && t.side !== ME; // E413
   for (const u of S) { u.go = true; u.wall = false; u.broke = false; } // E946
   if (theirs && SIDES[t.side] && !atWar(ME, t.side)) { say(WO.foeFirst); return null; }
@@ -200,7 +202,7 @@ function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.
   for (const u of S.filter((v) => !armed(v) && troop(v))) { const at = theirs && t.kind === 'unit' && FK.has(u, 'Convert'), sab = theirs && t.kind === 'bld' && FK.has(u, 'Spy'); if (at || sab) Object.assign(u, { job: at ? 'convert' : 'sab', cv: t, tid: t, path: null }); else walkTo(u, t || mid(k)); } // E475
   for (const u of S.filter((v) => FK.has(v, 'Unpack'))) ECON.sendWagon(u, k ?? kOf(t));
   if (!sol.length) return null; if (!t) k = landK(k); const goal = t ? kOf(t) : k; let L = null;
-  if (theirs) { L = convoy(sol, ...ringOf(sol.reduce((a, b) => (stat(a).rng <= stat(b).rng ? a : b)), t)); sol.forEach((u, n) => { fight(u, t, true); u.sent = false; const p = L && join(u, L); if (p) onWay(u, p, 'fight'); else u.rp = Math.min(CY.most, n * CY.stagger); }); }
+  if (theirs) { L = convoy(sol, ...ringOf(sol.reduce((a, b) => (stat(a).rng <= stat(b).rng ? a : b)), t)); sol.forEach((u, n) => { fight(u, t, true); u.sent = false; const p = L && join(u, L); if (p) onWay(u, p, 'fight'); else u.rp = turnOf(n); }); }
   else { const near = armyOf(sol[0].side).filter((v) => !sol.includes(v) && !v.target && v.goal != null && (v.job === 'hold' || onMarch(v))), at = (v) => nearK(v.goal, goal, GR.gap), joins = new Set(near.filter(at).map((v) => v.ord)); sol.push(...near.filter((v) => v.ord != null && joins.has(v.ord))); L = dress(sol, goal); if (!L) { say(fromBook('words').controller.why.noWay); return null; } for (const u of sol) u.sent = !t; }
   const O = mark(sol, goal, t ? FK.rankName(t.code || FK.KIND[t.kind].code, t.side) : MENU.coord(...FK.tileMid(k)), L); O.foe = !!theirs; O.band = theirs && t.kind === 'unit' ? bandOn(sol[0], t) : null; return O; } // E1567
 function defend(S) { const DF = D.defend, val = (t) => (FK.has(t, 'Seat') ? DF.seat : t.kind === 'bld' ? DF.bld : armed(t) ? DF.soldier : DF.folk), F = attacked(); if (!F.length) return null; // E1002
@@ -237,11 +239,11 @@ function reinforce(S, m) { const U = mUnits(m); if (!U.length) return; const O =
 const ofKind = (cls) => sendable().filter((u) => clsOf(u.code) === cls), aimK = (aim) => (aim.t ? kOf(aim.t) : aim.k), wait = (k) => Math.ceil(Math.max(K.t, AT[k] ?? K.t) - K.t);
 const chargeWhy = (S) => (!S.some((u) => !stat(u).bonly) ? WO.why.charge : AT['charge' + ME] > K.t ? WO.why.winded.replace('{n}', wait('charge' + ME)) : '');
 function charge(S) { const [s0] = S; AT['charge' + s0.side] = K.t + CH.cd * FK.stat('', s0.side, 'chargecd'); for (const u of S) if (!stat(u).bonly) { u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } }
-function fallBack(S) { const G = S.filter((u) => armed(u) && alive(u)); if (!G.length) return null; const [g] = G, c = centreOf(G), f = nearest(g, FB.look, c); if (!f) return 0; const F = []; FK.unitsNear(f, AR.group * T, (v) => { if (enemies(g, v) && alive(v)) F.push(v); }); // E1430
-  const out = Math.max(...F.map((v) => stat(v).rng)) + FB.ranks * GR.gap, [dx, dy] = dir(c.bx - f.bx, c.by - f.by); if (!dress(G, FK.tileAt(f.bx + dx * out * T, f.by + dy * out * T))) return 0; // E1431
-  for (const u of G) Object.assign(u, { fall: F, fb: Infinity, focus: null, ord: null, sent: false }); return G.length; } // E1432
+function fallBack(S) { const G = S.filter((u) => armed(u) && alive(u)); if (!G.length) return null; const [g] = G, c = centreOf(G), f = nearest(g, FB.look, c); if (!f) return null; const F = []; FK.unitsNear(f, AR.group * T, (v) => { if (enemies(g, v) && alive(v)) F.push(v); }); // E1430
+  const out = Math.max(...F.map((v) => stat(v).rng)) + FB.ranks * GR.gap, [dx, dy] = dir(c.bx - f.bx, c.by - f.by), on = (v) => Math.min(FK.B1, Math.max(FK.B0, v)); if (!dress(G, FK.tileAt(on(f.bx + dx * out * T), on(f.by + dy * out * T)))) return 0; // E1431
+  const W = { foes: F }; for (const u of G) Object.assign(u, { fall: W, fb: Infinity, focus: null, ord: null, sent: false }); return G.length; } // E1432
 function fallTick() { const by = new Map(); for (const u of units()) if (u.fall && alive(u)) (by.get(u.fall) || by.set(u.fall, []).get(u.fall)).push(u); // E1433
-  for (const [F, G] of by) if (!G.some((u) => status(u) === 'march')) { const L = F.filter(alive); for (const u of G) { Object.assign(u, { fall: null, fb: null }); if (L.length) fight(u, L.reduce((a, b) => (gap(u, a) <= gap(u, b) ? a : b)), true); } } } // E1434
+  for (const [W, G] of by) if (!G.some((u) => status(u) === 'march')) { const L = W.foes.filter(alive); for (const u of G) { Object.assign(u, { fall: null, fb: null }); if (L.length) fight(u, L.reduce((a, b) => (gap(u, a) <= gap(u, b) ? a : b)), true); } } } // E1434
 const DIRECTS = { // E419
   wall: (S, aim, said) => { const c = centreOf(S), F = foesNear(c), to = F.length ? centreOf(F) : aim ? mid(aimK(aim)) : null, [s0] = S, f = to ? dir(to.bx - c.bx, to.by - c.by) : [s0.fx ?? GR.face[0], s0.fy ?? GR.face[1]], k = kOf(c), cols = narrowAt(k, f); for (const u of S) Object.assign(u, { wall: true, focus: null, target: null, ord: null }); dress(S, k, cols ? 'choke' : DI.wall.lay, { t0: K.t, f, cols }); return cols ? WO.narrow.replace('{n}', cols) : said; },
   loose: (S, aim, said) => { if (AT.loose > K.t) return WO.why.reload.replace('{n}', wait('loose')); const c = centreOf(S), F = foesNear(c);

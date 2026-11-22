@@ -16,7 +16,7 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span id="ver"></span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span id="ver"></span><span id="store"></span><span id="seed"></span></div>
 <script>'use strict'; const BOOKS = {}; function BOOK(name, entries) { BOOKS[name] = entries; }</script>
 <script src="books/measure.js"></script>
 <script src="books/angles.js"></script>
@@ -95,9 +95,10 @@ function makeGround(sd, saved = false) {
   makeTerrain(roll); makeForest(roll);
   // E21
   const dh = (i, j) => (i < 0 || j < 0 || i >= N || j >= N ? 0 : Math.max(0, H[j * N + i]));
+  const ROUND = [[-1, -1, 3], [0, -1, 2], [-1, 0, 1], [0, 0, 0]], hs = [], ix = []; // E2661
   for (let cj = 0; cj <= N; cj++) for (let ci = 0; ci <= N; ci++) {
-    const round = [[ci - 1, cj - 1, 3], [ci, cj - 1, 2], [ci - 1, cj, 1], [ci, cj, 0]].filter(([i, j]) => i >= 0 && j >= 0 && i < N && j < N).map(([i, j, slot]) => [dh(i, j), (j * N + i) * 4 + slot]).sort((a, b) => a[0] - b[0]);
-    for (let a = 0; a < round.length; ) { let b = a + 1; while (b < round.length && round[b][0] - round[b - 1][0] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += round[q][0]; for (let q = a; q < b; q++) CH[round[q][1]] = sum / (b - a); a = b; }
+    let m = 0; for (const [di, dj, slot] of ROUND) { const i = ci + di, j = cj + dj; if (i < 0 || j < 0 || i >= N || j >= N) continue; const h = dh(i, j), at = (j * N + i) * 4 + slot; let p = m++; while (p && hs[p - 1] > h) { hs[p] = hs[p - 1]; ix[p] = ix[p - 1]; p--; } hs[p] = h; ix[p] = at; }
+    for (let a = 0; a < m; ) { let b = a + 1; while (b < m && hs[b] - hs[b - 1] <= REPOSE) b++; let sum = 0; for (let q = a; q < b; q++) sum += hs[q]; for (let q = a; q < b; q++) CH[ix[q]] = sum / (b - a); a = b; }
   }
   makeThings(roll); makeBuildings(); makeMarsh(); makeShore();
   if (!saved) renderGround(); // E976
@@ -263,7 +264,7 @@ function openWays(fixed) { // E652
     while (now.length) { for (const k of now) for (const d of step) { const n = k + d, w = cost[k] + FOR[n]; if (!walkable(n) || fixed.has(n) || w >= cost[n]) continue; cost[n] = w; back[n] = k; (FOR[n] ? next : now).push(n); } [now, next] = [next, []]; }
     for (const t of things) if (quarter(t) === c) { const [best] = step.map((d) => t.k + d).sort((a, b) => cost[a] - cost[b]); for (let k = best; cost[k] > 0 && cost[k] < Infinity; k = back[k]) FOR[k] = null; } });
 }
-const lay = (kind, bx, by, amount) => { put(kind, tileAt(bx, by), rng); return Object.assign(things.at(-1), { amount }); }; // E345
+const lay = (kind, bx, by, amount) => { put(kind, tileAt(bx, by), rng); const t = Object.assign(things.pop(), { amount }), at = things.findIndex((x) => x.vy > t.vy); things.splice(at < 0 ? things.length : at, 0, t); return t; }; // E345
 const byLake = (bx, by, r) => lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + D.beach + r);
 const PC = C.paper, TOP = [null, PC.wet, C.sand, C.dirt, PC.grass], GR = TOP.length - 1, DT = GR - 1; // E54
 const stratum = (h) => (h <= 0 ? 0 : h < D.wetTop ? 1 : h < D.sandTop ? 2 : h < D.dirtTop || h >= D.land + D.bare ? DT : GR); // E52
@@ -301,7 +302,7 @@ function renderGround() {
   gw = Math.ceil(maxX - minX) + 2; gh = Math.ceil(maxY - minY) + 2; ox = 1 - minX; oy = 1 - minY;
   let g = new Rec(), gm = new Rec(); const REC = g, RG = gm, RR = new Rec(); shoreOf(); // E912
   for (const m of [maskFlood, ...ICEM]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskFlood ? C.water : C.ground.ice; } // E57
-  scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); for (const t of things) if (t.kind === 'bld' && (t.side === ME || memOf(ME).has(t))) wear(t); // E546
+  scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); LANDS.key = ''; for (const t of things) if (t.kind === 'bld' && (t.side === ME || memOf(ME).has(t))) wear(t); // E546
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // E58
   const quad = (a, b, c, d, fill, grass = false) => { for (const x of grass ? [g, gm] : [g]) { x.fillStyle = x === g ? fill : PC.grass; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0] + 1, b[1]); x.lineTo(c[0] + 1, c[1] + 1); x.lineTo(d[0], d[1] + 1); x.closePath(); x.fill(); } }; // E902
@@ -370,13 +371,15 @@ function drawGround(gx, gy) { if (!GOPS) return; const z = cam.z; ctx.save(); ct
   ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = SEASON.col; ctx.fill(GRASSP); ctx.globalCompositeOperation = 'source-over'; // E902
   const [z0, z1] = D.paper.blades, a = clamp((z - z0) / (z1 - z0), 0, 1) * (1 - snowStep() / (PL.snow.steps + 1)); if (a > 0) { ctx.globalAlpha = a; for (const B of BLADES) { ctx.fillStyle = bladeTile(B, z * dpr); ctx.fill(GRASSP); } ctx.globalAlpha = 1; } // E910
   ctx.fillStyle = WATER[0]; ctx.fill(LEVELP); ctx.strokeStyle = C.ground.foam; ctx.lineWidth = D.lay.foam; ctx.lineCap = 'round'; ctx.stroke(LEVELE); replay(ctx, REEDS); ctx.restore(); } // E918
-const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null, SCARV = null; // E547
-const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); SCARV++; }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
+const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'), scarNew = document.createElement('canvas'); let scarX = null; // E547
+const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), scar = (x, y, r, f) => { f(scarX); if (!onSheet(x, y, r, f)) LANDS.key = ''; }, blot = (x, y, rx, ry, fill) => scar(x, y, Math.max(rx, ry), (c) => { c.fillStyle = fill; c.beginPath(); oval(c, x, y, rx, ry * TILT); c.fill(); }), onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
+const onSheet = (x, y, r, f) => { const S = LANDS, q = SC.res; if (!S.key || (show.K && (K.ice || K.flood > K.t || K.sand))) return false; const i = Math.floor((x - r) * q) - 1, j = Math.floor((y - r) * q) - 1, w = Math.ceil((x + r) * q) + 1 - i, h = Math.ceil((y + r) * q) + 1 - j, c = scarNew.getContext('2d'), M = D.landCache.margin, sx = (gw * S.z) / scarCv.width, sy = (gh * S.z) / scarCv.height; // E2540
+  if (!(w > 0 && h > 0)) return true; scarNew.width = w; scarNew.height = h; c.setTransform(q, 0, 0, q, -i, -j); f(c); S.x.save(); S.x.setTransform(dpr, 0, 0, dpr, M * dpr, M * dpr); S.x.globalAlpha = 1; S.x.globalCompositeOperation = 'source-over'; S.x.drawImage(scarNew, (-ox - S.cx) * S.z + cw / 2 + i * sx, (-oy - S.cy) * S.z + ch / 2 + j * sy, w * sx, h * sy); S.x.restore(); return true; };
 function wear(b) { if (!scarX || has(b, 'Field') || has(b, 'Line') || has(b, 'Gate') || has(b, 'Trap')) return; const [dx, dy, rx, ry] = SC.wear, w = b.n * D.tile, [x, y] = onGround(b.bx, b.by); blot(x + w * dx, y + w * dy * TILT, w * rx, w * ry, SCAR.wear); } // E548
 function fallen(u) { const F = SC.fall, [x, y] = onGround(u.bx, u.by), [w] = LOOKBOX[SH[u.code].look] || []; blot(x, y, w > F.big ? F.rx + F.more : F.rx, F.ry, SCAR.fall); if (!ECON.soldier(u.code)) return; // E549
-  const [a, b, c, d, lw] = SC.cut; scarX.strokeStyle = SCAR.cut; scarX.lineWidth = lw; scarX.beginPath(); scarX.moveTo(x - a, y + b * TILT); scarX.lineTo(x + c, y - d * TILT); scarX.stroke(); }
-function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; const [rx, ry, out, n, turn, step, least, w, h] = SC.burn, r0 = b.n * D.tile * D.place.half, [x, y] = onGround(b.bx, b.by); blot(x, y, r0 * rx, r0 * ry, SCAR.burn); scarX.fillStyle = SCAR.rubble; // E550
-  for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); scarX.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }
+  const [a, b, c, d, lw] = SC.cut; scar(x, y, Math.max(a, b, c, d) + lw, (q) => { q.strokeStyle = SCAR.cut; q.lineWidth = lw; q.beginPath(); q.moveTo(x - a, y + b * TILT); q.lineTo(x + c, y - d * TILT); q.stroke(); }); }
+function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; const [rx, ry, out, n, turn, step, least, w, h] = SC.burn, r0 = b.n * D.tile * D.place.half, [x, y] = onGround(b.bx, b.by); blot(x, y, r0 * rx, r0 * ry, SCAR.burn); // E550
+  scar(x, y, r0 * out * (1 + least) + w + h, (q) => { q.fillStyle = SCAR.rubble; for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); q.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }); }
 // ── The view (E63)
 const canvas = document.getElementById('map'); let ctx = canvas.getContext('2d');
 const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(0), P: /[?&]fps\b/.test(location.search), T: true, B: true, U: true, K: true, V: true, fast: false }; // E64
@@ -405,9 +408,11 @@ function stat(code, side, key) { // E280
 function fxRow(code, side) { const memo = FXC.get(side) || FXC.set(side, new Map()).get(side); return memo.get(code) || memo.set(code, new Map()).get(code); } // E1591
 function statRow(code, side) { const memo = fxRow(code, side), id = '*'; // E1591
   if (!memo.has(id)) memo.set(id, Object.fromEntries(Object.entries(D.stats[code] || {}).map(([k, v]) => [k, typeof v === 'number' ? stat(code, side, k) : v]))); return memo.get(id); }
-const kinds = (cls) => SHELLS.filter((c) => SH[c].class === cls && D.train[c] && !SH[c].civ), civKind = (c, side) => (SIDES[side] && SHELLS.find((k) => SH[k].replaces === c && SH[k].civ === SIDES[side].civ)) || c, trains = (c, side) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))).map((k) => civKind(k, side)), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
+const fromKnown = (make, code, side) => { const memo = fxRow(code, side); if (!memo.has(make)) memo.set(make, make(code, side)); return memo.get(make); }; // E2400
+const KINDS = new Map(), CIVK = new Map(); for (const c of SHELLS) { const e = SH[c], R = CIVK.get(e.replaces) || CIVK.set(e.replaces, new Map()).get(e.replaces); if (!R.has(e.civ)) R.set(e.civ, c); if (D.train[c] && !e.civ) (KINDS.get(e.class) || KINDS.set(e.class, []).get(e.class)).push(c); } // E2403
+const kinds = (cls) => KINDS.get(cls) || [], civKind = (c, side) => (SIDES[side] && CIVK.get(c)?.get(SIDES[side].civ)) || c, trains = (c, side) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))).map((k) => civKind(k, side)), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
 const TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), RANKS = {}, KITS = []; for (const [c, e] of Object.entries(BOOKS.tech)) { if (e.value.rank) (RANKS[e.value.rank.k] = RANKS[e.value.rank.k] || []).push(c); if (e.value.kit) KITS.push(c); } // E370
-const ranks = (code, side) => (RANKS[code] || []).filter((c) => (known.get(side) || new Set()).has(c)), rankOf = (code, side) => ranks(code, side).length, kitOf = (side, code) => KITS.filter((c) => SH[code].class && (known.get(side) || new Set()).has(c)).length;
+const ranks = (code, side) => (RANKS[code] || []).filter((c) => (known.get(side) || new Set()).has(c)), rankN = (code, side) => ranks(code, side).length, kitN = (code, side) => KITS.filter((c) => SH[code].class && (known.get(side) || new Set()).has(c)).length, rankOf = (code, side) => fromKnown(rankN, code, side), kitOf = (side, code) => fromKnown(kitN, code, side); // E2402
 const rankName = (code, side) => { const r = ranks(code, side); return r.length ? BOOKS.tech[r.at(-1)].value.rank.name : (SH[code] || {}).name; };
 function learn(side, id) { (known.get(side) || known.set(side, new Set()).get(side)).add(id); FXC.delete(side); for (const t of [...units, ...things]) if (t.side === side && t.hpMax) { const M = stat(t.code, side, 'hp'); t.hp *= M / t.hpMax; t.hpMax = M; } learnt(side, id); } // E281
 let last = 0, frameDt = 0, acc = 0; const TASKS = [], SIM = D.step; on('start', () => { acc = 0; TASKS.length = 0; });
@@ -423,7 +428,7 @@ if (TEST) show.P = true; // E894
 function fault(e) { const m = String((e && e.stack) || e); if (seenErr.has(m)) return; seenErr.add(m); console.error(m); if (seenErr.size > 1 && !paused) { paused = true; fire('say', WS.fault.replace('{line}', [e && e.message, (m.split('\n').find((l) => l.includes(':')) || '').split('/').pop()].filter(Boolean).join(' · '))); fire('event', 'fault', null); MENU.S.tab = 'Pause'; } } // E656
 addEventListener('error', (e) => fault(e.error || e.message)); addEventListener('unhandledrejection', (e) => fault(e.reason));
 const ARR = () => ({ H, OCC, FOR, MARSH, RUTS }), refill = (a, b) => { if (a instanceof Map || a instanceof Set) { a.clear(); for (const x of b) a instanceof Map ? a.set(...x) : a.add(x); } else if (Array.isArray(a)) a.splice(0, a.length, ...b); else { for (const k in a) delete a[k]; Object.assign(a, b); } };
-function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n) => [t, n])), base = new Map(BASE0.things.map((t, n) => [t, n])), S = { seed, dice: play.at(), things: [], units, K, SIDES, known, HZ, arr: {}, fog: { on: FOGON, exp: [...EXPL].map(([s, a]) => [s, a.reduce((o, v, c) => (v ? (o.push(c), o) : o), [])]), mem: MEM } }; // E657
+function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n) => [t, n])), base = new Map(BASE0.things.map((t, n) => [t, n])), S = { seed, stamp: [BASE0.things.length, D.version], dice: play.at(), things: [], units, K, SIDES, known, HZ, arr: {}, fog: { on: FOGON, exp: [...EXPL].map(([s, a]) => [s, a.reduce((o, v, c) => (v ? (o.push(c), o) : o), [])]), mem: MEM } }; // E657
   // E879
   S.things = things.map((t) => { const n = base.get(t); if (n == null) return t; const was = BASE0.shot[n], d = {}; for (const k in t) if (t[k] !== was[k] || (t[k] && typeof t[k] === 'object')) d[k] = t[k]; return Object.keys(d).length ? { [TG.base]: n, ...d } : n; });
   for (const [name, a] of Object.entries(ARR())) { const d = []; a.forEach((v, k) => { if (v !== BASE0[name][k]) d.push([k, v]); }); S.arr[name] = d; }
@@ -432,7 +437,7 @@ function pack() { const all = [...things, ...units], ids = new Map(all.map((t, n
   return JSON.stringify(S, function (k, v) { if (typeof v === 'number' && !Number.isFinite(v)) return { [TG.num]: String(v) }; if (!v || typeof v !== 'object') return v; if (ids.has(v) && this !== S.things && this !== units) return { [TG.ref]: ids.get(v) };
     if (v instanceof Map) return { [TG.map]: [...v] }; if (v instanceof Set) return { [TG.set]: [...v] }; if (v.constructor && v.constructor !== Object && v.constructor !== Array) return undefined;
     if (!k || v.constructor !== Object || ids.has(v)) return v; if (!twice.has(v)) return v; if (own.has(v)) return { [TG.same]: own.get(v) }; own.set(v, own.size); return { [TG.own]: own.get(v), ...v }; }); } // E681
-function unpack(S) { const fresh = BASE0.things; S.things = S.things.map((e) => (typeof e === 'number' ? fresh[e] : TG.base in e ? Object.assign(fresh[e[TG.base]], e) : e)); S.things.forEach((t) => delete t[TG.base]); // E658
+function unpack(S) { const fresh = BASE0.things; if (S.stamp != null && Number(String(S.stamp).split(',')[0]) !== fresh.length) throw new Error(WS.saveOld); S.things = S.things.map((e) => (typeof e === 'number' ? fresh[e] : TG.base in e ? Object.assign(fresh[e[TG.base]], e) : e)); S.things.forEach((t) => delete t[TG.base]); // E658
   const all = [...S.things, ...S.units], own = [], grab = (v) => { if (!v || typeof v !== 'object') return; if (TG.own in v) { own[v[TG.own]] = v; delete v[TG.own]; } for (const k in v) grab(v[k]); }; grab(S);
   const fix = (v) => { if (!v || typeof v !== 'object') return v; if (Array.isArray(v)) { v.forEach((x, n) => { v[n] = fix(x); }); return v; }
   if (TG.ref in v) return all[v[TG.ref]]; if (TG.same in v) return own[v[TG.same]]; if (TG.num in v) return Number(v[TG.num]); if (TG.map in v) return new Map(fix(v[TG.map])); if (TG.set in v) return new Set(fix(v[TG.set])); for (const k in v) v[k] = fix(v[k]); return v; };
@@ -450,7 +455,7 @@ function save(force) { if (TEST || seenErr.size > 1 || !TAB.mine) return; const 
   try { const t = pack(); if (t == null) return clearSave(); const n = (slot + 1) % SV.slots; slot = n; return Promise.all([stash(SLOT(n), t), stash(NOW, n)]).catch(fail); } catch (e) { fail(); } }
 let saveWhy = ''; const openSave = (k) => { try { const t = STORE.get(k), S = t && JSON.parse(t); if (t && !(S && S.things)) saveWhy = WS.saveBad; return S && S.things ? S : null; } catch (e) { saveWhy = String(e.message || e).split('\n')[0]; return null; } }; // E660
 function readSave() { for (const k of slotKeys()) { const S = openSave(k); if (S) return S; } return null; }
-function load(R) { WALKV++; TV++; const S = unpack(R); things = S.things; units = S.units; units.forEach(jobDoor); Object.assign(K, S.K); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
+function load(R) { WALKV++; TV++; const S = unpack(R); things = S.things; units = S.units; Object.assign(K, S.K); units.forEach(jobDoor); S.SIDES.forEach((s, n) => Object.assign(SIDES[n], s)); refill(known, S.known); FXC.clear(); refill(HZ, S.HZ); if (S.dice != null) play.at(S.dice); // E661
   for (const [name, a] of Object.entries(ARR())) for (const [k, v] of S.arr[name]) a[k] = v; VIS.clear(); CAST.clear(); EXPL.clear(); MEM.clear(); topN = -1; if (S.fog) { FOGON = S.fog.on; for (const [s, cs] of S.fog.exp) { const X = expOf(s); for (const c of cs) X[c] = 1; } for (const [s, m] of S.fog.mem) MEM.set(s, m); } // E879
   GATES.clear(); for (const t of things) if (has(t, 'Gate')) GATES.set(t.j * N + t.i, t.side); for (const d of DEEP) d.length = 0; DEEPV++; for (const t of things) if (t.kind === 'tree') deepen(t); regrid(); renderGround(); fire('load', S); }
 let wakeL = null, wakeP = false; const wakeOn = async (on) => { if (wakeP) return; try { if (on && !wakeL && navigator.wakeLock) { wakeP = true; wakeL = await navigator.wakeLock.request('screen'); } else if (!on && wakeL) { const w = wakeL; wakeL = null; await w.release(); } } catch (e) { wakeL = null; } wakeP = false; }; // E696
@@ -459,13 +464,13 @@ const newSheet = () => { const c = document.createElement('canvas'); return { c,
 function slideSheet(S, key, paint, ms = Infinity) { const M = D.landCache.margin, k = [key, cw, ch, dpr].join(), now = performance.now(); let dx = (S.cx - cam.x) * cam.z, dy = (S.cy - cam.y) * cam.z; // E889
   if (cam.z !== S.lz) { S.lz = cam.z; S.zt = now; } const r = cam.z / S.z, ox = cw * DRW.half - (cw * DRW.half + M) * r + dx, oy = ch * DRW.half - (ch * DRW.half + M) * r + dy; // E968
   if (k === S.key && r !== 1 && now - S.zt < D.landCache.settle && r < STEP && r > 1 / STEP && ox <= 0 && oy <= 0 && ox + (cw + M + M) * r >= cw && oy + (ch + M + M) * r >= ch) { const T = ctx.getTransform(); ctx.save(); ctx.setTransform(1, 0, 0, 1, Math.round(T.e), Math.round(T.f)); ctx.drawImage(S.c, ox * dpr, oy * dpr, S.c.width * r, S.c.height * r); ctx.restore(); dirty(); return; }
-  if (k !== S.key || r !== 1 || Math.abs(dx) > M || Math.abs(dy) > M || now - S.t > ms) { S.n = (S.n || 0) + 1; S.key = k; S.t = now; S.cx = cam.x; S.cy = cam.y; S.z = cam.z; dx = dy = 0; S.c.width = Math.ceil((cw + M + M) * dpr); S.c.height = Math.ceil((ch + M + M) * dpr); const main = ctx; ctx = S.x; ctx.setTransform(dpr, 0, 0, dpr, M * dpr, M * dpr); paint(); ctx = main; }
+  if (k !== S.key || r !== 1 || Math.abs(dx) > M || Math.abs(dy) > M || now - S.t > ms) { S.n = (S.n || 0) + 1; S.key = k; S.t = now; S.cx = cam.x; S.cy = cam.y; S.z = cam.z; dx = dy = 0; S.c.width = Math.ceil((cw + M + M) * dpr); S.c.height = Math.ceil((ch + M + M) * dpr); const main = ctx; ctx = S.x; try { ctx.setTransform(dpr, 0, 0, dpr, M * dpr, M * dpr); paint(); } catch (e) { S.key = ''; throw e; } finally { ctx = main; } }
   const T = ctx.getTransform(); ctx.save(); ctx.setTransform(1, 0, 0, 1, Math.round(T.e), Math.round(T.f)); ctx.drawImage(S.c, Math.round((dx - M) * dpr), Math.round((dy - M) * dpr)); ctx.restore(); }
 function draw() {
   want = false; lap(true);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
-  seasonNow(); slideSheet(LANDS, [show.K, SEASON.key, snowStep(), BLOOMY, SCARV].join(), // E1061
+  seasonNow(); slideSheet(LANDS, [show.K, SEASON.key, snowStep(), BLOOMY].join(), // E1061
   () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * 2, ch + D.landCache.margin * 2); drawGround(gx, gy); drawPaper(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); }, D.landCache.ms); lap(); // E880
   drawGlints(); drawClouds(); lap(); drawThings(); drawUnder(); lap(); const mk = K.beta > 0 ? `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}` : ''; if (FOGON) slideSheet(FOGS, FOGV + '|' + mk, () => { if (mk) drawMist(); drawFog(); }); else if (mk) slideSheet(MISTS, mk, drawMist); lap(); fire('draw', ctx, cam.z); lap(); // E975
   if (show.K) { drawSky(frameDt); lap(); drawLights(cam.z); lap(); } fire('over', ctx, cam.z);
@@ -518,8 +523,9 @@ g.lineTo(r0[0], r0[1]); g.closePath(); g.fillStyle = near; g.fill(); g.strokeSty
 return { ...r, top: ry }; } return r; }
 // E294
 let RES = null; const UPA = SPRITE.up, TECHAT = {}; for (const [c, e] of Object.entries(BOOKS.tech)) (TECHAT[e.value.at] = TECHAT[e.value.at] || []).push(c);
-const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level, k = known.get(t.side) || new Set(), at = TECHAT[t.code] || [], n = at.filter((c) => k.has(c)).length;
-  return [!L ? L : L.season ? season() : L.spent ? +!t.amount : L.flock ? t.sheep : L.age ? +((SIDES[t.side] || {}).age >= L.age) : [...k].filter((c) => BOOKS.tech[c].value.tier === art).length, +!!n + +(!!n && n >= at.length * UPA.half)]; };
+const tierOf = (code, side) => [...(known.get(side) || new Set())].filter((c) => BOOKS.tech[c].value.tier === B[code][3]).length, upOf = (code, side) => { const k = known.get(side) || new Set(), at = TECHAT[code] || [], n = at.filter((c) => k.has(c)).length; return +!!n + +(!!n && n >= at.length * UPA.half); }; // E2401
+const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level;
+  return [!L ? L : L.season ? season() : L.spent ? +!t.amount : L.flock ? t.sheep : L.age ? +((SIDES[t.side] || {}).age >= L.age) : fromKnown(tierOf, t.code, t.side), fromKnown(upOf, t.code, t.side)]; };
 function plinth(x0, x1, yf, h, d, k) { if (!RES) return; const { foot: F, shade, line, top, stone: [sw, sh, gap, edge], lift, rim: rl } = UPA;
   P_([[x0, yf], [x1, yf], [x1, yf - F], [x0, yf - F]], STONE, LINE, line); P_([[x1, yf], [x1 + k, yf - d], [x1 + k, yf - d - F], [x1, yf - F]], lit(STONE, shade), LINE, line);
   if (RES === top) for (let y = yf - gap; y > yf - h + edge; y -= gap) for (const x of [x0, x1 - sw]) P_([[x, y], [x + sw, y], [x + sw, y - sh], [x, y - sh]], lit(STONE, lift), LINE, rl); }
@@ -704,9 +710,9 @@ LG(x - 0.7, 0, x + 0.7, 0, ['#f8f2e0', '#e2d8c0', '#b3a68c']), LINE, 0.25, ); P_
 [sx0 - 0.6, sy - 11.6], [sx1 + 0.6, sy - 11.6], [sx1 + 0.6, sy - 13.2], [sx0 - 0.6, sy - 13.2], ], LG(0, sy - 11.6, 0, sy - 13.2, ['#cfc3a6', '#f3ecd8']), LINE, 0.3, ); P_( [ [sx0 - 1, sy - 13.2],
 [sx1 + 1, sy - 13.2], [k * 0.1, sy - 16.8], ], LG(0, sy - 13.2, 0, sy - 16.8, ['#e4dbc4', '#faf5e6']), LINE, 0.3, ); rim(sx0 - 1, sy - 13.2, k * 0.1, sy - 16.8, 0.6); for (const [dx, col] of [
 [-7, c], [7, '#3b5fa6'], ]) banner(k * 0.1 + dx, sy - 2.2, col, 6); L_(-w / 2, d / 2 - 0.5, w / 2, d / 2 - 0.5, c, 1.2); },
-tavern(c) { const r = block(26, 16, '#6b4a2c', 'timber', 'gable', SLATE, 9); const d = r.d; door(-5, d / 2, 5, 9, '#2a1a0c'); win(4, d / 2 - 6, 2.6, 2.6, '#e8b85a');
+tavern(c) { g.save(); g.scale(20 / 26, 20 / 26); const r = block(26, 16, '#6b4a2c', 'timber', 'gable', SLATE, 9); const d = r.d; door(-5, d / 2, 5, 9, '#2a1a0c'); win(4, d / 2 - 6, 2.6, 2.6, '#e8b85a'); // E2660
 win(9, d / 2 - 6, 2.6, 2.6, '#e8b85a'); win(-10, d / 2 - 6, 2.6, 2.6, '#e8b85a'); L_(9, d / 2 - 12, 9, d / 2 - 5, '#3a2a1a', 0.7); P_( [ [9, d / 2 - 11], [14, d / 2 - 11], [14, d / 2 - 7],
-[9, d / 2 - 7], ], '#8a5a2a', LINE, 0.4, ); E_(11.5, d / 2 - 9, 1.6, 1.6, '#e8c860'); banner(-8, d / 2 - 14, c, 6); },
+[9, d / 2 - 7], ], '#8a5a2a', LINE, 0.4, ); E_(11.5, d / 2 - 9, 1.6, 1.6, '#e8c860'); banner(-8, d / 2 - 14, c, 6); g.restore(); },
 temple(c) { const d = 40 * ART_T; for (let i = 0; i < 3; i++) P_( [ [-21 + i * 1.5, d / 2 - i * 1.6], [21 - i * 1.5, d / 2 - i * 1.6], [21 - i * 1.5, d / 2 - i * 1.6 - 1.6],
 [-21 + i * 1.5, d / 2 - i * 1.6 - 1.6], ], '#d8cdb4', LINE, 0.4, ); sides(-16, 16, d / 2 - 5, 22, d, '#c9bfa6'); P_( [ [-16, d / 2 - 5], [16, d / 2 - 5], [16, d / 2 - 27], [-16, d / 2 - 27], ],
 '#c9bfa6', LINE, 0.4, ); for (let x = -15; x <= 15; x += 5) column(x, d / 2 - 5, d / 2 - 27); ridgeRoof(19, d / 2 - 27, d / 2 - 38, d, '#c9a227'); P_( [ [-19, d / 2 - 27], [19, d / 2 - 27],
@@ -824,7 +830,7 @@ g.strokeStyle = 'rgba(10,12,14,.5)'; g.lineWidth = 0.4; g.beginPath(); g.moveTo(
 
 // ── The trees: twelve kinds from the Sprites book, each in a few variants, drawn once a leaf stage and kept (E773)
 const TREE = SPRITE.trees, TD = TREE.dab, TW = TREE.twig, HALF = TREE.half;
-const LAG = [], leafStage = (v) => { const f = (yt() / D.season + (LAG[v] ??= NS_rng(TREE.seed + v)() * TREE.lag)) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), 0); }; // E777
+const LAG = [], leafStage = (v) => { const f = (yt() / D.season + (LAG[v] ??= ((r) => (r(), r()))(NS_rng(TREE.seed + v)) * TREE.lag)) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), 0); }; // E777
 const treeLook = (v) => leafStage(v) + (K.snow > G.snow.covers ? TREE.snowKey : '');
 const kindOf = (v) => TREE.kinds[Math.floor(v / TREE.variants) % TREE.kinds.length];
 function treeKindAt(k, roll) { const h = H[k], where = h > D.land ? 'hill' : h < TREE.wet ? 'wet' : 'plain', W8 = TREE.kinds.map((s) => s.where[where] || 0), sum = W8.reduce((a, b) => a + b), x = roll() * sum; // E774
@@ -1016,7 +1022,7 @@ const B = {}; for (const c of SHELLS) { const e = SH[c]; if (e.layer === 110) B[
 function build(code, i, j, col = C.blue) {
   const [, n] = B[code]; if (i < 0 || j < 0 || i + n > N || j + n > N) return null;
   const shore = SH[code].ticks.includes('Shore'); for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) if (shore ? OCC[y * N + x] || FOR[y * N + x] : !free(y * N + x) || H[y * N + x] !== H[j * N + i]) return null; // E1069
-  for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) OCC[y * N + x] = B[code][2] ? 3 : 2; WALKV++;
+  for (let y = j; y < j + n; y++) for (let x = i; x < i + n; x++) OCC[y * N + x] = B[code][2] ? 3 : 2; WALKV++; labKeep();
   const [bx, by] = toBoard((i + n / 2) * D.tile, (j + n / 2) * D.tile), [vx, vy] = toView(bx, by, H[j * N + i]), t = { kind: 'bld', code, i, j, n, bx, by, vx, vy, col, side: SIDES.findIndex((q) => q.col === col), size: 1, done: 1 };
   if (has(t, 'Gate')) GATES.set(j * N + i, t.side); { const at = things.findIndex((x) => x.vy > t.vy); things.splice(at < 0 ? things.length : at, 0, t); } TV++; return t; // E710
 }
@@ -1036,7 +1042,7 @@ const iced = (k) => H[k] <= 0 && DEP[k] >= D.edge && holds(k) >= W.person.kg; //
 const CROSS = D.crossing, onIce = (u) => !u.inside && H[u.k] <= -D.wade / 2 && DEP[u.k] >= D.edge, year = () => Math.floor(yt() / (D.season * SPRITE.trees.year)); // E786
 const iceOf = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : CROSS.modes[0]);
 const holdBack = (u, w) => { if (w.length || u.side !== ME || !crossAt(w) || inCross(u)) return false; const R = CROSS.rules[iceOf(u)]; if (R.ask) return true; let n = 0, near = false; // E787
-  for (const v of units) if (v !== u && v.side === u.side && inCross(v)) { n++; if (R.gap && Math.hypot(v.bx - tileMid(w)[0], v.by - tileMid(w)[1]) <= R.gap * D.tile) near = true; } return near || (R.most && n >= R.most); };
+  const ice = iced(w); for (const v of units) if (v !== u && v.side === u.side && (ice ? onIce(v) : inWoods(v.k))) { n++; if (R.gap && Math.hypot(v.bx - tileMid(w)[0], v.by - tileMid(w)[1]) <= R.gap * D.tile) near = true; } return near || (R.most && n >= R.most); }; // E2505
 const iceReport = (U) => { let cm = Infinity; for (const u of U) for (const k of u.path || []) if (!k.length && H[k] <= 0 && iced(k)) cm = Math.min(cm, thick(k)); return cm < Infinity ? { cm, kg: ICE.load.safe * cm * cm, mass: U.reduce((m, u) => m + massOf(u.code), 0) } : null; }; // E788
 function offIce(u) { let best = -1, bd = Infinity; stamp(u.bx, u.by, CROSS.reach * D.tile, (k, d) => { if (H[k] > 0 && walkable(k, u) && d < bd) [best, bd] = [k, d]; }); u.ice = CROSS.modes[0]; u.shy = null; return ~best ? go(u, best) : false; } function clearIce(side) { for (const u of units) if (u.side === side && onIce(u)) offIce(u); } // E789
 on('tick', () => { if (!every([ICE.beat, 0])) return; const load = new Map(); for (const u of units) if (onIce(u)) load.set(u.k, (load.get(u.k) || 0) + massOf(u.code)); // E790
@@ -1045,9 +1051,12 @@ on('tick', () => { if (!every([ICE.beat, 0])) return; const load = new Map(); fo
     if (K.t - CRACK.get(k) >= ICE.warn && (kg >= fail || rng() < ((kg - safe) / (fail - safe)) ** 2)) { CRACK.delete(k); HOLES.set(k, fddDays()); fire('event', 'splash', at); let n = 0;
       for (const u of [...units]) if (onIce(u) || u.k === k) { const d = Math.hypot(u.bx - tileMid(k)[0], u.by - tileMid(k)[1]) / D.tile; if (u.k === k || (d <= ICE.near && rng() < ICE.fall)) { n += u.side === ME; u.under = true; fire('drown', u); } } if (n) fire('fell', n); } }
   for (const [k, t] of CRACK) if (!load.has(k) && K.t - t > ICE.warn + ICE.warn) CRACK.delete(k); });
+on('start', () => { HOLES.clear(); CRACK.clear(); }); on('save', (S) => { S.ice = { holes: HOLES, crack: CRACK }; }); on('load', (S) => { refill(HOLES, S.ice ? S.ice.holes : []); refill(CRACK, S.ice ? S.ice.crack : []); }); // E2621
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
-const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : null), onIceOk = (k, who) => !CRACK.has(k) && ICE.load[who && onIce(who) ? 'fail' : 'safe'] * thick(k) ** 2 >= (who ? massOf(who.code) * (iceChoice(who) ? 1 : CROSS.ai) : W.person.kg) && !(who && (who.shy > K.t || (iceChoice(who) && CROSS.rules[iceChoice(who)].avoid))); // E1540
+// E2501
+// E2502
+const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : null), bears = (k, who, at) => ICE.load[at] * thick(k) ** 2 >= (who ? massOf(who.code) * (iceChoice(who) ? 1 : CROSS.ai) : W.person.kg), onIceOk = (k, who) => !CRACK.has(k) && (bears(k, who, 'safe') || (!!who && onIce(who) && !bears(who.k, who, 'safe') && bears(k, who, 'fail'))) && !(who && !onIce(who) && (who.shy > K.t || (iceChoice(who) && CROSS.rules[iceChoice(who)].avoid))); // E1540
 const inWoods = (k) => !!FOR[k] && OCC[k] === 1, woodsIn = (who) => !!(who && who.code && (D.woods.enter[SH[who.code].mount || SH[who.code].body] || has(who, 'Fell')) && !(who.side === ME && iceOf(who) === 'around')), woodsDeep = (k) => { let n = 0; for (const [dx, dy] of D.ways) if (FOR[k + dy * N + dx]) n++; return n / D.ways.length; }; // E863
 const crossAt = (k) => iced(k) || inWoods(k), inCross = (u) => onIce(u) || inWoods(u.k); // E874
 const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || (iced(k) && onIceOk(k, who))) && (OCC[k] === 0 || OCC[k] === 3 || (inWoods(k) && woodsIn(who)) || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
@@ -1067,7 +1076,8 @@ function pace(u, g = footing(u)) { // E361
 // E89
 function around(k, f, who) { const i = k % N, j = (k - i) / N, h = hAt(k); for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy, q = y * N + x; if (x < 0 || y < 0 || x >= N || y >= N || !stepOk(h, q, who)) continue; if (dx && dy && !(walkable(j * N + x, who) && walkable(y * N + i, who))) continue; f(q, dx && dy); } } // E91
 const PF = { g: new Float32Array(N * N), came: new Int32Array(N * N), gen: new Int32Array(N * N), done: new Int32Array(N * N), hk: [], hf: [], n: null }; // E721
-const NOWAY = new Map(); function findPath(from, goal, near, most, who = null) { if (most != null) return searchPath(from, goal, near, most, who); const T = D.tries, key = `${who ? who.side : ''}|${who ? who.code : ''}|${who ? iceChoice(who) || '' : ''}|${who && who.shy > K.t ? 1 : 0}|${Math.floor((from % N) / T.cell)}|${Math.floor(from / N / T.cell)}|${near}`; const e = NOWAY.get(key); if (e > K.t && e <= K.t + T.forget) return null; const p = searchPath(from, goal, near, T.far, who); if (!p) { if (NOWAY.size > T.keep) NOWAY.clear(); NOWAY.set(key, K.t + T.forget); } return p; } // E1309
+// E2506
+const NOWAY = new Map(); function findPath(from, goal, near, most, who = null) { if (most != null) return searchPath(from, goal, near, most, who); const T = D.tries, key = `${who ? who.side : ''}|${who ? who.code : ''}|${who ? iceChoice(who) || '' : ''}|${who && who.shy > K.t ? 1 : 0}|${who && onIce(who) ? (bears(who.k, who, 'safe') ? 1 : 2) : 0}|${Math.floor((from % N) / T.cell)}|${Math.floor(from / N / T.cell)}|${near}`; const e = NOWAY.get(key); if (e > K.t && e <= K.t + T.forget) return null; const p = apart(from, goal, near) ? null : searchPath(from, goal, near, T.far, who); if (!p) { if (NOWAY.size > T.keep) NOWAY.clear(); NOWAY.set(key, K.t + T.forget); } return p; } // E1309
 function searchPath(from, goal, near, most, who) { // E90
   const TW = D.tries.weight, EDGE = who && who.side === ME ? CROSS.rules[iceOf(who)].edge : null, AV = who && has(who, 'Gather') && !(DANGER[who.side] || [])[near] && DANGER[who.side], gen = ++PF.n, G = PF.g, CAME = PF.came, GEN = PF.gen, DONE = PF.done, HK = PF.hk, HF = PF.hf, ni = near % N, nj = (near - ni) / N;
   const hx = (k) => { const i = k % N, dx = Math.abs(i - ni), dy = Math.abs((k - i) / N - nj); return Math.max(dx, dy) + (Math.SQRT2 - 1) * Math.min(dx, dy); };
@@ -1087,7 +1097,19 @@ function reach(side) { const h = things.find((t) => t.side === side && has(t, 'S
   const seen = new Uint8Array(N * N), Q = []; if (h) stamp(h.bx, h.by, h.n * D.tile, (k) => { if (!seen[k] && walkable(k, who)) { seen[k] = true; Q.push(k); } });
   for (const k of Q) around(k, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who);
   const set = { has: (k) => !!seen[k] }; REACH.set(side, { key, set, seen, who, v: WALKV, t: K.t }); return set; }
-function opened(k) { for (const r of REACH.values()) { const { seen, who } = r; if (seen[k] || !walkable(k, who)) continue; let joined = false; around(k, (q) => { joined = joined || !!seen[q]; }, who); if (!joined) continue; const Q = [k]; seen[k] = true; for (const p of Q) around(p, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who); } } // E978
+function opened(k) { labOpen(k); for (const r of REACH.values()) { const { seen, who } = r; if (seen[k] || !walkable(k, who)) continue; let joined = false; around(k, (q) => { joined = joined || !!seen[q]; }, who); if (!joined) continue; const Q = [k]; seen[k] = true; for (const p of Q) around(p, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who); } } // E978
+const LAB = new Int32Array(N * N), LABQ = new Int32Array(N * N), LDX = D.ways.map(([x]) => x), LDY = D.ways.map(([, y]) => y); let LABV = -1, LABI = null; const mayWalk = (k, top, a2) => (H[k] > -D.wade / 2 || (H[k] <= 0 && DEP[k] >= D.edge && ICE.load.fail * a2 * Math.max(0, top - onsetOf(k)) >= W.person.kg)) && (OCC[k] === 0 || OCC[k] === 3 || inWoods(k) || GATES.has(k)), ICEA = () => Math.max(ICE.alpha.bare, ICE.alpha.snow) ** 2; // E2580
+function regions() { const s = Math.floor(fddDays() / ICE.key); if (LABV === WALKV && LABI === s) return LAB; LABV = WALKV; LABI = s; // E2581
+  const top = (s + 1) * ICE.key, a2 = ICEA(); let id = 0;
+  for (let k = 0; k < N * N; k++) LAB[k] = mayWalk(k, top, a2) ? -1 : 0;
+  for (let k0 = 0; k0 < N * N; k0++) { if (LAB[k0] !== -1) continue; LAB[k0] = ++id; let a = 0, b = 0; LABQ[b++] = k0;
+    while (a < b) { const k = LABQ[a++], i = k % N, j = (k - i) / N; for (let w = 0; w < LDX.length; w++) { const x = i + LDX[w], y = j + LDY[w], q = y * N + x; if (x >= 0 && y >= 0 && x < N && y < N && LAB[q] === -1) { LAB[q] = id; LABQ[b++] = q; } } } }
+  return LAB; }
+function labOpen(k) { if (!LAB[k] && (LABI === null || mayWalk(k, (LABI + 1) * ICE.key, ICEA()))) LABV = -1; } function labKeep() { if (LABV === WALKV - 1) LABV = WALKV; } // E2583
+function apart(from, goal, near) { if (from < 0 || goal(from)) return false; const L = regions(), fi = from % N, fj = (from - fi) / N, S = []; // E2582
+  for (const [dx, dy] of [[0, 0], ...D.ways]) { const x = fi + dx, y = fj + dy, r = x >= 0 && y >= 0 && x < N && y < N ? L[y * N + x] : 0; if (r > 0 && !S.includes(r)) S.push(r); } if (!S.length) return true;
+  const ni = near % N, nj = (near - ni) / N, R0 = Math.max(1, D.army.homeR); let any = false; const at = (x, y) => { if (x < 0 || y < 0 || x >= N || y >= N) return false; const q = y * N + x; if (!goal(q)) return false; any = true; return S.includes(L[q]); };
+  for (let d = 0; ; d++) { any = false; if (d === 0 ? at(ni, nj) : false) return false; for (let x = ni - d; d && x <= ni + d; x++) if (at(x, nj - d) || at(x, nj + d)) return false; for (let y = nj - d + 1; y < nj + d; y++) if (at(ni - d, y) || at(ni + d, y)) return false; if (!any && d >= R0) return true; } }
 const reached = (side, b, bx, by) => { const R = reach(side); let hit = false; stamp(bx, by, (b.n + BAND) * D.tile, (k) => { hit = hit || (R.has(k) && byB(b)(k)); }); return hit; };
 const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k - i) / N + 0.5) * D.tile); };
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
@@ -1127,7 +1149,7 @@ function spotFor(u, c) { // E301
   return best;
 }
 function toSpot(u, c) { const s = spotFor(u, c); if (!s || !go(u, tileAt(s.x, s.y))) return false; u.path.pop(); u.path.push([s.x, s.y]); u.spot = s; return true; } // E302
-function fell(t) { if (t.down) return; t.down = true; FOR[t.k] = OCC[t.k] = 0; t.size *= D.woods.fell.low; TV++; WALKV++; opened(t.k); if (topN >= 0) cutTop(t.k); wake(t); } // E1091
+function fell(t) { if (t.down) return; t.down = true; FOR[t.k] = OCC[t.k] = 0; t.size *= D.woods.fell.low; TV++; WALKV++; if (LAB[t.k]) labKeep(); opened(t.k); if (topN >= 0) cutTop(t.k); wake(t); } // E1091
 on('tick', () => { for (const u of units) if (u.path && has(u, 'Fell')) woodsNear(u.bx, u.by, D.woods.fell.lane, (t) => { if (Math.hypot(t.bx - u.bx, t.by - u.by) <= D.woods.fell.lane) fell(t); }); });
 function take(t, n) { const root = has(t, 'Regrow') && D.regrow[t.kind].root; if (root) t.max = Math.max(t.max || 0, t.amount); t.amount -= n; if (t.deep && t.amount > 0) wake(t); if (root && t.amount <= 0) { t.amount = t.max * root; t.bare = true; return; } // E1072
   if (t.amount <= 0) { OCC[t.k] = 0; things.splice(things.indexOf(t), 1); TV++; opened(t.k); if (t.kind === 'tree' && topN >= 0) cutTop(t.k); if (t.kind === 'tree') wake(t); fire('gone', t); } } // E98
@@ -1271,7 +1293,7 @@ function lightAt(a) { RM = RM || slopes(); const L = RAMP.length - 1; if (a <= R
 // E125
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 const sheet = () => Math.sqrt(K.gfd / D.groundIce.fdd); // E365
-const WX = D.weather, FW = WX.fog, HOUR = D.day / 24; let GUST = () => 0, DROPS = []; // E377
+const WX = D.weather, FW = WX.fog, HOUR = D.day / D.clock[0]; let GUST = () => 0, DROPS = []; // E377
 const camHigh = () => (cw / cam.z / D.upm) * DRW.half / Math.tan(D.fogLayer.fov * D.fogLayer.rad * DRW.half); // E873
 const sky = (rain, snow, C = null) => { const R = rain * WX.rain.most, S = snow * WX.snow.most, flake = (WX.snow.slow + WX.snow.fast) * D.place.half, wind = Math.max(rain, snow) * WX.wind.most, fog = FW.beta * C ** FW.pow; return { R, S, wind, fog, gust: wind * (1 + WX.wind.gust), vis: (WX.km * WX.k) / (WX.rain.beta * (WX.rain.mp.a * R ** WX.rain.mp.b) ** WX.rain.pow + WX.snow.beta * (S / (WX.perHour * flake)) ** WX.snow.pow + fog) }; }; // E713
 const blizzard = (s) => s.S > 0 && s.gust >= WX.blizzard.wind && s.vis < WX.blizzard.vis; // E378
@@ -1291,11 +1313,11 @@ function climate(dt) {
   else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = clamp(Math.floor((ICE.steps * fddDays()) / ICE.span), 0, ICE.steps); K.iceOn = Math.floor(fddDays() / ICE.key) + HOLES.size; if (!K.fds) HOLES.clear(); // E364
   if (K.storm) { K.strikeT -= dt; if (K.strikeT <= 0) { const sh = D.strike.share; K.strikeT = -((D.strike.summer * Math.max(...sh)) / sh[season()]) * Math.log(1 - rng()); strike(); } } // E135
   K.bolts = K.bolts.filter((b) => wallT() - b.w < (b.n - 1) * STK.gap + STK.life); K.flash *= Math.exp(-dt / D.strike.flash.decay); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
-  document.getElementById('clock').textContent = SEASONS[sn] + ' ' + hhmm() + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.vis < FW.wmo ? ' ≈' : '');
 }
 // E136
 const wallT = () => performance.now() / DRW.ms, STK = D.strike.stroke, boltEnv = (b, age) => { let e = 0; for (let i = 0; i < b.n; i++) if (age >= i * STK.gap) e += Math.exp(-(age - i * STK.gap) / STK.fade); return Math.min(1, e); }; // E951
 const bolt = (vx, vy) => { const SF = D.strike.flash; K.bolts.push({ vx, vy, w: wallT(), n: STK.n[0] + Math.floor(glance() * (STK.n[1] - STK.n[0] + 1)), f: SF.bolt[0] + SF.bolt[1] * (1 - Math.min(1, Math.hypot(vx - cam.x, vy - cam.y) / D.upm / SF.near)), seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); fire('event', 'strike', { vx, vy }); }; // E576
+on('load', () => { K.bolts = []; }); // E2623
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
   const SF = D.strike.flash; if (close > SF.close) { const vx = cam.x + (glance() - DRW.half) * (cw / cam.z), vy = cam.y + (glance() - DRW.half) * (ch / cam.z); bolt(vx, vy); jolt = { t: D.strike.shake, px: D.jolt.max }; } // E728
   else { K.flash = Math.max(K.flash, SF.sheet[0] + SF.sheet[1] * close); fire('event', 'strike', { vx: cam.x + (glance() - DRW.half) * SF.far * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
@@ -1336,7 +1358,7 @@ function drawSky(dt) { // E140
 }
 // E552
 const FC = D.forecast, SKYW = fromBook('words').sky, FLD = D.flood, RU = D.ruts, RC = Math.ceil(N / RU.cell), RUTS = new Float32Array(RC * RC), BANK = new Uint8Array(N * N), HEAL = Math.exp(-RU.heal[0] / RU.tau);
-on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear', ev: {}, horde: null, sand: null, burn: new Set(), wayT: J.every, wayI: null }); sunAlt(); });
+on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear', ev: {}, horde: null, sand: null, burn: new Set(), wayT: J.every, wayI: null, mirage: null, flashT: -Infinity }); sunAlt(); }); // E2622
 on('gone', (t) => { if (t.kind === 'unit') fallen(t); }); on('event', (e, t) => { if (e === 'fell' && t) burnt(t); });
 function ahead(was) { const A = K.ahead, lead = Math.round((stat('', ME, 'forecast') * FC.step) / HOUR), wet = (w, h) => h * HOUR >= D.dry * D.day && rng() < D.chain[+w]; K.wetHour = A.length ? A.shift() : wet(was, K.hour); // E553
   do A.push(wet([K.wetHour, ...A].at(-1), K.hour + A.length + 1)); while (A.length < lead); const [last, prev] = [K.wetHour, ...A].reverse(), n = Math.round((lead * HOUR) / FC.step), S = SKYW.signs; if (!lead || last === prev) return;
@@ -1391,10 +1413,11 @@ function events(roll = rng) { const V = K.ev; if (V.next == null) V.next = K.t +
   else if (!V.warned && K.t >= V.next - EV.warn) { V.warned = pickEv(roll); const [warn] = WL.events[V.warned]; fire('say', warn); }
   else if (V.warned && K.t >= V.next) { const k = V.warned; V.warned = null; if (!canEv(k)) V.next = K.t + EV.retry; else { const e = (V.cur = { kind: k, t0: K.t, until: K.t + (ER[k].secs || FLD.secs) }); V.last = k; if (EVS[k].start) EVS[k].start(e); if (!EVS[k].says) fire('say', WL.events[k][1].replace('{n}', J.joins[ER.wagon.code]), WL.why[k]); } }
   horde(roll); arrivals(); for (const u of units.filter((u) => u.herd && !u.path)) if (u.k === u.to || !leg(u)) vanish(u); }
-function horde(roll) { const H = HZD.horde, W = WL.horde, seat = things.find((t) => t.side === ME && has(t, 'Seat')); if (!hz('horde') || K.horde === false) return; // E574
+function horde(roll) { const H = HZD.horde, W = WL.horde; if (!hz('horde') || K.horde === false) return; // E574
   if (!K.horde) { K.horde = { at: wait(roll, H.mean, H.min), said: null }; return; } const left = K.horde.at - K.t;
   H.warn.forEach((w, i) => { if (~~K.horde.said <= i && left <= w * D.season) { K.horde.said = -~i; fire('say', W[i]); } }); if (left > 0) return;
-  if (!seat || !WAR.atWar(ME, 'out')) { K.horde = false; return; } const [fx, fy] = roll() < H.edge ? edgeSpot() : wildSpot(), n = H.n + H.perAge * SIDES[ME].age, j = () => between(rng, [-H.spread, H.spread]) * D.tile;
+  const S = D.players.filter((q) => !ECON.fell(q) && FK.seatOf(q) && WAR.atWar(q, 'out')), pw = (q) => WAR.power(WAR.armyOf(q)), q = S.reduce((a, p) => (pw(p) < pw(a) ? p : a), S[0]), seat = q != null && FK.seatOf(q); // E2520
+  if (!seat) { K.horde = false; return; } const [fx, fy] = roll() < H.edge ? edgeSpot() : wildSpot(), n = H.n + H.perAge * SIDES[q].age, j = () => between(rng, [-H.spread, H.spread]) * D.tile;
   for (let i = n; i--; ) { const k = near1([fx + j(), fy + j()], H.spread); if (~k) Object.assign(spawn(H.kinds[i % H.kinds.length], -1, k, rng), { home: seat, horde: true }); }
   fire('say', W.at(-1)); K.horde = false; }
 function arrivals() { if (K.t < K.wayT) return; K.wayT = K.t + J.every; const e = J.edge * D.tile, E = [[MID, B0 + e], [B1 - e, MID], [MID, B1 - e], [B0 + e, MID]], a = E[K.wayI++ % E.length]; // E575
@@ -1402,7 +1425,7 @@ function arrivals() { if (K.t < K.wayT) return; K.wayT = K.t + J.every; const e 
 function trample() { const R = ER.stampede, r = R.r * D.tile; for (const b of K.ev.cur.units) if (!b.gone) { unitsNear(b, r, (v) => { if (v.herd || !(v.hp > 0) || v.inside || dist(v, b) >= r) return; harm(v, R.trample, 'stampede'); v.hurtT = K.t; shove(v, (v.bx - b.bx) * R.shove, (v.by - b.by) * R.shove); if (v.hp <= 0) WAR.die(v, null, 'stampede'); }); // E577
   bldsNear(b.bx, b.by, R.field * D.tile, (t) => has(t, 'Soil') && t.done >= 1 && dist(t, b) < R.field * D.tile && !!(t.fert = Math.max(stat(t.code, t.side, 'soil'), t.fert - R.fert))); } }
 // E558
-const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, WASH = [], wash = (col, a) => { if (a >= BD.least) WASH.push([rgb(col), Math.min(1, a)]); }, flushWash = () => { if (!WASH.length) return; let a = 0, c = [0, 0, 0]; for (const [col, ai] of WASH) { c = c.map((v, i) => col[i] * ai + v * (1 - ai)); a = ai + a * (1 - ai); } ctx.fillStyle = css(c.map((v) => v / a), a); ctx.fillRect(0, 0, cw, ch); WASH.length = 0; }, rgb = (h) => h.match(/\w\w/g).map((x) => parseInt(x, 16)), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
+const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, WASH = [], wash = (col, a) => { if (a >= BD.least) WASH.push([rgb(col), Math.min(1, a)]); }, flushWash = () => { if (!WASH.length) return; let a = 0, c = [0, 0, 0]; for (const [col, ai] of WASH) { c = c.map((v, i) => col[i] * ai + v * (1 - ai)); a = ai + a * (1 - ai); } ctx.fillStyle = css(c.map((v) => v / a), a); ctx.fillRect(0, 0, cw, ch); WASH.length = 0; }, RGBS = new Map(), rgb = (h) => RGBS.get(h) || RGBS.set(h, h.match(/\w\w/g).map((x) => parseInt(x, 16))).get(h), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
 function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWidth = RP.line; ctx.strokeStyle = C.marks.ripple; ctx.beginPath();
   if (K.ice < ICE.steps) for (const L of lakes) { const lx = L.x, ly = L.y * TILT; if (Math.abs(lx - cam.x) > w + L.r || Math.abs(ly - cam.y) > hh + L.r) continue; // E559
     for (let i = 0; i < RP.n; i++) { const a = i * RP.turn + K.t * RP.spin, r = L.r * (RP.from + RP.span * ((i * RP.step + K.t * RP.drift) % 1)), [x, y] = toScreen(L.x + Math.cos(a) * r, (L.y + Math.sin(a) * r) * TILT); ctx.moveTo(x - RP.w * z, y); ctx.quadraticCurveTo(x, y - RP.lift * z, x + RP.w * z, y); } }
@@ -1444,8 +1467,8 @@ const seenNow = (t, s) => { const V = visOf(s); if (t.kind !== 'bld') return V[c
 const rimSeen = (e, r, V, own) => { const k0 = tileAt(e.bx, e.by), c0 = cellK(k0), ci = c0 % NC_, cj = (c0 - ci) / NC_, R = Math.min(r / D.tile / SCELL, NC_); for (let a = 0; a < FOGW.rim; a++) { const th = (a / FOGW.rim) * Math.PI * 2, i = clamp(Math.round(ci + Math.cos(th) * R), 0, NC_ - 1), j = clamp(Math.round(cj + Math.sin(th) * R), 0, NC_ - 1), c = j * NC_ + i; if (V[c] - (own && own.has(c) ? 1 : 0) <= 0) return false; } return true; }; // E877
 let TOPV = 0; function look(dt) { seeT -= dt; const beat = seeT <= 0; if (!beat) return; if (topN !== topKey()) { tops(); cellTops(); TOPV++; } const all = units.filter((u) => !u.inside).concat(blds()); // E146
   if (FOGON) for (const s of D.players) { const V = visOf(s), X = expOf(s), C = CAST.get(s) || CAST.set(s, new Map()).get(s), live = new Set(), byCell = new Map();
-    for (const e of all) { if (e.side !== s || e.done < 1 || e.hp <= 0) continue; live.add(e); const r = sightOf(e), k = tileAt(e.bx, e.by), key = `${cellK(k)}|${Math.round(r / D.tile / SCELL)}|${Math.round(stat(e.code, e.side, 'eye'))}|${TOPV}`, c = C.get(e);
-      if (c && c.key === key) { if (!c.skip) byCell.set(key, e); continue; } const twin = byCell.get(key), drop = () => { if (c && !c.skip) for (const q of c.tiles) V[q]--; };
+    for (const e of all) { if (e.side !== s || e.done < 1 || e.hp <= 0) continue; live.add(e); const r = sightOf(e), k = tileAt(e.bx, e.by), key = `${cellK(k)}|${Math.round(r / D.tile / SCELL)}|${Math.round(stat(e.code, e.side, 'eye'))}|${s === ME ? TOPV : null}`, c = C.get(e); // E2641
+      if (c && c.key === key && !c.skip) { byCell.set(key, e); continue; } const twin = byCell.get(key), drop = () => { if (c && !c.skip) for (const q of c.tiles) V[q]--; }; // E2640
       if (twin || (c && rimSeen(e, r, V, c.skip ? null : new Set(c.tiles)))) { drop(); C.set(e, { key, tiles: [], skip: true }); continue; }
       drop(); const tiles = s === ME ? cast(e, r) : circle(e, r); for (const q of tiles) { V[q]++; X[q] = 1; } C.set(e, { key, tiles }); byCell.set(key, e); }
     for (const [e, c] of C) if (!live.has(e)) { if (!c.skip) for (const q of c.tiles) V[q]--; C.delete(e); } }
@@ -1473,12 +1496,12 @@ const inSight = (t, side = ME, eye) => !t || !SIDES[t.side] || !SIDES[side] || t
 function shadowVec(h) { const sun = clamp(K.alt / A.fade, 0, 1) * 0.35 * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, A.low) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
 function drawShadows(s) { // E152
   const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = C.sky.shadow;
-  for (const t of blds()) { const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue;
+  for (const t of blds()) { if (fire('hide', t)) continue; const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue; // E2642
     const n = t.n * D.tile, pts = [[t.i * D.tile, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile + n], [t.i * D.tile, t.j * D.tile + n]].map(([sx, sy]) => S(sx, sy, H[t.j * N + t.i]));
     const sh = pts.map(([px, py]) => [px + dx * h * s, py + dy * h * s]); ctx.beginPath(); // E153
     for (const q of [pts, sh, [pts[0], pts[1], sh[1], sh[0]], [pts[1], pts[2], sh[2], sh[1]], [pts[2], pts[3], sh[3], sh[2]], [pts[3], pts[0], sh[0], sh[3]]]) q.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
     ctx.fill(); }
-  for (const u of units) { if (u.inside || !inSight(u)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18, f = s * FIG();
+  for (const u of units) { if (u.inside || !inSight(u) || (u.veil && u.side !== ME)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18, f = s * FIG();
     ctx.beginPath(); ctx.ellipse(x + (dx * h * f) / 2, y + (dy * h * f) / 2, Math.max(4 * f, (Math.hypot(dx, dy) * h * f) / 2), 2.5 * f, Math.atan2(dy, dx), 0, A.round * RAD); ctx.fill(); }
   const [tr, or] = DRS.shade.r; if (DRAW.lvl < DRW.lv.shadows) { ctx.beginPath(); for (const t of things) { const h = t.kind !== 'bld' && !t.inner && PDR.nodeH[(KIND[t.kind] || {}).look]; if (!h) continue; const [x, y] = toScreen(t.vx, t.vy), r = (treeAt(t.k) ? tr : or) * s * t.size * artOf(t.kind), L = Math.hypot(dx, dy) * h * s * artOf(t.kind); if (x < -L || x > cw + L || y < -L || y > ch + L) continue; // E623
     ctx.moveTo(x + r, y); ctx.ellipse(x + (L / Math.hypot(dx, dy)) * dx * DRS.shade.lean, y + (L / Math.hypot(dx, dy)) * dy * DRS.shade.lean, L * DRS.shade.lean + r, Math.max(r * DRS.shade.wide, r * TILT), Math.atan2(dy, dx), -Math.PI, Math.PI); } ctx.fill(); }
@@ -1559,7 +1582,7 @@ function rims(L, z, nt) { if (!L.length || nt < LGT.dark) return; const R = LGT.
       x2.drawImage(flat(c, `rgb(${FLAME_RGB[kind]})`), 0, 0); g.addColorStop(0, rgba(FLAME_RGB[kind], 0)); g.addColorStop(DRW.half, rgba(FLAME_RGB[kind], 0)); g.addColorStop(1, rgba(FLAME_RGB[kind], 1)); x2.globalCompositeOperation = 'destination-in'; x2.fillStyle = g; x2.fillRect(0, 0, c.width, c.height); RIMS.set(id, rc); fitCache(RIMS, GC.sprites, rc); }
     ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = Math.min(1, bi * R.gain * nt); ctx.drawImage(rc, bx, by, bw, bh); ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over'; };
   const s = z * FIG(); for (const u of units) { if (u.inside || (u.side !== ME && (!inSight(u) || u.veil))) continue; const [x, y] = toScreen(...vAt(u)); if (x < 0 || y < 0 || x > cw || y > ch) continue; lit(unitSprite(u, s), x, y, s); }
-  for (const t of blds()) { if (t.done < 1 || fire('hide', t)) continue; const [x, y] = toScreen(t.vx, t.vy); if (x < -cw || y < -ch || x > cw + cw || y > ch + ch) continue; lit(bldSprite(t.code, t.col, z, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), x, y, z); } } // E966
+  for (const t of blds()) { if (t.done < 1 || has(t, 'Trap') || fire('hide', t)) continue; const [x, y] = toScreen(t.vx, t.vy); if (x < -cw || y < -ch || x > cw + cw || y > ch + ch) continue; lit(bldSprite(t.code, t.col, z, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), x, y, z); } } // E966
 function drawLights(z) { const nt = nightOf(), m = LGT.k * Math.sqrt(FLM.blaze.p) * z, at = (t) => { const [x, y] = toScreen(t.vx, t.vy); return x > -m && x < cw + m && y > -m && y < ch + m && { x, y }; }, [wx, wy, wf] = LGT.window.at, [la, ld] = LGT.lamp, [, ls, cx, cy, cs] = LGT.up;
   if (nt > LGT.night) { ctx.fillStyle = CLT.window; ctx.globalAlpha = LGT.window.a; for (const t of blds()) { const p = !(t.done < 1) && LGT.hearth.includes(SH[t.code].look) && !fire('hide', t) && at(t); if (p) ctx.fillRect(p.x + wx * z, p.y - wy * z + t.n * D.tile * wf * TILT * z * DRW.half, LGT.window.px * z, LGT.window.px * z); } ctx.globalAlpha = 1; }
   const OPEN = []; for (const [t, kind] of lightsOf()) { const p = at(t); if (!p) continue; const { x, y } = p, half = t.n * D.tile * DRW.half * z; if (!FLM[kind].covered && FLM[kind].s) OPEN.push([x, y, kind]);
@@ -1582,13 +1605,12 @@ on('draw', (c, z) => { const [life, r0, gr, lw] = STG.rip; c.save(); c.lineWidth
 on('over', (c) => { const [life, al] = STG.flash, a = K.t - whiteT; if (a >= 0 && a < life) { c.save(); c.globalAlpha = al * (1 - a / life); c.fillStyle = CLT.flash; c.fillRect(0, 0, cw, ch); c.restore(); } drawMini(c); });
 // E613
 let FONT = null;
-const headFont = () => { const T = fromBook('screen').type; return `${T.head[0]} ${T.head[1]}px "${T.ui}", sans-serif`; }; // E867
 const mapFont = () => { const b = FONT || (FONT = getComputedStyle(document.body)); return `${b.fontWeight} ${LBL.px}px ${b.fontFamily}`; };
 function tag(c, text, x, y) { const [pad, edge, rise, hi, inset, nudge] = LBL.pad; c.save(); c.font = mapFont(); c.textAlign = 'left'; const w = c.measureText(text).width + pad; x = clamp(x - w * DRW.half, edge, cw - w - edge);
   c.fillStyle = CMN.pill; c.fillRect(x, y - rise, w, hi); c.fillStyle = CDR.white; c.fillText(text, x + inset, y + nudge); c.restore(); }
 function idleMark(x, y, s, ch, dx) { const [lw] = DRS.mark.line; ctx.font = mapFont(); ctx.textAlign = 'center'; ctx.fillStyle = CDR.mark; ctx.strokeStyle = CDR.shade; ctx.lineWidth = lw; ctx.strokeText(ch, x + dx * s, y); ctx.fillText(ch, x + dx * s, y); }
 // E614
-const bar = (x, y, w, f, col) => { const B = SPRITE.marks.bar; ctx.save(); ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - w * DRW.half, y, w, B.h); ctx.restore(); ctx.fillStyle = col; ctx.fillRect(x - w * DRW.half, y, w * f, B.h); };
+const bar = (x, y, w, f, col) => { const B = SPRITE.marks.bar, a = ctx.globalAlpha; ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - w * DRW.half, y, w, B.h); ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(x - w * DRW.half, y, w * f, B.h); }; // E2404
 const stageOf = (k, tall) => { const [s1, s2] = DRS.site.frame.stages, from = tall ? s2 : s1; return [tall ? clamp((k - s1) / (s2 - s1), 0, 1) : 0, clamp((k - from) / (1 - from), 0, 1)]; }; // E1074
 function drawBld(t, x, y, s, dots) { const c = bldSprite(t.code, t.col, s, ...levelOf(t), !dots, SIDES[t.side] && SIDES[t.side].civ), w = t.n * D.tile * s, top = c.ay * s, S0 = DRS.site, [bw, blift, mlift] = S0.bar, [iz] = DRS.mark.idle;
   if (t.done < 1) { if (dots) return; const T = D.tile, n = t.n, d = w * TILT, h = H[t.j * N + t.i], pts = [[t.i, t.j], [t.i + n, t.j], [t.i + n, t.j + n], [t.i, t.j + n]].map(([i, j]) => S(i * T, j * T, h)), F = S0.frame, [s1] = F.stages, k = Math.max(0, t.done); // E615
@@ -1651,7 +1673,7 @@ on('drop', (p) => p.mode === 'mini');
 const MDW = D.meadow, MDC = C.meadow, PL = D.paper, MLAND = new Uint8Array(N * N), MGRASS = new Uint8Array(N * N), MTWI = new Float32Array(N * N), MDRIFT = new Float32Array(N * N), LIGHT = document.createElement('canvas'), SNOWP = new Map(), SEASON = { key: '', col: PC.grass }; // E900
 let MBLOOM = [], BLOOMY = NaN, GLINTS = [];
 const wetAt = (k) => K.wet * Math.max(0, 1 + MDW.twi * MTWI[k]), snowAt = (k) => K.snow * MDRIFT[k], phaseOf = () => (yt() / D.season) % TREE.year; // E804
-const pressOf = (u) => { const b = SH[u.code], f = G.tread[b.mount || b.body] || G.tread.person; return ((massOf(u.code) + (u.load || 0) * W.carried.kg + (u.cargo ? W.load.kg : 0)) * D.g) / (f.area * f.feet); }, STEP0 = Math.log((W.person.kg * D.g) / (G.tread.person.area * G.tread.person.feet) / G.soil.pa), tread = (u) => Math.max(0, Math.log(pressOf(u) / (G.soil.pa * (1 - G.soil.soft * Math.min(1, wetAt(u.k)))))) / STEP0; // E805
+const pressOf = (u) => { const b = SH[u.code], f = G.tread[b.mount || b.body] || G.tread.person; return ((massOf(u.code) + (u.load || 0) * W.carried.kg) * D.g) / (f.area * f.feet); }, STEP0 = Math.log((W.person.kg * D.g) / (G.tread.person.area * G.tread.person.feet) / G.soil.pa), tread = (u) => Math.max(0, Math.log(pressOf(u) / (G.soil.pa * (1 - G.soil.soft * Math.min(1, wetAt(u.k)))))) / STEP0; // E805
 const bloomAt = (kind, ph) => { const [a, b] = MDW.bloom[kind], f = MDW.flowers.fade; return clamp((ph - a) / f, 0, 1) * clamp((b - ph) / f, 0, 1); };
 function makeSoil() { // E800
   const r = dice(seed + MDW.seed), T = D.tile, TAU = Math.PI + Math.PI, land = [], half = 1 / 2, GRASS = GR;
@@ -1716,17 +1738,18 @@ function paintWoods() { const s = cam.z, M = D.landCache.margin, T = []; for (le
   T.sort((a, b) => a.vy - b.vy); for (const t of T) { const [x, y] = toScreen(t.vx, t.vy), z = s * treeZ(t); blit(nodeSprite(t.kind, t.v, z, t.wide), x, y, z); } }
 const drawWoods = () => slideSheet(WOODSH, [DEEPV, Math.floor((yt() / D.season) * TREE.stages.length), treeLook(0)].join(), paintWoods); // E159
 const COVER = new Set(), TMAP = { tv: -1, m: new Map() }, treeZ = (t) => artOf(t.kind) * t.size * (LEFT + GROW * Math.min(1, t.amount / (t.full ?? KIND[t.kind].amount))); // E988
-function covers(s) { if (TMAP.tv !== TV) { TMAP.tv = TV; TMAP.m.clear(); for (const t of things) if (t.deep) TMAP.m.set(t.k, t); } const W = D.woods, F = s * FIG(), at = (k) => [k % N, Math.floor(k / N), 1];
-  const live = [...units.filter((u) => !u.inside && (u.side === ME || inSight(u))).map((u) => [u, vAt(u), () => unitSprite(u, F), F, at(u.k)]), ...rest().map((t) => (t.kind === 'bld' ? [t, [t.vx, t.vy], () => bldSprite(t.code, t.col, s, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), s, [t.i, t.j, t.n]] : [t, [t.vx, t.vy], () => nodeSprite(t.kind, t.v, s * artOf(t.kind) * t.size, t.wide), s * artOf(t.kind) * t.size, at(t.k)]))];
+const RINGC = document.createElement('canvas'), pickRing = (x, y, rx) => { const c = RINGC, g = (DRS.glow * 3) / dpr + DRS.pick; if (c.rx !== rx || c.dpr !== dpr) { c.rx = rx; c.dpr = dpr; c.width = Math.ceil((rx + g) * 2 * dpr); c.height = Math.ceil((rx * DRW.half + g) * 2 * dpr); const q = c.getContext('2d'); q.setTransform(dpr, 0, 0, dpr, c.width / 2, c.height / 2); q.strokeStyle = q.shadowColor = C.foot.pick; q.lineWidth = DRS.pick; q.shadowBlur = DRS.glow; q.beginPath(); q.ellipse(0, 0, rx, rx * DRW.half, 0, 0, Math.PI * 2); q.stroke(); } if (c.width && c.height) ctx.drawImage(c, x - c.width / 2 / dpr, y - c.height / 2 / dpr, c.width / dpr, c.height / dpr); }; // E2541
+function covers(s, m) { if (TMAP.tv !== TV) { TMAP.tv = TV; TMAP.m.clear(); for (const t of things) if (t.deep) TMAP.m.set(t.k, t); } const W = D.woods, F = s * FIG(), at = (k) => [k % N, Math.floor(k / N), 1], near = (vx, vy) => { const [x, y] = toScreen(vx, vy); return x >= -m && x <= cw + m && y >= -m && y <= ch + m; }; // E2542
+  const live = [...units.filter((u) => !u.inside && (u.side === ME || inSight(u)) && near(...vAt(u))).map((u) => [u, vAt(u), () => unitSprite(u, F), F, at(u.k)]), ...rest().filter((t) => !has(t, 'Trap') && near(t.vx, t.vy)).map((t) => (t.kind === 'bld' ? [t, [t.vx, t.vy], () => bldSprite(t.code, t.col, s, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), s, [t.i, t.j, t.n]] : [t, [t.vx, t.vy], () => nodeSprite(t.kind, t.v, s * artOf(t.kind) * t.size, t.wide), s * artOf(t.kind) * t.size, at(t.k)]))];
   for (const [u, v, spr, f, [i, j, n]] of live) { const [x, y] = toScreen(...v), b0 = boxOf(spr(), x, y, f), [bx, by, bw, bh] = b0; if (bx > cw || by > ch || bx + bw < 0 || by + bh < 0) continue;
     for (let jj = j - W.cover; jj < j + n + W.cover; jj++) for (let ii = i - W.cover; ii < i + n + W.cover; ii++) { const t = TMAP.m.get(jj * N + ii); if (!t || COVER.has(t) || !(t.vy > u.vy)) continue; const [tx, ty] = toScreen(t.vx, t.vy), z = s * treeZ(t); if (meets(b0, boxOf(nodeSprite(t.kind, t.v, z, t.wide), tx, ty, z))) { COVER.add(t); if (KIND[u.kind] && KIND[u.kind].yield) COVERED.add(u); } } } }
 function drawThings() {
-  const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy); let n = 0;
+  const s = cam.z, dots = s * D.tile < D.lod, m = 70 * s, us = units.slice().sort((a, b) => a.vy - b.vy), PK = new Set(pick); let n = 0;
   const unit = (u) => { if (!show.U || u.inside || (u.side !== 0 && (!inSight(u) || u.veil))) return; const [x, y] = toScreen(...vAt(u)); if (x < -m || x > cw + m || y < -m || y > ch + m) return;
-    if (!dots) { const R = C.foot; ctx.strokeStyle = pick.includes(u) ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : isIdle(u) && !moving(u) ? R.idle : R.work; const on = pick.includes(u); ctx.lineWidth = on ? DRS.pick : DRS.foot; ctx.shadowColor = R.pick; ctx.shadowBlur = on ? DRS.glow : 0; ctx.beginPath(); ctx.ellipse(x, y, DRS.ring * s * FIG(), DRS.ring * DRW.half * s * FIG(), 0, 0, Math.PI * 2); ctx.stroke(); ctx.shadowBlur = 0; } // E766
+    if (!dots) { const R = C.foot, on = PK.has(u); ctx.strokeStyle = on ? R.pick : u.side !== ME ? (u.side >= 0 ? SIDES[u.side].col : R.wild) : isIdle(u) && !moving(u) ? R.idle : R.work; ctx.lineWidth = on ? DRS.pick : DRS.foot; ctx.shadowColor = R.pick; ctx.shadowBlur = 0; if (on) pickRing(x, y, DRS.ring * s * FIG()); else { ctx.beginPath(); ctx.ellipse(x, y, DRS.ring * s * FIG(), DRS.ring * DRW.half * s * FIG(), 0, 0, Math.PI * 2); ctx.stroke(); } } // E766
     // E855
     if (dots) rect(x - 1, y - 1, 2, 2, u.side >= 0 ? SIDES[u.side].col : C.white); else { drawUnit(u, x, y, s * FIG()); if (u.side === ME && !inWoods(u.k)) MINE.push({ u, x, y, z: s * FIG() }); } }; // E160
-  MINE.length = HID.length = 0; COVER.clear(); COVERED.clear(); if (!dots) { drawWoods(); drawShadows(s); covers(s); }
+  MINE.length = HID.length = 0; COVER.clear(); COVERED.clear(); if (!dots) { drawWoods(); drawShadows(s); covers(s, m); }
   for (const t of things) {
     while (n < us.length && us[n].vy <= t.vy) unit(us[n++]);
     if (t.deep && !dots && !COVER.has(t) && !K.burn.has(t)) continue;
@@ -1767,7 +1790,7 @@ function hitAt(px, py) { // E164
   const vx = cam.x + (px - cw / 2) / cam.z, vy = cam.y + (py - ch / 2) / cam.z, [sx, sy] = fromBoard(vx, (vy + D.land * UP) / TILT), i = Math.floor(sx / D.tile), j = Math.floor(sy / D.tile), k = i < 0 || j < 0 || i >= N || j >= N ? -1 : j * N + i, r = Math.max(TO.hit, TO.hitZ * cam.z * FIG());
   let near = null; for (const u of units) if (!u.inside && (u.side === ME || (inSight(u) && !u.hid && !u.veil))) { const [x, y] = toScreen(...vAt(u)), d = Math.hypot(x - px, y - TO.lift * cam.z * FIG() - py); if (d < r && (!near || d < near[1])) near = [u, d]; } // E725
   if (near && pick.length && near[0].side === ME && !pick.includes(near[0])) { let fd = Infinity; for (const t of things) { if (t.kind === 'bld' || t.gone) continue; const [x, y] = toScreen(t.vx, t.vy); fd = Math.min(fd, Math.hypot(x - px, y - py)); } if (near[1] > Math.max(TO.armed, TO.hitZ * cam.z * FIG()) || (fd < TO.find && fd < near[1])) near = null; } // E1040
-  if (!near) { let top = null; for (const t of things) { if (t.kind !== 'bld' || fire('hide', t)) continue; const [x, y] = toScreen(t.vx, t.vy), c = bldSprite(t.code, t.col, cam.z, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), f = cam.z / c.q, X = (px - x + c.ax * cam.z) / f, Y = (py - y + c.ay * cam.z) / f; if (X < 0 || Y < 0 || X >= c.width || Y >= c.height || (top && top.vy > t.vy)) continue; if (c.getContext('2d').getImageData(Math.floor(X), Math.floor(Y), 1, 1).data.at(-1)) top = t; } if (top) return [top.j * N + top.i, null]; } // E864
+  if (!near) { let top = null; for (const t of things) { if (t.kind !== 'bld' || has(t, 'Trap') || fire('hide', t)) continue; const [x, y] = toScreen(t.vx, t.vy), c = bldSprite(t.code, t.col, cam.z, ...levelOf(t), true, SIDES[t.side] && SIDES[t.side].civ), f = cam.z / c.q, X = (px - x + c.ax * cam.z) / f, Y = (py - y + c.ay * cam.z) / f; if (X < 0 || Y < 0 || X >= c.width || Y >= c.height || (top && top.vy > t.vy)) continue; if (c.getContext('2d').getImageData(Math.floor(X), Math.floor(Y), 1, 1).data.at(-1)) top = t; } if (top) return [top.j * N + top.i, null]; } // E864
   if (!near && pick.length && !things.some((t) => t.k === k && t.kind !== 'bld')) { let best = null; for (const t of things) { if (t.kind === 'bld' || t.gone) continue; const [x, y] = toScreen(t.vx, t.vy), d = Math.hypot(x - px, y - py); if (d < TO.find && (!best || d < best[1])) best = [t, d]; } if (best) return [best[0].k, null]; } // E935
   return [k, near && near[0]]; }
 const tap = (px, py) => fire('tap', ...hitAt(px, py), px, py);
@@ -1778,8 +1801,8 @@ on('draw', (c) => { if (!press || press.moved) return; const f = (performance.no
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); camStop(); keepOn(); dirty(); }, { passive: false });
 // E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
-function start(sd, S = null) { FOR.fill(0); OCC.fill(0); MARSH.fill(0); NOWAY.clear(); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; DEEPV++; for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today(), !!S); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); }
-const boot = async () => { await openDb(); migrate(); slot = Number(STORE.get(NOW)) || 0; if (BC) BC.postMessage(TAB.id); for (const [n, k] of (TEST ? [] : slotKeys()).entries()) { const S = openSave(k); if (!S) continue; try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); if (n) fire('say', WS.older.replace('{why}', saveWhy || WS.saveGone)); return; } catch (e) { saveWhy = String(e.message || e).split('\n')[0]; fault(e); } } start(TEST ? D.testField.seed : null); }; // E662
+function start(sd, S = null) { FOR.fill(0); OCC.fill(0); MARSH.fill(0); NOWAY.clear(); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.flood = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; DEEPV++; for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today(), !!S); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); } // E2620
+const boot = async () => { await openDb(); migrate(); slot = Number(STORE.get(NOW)) || 0; if (BC) BC.postMessage(TAB.id); for (const [n, k] of (TEST ? [] : slotKeys()).entries()) { const S = openSave(k); if (!S) continue; try { start(null, S); MENU.S.tab = 'Back'; pause(true); MENU.render(true); if (n) fire('say', WS.older.replace('{why}', saveWhy || WS.saveGone)); return; } catch (e) { saveWhy = String(e.message || e).split('\n')[0]; fault(e); } } start(TEST ? D.testField.seed : null); if (saveWhy) fire('say', WS.lost.replace('{why}', saveWhy)); }; // E662
 addEventListener('resize', resize);
 window.FK = { layer: (bx, by) => layerOf(tileAt(bx, by)), roads: () => ROADS, lands: () => LANDS.n || 0, bar, harm, jobWas: (u) => ({ ...jobRec(u) }), isIdle, jobOdd: () => [...ODD], glades: () => GLADES, cover: (k) => FOR[k] && !STRIP[k], inWoods, woodsLine: (a, t) => { const [i0, j0] = cellOf(a), [i1, j1] = cellOf(t), n = Math.max(Math.abs(i1 - i0), Math.abs(j1 - j0), 1); let w = 0; for (let s = 0; s <= n; s++) if (inWoods(Math.round(j0 + ((j1 - j0) * s) / n) * N + Math.round(i0 + ((i1 - i0) * s) / n))) w++; return (w * Math.hypot(i1 - i0, j1 - j0) * D.tile) / (n + 1) / D.upm; }, fog: (on) => { FOGON = on; VIS.clear(); CAST.clear(); fogPaint(); }, fogOn: () => FOGON, bars, fam, exposure, clearIce, offIce, iceReport, year, onIce, evKnob, statRow, TK, glance, look, sightOf, tops, TOPS, camGo, camStop, followCam, lightsOf, kelvinRGB, flameLife, popC, popOf: (t) => popC((K.t - (DONE.get(t) ?? -Infinity)) / PS), mini: () => MINI, miniBox, miniAt, tag, DRAW, shed, dist, bought, flood, flooded, mudAt, rutOf, rutAt, RUTS, BANK, wear, moonPhase, D, A, C, W, G, HB, SPRITE, SH, ref, lay, stamp, DANGER, reach, reached, byLake, levelOf, Z1, land: () => land, TEST, save, readSave, store: STORE, pack, refill, resume: (S) => start(null, S), pause, paused: () => paused, HZ, blds, has, ticked, seatOf: (side) => blds().find((t) => t.side === side && has(t, 'Seat')), fire, season, zmax: () => zmax, impact, iced, B, U, K, KIND, SIDES, OCC, H, FOR, MARSH, SEEN, N, MID, B0, B1, cam, show, ctx, on, dirty, keepOn, TILT, UP, toView, toBoard, fromBoard, toScreen, corner, tileAt, tileMid, walkable, free, inSight, findPath, footing, pace, walkTo, go, goBeside, goBy, build, unbuild, spawn, stageOf, take, vanish, rowOf, put, hz, level, levelMul, events, bolt, EVS, stat, learn, kinds, trains, civKind, aged, rankOf, rankName, kitOf, ranks, figure, dropFor, bldSprite, blit, LOOKBOX, WORK, SP, ring, atB, spotFor, toSpot, wayLen, place,
   yt, rng, every, relax, unitsNear, bldsNear, things: () => things, rest, WOODS, woodsNear, units: () => units, tap, hitAt, picked: () => (pick = pick.filter((u) => !u.gone && u.hp > 0)), sel: () => FK.picked()[0] || null, select: (u) => { pick = u == null ? [] : [].concat(u); }, seed: () => seed, size: () => [cw, ch], step, sim, task, finish, today, NS_rng, seasonName: () => SEASONS[season()], clockOfDay: hhmm, restart: (daily) => { history.replaceState(null, '', daily ? location.pathname + location.search : '#' + Math.floor(Math.random() * 4294967296)); start(); }, reset: start }; // E166
