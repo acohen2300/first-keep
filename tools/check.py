@@ -385,6 +385,46 @@ async def walled():
         await run.step(pg, 40); shut = await pg.evaluate(SET); await run.step(pg, 20); first = await pg.evaluate(LOOK); await run.step(pg, 140)
         return shut, first, await pg.evaluate(LOOK)
 
+async def unqueued():
+    """Back on a Town Center queue of a villager then the next age takes the villager out: the age-up starts its whole time and does not finish on the next step (Nov 21 review of econ.js, E931)."""
+    SET = """(() => { const h = fk.seatOf(0), v = units.find((u) => u.side === 0 && fk.has(u, 'Gather')).code, a0 = fk.SIDES[0].age; if (!ECON.queue(h, v)) { h.q = [v]; h.qt = ECON.timeOf(0, v); } const up = ECON.ageUp(0); window.ZUQ = { h, a0 }; return [h.q.length, up]; })()"""
+    LOOK = "(() => { const { h, a0 } = ZUQ; return [fk.SIDES[0].age - a0, h.q.length, Math.round(h.qt), h.q.length ? Math.round(ECON.timeOf(0, h.q[0])) : null]; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); q = await pg.evaluate(SET); await run.step(pg, 1)
+        await pg.evaluate("ECON.unqueue(ZUQ.h, 0)"); await run.step(pg, 1)
+        return q, await pg.evaluate(LOOK)
+
+async def camp_crew():
+    """One soldier alone raises a camp piece 45 tiles or more from every other soldier: its crew does not grow step on step, and in ten seconds the piece rises at one soldier's hands (D279 build x campbuild, to D126's crew power), not slower and slower (Nov 21 review of econ.js, E2560)."""
+    SET = """(() => { const h = fk.seatOf(0), N = fk.N, T = fk.D.tile, [code] = fk.bought('House'), A = units.filter((v) => v.side === 0 && WAR.armed(v)); let b = null;
+  for (let r = 45; r < 90 && !b; r += 3) for (let a = 0; a < 24 && !b; a++) { const i = Math.round(h.i + r * Math.cos(a * Math.PI / 12)), j = Math.round(h.j + r * Math.sin(a * Math.PI / 12)); const t = i > 0 && j > 0 && ECON.site(0, code, i, j); if (!t) continue; if (A.some((v) => fk.dist(v, t) < 45 * T)) fk.unbuild(t); else b = t; }
+  b.camp = { size: 'small' }; const foot = units.find((u) => u.side === 0 && fk.SH[u.code].class === 'Foot').code; let u = null;
+  for (let y = b.j - 1; y <= b.j + b.n && !u; y++) for (let x = b.i - 1; x <= b.i + b.n && !u; x++) { const k = y * N + x; if (fk.walkable(k) && !fk.OCC[k] && !units.some((v) => v.k === k)) u = fk.spawn(foot, 0, k, fk.rng); }
+  Object.assign(u, { job: 'raise', then: 'raise', site: b, goal: null, target: null, path: null }); window.ZCC = { b, u, d0: b.done }; return [Math.round(Math.min(...A.map((v) => fk.dist(v, b))) / T), fk.atB(u, b)]; })()"""
+    LOOK = "(() => { const { b, u, d0 } = ZCC, T1 = fk.stat(b.code, 0, 'build'), hand = fk.D.camp.build * fk.stat('', 0, 'campbuild'); return [Math.round(b.crew || 0), +(b.done - d0).toFixed(4), +((hand ** fk.D.crew) * 10 / T1).toFixed(4), units.filter((v) => v.site === b && v.job === 'raise').length, units.filter((v) => v.target === b).length, u.job]; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 10)
+        return s, await pg.evaluate(LOOK)
+
+async def age_lost():
+    """A second Town Center stands; the one raising the age-up is razed: the side can start the age-up again at the other (Nov 21 review of econ.js, E2561)."""
+    SET = """(() => { const h = fk.seatOf(0), col = fk.SIDES[0].col; let h2 = null; for (let r = 12; r < 40 && !h2; r++) for (let a = -r; a <= r && !h2; a += 2) h2 = fk.build(h.code, h.i + a, h.j + r, col) || fk.build(h.code, h.i + a, h.j - r, col);
+  h2.done = 1; h2.hp = h2.hpMax = WAR.hpMax(h2); const up = ECON.ageUp(0), at = fk.blds().find((t) => t.side === 0 && (t.q || []).some((c) => fk.D.ages.includes(c))); window.ZAL = at; return [up, !!at, fk.SIDES[0].aging > 0]; })()"""
+    RAZE = "(() => { WAR.die(ZAL, units.find((u) => u.side > 0 && fk.SIDES[u.side] && WAR.armed(u)) || null, 'razed'); return [fk.SIDES[0].aging, fk.blds().filter((t) => t.side === 0 && fk.has(t, 'Seat')).length, ECON.ageUp(0), fk.SIDES[0].aging > 0]; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 1)
+        return s, await pg.evaluate(RAZE)
+
+async def no_phantom():
+    """A villager sent to a new farm finds no path to it: the farm keeps no worker who is not there, shows as idle, and the next villager sent works it (Nov 21 review of econ.js, E222)."""
+    SET = """(() => { const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')), v = V[0], w = V[1], N = fk.N, [code] = fk.bought('Field'), k0 = fk.tileAt(v.bx, v.by), i0 = k0 % N, j0 = Math.floor(k0 / N); let f = null;
+  for (let r = 8; r < 30 && !f; r++) for (let d = -r; d <= r && !f; d++) f = ECON.site(0, code, i0 + d, j0 + r) || ECON.site(0, code, i0 + d, j0 - r);
+  f.done = 1; f.hp = f.hpMax; Object.assign(v, { load: 0, carry: null }); const g = fk.goBy; fk.goBy = () => false; ECON.gatherAt(v, f); fk.goBy = g; window.ZNP = { f, w }; return [v.target === f, ~~f.wk, ECON.idlePost(f)]; })()"""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 1)
+        took = await pg.evaluate("(() => { Object.assign(ZNP.w, { load: 0, carry: null }); ECON.gatherAt(ZNP.w, ZNP.f); return ZNP.w.target === ZNP.f; })()"); await run.step(pg, 2)
+        return s, took, await pg.evaluate("[ZNP.w.target === ZNP.f, ~~ZNP.f.wk]")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -439,6 +479,14 @@ async def check_game():
     rule('the alarm leaves nobody idle in the open: every building with room fills, the rest gather beside the town center', ac['n'] >= 40 and ac['open'] == 0 and ac['other'] == 0 and ac['inside'] == min(ac['room'], ac['n']) and not ae, f'{ac}, errors {ae}')
     ws, w0, w1 = await walled()
     rule('a soldier with no way to its foe strikes the enemy wall or gate in the way, and goes back to the foe once a piece falls (D400)', ws and w0['onWall'] > 0 and w1['stand'] < w1['of'] and (w1['onHouse'] > 0 or w1['house'] < 100), f'ring shut: {ws}; at 20 s on a wall {w0["onWall"]}, on the house {w0["onHouse"]}; at 160 s wall pieces standing {w1["stand"]} of {w1["of"]}, on the house {w1["onHouse"]}, house left {w1["house"]}%')
+    uq = await unqueued()
+    rule('taking the first item out of a queue restarts the clock: Back on a Town Center queue of a villager then an age leaves the age-up its whole time, not a free age', uq[0] == [2, True] and uq[1][:2] == [0, 1] and uq[1][2] >= uq[1][3] - 2, f'queue and age-up taken: {uq[0]}; ages gained, queue left, seconds left, its whole time: {uq[1]}')
+    cs, cc = await camp_crew()
+    rule('a camp piece raised by soldiers alone rises at their hands, as a villager\'s would: its crew does not grow step on step', cs[1] and cc[0] <= 1 and cc[3:] == [1, 0, 'raise'] and abs(cc[1] - cc[2]) <= cc[2] * 0.02, f'piece {cs[0]} tiles from the other soldiers, one beside it: {cs[1]}; crew, risen in 10 s, one soldier\'s 10 s, soldiers on it, villagers on it, his job: {cc}')
+    al, ar = await age_lost()
+    rule('a side whose Town Center falls while raising the age, with another standing, can start the age-up again at the other', al == [True, True, True] and ar[0] == 0 and ar[1] >= 1 and ar[2:] == [True, True], f'second Town Center, age-up taken and running: {al}; after the raze: aging, Town Centers left, age-up taken again, running: {ar}')
+    ns, nt, nw = await no_phantom()
+    rule('a villager with no path to a farm leaves no one counted on it: it shows idle and the next villager sent works it', ns == [False, 0, True] and nt and nw == [True, 1], f'on it, counted, idle after the failed walk: {ns}; the next taken: {nt}; on it and counted two seconds on: {nw}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Archers 8', 'Cavalry 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
