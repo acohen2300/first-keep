@@ -729,6 +729,7 @@ BOOK("comments", {
  "E660": {"text": "saves roll through D331's slots, one set per build folder, so live and a preview never share one; when storage is full the oldest goes to make room; a save that will not open is skipped and the one before opens"},
  "E661": {"text": "the game opened from a save: the fresh map from its seed, then the lists, the clock (before the job records, so each job is timed from the save, not from zero), the sides and the changes laid back, then each module's own"},
  "E662": {"text": "The opening: the game opens where you left it, newest save first, saying so if it had to open an older one, or if none would open and a new game began; the address never ends a match; ?test opens the test field on its own seed"},
+ "E2620": {"text": "a new game: the clock, the flood and the weather are reset before the map and units are made, so the last game's flood (still ahead of a clock back at zero) cannot close land, move a guard or an animal, and the same seed plays the same match after any other game"},
  "E663": {"text": "New game (Mid's applyScenario and testField): the scenario's buildings and people placed by the placing rules nearest their spot"},
  "E664": {"text": "A scenario (D330): the age, the store and the research for you (or every court), the relations, the buildings and villagers, the length"},
  "E665": {"text": "The test field (D333): you and one rival at war, the other two gone, every store full, both armies down the road from your Town Center"},
