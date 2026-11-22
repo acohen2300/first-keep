@@ -277,7 +277,7 @@ const w2 = () => { const n = SCR.mold.slots, k = SCR.wide.slots, g = SCR.mold.ga
 let acc = 0;
 function render(force) { if (!force && S.down) return; for (const k in ARGS) delete ARGS[k]; QB.length = 0; const r = read(); // E693
   const tbNew = put(topEl, topbar(r)); if (tbNew || force) ringMount(topEl);
-  if (r.result && S.tab !== 'Start') { S.tab = null; S.ghost = null; const you = r.result.winner === 0; $('card').className = 'on'; ui.classList.add('sheet'); put($('card'), `<h2>${EW.head[+!you]}</h2><p>${r.result.text}</p><div class="row">${vcell('new')}${vcell('copylog')}</div>`); $('panel').className = ''; return; }
+  if (r.result && S.tab !== 'Start') { S.tab = null; S.ghost = null; const you = r.result.winner === 0; $('card').className = 'on'; ui.classList.add('sheet'); if (put($('card'), `<h2>${EW.head[+!you]}</h2><p>${r.result.text}</p><div class="row">${vcell('new')}${vcell('copylog')}</div>`)) patches(); $('panel').className = ''; return; }
   if (S.subject && (S.subject.kind === 'unit' ? units().indexOf(S.subject) < 0 : things().indexOf(S.subject) < 0)) S.subject = null;
   const html = page(r) + (S.tab === 'Back' ? `<button class="ihr ${S.helpOpen ? 'open' : ''}" data-v="chev"><i class="chev" data-v="chev"></i>${rk(RS.verbs.help, 'lit')}${(S.tab === 'Start' ? civLine(civOf(S.opt.civ)) : WD.card.welcome).replace(/&/g, '&amp;').replace(/</g, '&lt;')}</button>` : ''), card = '', // E825
     M = sheet() ? null : mold(), rk6 = M ? mline(M) : '', bh = M ? mbase(M) : '', sig = html + card + S.tab + rk6 + bh; if (!force && sig === S.last) return; S.last = sig; // E955
