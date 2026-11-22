@@ -1241,5 +1241,6 @@ BOOK("comments", {
  "E2685": {"text": "A War order tapped on the map sends the same soldiers as the mission tile: the picked fighters, not the healers, priests and spies among them (review menu2.md 13, E1286)"},
  "E2686": {"text": "A remembered no-way is forgotten as soon as the land changes (a wall or building taken down or raised, a tree felled, ice or a flood): it is kept with WALKV, the ice and the flood, and answers only while they stand as they were (review v-routes.md 5); a breach no longer stays shut for 5 s"},
  "E2687": {"text": "Variety (Albert, Nov 22: every game played the same, towers in the same spots): a computer's site is drawn from every free place on the nearest ring that has one, by a draw seeded with the match, the side, the kind and how many it has, instead of always the first place found; the same seed still builds the same town"},
- "E2688": {"text": "A mission tapped with no troops picked does nothing and says Pick troops first (Albert, Nov 22 18:55): it picked the whole army and turned the eye off, so one soldier meant to move could become all of them"}
+ "E2688": {"text": "A mission tapped with no troops picked does nothing and says Pick troops first (Albert, Nov 22 18:55): it picked the whole army and turned the eye off, so one soldier meant to move could become all of them"},
+ "E2689": {"text": "Red box = set (Albert, Nov 22 18:55): a mission armed or just sent wears the red box, as the Mode tiles do; Exit buttons lose the red box they always wore, since nothing about Exit is set"}
 });
