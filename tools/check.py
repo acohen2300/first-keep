@@ -142,7 +142,7 @@ async def defends():
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate(CALM); await run.step(pg, 40); await pg.evaluate("(() => { const h = fk.seatOf(0); WAR.order(units.filter((u) => u.side === 0 && fk.SH[u.code].class), null, fk.tileAt(h.bx, h.by - 600)); })()"); await run.step(pg, 80)
         await pg.evaluate(RAID); await run.step(pg, 3)
-        for v in ('war||', 'mwho|Foot|', 'mord|defend|'): await pg.evaluate(TAP, v)
+        for v in ('war||', 'mwho|Foot|', 'mord|retreat|'): await pg.evaluate(TAP, v)
         await run.step(pg, 5)
         return await pg.evaluate(LOOK)
 
@@ -169,13 +169,13 @@ async def site_taps():
         return await pg.evaluate("[fk.things().includes(ZQS), MENU.S.subject === ZQS, document.querySelectorAll('.trash').length, /undefined/.test(document.body.innerText)]")
 
 async def picks_end():
-    """Every order ends the pick: a move and a defend from the War card (Hold is a Mode tile and keeps the pick), and villagers sent to a bush from the map."""
+    """Every order ends the pick: a move and a retreat from the War card (Hold is a Mode tile and keeps the pick), and villagers sent to a bush from the map."""
     TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return fk.picked().length; }"
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40); got = []
         for v in ('war||', 'mwho|Archers|'): got.append(await pg.evaluate(TAP, v))
         await pg.evaluate(TAP, 'mord|move|'); await pg.evaluate("fk.tap(70, 250)"); got.append(await pg.evaluate("fk.picked().length"))
-        got.append(await pg.evaluate(TAP, 'mwho|Foot|')); got.append(await pg.evaluate(TAP, 'mord|defend|'))
+        got.append(await pg.evaluate(TAP, 'mwho|Foot|')); got.append(await pg.evaluate(TAP, 'mord|retreat|'))
         await pg.evaluate(TAP, 'war||')
         got.append(await pg.evaluate("""(() => { const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).slice(0, 3), b = fk.things().filter((t) => t.kind === 'bush').sort((a, c) => fk.dist(a, V[0]) - fk.dist(c, V[0]))[0]; fk.select(V); MENU.render(true); fk.cam.x = b.vx; fk.cam.y = b.vy; MENU.render(true); const [x, y] = fk.toScreen(b.vx, b.vy); const n = fk.picked().length; if (fk.paused()) fk.pause(false); fk.tap(x, y); return [n, fk.picked().length, V.filter((u) => u.target === b).length]; })()"""))
         return got
@@ -488,7 +488,7 @@ async def check_game():
     foot, bow = await defends()
     rule('Defend sends the picked soldiers at whoever is attacking the town, and nobody else', foot > 0 and bow == 0, f'{foot} foot on the raiders five seconds on, {bow} archers')
     pe = await picks_end()
-    rule('every order ends the pick: a War move, a War defend, villagers sent to a bush', pe[2] == 0 and pe[4] == 0 and pe[5][0] == 3 and pe[5][1] == 0 and pe[5][2] > 0, f'picked before and after (archers, move, foot, defend, villagers [before, after, went]): {pe}')
+    rule('every order ends the pick: a War move, a War retreat, villagers sent to a bush', pe[2] == 0 and pe[4] == 0 and pe[5][0] == 3 and pe[5][1] == 0 and pe[5][2] > 0, f'picked before and after (archers, move, foot, retreat, villagers [before, after, went]): {pe}')
     rg = await rings()
     rule('an order at a foe draws no ring where the foe stood; a move keeps its ring', rg == [False, True], f'live orders, marked foe: {rg}')
     tk, tp = await told()
@@ -532,7 +532,7 @@ async def check_game():
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Archers 8', 'Cavalry 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
     mr, me, ma = await missions()
     rule('a mission tapped with nobody picked first picks All, then arms', ma == (24, True), f'picked, Move armed: {ma}')
-    rule('the mission row reads Attack, Move, Hold, Defend, Fall back, Retreat, then the bell tile', mr == ['Attack', 'Move', 'Hold', 'Defend', 'Fall back', 'Retreat', 'bell'], f'row: {mr}')
+    rule('the mission row reads Attack, Move, Defend, Fall back, Retreat, then the bell tile (Hold moved to Mode, Nov 22)', mr == ['Attack', 'Move', 'Defend', 'Fall back', 'Retreat', 'bell'], f'row: {mr}')
     rule('the eye: with the army out of view, tapped it drops the counts to the soldiers on screen and shows set; tapped again, all count', [w.split()[-1] for w, _ in me] == ['24', '0', '24'] and [on for _, on in me] == [False, True, False], f'All word and eye set, before and after two taps: {me}')
     cn, cf, cd = await courage('normal'), await courage('focused'), await courage('death')
     rule('courage on the War card: eight foot set upon by sixteen; Normal ones break, Focused hold three times the losses, To death never run', cn > 0 and cf < cn and cd == 0, f'broke after a minute: Normal {cn}, Focused {cf}, To death {cd}')
