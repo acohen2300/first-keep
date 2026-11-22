@@ -405,9 +405,11 @@ function stat(code, side, key) { // E280
 function fxRow(code, side) { const memo = FXC.get(side) || FXC.set(side, new Map()).get(side); return memo.get(code) || memo.set(code, new Map()).get(code); } // E1591
 function statRow(code, side) { const memo = fxRow(code, side), id = '*'; // E1591
   if (!memo.has(id)) memo.set(id, Object.fromEntries(Object.entries(D.stats[code] || {}).map(([k, v]) => [k, typeof v === 'number' ? stat(code, side, k) : v]))); return memo.get(id); }
-const kinds = (cls) => SHELLS.filter((c) => SH[c].class === cls && D.train[c] && !SH[c].civ), civKind = (c, side) => (SIDES[side] && SHELLS.find((k) => SH[k].replaces === c && SH[k].civ === SIDES[side].civ)) || c, trains = (c, side) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))).map((k) => civKind(k, side)), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
+const fromKnown = (make, code, side) => { const memo = fxRow(code, side); if (!memo.has(make)) memo.set(make, make(code, side)); return memo.get(make); }; // E2400
+const KINDS = new Map(), CIVK = new Map(); for (const c of SHELLS) { const e = SH[c], R = CIVK.get(e.replaces) || CIVK.set(e.replaces, new Map()).get(e.replaces); if (!R.has(e.civ)) R.set(e.civ, c); if (D.train[c] && !e.civ) (KINDS.get(e.class) || KINDS.set(e.class, []).get(e.class)).push(c); } // E2403
+const kinds = (cls) => KINDS.get(cls) || [], civKind = (c, side) => (SIDES[side] && CIVK.get(c)?.get(SIDES[side].civ)) || c, trains = (c, side) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))).map((k) => civKind(k, side)), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
 const TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), RANKS = {}, KITS = []; for (const [c, e] of Object.entries(BOOKS.tech)) { if (e.value.rank) (RANKS[e.value.rank.k] = RANKS[e.value.rank.k] || []).push(c); if (e.value.kit) KITS.push(c); } // E370
-const ranks = (code, side) => (RANKS[code] || []).filter((c) => (known.get(side) || new Set()).has(c)), rankOf = (code, side) => ranks(code, side).length, kitOf = (side, code) => KITS.filter((c) => SH[code].class && (known.get(side) || new Set()).has(c)).length;
+const ranks = (code, side) => (RANKS[code] || []).filter((c) => (known.get(side) || new Set()).has(c)), rankN = (code, side) => ranks(code, side).length, kitN = (code, side) => KITS.filter((c) => SH[code].class && (known.get(side) || new Set()).has(c)).length, rankOf = (code, side) => fromKnown(rankN, code, side), kitOf = (side, code) => fromKnown(kitN, code, side); // E2402
 const rankName = (code, side) => { const r = ranks(code, side); return r.length ? BOOKS.tech[r.at(-1)].value.rank.name : (SH[code] || {}).name; };
 function learn(side, id) { (known.get(side) || known.set(side, new Set()).get(side)).add(id); FXC.delete(side); for (const t of [...units, ...things]) if (t.side === side && t.hpMax) { const M = stat(t.code, side, 'hp'); t.hp *= M / t.hpMax; t.hpMax = M; } learnt(side, id); } // E281
 let last = 0, frameDt = 0, acc = 0; const TASKS = [], SIM = D.step; on('start', () => { acc = 0; TASKS.length = 0; });
@@ -518,8 +520,9 @@ g.lineTo(r0[0], r0[1]); g.closePath(); g.fillStyle = near; g.fill(); g.strokeSty
 return { ...r, top: ry }; } return r; }
 // E294
 let RES = null; const UPA = SPRITE.up, TECHAT = {}; for (const [c, e] of Object.entries(BOOKS.tech)) (TECHAT[e.value.at] = TECHAT[e.value.at] || []).push(c);
-const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level, k = known.get(t.side) || new Set(), at = TECHAT[t.code] || [], n = at.filter((c) => k.has(c)).length;
-  return [!L ? L : L.season ? season() : L.spent ? +!t.amount : L.flock ? t.sheep : L.age ? +((SIDES[t.side] || {}).age >= L.age) : [...k].filter((c) => BOOKS.tech[c].value.tier === art).length, +!!n + +(!!n && n >= at.length * UPA.half)]; };
+const tierOf = (code, side) => [...(known.get(side) || new Set())].filter((c) => BOOKS.tech[c].value.tier === B[code][3]).length, upOf = (code, side) => { const k = known.get(side) || new Set(), at = TECHAT[code] || [], n = at.filter((c) => k.has(c)).length; return +!!n + +(!!n && n >= at.length * UPA.half); }; // E2401
+const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level;
+  return [!L ? L : L.season ? season() : L.spent ? +!t.amount : L.flock ? t.sheep : L.age ? +((SIDES[t.side] || {}).age >= L.age) : fromKnown(tierOf, t.code, t.side), fromKnown(upOf, t.code, t.side)]; };
 function plinth(x0, x1, yf, h, d, k) { if (!RES) return; const { foot: F, shade, line, top, stone: [sw, sh, gap, edge], lift, rim: rl } = UPA;
   P_([[x0, yf], [x1, yf], [x1, yf - F], [x0, yf - F]], STONE, LINE, line); P_([[x1, yf], [x1 + k, yf - d], [x1 + k, yf - d - F], [x1, yf - F]], lit(STONE, shade), LINE, line);
   if (RES === top) for (let y = yf - gap; y > yf - h + edge; y -= gap) for (const x of [x0, x1 - sw]) P_([[x, y], [x + sw, y], [x + sw, y - sh], [x, y - sh]], lit(STONE, lift), LINE, rl); }
@@ -1591,7 +1594,7 @@ function tag(c, text, x, y) { const [pad, edge, rise, hi, inset, nudge] = LBL.pa
   c.fillStyle = CMN.pill; c.fillRect(x, y - rise, w, hi); c.fillStyle = CDR.white; c.fillText(text, x + inset, y + nudge); c.restore(); }
 function idleMark(x, y, s, ch, dx) { const [lw] = DRS.mark.line; ctx.font = mapFont(); ctx.textAlign = 'center'; ctx.fillStyle = CDR.mark; ctx.strokeStyle = CDR.shade; ctx.lineWidth = lw; ctx.strokeText(ch, x + dx * s, y); ctx.fillText(ch, x + dx * s, y); }
 // E614
-const bar = (x, y, w, f, col) => { const B = SPRITE.marks.bar; ctx.save(); ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - w * DRW.half, y, w, B.h); ctx.restore(); ctx.fillStyle = col; ctx.fillRect(x - w * DRW.half, y, w * f, B.h); };
+const bar = (x, y, w, f, col) => { const B = SPRITE.marks.bar, a = ctx.globalAlpha; ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - w * DRW.half, y, w, B.h); ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(x - w * DRW.half, y, w * f, B.h); }; // E2404
 const stageOf = (k, tall) => { const [s1, s2] = DRS.site.frame.stages, from = tall ? s2 : s1; return [tall ? clamp((k - s1) / (s2 - s1), 0, 1) : 0, clamp((k - from) / (1 - from), 0, 1)]; }; // E1074
 function drawBld(t, x, y, s, dots) { const c = bldSprite(t.code, t.col, s, ...levelOf(t), !dots, SIDES[t.side] && SIDES[t.side].civ), w = t.n * D.tile * s, top = c.ay * s, S0 = DRS.site, [bw, blift, mlift] = S0.bar, [iz] = DRS.mark.idle;
   if (t.done < 1) { if (dots) return; const T = D.tile, n = t.n, d = w * TILT, h = H[t.j * N + t.i], pts = [[t.i, t.j], [t.i + n, t.j], [t.i + n, t.j + n], [t.i, t.j + n]].map(([i, j]) => S(i * T, j * T, h)), F = S0.frame, [s1] = F.stages, k = Math.max(0, t.done); // E615
