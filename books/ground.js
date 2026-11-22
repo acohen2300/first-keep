@@ -1,4 +1,4 @@
-// Book · G Ground: what is underfoot. Each condition carries its friction (μ, foot on ground) and the sound a hoof makes on it. A tile's condition is read from the climate and the marsh (QBT). Edit here only.
+// Book · G Ground: what is underfoot. Each condition carries its friction: mu, how fast a sliding body stops on it (mu × g), and grip, a boot's grip on it. A tile's condition is read from the ice, the climate (snow, wet, flood), the marsh and the ruts (QBT). Edit here only.
 BOOK("ground", {
  "G5": {"key":"grass","value":{"mu":0.35,"grip":0.7},"name":"dry grass; a boot's grip on dry ground","cite":["N104","N18","N173"],"law":["QBT","QR"]},
  "G6": {"key":"mud","value":{"mu":0.25,"grip":0.45},"name":"mud: wet ground or marsh; a boot's grip on it","cite":["N105","N18","N173"],"law":["QBT","QR"]},

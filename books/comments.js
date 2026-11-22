@@ -1160,5 +1160,6 @@ BOOK("comments", {
  "E1486": {"text": "a building falls: everyone breaking a building of that side goes back to the foe it was cut off from, as told before; the way may be open now, and if not it strikes the next thing in the way"},
  "E1487": {"text": "out of reach and no path: look for one; none, the soldier breaches (E1485)"},
  "E1488": {"text": "the wall or gate first; no wall or gate on the line, the first other enemy building; nothing, none"},
- "E1489": {"text": "nothing to break: the old no way (logged, foe dropped, the told foe kept so it does not pick it again and again, waits wait path checks), then out of shooters' reach (E1484) or, out of reach already, it strikes an enemy building beside it"}
+ "E1489": {"text": "nothing to break: the old no way (logged, foe dropped, the told foe kept so it does not pick it again and again, waits wait path checks), then out of shooters' reach (E1484) or, out of reach already, it strikes an enemy building beside it"},
+ "E2080": {"text": "stepOk: may a walker step from a tile of height h (its hAt, which around reads once for all eight ways instead of once per way) to tile b: b is walkable and the rise is within the slope of repose (REPOSE, E7)"}
 });

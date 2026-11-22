@@ -1048,10 +1048,10 @@ on('tick', () => { if (!every([ICE.beat, 0])) return; const load = new Map(); fo
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
 const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : null), onIceOk = (k, who) => !CRACK.has(k) && ICE.load[who && onIce(who) ? 'fail' : 'safe'] * thick(k) ** 2 >= (who ? massOf(who.code) * (iceChoice(who) ? 1 : CROSS.ai) : W.person.kg) && !(who && (who.shy > K.t || (iceChoice(who) && CROSS.rules[iceChoice(who)].avoid))); // E1540
-const inWoods = (k) => !!FOR[k] && OCC[k] === 1, woodsIn = (who) => !!(who && who.code && (D.woods.enter[SH[who.code].mount || SH[who.code].body] || has(who, 'Fell')) && !(who.side === ME && iceOf(who) === 'around')), woodsDeep = (k) => D.ways.filter(([dx, dy]) => FOR[k + dy * N + dx]).length / D.ways.length; // E863
+const inWoods = (k) => !!FOR[k] && OCC[k] === 1, woodsIn = (who) => !!(who && who.code && (D.woods.enter[SH[who.code].mount || SH[who.code].body] || has(who, 'Fell')) && !(who.side === ME && iceOf(who) === 'around')), woodsDeep = (k) => { let n = 0; for (const [dx, dy] of D.ways) if (FOR[k + dy * N + dx]) n++; return n / D.ways.length; }; // E863
 const crossAt = (k) => iced(k) || inWoods(k), inCross = (u) => onIce(u) || inWoods(u.k); // E874
 const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || (iced(k) && onIceOk(k, who))) && (OCC[k] === 0 || OCC[k] === 3 || (inWoods(k) && woodsIn(who)) || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
-const stepOk = (a, b, who) => walkable(b, who) && Math.abs(hAt(a) - hAt(b)) <= REPOSE;
+const stepOk = (h, b, who) => walkable(b, who) && Math.abs(h - hAt(b)) <= REPOSE; // E2080
 const [ME] = D.players, PACE = D.pace, PAN = D.pace.pandolf, NEED = G.step, SLIP = G.slip; // E88
 function footing(u, to = u.k) { // E360
   const c = u.code, bare = clamp(G.ice.grip - ((G.ice.cold - G.ice.grip) * K.temp) / G.ice.at, G.ice.grip, G.ice.cold), mud = Math.max(MARSH[u.k], mudAt(u.k)), snow = Math.min(1, snowAt(u.k) / G.snow.full), d = G.grass.grip + (G.mud.grip - G.grass.grip) * mud;
@@ -1065,7 +1065,7 @@ function pace(u, g = footing(u)) { // E361
   return Object.entries(PACE.state).reduce((v, [k, f]) => (u[k] ? v * f : v), (inWoods(u.k) && SH[c].mount ? Math.min(v, D.woods.walk) : v) * (u.pacex ?? D.bases.pace) * evKnob('spd') * (1 - FAM.pace * (1 - (u.fam ?? 1)))) * (1 - (!!u.wary && (g.ice * (g.need - Math.min(g.need, g.on))) / g.need));
 }
 // E89
-function around(k, f, who) { const i = k % N, j = (k - i) / N; for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy, q = y * N + x; if (x < 0 || y < 0 || x >= N || y >= N || !stepOk(k, q, who)) continue; if (dx && dy && !(walkable(j * N + x, who) && walkable(y * N + i, who))) continue; f(q, dx && dy); } } // E91
+function around(k, f, who) { const i = k % N, j = (k - i) / N, h = hAt(k); for (const [dx, dy] of D.ways) { const x = i + dx, y = j + dy, q = y * N + x; if (x < 0 || y < 0 || x >= N || y >= N || !stepOk(h, q, who)) continue; if (dx && dy && !(walkable(j * N + x, who) && walkable(y * N + i, who))) continue; f(q, dx && dy); } } // E91
 const PF = { g: new Float32Array(N * N), came: new Int32Array(N * N), gen: new Int32Array(N * N), done: new Int32Array(N * N), hk: [], hf: [], n: null }; // E721
 const NOWAY = new Map(); function findPath(from, goal, near, most, who = null) { if (most != null) return searchPath(from, goal, near, most, who); const T = D.tries, key = `${who ? who.side : ''}|${who ? who.code : ''}|${Math.floor((from % N) / T.cell)}|${Math.floor(from / N / T.cell)}|${near}`; if (NOWAY.get(key) > K.t) return null; const p = searchPath(from, goal, near, T.far, who); if (!p) { if (NOWAY.size > T.keep) NOWAY.clear(); NOWAY.set(key, K.t + T.forget); } return p; } // E1309
 function searchPath(from, goal, near, most, who) { // E90
