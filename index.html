@@ -1359,7 +1359,7 @@ function drawSky(dt) { // E140
 // E552
 const FC = D.forecast, SKYW = fromBook('words').sky, FLD = D.flood, RU = D.ruts, RC = Math.ceil(N / RU.cell), RUTS = new Float32Array(RC * RC), BANK = new Uint8Array(N * N), HEAL = Math.exp(-RU.heal[0] / RU.tau);
 on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear', ev: {}, horde: null, sand: null, burn: new Set(), wayT: J.every, wayI: null, mirage: null, flashT: -Infinity }); sunAlt(); }); // E2622
-on('gone', (t) => { if (t.kind === 'unit') fallen(t); }); on('event', (e, t) => { if (e === 'fell' && t) burnt(t); });
+on('gone', (t) => { if (t.kind === 'unit' && t.why !== 'stood down') fallen(t); }); /* E2679 */ on('event', (e, t) => { if (e === 'fell' && t) burnt(t); });
 function ahead(was) { const A = K.ahead, lead = Math.round((stat('', ME, 'forecast') * FC.step) / HOUR), wet = (w, h) => h * HOUR >= D.dry * D.day && rng() < D.chain[+w]; K.wetHour = A.length ? A.shift() : wet(was, K.hour); // E553
   do A.push(wet([K.wetHour, ...A].at(-1), K.hour + A.length + 1)); while (A.length < lead); const [last, prev] = [K.wetHour, ...A].reverse(), n = Math.round((lead * HOUR) / FC.step), S = SKYW.signs; if (!lead || last === prev) return;
   fire('say', (last ? S.rain : S.clear).replace('{n}', n > 1 ? S.more.replace('{n}', n) : S.one)); }
@@ -1510,7 +1510,7 @@ function drawShadows(s) { // E152
 // E454
 let FALL = []; const FD = D.fallen, RD = D.radar, GL = D.glow, ETA = fromBook('words').alarm.eta, pos = (v) => v > -v; let glow = null, RADAR = null;
 on('start', () => { FALL = []; glow = RADAR = null; });
-on('gone', (u) => { if (u.kind === 'unit' && !u.under && FALL.length < FD.most && !FD.not.includes(SH[u.code].class) && (u.side === ME || inSight(u))) FALL.push({ u, t: K.t }); });
+on('gone', (u) => { if (u.kind === 'unit' && !u.under && u.why !== 'stood down' && FALL.length < FD.most && !FD.not.includes(SH[u.code].class) && (u.side === ME || inSight(u))) FALL.push({ u, t: K.t }); });
 on('event', (e, t, a) => { if (e === 'struck' && t.side === ME) glow = { t: K.t, col: a && SIDES[a.side] ? C.red : C.flame }; });
 on('draw', (c, s) => { FALL = FALL.filter((f) => K.t - f.t <= FD.secs); for (const f of FALL) { const a = K.t - f.t, u = f.u, [x, y] = toScreen(...vAt(u)), [, look] = U[u.code]; // E455
   c.save(); c.globalAlpha = Math.min(FD.fade, FD.secs - a) / FD.fade; c.translate(x, y); c.rotate((Math.min(FD.drop, a) / FD.drop) * Math.PI * FD.turn * -u.face); c.scale(u.face, u.face * u.face);

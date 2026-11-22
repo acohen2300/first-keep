@@ -1231,5 +1231,6 @@ BOOK("comments", {
  "E2675": {"text": "The goal ring round a target is round, measured as the reach is (edgeDist from the tile's middle), at least a man's eight neighbours (review combat.md 3): it was a square, so an archer or engine coming at a corner stopped on a ring tile out of reach and stood there, against a building for good"},
  "E2676": {"text": "The tapped man counts in his own group (review combat.md 4): unitsNear skips the one it measures from, so a front man was never his band's target and a pair read as a man alone"},
  "E2677": {"text": "Spice a caravan buys is priced for its own side, so the side's trade-price research (band) counts here as at the market (review econ.md 10)"},
- "E2678": {"text": "A ruins scroll teaches only research the finder's own civilization may learn, as researchWhy asks (review econ.md 12)"}
+ "E2678": {"text": "A ruins scroll teaches only research the finder's own civilization may learn, as researchWhy asks (review econ.md 12)"},
+ "E2679": {"text": "A soldier stood down at peace leaves without a death: no fall, no blood scar, not counted among the lost (review idx6.md 14); he is turned into a villager on the spot"}
 });
