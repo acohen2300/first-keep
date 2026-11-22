@@ -1032,7 +1032,7 @@ BOOK("comments", {
  "E1226": {"text": "send: Attack goes through the tap rows (a foe is fought, the ground marched to); Move marches to the spot whatever is there"},
  "E1227": {"text": "the Normal | Daily toggle on the new-game sheet"},
  "E1228": {"text": "a scenario is optional: a tap lights one, a second tap clears it (a normal game)"},
- "E1229": {"text": "the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) each tap on and off"},
+ "E1229": {"text": "the Rules pads: War Fog, Allies (today's Diplomacy) and Random (hazards rolled at random) each tap on and off; on a Daily, Random is off and cannot be set, like the hazard picks: the day's draw sets the hazards, and a roll would take numbers from the match's own dice, so the Daily would no longer be the same match for everyone"},
  "E1230": {"text": "whether a Rules pad is lit"},
  "E1231": {"text": "Albert, Nov 17 15:36 (The List 26 item 7): when a side reaches an age, every unit of its line upgrades to the next kind that age opens (AoE II's line upgrade), keeping its share of health and its job; the School's Teach is cut from the player's menus"},
  "E1234": {"text": "a tap on a ready book opens that building's card on Learn (Design 15 E): the book wins over what is under it, its tap area the slot; the book of the open card is gold with a white edge for as long as the card is open (N420)"},
