@@ -1179,5 +1179,6 @@ BOOK("comments", {
  "E2062": {"text": "the icons, each made once at load from the Screen book's icons (SN19)"},
  "E2063": {"text": "a dock's stock, laid at its site (the Shore tick): D218's amt × dock of its own, plus the amount of every fish find (the Catch tick) in its reach that no dock has claimed; each one counted is marked (shoal), so a shoal feeds one dock only"},
  "E2064": {"text": "a side's head count of the kinds asked (all by default): its units plus everyone waiting in its buildings' queues, a muster's plan counted one by one, so one queued already holds a place"},
+"E1311": {"text": "a villager with a load does not carry it to a drop-off while the alarm holds her (u.emg): the drop-off would send her back to work in the raid (review v-econ, Nov 21)"},
  "E1445": {"text": "the War button: opening the War card (his call 9, Nov 21 18:22) picks All when no soldier is picked, as the All word and a mission tapped with nobody picked do, and arms Attack when there are soldiers, so Attack glows and the hint says to tap the map; closing it drops the soldiers from the pick and resets the who-line"}
 });

@@ -243,7 +243,7 @@ FK.on('tick', (dt) => {
       if (up(t)) { t.hp = t.hpMax; if (t.side === ME || !FK.fogOn()) FK.wear(t); if (FK.has(t, 'Wonder')) { t.held = bell + D.wonderHold; tell(EW.built[+(t.side !== ME)], { m: Math.round(D.wonderHold / MINUTE), side: EW.sides[t.side] }); } if (t.side === ME) FK.fire('event', wallish(t) || FK.trains(t.code).some((c) => !FK.SH[c].ticks.includes('Gather')) ? 'builtWar' : 'built', t); } }
     else if (u.job === 'board') boardStep(u, t, dt);
     else if (u.job === 'wait') { u.wait -= dt; if (u.wait <= 0) { if (u.load) carry(u); else if (u.lost) look(u); else idle(u); } }
-    else if (isIdle(u) && u.load) carry(u);
+    else if (isIdle(u) && u.load && !u.emg) carry(u); // E1311
   }
   burn(dt); if (FK.every(FD.beat)) finds(); if (FK.every(D.minute)) lightning(); if (FK.every(D.beats.health)) health();
   if (FK.every(DG.beat)) { dangerMap(); watch(); sites(); homeIdle(); } if (FK.every(DG.look)) leave(); if (FK.every(FL.look)) for (const u of units()) if (FK.has(u, 'Gather') && SIDES[u.side]) fright(u, FK.seatOf(u.side)); if (FK.every(D.peaceBeat)) judge();
