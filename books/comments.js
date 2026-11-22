@@ -1238,5 +1238,6 @@ BOOK("comments", {
  "E2682": {"text": "The more tile counts what this page does not show (review menu1.md 11): it showed the same count on every page"},
  "E2683": {"text": "A finger on a button is kept by its pointer: a second finger touching the map or lifting no longer clears it, so the button under the thumb is not redrawn away (review menu2.md 11)"},
  "E2684": {"text": "A march picked up again walks to its goal as march() does, near it when the goal tile cannot be stood on (review v-routes.md 7): it asked for exactly the goal tile, so a march on a building never got there and each try searched the whole map"},
- "E2685": {"text": "A War order tapped on the map sends the same soldiers as the mission tile: the picked fighters, not the healers, priests and spies among them (review menu2.md 13, E1286)"}
+ "E2685": {"text": "A War order tapped on the map sends the same soldiers as the mission tile: the picked fighters, not the healers, priests and spies among them (review menu2.md 13, E1286)"},
+ "E2686": {"text": "A remembered no-way is forgotten as soon as the land changes (a wall or building taken down or raised, a tree felled, ice or a flood): it is kept with WALKV, the ice and the flood, and answers only while they stand as they were (review v-routes.md 5); a breach no longer stays shut for 5 s"}
 });
