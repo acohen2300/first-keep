@@ -612,7 +612,7 @@ BOOK("comments", {
  "E535": {"text": "its personality's buildings in order (D303 build); while saving, only the first; a second barracks or place to train when every line is full"},
  "E536": {"text": "faith and care: priests with an army, Zeal on the soldiers fighting, medics (Mid's think)"},
  "E537": {"text": "engines to break what soldiers cannot, by D291's cycle and the age's late engine"},
- "E538": {"text": "research while not saving: its personality's list in order, each through the first step it waits on; with the list done, any step every D291 research-th turn"},
+ "E538": {"text": "research while not saving: its personality's list in order, each through the first step it waits on; with the list done, any step every D291 research-th turn, all looked at in one slice (a slice a step stalled the turn up to 260 slices, about 6.5 s, review ai.md item 6)"},
  "E539": {"text": "the hands by need (QCM): the goal and what is due are the cost; the bottleneck is the yield with the longest time to afford it (food first when the famine runway is short)"},
  "E540": {"text": "a hand moves to the bottleneck from a yield the goal does not need whose store does not then run out, or from one whose time stays under the bottleneck's after the move"},
  "E541": {"text": "with nothing short, the personality's mix: no stone and less gold in the Stone age, no iron before the Classical, a Wonder-builder a little of everything"},

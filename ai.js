@@ -114,7 +114,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
   if (P.trade && s.age && armyN >= AT.caravan.army && !saving && count(side, MARKET) && mine(side, (c) => tick(c, 'Trade')) < AT.caravan.most && ECON.canPay(side, AT.caravan.cost)) train(side, kindOf('Trade'));
   yield; economy(side, P, h, saving, put); yield; chaseCrown(side, (c) => put(c, h, RG.build));
   yield; const spy = kindOf('Spy'); if (P.spy && mine(side, is(spy)) < AT.spy.most && ECON.canPay(side, AT.spy.cost)) train(side, spy);
-  if (!saving && !P.techs.some((k) => TK[k] && ECON.research(side, firstNeed(side, TK[k]) || TK[k])) && !((m.n = of(m.n) + 1) % AT.research)) for (const c of Object.keys(BOOKS.tech)) { if (ECON.research(side, c)) break; yield; } // E538
+  if (!saving && !P.techs.some((k) => TK[k] && ECON.research(side, firstNeed(side, TK[k]) || TK[k])) && !((m.n = of(m.n) + 1) % AT.research)) Object.keys(BOOKS.tech).some((c) => ECON.research(side, c)); // E538
   yield; if (!saving && WAR.knows(side, 'muster') && inArmy(side) + AT.muster <= aim(side)) { const want = (m.want = bestCounter(side)); if (want) ECON.muster(side, { [want]: AT.muster }); }
   if (!saving && inArmy(side) < aim(side) && vs.length >= P.early) { const want = (m.want = bestCounter(side)); if (want) train(side, want); }
   yield; const goal = goalOf(side, P, saving), all = ECON.addRes({ ...(goal ? goal.cost : {}) }, due), plan = needOf(side, vs, all, draw), famine = famineNear(side, plan, eat); // E539
