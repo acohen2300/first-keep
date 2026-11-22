@@ -330,6 +330,18 @@ async def thin_ice():
         got = await pg.evaluate('() => [window.__ice.drowned, HOLES.size]')
         await pg.evaluate(SET, 1.2); bears = await pg.evaluate(BEARS)
         return ways, got, bears, pg.errors[:2]
+async def alarmed():
+    """The alarm leaves nobody idle in the open: 50 villagers spread over the base, Shelter rung; 30 s on every building with room is full and the rest are beside the town center or still on their way (Albert's raid, Nov 21: 8 in, 30 idle, 15 walking)."""
+    SET = """(() => { const h = fk.seatOf(0), T = fk.D.tile, v0 = units.filter((u) => u.side === 0 && fk.has(u, 'Gather'))[0];
+  for (let i = 0; i < 44; i++) ECON.spawnBy(h, v0.code);
+  units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).forEach((u, i) => { const a = i * 2.4, r = (7 + (i % 12) * 2.2) * T; Object.assign(u, { bx: h.bx + Math.cos(a) * r, by: h.by + Math.sin(a) * r, path: null, load: 0, carry: null, target: null, job: 'idle' }); fk.place(u); }); })()"""
+    LOOK = """(() => { const h = fk.seatOf(0), V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather') && !u.gone), c = { n: V.length, inside: 0, walking: 0, open: 0, beside: 0, other: 0 };
+  for (const u of V) c[u.inside ? 'inside' : u.path || u.job === 'walk' || u.job === 'shelter' ? 'walking' : fk.isIdle(u) ? (fk.atB(u, h) ? 'beside' : 'open') : 'other']++;
+  c.room = fk.blds().filter((b) => b.side === 0 && ECON.up(b) && ECON.hold(b)).reduce((n, b) => n + ECON.hold(b), 0); return c; })()"""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); await pg.evaluate(SET); await run.step(pg, 1)
+        await pg.evaluate("ECON.alarm('shelter')"); await run.step(pg, 30)
+        return await pg.evaluate(LOOK), pg.errors[:2]
 
 async def check_game():
     a, gathered, people, errs = await play()
@@ -381,6 +393,8 @@ async def check_game():
     rule('a Train tap on a full line goes to the least busy barracks with room, says so in a note, and is refused only when every line is full', fl[1:5] == [fl[0], True, fl[0], 1] and fl[5] == fl[11] and fl[6:11] == [fl[0], False, fl[0], fl[0], 1] and not fe, f'line size, first filled, tap taken, the two lines, the note, second filled, last tap taken, the two lines, refused: {fl}; errors: {fe[:2]}')
     ti = await thin_ice()
     rule('thin ice: no soldier of any side gets a way onto ice too thin to bear him at the safe load, none drowns, the ice stays whole; ice that bears yours lets them on, not the computer\'s', ti is not None and ti[0] == [False] * 4 and ti[1] == [0, 0] and ti[2] == [True, False] and not ti[3], f'ways {ti and ti[0]}, drowned and holes {ti and ti[1]}, bears (yours, computer) {ti and ti[2]}, errors {ti and ti[3]}')
+    ac, ae = await alarmed()
+    rule('the alarm leaves nobody idle in the open: every building with room fills, the rest gather beside the town center', ac['n'] >= 40 and ac['open'] == 0 and ac['other'] == 0 and ac['inside'] == min(ac['room'], ac['n']) and not ae, f'{ac}, errors {ae}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
