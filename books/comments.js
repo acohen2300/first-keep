@@ -799,7 +799,6 @@ BOOK("comments", {
  "E864": {"text": "a tap anywhere on a building's drawn shape is the building: the front-most whose picture is solid under the finger (Albert, Nov 9 item 8.7)"},
  "E865": {"text": "a hold is only the box drag to pick many (Albert, Nov 9 item 8.5): nothing else listens for it"},
  "E866": {"text": "the menus' sizes, once: every px in the style read from the Screen book's css entry (SN35); a row word's tap area reaches up to the mold's slot from its 40 (N423)"},
- "E867": {"text": "words drawn on the map at the head type (SN20), never a size typed in the code"},
  "E868": {"text": "the sight map, per side: each tile counts the eyes on it (VIS), remembers being seen (EXPL); the buildings a side has seen stay as it saw them (MEM)"},
  "E869": {"text": "an eye's tiles: every tile in its reach whose ground, a body high, its line clears over the tops between (trees and buildings by height); cast again only when the eye steps to a new tile, its reach changes, or the tops change"},
  "E870": {"text": "seen now: a unit whose tile is in sight; a building any of whose corners is"},

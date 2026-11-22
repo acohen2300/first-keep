@@ -1582,7 +1582,6 @@ on('draw', (c, z) => { const [life, r0, gr, lw] = STG.rip; c.save(); c.lineWidth
 on('over', (c) => { const [life, al] = STG.flash, a = K.t - whiteT; if (a >= 0 && a < life) { c.save(); c.globalAlpha = al * (1 - a / life); c.fillStyle = CLT.flash; c.fillRect(0, 0, cw, ch); c.restore(); } drawMini(c); });
 // E613
 let FONT = null;
-const headFont = () => { const T = fromBook('screen').type; return `${T.head[0]} ${T.head[1]}px "${T.ui}", sans-serif`; }; // E867
 const mapFont = () => { const b = FONT || (FONT = getComputedStyle(document.body)); return `${b.fontWeight} ${LBL.px}px ${b.fontFamily}`; };
 function tag(c, text, x, y) { const [pad, edge, rise, hi, inset, nudge] = LBL.pad; c.save(); c.font = mapFont(); c.textAlign = 'left'; const w = c.measureText(text).width + pad; x = clamp(x - w * DRW.half, edge, cw - w - edge);
   c.fillStyle = CMN.pill; c.fillRect(x, y - rise, w, hi); c.fillStyle = CDR.white; c.fillText(text, x + inset, y + nudge); c.restore(); }
