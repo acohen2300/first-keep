@@ -283,6 +283,24 @@ async def pressed():
         await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
         return got, await pg.evaluate("document.querySelectorAll('.pr').length")
 
+async def thin_ice():
+    """Albert's log (Nov 21, seed 3382234986): soldiers drowned marching, as a crossing mode let them onto ice too thin to bear one of them. On the lake nearest your Town Center, ice at 0.8 of what bears a soldier at the safe load:
+    no soldier of any side, with a crossing mode or without, gets a way onto it, none drowns, and the ice stays whole; at 1.2 of it yours (normal) may step on and the computer's (ai of them) may not."""
+    FIND = """() => { const me = FK.ME ?? ME, seat = FK.seatOf(me), N = FK.N; let best = -1, land = -1, bd = Infinity;
+  for (let k = 0; k < N * N; k++) { if (!(FK.H[k] <= -FK.D.wade / 2 && DEP[k] >= FK.D.edge)) continue; let l = -1; for (const [dx, dy] of FK.D.ways) { const q = k + dy * N + dx; if (FK.H[q] > 0 && FK.walkable(q)) l = q; } if (l < 0) continue;
+    const [x, y] = FK.tileMid(k), d = Math.hypot(x - seat.bx, y - seat.by); if (d < bd) [bd, best, land] = [d, k, l]; }
+  const foe = Object.keys(FK.SIDES).map(Number).find((s) => s !== me); window.__ice = { me, foe, k: best, land, code: 'UM1', drowned: 0 }; FK.on('drown', () => window.__ice.drowned++); return best >= 0; }"""
+    SET = """(f) => { const T = window.__ice; FK.K.snow = 0; const h = Math.sqrt(massOf(T.code) / FK.D.ice.load.safe) * f; FK.K.fds = (onsetOf(T.k) + (h / FK.D.ice.alpha.bare) ** 2) * FK.D.day; }"""
+    SEND = """() => { const T = window.__ice, U = []; for (const s of [T.me, T.me, T.foe, T.foe]) { const u = FK.spawn(T.code, s, T.land, FK.rng); if (s === T.me) u.ice = 'normal'; U.push(u); } return U.map((u) => FK.go(u, T.k)); }"""
+    BEARS = """() => { const T = window.__ice, [a, b] = [T.me, T.foe].map((s) => FK.spawn(T.code, s, T.land, FK.rng)); a.ice = 'normal'; return [FK.walkable(T.k, a), FK.walkable(T.k, b)]; }"""
+    async with run.game(3382234986, test=True) as pg:
+        if not await pg.evaluate(FIND): return None
+        await pg.evaluate(SET, 0.8); ways = await pg.evaluate(SEND)
+        for _ in range(12): await pg.evaluate(SET, 0.8); await run.step(pg, 1)
+        got = await pg.evaluate('() => [window.__ice.drowned, HOLES.size]')
+        await pg.evaluate(SET, 1.2); bears = await pg.evaluate(BEARS)
+        return ways, got, bears, pg.errors[:2]
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -325,6 +343,8 @@ async def check_game():
     rule('every word floating over the map has its dark patch at the book strength, and a redrawn card keeps them in place', len(pg_) >= pn and all(abs(o - pm) < 0.01 for _, _, o in pg_) and pk, f'{len(pg_)} patches for {pn} troop words and the rest, strengths {sorted({o for _, _, o in pg_})}, same after a redraw: {pk}')
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
+    ti = await thin_ice()
+    rule('thin ice: no soldier of any side gets a way onto ice too thin to bear him at the safe load, none drowns, the ice stays whole; ice that bears yours lets them on, not the computer\'s', ti is not None and ti[0] == [False] * 4 and ti[1] == [0, 0] and ti[2] == [True, False] and not ti[3], f'ways {ti and ti[0]}, drowned and holes {ti and ti[1]}, bears (yours, computer) {ti and ti[2]}, errors {ti and ti[3]}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
