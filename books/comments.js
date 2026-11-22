@@ -732,6 +732,7 @@ BOOK("comments", {
  "E2620": {"text": "a new game: the clock, the flood and the weather are reset before the map and units are made, so the last game's flood (still ahead of a clock back at zero) cannot close land, move a guard or an animal, and the same seed plays the same match after any other game"},
  "E2621": {"text": "the ice's holes and cracks: none at a new game; they go in the save and come back on load, so broken ice is still broken and a crack still counts down after a reopen"},
  "E2622": {"text": "a new game starts with no flood, clear sky, no events, no mirage and the last flash long past, whatever the last game left (its clock is back at zero, so a mark from it would hold for its whole length)"},
+ "E2623": {"text": "a bolt is timed by the page's own wall clock, which a reload starts again, so bolts in a save are dropped on load: kept, they would never fade and cost work every frame unseen"},
  "E663": {"text": "New game (Mid's applyScenario and testField): the scenario's buildings and people placed by the placing rules nearest their spot"},
  "E664": {"text": "A scenario (D330): the age, the store and the research for you (or every court), the relations, the buildings and villagers, the length"},
  "E665": {"text": "The test field (D333): you and one rival at war, the other two gone, every store full, both armies down the road from your Town Center"},

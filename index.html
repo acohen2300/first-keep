@@ -1297,6 +1297,7 @@ function climate(dt) {
 // E136
 const wallT = () => performance.now() / DRW.ms, STK = D.strike.stroke, boltEnv = (b, age) => { let e = 0; for (let i = 0; i < b.n; i++) if (age >= i * STK.gap) e += Math.exp(-(age - i * STK.gap) / STK.fade); return Math.min(1, e); }; // E951
 const bolt = (vx, vy) => { const SF = D.strike.flash; K.bolts.push({ vx, vy, w: wallT(), n: STK.n[0] + Math.floor(glance() * (STK.n[1] - STK.n[0] + 1)), f: SF.bolt[0] + SF.bolt[1] * (1 - Math.min(1, Math.hypot(vx - cam.x, vy - cam.y) / D.upm / SF.near)), seed: glance() }); if (scarX) blot(vx + ox, vy + oy, ...SC.strike, SCAR.strike); fire('event', 'strike', { vx, vy }); }; // E576
+on('load', () => { K.bolts = []; }); // E2623
 function strike() { if (K.t - K.flashT < D.flashGap) return; const close = glance(); K.flashT = K.t;
   const SF = D.strike.flash; if (close > SF.close) { const vx = cam.x + (glance() - DRW.half) * (cw / cam.z), vy = cam.y + (glance() - DRW.half) * (ch / cam.z); bolt(vx, vy); jolt = { t: D.strike.shake, px: D.jolt.max }; } // E728
   else { K.flash = Math.max(K.flash, SF.sheet[0] + SF.sheet[1] * close); fire('event', 'strike', { vx: cam.x + (glance() - DRW.half) * SF.far * (cw / cam.z), vy: cam.y - ch / cam.z }); } } // E137
