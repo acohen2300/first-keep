@@ -1233,5 +1233,6 @@ BOOK("comments", {
  "E2677": {"text": "Spice a caravan buys is priced for its own side, so the side's trade-price research (band) counts here as at the market (review econ.md 10)"},
  "E2678": {"text": "A ruins scroll teaches only research the finder's own civilization may learn, as researchWhy asks (review econ.md 12)"},
  "E2679": {"text": "A soldier stood down at peace leaves without a death: no fall, no blood scar, not counted among the lost (review idx6.md 14); he is turned into a villager on the spot"},
- "E2680": {"text": "Taking something out of the lists twice takes out nothing more (review idx4.md 9): splice at indexOf -1 removed the last unit or thing, an unrelated one"}
+ "E2680": {"text": "Taking something out of the lists twice takes out nothing more (review idx4.md 9): splice at indexOf -1 removed the last unit or thing, an unrelated one"},
+ "E2681": {"text": "New game and Delete confirm only on a second tap that is not a double tap, as Demolish does; Delete disarms itself after a while (review menu1.md 4; Albert: no double taps)"}
 });
