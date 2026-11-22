@@ -1,4 +1,4 @@
-// Book · S Shells: everything you can tap, one row a code. A row names its layer, ticks its capabilities, and fills each slot with a pointer into another book (D measurements, W mass, sprites, sound). No number lives here.
+// Book · S Shells: everything you can tap, one row a code. A row names its layer (a label, not an amount: 100 a find, 110 a building, 120 a unit), ticks its capabilities, and fills each slot with a pointer into another book (D measurements, W mass, sprites, sound). No measured or chosen number lives here.
 BOOK("shells", {
  "R1": {"name": "Tree", "layer": 100, "find": "tree", "look": "tree", "body": "tree", "ticks": ["Yield"], "yield": "wood", "amount": "D53", "sound": "chop", "cite": ["N144"]},
  "R5": {"name": "Bush", "layer": 100, "find": "bush", "look": "bush", "body": "bush", "ticks": ["Yield", "Regrow"], "yield": "food", "amount": "D54", "sound": "pick", "cite": ["N144"]},
