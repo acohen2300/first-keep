@@ -1222,5 +1222,6 @@ BOOK("comments", {
  "E2666": {"text": "Hold is die in place (N565, Albert 09:35): a held soldier is never pulled off his spot by a nearby fight, nor joined into another group's move"},
  "E2667": {"text": "Re-forms a group where it stands, facing the way it faces, after its Mode changes on the War card (N565); a group that is fighting, routing or idle at home is left as it is"},
  "E2668": {"text": "The War card's Mode controller (N565): three formations (Line, Specialty, Wide; all but Line need Formations researched) and three courages (Normal, Focused, To death) for the picked soldiers; a tile is boxed when every picked soldier has it; a tap sets it and re-forms a group standing in the field"},
- "E2669": {"text": "A held soldier strikes the nearest foe within his reach, since the best foe the scan picks may stand out of it (N565: they fight where they stand)"}
+ "E2669": {"text": "A held soldier strikes the nearest foe within his reach, since the best foe the scan picks may stand out of it (N565: they fight where they stand)"},
+ "E2670": {"text": "A soldier walking but jammed in a crowd short of his place (D454, N566): first he finds his own way there off the shared lane, then he stands where he is, so the order arrives; drills and fighters are left alone"}
 });

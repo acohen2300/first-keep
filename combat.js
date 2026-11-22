@@ -146,9 +146,12 @@ let routSaid = -Infinity, homeT = 0, ordT = HU.beat; const sparks = [], tracers 
 function flee(u) { if (K.t > u.routAt + FK.stat(u.code, u.side, 'rout')) { Object.assign(u, { job: 'idle', routAt: null, mor: MO.after, path: null }); const f = nearest(u, FK.stat(u.code, u.side, 'sight')); if (f) fight(u, f); else if (u.goal != null && u.side === ME) Object.assign(u, { job: 'hold', goal: u.k }); else if (u.home) march(u, FK.tileAt(u.home.bx, u.home.by)); return; } // E395
   if (u.path || !due(u.rp)) return; u.rp = D.repath; const f = nearest(u, MO.flee), h = home(u.side) || u, [dx, dy] = f ? dir(u.bx - f.bx, u.by - f.by) : dir(h.bx - u.bx, h.by - u.by);
   if (FK.go(u, FK.tileAt(u.bx + dx * MO.run * T, u.by + dy * MO.run * T))) u.then = 'rout'; }
+function unjam(u, dt) { if (u.job !== 'march' || !u.path || u.target || u.drill || u.goal == null) { u.jam = u.jams = 0; u.best = null; return; } const d = gap(u, mid(u.goal)), J = D.jam; // E2670
+  if (u.best == null || d < u.best - J.gain) { u.best = d; u.jam = 0; return; } if (!u.mps || (u.jam += dt) < J.secs) return; u.jam = 0; u.best = null;
+  if (!u.jams++) march(u, u.goal); else Object.assign(u, { path: null, goal: u.k, job: 'hold', jams: 0 }); }
 function brain(u, dt, look) { // E396
   if (u.job === 'rout') { if (routing(u)) flee(u); else if (!u.path) u.job = 'idle'; return true; }
-  nerve(u, dt); if (routing(u)) return true; drillHold(u); if (u.amb && ambushTick(u)) return true;
+  nerve(u, dt); if (routing(u)) return true; drillHold(u); unjam(u, dt); if (u.amb && ambushTick(u)) return true;
   if (u.chg && u.chg < K.t) { u.chg = null; u.tire = CH.slow; } if (u.tire) u.tire = FK.relax(u.tire, D.bases.pace, CH.tired, dt); // E408
   if (u.hp < u.hpMax && !u.target && !u.unfed && FK.bldsNear(u.bx, u.by, D.shelter.r * T, (b) => b.side === u.side && FK.has(b, 'Shelter') && up(b) && gap(u, b) < D.shelter.r)) u.hp = FK.relax(u.hp, u.hpMax, u.hpMax / FK.stat(u.code, u.side, 'garrison'), dt);
   const s = stat(u), sight = FK.stat(u.code, u.side, 'sight'), atHome = isIdle(u) || (u.job === 'fight' && u.was == null), d = (v) => edgeDist(u, v); let t = u.target;
