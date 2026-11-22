@@ -213,6 +213,7 @@ BOOK("comments", {
  "E991": {"text": "the light between the ramp's points: a cubic Hermite with Fritsch-Carlson slopes, flat at both ends, so dusk and dawn fade without a corner (D369)"},
  "E992": {"text": "a computer's side sees in a plain circle of its sight: it knows what is there, no rays through woods and hills (Albert, Nov 11; the late game spent 43% of its logic casting rays for four sides)"},
  "E2640": {"text": "an eye that leans on another's sight (a twin in its cell, or its rim already seen) is looked at again every beat: when the eye it leaned on leaves or dies, it sees for itself from the next beat, not nothing until it moves (review idx5, Nov 21)"},
+ "E2641": {"text": "a computer's circle (E992) does not care what stands on the land, so a felled tree or a new building (TOPV) recasts only your side's eyes, not every computer's"},
  "E993": {"text": "the save lives in the phone's IndexedDB (hundreds of MB, the browser's own big store), mirrored in STORE so reading is instant; the small localStorage (about 5 MB for the whole site, shared by every folder) is no longer used (Albert, Nov 11: one save, kept)"},
  "E994": {"text": "an old save left in localStorage moves to IndexedDB once, and every First Keep key there is cleared to free the site's small store"},
  "E995": {"text": "the newest tab owns the save: a tab told another has opened pauses and stops saving, so two tabs never write over each other (Albert, Nov 11)"},
