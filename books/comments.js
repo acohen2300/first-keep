@@ -727,7 +727,7 @@ BOOK("comments", {
  "E658": {"text": "a save opened: the places turned back into the things and units, the Maps, Sets and Infinity by their tags (D331); a save whose stamp is not this map's count of things and this build is refused, by name, never laid on the wrong map"},
  "E659": {"text": "the save waits while you fight, at most D331's fight; a failed save says so once in D331's fail; the test field is never saved"},
  "E660": {"text": "saves roll through D331's slots, one set per build folder, so live and a preview never share one; when storage is full the oldest goes to make room; a save that will not open is skipped and the one before opens"},
- "E661": {"text": "the game opened from a save: the fresh map from its seed, then the lists, the sides and the changes laid back, then each module's own"},
+ "E661": {"text": "the game opened from a save: the fresh map from its seed, then the lists, the clock (before the job records, so each job is timed from the save, not from zero), the sides and the changes laid back, then each module's own"},
  "E662": {"text": "The opening: the game opens where you left it, newest save first, saying so if it had to open an older one, or if none would open and a new game began; the address never ends a match; ?test opens the test field on its own seed"},
  "E663": {"text": "New game (Mid's applyScenario and testField): the scenario's buildings and people placed by the placing rules nearest their spot"},
  "E664": {"text": "A scenario (D330): the age, the store and the research for you (or every court), the relations, the buildings and villagers, the length"},
