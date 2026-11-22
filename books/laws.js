@@ -4,7 +4,6 @@ BOOK("laws", {
  "QB": {"chapter": "Sky and time", "text": "True sun, moon and planets: Meeus and JPL elements", "cite": ["N2", "N3"]},
  "QC": {"chapter": "Sky and time", "text": "Moon lit fraction: (1 − cos i) / 2", "cite": ["N2"]},
  "QD": {"chapter": "Sky and time", "text": "Day's edges: sunrise at −0.833°, civil −6°, nautical −12°", "cite": ["N2"]},
- "QE": {"chapter": "Sky and time", "text": "Eclipses, by geometry", "cite": ["N2"]},
  "QF": {"chapter": "Sky and time", "text": "Colour from temperature: black body (stars via colour index, flames by kelvin)", "cite": ["N4", "N5", "N54"]},
  "QH": {"chapter": "Climate", "text": "Rain or dry: two-state chain, P(wet|dry), P(wet|wet)", "cite": ["N7"]},
  "QI": {"chapter": "Climate", "text": "Snow line: snow at or below 1 °C", "cite": ["N8"]},
