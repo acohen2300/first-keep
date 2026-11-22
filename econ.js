@@ -32,7 +32,7 @@ const outOf = (side, y) => flowOf(side, y, SIDES[side].orate, SIDES[side].spent1
 const netOf = (side, y) => flowOf(side, y, SIDES[side].rate, SIDES[side].flow) - outOf(side, y);
 const velOf = (side, y) => { const net = netOf(side, y); return net < -F.half && SIDES[side].store[y] < -net * F.short ? -1 : Math.tanh(net / F.ref); };
 FK.on('tick', () => { if (FK.every(D.minute)) for (const s of SIDES) Object.assign(s, { rate: s.flow, flow: {}, orate: s.spent1, spent1: {}, rateBy: s.flowBy, flowBy: {}, orateBy: s.spentBy, spentBy: {} }); }); // E271
-const popOf = (side, ok = (c) => FK.SH[c]) => units().filter((u) => u.side === side && ok(u.code)).length + FK.blds().filter((t) => t.side === side).reduce((n, t) => n + (t.q || []).flatMap((c) => (c.plan ? Object.entries(c.plan).flatMap(([k, v]) => Array(v).fill(k)) : [c])).filter(ok).length, 0);
+const popOf = (side, ok = (c) => FK.SH[c]) => units().filter((u) => u.side === side && ok(u.code)).length + FK.blds().filter((t) => t.side === side).reduce((n, t) => n + (t.q || []).flatMap((c) => (c.plan ? Object.entries(c.plan).flatMap(([k, v]) => Array(v).fill(k)) : [c])).filter(ok).length, 0); // E2064
 const soldier = (c) => FK.SH[c] && FK.SH[c].class, armyRoom = (side) => D.armyMax + ~~SIDES[side].capA, armyFull = (side) => popOf(side, soldier) >= armyRoom(side); // E371
 const popCap = (side) => Math.min(D.popMax, FK.blds().filter((t) => t.side === side && up(t)).reduce((n, t) => n + (FK.stat(t.code, side, 'room') || 0), 0));
 const villagersOf = (side) => units().filter((u) => u.side === side && FK.has(u, 'Gather'));
@@ -194,7 +194,7 @@ function toJob(u, y) { const t = bestFind(u, y); if (!t) return false; u.focus =
 const SAY = fromBook('words').say, marchEats = (u) => (u.job === 'march' && u.path && soldier(u.code) ? D.pace.marchDay : 1), eats = (u) => (FK.stat(u.code, u.side, 'eat') * D.upkeep * marchEats(u) * (1 + D.exposure.ration * FK.exposure(u.code, u.side))) / D.day, // E1032
    hungerOf = (side) => (bell - ((SIDES[side] || {}).famine ?? bell) >= D.hunger.days * D.day ? D.hunger.work : 1);
 const reach = (b, t) => Math.abs(b.bx - t.bx) < D.fish.near && Math.abs(b.by - t.by) < D.fish.near, docked = (side, t) => !FK.has(t, 'Catch'), dockFor = (u, t) => FK.blds().filter((b) => b.side === u.side && FK.has(b, 'Shore') && up(b) && alive(b) && reach(b, t)).sort((a, b) => ~~a.wk - ~~b.wk || dist(a, t) - dist(b, t))[0]; // E1088
-const shoal = (b) => things().filter((t) => FK.has(t, 'Catch') && !t.shoal && reach(b, t)).reduce((n, t) => { t.shoal = true; return n + t.amount; }, D.fish.amt * D.fish.dock);
+const shoal = (b) => things().filter((t) => FK.has(t, 'Catch') && !t.shoal && reach(b, t)).reduce((n, t) => { t.shoal = true; return n + t.amount; }, D.fish.amt * D.fish.dock); // E2063
 const inReach = (side) => { const R = D.hunger.reach * D.upm, drops = FK.blds().filter((b) => b.side === side && up(b) && (([, , , , y]) => (y || []).includes('food'))(FK.B[b.code])), near = (t) => drops.some((b) => Math.hypot(b.bx - t.bx, b.by - t.by) < R); return findsOf('food').some((t) => (t.kind !== 'bld' || t.side === side) && docked(side, t) && near(t)) || units().some((u) => FK.has(u, 'Prey') && near(u)); }; // E981
 const fromFind = (u) => FK.has(u, 'Gather') && u.target && !u.target.gone && (jobOf(u) === 'food' || FK.has(u.target, 'Prey')) && !FK.has(u.target, 'Flock'); // E349
 const REACH = {}, reachNow = (side) => { const r = REACH[side]; if (r && r.t === Math.floor(bell)) return r.v; return (REACH[side] = { t: Math.floor(bell), v: inReach(side) }).v; }; // E1011

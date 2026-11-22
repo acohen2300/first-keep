@@ -1121,6 +1121,8 @@ BOOK("comments", {
  "E2060": {"text": "the mini map: drawn into the box a card sets (FK.miniBox), a square of the box's shorter side centred in it with the whole land fitted inside; MINI keeps the fit so a tap on it reads back to the map (miniAt); a blizzard whites it out"},
  "E2061": {"text": "a kind's limit for a side: its limit stat, one number an age, read at the side's age (the last when the side's age runs past the list); none when the kind has no limit"},
  "E2062": {"text": "the icons, each made once at load from the Screen book's icons (SN19)"},
+ "E2063": {"text": "a dock's stock, laid at its site (the Shore tick): D218's amt × dock of its own, plus the amount of every fish find (the Catch tick) in its reach that no dock has claimed; each one counted is marked (shoal), so a shoal feeds one dock only"},
+ "E2064": {"text": "a side's head count of the kinds asked (all by default): its units plus everyone waiting in its buildings' queues, a muster's plan counted one by one, so one queued already holds a place"},
  "E1430": {"text": "Fall back (N465): the picked soldiers that fight find the nearest enemy within look tiles of their middle, and the enemies grouped round it; none near, nothing happens"},
  "E1431": {"text": "Fall back: the spot is straight away from that enemy, past the farthest reach among them plus ranks rank spacings; the soldiers re-form there (dress), or nothing happens when they cannot get there"},
  "E1432": {"text": "Fall back: each soldier remembers the enemies it left (one shared list, so the group is known), falls back in order until it arrives (fb: fewer blows, no rout) and drops any squad order"},
