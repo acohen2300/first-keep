@@ -9,7 +9,8 @@ const stat = (u) => FK.statRow(u.code, u.side);
 const hpMax = (t) => FK.stat(t.code, t.side, 'hp');
 const armed = (u) => !!SIDES[u.side] && FK.has(u, 'Fight') && !FK.has(u, 'Gather');
 const SB = fromBook('sides'), rel = new Map(); // E285
-const groupOf = (x) => (SIDES[x.side] ? null : SB.beasts.includes(x.code) ? 'beast' : x.horde && !x.back ? 'out' : Object.keys(SB.groups).find((g) => SB.groups[g].includes(x.code)) || 'nat'); // E286
+const GROUP = new Map(Object.keys(SB.groups).flatMap((g) => SB.groups[g].map((c) => [c, g])).reverse()); // E2202
+const groupOf = (x) => (SIDES[x.side] ? null : SB.beasts.includes(x.code) ? 'beast' : x.horde && !x.back ? 'out' : GROUP.get(x.code) || 'nat'); // E286
 const stance = (a, b) => (a === b ? null : rel.get(a + ' ' + b) ?? SB.start), treaty = (a, b, s) => { if (SB.stances.includes(s)) { rel.set(a + ' ' + b, s); rel.set(b + ' ' + a, s); } }; // E287
 const [WARS, , ALLY] = SB.stances, atWar = (a, b) => stance(a, b) === WARS, friendly = (a, b) => a === b || stance(a, b) === ALLY; // E2200
 function isFoe(o, x, me) { if (x.side === o) return false; if (!SIDES[x.side]) { const g = groupOf(x); return g === 'beast' || atWar(o, g); } if (SIDES[o]) return atWar(o, x.side); // E288
