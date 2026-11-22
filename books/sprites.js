@@ -20,7 +20,6 @@ BOOK("sprites", {
  "P18": {"key":"wolf","value":{"brush":"quad","o":{"col":"#7a7570","len":13,"h":5,"legH":5.2,"legW":0.7,"head":2.2,"headY":1,"tail":1.6},"box":[24,16]},"name":"the wolf figure","cite":["N150"],"law":[]},
  "P19": {"key":"bear","value":{"brush":"quad","o":{"col":"#4e3524","len":17,"h":9,"legH":4.5,"legW":1.5,"head":3.2,"headY":0.8,"hump":true,"tail":0},"box":[30,22]},"name":"the bear figure","cite":["N150"],"law":[]},
  "PB1": {"key":"castle","value":{"top":66},"name":"the castle building picture","cite":["N151"],"law":[]},
- "PB2": {"key":"town","value":{"top":52},"name":"the town building picture","cite":["N151"],"law":[]},
  "PB3": {"key":"keep","value":{"top":62,"level":{"age":4}},"name":"the keep building picture; its level (Mid's fourth age, Gunpowder) adds the bastion, PB13","cite":["N151","N160"],"law":[]},
  "PB4": {"key":"tower","value":{"top":84,"level":{"steps":"tier"}},"name":"the tower building picture; its level is how many steps that raise it (a Research row's tier) the side knows: TOWER_LOOK's three","cite":["N151","N160"],"law":[]},
  "PB5": {"key":"wonder","value":{"top":72},"name":"the wonder building picture","cite":["N151"],"law":[]},
