@@ -178,7 +178,7 @@ FK.on('begin', () => { level(); const them = D.players.filter((s) => s !== ME); 
 FK.on('start', () => { rates.clear(); rings.clear(); // E683
   claimT.clear(); helped.clear(); league = null; mind.forEach((_, i) => { mind[i] = {}; }); });
 FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] -= DF.react; FK.task('think' + side, whileHome(side, thinking(side))); } } });
-FK.on('save', (X) => { X.ai = { clock, rings, claimT, helped, league, mind }; }); // E668
-FK.on('load', ({ ai: M }) => { league = M.league; const keep = { clock, rings, claimT, helped, mind }; for (const k in keep) FK.refill(keep[k], M[k]); rates.clear(); level(); });
+FK.on('save', (X) => { X.ai = { clock, rings, claimT, helped, league, mind, hand }; }); // E668 E2674
+FK.on('load', ({ ai: M }) => { league = M.league; if (M.hand && M.hand.seed === FK.seed()) hand = M.hand; const keep = { clock, rings, claimT, helped, mind }; for (const k in keep) FK.refill(keep[k], M[k]); rates.clear(); level(); });
 return { think: (side) => FK.finish(thinking(side)), mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim, per, goal: (side) => (goalOf(side, per(side), false) || {}).what || null }; // E1401
 })();
