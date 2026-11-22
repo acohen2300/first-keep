@@ -10,6 +10,7 @@ What the match showed, worst first: armies broke all at once at every Town Cente
 
 Build order agreed (Albert, Nov 22 14:03 "Build"), one area per build, one preview each:
 1. The army: War card Step 5 Mode (formations and courage, his Nov 21 design below), Hold that holds (die in place), stuck orders and "no way"
+   - [x] built Nov 22 (preview f636767c): Mode tiles (Line, Specialty, Wide; Normal, Focused, To death), Hold never breaks or leaves its spot, jammed orders arrive (D452–D454, N565–N566). Still open: Focused/To death do not yet keep their target on retarget; Wide and crescent trade nothing in combat yet (tuning); 'no way' in his log is soldiers with no path to foes behind walls (D400 handles it); Hold only strikes foes within reach
 2. The economy: idle villagers find work, a winter food target, low-resource warnings, training that does not jam, the pop cap
 3. Freezes in fights; rival passivity and hoards
 4. Small: the fallen-building alert names the wrong place ("attacked at I28", "fallen at I1"); "Your cataphract" when he had none; the Pioneer has no order of its own and a tap sends it to whatever is under the finger; tapping your own soldier during an order changes the pick
