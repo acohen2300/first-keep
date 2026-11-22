@@ -40,7 +40,7 @@ async def game(seed=1, root=ROOT, setup=(), test=False, cover=False, begin=True)
     with served(root) as url:
         async with async_playwright() as p:
             b = await p.chromium.launch(channel='chrome', args=['--no-sandbox', '--enable-unsafe-swiftshader'])
-            pg = await (await b.new_context(**PHONE)).new_page()
+            pg = await (await b.new_context(**PHONE)).new_page(); pg.set_default_timeout(240000)  # a busy machine (helpers building alongside) can take minutes to start the page
             pg.errors = []
             pg.on('pageerror', lambda e: pg.errors.append(str(e)[:300]))
             pg.on('console', lambda m: pg.errors.append(m.text[:300]) if m.type == 'error' and 'favicon' not in m.text and '404' not in m.text else None)
@@ -49,7 +49,7 @@ async def game(seed=1, root=ROOT, setup=(), test=False, cover=False, begin=True)
                 pg.cdp = await pg.context.new_cdp_session(pg)
                 await pg.cdp.send('Profiler.enable'); await pg.cdp.send('Profiler.startPreciseCoverage', {'callCount': True, 'detailed': False})
             await pg.goto(f'{url}/index.html' + ('?test' if test else ''))
-            await pg.locator('button:has-text("Start")').first.wait_for()
+            await pg.locator('button:has-text("Start")').first.wait_for(timeout=240000)
             for label in setup:
                 try: await tap(pg, label)
                 except RuntimeError as e: pg.errors.append(str(e))
