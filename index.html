@@ -1045,6 +1045,7 @@ on('tick', () => { if (!every([ICE.beat, 0])) return; const load = new Map(); fo
     if (K.t - CRACK.get(k) >= ICE.warn && (kg >= fail || rng() < ((kg - safe) / (fail - safe)) ** 2)) { CRACK.delete(k); HOLES.set(k, fddDays()); fire('event', 'splash', at); let n = 0;
       for (const u of [...units]) if (onIce(u) || u.k === k) { const d = Math.hypot(u.bx - tileMid(k)[0], u.by - tileMid(k)[1]) / D.tile; if (u.k === k || (d <= ICE.near && rng() < ICE.fall)) { n += u.side === ME; u.under = true; fire('drown', u); } } if (n) fire('fell', n); } }
   for (const [k, t] of CRACK) if (!load.has(k) && K.t - t > ICE.warn + ICE.warn) CRACK.delete(k); });
+on('save', (S) => { S.ice = { holes: HOLES, crack: CRACK }; }); on('load', (S) => { refill(HOLES, S.ice ? S.ice.holes : []); refill(CRACK, S.ice ? S.ice.crack : []); }); // E2621
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
 const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : null), onIceOk = (k, who) => !CRACK.has(k) && ICE.load[who && onIce(who) ? 'fail' : 'safe'] * thick(k) ** 2 >= (who ? massOf(who.code) * (iceChoice(who) ? 1 : CROSS.ai) : W.person.kg) && !(who && (who.shy > K.t || (iceChoice(who) && CROSS.rules[iceChoice(who)].avoid))); // E1540
