@@ -1126,5 +1126,19 @@ BOOK("comments", {
  "E1502": {"text": "the town centre gathering: a villager with no shelter walks to her side's Town Center and stands beside it, under its arrows; one already beside it, or who cannot get there, stays put"},
  "E1503": {"text": "during the Alarm, a villager left idle outside (her walk failed, her building fell, she reached the Town Center) looks again: into the nearest building with room, else beside the Town Center; nobody stands idle in the open while it rings, on every side"},
  "E1504": {"text": "the Alarm's villagers each take the nearest building with room whose trip is clear (E1501), not the sturdiest building's nearest, so a far or full shelter never sends her across the map or through the raid"},
- "E1505": {"text": "the Alarm's villagers with no room anywhere (Garrison, Shelter) gather beside the Town Center (E1502), not on a spot behind it that may be blocked or out of its arrows"}
+ "E1505": {"text": "the Alarm's villagers with no room anywhere (Garrison, Shelter) gather beside the Town Center (E1502), not on a spot behind it that may be blocked or out of its arrows"},
+ "E1430": {"text": "Fall back (N465): the picked soldiers that fight find the nearest enemy within look tiles of their middle, and the enemies grouped round it; none near, nothing happens"},
+ "E1431": {"text": "Fall back: the spot is straight away from that enemy, past the farthest reach among them plus ranks rank spacings; the soldiers re-form there (dress), or nothing happens when they cannot get there"},
+ "E1432": {"text": "Fall back: each soldier remembers the enemies it left (one shared list, so the group is known), falls back in order until it arrives (fb: fewer blows, no rout) and drops any squad order"},
+ "E1433": {"text": "Fall back's beat: the soldiers falling back, grouped by the enemies they left"},
+ "E1434": {"text": "Fall back's beat: once none of a group is still marching they have re-formed, so each goes back in at the nearest of the enemies they left still alive; the same rule for every side"},
+ "E1435": {"text": "the war beat: squad orders, then those falling back"},
+ "E1436": {"text": "the War card's missions that act at once (Defend, Fall back, Retreat, and Attack's arming): Fall back says how many fall back, or that no enemy is near"},
+ "E1438": {"text": "a row of tiles, paged when it has more than six; a narrow tail tile (the War card's bell) comes after, not counted"},
+ "E1439": {"text": "the War card's mission row (N465): the six missions in order with their icons, then the alarm as a narrow tile showing only the bell, green when on"},
+ "E1440": {"text": "the War card's top line Troops | Mode | Mission: the open controller at full strength, the others' letters dimmed, the red box meaning set; the eye (N465) in place of the two screen boxes: plain, all troops count, tapped (red ring), only those on screen; the hint over the top line says the next step"},
+ "E1441": {"text": "the mold's top line: the home circle, the hint and the top line (War: Troops | Mode | Mission and the eye), the alert, the War button"},
+ "E1442": {"text": "what floats over the map gets a dark patch: the rank and the card's words, the War hint; the clear icons (pause, mail, the eye) a round one"},
+ "E1443": {"text": "the War card's look (N465): the mission row six tiles and a half-wide bell; the eye a clear round icon like pause and mail, red ring when set; the hint in the italic hint style above the top line; a closed controller dims its letters, not its box"},
+ "E1444": {"text": "a mission tile (N465): tapped with nobody picked it first picks All, as the All word does (the War card's opening default), then acts: Squad saves or picks the squad, Hold holds, Defend, Fall back and Retreat act at once, Attack and Move arm and wait for the map; refused only with no soldiers at all"}
 });
