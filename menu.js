@@ -13,7 +13,7 @@ const BUILT = { diff: true, len: true, daily: true, civ: true, scen: true, fog: 
 const ORDER = ['food', 'wood', 'stone', 'gold', 'iron'], NAME = fromBook('words').say.res; // E178
 // E179
 const svg = (body, fill = 'none') => `<svg viewBox="0 0 24 24" width="22" height="22" fill="${fill}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
-const SVG = {}; for (const [k, v] of Object.entries(SCR.icons)) SVG[k] = svg(v); // E819
+const SVG = {}; for (const [k, v] of Object.entries(SCR.icons)) SVG[k] = svg(v); // E2062
 // E181
 const CB = fromBook('colours'), COL = { ...CB.menu, rb: CB.blue, rg: CB.green, rr: CB.red, rw: CB.white, g1: CB.gold, s2: CB.gunmetal };
 const fnt = ([w, px], f) => `${w} ${px}px var(--${f})`, css = document.createElement('style'); // E839
