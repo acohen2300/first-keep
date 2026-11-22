@@ -471,7 +471,7 @@ FK.on('tick', (dt) => { if (result) return; campRaise(dt); const send = FK.every
 // E505
 const RL = D.relations, RG = D.regard, VA = D.vassal, DM = VA.demand, RW = fromBook('words').realm, SB = fromBook('sides'), [WARS, PEACE, ALLY] = SB.stances, [LO, HI] = VA.scale, notice = new Map(), gangs = new Map(), [ENVOY] = FK.ticked('Envoy');
 const nameOf2 = (q) => (typeof q === 'string' ? SB.names[q] : EW.sides[q]), courts = () => D.players.filter((p) => !fell.has(p)), oddsOf = (q, o) => WAR.odds(WAR.armyOf(q), o), unally = (a, b) => { for (const [x, y] of [[a, b], [b, a]]) if (SIDES[x].ally === y) SIDES[x].ally = null; };
-const recallAt = (a, b) => { const w = WAR.waves[a], h = FK.seatOf(b); if (w && h && w.k === FK.tileAt(h.bx, h.by)) WAR.recall(a); };
+const recallAt = (a, b) => { const w = WAR.waves[a], h = FK.seatOf(b); if (w && (w.to === b || (h && w.k === FK.tileAt(h.bx, h.by)))) WAR.recall(a); }; // E2465
 function declareWar(a, b, why) { if (a === b || WAR.atWar(a, b)) return; const was = WAR.stance(a, b) === ALLY; WAR.treaty(a, b, WARS); notice.delete(a + ' ' + b); notice.delete(b + ' ' + a); unally(a, b);
   if (a === ME || b === ME) tell(RW.war, { side: nameOf2(a === ME ? b : a), was: was ? RW.broken : '', why }); else tell(RW.between, { a: nameOf2(a), b: nameOf2(b) }); }
 function makePeace(a, b) { WAR.treaty(a, b, PEACE); unally(a, b); recallAt(a, b); recallAt(b, a); }
