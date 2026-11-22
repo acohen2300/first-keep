@@ -358,7 +358,7 @@ async def missions():
         seen = [await pg.evaluate(ALL)]
         for _ in range(2): await pg.evaluate(TAP, 'mscr|1|'); seen.append(await pg.evaluate(ALL))
         await pg.evaluate("fk.select(null)"); n = await pg.evaluate(TAP, 'mord|move|')
-        armed = await pg.evaluate("[...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === 'mord|move|').classList.contains('sel')")
+        armed = await pg.evaluate("[...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === 'mord|move|').querySelector('.bx') !== null")
         return row, seen, (n, armed)
 
 async def falls():
