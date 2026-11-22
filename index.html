@@ -1229,7 +1229,7 @@ function sprite(key, W, H, tx, ty, ax, ay, skew, s, paint) { // E118
 const blit = (c, x, y, s, into = ctx) => { const f = s / c.q; into.drawImage(c, x - c.ax * s, y - c.ay * s, c.width * f, c.height * f); };
 const NS_rng = (z) => () => (z = (z * 16807) % 2147483647) / 2147483647; // E119
 const [LEFT, GROW] = SPRITE.nodes.left;
-const nodeSprite = (kind, v, s, w = 1) => sprite(kind + v + treeLook(v) + w, 46 * w, 58, 17 * w, 54, 17 * w, 54, 0, s, () => { g.scale(w, 1); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
+const nodeSprite = (kind, v, s, w = 1) => sprite(kind + v + (kind === 'tree' ? treeLook(v) : '') + w, 46 * w, 58, 17 * w, 54, 17 * w, 54, 0, s, () => { g.scale(w, 1); nodeArt(kind, v, NS_rng(11 + v * 7 + kind.length)); });
 let FLAGS = null, FLY = null;
 function bldSprite(code, col, s, lv, up, fly, civ, want) { const [, n, , art] = B[code], w = n * D.tile, top = BLDTOP[art] || 40, pad = 12, k = w * ART_T * ART_S, W = w + pad * 2 + 10 + 2 * k, H = (w * ART_T) / 2 + top + pad * 2 + SKEW * W;
   const c = sprite(code + col + lv + up + !!fly + civ + (want || ''), W, H, W / 2, top + pad, W / 2 + k / 2, top + pad + (SKEW * k) / 2, SKEW, s, () => { FLAGS = fly ? [] : null; RES = up; ART[art](col, 0, lv, civ, want); RES = null; FLY = FLAGS; FLAGS = null; }); if (FLY) { c.flags = FLY; FLY = null; } return c; }
