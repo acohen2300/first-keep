@@ -1150,5 +1150,15 @@ BOOK("comments", {
  "E1406": {"text": "the side it bears a grudge against this match (D390): its odds on that side read grudge times higher, so which side it marches on differs from game to game"},
  "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"},
  "E1590": {"text": "a stat is looked up by its unit and then its name, two steps, not by a name strung together each time: in a big battle the joined name was built and hashed on every blow (5.8% of a heavy late-game step, Nov 21); same numbers, same memo, cleared the same way"},
- "E1591": {"text": "one side's remembered stats, one row a unit: stat keeps each number under its name, statRow keeps the whole row under *"}
+ "E1591": {"text": "one side's remembered stats, one row a unit: stat keeps each number under its name, statRow keeps the whole row under *"},
+ "E1480": {"text": "a soldier with no way to its foe (N470), its numbers (D400)"},
+ "E1481": {"text": "what is in a soldier's way to its foe: the tiles on the straight line from it to the foe, one by one"},
+ "E1482": {"text": "on each tile, the enemy building standing there (not the foe itself); the first wall or gate wins, else the first other building"},
+ "E1483": {"text": "the enemy shooters (Shoot, built) within look tiles whose reach covers the soldier where it stands"},
+ "E1484": {"text": "backing off: away from the middle of the shooters that reach it, spare tiles past the deepest of their reaches; none reach it, it stays"},
+ "E1485": {"text": "no way to the foe (N470): strike what is in the way (E1481), keeping the first foe and whether it was told, to go back to (E1486)"},
+ "E1486": {"text": "a building falls: everyone breaking a building of that side goes back to the foe it was cut off from, as told before; the way may be open now, and if not it strikes the next thing in the way"},
+ "E1487": {"text": "out of reach and no path: look for one; none, the soldier breaches (E1485)"},
+ "E1488": {"text": "the wall or gate first; no wall or gate on the line, the first other enemy building; nothing, none"},
+ "E1489": {"text": "nothing to break: the old no way (logged, foe dropped, the told foe kept so it does not pick it again and again, waits wait path checks), then out of shooters' reach (E1484) or, out of reach already, it strikes an enemy building beside it"}
 });
