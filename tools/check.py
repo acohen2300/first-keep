@@ -283,6 +283,20 @@ async def pressed():
         await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
         return got, await pg.evaluate("document.querySelectorAll('.pr').length")
 
+async def full_lines():
+    """Two barracks of yours: a Train tap on one whose line is full goes to the other's line, with a note naming where it went; with both full it is refused."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 1)
+        return await pg.evaluate("""(() => { for (const u of fk.units().filter((v) => v.side === 0 && ECON.soldier(v.code))) fk.vanish(u);
+  const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by), [H] = fk.bought('House'), put = (code) => { for (let r = 8; r < 40; r++) for (let d = -r; d <= r; d++) for (const [i, j] of [[k0 % N + d, Math.floor(k0 / N) - r], [k0 % N + d, Math.floor(k0 / N) + r], [k0 % N - r, Math.floor(k0 / N) + d], [k0 % N + r, Math.floor(k0 / N) + d]]) if (ECON.canPlace(code, i, j)) { const t = ECON.site(0, code, i, j); t.done = 1; return t; } return null; };
+  const b1 = put('BM1'), b2 = put('BM1'), [c] = fk.trains('BM1', 0).filter((x) => fk.aged(x, 0)), cap = fk.stat('BM1', 0, 'queue'), got = [cap];
+  for (let n = 0; n < 9 && ECON.popCap(0) < ECON.popOf(0) + 2 * cap + 1; n++) put(H);
+  for (let n = 0; n < cap; n++) ECON.queue(b1, c);
+  got.push(b1.q.length, MENU.act('train', c, b1), b1.q.length, b2.q.length, MENU.mail[0] && MENU.mail[0].text);
+  for (let n = 1; n < cap; n++) MENU.act('train', c, b1);
+  got.push(b2.q.length, MENU.act('train', c, b2), b1.q.length, b2.q.length, MENU.log.no['train: ' + MENU.WD.say.lineFull] || 0, MENU.WD.say.lineOther.replace('{b}', ECON.nameOf('BM1').toLowerCase()));
+  return got; })()"""), pg.errors
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -325,6 +339,8 @@ async def check_game():
     rule('every word floating over the map has its dark patch at the book strength, and a redrawn card keeps them in place', len(pg_) >= pn and all(abs(o - pm) < 0.01 for _, _, o in pg_) and pk, f'{len(pg_)} patches for {pn} troop words and the rest, strengths {sorted({o for _, _, o in pg_})}, same after a redraw: {pk}')
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
+    fl, fe = await full_lines()
+    rule('a Train tap on a full line goes to the least busy barracks with room, says so in a note, and is refused only when every line is full', fl[1:5] == [fl[0], True, fl[0], 1] and fl[5] == fl[11] and fl[6:11] == [fl[0], False, fl[0], fl[0], 1] and not fe, f'line size, first filled, tap taken, the two lines, the note, second filled, last tap taken, the two lines, refused: {fl}; errors: {fe[:2]}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')

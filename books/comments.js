@@ -1103,5 +1103,10 @@ BOOK("comments", {
  "E1305": {"text": "floaters: every floating word and clear icon now on screen, keyed by its button's code and its text so a redrawn card finds its old patch. A word inside a ring box (.bx) or the title box takes the box; a bare word takes its letters plus the box's padding and edge, so every patch is the size a ring would be"},
  "E1306": {"text": "patches: lays a patch under each floater and drops the patches of words that went; run after every card is drawn, so a patch never lags its word. Nothing reads the screen (the per-word brightness look cost frames on his phone, Nov 21)"},
  "E1307": {"text": "the press's look (SN58): every button grows and brightens while pressed and springs back when let go; growing is quick (down), the way back slower on the spring curve (up)"},
- "E1308": {"text": "the press (N445): lift lets the pressed button go, but only the press it was set for, so a newer tap is never cut short; repress puts a press back on a button the card just redrew (put), so the spring back still shows when the tap changed the button"}
+ "E1308": {"text": "the press (N445): lift lets the pressed button go, but only the press it was set for, so a newer tap is never cut short; repress puts a press back on a button the card just redrew (put), so the spring back still shows when the tap changed the button"},
+ "E1520": {"text": "the line a train order goes to (N480): the tapped building's own while it has room, else the least busy building of the same kind standing for that side with room that trains the unit; none when every such line is full; the same for every side"},
+ "E1521": {"text": "a train order queues at the line with room (E1520) and pays that line's price; it gives back the building it went to, or false when refused"},
+ "E1522": {"text": "lineAt shared with the menu, so a Train tap is refused only when the order itself would be"},
+ "E1523": {"text": "Train (N480): refused as That line is full only when every line of that building's kind is full, the price read at the line it would go to; the card stays on the tapped building, and when the unit goes to another one a note says so and points at it"},
+ "E1524": {"text": "the people button trains through the Train verb, so it gets the same lines and the same note"}
 });
