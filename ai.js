@@ -4,7 +4,7 @@ window.AI = (() => {
 const { D, B, SIDES, N, isIdle } = FK;
 // E170
 const whole = FK.things, things = FK.rest, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
-const clock = SIDES.map(() => 0), rates = new Map(), mind = SIDES.map(() => ({})), of = (x) => x || 0, per = (side) => A.pers[A.pers.of[side]];
+const clock = SIDES.map(() => 0), rates = new Map(), mind = SIDES.map(() => ({})), of = (x) => x || 0, per = (side) => dealt(side); // E1401
 const home = FK.seatOf, born = (h) => FK.trains(h.code)[0]; // E242
 const bought = FK.bought; // E243
 const [HOUSE] = bought('House'), [WALL] = bought('Line'), [GATE] = bought('Gate'), [WONDER] = bought('Wonder'), [MARKET] = bought('Trade'), [PASTURE] = bought('Flock'), [POST] = bought('Post'), TOWER = A.tower;
@@ -12,6 +12,14 @@ const WP = D.ai.walls, rings = new Map(), TK = FK.TK, SHOP = Object.keys(D.makes
 const camps = Object.fromEntries(Y.map((y) => [y, bought('Drop-off').find((c) => !FK.ticked('Shore').includes(c) && (FK.SH[c].drop || []).includes(y))])); // E244
 const dist = FK.dist, tick = (c, k) => FK.has({ code: c }, k), kindOf = (k) => Object.keys(D.train).find((c) => tick(c, k) && tick(c, 'Walk'));
 let DF;
+const V = A.vary, U = A.unstick; let hand = null; // E1400
+function deal(seed) { const r = FK.NS_rng(seed + V.seed), span = ([lo, hi]) => lo + r() * (hi - lo), one = (xs) => xs[Math.floor(r() * xs.length)]; for (let n = V.burn; n > 0; n--) r(); // E1400
+  return SIDES.map((_, side) => { if (!A.pers.of[side]) return null; const name = one(V.pick), P = { ...structuredClone(A.pers[name]), name, vills: U.vills[name] }; // E1400
+    for (const [k, R] of Object.entries(V.by)) { const f = (x) => (Number.isInteger(x) ? Math.round(x * span(R)) : x * span(R)); if (k in P) P[k] = Array.isArray(P[k]) ? P[k].map(f) : f(P[k]); } // E1400
+    for (const [k, c] of Object.entries(V.flip)) if (r() < c) P[k] = !P[k]; // E1400
+    if (r() < V.shuffle) for (let i = P.goals.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [P.goals[i], P.goals[j]] = [P.goals[j], P.goals[i]]; } // E1400
+    return Object.assign(P, { likes: one(V.likes), liking: span(V.liking), foe: one(D.players.filter((q) => q !== side)), grudge: span(V.grudge) }); }); } // E1400
+const dealt = (side) => { const sd = FK.seed(); if (!hand || hand.seed !== sd) hand = { seed: sd, P: deal(sd) }; return hand.P[side]; }; // E1401
 // E245
 function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);
   for (let r = rmin; r < rmax; r++) for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i += j === cj - r || j === cj + r ? 1 : 2 * r) if (ECON.canPlace(code, i, j, side, true, true)) return [i, j]; return null; }
@@ -55,14 +63,15 @@ const famineNear = (side, plan, eat) => runsOut(side, FOOD, plan[FOOD], plan[FOO
 const peaceAll = ECON.peaceAll;
 const cap = (side) => Math.min(D.armyMax, per(side).armyCap + AT.armyAge * SIDES[side].age), aim = (side) => Math.ceil(cap(side) * (peaceAll(side) ? DP.stand : 1));
 const trains = (code) => Object.keys(D.trains).find((c) => FK.trains(c).includes(FK.SH[code].replaces || code));
-function goalOf(side, P, saving) { const s = SIDES[side], n = inArmy(side), age = { what: 'age', cost: ECON.ageCost(side) }; if (saving) return age;
-  for (const g of P.goals) { if (g === 'age' && age.cost && !s.aging) return age;
-    if (g === 'army' && n < aim(side)) { const [first] = A.troops, want = mind[side].want || first, at = trains(want); if (!count(side, at)) return { what: at, cost: D.cost[at] }; return { what: g, cost: ECON.addRes({}, FK.stat(want, side, 'cost'), Math.min(P.waveMin, aim(side) - n)) }; }
-    if (g === 'build') { const [c] = P.build.find(([c, age, m, army]) => s.age >= age && count(side, c) < m && n >= army) || []; if (c) return { what: c, cost: D.cost[c] }; } }
+function goalOf(side, P, saving) { const s = SIDES[side], n = inArmy(side), age = { what: 'age', cost: ECON.ageCost(side) }, skip = mind[side].skip || {}, off = (w) => of(skip[w]) > FK.K.t; if (saving) return age; // E1402
+  for (const g of P.goals) { if (off(g)) continue; if (g === 'age' && age.cost && !s.aging) return age; // E1402
+    if (g === 'army' && n < aim(side)) { const [first] = A.troops, want = mind[side].want || first, at = trains(want); if (!count(side, at)) { if (off(at)) continue; return { what: at, cost: D.cost[at] }; } return { what: g, cost: ECON.addRes({}, FK.stat(want, side, 'cost'), Math.min(P.waveMin, aim(side) - n)) }; } // E1402
+    if (g === 'build') { const [c] = P.build.find(([c, age, m, army]) => !off(c) && s.age >= age && count(side, c) < m && n >= army) || []; if (c) return { what: c, cost: D.cost[c] }; } } // E1402
   return null; }
 function bestCounter(side) { const m = mind[side], i = of(m.cyc), foes = units().filter((v) => SIDES[v.side] && WAR.atWar(side, v.side) && ECON.soldier(v.code) && FK.inSight(v, side)); m.cyc = i + 1; // E528
-  const can = [...new Set(ready(side).flatMap((t) => FK.trains(t.code, side)))].filter((c) => ECON.soldier(c) && FK.aged(c, side) && !CO.not.includes(FK.SH[c].class) && !FK.statRow(c, side).bonly); if (!can.length) return null; if (!foes.length) return can[i % can.length];
-  const sc = can.map((c) => { const me = { code: c, side }; return { c, s: total(foes, (v) => WAR.vs(me, v) / Math.max(CO.floor, WAR.vs(v, me))) / foes.length / (ECON.sumCost(D.cost[c]) / CO.per) ** CO.pow }; }).sort((a, b) => b.s - a.s);
+  const P = per(side), can = [...new Set(ready(side).flatMap((t) => FK.trains(t.code, side)))].filter((c) => ECON.soldier(c) && FK.aged(c, side) && !CO.not.includes(FK.SH[c].class) && !FK.statRow(c, side).bonly); if (!can.length) return null; // E1405
+  if (!foes.length) { const fav = can.filter((c) => FK.SH[c].class === P.likes), pool = fav.length && i % CO.mix ? fav : can; return pool[i % pool.length]; } // E1405
+  const sc = can.map((c) => { const me = { code: c, side }; return { c, s: (total(foes, (v) => WAR.vs(me, v) / Math.max(CO.floor, WAR.vs(v, me))) / foes.length / (ECON.sumCost(D.cost[c]) / CO.per) ** CO.pow) * (FK.SH[c].class === P.likes ? P.liking : 1) }; }).sort((a, b) => b.s - a.s); // E1405
   return sc[i % Math.min(CO.mix, sc.length)].c; }
 function firstNeed(side, c) { if (!c || SIDES[side].techs.has(c)) return null; for (const n of ECON.needsOf(c)) if (!SIDES[side].techs.has(n)) return firstNeed(side, n); return c; }
 const young = (M, T) => Object.fromEntries(Y.map((y) => [y, M[y] + total(Object.entries(T[y] || {}), ([k, f]) => f * M[k])]));
@@ -86,7 +95,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
   yield; let threat = false; FK.unitsNear(h, AT.threat * D.tile, (u) => { threat = threat || (!!SIDES[u.side] && WAR.atWar(side, u.side) && ECON.soldier(u.code)); });
   const saving = !!cost && !threat && !(m.save && t < m.save.until), need = saving ? cost : {}; m.saving = saving;
   for (const y of Y) { rateFrom(side, y); yield; } const grow = ECON.popOf(side) < D.popMax && Math.max(...Y.map((y) => rateFrom(side, y))) * left() > ECON.sumCost(FK.stat(vil, side, 'cost')), eat = total(units().filter((u) => u.side === side), ECON.eats), draw = { [FOOD]: eat }; // E534
-  if (grow && (!saving || R[FOOD] >= of(need[FOOD]) + AT.spare)) { if (lineOf(h) < AT.line) ECON.queue(h, vil); const each = ECON.addRes(ECON.addRes({}, FK.stat(vil, side, 'cost')), D.cost[HOUSE], 1 / Math.max(1, of(FK.stat(HOUSE, side, 'room'))));
+  if (grow && vs.length < Math.min(P.vills, D.popMax - aim(side)) && (!saving || R[FOOD] >= of(need[FOOD]) + AT.spare)) { if (lineOf(h) < AT.line) ECON.queue(h, vil); const each = ECON.addRes(ECON.addRes({}, FK.stat(vil, side, 'cost')), D.cost[HOUSE], 1 / Math.max(1, of(FK.stat(HOUSE, side, 'room')))); // E1404
     for (const [y, c] of Object.entries(each)) draw[y] = of(draw[y]) + c / ECON.timeOf(side, vil); }
   yield; const scout = kindOf('Scout'); if (!saving && !mine(side, is(scout)) && t > AT.scout.at && R[FOOD] > AT.scout.food) train(side, scout);
   const [[BAR]] = P.build, lines = A.lines.flatMap((c) => ready(side, c)); // E535
@@ -109,6 +118,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
   if (!saving && inArmy(side) < aim(side) && vs.length >= P.early) { const want = (m.want = bestCounter(side)); if (want) train(side, want); }
   yield; const goal = goalOf(side, P, saving), all = ECON.addRes({ ...(goal ? goal.cost : {}) }, due), plan = needOf(side, vs, all, draw), famine = famineNear(side, plan, eat); // E539
   const order = Y.filter((y) => plan[y].t || (famine && y === FOOD)).sort((a, b) => (famine && (b === FOOD) - (a === FOOD)) || plan[b].t - plan[a].t), [first] = order, idle = vs.find((v) => isIdle(v)); Object.assign(m, { goal: goal && goal.what, need: first || null, plan });
+  const mark = goal && [goal.what, goal.what === 'army' ? inArmy(side) : goal.what === 'age' ? s.age : count(side, goal.what)].join(); if (mark !== m.mark) Object.assign(m, { mark, markT: t }); else if (mark && t - m.markT > U.stall) { m.skip = { ...m.skip, [goal.what]: t + U.skip }; m.mark = null; } // E1403
   yield; const move = (u, y) => { const f = u && ECON.bestFind(u, y); if (f) ECON.gatherAt(u, f); }, giver = (y) => vs.find((v) => ECON.jobOf(v) === y && of(v.load) < AT.carry && !(ECON.posted(v) && FK.has(v.target, 'Make')));
   if (first) { const tb = famine && first === FOOD ? Infinity : plan[first].t; if (idle) move(idle, first);
     else { let d = null, dv = -Infinity; for (const y of Y) { const Q = plan[y], gain = Q.inc - Q.rho; if (y === first || !Q.n || (famine && y === FOOD)) continue; const after = Q.short && (pos(gain) ? Q.short / gain : Infinity); // E540
@@ -126,7 +136,7 @@ function economy(side, P, h, saving, put) { const s = SIDES[side], R = s.store; 
   if (saving) return; const age = ECON.ageCost(side); if (R[GOLD] - of(age && age[GOLD]) > EC.venture.spare && s.ventures.length < EC.venture.most) ECON.venture(side, EC.venture.amt);
   if (ECON.canPay(side, EC.post.cost)) { const [f] = ECON.stops().filter((x) => !ECON.postOn(x) && dist(x, h) < EC.post.far * D.tile).sort((a, b) => dist(a, h) - dist(b, h)); if (f && put(POST, f, RG.post)) return; }
   if (!P.trade) return; if (!count(side, MARKET)) { if (ECON.canPay(side, EC.market)) put(MARKET, h, RG.build); return; }
-  const brew = A.pers.of[side] === EC.brew; if (!brew && !count(side, PASTURE) && ECON.canPay(side, EC.pasture)) return put(PASTURE, h, RG.build);
+  const brew = P.name === EC.brew; if (!brew && !count(side, PASTURE) && ECON.canPay(side, EC.pasture)) return put(PASTURE, h, RG.build); // E1407
   if (!count(side, SHOP) && ECON.canPay(side, EC.shop)) { const b = put(SHOP, h, RG.build); if (b) ECON.setMake(b, brew ? EC.beer : EC.cloth); return; }
   const cs = units().filter((c) => c.side === side && FK.has(c, 'Trade')); if (mine(side, (c) => tick(c, 'Trade')) < EC.caravans) train(side, kindOf('Trade'));
   if (FK.every(EC.route)) for (const c of cs) if (!c.route) { const f = ECON.bestTarget(side, c); if (f) ECON.setRoute(c, f, true, false); } }
@@ -139,7 +149,7 @@ function decideWar(side, P) { const m = mind[side], w = WAR.waves[side], t = FK.
   if (w) return; const Wd = things().find((b) => b.code === WONDER && up(b) && b.side !== side && WAR.atWar(side, b.side)), free = WAR.armyFree(side, 'rout').filter((u) => !u.goal && !u.drill && !u.esc);
   if (free.length < (Wd ? WV.wonder : P.waveMin + DF.wave)) return; const bold = P.bold + DF.bold, go = Wd ? free : free.slice(Math.floor(free.length * P.guard)); let best = null, bp = -Infinity;
   for (const q of D.players) { if (q === side || ECON.fell(q) || !WAR.atWar(side, q) || !home(q)) continue; const threat = !!Wd && Wd.side === q; if (!threat && of(m.cool[q]) > t) continue; if (q === ME && ECON.time() < DF.safe && !Wd) continue;
-    const prob = WAR.odds(go, q), busy = P.opportunist && D.players.some((x) => x !== side && x !== q && !ECON.fell(x) && WAR.atWar(q, x)), pr = threat ? Math.max(prob, WV.threat) : busy ? prob * P.opportunist * DF.opp : prob; if (pr > bp) { bp = pr; best = q; } }
+    const prob = WAR.odds(go, q), busy = P.opportunist && D.players.some((x) => x !== side && x !== q && !ECON.fell(x) && WAR.atWar(q, x)), pr = (threat ? Math.max(prob, WV.threat) : busy ? prob * P.opportunist * DF.opp : prob) * (q === P.foe ? P.grudge : 1); if (pr > bp) { bp = pr; best = q; } } // E1406
   if (best == null || bp <= (WAR.armyOf(side).length >= cap(side) - WV.full ? Math.min(bold, WV.settle) : bold)) return; const at = Wd && Wd.side === best ? Wd : home(best); if (!WAR.attack(side, FK.tileAt(at.bx, at.by), go)) return; // E545
   Object.assign(WAR.waves[side], { S: go, to: best, bid: at !== home(best), d: Infinity, pt: t }); const fast = go.filter((u) => FK.SH[u.code].class === WV.riders).filter((_, i) => i < P.raid);
   const [mark] = blds(best).filter((b) => up(b) && !FK.has(b, 'Seat') && FK.has(b, 'Drop-off')).sort((a, b) => dist(a, h0(side)) - dist(b, h0(side))); if (mark && fast.length) WAR.dress(fast, FK.tileAt(mark.bx, mark.by));
@@ -168,5 +178,5 @@ FK.on('start', () => { rates.clear(); rings.clear(); // E683
 FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] -= DF.react; FK.task('think' + side, whileHome(side, thinking(side))); } } });
 FK.on('save', (X) => { X.ai = { clock, rings, claimT, helped, league, mind }; }); // E668
 FK.on('load', ({ ai: M }) => { league = M.league; const keep = { clock, rings, claimT, helped, mind }; for (const k in keep) FK.refill(keep[k], M[k]); rates.clear(); level(); });
-return { think: (side) => FK.finish(thinking(side)), mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim, goal: (side) => (goalOf(side, per(side), false) || {}).what || null };
+return { think: (side) => FK.finish(thinking(side)), mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim, per, goal: (side) => (goalOf(side, per(side), false) || {}).what || null }; // E1401
 })();

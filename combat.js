@@ -354,7 +354,7 @@ function raids() { const [g0, g1] = RD.gap, wait = () => (g0 + FK.rng() * (g1 - 
       const c = power1(v) + guard; if ((band * band) / (band * band + c * c) <= RD.beat) continue; const load = (v.load || 0) + sum(Object.values(v.goods || {}), (x) => x); M.push(v); B.set(v, R); w.push((again * (D.carry + RD.load * load) * band) / (D.carry * (band + RD.guard * guard))); } }
   if (!M.length) return; const mark = M[roulette(w)], R = B.get(mark); raid.hit[mark.side] = K.t; for (const u of R) Object.assign(u, { camp: u.home, home: { bx: mark.bx, by: mark.by }, aggro: mark, horde: true, back: K.t + RD.secs });
   if (mark.side === ME) say(WW.raid, { name: FK.SH[mark.code].name.toLowerCase(), at: MENU.coord(mark.bx, mark.by) }); return mark; }
-function loot(o) { const L = FD.loot, P = D.ai.pers[D.ai.pers.of[o]], army = armyOf(o), seat = FK.seatOf(o); if (!seat || ECON.fell(o)) return; // E588
+function loot(o) { const L = FD.loot, P = AI.per(o), army = armyOf(o), seat = FK.seatOf(o); if (!seat || ECON.fell(o)) return; // E588
   for (const t of things()) if (FK.has(t, 'Hire') && !t.taken && SIDES[o].store.gold >= L.gold) ECON.hire(o, t); if (!P || !P.loot || army.length < L.army || waves[o]) return;
   const out = army.filter((u) => u.loot); if (out.length) { const [u0] = out, f = u0.loot; if (f.gone || f.taken || (!guardsLeft(f) && K.t - u0.lootT > L.give)) { for (const u of out) u.loot = null; homeAll(out); } return; }
   let f = null; for (const t of things()) { const F = rowOf(t), d = F && gap(t, seat); if (F && !t.taken && (F.got || F.hire || (guardsLeft(t) && SIDES[o].age)) && d < (F.got || F.hire ? L.far : L.stop) && (!f || d < gap(f, seat))) f = t; }
