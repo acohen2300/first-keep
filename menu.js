@@ -328,7 +328,7 @@ FK.on('draw', (ctx, s) => { const g = S.ghost; if (!g) return; const [, n] = B[g
     ctx.globalAlpha = P.ghost; ctx.lineWidth = P.width.knob; ctx.setLineDash([]); g.pts.forEach((k, q) => { ctx.fillStyle = COL.rw; ctx.strokeStyle = q ? COL.ink : COL.rg; ctx.beginPath(); ctx.arc(...onMap(k), P.knob, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); }); }
   else if (g.i != null) { const ci = g.i + n * P.half, cj = g.j + n * P.half, seg = (a, z) => { ctx.moveTo(...at(...a)); ctx.lineTo(...at(...z)); }; ctx.strokeStyle = COL.rb; ctx.lineWidth = P.width.guide; ctx.setLineDash(P.dash.guide); ctx.beginPath();
     for (const q of ECON.guides(ME, g.code, g.i, g.j)) if (!q.d) seg(...[q.lo, q.hi].map((w) => (q.ax ? [w, q.at] : [q.at, w])).map((q2) => q2.map((w) => w * P.half))); // E716
-    ctx.stroke(); const sp = tinted(FK.bldSprite(g.code, SIDES[ME].col, s, ...FK.levelOf({ code: g.code, side: ME })), g.ok ? COL.rg : COL.rr), [gx, gy] = at(ci, cj); FK.tag(ctx, g.ok ? `${ECON.nameOf(g.code)} · ${costText(D.cost[g.code] || {})}` : g.why, gx, gy - sp.ay * s - P.lift * P.half); ctx.globalAlpha = P.ghost; FK.blit(sp, gx, gy, s); } // E699
+    ctx.stroke(); const sp = tinted(FK.bldSprite(g.code, SIDES[ME].col, s, ...FK.levelOf({ code: g.code, side: ME }), false, SIDES[ME].civ), g.ok ? COL.rg : COL.rr), [gx, gy] = at(ci, cj); FK.tag(ctx, g.ok ? `${ECON.nameOf(g.code)} · ${costText(D.cost[g.code] || {})}` : g.why, gx, gy - sp.ay * s - P.lift * P.half); ctx.globalAlpha = P.ghost; FK.blit(sp, gx, gy, s); } // E699
   ctx.restore(); });
 // E207
 const hintAt = (k) => { S.hint = onB(k) && !under(k) ? suggest(k) || null : null; }; // E730
