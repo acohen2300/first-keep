@@ -264,7 +264,7 @@ const mbase = (M) => `<div class="mctl">${M.ctl}</div>${M.tiles || '<div class="
 const sitesOf = () => FK.blds().filter((t) => t.side === ME && t.done < 1); // E735
 // E202
 // E203
-const PEOPLE = { Relations: ['Raiders', 'Rivals', 'Fortress'], Misfits: ['Natives', 'Outlaws', 'Bandits', 'Robbers'] };
+const PEOPLE = { Relations: ['Raiders', 'Rivals', 'Fortress'], Misfits: Object.values(fromBook('sides').names) }; // E2201
 const escorts = (c) => WAR.armyOf(ME).filter((u) => isIdle(u) && !u.esc && !u.inside).sort((a, b) => FK.dist(a, c) - FK.dist(b, c)); // E1045
 const nearStop = (c) => ECON.stops().filter((f) => !(f.owner != null && f.owner !== ME && WAR.atWar(ME, f.owner))).reduce((a, b) => (!a || FK.dist(b, c) < FK.dist(a, c) ? b : a), null), WT_ = WD.trading, SB_ = fromBook('sides'), whoOf = (t, n, i) => (t === 'Relations' ? D.players[i + 1] : Object.keys(SB_.names).find((g) => SB_.names[g] === n)), standCol = { war: 'var(--rr)', peace: 'var(--rw)', ally: 'var(--rg)' }; // E1024
 // E971

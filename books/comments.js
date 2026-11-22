@@ -366,6 +366,8 @@ BOOK("comments", {
  "E287": {"text": "a stance is the pair's own, or the book's start (I2); a treaty sets it both ways between its signers only, never for a third (pacta tertiis, N159)"},
  "E288": {"text": "the one hostility test (Mid's isFoe): never one's own; an animal is everyone's foe; one of a wild group is a foe when the side is at war with that group; between sides, war"},
  "E289": {"text": "the wild looking at a side: an animal fights everyone; a group fights a side at war with it, but starts nothing with a computer (decision 4b: a camp fights a computer only once struck on its ground, which comes with the camps)"},
+ "E2200": {"text": "war and friendship are the Sides book's own words (I1), read once, never written in the code"},
+ "E2201": {"text": "the Relations card's wild rows are the Sides book's group names (I5), in its order; whoOf reads each back to its group by that name"},
  "E290": {"text": "the Research book (O) by code and by key"},
  "E291": {"text": "a find's or a field's rate after the side's research (QCA): the one window, D88 or the row's own rate as the base"},
  "E292": {"text": "Mid's research lines: a line is the steps of one line at one building, in the book's order; a step waits on the one before it and on its needs (by key; a need not yet in the book is never met); the next is the first unknown step of the line"},
