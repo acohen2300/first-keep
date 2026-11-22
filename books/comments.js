@@ -813,7 +813,7 @@ BOOK("comments", {
  "E878": {"text": "a sight cell's woods: how much of it is wood and its ground under the trees, so a ray through the trunks thins by e^(-n d L) and a ray over the canopy meets a wall"},
  "E879": {"text": "the fog of war is saved with the game: the ground each side has seen and the buildings it remembers, and whether fog is on; sight is cast again on load"},
  "E880": {"text": "the land kept while the camera holds still: one copy drawn back instead of the ground, the meadow, the scars and the skin each frame (SoRen's keyed layers)"},
- "E889": {"text": "the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a new land"},
+ "E889": {"text": "the land sheet slid by the camera's move since it was drawn: a pan costs one copy, not a new land; drawing always returns to the screen after a sheet is painted, and a sheet whose paint failed is painted again"},
  "E893": {"text": "a sheet (a cel of the old cartoon): a picture a margin larger than the screen, slid pixel for pixel with the camera, painted again only when it slides past its margin, the zoom or its key changes, or its time runs out; the land and the fog of war are each one"},
  "E894": {"text": "with ?test the frame meter shows from the start (its only door, the Yard, left the Paused card in N6)"},
  "E896": {"text": "the weather's fog as a sheet: each 5 m cell veiled by Beer-Lambert through the fog above it, the layer's top level over the lowest ground, so it pools in the hollows"},
