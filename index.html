@@ -263,7 +263,7 @@ function openWays(fixed) { // E652
     while (now.length) { for (const k of now) for (const d of step) { const n = k + d, w = cost[k] + FOR[n]; if (!walkable(n) || fixed.has(n) || w >= cost[n]) continue; cost[n] = w; back[n] = k; (FOR[n] ? next : now).push(n); } [now, next] = [next, []]; }
     for (const t of things) if (quarter(t) === c) { const [best] = step.map((d) => t.k + d).sort((a, b) => cost[a] - cost[b]); for (let k = best; cost[k] > 0 && cost[k] < Infinity; k = back[k]) FOR[k] = null; } });
 }
-const lay = (kind, bx, by, amount) => { put(kind, tileAt(bx, by), rng); return Object.assign(things.at(-1), { amount }); }; // E345
+const lay = (kind, bx, by, amount) => { put(kind, tileAt(bx, by), rng); const t = Object.assign(things.pop(), { amount }), at = things.findIndex((x) => x.vy > t.vy); things.splice(at < 0 ? things.length : at, 0, t); return t; }; // E345
 const byLake = (bx, by, r) => lakes.some((L) => Math.hypot(L.x - bx, L.y - by) < L.r + D.beach + r);
 const PC = C.paper, TOP = [null, PC.wet, C.sand, C.dirt, PC.grass], GR = TOP.length - 1, DT = GR - 1; // E54
 const stratum = (h) => (h <= 0 ? 0 : h < D.wetTop ? 1 : h < D.sandTop ? 2 : h < D.dirtTop || h >= D.land + D.bare ? DT : GR); // E52
