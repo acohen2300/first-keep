@@ -1633,7 +1633,7 @@ function drawUnit(u, x, y, s) { const L = DRS.lean, Bd = DRS.body, M = DRS.mark,
   if (u.side === ME && has(u, 'Gather') && isIdle(u)) idleMark(x, top, s, PDR.marks.idle, iz); if (u.side === ME && u.focus && has(u, 'Gather')) idleMark(x, top, s, PDR.marks.focus, iF); }
 // E620
 let MINI = null, MINIBOX = null; const miniBox = (r) => { MINIBOX = r && { x: r.left, y: r.top, w: r.width, h: r.height }; dirty(); }, miniAt = (px, py) => [MINI.cx + (px - MINI.mx) / MINI.k, MINI.cy + (py - MINI.my) / MINI.k];
-function drawMini(c) { MINI = null; if (!MINIBOX || !ground) return; const s = Math.min(MINIBOX.w, MINIBOX.h), x0 = MINIBOX.x + (MINIBOX.w - s) * DRW.half, y0 = MINIBOX.y + (MINIBOX.h - s) * DRW.half, // E731
+function drawMini(c) { MINI = null; if (!MINIBOX || !ground) return; const s = Math.min(MINIBOX.w, MINIBOX.h), x0 = MINIBOX.x + (MINIBOX.w - s) * DRW.half, y0 = MINIBOX.y + (MINIBOX.h - s) * DRW.half, // E2060
     [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, null), k = s / Math.max(r - l, b - t), cx = (l + r) * DRW.half, cy = (t + b) * DRW.half, mx = x0 + s * DRW.half, my = y0 + s * DRW.half, at = (vx, vy) => [mx + (vx - cx) * k, my + (vy - cy) * k];
   MINI = { x0, y0, s, k, cx, cy, mx, my }; c.save(); c.beginPath(); c.rect(x0, y0, s, s); c.clip(); c.fillStyle = deepest; c.fillRect(x0, y0, s, s); c.drawImage(ground, ...at(-ox, -oy), gw * k, gh * k);
   if (K.bliz) { c.fillStyle = CMN.white; c.fillRect(x0, y0, s, s); } const [sr, si, sn] = MNI.seat, [bw, bo, bb] = MNI.bld, sq = (x, y, r) => c.fillRect(x - r * DRW.half, y - r * DRW.half, r, r);
