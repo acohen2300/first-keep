@@ -6,5 +6,7 @@ BOOK("angles", {
  "A4": {"key":"round","value":360,"name":"a full turn: the fish spots go round a lake's shore","cite":["N170"],"law":[]},
  "A5": {"key":"loose","value":45,"name":"a missile is loosed at this rise: the farthest reach (Mid's rangeFrom)","cite":["N39","N188"],"law":["QAJ"]},
  "A6": {"key":"corner","value":270,"name":"your corner: the board's corners go clockwise a quarter turn apart from the top left of the screen; yours, the first, is this far round, the bottom left, whatever the grid's turn (Albert, Nov 6 16:01)","cite":["N228"],"law":[]},
- "A7": {"key":"axis","value":23.44,"name":"the earth's axis leans this far from upright: the sun's height at noon swings this far either side of the equinox over the year","cite":["N2"],"law":["QA"]}
+ "A7": {"key":"axis","value":23.44,"name":"the earth's axis leans this far from upright: the sun's height at noon swings this far either side of the equinox over the year","cite":["N2"],"law":["QA"]},
+ "A8": {"key":"fade","value":10,"name":"the sun's height over which its shadows fade in: from the horizon up to this they darken to full (tuning)","cite":["N500"],"law":["QAT"]},
+ "A9": {"key":"low","value":2,"name":"the lowest sun or moon a shadow is cast from: lower, the shadow is cast as from this height, so it stays finite and points away (tuning)","cite":["N500"],"law":["QAT"]}
 });

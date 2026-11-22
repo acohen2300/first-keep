@@ -1469,7 +1469,7 @@ const FAM = D.familiar, FAMC = Math.ceil(N / FAM.cell), FAMT = new Map(), famCel
 const fam = (side, k) => (!SIDES[side] ? 1 : Math.max(+bldsNear(...tileMid(k), FAM.home * D.tile, (b) => b.side === side && b.done >= 1), Math.exp(-(K.t - famOf(side)[famCell(k)]) / FAM.tau))); // E811
 const inSight = (t, side = ME, eye) => !t || !SIDES[t.side] || !SIDES[side] || t.side === side || !FOGON || seenNow(t, side) || (!!eye && dist(eye, t) < sightOf(eye) && sees(eye, t)); // E624
 // E150
-function shadowVec(h) { const sun = clamp(K.alt / 10, 0, 1) * 0.35 * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, 2) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
+function shadowVec(h) { const sun = clamp(K.alt / A.fade, 0, 1) * 0.35 * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, A.low) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
 function drawShadows(s) { // E152
   const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = C.sky.shadow;
   for (const t of blds()) { const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue;
@@ -1478,7 +1478,7 @@ function drawShadows(s) { // E152
     for (const q of [pts, sh, [pts[0], pts[1], sh[1], sh[0]], [pts[1], pts[2], sh[2], sh[1]], [pts[2], pts[3], sh[3], sh[2]], [pts[3], pts[0], sh[0], sh[3]]]) q.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
     ctx.fill(); }
   for (const u of units) { if (u.inside || !inSight(u)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18, f = s * FIG();
-    ctx.beginPath(); ctx.ellipse(x + (dx * h * f) / 2, y + (dy * h * f) / 2, Math.max(4 * f, (Math.hypot(dx, dy) * h * f) / 2), 2.5 * f, Math.atan2(dy, dx), 0, 7); ctx.fill(); }
+    ctx.beginPath(); ctx.ellipse(x + (dx * h * f) / 2, y + (dy * h * f) / 2, Math.max(4 * f, (Math.hypot(dx, dy) * h * f) / 2), 2.5 * f, Math.atan2(dy, dx), 0, A.round * RAD); ctx.fill(); }
   const [tr, or] = DRS.shade.r; if (DRAW.lvl < DRW.lv.shadows) { ctx.beginPath(); for (const t of things) { const h = t.kind !== 'bld' && !t.inner && PDR.nodeH[(KIND[t.kind] || {}).look]; if (!h) continue; const [x, y] = toScreen(t.vx, t.vy), r = (treeAt(t.k) ? tr : or) * s * t.size * artOf(t.kind), L = Math.hypot(dx, dy) * h * s * artOf(t.kind); if (x < -L || x > cw + L || y < -L || y > ch + L) continue; // E623
     ctx.moveTo(x + r, y); ctx.ellipse(x + (L / Math.hypot(dx, dy)) * dx * DRS.shade.lean, y + (L / Math.hypot(dx, dy)) * dy * DRS.shade.lean, L * DRS.shade.lean + r, Math.max(r * DRS.shade.wide, r * TILT), Math.atan2(dy, dx), -Math.PI, Math.PI); } ctx.fill(); }
   ctx.restore();
