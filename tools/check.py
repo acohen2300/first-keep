@@ -283,6 +283,19 @@ async def pressed():
         await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
         return got, await pg.evaluate("document.querySelectorAll('.pr').length")
 
+async def walled():
+    """Nine foot are ordered at a rival house inside a closed ring of rival walls with a gate (no way in); what they strike at 20 s, and at 160 s how many wall pieces stand and whether the house was reached."""
+    SET = """(() => { const h = fk.seatOf(0), N = fk.N, B = fk.B, col = fk.SIDES[2].col, [WALL] = fk.bought('Line'), [GATE] = fk.bought('Gate'), [HOUSE] = fk.bought('House'), R = 2, n = B[HOUSE][1], gn = B[GATE][1], box = n + R + R, k0 = fk.tileAt(h.bx, h.by - 300), up = (t) => { if (t) { t.done = 1; t.hp = t.hpMax = WAR.hpMax(t); } return t; };
+      let at = null; for (let d = 0; d < 40 && !at; d++) for (let dx = -d; dx <= d && !at; dx++) for (const dy of [-d, d]) { const i = k0 % N + dx, j = Math.floor(k0 / N) + dy, h0 = fk.H[j * N + i]; let ok = true; for (let y = j - 1; y < j + box + 1 && ok; y++) for (let x = i - 1; x < i + box + 1 && ok; x++) ok = fk.walkable(y * N + x) && !fk.OCC[y * N + x] && fk.H[y * N + x] === h0; if (ok) { at = [i + R, j + R]; break; } }
+      const [i0, j0] = at, house = up(fk.build(HOUSE, i0, j0, col)), W = [up(fk.build(GATE, i0 + Math.floor((n - gn) / 2), j0 + n + R - gn, col))];
+      for (let y = j0 - R; y < j0 + n + R; y++) for (let x = i0 - R; x < i0 + n + R; x++) if (y === j0 - R || y === j0 + n + R - 1 || x === i0 - R || x === i0 + n + R - 1) { const w = up(fk.build(WALL, x, y, col)); if (w) W.push(w); }
+      const men = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot').slice(0, 9), shut = !fk.findPath(men[0].k, (q) => { const x = q % N, y = (q - x) / N; return x >= i0 - 1 && x <= i0 + n && y >= j0 - 1 && y <= j0 + n; }, fk.tileAt(house.bx, house.by), D.tries.way, men[0]);
+      window.WALLED = { house, W, men }; WAR.order(men, house, fk.tileAt(house.bx, house.by)); return shut; })()"""
+    LOOK = "(() => { const { house, W, men } = WALLED, A = men.filter((u) => units.includes(u)); return { onWall: A.filter((u) => W.includes(u.target)).length, onHouse: A.filter((u) => u.target === house).length, stand: W.filter((w) => things.includes(w)).length, of: W.length, house: things.includes(house) ? Math.round(house.hp / house.hpMax * 100) : 0 }; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); shut = await pg.evaluate(SET); await run.step(pg, 20); first = await pg.evaluate(LOOK); await run.step(pg, 140)
+        return shut, first, await pg.evaluate(LOOK)
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -325,6 +338,8 @@ async def check_game():
     rule('every word floating over the map has its dark patch at the book strength, and a redrawn card keeps them in place', len(pg_) >= pn and all(abs(o - pm) < 0.01 for _, _, o in pg_) and pk, f'{len(pg_)} patches for {pn} troop words and the rest, strengths {sorted({o for _, _, o in pg_})}, same after a redraw: {pk}')
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
+    ws, w0, w1 = await walled()
+    rule('a soldier with no way to its foe strikes the enemy wall or gate in the way, and goes back to the foe once a piece falls (D400)', ws and w0['onWall'] > 0 and w1['stand'] < w1['of'] and (w1['onHouse'] > 0 or w1['house'] < 100), f'ring shut: {ws}; at 20 s on a wall {w0["onWall"]}, on the house {w0["onHouse"]}; at 160 s wall pieces standing {w1["stand"]} of {w1["of"]}, on the house {w1["onHouse"]}, house left {w1["house"]}%')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
