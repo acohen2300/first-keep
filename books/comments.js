@@ -1135,7 +1135,7 @@ BOOK("comments", {
  "E1505": {"text": "the Alarm's villagers with no room anywhere (Garrison, Shelter) gather beside the Town Center (E1502), not on a spot behind it that may be blocked or out of its arrows"},
  "E1430": {"text": "Fall back (N465): the picked soldiers that fight find the nearest enemy within look tiles of their middle, and the enemies grouped round it; none near, nothing happens"},
  "E1431": {"text": "Fall back: the spot is straight away from that enemy, past the farthest reach among them plus ranks rank spacings; the soldiers re-form there (dress), or nothing happens when they cannot get there"},
- "E1432": {"text": "Fall back: each soldier remembers the enemies it left (one shared list, so the group is known), falls back in order until it arrives (fb: fewer blows, no rout) and drops any squad order"},
+ "E1432": {"text": "Fall back: each soldier remembers the enemies it left (one shared record holding them, so the group is known and stays one group through a save), falls back in order until it arrives (fb: fewer blows, no rout) and drops any squad order"},
  "E1433": {"text": "Fall back's beat: the soldiers falling back, grouped by the enemies they left"},
  "E1434": {"text": "Fall back's beat: once none of a group is still marching they have re-formed, so each goes back in at the nearest of the enemies they left still alive; the same rule for every side"},
  "E1435": {"text": "the war beat: squad orders, then those falling back"},
