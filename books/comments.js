@@ -1148,5 +1148,7 @@ BOOK("comments", {
  "E1404": {"text": "villagers stop at the personality's cap times its match share, and never past the room the army aim needs under the most people, so a full town still has room for soldiers (D391, N460: 146 villagers at 180 people with an army aim)"},
  "E1405": {"text": "the class it likes this match (D390): with no foe in sight every other soldier is of it, and with foes its kinds are scored liking times higher"},
  "E1406": {"text": "the side it bears a grudge against this match (D390): its odds on that side read grudge times higher, so which side it marches on differs from game to game"},
- "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"}
+ "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"},
+ "E1590": {"text": "a stat is looked up by its unit and then its name, two steps, not by a name strung together each time: in a big battle the joined name was built and hashed on every blow (5.8% of a heavy late-game step, Nov 21); same numbers, same memo, cleared the same way"},
+ "E1591": {"text": "one side's remembered stats, one row a unit: stat keeps each number under its name, statRow keeps the whole row under *"}
 });
