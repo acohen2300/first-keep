@@ -343,6 +343,7 @@ BOOK("comments", {
  "E264": {"text": "the player's volume for this channel"},
  "E265": {"text": "ambience as events: a bird from a tree in view by day, a cricket in the dark, never in winter; when one sings is a Poisson process (HX4)"},
  "E266": {"text": "QBX: the air's top falls with snow cover, on a log scale"},
+ "E2220": {"text": "one panner for a whole sound, not one for each of its parts (a knock is up to four): fewer nodes made a blow in a big fight, the same sound, since a panner is linear on one channel; a part with its own pan (the new age's chord) still gets its own"},
  "E267": {"text": "a side's economy, fresh: its age, the steps it knows, its gathered total, the rally, and the stores' flow (this minute's in and out, the last minute's, each by reason) and the ledger of the whole game"},
  "E268": {"text": "earn and spend: every store in or out goes through these two, the one home for the stores, the minute's flow (by resource and by reason) and the ledger of where it came from and went (its words in the Words book, J1); a gain from gathering counts toward the score's wealth"},
  "E269": {"text": "what was paid comes back the way it went out: the store, the minute's spending and the ledger step back, so a cancel is as if the order never was"},
