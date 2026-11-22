@@ -353,7 +353,7 @@ FK.on('plan', (u, t, k) => { if (u.hp > 0) { const was = S.told; tapDo([u], t, k
 FK.on('tap', (k, u, px, py) => { FK.fire('event', ...heard(k, u, px, py)); return true; }); // E772
 function heard(k, u, px, py) {
   if (S.ghost) { if (!line(S.ghost.code)) { const g = S.ghost, [i, j] = tileUnder(px, py), [, n] = B[g.code]; if (g.ok && i >= g.i && i < g.i + n && j >= g.j && j < g.j + n) { VERBS.build.run(); render(true); return ['place']; } ghostTo(px, py); render(true); return ['tap']; } if (k >= 0) { S.ghost.pts.push(wallSnap(S.ghost.pts.at(-1), k)); wallSet(S.ghost); render(true); return ['place']; } return ['err']; } // E1252
-  if (S.war && !(u && own(u) && !isSoldier(u)) && !FK.picked().some((v) => own(v) && !isSoldier(v))) { const C = S.ctl, P = soldiers(); S.ro = null; // E1047
+  if (S.war && !(u && own(u) && !isSoldier(u)) && !FK.picked().some((v) => own(v) && !isSoldier(v))) { const C = S.ctl, P = host(); S.ro = null; // E1047 E2685
  if (isSoldier(u)) { pickToggle(u); return ['pick', u]; } if (P.length && C.act && onB(k)) { const t = u || (FK.inSight(under(k)) ? under(k) : null); aimSpot(k, u); send(C.act, P, t && !own(t) ? t : null, k); endPick(); render(true); return ['order', t]; } if (C.spot && S.aim && (u ? S.aim.t === u : S.aim.k === k)) { C.spot = false; S.aim = null; } else { aimSpot(k, u); C.spot = onB(k); } render(true); return ['tap']; } // E1006
   const bk = BKS.find(([, x, y]) => Math.hypot(x - px, y - py) * 2 < SCR.mold.slot); if (bk) { letGo(); Object.assign(S, { subject: bk[0], cof: bk[0], ctab: MO.sides.L[0], cpage: 0, cs: null, tab: null, hide: false }); render(true); return ['book', bk[0]]; } // E1234
   if (FK.paused() && !S.tab && !S.ghost) { FK.pause(false); return ['tap']; } // E706
