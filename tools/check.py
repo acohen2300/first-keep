@@ -15,7 +15,7 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
     (12, ['Easy', 'Han', '30 min', 'Siege'], 20),
     (13, ['Hard', 'Persian', 'Conquest', 'Silk Road', 'Hardest', 'Famine', 'Weather', 'Drought', 'Outlaws', 'Plague'], 25),
 ]
-NO_UNIT = 1745
+NO_UNIT = 1735
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
 
 fails = []
