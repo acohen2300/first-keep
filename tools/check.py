@@ -390,6 +390,18 @@ async def unqueued():
         await pg.evaluate("ECON.unqueue(ZUQ.h, 0)"); await run.step(pg, 1)
         return q, await pg.evaluate(LOOK)
 
+async def camp_crew():
+    """One soldier alone raises a camp piece 45 tiles or more from every other soldier: its crew does not grow step on step, and in ten seconds the piece rises at one soldier's hands (D279 build x campbuild, to D126's crew power), not slower and slower (Nov 21 review of econ.js, E2560)."""
+    SET = """(() => { const h = fk.seatOf(0), N = fk.N, T = fk.D.tile, [code] = fk.bought('House'), A = units.filter((v) => v.side === 0 && WAR.armed(v)); let b = null;
+  for (let r = 45; r < 90 && !b; r += 3) for (let a = 0; a < 24 && !b; a++) { const i = Math.round(h.i + r * Math.cos(a * Math.PI / 12)), j = Math.round(h.j + r * Math.sin(a * Math.PI / 12)); const t = i > 0 && j > 0 && ECON.site(0, code, i, j); if (!t) continue; if (A.some((v) => fk.dist(v, t) < 45 * T)) fk.unbuild(t); else b = t; }
+  b.camp = { size: 'small' }; const foot = units.find((u) => u.side === 0 && fk.SH[u.code].class === 'Foot').code; let u = null;
+  for (let y = b.j - 1; y <= b.j + b.n && !u; y++) for (let x = b.i - 1; x <= b.i + b.n && !u; x++) { const k = y * N + x; if (fk.walkable(k) && !fk.OCC[k] && !units.some((v) => v.k === k)) u = fk.spawn(foot, 0, k, fk.rng); }
+  Object.assign(u, { job: 'raise', then: 'raise', site: b, goal: null, target: null, path: null }); window.ZCC = { b, u, d0: b.done }; return [Math.round(Math.min(...A.map((v) => fk.dist(v, b))) / T), fk.atB(u, b)]; })()"""
+    LOOK = "(() => { const { b, u, d0 } = ZCC, T1 = fk.stat(b.code, 0, 'build'), hand = fk.D.camp.build * fk.stat('', 0, 'campbuild'); return [Math.round(b.crew || 0), +(b.done - d0).toFixed(4), +((hand ** fk.D.crew) * 10 / T1).toFixed(4), units.filter((v) => v.site === b && v.job === 'raise').length, units.filter((v) => v.target === b).length, u.job]; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 10)
+        return s, await pg.evaluate(LOOK)
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -446,6 +458,8 @@ async def check_game():
     rule('a soldier with no way to its foe strikes the enemy wall or gate in the way, and goes back to the foe once a piece falls (D400)', ws and w0['onWall'] > 0 and w1['stand'] < w1['of'] and (w1['onHouse'] > 0 or w1['house'] < 100), f'ring shut: {ws}; at 20 s on a wall {w0["onWall"]}, on the house {w0["onHouse"]}; at 160 s wall pieces standing {w1["stand"]} of {w1["of"]}, on the house {w1["onHouse"]}, house left {w1["house"]}%')
     uq = await unqueued()
     rule('taking the first item out of a queue restarts the clock: Back on a Town Center queue of a villager then an age leaves the age-up its whole time, not a free age', uq[0] == [2, True] and uq[1][:2] == [0, 1] and uq[1][2] >= uq[1][3] - 2, f'queue and age-up taken: {uq[0]}; ages gained, queue left, seconds left, its whole time: {uq[1]}')
+    cs, cc = await camp_crew()
+    rule('a camp piece raised by soldiers alone rises at their hands, as a villager\'s would: its crew does not grow step on step', cs[1] and cc[0] <= 1 and cc[3:] == [1, 0, 'raise'] and abs(cc[1] - cc[2]) <= cc[2] * 0.02, f'piece {cs[0]} tiles from the other soldiers, one beside it: {cs[1]}; crew, risen in 10 s, one soldier\'s 10 s, soldiers on it, villagers on it, his job: {cc}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')

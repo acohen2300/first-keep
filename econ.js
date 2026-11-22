@@ -445,11 +445,11 @@ function campWhyTrain(side, c) { const size = campOf(c), Q = CW.cap; if (!size) 
   return campsOut(side, size) >= cap ? (cap === CA.one ? Q.one : Q.two).replace('{what}', what) : ''; }
 // E500
 const needs = (b) => !up(b) || b.hp < b.hpMax * CA.mend, hands = (u) => CA.build * FK.stat('', u.side, 'campbuild'), raiser = (u) => WAR.armed(u) && !CA.not.includes(FK.SH[u.code].class) && !u.target && !u.chg && !u.goingHome && (isIdle(u) || u.job === 'hold');
-function campRaise(dt) { const S = things().filter((b) => b.camp && alive(b) && needs(b)), look = FK.every(CA.look), at1 = [];
-  for (const u of units()) { if (u.job === 'raise') { const b = u.site; if (!b || b.gone || !needs(b) || u.target) { u.site = null; u.job = 'idle'; } else if (FK.atB(u, b)) { b.crew += hands(u); at1.push(u); } else if (!u.path && !FK.goBy(u, b)) u.job = 'idle'; continue; }
+function campRaise(dt) { const S = things().filter((b) => b.camp && alive(b) && needs(b)), look = FK.every(CA.look), at1 = [], hand = new Map(); // E2560
+  for (const u of units()) { if (u.job === 'raise') { const b = u.site; if (!b || b.gone || !needs(b) || u.target) { u.site = null; u.job = 'idle'; } else if (FK.atB(u, b)) { hand.set(b, (hand.get(b) || 0) + hands(u)); at1.push(u); } else if (!u.path && !FK.goBy(u, b)) u.job = 'idle'; continue; }
     if (!look || !S.length || !raiser(u)) continue; const taken = (b) => units().filter((v) => v.site === b && v.job === 'raise').length, by = (b) => dist(u, b) / D.tile + CA.crowd * taken(b), [b] = S.filter((q) => q.side === u.side && by(q) < CA.raise).sort((p, q) => by(p) - by(q));
     if (b) { Object.assign(u, { job: 'raise', then: 'raise', site: b, goal: null }); if (!FK.atB(u, b) && !FK.goBy(u, b)) u.job = 'idle'; } }
-  for (const u of at1) { const b = u.site, T1 = FK.stat(b.code, b.side, 'build'), k = ((hands(u) * Math.pow(b.crew, D.crew)) / b.crew) * dt / T1;
+  for (const u of at1) { const b = u.site, T1 = FK.stat(b.code, b.side, 'build'), c = ~~b.crew + hand.get(b), k = ((hands(u) * Math.pow(c, D.crew)) / c) * dt / T1;
     if (up(b)) b.hp = Math.min(b.hpMax, b.hp + ((b.hpMax * D.rising.rise * hands(u)) / T1) * dt); else { b.done = Math.min(CA.built, b.done + k); b.hp = up(b) ? b.hpMax : Math.min(b.hpMax, b.hp + b.hpMax * D.rising.rise * k); } } }
 function sendHome(u) { const H1 = (t) => t.kind === 'bld' && t.side === u.side && FK.has(t, 'Heal') && up(t) && alive(t), tent = things().find((t) => H1(t) && t.camp && dist(t, u) < D.heal[t.code].r * D.tile), hosp = tent && things().find((t) => H1(t) && !t.camp); // E501
   if (!hosp) return; WAR.march(u, FK.tileAt(hosp.bx, hosp.by)); u.goingHome = true; if (u.side === ME) tell(CW.home, { name: FK.rankName(u.code, u.side) }); }
