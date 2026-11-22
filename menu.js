@@ -10,7 +10,7 @@ const classes = () => [...new Set(Object.values(D.trains).flat().filter((k) => !
 const ticked = (page, t) => !!(SCR[page] && SCR[page].ticks.includes(t)), tall = (page) => ticked(page, 'Tall'), sheet = () => !!S.tab && !ticked(S.tab, 'Dock'); // E175
 const OPTS = ((W, V, F) => ({ ...Object.fromEntries(Object.keys(W).map((k) => [k, W[k].map((w, i) => [w, (V[k] || [])[i]])])), fog: [[F.on, true], [F.off, false]] }))(fromBook('words').say.opts, SCR.opts, fromBook('words').fogwar); // E176
 const BUILT = { diff: true, len: true, daily: true, civ: true, scen: true, fog: true }; // E177
-const ORDER = ['food', 'wood', 'stone', 'gold', 'iron'], NAME = fromBook('words').say.res; // E178
+const NAME = fromBook('words').say.res, ORDER = SCR.top.filter((k) => k in NAME); // E178
 // E179
 const svg = (body, fill = 'none') => `<svg viewBox="0 0 24 24" width="22" height="22" fill="${fill}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
 const SVG = {}; for (const [k, v] of Object.entries(SCR.icons)) SVG[k] = svg(v); // E819
@@ -66,10 +66,10 @@ function ringMount(root) { for (const m of root.querySelectorAll('.rk')) { const
 const ringP = (m) => { if (m.dataset.src === 'sites') { const ss = sitesOf(); return ss.length ? ss.reduce((a, t) => a + t.done, 0) / ss.length : 0; } const b = QB[m.dataset.qb]; return b && b.q && b.q.length ? Math.min(1, Math.max(0, 1 - b.qt / ECON.timeOf(b.side, b.q[0]))) : 0; }; // E833
 function fit(root) { const F = SCR.dock.fit, pad = SCR.css.edge; for (const c of root.querySelectorAll('.tabs .cell, .tabs + .row6 .cell, .hp .cell, .exec.name, .kr .cell, .mt .cell')) for (const n of [...c.childNodes]) { let e = n; if (n.nodeType === Node.TEXT_NODE) { if (!n.textContent.trim()) continue; e = document.createElement('span'); n.replaceWith(e); e.append(n); } else if (!n.matches('small, span:not(.bar):not(.t)')) continue; const k = (c.clientWidth - pad) / e.offsetWidth; e.style.transform = k < 1 ? `scaleX(${Math.max(F, k)})` : ''; } } // E1120
 FK.on('over', () => { for (const r of document.querySelectorAll('.rg .rr')) { const m = r.closest('svg').parentElement.querySelector(':scope > .rk'), p = ringP(m); r.setAttribute('stroke-dasharray', `${1 - p + (p ? 0 : RS.seam)} ${2}`); r.setAttribute('stroke-dashoffset', -p); } }); // E834
-const price = (c) => { const st = SIDES[ME].store, L = Object.entries(c || {}).filter(([, n]) => n > 0); if (!L.length) return `<small>${costText(c)}</small>`; // E926
-  const share = ([y, n]) => (st[y] || 0) / n, worst = Math.min(...L.map(share)); const m = L.length > T3 ? Math.ceil(L.length / 2) : L.length; return [L.slice(0, m), L.slice(m)].filter((G) => G.length).map((G) => `<small style="opacity:1;color:${worst > 1 ? COL.rg : worst === 1 ? COL.rw : COL.rr}">${G.map((e) => `<span${share(e) < 1 ? ' class="lack"' : ''}>${e[1]}${e[0][0]}</span>`).join('')}</small>`).join(''); };
+const price = (c) => { const st = SIDES[ME].store, L = costList(c); if (!L.length) return `<small>${costText(c)}</small>`; // E926
+  const share = ([y, n]) => (st[y] || 0) / n, worst = Math.min(...L.map(share)); const m = L.length > T3 ? Math.ceil(L.length / 2) : L.length; return [L.slice(0, m), L.slice(m)].filter((G) => G.length).map((G) => `<small style="opacity:1;color:${worst > 1 ? COL.rg : worst === 1 ? COL.rw : COL.rr}">${G.map((e) => `<span${share(e) < 1 ? ' class="lack"' : ''}>${costBit(e)}</span>`).join('')}</small>`).join(''); };
 const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
-const costText = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).map(([y, n]) => `${n}${y[0]}`).join(' ') || TELL.free, needs = (c) => WD.research.cost.replace('{cost}', costText(c)), [NEEDS] = WD.research.cost.split('{'); // E183
+const rankOf = (y) => (ORDER.includes(y) ? ORDER.indexOf(y) : ORDER.length), costList = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).sort(([a], [b]) => rankOf(a) - rankOf(b)), costBit = ([y, n]) => `${fmt(n)}${y[0]}`, costText = (c) => costList(c).map(costBit).join(' ') || TELL.free, needs = (c) => WD.research.cost.replace('{cost}', costText(c)), [NEEDS] = WD.research.cost.split('{'); // E183
 const own = (t) => t && t.side === ME, AW = WD.alarm, EW = WD.end, NEWS = WD.news, TELL = WD.say; // E404
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u); // E819
 const isSoldier = (u) => u && u.kind === 'unit' && own(u) && WAR.troop(u);
