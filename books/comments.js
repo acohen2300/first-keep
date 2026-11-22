@@ -1155,6 +1155,7 @@ BOOK("comments", {
  "E1405": {"text": "the class it likes this match (D390): with no foe in sight every other soldier is of it, and with foes its kinds are scored liking times higher"},
  "E1406": {"text": "the side it bears a grudge against this match (D390): its odds on that side read grudge times higher, so which side it marches on differs from game to game"},
  "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"},
+ "E2463": {"text": "with no wave out it holds a choke on the road to the side it bears the grudge against (D390), while at war with it; else on the road to the first side it is at war with"},
  "E1590": {"text": "a stat is looked up by its unit and then its name, two steps, not by a name strung together each time: in a big battle the joined name was built and hashed on every blow (5.8% of a heavy late-game step, Nov 21); same numbers, same memo, cleared the same way"},
  "E1591": {"text": "one side's remembered stats, one row a unit: stat keeps each number under its name, statRow keeps the whole row under *"},
  "E1480": {"text": "a soldier with no way to its foe (N470), its numbers (D400)"},
