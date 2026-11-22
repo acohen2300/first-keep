@@ -4,7 +4,7 @@ Agreed Nov 20. One build between previews. Order is top to bottom.
 
 ## Handoff, Nov 22 (after his 277-minute match, a win; logs read in chat)
 
-Read this first. The reviewers' 18 reports are on the branch `fresh-notes`, folder `review/`.
+Read this first. The reviewers' 18 reports are on the branch `fresh-notes`, folder `review/`. Where each finding stands: `review/STATUS.md` (Nov 22): round 2 fixed most; 18 more fixed Nov 22; 9 wait for his call; the frame findings go with Build 3, the rule clean-up last.
 
 What the match showed, worst first: armies broke all at once at every Town Center (no courage, Hold does not hold); the economy did not run itself (idle villagers, winter starvation until he doubled food workers by hand, 300k banked with nothing to buy, pop cap 180, "That line is full" 553 times); no information (no scout report, no warning before winter, a resource running out or a break); orders that never arrived (T27 sat 46 min, V25 12 min; "no way" on 79 men at 98:32); rivals sat on hoards and did not attack for long stretches; freezes up to 1.5 s in fights.
 
