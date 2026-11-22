@@ -1012,7 +1012,7 @@ BOOK("comments", {
  "E1210": {"text": "the saved group still alive; Custom+ saves a pick made by hand or trimmed with minus and plus (or any pick while nothing is saved), and otherwise picks the saved group again, until Custom+ gets its own step (N433)"},
  "E1211": {"text": "which card shows: ice, war, a crew, my building, any other subject, then Build or Jobs"},
  "E1213": {"text": "under the line the control row and the tile row; empty rows keep their height so Home and War never move"},
- "E1214": {"text": "a Jobs tile: People or a resource; picking one rings it and makes it the rally (new villagers go there)"},
+ "E1214": {"text": "a Jobs tile: People or a resource. People trains a villager at the hall (its tile shows the head count over the cap and the price); a resource with villagers picked sends them to that work; with none picked it rings it and makes it the rally (new villagers go there), and a second tap takes the rally off"},
  "E1216": {"text": "the Jobs | Build toggle; with a card open it closes the card and opens the page; Jobs lets the picked go and is always the Jobs page, Build keeps the picked villagers as its builders (N396, N414)"},
  "E1218": {"text": "Home: closes whatever is open; with nothing open it takes the camera home"},
  "E1219": {"text": "Cancel on a one-line card: let go of the pick and close"},
