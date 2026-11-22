@@ -402,6 +402,15 @@ async def camp_crew():
         await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 10)
         return s, await pg.evaluate(LOOK)
 
+async def age_lost():
+    """A second Town Center stands; the one raising the age-up is razed: the side can start the age-up again at the other (Nov 21 review of econ.js, E2561)."""
+    SET = """(() => { const h = fk.seatOf(0), col = fk.SIDES[0].col; let h2 = null; for (let r = 12; r < 40 && !h2; r++) for (let a = -r; a <= r && !h2; a += 2) h2 = fk.build(h.code, h.i + a, h.j + r, col) || fk.build(h.code, h.i + a, h.j - r, col);
+  h2.done = 1; h2.hp = h2.hpMax = WAR.hpMax(h2); const up = ECON.ageUp(0), at = fk.blds().find((t) => t.side === 0 && (t.q || []).some((c) => fk.D.ages.includes(c))); window.ZAL = at; return [up, !!at, fk.SIDES[0].aging > 0]; })()"""
+    RAZE = "(() => { WAR.die(ZAL, units.find((u) => u.side > 0 && fk.SIDES[u.side] && WAR.armed(u)) || null, 'razed'); return [fk.SIDES[0].aging, fk.blds().filter((t) => t.side === 0 && fk.has(t, 'Seat')).length, ECON.ageUp(0), fk.SIDES[0].aging > 0]; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 1)
+        return s, await pg.evaluate(RAZE)
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -460,6 +469,8 @@ async def check_game():
     rule('taking the first item out of a queue restarts the clock: Back on a Town Center queue of a villager then an age leaves the age-up its whole time, not a free age', uq[0] == [2, True] and uq[1][:2] == [0, 1] and uq[1][2] >= uq[1][3] - 2, f'queue and age-up taken: {uq[0]}; ages gained, queue left, seconds left, its whole time: {uq[1]}')
     cs, cc = await camp_crew()
     rule('a camp piece raised by soldiers alone rises at their hands, as a villager\'s would: its crew does not grow step on step', cs[1] and cc[0] <= 1 and cc[3:] == [1, 0, 'raise'] and abs(cc[1] - cc[2]) <= cc[2] * 0.02, f'piece {cs[0]} tiles from the other soldiers, one beside it: {cs[1]}; crew, risen in 10 s, one soldier\'s 10 s, soldiers on it, villagers on it, his job: {cc}')
+    al, ar = await age_lost()
+    rule('a side whose Town Center falls while raising the age, with another standing, can start the age-up again at the other', al == [True, True, True] and ar[0] == 0 and ar[1] >= 1 and ar[2:] == [True, True], f'second Town Center, age-up taken and running: {al}; after the raze: aging, Town Centers left, age-up taken again, running: {ar}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')

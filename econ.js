@@ -248,7 +248,7 @@ FK.on('tick', (dt) => {
   burn(dt); if (FK.every(FD.beat)) finds(); if (FK.every(D.minute)) lightning(); if (FK.every(D.beats.health)) health();
   if (FK.every(DG.beat)) { dangerMap(); watch(); sites(); homeIdle(); } if (FK.every(DG.look)) leave(); if (FK.every(FL.look)) for (const u of units()) if (FK.has(u, 'Gather') && SIDES[u.side]) fright(u, FK.seatOf(u.side)); if (FK.every(D.peaceBeat)) judge();
 });
-FK.on('gone', (t) => { t.gone = true; });
+FK.on('gone', (t) => { t.gone = true; if (SIDES[t.side] && (t.q || []).some((c) => D.ages.includes(c))) SIDES[t.side].aging = 0; }); // E2561
 FK.on('gone', (t) => { if (FK.has(t, 'Wonder') && t.held != null) tell(EW.lost[+(t.side !== ME)], { side: EW.sides[t.side] }); if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side) || fell.has(t.side) || things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) return; fall(t.side, t.by); });
 FK.on('start', () => { result = emg = FK.near = null; bell = 0; warnT = -Infinity; fell.clear(); rang.clear(); turned = Math.floor(FK.yt() / D.season); harvest = D.harvest.at(-1); for (const s of SIDES) Object.assign(s, fresh(), { store: { ...D.start }, capA: null }); for (const s of D.players) { scares[s] = []; delete FK.DANGER[s]; } // E225
   for (const side of D.players) villagersOf(side).forEach((u, i) => { const f = bestFind(u, D.first.jobs[i] || D.first.rest); if (f) gatherAt(u, f); }); });
