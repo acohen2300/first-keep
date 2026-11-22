@@ -51,6 +51,7 @@ BOOK("comments", {
 "E776": {"text": "water cells traced like the land: each depth band of the water drawn along its contour, so the shallows and the deep meet in curves, not tiles"},
 "E777": {"text": "a tree's leaf stage: the year's place in seasons, each tree a little later or earlier by its own seed (lag), kept once per tree; the lag uses the seed's second draw, because a small seed's first draw is near 0 and every tree would turn on the same frame"},
 "E2660": {"text": "the Bar (tavern) picture is drawn 26 wide and scaled to its 20-wide footprint (D8, 2 tiles of D.tile), so it no longer spills onto the next tile or catches taps there"},
+"E2661": {"text": "the drawn corners (E21): each corner's up to 4 tile heights are sorted by a small insertion sort into two reused arrays (equal heights keep their order, as the old sort did), instead of 5 new arrays and a sort at every corner of the map; the same heights come out, about 6 times faster per map load"},
 "E778": {"text": "every leaf a tree could hold is placed first, each with its own draw; the ones under the share kept are drawn, so a crown fills in spring and thins in fall, leaf by leaf, never reshuffled"},
 "E779": {"text": "the contours painted band by band over the whole piece of land, lowest first, so a band laid in one cell is never painted over by the lower band of the next; then the ice masks filled once each"},
 "E780": {"text": "the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake's depth (D27) of D350's steps"},
