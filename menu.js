@@ -297,7 +297,7 @@ document.addEventListener('pointerdown', (e) => { const b = e.target.closest('[d
 FK.on('rest', () => !!ECON.result());
 // E206
 const canvas = document.getElementById('map');
-const tileUnder = (px, py) => { const [cw, ch] = FK.size(), c = FK.cam, vx = c.x + (px - cw / 2) / c.z, vy = c.y + (py - ch / 2) / c.z, [sx, sy] = FK.fromBoard(vx, (vy + D.land * Math.cos(FK.A.rise * Math.PI / 180)) / Math.sin(FK.A.rise * Math.PI / 180)); return [Math.floor(sx / D.tile), Math.floor(sy / D.tile)]; };
+const tileUnder = (px, py) => { const [cw, ch] = FK.size(), c = FK.cam, vx = c.x + (px - cw / 2) / c.z, vy = c.y + (py - ch / 2) / c.z, [sx, sy] = FK.fromBoard(vx, (vy + D.land * FK.UP) / FK.TILT); return [Math.floor(sx / D.tile), Math.floor(sy / D.tile)]; };
 const ghostTo = (px, py, tol = Math.max(P.tol.least, P.tol.zoom / FK.cam.z)) => { const g = S.ghost, [i, j] = tileUnder(px, py), [, n] = B[g.code], h = Math.floor(n * P.half); [g.i, g.j] = ECON.spot(ME, g.code, i - h, j - h, tol); g.why = ECON.placeWhy(ME, g.code, g.i, g.j); g.ok = !g.why; FK.dirty(); }; // E333
 const inN = (v) => Math.max(0, Math.min(N - 1, v)), tileK = (px, py) => { const [i, j] = tileUnder(px, py).map(inN); return j * N + i; }, ij = (k) => ECON.at(k), fits = (g, k) => ECON.canPlace(g.code, ...ij(k));
 const wallSnap = (a, k) => { if (a == null) return k; const [ai, aj] = ij(a), [i, j] = ij(k); return Math.abs(j - aj) * P.flat < Math.abs(i - ai) ? aj * N + i : Math.abs(i - ai) * P.flat < Math.abs(j - aj) ? j * N + ai : k; }; // E334
