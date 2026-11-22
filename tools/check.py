@@ -382,7 +382,7 @@ async def walled():
       window.WALLED = { house, W, men }; WAR.order(men, house, fk.tileAt(house.bx, house.by)); return shut; })()"""
     LOOK = "(() => { const { house, W, men } = WALLED, A = men.filter((u) => units.includes(u)); return { onWall: A.filter((u) => W.includes(u.target)).length, onHouse: A.filter((u) => u.target === house).length, stand: W.filter((w) => things.includes(w)).length, of: W.length, house: things.includes(house) ? Math.round(house.hp / house.hpMax * 100) : 0 }; })()"
     async with run.game(SEED, test=True) as pg:
-        await run.step(pg, 40); shut = await pg.evaluate(SET); await run.step(pg, 20); first = await pg.evaluate(LOOK); await run.step(pg, 140)
+        await pg.evaluate(CALM); await run.step(pg, 40); shut = await pg.evaluate(SET); await run.step(pg, 20); first = await pg.evaluate(LOOK); await run.step(pg, 140)
         return shut, first, await pg.evaluate(LOOK)
 
 async def unqueued():
