@@ -439,7 +439,7 @@ async def check_game():
     rule('a soldier with no way to its foe strikes the enemy wall or gate in the way, and goes back to the foe once a piece falls (D400)', ws and w0['onWall'] > 0 and w1['stand'] < w1['of'] and (w1['onHouse'] > 0 or w1['house'] < 100), f'ring shut: {ws}; at 20 s on a wall {w0["onWall"]}, on the house {w0["onHouse"]}; at 160 s wall pieces standing {w1["stand"]} of {w1["of"]}, on the house {w1["onHouse"]}, house left {w1["house"]}%')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
-    rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
+    rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Archers 8', 'Cavalry 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
     mr, me, ma = await missions()
     rule('a mission tapped with nobody picked first picks All, then arms', ma == (24, True), f'picked, Move armed: {ma}')
     rule('the mission row reads Attack, Move, Hold, Defend, Fall back, Retreat, then the bell tile', mr == ['Attack', 'Move', 'Hold', 'Defend', 'Fall back', 'Retreat', 'bell'], f'row: {mr}')
