@@ -238,7 +238,7 @@ const ofKind = (cls) => sendable().filter((u) => clsOf(u.code) === cls), aimK = 
 const chargeWhy = (S) => (!S.some((u) => !stat(u).bonly) ? WO.why.charge : AT['charge' + ME] > K.t ? WO.why.winded.replace('{n}', wait('charge' + ME)) : '');
 function charge(S) { const [s0] = S; AT['charge' + s0.side] = K.t + CH.cd * FK.stat('', s0.side, 'chargecd'); for (const u of S) if (!stat(u).bonly) { u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } }
 function fallBack(S) { const G = S.filter((u) => armed(u) && alive(u)); if (!G.length) return null; const [g] = G, c = centreOf(G), f = nearest(g, FB.look, c); if (!f) return 0; const F = []; FK.unitsNear(f, AR.group * T, (v) => { if (enemies(g, v) && alive(v)) F.push(v); }); // E1430
-  const out = Math.max(...F.map((v) => stat(v).rng)) + FB.ranks * GR.gap, [dx, dy] = dir(c.bx - f.bx, c.by - f.by); if (!dress(G, FK.tileAt(f.bx + dx * out * T, f.by + dy * out * T))) return 0; // E1431
+  const out = Math.max(...F.map((v) => stat(v).rng)) + FB.ranks * GR.gap, [dx, dy] = dir(c.bx - f.bx, c.by - f.by), on = (v) => Math.min(FK.B1, Math.max(FK.B0, v)); if (!dress(G, FK.tileAt(on(f.bx + dx * out * T), on(f.by + dy * out * T)))) return 0; // E1431
   for (const u of G) Object.assign(u, { fall: F, fb: Infinity, focus: null, ord: null, sent: false }); return G.length; } // E1432
 function fallTick() { const by = new Map(); for (const u of units()) if (u.fall && alive(u)) (by.get(u.fall) || by.set(u.fall, []).get(u.fall)).push(u); // E1433
   for (const [F, G] of by) if (!G.some((u) => status(u) === 'march')) { const L = F.filter(alive); for (const u of G) { Object.assign(u, { fall: null, fb: null }); if (L.length) fight(u, L.reduce((a, b) => (gap(u, a) <= gap(u, b) ? a : b)), true); } } } // E1434
