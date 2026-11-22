@@ -283,6 +283,17 @@ async def pressed():
         await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
         return got, await pg.evaluate("document.querySelectorAll('.pr').length")
 
+async def front_line():
+    """Twenty foe foot march at ten foot and ten archers of ours, which are told to attack the man at the back of them: they take the front, nobody goes past it, and a minute on we have lost fewer than they have."""
+    SET = "(() => { const h = fk.seatOf(0), N = fk.N, T = fk.D.tile, code = (cls) => units.find((u) => u.side === 0 && fk.SH[u.code].class === cls).code, block = (c, side, k0, n, into) => { for (let d = 0; d < 12 && into.length < n; d++) for (let dx = -d; dx <= d && into.length < n; dx++) for (const dy of [-d, d]) { const k = k0 + dx + dy * N; const e = into.length < n && fk.walkable(k) && !units.some((u) => u.k === k) && fk.spawn(c, side, k, fk.rng); if (e) into.push(e); } return into; }, P = fk.tileAt(h.bx, h.by - 30 * T); window.MINE = block(code('Foot'), 0, P, 10, []); block(code('Archers'), 0, P + 3 * N, 20, MINE); window.FOES = block(code('Foot'), 2, fk.tileAt(h.bx, h.by - 52 * T), 20, []); WAR.attack(2, P, FOES); })()"
+    TAP = "(() => { const c = WAR.centreOf(MINE), F = FOES.filter((u) => units.includes(u)), f = WAR.centreOf(F), d = Math.hypot(f.bx - c.bx, f.by - c.by); window.AX = { c, a: [(f.bx - c.bx) / d, (f.by - c.by) / d] }; window.BACK = F.sort((p, q) => Math.hypot(q.bx - c.bx, q.by - c.by) - Math.hypot(p.bx - c.bx, p.by - c.by))[0]; WAR.order(MINE, BACK, BACK.k); })()"
+    LOOK = "(() => { const on = (u) => ((u.bx - AX.c.bx) * AX.a[0] + (u.by - AX.c.by) * AX.a[1]) / fk.D.tile, M = MINE.filter((u) => units.includes(u)), F = FOES.filter((u) => units.includes(u)), front = Math.min(...F.map(on)), c = WAR.centreOf(M), far = (v) => Math.hypot(v.bx - c.bx, v.by - c.by) / fk.D.tile, near = Math.min(...F.map(far)); return [M.filter((u) => on(u) > front + 2).length, 20 - M.length, 20 - F.length, M.filter((u) => u.target === BACK).length, M.filter((u) => F.includes(u.target) && far(u.target) > near + fk.D.front.deep + 1).length]; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 10); await pg.evaluate(SET); await run.step(pg, 4); await pg.evaluate(TAP); await run.step(pg, 1)
+        first = await pg.evaluate(LOOK); most, deep = 0, first[4]
+        for _ in range(30): await run.step(pg, 2); got = await pg.evaluate(LOOK); most, deep = max(most, got[0]), max(deep, got[4])
+        return first[3], deep, most, got[1], got[2]
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -325,6 +336,8 @@ async def check_game():
     rule('every word floating over the map has its dark patch at the book strength, and a redrawn card keeps them in place', len(pg_) >= pn and all(abs(o - pm) < 0.01 for _, _, o in pg_) and pk, f'{len(pg_)} patches for {pn} troop words and the rest, strengths {sorted({o for _, _, o in pg_})}, same after a redraw: {pk}')
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
+    fb, fd, fp, fm, ff = await front_line()
+    rule('a tap on one man of a group coming on: nobody goes for the man tapped at the back, every soldier fights a man of its front, never one deeper', fb == 0 and fd == 0, f'on the man tapped: {fb}; most on a man deeper than the front: {fd}; most of ours past their front: {fp}; a minute on, lost {fm} of 20, they lost {ff} of 20')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
