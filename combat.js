@@ -100,7 +100,7 @@ function backOff(u) { const S = inReach(u); if (!S.length) return false; const c
 function breach(u, t) { const w = inWay(u, t); if (w) { u.aim = { ...(u.aim && u.aim.w === t ? u.aim : { t, told: u.focus === t }), w }; fight(u, w, true); return; } // E1485
   befall(u.ord, 'no way'); Object.assign(u, { target: null, aim: null, job: 'idle', rp: BR.wait * D.repath }); if (!backOff(u)) block(u); } // E1489
 FK.on('gone', (b) => { if (b.kind !== 'bld') return; for (const u of units()) if (u.aim && u.target === u.aim.w && u.aim.w.side === b.side) { const { t, told } = u.aim; u.aim = null; if (alive(t)) { fight(u, t, told); u.path = null; } } }); // E1486
-function recall(side) { waves[side] = null; homeAll(orders(side)); }
+function recall(side) { const w = waves[side]; waves[side] = null; homeAll(w && w.S ? w.S.filter((u) => !u.gone && u.side === side) : orders(side)); } // E2466
 const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { const room = t && D.trade.guard - guardsOf(t).length; S.filter((u) => armed(u) && u.esc !== t).filter((u, i) => !t || i < room).forEach((u) => Object.assign(u, { esc: t, home: t })); }; // E493
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
 FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= 0) { const G = guardsOf(c).filter(alive); c.convoy = G.length > 0 && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046

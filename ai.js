@@ -14,15 +14,16 @@ const dist = FK.dist, tick = (c, k) => FK.has({ code: c }, k), kindOf = (k) => O
 let DF;
 const V = A.vary, U = A.unstick; let hand = null; // E1400
 function deal(seed) { const r = FK.NS_rng(seed + V.seed), span = ([lo, hi]) => lo + r() * (hi - lo), one = (xs) => xs[Math.floor(r() * xs.length)]; for (let n = V.burn; n > 0; n--) r(); // E1400
-  return SIDES.map((_, side) => { if (!A.pers.of[side]) return null; const name = one(V.pick), P = { ...structuredClone(A.pers[name]), name, vills: U.vills[name] }; // E1400
+  const H = SIDES.map((_, side) => { if (!A.pers.of[side]) return null; const name = one(V.pick), P = { ...structuredClone(A.pers[name]), name, vills: U.vills[name] }; // E1400
     for (const [k, R] of Object.entries(V.by)) { const f = (x) => (Number.isInteger(x) ? Math.round(x * span(R)) : x * span(R)); if (k in P) P[k] = Array.isArray(P[k]) ? P[k].map(f) : f(P[k]); } // E1400
     for (const [k, c] of Object.entries(V.flip)) if (r() < c) P[k] = !P[k]; // E1400
     if (r() < V.shuffle) for (let i = P.goals.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [P.goals[i], P.goals[j]] = [P.goals[j], P.goals[i]]; } // E1400
-    return Object.assign(P, { likes: one(V.likes), liking: span(V.liking), foe: one(D.players.filter((q) => q !== side)), grudge: span(V.grudge) }); }); } // E1400
+    return Object.assign(P, { likes: one(V.likes), liking: span(V.liking), foe: one(D.players.filter((q) => q !== side)), grudge: span(V.grudge) }); }); // E1400
+  for (const P of H) if (P) Object.assign(P, { face: [one([1, -1]), one([1, -1]), one([false, true])], strike: one(V.strikes) }); return H; } // E2460
 const dealt = (side) => { const sd = FK.seed(); if (!hand || hand.seed !== sd) hand = { seed: sd, P: deal(sd) }; return hand.P[side]; }; // E1401
 // E245
-function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2);
-  for (let r = rmin; r < rmax; r++) for (let j = cj - r; j <= cj + r; j++) for (let i = ci - r; i <= ci + r; i += j === cj - r || j === cj + r ? 1 : 2 * r) if (ECON.canPlace(code, i, j, side, true, true)) return [i, j]; return null; }
+function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2), [fx, fy, cols] = (per(side) || {}).face || [1, 1, false], at = (a, b) => (cols ? [ci + fx * b, cj + fy * a] : [ci + fx * a, cj + fy * b]); // E2461
+  for (let r = rmin; r < rmax; r++) for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i += j === -r || j === r ? 1 : 2 * r) { const [x, y] = at(i, j); if (ECON.canPlace(code, x, y, side, true, true)) return [x, y]; } return null; }
 function raise(side, code, bx, by, rmin, rmax) { if (!ECON.canPay(side, D.cost[code] || {}) || ECON.capWhy(side, code)) return null; const at = spot(code, bx, by, rmin, side, rmax); // E686
   if (!at) return null; const t = ECON.plan(side, code, ...at, true); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (isIdle(u) || u.job === 'wait' || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
 function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n * H, cj = h.j + h.n * H, mid = FK.MID / D.tile, base = Math.atan2(mid - cj, mid - ci), off = new Map(); let pi = null, pj = null; // E331
@@ -70,7 +71,7 @@ function goalOf(side, P, saving) { const s = SIDES[side], n = inArmy(side), age 
   return null; }
 function bestCounter(side) { const m = mind[side], i = of(m.cyc), foes = units().filter((v) => SIDES[v.side] && WAR.atWar(side, v.side) && ECON.soldier(v.code) && FK.inSight(v, side)); m.cyc = i + 1; // E528
   const P = per(side), can = [...new Set(ready(side).flatMap((t) => FK.trains(t.code, side)))].filter((c) => ECON.soldier(c) && FK.aged(c, side) && !CO.not.includes(FK.SH[c].class) && !FK.statRow(c, side).bonly); if (!can.length) return null; // E1405
-  if (!foes.length) { const fav = can.filter((c) => FK.SH[c].class === P.likes), pool = fav.length && i % CO.mix ? fav : can; return pool[i % pool.length]; } // E1405
+  if (!foes.length) { const fav = can.filter((c) => FK.SH[c].class === P.likes), pool = fav.length && i % CO.mix ? fav : can; return pool[Math.floor(i / (fav.length ? CO.mix : 1)) % pool.length]; } // E1405
   const sc = can.map((c) => { const me = { code: c, side }; return { c, s: (total(foes, (v) => WAR.vs(me, v) / Math.max(CO.floor, WAR.vs(v, me))) / foes.length / (ECON.sumCost(D.cost[c]) / CO.per) ** CO.pow) * (FK.SH[c].class === P.likes ? P.liking : 1) }; }).sort((a, b) => b.s - a.s); // E1405
   return sc[i % Math.min(CO.mix, sc.length)].c; }
 function firstNeed(side, c) { if (!c || SIDES[side].techs.has(c)) return null; for (const n of ECON.needsOf(c)) if (!SIDES[side].techs.has(n)) return firstNeed(side, n); return c; }
@@ -128,7 +129,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
     const all = total(Y, (y) => M[y]) || 1, [[top, gap], ...rest] = Y.map((y) => [y, (M[y] / all) * vs.length - plan[y].n]).sort((a, b) => b[1] - a[1]), [low] = rest.at(-1); if (idle) move(idle, top); else if (gap >= 1) move(giver(low), top); }
   yield; s.rally = first || FOOD; for (const v of vs) if ((v.job === 'wait' && (!v.target || v.lost)) || isIdle(v)) { yield; const by = (r) => { const f = ECON.bestFind(v, r); return of(f && ECON.forage(v, f, FK.dropFor(v, r))); }, y = order.find((r) => ECON.bestFind(v, r)) || Y.slice().sort((a, b) => by(b) - by(a)).find(by); if (y) move(v, y); } // E542
   yield; for (const u of WAR.armyOf(side)) if (u.job === 'hold' && ((u.drill && u.drill.until <= FK.K.t) || (u.helpT != null && FK.K.t - u.mvT > DP.help.stay))) Object.assign(u, { job: 'idle', drill: null, goal: null, helpT: null }); // E688
-  if (P.bold < AT.never) decideWar(side, P); if (!WAR.waves[side]) chokeClaim(side, D.players.find((p) => WAR.atWar(side, p) && home(p)));
+  if (P.bold < AT.never) decideWar(side, P); if (!WAR.waves[side]) chokeClaim(side, [P.foe, ...D.players].find((p) => WAR.atWar(side, p) && home(p))); // E2463
   yield; if (P.diplo) diplomacy(side, P); allyDuty(side); }
 // E543
 function economy(side, P, h, saving, put) { const s = SIDES[side], R = s.store; if (s.age < EC.age || FK.K.t < EC.at) return;
@@ -150,11 +151,12 @@ function decideWar(side, P) { const m = mind[side], w = WAR.waves[side], t = FK.
   if (free.length < (Wd ? WV.wonder : P.waveMin + DF.wave)) return; const bold = P.bold + DF.bold, go = Wd ? free : free.slice(Math.floor(free.length * P.guard)); let best = null, bp = -Infinity;
   for (const q of D.players) { if (q === side || ECON.fell(q) || !WAR.atWar(side, q) || !home(q)) continue; const threat = !!Wd && Wd.side === q; if (!threat && of(m.cool[q]) > t) continue; if (q === ME && ECON.time() < DF.safe && !Wd) continue;
     const prob = WAR.odds(go, q), busy = P.opportunist && D.players.some((x) => x !== side && x !== q && !ECON.fell(x) && WAR.atWar(q, x)), pr = (threat ? Math.max(prob, WV.threat) : busy ? prob * P.opportunist * DF.opp : prob) * (q === P.foe ? P.grudge : 1); if (pr > bp) { bp = pr; best = q; } } // E1406
-  if (best == null || bp <= (WAR.armyOf(side).length >= cap(side) - WV.full ? Math.min(bold, WV.settle) : bold)) return; const at = Wd && Wd.side === best ? Wd : home(best); if (!WAR.attack(side, FK.tileAt(at.bx, at.by), go)) return; // E545
-  Object.assign(WAR.waves[side], { S: go, to: best, bid: at !== home(best), d: Infinity, pt: t }); const fast = go.filter((u) => FK.SH[u.code].class === WV.riders).filter((_, i) => i < P.raid);
+  if (best == null || bp <= (WAR.armyOf(side).length >= cap(side) - WV.full ? Math.min(bold, WV.settle) : bold)) return; const bid = !!Wd && Wd.side === best, at = bid ? Wd : struck(side, best); if (!WAR.attack(side, FK.tileAt(at.bx, at.by), go)) return; // E545
+  Object.assign(WAR.waves[side], { S: go, to: best, bid, d: Infinity, pt: t }); const fast = go.filter((u) => FK.SH[u.code].class === WV.riders).filter((_, i) => i < P.raid);
   const [mark] = blds(best).filter((b) => up(b) && !FK.has(b, 'Seat') && FK.has(b, 'Drop-off')).sort((a, b) => dist(a, h0(side)) - dist(b, h0(side))); if (mark && fast.length) WAR.dress(fast, FK.tileAt(mark.bx, mark.by));
   if (best === ME) ECON.tell(fromBook('words').realm.march, { side: fromBook('words').end.sides[side], n: go.length }); }
 const h0 = (side) => home(side) || { bx: FK.MID, by: FK.MID };
+const struck = (side, q, how = per(side).strike) => { const [b] = how === 'seat' ? [] : blds(q).filter((b) => up(b) && !ECON.wallish(b) && (how === 'near' || (!FK.has(b, 'Seat') && (FK.has(b, 'Drop-off') || ECON.yieldOf(b))))).sort((a, b) => dist(a, h0(side)) - dist(b, h0(side))); return b || home(q); }; // E2462
 // E522
 const DP = D.ai.diplo, LG = D.league, [ME] = D.players, [WARS, PEACE, ALLY] = fromBook('sides').stances, [ENVOY] = FK.ticked('Envoy'), helped = new Map(), score = (p) => ECON.score(p).total; let league = null;
 function diplomacy(side, P) { const s = SIDES[side], rivals = D.players.filter((q) => q !== side && !ECON.fell(q)); if (!FK.aged(ENVOY, side) || s.envoyOut || FK.K.t - s.envoyAt < DF.envoy) return;
