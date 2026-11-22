@@ -283,6 +283,19 @@ async def pressed():
         await pg.wait_for_timeout(int(await pg.evaluate('MENU.SCR.press.hold * D.touch.ms')) + 200)
         return got, await pg.evaluate("document.querySelectorAll('.pr').length")
 
+async def alarmed():
+    """The alarm leaves nobody idle in the open: 50 villagers spread over the base, Shelter rung; 30 s on every building with room is full and the rest are beside the town center or still on their way (Albert's raid, Nov 21: 8 in, 30 idle, 15 walking)."""
+    SET = """(() => { const h = fk.seatOf(0), T = fk.D.tile, v0 = units.filter((u) => u.side === 0 && fk.has(u, 'Gather'))[0];
+  for (let i = 0; i < 44; i++) ECON.spawnBy(h, v0.code);
+  units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).forEach((u, i) => { const a = i * 2.4, r = (7 + (i % 12) * 2.2) * T; Object.assign(u, { bx: h.bx + Math.cos(a) * r, by: h.by + Math.sin(a) * r, path: null, load: 0, carry: null, target: null, job: 'idle' }); fk.place(u); }); })()"""
+    LOOK = """(() => { const h = fk.seatOf(0), V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather') && !u.gone), c = { n: V.length, inside: 0, walking: 0, open: 0, beside: 0, other: 0 };
+  for (const u of V) c[u.inside ? 'inside' : u.path || u.job === 'walk' || u.job === 'shelter' ? 'walking' : fk.isIdle(u) ? (fk.atB(u, h) ? 'beside' : 'open') : 'other']++;
+  c.room = fk.blds().filter((b) => b.side === 0 && ECON.up(b) && ECON.hold(b)).reduce((n, b) => n + ECON.hold(b), 0); return c; })()"""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); await pg.evaluate(SET); await run.step(pg, 1)
+        await pg.evaluate("ECON.alarm('shelter')"); await run.step(pg, 30)
+        return await pg.evaluate(LOOK), pg.errors[:2]
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -325,6 +338,8 @@ async def check_game():
     rule('every word floating over the map has its dark patch at the book strength, and a redrawn card keeps them in place', len(pg_) >= pn and all(abs(o - pm) < 0.01 for _, _, o in pg_) and pk, f'{len(pg_)} patches for {pn} troop words and the rest, strengths {sorted({o for _, _, o in pg_})}, same after a redraw: {pk}')
     pr, pl = await pressed()
     rule('a tapped button is pressed when the finger lands and let go after; a tap that redraws it still shows the press; nothing stays pressed', pr == [True, True, True] and pl == 0, f'pressed on landing, redrawn, pressed again: {pr}; still pressed after: {pl}')
+    ac, ae = await alarmed()
+    rule('the alarm leaves nobody idle in the open: every building with room fills, the rest gather beside the town center', ac['n'] >= 40 and ac['open'] == 0 and ac['other'] == 0 and ac['inside'] == min(ac['room'], ac['n']) and not ae, f'{ac}, errors {ae}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, On Screen alone picks nobody when the army is out of view', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, Off Screen off, on): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')

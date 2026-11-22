@@ -271,6 +271,7 @@ function enter(u) { if (u.target) u.stay = posted(u) || u.told === u.target ? u.
   Object.assign(u, { inside: b, den: null, hid: true, job: 'inside', then: null, path: null, target: null, spot: null }); }
 const out = (u) => Object.assign(u, { inside: null, hid: false, emg: false, scared: false, job: u.job === 'inside' ? 'idle' : u.job }), focused = (u) => !!(u.focus && alive(u.focus)), resume = (u) => { const s = u.stay; u.stay = null; if (s && alive(s)) { if (!u.load) return gatherAt(u, s); u.target = s; return carry(u); } return u.load ? carry(u) : focused(u) ? gatherAt(u, u.focus) : u.carry ? look(u) : idle(u); }; // E1027
 function fright(u, h) { if (!h) return; if (u.inside) { if (!u.emg && !units().some((v) => foeOf(u.side, v) && dist(v, u.inside) < FL.clear * T0)) resume(out(u)); return; } if (posted(u) && !u.emg) { u.scared = false; return; } // E442
+  if (u.emg && !u.den && !u.path && isIdle(u)) { if (!shelter(u) && !FK.atB(u, h)) seat(u); return; } // E1503
   const was = u.scared, r = (was ? FL.flee * FL.wide : FL.flee) * T0; const near = []; FK.unitsNear(u, r, (v) => { if (foeOf(u.side, v) && dist(u, v) < r) near.push(v); }); const foe = near.filter((v) => SIDES[v.side]).length, wild = near.length - foe;
   u.scared = !!(u.emg || foe || (wild && (wild >= FL.raid || FK.K.t - (u.hurtT ?? -Infinity) < FL.hurt)));
   if (u.scared && !was && !u.den) { const [tw] = things().filter((b) => b.side === u.side && b !== h && up(b) && inN(b) < hold(b) && dist(u, b) < FL.tower * T0).sort((a, b) => dist(u, a) - dist(u, b)); u.den = tw && dist(u, tw) < dist(u, h) ? tw : h; enter(u);
@@ -278,7 +279,9 @@ function fright(u, h) { if (!h) return; if (u.inside) { if (!u.emg && !units().s
   else if (!u.scared && was && u.den) { u.den = null; resume(u); } }
 const danger = (u) => units().some((v) => foeOf(u.side, v) && dist(u, v) < FL.flee * FL.wide * T0); // E820
 function garrison(S, b) { let n = 0; for (const u of S) { if (inN(b) >= hold(b)) { Object.assign(u, { job: 'walk', then: 'idle', target: null }); FK.goBy(u, b); continue; } Object.assign(u, { den: b, ord: null, target: null }); enter(u); n++; } if (S.length > n && S[0].side === ME) tell(fromBook('words').alarm.full.replace('{n}', S.length - n)); return n; } // E1039
-function shelter(u) { const [b] = things().filter((b) => b.side === u.side && up(b) && inN(b) < hold(b)).sort((a, c) => dist(u, a) - dist(u, c)); if (!b) return false; Object.assign(u, { den: b, scared: true }); enter(u); return true; }
+const runsAt = (u, b, f) => { const ex = b.bx - u.bx, ey = b.by - u.by, s = Math.max(0, Math.min(1, ((f.bx - u.bx) * ex + (f.by - u.by) * ey) / (ex * ex + ey * ey || 1))), d = Math.hypot(u.bx + s * ex - f.bx, u.by + s * ey - f.by); return d < DG.near * T0 && d < dist(u, f); }; // E1500
+function shelter(u) { const F = units().filter((v) => foeOf(u.side, v)), [b] = things().filter((b) => b.side === u.side && up(b) && hold(b) && inN(b) < hold(b) && !F.some((f) => runsAt(u, b, f))).sort((a, c) => dist(u, a) - dist(u, c)); if (!b) return false; Object.assign(u, { den: b, scared: true }); enter(u); return !!(u.den || u.inside); } // E1501
+const seat = (u) => { const h = FK.seatOf(u.side); Object.assign(u, { job: 'walk', then: 'idle', target: null, spot: null, den: null }); if (!h || FK.atB(u, h) || !FK.goBy(u, h)) u.job = 'idle'; }; // E1502
 // E443
 const ranked = () => things().filter((b) => b.side === ME && up(b) && hold(b)).sort((a, b) => b.hp - a.hp || hold(b) - hold(a));
 function fillRank(us, into, first) { let rest = us.slice(); for (const b of ranked()) { const n = hold(b) - inN(b), take = rest.sort((p, q) => (first ? first(p) - first(q) : null) || dist(p, b) - dist(q, b)).filter((_, i) => i < n); take.forEach((u) => into(u, b)); rest = rest.filter((u) => !take.includes(u)); } return rest; }
@@ -290,11 +293,11 @@ function alarm(kind) { const h = FK.seatOf(ME); if (!h) return false; emg = emg 
     for (const u of S) { const d = dist(u, h) || Infinity, f = r + AL.square * AL.away * T0; WAR.march(u, FK.tileAt(h.bx + ((u.bx - h.bx) / d) * f, h.by + ((u.by - h.by) / d) * f)); } }
   if (kind === 'hands') { for (const u of S) Object.assign(u, { ord: null, focus: null, target: null }); const left = fillRank(S, (u, b) => { u.den = b; enter(u); }, (u) => !WAR.ranged(u)), m = Math.min(left.length, AL.perRow), cx = h.bx + dx * AL.line * T0, cy = h.by + dy * AL.line * T0;
     left.forEach((u, i) => { const row = Math.floor(i / AL.perRow) * AL.row * T0, col = ((i % AL.perRow) - (m - AL.one) * P.half) * AL.row * T0; WAR.march(u, FK.tileAt(cx - dx * row - dy * col, cy - dy * row + dx * col)); }); }
-  if (kind !== 'square') { const V = villagersOf(ME).filter((u) => !u.inside && !u.den); for (const u of V) Object.assign(u, { emg: true, scared: true }); const left = fillRank(V, (u, b) => { u.den = b; enter(u); });
+  if (kind !== 'square') { const V = villagersOf(ME).filter((u) => !u.inside && !u.den); for (const u of V) Object.assign(u, { emg: true, scared: true }); const left = V.filter((u) => !shelter(u)); // E1504
     const mine = FK.blds().filter((b) => b.side === ME && up(b)), goals = kind === 'lure' ? mine.filter((b) => FK.has(b, 'Shoot')) : kind === 'seek' ? mine.filter((b) => FK.trains(b.code, ME).some(soldier)) : [], away = Math.atan2(-dy, -dx); // E1031
     left.forEach((u, i) => { const b = goals.reduce((a, c) => (!a || dist(u, c) < dist(u, a) ? c : a), null), a = away + ((i + P.half) / left.length - P.half) * Math.PI * 2 * AL.fan;
       if (kind === 'split') walkTo(u, u.bx + Math.cos(a) * AL.split * T0, u.by + Math.sin(a) * AL.split * T0); else if (b) { Object.assign(u, { job: 'walk', then: 'idle', target: null, spot: null, den: null }); if (!FK.goBy(u, b)) u.job = 'idle'; }
-      else walkTo(u, h.bx - dx * AL.behind * T0 + ((i % AL.cols) * AL.gap - AL.shift) * T0, h.by - dy * AL.behind * T0 + Math.floor(i / AL.cols) * AL.gap * T0); }); }
+      else seat(u); }); } // E1505
   tell(AW.started, { name: AW.cells[kind].name }); return true; }
 // E1033
 const PRP = D.prep, PWD = fromBook('words').prep, boardable = (b) => b.side === ME && up(b) && !b.board && !b.noBoard && !wallish(b) && !FK.has(b, 'Field') && !FK.has(b, 'Trap'), boardAdd = (b) => Math.round(hpBase(b) * PRP.add[FK.SH[b.code].material === 'stone' ? 'stone' : 'wood']), hpBase = (b) => b.hpMax - (b.board ? b.board.add : 0);
