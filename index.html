@@ -301,7 +301,7 @@ function renderGround() {
   gw = Math.ceil(maxX - minX) + 2; gh = Math.ceil(maxY - minY) + 2; ox = 1 - minX; oy = 1 - minY;
   let g = new Rec(), gm = new Rec(); const REC = g, RG = gm, RR = new Rec(); shoreOf(); // E912
   for (const m of [maskFlood, ...ICEM]) { m.width = Math.ceil(gw / 4); m.height = Math.ceil(gh / 4); const q = m.getContext('2d'); q.scale(0.25, 0.25); q.fillStyle = m === maskFlood ? C.water : C.ground.ice; } // E57
-  scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); for (const t of things) if (t.kind === 'bld' && (t.side === ME || memOf(ME).has(t))) wear(t); // E546
+  scarCv.width = Math.ceil(gw * SC.res); scarCv.height = Math.ceil(gh * SC.res); scarX = scarCv.getContext('2d'); scarX.scale(SC.res, SC.res); LANDS.key = ''; for (const t of things) if (t.kind === 'bld' && (t.side === ME || memOf(ME).has(t))) wear(t); // E546
   const P = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return [x + ox, y + oy]; };
   // E58
   const quad = (a, b, c, d, fill, grass = false) => { for (const x of grass ? [g, gm] : [g]) { x.fillStyle = x === g ? fill : PC.grass; x.beginPath(); x.moveTo(a[0], a[1]); x.lineTo(b[0] + 1, b[1]); x.lineTo(c[0] + 1, c[1] + 1); x.lineTo(d[0], d[1] + 1); x.closePath(); x.fill(); } }; // E902
@@ -370,13 +370,15 @@ function drawGround(gx, gy) { if (!GOPS) return; const z = cam.z; ctx.save(); ct
   ctx.globalCompositeOperation = 'multiply'; ctx.fillStyle = SEASON.col; ctx.fill(GRASSP); ctx.globalCompositeOperation = 'source-over'; // E902
   const [z0, z1] = D.paper.blades, a = clamp((z - z0) / (z1 - z0), 0, 1) * (1 - snowStep() / (PL.snow.steps + 1)); if (a > 0) { ctx.globalAlpha = a; for (const B of BLADES) { ctx.fillStyle = bladeTile(B, z * dpr); ctx.fill(GRASSP); } ctx.globalAlpha = 1; } // E910
   ctx.fillStyle = WATER[0]; ctx.fill(LEVELP); ctx.strokeStyle = C.ground.foam; ctx.lineWidth = D.lay.foam; ctx.lineCap = 'round'; ctx.stroke(LEVELE); replay(ctx, REEDS); ctx.restore(); } // E918
-const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'); let scarX = null, SCARV = null; // E547
-const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), blot = (x, y, rx, ry, fill) => { scarX.fillStyle = fill; scarX.beginPath(); oval(scarX, x, y, rx, ry * TILT); scarX.fill(); SCARV++; }, onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
+const SC = D.scars, SCAR = C.scar, scarCv = document.createElement('canvas'), scarNew = document.createElement('canvas'); let scarX = null; // E547
+const oval = (c, x, y, rx, ry) => c.ellipse(x, y, rx, ry, 0, -Math.PI, Math.PI), scar = (x, y, r, f) => { f(scarX); if (!onSheet(x, y, r, f)) LANDS.key = ''; }, blot = (x, y, rx, ry, fill) => scar(x, y, Math.max(rx, ry), (c) => { c.fillStyle = fill; c.beginPath(); oval(c, x, y, rx, ry * TILT); c.fill(); }), onGround = (bx, by) => { const [x, y] = toView(bx, by, H[tileAt(bx, by)]); return [x + ox, y + oy]; };
+const onSheet = (x, y, r, f) => { const S = LANDS, q = SC.res; if (!S.key || (show.K && (K.ice || K.flood > K.t || K.sand))) return false; const i = Math.floor((x - r) * q) - 1, j = Math.floor((y - r) * q) - 1, w = Math.ceil((x + r) * q) + 1 - i, h = Math.ceil((y + r) * q) + 1 - j, c = scarNew.getContext('2d'), M = D.landCache.margin, sx = (gw * S.z) / scarCv.width, sy = (gh * S.z) / scarCv.height; // E2540
+  if (!(w > 0 && h > 0)) return true; scarNew.width = w; scarNew.height = h; c.setTransform(q, 0, 0, q, -i, -j); f(c); S.x.save(); S.x.setTransform(dpr, 0, 0, dpr, M * dpr, M * dpr); S.x.globalAlpha = 1; S.x.globalCompositeOperation = 'source-over'; S.x.drawImage(scarNew, (-ox - S.cx) * S.z + cw / 2 + i * sx, (-oy - S.cy) * S.z + ch / 2 + j * sy, w * sx, h * sy); S.x.restore(); return true; };
 function wear(b) { if (!scarX || has(b, 'Field') || has(b, 'Line') || has(b, 'Gate') || has(b, 'Trap')) return; const [dx, dy, rx, ry] = SC.wear, w = b.n * D.tile, [x, y] = onGround(b.bx, b.by); blot(x + w * dx, y + w * dy * TILT, w * rx, w * ry, SCAR.wear); } // E548
 function fallen(u) { const F = SC.fall, [x, y] = onGround(u.bx, u.by), [w] = LOOKBOX[SH[u.code].look] || []; blot(x, y, w > F.big ? F.rx + F.more : F.rx, F.ry, SCAR.fall); if (!ECON.soldier(u.code)) return; // E549
-  const [a, b, c, d, lw] = SC.cut; scarX.strokeStyle = SCAR.cut; scarX.lineWidth = lw; scarX.beginPath(); scarX.moveTo(x - a, y + b * TILT); scarX.lineTo(x + c, y - d * TILT); scarX.stroke(); }
-function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; const [rx, ry, out, n, turn, step, least, w, h] = SC.burn, r0 = b.n * D.tile * D.place.half, [x, y] = onGround(b.bx, b.by); blot(x, y, r0 * rx, r0 * ry, SCAR.burn); scarX.fillStyle = SCAR.rubble; // E550
-  for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); scarX.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }
+  const [a, b, c, d, lw] = SC.cut; scar(x, y, Math.max(a, b, c, d) + lw, (q) => { q.strokeStyle = SCAR.cut; q.lineWidth = lw; q.beginPath(); q.moveTo(x - a, y + b * TILT); q.lineTo(x + c, y - d * TILT); q.stroke(); }); }
+function burnt(b) { if (b.done < 1 || has(b, 'Line') || has(b, 'Gate')) return; const [rx, ry, out, n, turn, step, least, w, h] = SC.burn, r0 = b.n * D.tile * D.place.half, [x, y] = onGround(b.bx, b.by); blot(x, y, r0 * rx, r0 * ry, SCAR.burn); // E550
+  scar(x, y, r0 * out * (1 + least) + w + h, (q) => { q.fillStyle = SCAR.rubble; for (let i = n; i--; ) { const a = i * turn + b.i + b.j, r = r0 * out * (((i * step) % 1) + least); q.fillRect(x + Math.cos(a) * r, y + Math.sin(a) * r * TILT, w, h); } }); }
 // ── The view (E63)
 const canvas = document.getElementById('map'); let ctx = canvas.getContext('2d');
 const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(0), P: /[?&]fps\b/.test(location.search), T: true, B: true, U: true, K: true, V: true, fast: false }; // E64
@@ -465,7 +467,7 @@ function draw() {
   want = false; lap(true);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   if (jolt.t > 0) { jolt.t -= frameDt; ctx.translate((glance() * 2 - 1) * jolt.px, (glance() * 2 - 1) * jolt.px); } // E68
-  seasonNow(); slideSheet(LANDS, [show.K, SEASON.key, snowStep(), BLOOMY, SCARV].join(), // E1061
+  seasonNow(); slideSheet(LANDS, [show.K, SEASON.key, snowStep(), BLOOMY].join(), // E1061
   () => { const [gx, gy] = toScreen(-ox, -oy); ctx.fillStyle = deepest; ctx.fillRect(-D.landCache.margin, -D.landCache.margin, cw + D.landCache.margin * 2, ch + D.landCache.margin * 2); drawGround(gx, gy); drawPaper(gx, gy); ctx.drawImage(scarCv, gx, gy, gw * cam.z, gh * cam.z); if (show.K) drawSkin(); }, D.landCache.ms); lap(); // E880
   drawGlints(); drawClouds(); lap(); drawThings(); drawUnder(); lap(); const mk = K.beta > 0 ? `${Math.round(K.beta / D.fogLayer.step)}|${Math.round(camHigh() / D.fogLayer.step)}` : ''; if (FOGON) slideSheet(FOGS, FOGV + '|' + mk, () => { if (mk) drawMist(); drawFog(); }); else if (mk) slideSheet(MISTS, mk, drawMist); lap(); fire('draw', ctx, cam.z); lap(); // E975
   if (show.K) { drawSky(frameDt); lap(); drawLights(cam.z); lap(); } fire('over', ctx, cam.z);
