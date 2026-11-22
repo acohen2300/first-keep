@@ -1224,5 +1224,6 @@ BOOK("comments", {
  "E2668": {"text": "The War card's Mode controller (N565): three formations (Line, Specialty, Wide; all but Line need Formations researched) and three courages (Normal, Focused, To death) for the picked soldiers; a tile is boxed when every picked soldier has it; a tap sets it and re-forms a group standing in the field"},
  "E2669": {"text": "A held soldier strikes the nearest foe within his reach, since the best foe the scan picks may stand out of it (N565: they fight where they stand)"},
  "E2670": {"text": "A soldier walking but jammed in a crowd short of his place (D454, N566): first he finds his own way there off the shared lane, then he stands where he is, so the order arrives; drills and fighters are left alone"},
- "E2671": {"text": "The War card's Mode row (Albert, Nov 22 15:07–17:04): Hold on or off for the picked group, its three courages, and a door to the formations (Line, Specialty, Wide, back) showing the one set; Hold is no longer a mission; a set tile wears the red box"}
+ "E2671": {"text": "The War card's Mode row (Albert, Nov 22 15:07–17:04): Hold on or off for the picked group, its three courages, and a door to the formations (Line, Specialty, Wide, back) showing the one set; Hold is no longer a mission; a set tile wears the red box"},
+ "E2672": {"text": "A rebel side that wins its freedom calls back the rising's wave, as a crushed one does; the wave had no record and stood forever, so a freed computer never attacked, looted or held a choke again (review ai.md 7)"}
 });
