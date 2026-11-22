@@ -685,6 +685,7 @@ BOOK("comments", {
  "E611": {"text": "what burns after dark: a blazing or badly hurt building, a hearth in a home, a lantern at a lit door, a camp's fire, a caravan's lantern (Mid's drawLight, HEARTH)"},
  "E612": {"text": "theatrics: one pop curve (a finished building and a newborn swell and settle), ripples where you tap, three sizes of celebration (a building, an upgrade rolling through the army, a new age or a wonder) and the pale flash (Mid's popC, celebrate, ripple, ripDraw, drawFlash)"},
  "E613": {"text": "words on the map keep one size whatever the zoom, as the screen's own words; a label is a pill (Mid's mapFont, tag)"},
+ "E2404": {"text": "a bar (health, morale, work) dims its back by setting the see-through and putting it back by hand, not by saving and restoring the whole canvas state for every bar every frame; the only other state it touches, the fill, it sets again itself, so the canvas is left exactly as before"},
  "E614": {"text": "the dressing: a site staked out and rising with the work, a finished building's pop and fresh glow, its flags, piles and chimney smoke (Mid's drawBld)"},
  "E615": {"text": "a building site: the stakes round its footprint, the walls rising with the work between two posts, the bar, and z when nobody builds it"},
  "E616": {"text": "a building's flags, drawn live over its picture where its art put them, waving more in a strong wind (Mid's flagsOn)"},

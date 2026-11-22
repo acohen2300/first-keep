@@ -1591,7 +1591,7 @@ function tag(c, text, x, y) { const [pad, edge, rise, hi, inset, nudge] = LBL.pa
   c.fillStyle = CMN.pill; c.fillRect(x, y - rise, w, hi); c.fillStyle = CDR.white; c.fillText(text, x + inset, y + nudge); c.restore(); }
 function idleMark(x, y, s, ch, dx) { const [lw] = DRS.mark.line; ctx.font = mapFont(); ctx.textAlign = 'center'; ctx.fillStyle = CDR.mark; ctx.strokeStyle = CDR.shade; ctx.lineWidth = lw; ctx.strokeText(ch, x + dx * s, y); ctx.fillText(ch, x + dx * s, y); }
 // E614
-const bar = (x, y, w, f, col) => { const B = SPRITE.marks.bar; ctx.save(); ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - w * DRW.half, y, w, B.h); ctx.restore(); ctx.fillStyle = col; ctx.fillRect(x - w * DRW.half, y, w * f, B.h); };
+const bar = (x, y, w, f, col) => { const B = SPRITE.marks.bar, a = ctx.globalAlpha; ctx.fillStyle = C.shade; ctx.globalAlpha = B.alpha; ctx.fillRect(x - w * DRW.half, y, w, B.h); ctx.globalAlpha = a; ctx.fillStyle = col; ctx.fillRect(x - w * DRW.half, y, w * f, B.h); }; // E2404
 const stageOf = (k, tall) => { const [s1, s2] = DRS.site.frame.stages, from = tall ? s2 : s1; return [tall ? clamp((k - s1) / (s2 - s1), 0, 1) : 0, clamp((k - from) / (1 - from), 0, 1)]; }; // E1074
 function drawBld(t, x, y, s, dots) { const c = bldSprite(t.code, t.col, s, ...levelOf(t), !dots, SIDES[t.side] && SIDES[t.side].civ), w = t.n * D.tile * s, top = c.ay * s, S0 = DRS.site, [bw, blift, mlift] = S0.bar, [iz] = DRS.mark.idle;
   if (t.done < 1) { if (dots) return; const T = D.tile, n = t.n, d = w * TILT, h = H[t.j * N + t.i], pts = [[t.i, t.j], [t.i + n, t.j], [t.i + n, t.j + n], [t.i, t.j + n]].map(([i, j]) => S(i * T, j * T, h)), F = S0.frame, [s1] = F.stages, k = Math.max(0, t.done); // E615
