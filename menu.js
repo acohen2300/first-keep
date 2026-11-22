@@ -300,7 +300,7 @@ FK.on('begin', () => { S.game = { ...S.opt }; FK.fog(OPTS.fog[S.opt.fog ?? 0][1]
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 const popAt = (x, y, foot = y) => { const m = SCR.mold, [w] = FK.size(), up = y - qaEl.offsetHeight - m.slot; qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, x - qaEl.offsetWidth * P.half)) + 'px'; qaEl.style.top = (up < topEl.getBoundingClientRect().bottom + m.gap ? foot + m.slot : up) + 'px'; }; // E817
 document.addEventListener('click', click); // E821
-document.addEventListener('pointerdown', (e) => { const b = e.target.closest('[data-v]'); S.down = !!b; if (!b) return; for (const x of document.querySelectorAll('.pr')) x.classList.remove('pr'); b.classList.add('pr'); S.pr = { v: b.dataset.v, t: performance.now() }; }, true); for (const ev of ['pointerup', 'pointercancel']) window.addEventListener(ev, () => { S.down = false; const p = S.pr; if (p) setTimeout(() => lift(p), Math.max(0, SCR.press.hold * D.touch.ms - (performance.now() - p.t))); }); // E943
+document.addEventListener('pointerdown', (e) => { const b = e.target.closest('[data-v]'); if (b) S.down = { id: e.pointerId }; /* E2683 */ if (!b) return; for (const x of document.querySelectorAll('.pr')) x.classList.remove('pr'); b.classList.add('pr'); S.pr = { v: b.dataset.v, t: performance.now() }; }, true); for (const ev of ['pointerup', 'pointercancel']) window.addEventListener(ev, (e) => { if (!S.down || S.down.id === e.pointerId) S.down = false; const p = S.pr; if (p) setTimeout(() => lift(p), Math.max(0, SCR.press.hold * D.touch.ms - (performance.now() - p.t))); }); // E943
 FK.on('rest', () => !!ECON.result());
 // E206
 const canvas = document.getElementById('map');
