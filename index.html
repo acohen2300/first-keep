@@ -405,6 +405,7 @@ function stat(code, side, key) { // E280
 function fxRow(code, side) { const memo = FXC.get(side) || FXC.set(side, new Map()).get(side); return memo.get(code) || memo.set(code, new Map()).get(code); } // E1591
 function statRow(code, side) { const memo = fxRow(code, side), id = '*'; // E1591
   if (!memo.has(id)) memo.set(id, Object.fromEntries(Object.entries(D.stats[code] || {}).map(([k, v]) => [k, typeof v === 'number' ? stat(code, side, k) : v]))); return memo.get(id); }
+const fromKnown = (make, code, side) => { const memo = fxRow(code, side); if (!memo.has(make)) memo.set(make, make(code, side)); return memo.get(make); }; // E2400
 const kinds = (cls) => SHELLS.filter((c) => SH[c].class === cls && D.train[c] && !SH[c].civ), civKind = (c, side) => (SIDES[side] && SHELLS.find((k) => SH[k].replaces === c && SH[k].civ === SIDES[side].civ)) || c, trains = (c, side) => (D.trains[c] || []).flatMap((k) => (SH[k] ? [k] : kinds(k))).map((k) => civKind(k, side)), aged = (c, side) => D.ages.indexOf(SH[c].age) <= SIDES[side].age; // E369
 const TK = Object.fromEntries(Object.entries(BOOKS.tech).map(([c, e]) => [e.key, c])), RANKS = {}, KITS = []; for (const [c, e] of Object.entries(BOOKS.tech)) { if (e.value.rank) (RANKS[e.value.rank.k] = RANKS[e.value.rank.k] || []).push(c); if (e.value.kit) KITS.push(c); } // E370
 const ranks = (code, side) => (RANKS[code] || []).filter((c) => (known.get(side) || new Set()).has(c)), rankOf = (code, side) => ranks(code, side).length, kitOf = (side, code) => KITS.filter((c) => SH[code].class && (known.get(side) || new Set()).has(c)).length;
@@ -518,8 +519,9 @@ g.lineTo(r0[0], r0[1]); g.closePath(); g.fillStyle = near; g.fill(); g.strokeSty
 return { ...r, top: ry }; } return r; }
 // E294
 let RES = null; const UPA = SPRITE.up, TECHAT = {}; for (const [c, e] of Object.entries(BOOKS.tech)) (TECHAT[e.value.at] = TECHAT[e.value.at] || []).push(c);
-const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level, k = known.get(t.side) || new Set(), at = TECHAT[t.code] || [], n = at.filter((c) => k.has(c)).length;
-  return [!L ? L : L.season ? season() : L.spent ? +!t.amount : L.flock ? t.sheep : L.age ? +((SIDES[t.side] || {}).age >= L.age) : [...k].filter((c) => BOOKS.tech[c].value.tier === art).length, +!!n + +(!!n && n >= at.length * UPA.half)]; };
+const tierOf = (code, side) => [...(known.get(side) || new Set())].filter((c) => BOOKS.tech[c].value.tier === B[code][3]).length, upOf = (code, side) => { const k = known.get(side) || new Set(), at = TECHAT[code] || [], n = at.filter((c) => k.has(c)).length; return +!!n + +(!!n && n >= at.length * UPA.half); }; // E2401
+const levelOf = (t) => { const [, , , art] = B[t.code], L = SPRITE[art]?.level;
+  return [!L ? L : L.season ? season() : L.spent ? +!t.amount : L.flock ? t.sheep : L.age ? +((SIDES[t.side] || {}).age >= L.age) : fromKnown(tierOf, t.code, t.side), fromKnown(upOf, t.code, t.side)]; };
 function plinth(x0, x1, yf, h, d, k) { if (!RES) return; const { foot: F, shade, line, top, stone: [sw, sh, gap, edge], lift, rim: rl } = UPA;
   P_([[x0, yf], [x1, yf], [x1, yf - F], [x0, yf - F]], STONE, LINE, line); P_([[x1, yf], [x1 + k, yf - d], [x1 + k, yf - d - F], [x1, yf - F]], lit(STONE, shade), LINE, line);
   if (RES === top) for (let y = yf - gap; y > yf - h + edge; y -= gap) for (const x of [x0, x1 - sw]) P_([[x, y], [x + sw, y], [x + sw, y - sh], [x, y - sh]], lit(STONE, lift), LINE, rl); }
