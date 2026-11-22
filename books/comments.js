@@ -1152,7 +1152,7 @@ BOOK("comments", {
  "E1402": {"text": "an aim put aside (D391) is passed over for its time: the age, the army, the place that trains the army's kind, a building of its list; the next aim is taken"},
  "E1403": {"text": "an aim that has not moved for stall s (the same aim with the same age, the same soldiers or the same count of that building) is put aside for skip s (D391, N460: a second Town Center aimed at for 106 minutes)"},
  "E1404": {"text": "villagers stop at the personality's cap times its match share, and never past the room the army aim needs under the most people, so a full town still has room for soldiers (D391, N460: 146 villagers at 180 people with an army aim)"},
- "E1405": {"text": "the class it likes this match (D390): with no foe in sight every other soldier is of it, and with foes its kinds are scored liking times higher"},
+ "E1405": {"text": "the class it likes this match (D390): with no foe in sight every other soldier is of it, the turns between going round every kind it can train, and with foes its kinds are scored liking times higher"},
  "E1406": {"text": "the side it bears a grudge against this match (D390): its odds on that side read grudge times higher, so which side it marches on differs from game to game"},
  "E1407": {"text": "the brewer is the personality dealt for this match (D390), not a fixed side"},
  "E2460": {"text": "after every side's plan is dealt, each draws two more from the same stream (D390), so the plans dealt before stay as they were for the same seed: its town's facing (east or west first, north or south first, along rows or columns: the eight ways a square can be turned or mirrored) and what its waves strike"},

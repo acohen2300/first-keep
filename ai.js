@@ -71,7 +71,7 @@ function goalOf(side, P, saving) { const s = SIDES[side], n = inArmy(side), age 
   return null; }
 function bestCounter(side) { const m = mind[side], i = of(m.cyc), foes = units().filter((v) => SIDES[v.side] && WAR.atWar(side, v.side) && ECON.soldier(v.code) && FK.inSight(v, side)); m.cyc = i + 1; // E528
   const P = per(side), can = [...new Set(ready(side).flatMap((t) => FK.trains(t.code, side)))].filter((c) => ECON.soldier(c) && FK.aged(c, side) && !CO.not.includes(FK.SH[c].class) && !FK.statRow(c, side).bonly); if (!can.length) return null; // E1405
-  if (!foes.length) { const fav = can.filter((c) => FK.SH[c].class === P.likes), pool = fav.length && i % CO.mix ? fav : can; return pool[i % pool.length]; } // E1405
+  if (!foes.length) { const fav = can.filter((c) => FK.SH[c].class === P.likes), pool = fav.length && i % CO.mix ? fav : can; return pool[Math.floor(i / (fav.length ? CO.mix : 1)) % pool.length]; } // E1405
   const sc = can.map((c) => { const me = { code: c, side }; return { c, s: (total(foes, (v) => WAR.vs(me, v) / Math.max(CO.floor, WAR.vs(v, me))) / foes.length / (ECON.sumCost(D.cost[c]) / CO.per) ** CO.pow) * (FK.SH[c].class === P.likes ? P.liking : 1) }; }).sort((a, b) => b.s - a.s); // E1405
   return sc[i % Math.min(CO.mix, sc.length)].c; }
 function firstNeed(side, c) { if (!c || SIDES[side].techs.has(c)) return null; for (const n of ECON.needsOf(c)) if (!SIDES[side].techs.has(n)) return firstNeed(side, n); return c; }
