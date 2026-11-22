@@ -248,6 +248,7 @@ BOOK("comments", {
  "E150": {"text": "QAT the shadow: length = height × cot(the sun's height), capped at D120 heights, thrown away from the sun; the sun rises on the right, stands over the bottom of the screen at noon (the camera looks north), sets on the left"},
  "E151": {"text": "left at sunrise, up at noon, right at sunset"},
  "E152": {"text": "under the buildings and units: a building's footprint thrown by its height, a unit's foot by its own; none under the trees (the woods are their own shade)"},
+ "E2642": {"text": "a shadow only for what is drawn: a building the hide rule keeps off the map (unseen and not remembered, an enemy trap) and a disguised enemy spy cast none (review idx5, Nov 21)"},
  "E153": {"text": "the box's shadow: its top thrown, joined to its foot along every edge, one fill so the overlaps stay one shade"},
  "E154": {"text": "The woods cache: the deep trees (eight tree neighbours) are painted once per chunk of the board and zoom step; the rest of the things are stamped each frame. Cutting a tree wakes its neighbours and repaints the chunk."},
  "E155": {"text": "chunks of CS × CS tiles"},
