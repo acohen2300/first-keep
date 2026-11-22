@@ -1140,6 +1140,7 @@ BOOK("comments", {
  "E1434": {"text": "Fall back's beat: once none of a group is still marching they have re-formed, so each goes back in at the nearest of the enemies they left still alive; the same rule for every side"},
  "E1435": {"text": "the war beat: squad orders, then those falling back"},
  "E1436": {"text": "the War card's missions that act at once (Defend, Fall back, Retreat, and Attack's arming): Fall back says how many fall back, or that no enemy is near"},
+ "E2480": {"text": "the order log: every order the player gives, Fall back aside, ends a Fall back under way, so the soldiers keep the new order and are not turned back onto the enemies they left (fall and its fewer blows, no rout, both dropped)"},
  "E1438": {"text": "a row of tiles, paged when it has more than six; a narrow tail tile (the War card's bell) comes after, not counted"},
  "E1439": {"text": "the War card's mission row (N465): the six missions in order with their icons, then the alarm as a narrow tile showing only the bell, green when on"},
  "E1440": {"text": "the War card's top line Troops | Mode | Mission: the open controller at full strength, the others' letters dimmed, the red box meaning set; the eye (N465) in place of the two screen boxes: plain, all troops count, tapped (red ring), only those on screen; the hint over the top line says the next step"},
