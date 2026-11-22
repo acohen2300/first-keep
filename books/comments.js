@@ -49,7 +49,7 @@ BOOK("comments", {
 "E773": {"text": "the trees as a cast: twelve kinds from the Sprites book (PT1), each a few variants by its own seed; a crown is leaf dabs inside its outline, lit by where each sits; bare limbs grow by twig; evergreen tiers fade light to shade across the tree; drawn once a leaf stage (and snow) and kept"},
 "E774": {"text": "which kind a tree is: weighed by where it stands (wet low ground, the plain, the hills), one roll picks the kind and its variant"},
 "E776": {"text": "water cells traced like the land: each depth band of the water drawn along its contour, so the shallows and the deep meet in curves, not tiles"},
-"E777": {"text": "a tree's leaf stage: the year's place in seasons, each tree a little later or earlier by its own seed (lag)"},
+"E777": {"text": "a tree's leaf stage: the year's place in seasons, each tree a little later or earlier by its own seed (lag), kept once per tree; the lag uses the seed's second draw, because a small seed's first draw is near 0 and every tree would turn on the same frame"},
 "E778": {"text": "every leaf a tree could hold is placed first, each with its own draw; the ones under the share kept are drawn, so a crown fills in spring and thins in fall, leaf by leaf, never reshuffled"},
 "E779": {"text": "the contours painted band by band over the whole piece of land, lowest first, so a band laid in one cell is never painted over by the lower band of the next; then the ice masks filled once each"},
 "E780": {"text": "the ice masks, one a step of depth: a lake's water of depth d belongs to step d ÷ the lake's depth (D27) of D350's steps"},
