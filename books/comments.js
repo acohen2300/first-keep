@@ -206,7 +206,7 @@ BOOK("comments", {
  "E120": {"text": "each drawn at its stand (x, y on the screen), s pixels a unit"},
  "E121": {"text": "a find far out, from its look"},
  "E122": {"text": "Floor 6, climate (layer 130): one sky over the whole board (185 m across: one weather), acting on everything below (L7). The clock is Y: a day D20, a season D21, a year D22."},
- "E123": {"text": "QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±23.44° over the year from the spring equinox, H turns with the day (noon at the day's middle)"},
+ "E123": {"text": "QA the sun: sin a = sin φ sin δ + cos φ cos δ cos H; φ D99, δ swings ±A7 over the year from the spring equinox, H turns with the day (noon at the day's middle)"},
  "E989": {"text": "the picked bar acts on the picked soldiers only and says what it did (Mid's phold, precall; Albert, Nov 11)"},
  "E990": {"text": "the clock reads the sun: the day's noon (D341) shows 12:00 (Albert, Nov 11)"},
  "E991": {"text": "the light between the ramp's points: a cubic Hermite with Fritsch-Carlson slopes, flat at both ends, so dusk and dawn fade without a corner (D369)"},

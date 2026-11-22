@@ -1261,7 +1261,7 @@ const season = () => Math.floor(yt() / D.season) % 4, dayPhase = () => (K.t % D.
 const sunPhase = () => (dayPhase() - D.noon + 1 + 2 ** -1) % 1; // E990
 const hhmm = () => { const [h, m] = D.clock; return String(Math.floor(sunPhase() * h)).padStart(String(h).length, '0') + ':' + String(Math.floor((sunPhase() * h * m) % m)).padStart(String(m).length, '0'); }; // E928
 // E123
-function sunAlt() { const phi = D.lat * RAD, dec = 23.44 * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - D.noon) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
+function sunAlt() { const phi = D.lat * RAD, dec = A.axis * RAD * Math.sin(((K.t / D.year) * 2 * Math.PI)), Hh = (dayPhase() - D.noon) * 2 * Math.PI, alt = (d, h) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(h)) / RAD, f = 2 * Math.PI * moonPhase();
   K.moonAlt = alt(dec * Math.cos(f), Hh + f); K.moonLit = (1 - Math.cos(f)) / 2; return alt(dec, Hh); } // E551
 const MO = D.moon, moonPhase = () => (K.t / D.day / MO.month) % 1, nightOf = () => clamp(-K.alt / MO.twilight, 0, 1);
 const RAMP = D.ramp, slopes = () => { const d = RAMP.slice(1).map(([a, l], i) => (l - RAMP[i][1]) / (a - RAMP[i][0])); return RAMP.map((_, i) => (i && i < d.length && d[i - 1] * d[i] > 0 ? 2 / (1 / d[i - 1] + 1 / d[i]) : 0)); }; let RM = null; // E124

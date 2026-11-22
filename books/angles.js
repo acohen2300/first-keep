@@ -5,5 +5,6 @@ BOOK("angles", {
  "A3": {"key":"repose","value":34,"name":"the angle of repose, dry sand: steeper is a face, not a slope","cite":["N64"],"law":["QBE"]},
  "A4": {"key":"round","value":360,"name":"a full turn: the fish spots go round a lake's shore","cite":["N170"],"law":[]},
  "A5": {"key":"loose","value":45,"name":"a missile is loosed at this rise: the farthest reach (Mid's rangeFrom)","cite":["N39","N188"],"law":["QAJ"]},
- "A6": {"key":"corner","value":270,"name":"your corner: the board's corners go clockwise a quarter turn apart from the top left of the screen; yours, the first, is this far round, the bottom left, whatever the grid's turn (Albert, Nov 6 16:01)","cite":["N228"],"law":[]}
+ "A6": {"key":"corner","value":270,"name":"your corner: the board's corners go clockwise a quarter turn apart from the top left of the screen; yours, the first, is this far round, the bottom left, whatever the grid's turn (Albert, Nov 6 16:01)","cite":["N228"],"law":[]},
+ "A7": {"key":"axis","value":23.44,"name":"the earth's axis leans this far from upright: the sun's height at noon swings this far either side of the equinox over the year","cite":["N2"],"law":["QA"]}
 });
