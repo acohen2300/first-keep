@@ -27,7 +27,7 @@ const PART = { tone, hiss, knock };
 // E257
 // E258
 const camH = (z) => FK.size()[0] / z / 2 / Math.tan((HB.ear.fov * Math.PI) / 360) / D.upm; // E259
-function hearing(w, name) { const dx = w.vx - cam.x, dy = (w.vy - cam.y) / Math.sin(FK.A.rise * Math.PI / 180), d = Math.hypot(dx, dy) / D.upm, s = Math.hypot(d, camH(cam.z)), d0 = HB.reach[name] ? HB.ear.floor * HB.reach[name] : camH(FK.zmax()); // E260
+function hearing(w, name) { const dx = w.vx - cam.x, dy = (w.vy - cam.y) / FK.TILT, d = Math.hypot(dx, dy) / D.upm, s = Math.hypot(d, camH(cam.z)), d0 = HB.reach[name] ? HB.ear.floor * HB.reach[name] : camH(FK.zmax()); // E260
   return { v: Math.min(1, d0 / Math.max(0.1, s)) * 10 ** ((-HB.ear.alphaKm * s) / 1000 / 20), s, pan: Math.max(-1, Math.min(1, dx / (FK.size()[0] / 2 / cam.z))) * 0.8 }; }
 function play(name, where, delay = 0) {
   const r = HB[name]; if (!on || !AC || AC.state !== 'running' || document.hidden || !r) return;
