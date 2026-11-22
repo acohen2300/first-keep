@@ -142,7 +142,7 @@ async def defends():
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate(CALM); await run.step(pg, 40); await pg.evaluate("(() => { const h = fk.seatOf(0); WAR.order(units.filter((u) => u.side === 0 && fk.SH[u.code].class), null, fk.tileAt(h.bx, h.by - 600)); })()"); await run.step(pg, 80)
         await pg.evaluate(RAID); await run.step(pg, 3)
-        for v in ('war||', 'mwho|Foot|', 'mord|retreat|'): await pg.evaluate(TAP, v)
+        for v in ('war||', 'mwho|Foot|', 'mord|defend|'): await pg.evaluate(TAP, v)
         await run.step(pg, 5)
         return await pg.evaluate(LOOK)
 
