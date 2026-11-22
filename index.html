@@ -1271,7 +1271,7 @@ function lightAt(a) { RM = RM || slopes(); const L = RAMP.length - 1; if (a <= R
 // E125
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 const sheet = () => Math.sqrt(K.gfd / D.groundIce.fdd); // E365
-const WX = D.weather, FW = WX.fog, HOUR = D.day / 24; let GUST = () => 0, DROPS = []; // E377
+const WX = D.weather, FW = WX.fog, HOUR = D.day / D.clock[0]; let GUST = () => 0, DROPS = []; // E377
 const camHigh = () => (cw / cam.z / D.upm) * DRW.half / Math.tan(D.fogLayer.fov * D.fogLayer.rad * DRW.half); // E873
 const sky = (rain, snow, C = null) => { const R = rain * WX.rain.most, S = snow * WX.snow.most, flake = (WX.snow.slow + WX.snow.fast) * D.place.half, wind = Math.max(rain, snow) * WX.wind.most, fog = FW.beta * C ** FW.pow; return { R, S, wind, fog, gust: wind * (1 + WX.wind.gust), vis: (WX.km * WX.k) / (WX.rain.beta * (WX.rain.mp.a * R ** WX.rain.mp.b) ** WX.rain.pow + WX.snow.beta * (S / (WX.perHour * flake)) ** WX.snow.pow + fog) }; }; // E713
 const blizzard = (s) => s.S > 0 && s.gust >= WX.blizzard.wind && s.vis < WX.blizzard.vis; // E378
