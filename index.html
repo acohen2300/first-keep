@@ -823,7 +823,7 @@ g.strokeStyle = 'rgba(10,12,14,.5)'; g.lineWidth = 0.4; g.beginPath(); g.moveTo(
 
 // ── The trees: twelve kinds from the Sprites book, each in a few variants, drawn once a leaf stage and kept (E773)
 const TREE = SPRITE.trees, TD = TREE.dab, TW = TREE.twig, HALF = TREE.half;
-const leafStage = (v) => { const f = (yt() / D.season + NS_rng(TREE.seed + v)() * TREE.lag) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), 0); }; // E777
+const LAG = [], leafStage = (v) => { const f = (yt() / D.season + (LAG[v] ??= NS_rng(TREE.seed + v)() * TREE.lag)) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), 0); }; // E777
 const treeLook = (v) => leafStage(v) + (K.snow > G.snow.covers ? TREE.snowKey : '');
 const kindOf = (v) => TREE.kinds[Math.floor(v / TREE.variants) % TREE.kinds.length];
 function treeKindAt(k, roll) { const h = H[k], where = h > D.land ? 'hill' : h < TREE.wet ? 'wet' : 'plain', W8 = TREE.kinds.map((s) => s.where[where] || 0), sum = W8.reduce((a, b) => a + b), x = roll() * sum; // E774
