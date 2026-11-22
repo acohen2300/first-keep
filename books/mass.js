@@ -18,7 +18,6 @@ BOOK("mass", {
  "W27": {"key":"outcrop","value":{"height":3},"name":"a rock outcrop where stone, gold or iron is dug: a tor or a lode's face standing out of the grass, about two men high (Nov 9 19:21, Albert: v80's gold, stone and iron piles, which read at a glance; tors stand about 3 to 5 m, from memory, to open; Nov 8 13:08 was 1.2, before that 2 m)","cite":["N259","N287"],"law":[]},
  "W12": {"key":"timber","value":{"density":600},"name":"timber","cite":["N87"],"law":[]},
  "W15": {"key":"stone","value":{"density":2400},"name":"stone","cite":["N87"],"law":[]},
- "W16": {"key":"iron","value":{"density":7870},"name":"iron","cite":["N87"],"law":[]},
  "W17": {"key":"boar","value":{"kg":80,"height":0.9,"com":0.5,"foot":0.3,"stride":1.2},"name":"a boar","cite":["N85","N170"],"law":["QBS","QBT","QBU"]},
  "W18": {"key":"bison","value":{"kg":700,"height":1.8,"com":1.1,"foot":0.6,"stride":2.2},"name":"a bison","cite":["N85","N170"],"law":["QBS","QBT","QBU"]},
  "W19": {"key":"sword","value":{"kg":1.2,"blow":{"kg":1.2,"mps":8}},"name":"a sword","cite":["N177"],"law":["QBT"]},
