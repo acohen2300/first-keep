@@ -169,13 +169,13 @@ async def site_taps():
         return await pg.evaluate("[fk.things().includes(ZQS), MENU.S.subject === ZQS, document.querySelectorAll('.trash').length, /undefined/.test(document.body.innerText)]")
 
 async def picks_end():
-    """Every order ends the pick: a move and a hold from the War card, and villagers sent to a bush from the map."""
+    """Every order ends the pick: a move and a defend from the War card (Hold is a Mode tile and keeps the pick), and villagers sent to a bush from the map."""
     TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return fk.picked().length; }"
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40); got = []
         for v in ('war||', 'mwho|Archers|'): got.append(await pg.evaluate(TAP, v))
         await pg.evaluate(TAP, 'mord|move|'); await pg.evaluate("fk.tap(70, 250)"); got.append(await pg.evaluate("fk.picked().length"))
-        got.append(await pg.evaluate(TAP, 'mwho|Foot|')); got.append(await pg.evaluate(TAP, 'mord|hold|'))
+        got.append(await pg.evaluate(TAP, 'mwho|Foot|')); got.append(await pg.evaluate(TAP, 'mord|defend|'))
         await pg.evaluate(TAP, 'war||')
         got.append(await pg.evaluate("""(() => { const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).slice(0, 3), b = fk.things().filter((t) => t.kind === 'bush').sort((a, c) => fk.dist(a, V[0]) - fk.dist(c, V[0]))[0]; fk.select(V); MENU.render(true); fk.cam.x = b.vx; fk.cam.y = b.vy; MENU.render(true); const [x, y] = fk.toScreen(b.vx, b.vy); const n = fk.picked().length; if (fk.paused()) fk.pause(false); fk.tap(x, y); return [n, fk.picked().length, V.filter((u) => u.target === b).length]; })()"""))
         return got
@@ -441,21 +441,21 @@ async def hold_fast():
     LOOK = "(() => { const A = MEN.filter((u) => units.includes(u) && u.hp > 0); return [+Math.max(0, ...A.map((u) => Math.hypot(u.bx - AT.get(u)[0], u.by - AT.get(u)[1]) / fk.D.tile)).toFixed(1), MEN.filter((u) => u.broke).length, A.length]; })()"
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate(CALM); await run.step(pg, 40); await pg.evaluate(OUT); await run.step(pg, 60)
-        for v in ('war||', 'mwho|Foot|', 'mord|hold|'): await pg.evaluate(TAP, v)
+        for v in ('war||', 'mwho|Foot|', 'mview|mode|', 'mhold||'): await pg.evaluate(TAP, v)
         await run.step(pg, 3); n = await pg.evaluate(RAID); await run.step(pg, 60)
         return n, await pg.evaluate(LOOK)
 
 async def modes():
     """The War card's Mode: its six tiles and which are boxed; Specialty set on the whole army, then a move: where each class stands, [forward, right] in tiles from the spot (N565)."""
-    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return [...document.querySelectorAll('#base .mt .cell')].map((b) => b.textContent.trim() + (b.classList.contains('sel') ? '*' : '')); }"
+    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return [...document.querySelectorAll('#base .mt .cell')].map((b) => b.textContent.trim() + (b.querySelector('.bx') ? '*' : '')); }"
     GO = "() => { const h = fk.seatOf(0), A = units.filter((u) => u.side === 0 && fk.SH[u.code].class); window.ARMY = A; window.GOAL = fk.tileAt(h.bx, h.by - 300); WAR.order(A, null, GOAL); }"
     LOOK = "(() => { const [gx, gy] = fk.tileMid(GOAL), f = [ARMY[0].fx, ARMY[0].fy], by = {}; for (const u of ARMY) { const dx = (u.bx - gx) / fk.D.tile, dy = (u.by - gy) / fk.D.tile; (by[fk.SH[u.code].class] ||= []).push([dx * f[0] + dy * f[1], -dx * f[1] + dy * f[0]]); } const m = (L, i) => L.reduce((a, p) => a + p[i], 0) / L.length; return Object.fromEntries(Object.entries(by).map(([c, L]) => [c, [+m(L, 0).toFixed(1), +m(L, 1).toFixed(1)]])); })()"
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate(CALM); await run.step(pg, 40)
         for v in ('war||', 'mwho||'): await pg.evaluate(TAP, v)
-        a = await pg.evaluate(TAP, 'mview|mode|'); b = await pg.evaluate(TAP, 'mmode|form|specialty'); c = await pg.evaluate(TAP, 'mmode|heart|death')
+        a = await pg.evaluate(TAP, 'mview|mode|'); b = await pg.evaluate(TAP, 'mmode|heart|death|'); c = await pg.evaluate(TAP, 'mdoor|form|'); d = await pg.evaluate(TAP, 'mmode|form|specialty|'); e = await pg.evaluate(TAP, 'mdoor||')
         await pg.evaluate(GO); await run.step(pg, 90)
-        return [a, b, c], await pg.evaluate(LOOK)
+        return [a, b, c, d, e], await pg.evaluate(LOOK)
 
 async def big_move():
     """Fifty more soldiers made, then all 74 moved 85 tiles at once: the order must count as arrived within two minutes (N566: his orders at T27 and U25 never did)."""
@@ -488,7 +488,7 @@ async def check_game():
     foot, bow = await defends()
     rule('Defend sends the picked soldiers at whoever is attacking the town, and nobody else', foot > 0 and bow == 0, f'{foot} foot on the raiders five seconds on, {bow} archers')
     pe = await picks_end()
-    rule('every order ends the pick: a War move, a War hold, villagers sent to a bush', pe[2] == 0 and pe[4] == 0 and pe[5][0] == 3 and pe[5][1] == 0 and pe[5][2] > 0, f'picked before and after (archers, move, foot, hold, villagers [before, after, went]): {pe}')
+    rule('every order ends the pick: a War move, a War defend, villagers sent to a bush', pe[2] == 0 and pe[4] == 0 and pe[5][0] == 3 and pe[5][1] == 0 and pe[5][2] > 0, f'picked before and after (archers, move, foot, defend, villagers [before, after, went]): {pe}')
     rg = await rings()
     rule('an order at a foe draws no ring where the foe stood; a move keeps its ring', rg == [False, True], f'live orders, marked foe: {rg}')
     tk, tp = await told()
@@ -539,7 +539,7 @@ async def check_game():
     hn, hl = await hold_fast()
     rule('Hold is die in place: the held foot neither move from their spot nor break with twenty foes on them', hn > 0 and hl[0] < 1.5 and hl[1] == 0, f'{hn} held; a minute on, the farthest moved {hl[0]} tiles, {hl[1]} broke, {hl[2]} alive')
     mt, ml = await modes()
-    rule('the Mode tiles read Line, Specialty, Wide, Normal, Focused, To death and box what the picked soldiers have', mt == [['Line*', 'Specialty', 'Wide', 'Normal*', 'Focused', 'To death'], ['Line', 'Specialty*', 'Wide', 'Normal*', 'Focused', 'To death'], ['Line', 'Specialty*', 'Wide', 'Normal', 'Focused', 'To death*']], f'{mt}')
+    rule('the Mode row reads Hold, Normal, Focused, To death and a door to the formations (Line, Specialty, Wide, Back), red-boxing what the picked soldiers have', mt == [['Hold', 'Normal*', 'Focused', 'To death', 'LineFormation›'], ['Hold', 'Normal', 'Focused', 'To death*', 'LineFormation›'], ['Line*', 'Specialty', 'Wide', '‹ Back'], ['Line', 'Specialty*', 'Wide', '‹ Back'], ['Hold', 'Normal', 'Focused', 'To death*', 'SpecialtyFormation›']], f'{mt}')
     rule('Specialty: foot in front, archers behind them, siege at the back, cavalry off the right flank', ml['Archers'][0] < ml['Foot'][0] - 2 and ml['Engines'][0] < ml['Archers'][0] and ml['Riders'][1] > ml['Foot'][1] + 3, f'[forward, right] tiles: {ml}')
     bn, ba = await big_move()
     rule('a big army moved at once arrives: no soldier walks in place short of his spot', ba == [True, 0], f'{bn} soldiers; two minutes on, arrived and still marching: {ba}')
