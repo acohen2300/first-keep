@@ -1140,5 +1140,6 @@ BOOK("comments", {
  "E1441": {"text": "the mold's top line: the home circle, the hint and the top line (War: Troops | Mode | Mission and the eye), the alert, the War button"},
  "E1442": {"text": "what floats over the map gets a dark patch: the rank and the card's words, the War hint; the clear icons (pause, mail, the eye) a round one"},
  "E1443": {"text": "the War card's look (N465): the mission row six tiles and a half-wide bell; the eye a clear round icon like pause and mail, red ring when set; the hint in the italic hint style above the top line; a closed controller dims its letters, not its box"},
- "E1444": {"text": "a mission tile (N465): tapped with nobody picked it first picks All, as the All word does (the War card's opening default), then acts: Squad saves or picks the squad, Hold holds, Defend, Fall back and Retreat act at once, Attack and Move arm and wait for the map; refused only with no soldiers at all"}
+ "E1444": {"text": "a mission tile (N465): tapped with nobody picked it first picks All, as the All word does (the War card's opening default), then acts: Squad saves or picks the squad, Hold holds, Defend, Fall back and Retreat act at once, Attack and Move arm and wait for the map; refused only with no soldiers at all"},
+ "E2080": {"text": "stepOk: may a walker step from a tile of height h (its hAt, which around reads once for all eight ways instead of once per way) to tile b: b is walkable and the rise is within the slope of repose (REPOSE, E7)"}
 });
