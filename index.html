@@ -1045,7 +1045,7 @@ on('tick', () => { if (!every([ICE.beat, 0])) return; const load = new Map(); fo
     if (K.t - CRACK.get(k) >= ICE.warn && (kg >= fail || rng() < ((kg - safe) / (fail - safe)) ** 2)) { CRACK.delete(k); HOLES.set(k, fddDays()); fire('event', 'splash', at); let n = 0;
       for (const u of [...units]) if (onIce(u) || u.k === k) { const d = Math.hypot(u.bx - tileMid(k)[0], u.by - tileMid(k)[1]) / D.tile; if (u.k === k || (d <= ICE.near && rng() < ICE.fall)) { n += u.side === ME; u.under = true; fire('drown', u); } } if (n) fire('fell', n); } }
   for (const [k, t] of CRACK) if (!load.has(k) && K.t - t > ICE.warn + ICE.warn) CRACK.delete(k); });
-on('save', (S) => { S.ice = { holes: HOLES, crack: CRACK }; }); on('load', (S) => { refill(HOLES, S.ice ? S.ice.holes : []); refill(CRACK, S.ice ? S.ice.crack : []); }); // E2621
+on('start', () => { HOLES.clear(); CRACK.clear(); }); on('save', (S) => { S.ice = { holes: HOLES, crack: CRACK }; }); on('load', (S) => { refill(HOLES, S.ice ? S.ice.holes : []); refill(CRACK, S.ice ? S.ice.crack : []); }); // E2621
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
 const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : null), onIceOk = (k, who) => !CRACK.has(k) && ICE.load[who && onIce(who) ? 'fail' : 'safe'] * thick(k) ** 2 >= (who ? massOf(who.code) * (iceChoice(who) ? 1 : CROSS.ai) : W.person.kg) && !(who && (who.shy > K.t || (iceChoice(who) && CROSS.rules[iceChoice(who)].avoid))); // E1540
@@ -1337,7 +1337,7 @@ function drawSky(dt) { // E140
 }
 // E552
 const FC = D.forecast, SKYW = fromBook('words').sky, FLD = D.flood, RU = D.ruts, RC = Math.ceil(N / RU.cell), RUTS = new Float32Array(RC * RC), BANK = new Uint8Array(N * N), HEAL = Math.exp(-RU.heal[0] / RU.tau);
-on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear', ev: {}, horde: null, sand: null, burn: new Set(), wayT: J.every, wayI: null }); sunAlt(); });
+on('start', () => { RUTS.fill(0); Object.assign(K, { ahead: [], flood: -Infinity, sky: 'clear', ev: {}, horde: null, sand: null, burn: new Set(), wayT: J.every, wayI: null, mirage: null, flashT: -Infinity }); sunAlt(); }); // E2622
 on('gone', (t) => { if (t.kind === 'unit') fallen(t); }); on('event', (e, t) => { if (e === 'fell' && t) burnt(t); });
 function ahead(was) { const A = K.ahead, lead = Math.round((stat('', ME, 'forecast') * FC.step) / HOUR), wet = (w, h) => h * HOUR >= D.dry * D.day && rng() < D.chain[+w]; K.wetHour = A.length ? A.shift() : wet(was, K.hour); // E553
   do A.push(wet([K.wetHour, ...A].at(-1), K.hour + A.length + 1)); while (A.length < lead); const [last, prev] = [K.wetHour, ...A].reverse(), n = Math.round((lead * HOUR) / FC.step), S = SKYW.signs; if (!lead || last === prev) return;
