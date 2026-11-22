@@ -16,7 +16,7 @@ canvas { position: fixed; inset: 0; width: 100%; height: 100%; touch-action: non
 </head>
 <body>
 <canvas id="map"></canvas>
-<div id="top"><b>First Keep</b><span id="ver"></span><span id="clock" style="white-space:nowrap"></span><span id="store"></span><span id="seed"></span></div>
+<div id="top"><b>First Keep</b><span id="ver"></span><span id="store"></span><span id="seed"></span></div>
 <script>'use strict'; const BOOKS = {}; function BOOK(name, entries) { BOOKS[name] = entries; }</script>
 <script src="books/measure.js"></script>
 <script src="books/angles.js"></script>
@@ -1277,7 +1277,7 @@ function lightAt(a) { RM = RM || slopes(); const L = RAMP.length - 1; if (a <= R
 // E125
 const relax = (x, L, tau, dt) => L + (x - L) * Math.exp(-dt / tau);
 const sheet = () => Math.sqrt(K.gfd / D.groundIce.fdd); // E365
-const WX = D.weather, FW = WX.fog, HOUR = D.day / 24; let GUST = () => 0, DROPS = []; // E377
+const WX = D.weather, FW = WX.fog, HOUR = D.day / D.clock[0]; let GUST = () => 0, DROPS = []; // E377
 const camHigh = () => (cw / cam.z / D.upm) * DRW.half / Math.tan(D.fogLayer.fov * D.fogLayer.rad * DRW.half); // E873
 const sky = (rain, snow, C = null) => { const R = rain * WX.rain.most, S = snow * WX.snow.most, flake = (WX.snow.slow + WX.snow.fast) * D.place.half, wind = Math.max(rain, snow) * WX.wind.most, fog = FW.beta * C ** FW.pow; return { R, S, wind, fog, gust: wind * (1 + WX.wind.gust), vis: (WX.km * WX.k) / (WX.rain.beta * (WX.rain.mp.a * R ** WX.rain.mp.b) ** WX.rain.pow + WX.snow.beta * (S / (WX.perHour * flake)) ** WX.snow.pow + fog) }; }; // E713
 const blizzard = (s) => s.S > 0 && s.gust >= WX.blizzard.wind && s.vis < WX.blizzard.vis; // E378
@@ -1297,7 +1297,6 @@ function climate(dt) {
   else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = clamp(Math.floor((ICE.steps * fddDays()) / ICE.span), 0, ICE.steps); K.iceOn = Math.floor(fddDays() / ICE.key) + HOLES.size; if (!K.fds) HOLES.clear(); // E364
   if (K.storm) { K.strikeT -= dt; if (K.strikeT <= 0) { const sh = D.strike.share; K.strikeT = -((D.strike.summer * Math.max(...sh)) / sh[season()]) * Math.log(1 - rng()); strike(); } } // E135
   K.bolts = K.bolts.filter((b) => wallT() - b.w < (b.n - 1) * STK.gap + STK.life); K.flash *= Math.exp(-dt / D.strike.flash.decay); if (K.flood > K.t && every(FLD.beat)) flooding(); if (every(EV.beat)) events(); if (evOn('stampede') && every(ER.stampede.beat)) trample(); if (every(RU.heal)) RUTS.forEach((n, i) => { RUTS[i] = Math.floor(n * HEAL); });
-  document.getElementById('clock').textContent = SEASONS[sn] + ' ' + hhmm() + (falling ? (falling === 'snow' ? ' ❄' : K.storm ? ' ⚡' : ' ☂') : K.vis < FW.wmo ? ' ≈' : '');
 }
 // E136
 const wallT = () => performance.now() / DRW.ms, STK = D.strike.stroke, boltEnv = (b, age) => { let e = 0; for (let i = 0; i < b.n; i++) if (age >= i * STK.gap) e += Math.exp(-(age - i * STK.gap) / STK.fade); return Math.min(1, e); }; // E951
@@ -1409,7 +1408,7 @@ function arrivals() { if (K.t < K.wayT) return; K.wayT = K.t + J.every; const e 
 function trample() { const R = ER.stampede, r = R.r * D.tile; for (const b of K.ev.cur.units) if (!b.gone) { unitsNear(b, r, (v) => { if (v.herd || !(v.hp > 0) || v.inside || dist(v, b) >= r) return; harm(v, R.trample, 'stampede'); v.hurtT = K.t; shove(v, (v.bx - b.bx) * R.shove, (v.by - b.by) * R.shove); if (v.hp <= 0) WAR.die(v, null, 'stampede'); }); // E577
   bldsNear(b.bx, b.by, R.field * D.tile, (t) => has(t, 'Soil') && t.done >= 1 && dist(t, b) < R.field * D.tile && !!(t.fert = Math.max(stat(t.code, t.side, 'soil'), t.fert - R.fert))); } }
 // E558
-const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, WASH = [], wash = (col, a) => { if (a >= BD.least) WASH.push([rgb(col), Math.min(1, a)]); }, flushWash = () => { if (!WASH.length) return; let a = 0, c = [0, 0, 0]; for (const [col, ai] of WASH) { c = c.map((v, i) => col[i] * ai + v * (1 - ai)); a = ai + a * (1 - ai); } ctx.fillStyle = css(c.map((v) => v / a), a); ctx.fillRect(0, 0, cw, ch); WASH.length = 0; }, rgb = (h) => h.match(/\w\w/g).map((x) => parseInt(x, 16)), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
+const RP = D.ripples, RR = D.rings, BD = D.band, SKYC = C.sky, CL = BD.clouds, WASH = [], wash = (col, a) => { if (a >= BD.least) WASH.push([rgb(col), Math.min(1, a)]); }, flushWash = () => { if (!WASH.length) return; let a = 0, c = [0, 0, 0]; for (const [col, ai] of WASH) { c = c.map((v, i) => col[i] * ai + v * (1 - ai)); a = ai + a * (1 - ai); } ctx.fillStyle = css(c.map((v) => v / a), a); ctx.fillRect(0, 0, cw, ch); WASH.length = 0; }, RGBS = new Map(), rgb = (h) => RGBS.get(h) || RGBS.set(h, h.match(/\w\w/g).map((x) => parseInt(x, 16))).get(h), mixC = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f), css = (c, a) => `rgba(${c.map(Math.round)},${a})`;
 function marks() { const z = cam.z, w = cw / z / 2, hh = ch / z / 2; ctx.lineWidth = RP.line; ctx.strokeStyle = C.marks.ripple; ctx.beginPath();
   if (K.ice < ICE.steps) for (const L of lakes) { const lx = L.x, ly = L.y * TILT; if (Math.abs(lx - cam.x) > w + L.r || Math.abs(ly - cam.y) > hh + L.r) continue; // E559
     for (let i = 0; i < RP.n; i++) { const a = i * RP.turn + K.t * RP.spin, r = L.r * (RP.from + RP.span * ((i * RP.step + K.t * RP.drift) % 1)), [x, y] = toScreen(L.x + Math.cos(a) * r, (L.y + Math.sin(a) * r) * TILT); ctx.moveTo(x - RP.w * z, y); ctx.quadraticCurveTo(x, y - RP.lift * z, x + RP.w * z, y); } }
@@ -1451,8 +1450,8 @@ const seenNow = (t, s) => { const V = visOf(s); if (t.kind !== 'bld') return V[c
 const rimSeen = (e, r, V, own) => { const k0 = tileAt(e.bx, e.by), c0 = cellK(k0), ci = c0 % NC_, cj = (c0 - ci) / NC_, R = Math.min(r / D.tile / SCELL, NC_); for (let a = 0; a < FOGW.rim; a++) { const th = (a / FOGW.rim) * Math.PI * 2, i = clamp(Math.round(ci + Math.cos(th) * R), 0, NC_ - 1), j = clamp(Math.round(cj + Math.sin(th) * R), 0, NC_ - 1), c = j * NC_ + i; if (V[c] - (own && own.has(c) ? 1 : 0) <= 0) return false; } return true; }; // E877
 let TOPV = 0; function look(dt) { seeT -= dt; const beat = seeT <= 0; if (!beat) return; if (topN !== topKey()) { tops(); cellTops(); TOPV++; } const all = units.filter((u) => !u.inside).concat(blds()); // E146
   if (FOGON) for (const s of D.players) { const V = visOf(s), X = expOf(s), C = CAST.get(s) || CAST.set(s, new Map()).get(s), live = new Set(), byCell = new Map();
-    for (const e of all) { if (e.side !== s || e.done < 1 || e.hp <= 0) continue; live.add(e); const r = sightOf(e), k = tileAt(e.bx, e.by), key = `${cellK(k)}|${Math.round(r / D.tile / SCELL)}|${Math.round(stat(e.code, e.side, 'eye'))}|${TOPV}`, c = C.get(e);
-      if (c && c.key === key) { if (!c.skip) byCell.set(key, e); continue; } const twin = byCell.get(key), drop = () => { if (c && !c.skip) for (const q of c.tiles) V[q]--; };
+    for (const e of all) { if (e.side !== s || e.done < 1 || e.hp <= 0) continue; live.add(e); const r = sightOf(e), k = tileAt(e.bx, e.by), key = `${cellK(k)}|${Math.round(r / D.tile / SCELL)}|${Math.round(stat(e.code, e.side, 'eye'))}|${s === ME ? TOPV : null}`, c = C.get(e); // E2641
+      if (c && c.key === key && !c.skip) { byCell.set(key, e); continue; } const twin = byCell.get(key), drop = () => { if (c && !c.skip) for (const q of c.tiles) V[q]--; }; // E2640
       if (twin || (c && rimSeen(e, r, V, c.skip ? null : new Set(c.tiles)))) { drop(); C.set(e, { key, tiles: [], skip: true }); continue; }
       drop(); const tiles = s === ME ? cast(e, r) : circle(e, r); for (const q of tiles) { V[q]++; X[q] = 1; } C.set(e, { key, tiles }); byCell.set(key, e); }
     for (const [e, c] of C) if (!live.has(e)) { if (!c.skip) for (const q of c.tiles) V[q]--; C.delete(e); } }
@@ -1480,12 +1479,12 @@ const inSight = (t, side = ME, eye) => !t || !SIDES[t.side] || !SIDES[side] || t
 function shadowVec(h) { const sun = clamp(K.alt / A.fade, 0, 1) * 0.35 * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, A.low) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
 function drawShadows(s) { // E152
   const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = C.sky.shadow;
-  for (const t of blds()) { const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue;
+  for (const t of blds()) { if (fire('hide', t)) continue; const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue; // E2642
     const n = t.n * D.tile, pts = [[t.i * D.tile, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile], [t.i * D.tile + n, t.j * D.tile + n], [t.i * D.tile, t.j * D.tile + n]].map(([sx, sy]) => S(sx, sy, H[t.j * N + t.i]));
     const sh = pts.map(([px, py]) => [px + dx * h * s, py + dy * h * s]); ctx.beginPath(); // E153
     for (const q of [pts, sh, [pts[0], pts[1], sh[1], sh[0]], [pts[1], pts[2], sh[2], sh[1]], [pts[2], pts[3], sh[3], sh[2]], [pts[3], pts[0], sh[0], sh[3]]]) q.forEach(([px, py], i) => (i ? ctx.lineTo(px, py) : ctx.moveTo(px, py)));
     ctx.fill(); }
-  for (const u of units) { if (u.inside || !inSight(u)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18, f = s * FIG();
+  for (const u of units) { if (u.inside || !inSight(u) || (u.veil && u.side !== ME)) continue; const [x, y] = toScreen(...vAt(u)); if (x < -40 * s || x > cw + 40 * s || y < -40 * s || y > ch + 40 * s) continue; const h = 18, f = s * FIG();
     ctx.beginPath(); ctx.ellipse(x + (dx * h * f) / 2, y + (dy * h * f) / 2, Math.max(4 * f, (Math.hypot(dx, dy) * h * f) / 2), 2.5 * f, Math.atan2(dy, dx), 0, A.round * RAD); ctx.fill(); }
   const [tr, or] = DRS.shade.r; if (DRAW.lvl < DRW.lv.shadows) { ctx.beginPath(); for (const t of things) { const h = t.kind !== 'bld' && !t.inner && PDR.nodeH[(KIND[t.kind] || {}).look]; if (!h) continue; const [x, y] = toScreen(t.vx, t.vy), r = (treeAt(t.k) ? tr : or) * s * t.size * artOf(t.kind), L = Math.hypot(dx, dy) * h * s * artOf(t.kind); if (x < -L || x > cw + L || y < -L || y > ch + L) continue; // E623
     ctx.moveTo(x + r, y); ctx.ellipse(x + (L / Math.hypot(dx, dy)) * dx * DRS.shade.lean, y + (L / Math.hypot(dx, dy)) * dy * DRS.shade.lean, L * DRS.shade.lean + r, Math.max(r * DRS.shade.wide, r * TILT), Math.atan2(dy, dx), -Math.PI, Math.PI); } ctx.fill(); }
