@@ -40,7 +40,7 @@ const CODE = {}; for (const b of Object.values(BOOKS)) for (const [c, e] of Obje
 const ref = (p) => { if (p == null) return null; const [c, k] = p.split('.'); const v = CODE[c]; if (v === undefined) throw new Error('no book entry ' + c); return k ? v[k] : v; }; // E4
 // E5
 const SH = BOOKS.shells, SHELLS = Object.keys(SH);
-const ticked = (cap) => SHELLS.filter((c) => SH[c].ticks.includes(cap));
+const TICKED = {}, ticked = (cap) => TICKED[cap] || (TICKED[cap] = SHELLS.filter((c) => SH[c].ticks.includes(cap))); // E2180
 const TICKS = Object.fromEntries(SHELLS.map((c) => [c, new Set(SH[c].ticks)])), has = (t, cap) => { const S = t && (t.code ? TICKS[t.code] : KIND[t.kind] && TICKS[KIND[t.kind].code]); return !!S && S.has(cap); }; // E708
 
 // ── The frames (E6)
@@ -1242,7 +1242,7 @@ const GIFT = { // E120
   cemetery: (x, y, s) => { for (let n = 0; n < 4; n++) { const gx = x - 6.5 * s + n * 4 * s, gy = y - (n % 2) * 1.5 * s; rect(gx, gy - 4 * s, 2.2 * s, 4 * s, ROCKLIT); disc(gx + 1.1 * s, gy - 4 * s, 1.1 * s, ROCKLIT); } },
   campfire: (x, y, s) => { for (let n = 0; n < 6; n++) disc(x + 3.2 * s * Math.cos((n * Math.PI) / 3), y - 1.2 * s + 1.6 * s * Math.sin((n * Math.PI) / 3), 0.9 * s, ROCK);
     ctx.fillStyle = C.gold; ctx.beginPath(); ctx.moveTo(x - 1.6 * s, y - 1 * s); ctx.lineTo(x + 1.6 * s, y - 1 * s); ctx.lineTo(x, y - 6 * s); ctx.fill(); ctx.fillStyle = C.red; ctx.beginPath(); ctx.moveTo(x - 0.8 * s, y - 1 * s); ctx.lineTo(x + 0.8 * s, y - 1 * s); ctx.lineTo(x, y - 3.5 * s); ctx.fill(); },
-  stop: (x, y, z, t, s) => { if (!t || t.owner != null) return; const c = bldSprite(SHELLS.find((q) => TICKS[q].has('Post')), null, s, 0, true, false, null, t.want); blit(c, x, y, s); hides(c, x, y, s); }, // E1099
+  stop: (x, y, z, t, s) => { if (!t || t.owner != null) return; const c = bldSprite(ticked('Post')[0], null, s, 0, true, false, null, t.want); blit(c, x, y, s); hides(c, x, y, s); }, // E1099
   treasure: (x, y, s) => { rect(x - 3 * s, y - 4 * s, 6 * s, 4 * s, CHEST); rect(x - 3 * s, y - 5.2 * s, 6 * s, 1.5 * s, LID); rect(x - 0.6 * s, y - 5.2 * s, 1.2 * s, 5.2 * s, C.gold); },
 };
 for (const [k, B] of Object.entries(SPRITE.nodes.blobs)) GIFT[k] = (x, y, s) => B.forEach(([dx, dy, r, c]) => disc(x + dx * s, y + dy * s, r * s, C.wild[c] || C[c])); // E580
