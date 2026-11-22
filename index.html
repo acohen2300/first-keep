@@ -1255,7 +1255,7 @@ function trapArt(x, y, s, t) { const A = TRAPS[t.done < D.camp.built ? 'site' : 
 const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // E121
 // ── Floor 6, climate (E122)
 const K = { ev: {}, t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: null, iceOn: null, fog: 0, dew: null, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
-const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'];
+const SEASONS = fromBook('words').seasons; // E2280
 const yt = () => K.t + D.startIn * D.season; // E862
 const season = () => Math.floor(yt() / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
 const sunPhase = () => (dayPhase() - D.noon + 1 + 2 ** -1) % 1; // E990
