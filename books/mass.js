@@ -1,6 +1,6 @@
 // Book · W Mass, in kilograms (weight is never stored: weight = mass × g, D168). Bodies carry the measures the laws read: mass, height, the centre of mass, the foot, the stride (two steps). Kit is what is carried or worn; a weapon carries its striking mass and speed. Materials are densities, kg/m³. Edit here only.
 BOOK("mass", {
- "W1": {"key":"person","value":{"drag":0.27,"kg":70,"height":1.8,"com":0.99,"foot":0.26,"stride":1.524},"name":"a person; its drag ½ρCdA in N·s²/m² (ρ 1.2 kg/m³, CdA 0.45 m²)","cite":["N108","N109","N110","N181"],"law":["QBS","QBT","QBU","QCB"]},
+ "W1": {"key":"person","value":{"drag":0.27,"kg":70,"height":1.8,"com":0.99,"foot":0.26,"stride":1.524},"name":"a person; its drag ½ρCdA in N·s²/m² (ρ 1.2 kg/m³, CdA 0.45 m²)","cite":["N84","N108","N109","N110","N181"],"law":["QBS","QBT","QBU","QCB"]},
  "W2": {"key":"horse","value":{"kg":500,"height":1.6,"com":1.2,"foot":0.6,"stride":2.5},"name":"a horse","cite":["N85"],"law":["QBT","QBU"]},
  "W3": {"key":"deer","value":{"kg":70,"height":1.0,"com":0.7,"foot":0.4,"stride":1.5},"name":"a deer","cite":["N85"],"law":["QBS","QBT","QBU"]},
  "W4": {"key":"wolf","value":{"kg":40,"height":0.8,"com":0.5,"foot":0.35,"stride":1.4},"name":"a wolf","cite":["N85"],"law":["QBS","QBT","QBU"]},
