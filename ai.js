@@ -19,7 +19,7 @@ function deal(seed) { const r = FK.NS_rng(seed + V.seed), span = ([lo, hi]) => l
     for (const [k, c] of Object.entries(V.flip)) if (r() < c) P[k] = !P[k]; // E1400
     if (r() < V.shuffle) for (let i = P.goals.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [P.goals[i], P.goals[j]] = [P.goals[j], P.goals[i]]; } // E1400
     return Object.assign(P, { likes: one(V.likes), liking: span(V.liking), foe: one(D.players.filter((q) => q !== side)), grudge: span(V.grudge) }); }); // E1400
-  for (const P of H) if (P) Object.assign(P, { face: [one([1, -1]), one([1, -1]), one([false, true])] }); return H; } // E2460
+  for (const P of H) if (P) Object.assign(P, { face: [one([1, -1]), one([1, -1]), one([false, true])], strike: one(V.strikes) }); return H; } // E2460
 const dealt = (side) => { const sd = FK.seed(); if (!hand || hand.seed !== sd) hand = { seed: sd, P: deal(sd) }; return hand.P[side]; }; // E1401
 // E245
 function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2), [fx, fy, cols] = (per(side) || {}).face || [1, 1, false], at = (a, b) => (cols ? [ci + fx * b, cj + fy * a] : [ci + fx * a, cj + fy * b]); // E2461
@@ -151,11 +151,12 @@ function decideWar(side, P) { const m = mind[side], w = WAR.waves[side], t = FK.
   if (free.length < (Wd ? WV.wonder : P.waveMin + DF.wave)) return; const bold = P.bold + DF.bold, go = Wd ? free : free.slice(Math.floor(free.length * P.guard)); let best = null, bp = -Infinity;
   for (const q of D.players) { if (q === side || ECON.fell(q) || !WAR.atWar(side, q) || !home(q)) continue; const threat = !!Wd && Wd.side === q; if (!threat && of(m.cool[q]) > t) continue; if (q === ME && ECON.time() < DF.safe && !Wd) continue;
     const prob = WAR.odds(go, q), busy = P.opportunist && D.players.some((x) => x !== side && x !== q && !ECON.fell(x) && WAR.atWar(q, x)), pr = (threat ? Math.max(prob, WV.threat) : busy ? prob * P.opportunist * DF.opp : prob) * (q === P.foe ? P.grudge : 1); if (pr > bp) { bp = pr; best = q; } } // E1406
-  if (best == null || bp <= (WAR.armyOf(side).length >= cap(side) - WV.full ? Math.min(bold, WV.settle) : bold)) return; const at = Wd && Wd.side === best ? Wd : home(best); if (!WAR.attack(side, FK.tileAt(at.bx, at.by), go)) return; // E545
-  Object.assign(WAR.waves[side], { S: go, to: best, bid: at !== home(best), d: Infinity, pt: t }); const fast = go.filter((u) => FK.SH[u.code].class === WV.riders).filter((_, i) => i < P.raid);
+  if (best == null || bp <= (WAR.armyOf(side).length >= cap(side) - WV.full ? Math.min(bold, WV.settle) : bold)) return; const bid = !!Wd && Wd.side === best, at = bid ? Wd : struck(side, best); if (!WAR.attack(side, FK.tileAt(at.bx, at.by), go)) return; // E545
+  Object.assign(WAR.waves[side], { S: go, to: best, bid, d: Infinity, pt: t }); const fast = go.filter((u) => FK.SH[u.code].class === WV.riders).filter((_, i) => i < P.raid);
   const [mark] = blds(best).filter((b) => up(b) && !FK.has(b, 'Seat') && FK.has(b, 'Drop-off')).sort((a, b) => dist(a, h0(side)) - dist(b, h0(side))); if (mark && fast.length) WAR.dress(fast, FK.tileAt(mark.bx, mark.by));
   if (best === ME) ECON.tell(fromBook('words').realm.march, { side: fromBook('words').end.sides[side], n: go.length }); }
 const h0 = (side) => home(side) || { bx: FK.MID, by: FK.MID };
+const struck = (side, q, how = per(side).strike) => { const [b] = how === 'seat' ? [] : blds(q).filter((b) => up(b) && !ECON.wallish(b) && (how === 'near' || (!FK.has(b, 'Seat') && (FK.has(b, 'Drop-off') || ECON.yieldOf(b))))).sort((a, b) => dist(a, h0(side)) - dist(b, h0(side))); return b || home(q); }; // E2462
 // E522
 const DP = D.ai.diplo, LG = D.league, [ME] = D.players, [WARS, PEACE, ALLY] = fromBook('sides').stances, [ENVOY] = FK.ticked('Envoy'), helped = new Map(), score = (p) => ECON.score(p).total; let league = null;
 function diplomacy(side, P) { const s = SIDES[side], rivals = D.players.filter((q) => q !== side && !ECON.fell(q)); if (!FK.aged(ENVOY, side) || s.envoyOut || FK.K.t - s.envoyAt < DF.envoy) return;
