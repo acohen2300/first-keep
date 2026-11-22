@@ -1229,5 +1229,7 @@ BOOK("comments", {
  "E2673": {"text": "A computer's build goal asks its gatherers for what the build loop waits for: the larger of the price and the entry's stock (review ai.md 9); it asked only for the price, so a fort sat short of its Castle's stock with no one sent to gather the rest"},
  "E2674": {"text": "The computers' dealt plans are saved with the game and taken back on load, so an old save keeps each computer's personality after a build changes the dealing's books or order (review ai.md 10, v-ai.md 6); a save with no plans deals them from the seed as before"},
  "E2675": {"text": "The goal ring round a target is round, measured as the reach is (edgeDist from the tile's middle), at least a man's eight neighbours (review combat.md 3): it was a square, so an archer or engine coming at a corner stopped on a ring tile out of reach and stood there, against a building for good"},
- "E2676": {"text": "The tapped man counts in his own group (review combat.md 4): unitsNear skips the one it measures from, so a front man was never his band's target and a pair read as a man alone"}
+ "E2676": {"text": "The tapped man counts in his own group (review combat.md 4): unitsNear skips the one it measures from, so a front man was never his band's target and a pair read as a man alone"},
+ "E2677": {"text": "Spice a caravan buys is priced for its own side, so the side's trade-price research (band) counts here as at the market (review econ.md 10)"},
+ "E2678": {"text": "A ruins scroll teaches only research the finder's own civilization may learn, as researchWhy asks (review econ.md 12)"}
 });
