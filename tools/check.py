@@ -411,6 +411,16 @@ async def age_lost():
         await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 1)
         return s, await pg.evaluate(RAZE)
 
+async def no_phantom():
+    """A villager sent to a new farm finds no path to it: the farm keeps no worker who is not there, shows as idle, and the next villager sent works it (Nov 21 review of econ.js, E222)."""
+    SET = """(() => { const V = units.filter((u) => u.side === 0 && fk.has(u, 'Gather')), v = V[0], w = V[1], N = fk.N, [code] = fk.bought('Field'), k0 = fk.tileAt(v.bx, v.by), i0 = k0 % N, j0 = Math.floor(k0 / N); let f = null;
+  for (let r = 8; r < 30 && !f; r++) for (let d = -r; d <= r && !f; d++) f = ECON.site(0, code, i0 + d, j0 + r) || ECON.site(0, code, i0 + d, j0 - r);
+  f.done = 1; f.hp = f.hpMax; Object.assign(v, { load: 0, carry: null }); const g = fk.goBy; fk.goBy = () => false; ECON.gatherAt(v, f); fk.goBy = g; window.ZNP = { f, w }; return [v.target === f, ~~f.wk, ECON.idlePost(f)]; })()"""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 3); s = await pg.evaluate(SET); await run.step(pg, 1)
+        took = await pg.evaluate("(() => { Object.assign(ZNP.w, { load: 0, carry: null }); ECON.gatherAt(ZNP.w, ZNP.f); return ZNP.w.target === ZNP.f; })()"); await run.step(pg, 2)
+        return s, took, await pg.evaluate("[ZNP.w.target === ZNP.f, ~~ZNP.f.wk]")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -471,6 +481,8 @@ async def check_game():
     rule('a camp piece raised by soldiers alone rises at their hands, as a villager\'s would: its crew does not grow step on step', cs[1] and cc[0] <= 1 and cc[3:] == [1, 0, 'raise'] and abs(cc[1] - cc[2]) <= cc[2] * 0.02, f'piece {cs[0]} tiles from the other soldiers, one beside it: {cs[1]}; crew, risen in 10 s, one soldier\'s 10 s, soldiers on it, villagers on it, his job: {cc}')
     al, ar = await age_lost()
     rule('a side whose Town Center falls while raising the age, with another standing, can start the age-up again at the other', al == [True, True, True] and ar[0] == 0 and ar[1] >= 1 and ar[2:] == [True, True], f'second Town Center, age-up taken and running: {al}; after the raze: aging, Town Centers left, age-up taken again, running: {ar}')
+    ns, nt, nw = await no_phantom()
+    rule('a villager with no path to a farm leaves no one counted on it: it shows idle and the next villager sent works it', ns == [False, 0, True] and nt and nw == [True, 1], f'on it, counted, idle after the failed walk: {ns}; the next taken: {nt}; on it and counted two seconds on: {nw}')
     tr, tw = await troops()
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Bow 8', 'Cav 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
