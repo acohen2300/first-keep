@@ -1650,7 +1650,7 @@ on('drop', (p) => p.mode === 'mini');
 const MDW = D.meadow, MDC = C.meadow, PL = D.paper, MLAND = new Uint8Array(N * N), MGRASS = new Uint8Array(N * N), MTWI = new Float32Array(N * N), MDRIFT = new Float32Array(N * N), LIGHT = document.createElement('canvas'), SNOWP = new Map(), SEASON = { key: '', col: PC.grass }; // E900
 let MBLOOM = [], BLOOMY = NaN, GLINTS = [];
 const wetAt = (k) => K.wet * Math.max(0, 1 + MDW.twi * MTWI[k]), snowAt = (k) => K.snow * MDRIFT[k], phaseOf = () => (yt() / D.season) % TREE.year; // E804
-const pressOf = (u) => { const b = SH[u.code], f = G.tread[b.mount || b.body] || G.tread.person; return ((massOf(u.code) + (u.load || 0) * W.carried.kg + (u.cargo ? W.load.kg : 0)) * D.g) / (f.area * f.feet); }, STEP0 = Math.log((W.person.kg * D.g) / (G.tread.person.area * G.tread.person.feet) / G.soil.pa), tread = (u) => Math.max(0, Math.log(pressOf(u) / (G.soil.pa * (1 - G.soil.soft * Math.min(1, wetAt(u.k)))))) / STEP0; // E805
+const pressOf = (u) => { const b = SH[u.code], f = G.tread[b.mount || b.body] || G.tread.person; return ((massOf(u.code) + (u.load || 0) * W.carried.kg) * D.g) / (f.area * f.feet); }, STEP0 = Math.log((W.person.kg * D.g) / (G.tread.person.area * G.tread.person.feet) / G.soil.pa), tread = (u) => Math.max(0, Math.log(pressOf(u) / (G.soil.pa * (1 - G.soil.soft * Math.min(1, wetAt(u.k)))))) / STEP0; // E805
 const bloomAt = (kind, ph) => { const [a, b] = MDW.bloom[kind], f = MDW.flowers.fade; return clamp((ph - a) / f, 0, 1) * clamp((b - ph) / f, 0, 1); };
 function makeSoil() { // E800
   const r = dice(seed + MDW.seed), T = D.tile, TAU = Math.PI + Math.PI, land = [], half = 1 / 2, GRASS = GR;
