@@ -95,8 +95,9 @@ async def draw():
 async def orders():
     """Two groups, two orders: the foot to one spot, then the archers to another. Each must end at its own spot, and soldiers never picked must not move."""
     WHERE = "(() => { const at = (f) => { const U = units.filter((u) => u.side === 0 && f(fk.SH[u.code].class)); return [U.reduce((a, u) => a + u.bx, 0) / U.length, U.reduce((a, u) => a + u.by, 0) / U.length]; }; return { foot: at((c) => c === 'Foot'), archers: at((c) => c === 'Archers'), rest: at((c) => c === 'Riders' || c === 'Engines'), tile: fk.D.tile }; })()"
-    SEND = "([who, x, y]) => { const tap = (v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); tap('mwho|' + who + '|'); const spot = fk.tileMid(fk.hitAt(x, y)[0]); fk.tap(x, y); tap('mord|move|'); return spot; }"
+    SEND = "([who, x, y]) => { const tap = (v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); tap('mwho|' + who + '|'); tap('mord|move|'); const spot = fk.tileMid(fk.hitAt(x, y)[0]); fk.tap(x, y); return spot; }"
     async with run.game(SEED, test=True) as pg:
+        await pg.evaluate("[1, 2, 3].forEach((s) => WAR.treaty(0, s, 'peace'))")  # the computers' early waves (dealt per match) would otherwise fight the soldiers never picked
         await run.step(pg, 40); await pg.evaluate("document.querySelector('[data-v=\"war||\"]').click()"); was = await pg.evaluate(WHERE)
         a = await pg.evaluate(SEND, ['Foot', 70, 250]); await run.step(pg, 30); b = await pg.evaluate(SEND, ['Archers', 320, 250]); await run.step(pg, 40); now = await pg.evaluate(WHERE)
         far = lambda p, q: math.hypot(p[0] - q[0], p[1] - q[1]) / now['tile']
@@ -296,7 +297,7 @@ async def front_line():
     TAP = "(() => { const c = WAR.centreOf(MINE), F = FOES.filter((u) => units.includes(u)), f = WAR.centreOf(F), d = Math.hypot(f.bx - c.bx, f.by - c.by); window.AX = { c, a: [(f.bx - c.bx) / d, (f.by - c.by) / d] }; window.BACK = F.sort((p, q) => Math.hypot(q.bx - c.bx, q.by - c.by) - Math.hypot(p.bx - c.bx, p.by - c.by))[0]; WAR.order(MINE, BACK, BACK.k); })()"
     LOOK = "(() => { const on = (u) => ((u.bx - AX.c.bx) * AX.a[0] + (u.by - AX.c.by) * AX.a[1]) / fk.D.tile, M = MINE.filter((u) => units.includes(u)), F = FOES.filter((u) => units.includes(u)), front = Math.min(...F.map(on)), c = WAR.centreOf(M), far = (v) => Math.hypot(v.bx - c.bx, v.by - c.by) / fk.D.tile, near = Math.min(...F.map(far)); return [M.filter((u) => on(u) > front + 2).length, 20 - M.length, 20 - F.length, M.filter((u) => u.target === BACK).length, M.filter((u) => F.includes(u.target) && far(u.target) > near + fk.D.front.deep + 1).length]; })()"
     async with run.game(SEED, test=True) as pg:
-        await run.step(pg, 10); await pg.evaluate(SET); await run.step(pg, 4); await pg.evaluate(TAP); await run.step(pg, 1)
+        await pg.evaluate("[1, 3].forEach((s) => WAR.treaty(0, s, 'peace'))"); await run.step(pg, 10); await pg.evaluate(SET); await run.step(pg, 4); await pg.evaluate(TAP); await run.step(pg, 1)
         first = await pg.evaluate(LOOK); most, deep = 0, first[4]
         for _ in range(30): await run.step(pg, 2); got = await pg.evaluate(LOOK); most, deep = max(most, got[0]), max(deep, got[4])
         return first[3], deep, most, got[1], got[2]
