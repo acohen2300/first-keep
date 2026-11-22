@@ -848,7 +848,7 @@ BOOK("comments", {
  "E928": {"text": "the time of day as hours and minutes, one home for the clock and the ribbon"},
  "E929": {"text": "a villager walking home with a load carries it on the back, a bundle in its store's colour (Albert, Nov 10, #35)"},
  "E930": {"text": "every finished building has a torch by its door from the start, houses their hearth as well; a building two tiles wide or more has two (Albert, Nov 10, #26)"},
- "E931": {"text": "any queued item can be taken out, not only the last, and is paid back in full; taking out the first restarts the clock"},
+ "E931": {"text": "any queued item can be taken out, not only the last, and is paid back in full; taking out the first restarts the clock: the next starts its whole time (Nov 21 review: it started at nothing and finished on the next step, so Back on a Town Center queue of a villager then an age gave the age at once)"},
  "E934": {"text": "an order's target answers: a unit glows, a thing ripples in the done colour (Albert, Nov 10, #31)"},
  "E935": {"text": "with someone picked, a tap near a resource takes it, so the target is bigger than its tile (Albert, Nov 10, #23)"},
  "E936": {"text": "your soldiers leave a wild animal alone unless it is after one of yours or you sent them at it (Albert, Nov 10, #32)"},
