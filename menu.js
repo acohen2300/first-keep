@@ -68,7 +68,7 @@ function fit(root) { const F = SCR.dock.fit, pad = SCR.css.edge; for (const c of
 FK.on('over', () => { for (const r of document.querySelectorAll('.rg .rr')) { const m = r.closest('svg').parentElement.querySelector(':scope > .rk'), p = ringP(m); r.setAttribute('stroke-dasharray', `${1 - p + (p ? 0 : RS.seam)} ${2}`); r.setAttribute('stroke-dashoffset', -p); } }); // E834
 const price = (c) => { const st = SIDES[ME].store, L = costList(c); if (!L.length) return `<small>${costText(c)}</small>`; // E926
   const share = ([y, n]) => (st[y] || 0) / n, worst = Math.min(...L.map(share)); const m = L.length > T3 ? Math.ceil(L.length / 2) : L.length; return [L.slice(0, m), L.slice(m)].filter((G) => G.length).map((G) => `<small style="opacity:1;color:${worst > 1 ? COL.rg : worst === 1 ? COL.rw : COL.rr}">${G.map((e) => `<span${share(e) < 1 ? ' class="lack"' : ''}>${costBit(e)}</span>`).join('')}</small>`).join(''); };
-const clock = (t) => `${Math.floor(t / 60)}:${String(Math.ceil(t % 60) % 60).padStart(2, '0')}`;
+const clock = (t) => { const s = Math.ceil(t); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 const rankOf = (y) => (ORDER.includes(y) ? ORDER.indexOf(y) : ORDER.length), costList = (c) => Object.entries(c || {}).filter(([, n]) => n > 0).sort(([a], [b]) => rankOf(a) - rankOf(b)), costBit = ([y, n]) => `${fmt(n)}${y[0]}`, costText = (c) => costList(c).map(costBit).join(' ') || TELL.free, needs = (c) => WD.research.cost.replace('{cost}', costText(c)), [NEEDS] = WD.research.cost.split('{'); // E183
 const own = (t) => t && t.side === ME, AW = WD.alarm, EW = WD.end, NEWS = WD.news, TELL = WD.say; // E404
 const isVil = (u) => u && u.kind === 'unit' && FK.has(u, 'Gather') && own(u); // E819
