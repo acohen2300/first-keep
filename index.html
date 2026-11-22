@@ -1048,7 +1048,8 @@ on('tick', () => { if (!every([ICE.beat, 0])) return; const load = new Map(); fo
 const hAt = (k) => (iced(k) ? 0 : H[k]);
 const GATES = new Map(); // E328
 // E2501
-const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : null), bears = (k, who, at) => ICE.load[at] * thick(k) ** 2 >= (who ? massOf(who.code) * (iceChoice(who) ? 1 : CROSS.ai) : W.person.kg), onIceOk = (k, who) => !CRACK.has(k) && (bears(k, who, 'safe') || (!!who && onIce(who) && !bears(who.k, who, 'safe') && bears(k, who, 'fail'))) && !(who && (who.shy > K.t || (iceChoice(who) && CROSS.rules[iceChoice(who)].avoid))); // E1540
+// E2502
+const iceChoice = (u) => u.ice || (u.side === ME && K.iceMem && (K.iceMem.year < 0 || K.iceMem.year === year()) ? K.iceMem.mode : null), bears = (k, who, at) => ICE.load[at] * thick(k) ** 2 >= (who ? massOf(who.code) * (iceChoice(who) ? 1 : CROSS.ai) : W.person.kg), onIceOk = (k, who) => !CRACK.has(k) && (bears(k, who, 'safe') || (!!who && onIce(who) && !bears(who.k, who, 'safe') && bears(k, who, 'fail'))) && !(who && !onIce(who) && (who.shy > K.t || (iceChoice(who) && CROSS.rules[iceChoice(who)].avoid))); // E1540
 const inWoods = (k) => !!FOR[k] && OCC[k] === 1, woodsIn = (who) => !!(who && who.code && (D.woods.enter[SH[who.code].mount || SH[who.code].body] || has(who, 'Fell')) && !(who.side === ME && iceOf(who) === 'around')), woodsDeep = (k) => { let n = 0; for (const [dx, dy] of D.ways) if (FOR[k + dy * N + dx]) n++; return n / D.ways.length; }; // E863
 const crossAt = (k) => iced(k) || inWoods(k), inCross = (u) => onIce(u) || inWoods(u.k); // E874
 const walkable = (k, who) => k >= 0 && (H[k] > -D.wade / 2 || (iced(k) && onIceOk(k, who))) && (OCC[k] === 0 || OCC[k] === 3 || (inWoods(k) && woodsIn(who)) || (GATES.has(k) && !fire('shut', GATES.get(k), who))) && !(flooded(k) && !(who && stat('', who.side, 'flood')));
