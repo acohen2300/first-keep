@@ -23,7 +23,7 @@ His calls Nov 23, after the freeze: the computers may sell surplus (lifts N202's
 Welcome back full width (c532df9): a design change, not urgent. Sprints may suspend the rules (his reason Sat night: cover ground)
 
 ## Handoff, Nov 23 06:10 (start the next chat here)
-- Latest build: v103 (https://acohen2300.github.io/first-keep/fresh/v103/). Every publish goes to its own fresh/vN/ folder; fresh/ forwards to the newest. A game stays on the build it started on.
+- Latest build: v104 (https://acohen2300.github.io/first-keep/fresh/v104/). Every publish goes to its own fresh/vN/ folder; fresh/ forwards to the newest. A game stays on the build it started on.
 - Built since the Nov 22 handoff: army Mode (Hold on/off overrides courage; Normal/Focused/To death; Formation door: Line, Specialty, Wide), stuck orders, 18 review fixes (review/STATUS.md on fresh-notes), Build A, route tracker, Build C (more far resources, 40% fewer trees), save safety, the Steward (Store tab).
 - Waiting for his "build": passive rivals. Findings: his 277-minute match was on Easy (diff 0: odds +0.1, waves +3, 6 min safe); computers attack only when they think they win (odds vs his visible army and towers, need 0.5-0.65); 7 waves in 277 min; no raids outside waves. Proposed, same rules for every side: (a) raids that do not wait for odds, (b) odds judged at the strike point only, (c) use it or lose it when the army is full and idle, (d) spread the targets. Open: does Easy get them too (Claude: yes, gentler)
 - Next after that: bridges (spec-roads option A); freezes (Build 3 frame findings); rule clean-up last
