@@ -833,7 +833,7 @@ const TREE = SPRITE.trees, TD = TREE.dab, TW = TREE.twig, HALF = TREE.half;
 const LAG = [], leafStage = (v) => { const f = (yt() / D.season + (LAG[v] ??= ((r) => (r(), r()))(NS_rng(TREE.seed + v)) * TREE.lag)) % TREE.year; return TREE.stages.reduce((s, st, i) => (f >= st.from ? i : s), 0); }; // E777
 const treeLook = (v) => leafStage(v) + (K.snow > G.snow.covers ? TREE.snowKey : '');
 const kindOf = (v) => TREE.kinds[Math.floor(v / TREE.variants) % TREE.kinds.length];
-function treeKindAt(k, roll) { const h = H[k], where = h > D.land ? 'hill' : h < TREE.wet ? 'wet' : 'plain', W8 = TREE.kinds.map((s) => s.where[where] || 0), sum = W8.reduce((a, b) => a + b), x = roll() * sum; // E774
+function treeKindAt(k, roll) { /* E2693 */ const h = RELIEF[k], where = h > D.land ? 'hill' : h < TREE.wet ? 'wet' : 'plain', W8 = TREE.kinds.map((s) => s.where[where] || 0), sum = W8.reduce((a, b) => a + b), x = roll() * sum; // E774
   let acc = 0; for (let i = 0; i < W8.length; i++) { acc += W8[i]; if (x < acc) return i * TREE.variants + Math.floor(((x - acc + W8[i]) / W8[i]) * TREE.variants); } return 0; }
 function treeArt(v) { const S = kindOf(v), st = TREE.stages[leafStage(v)], snow = K.snow > G.snow.covers, r = NS_rng(TREE.seed + v * TREE.step), paint = (c) => (c in S ? S[c] : c);
   const col = S.ever ? (st.ever ? blend(S.leaf, st.ever[0], st.ever[1]) : S.leaf) : st.leaf && (st.leaf[1] ? blend(paint(st.leaf[0]), paint(st.leaf[1]), st.leaf.at(-1)) : paint(st.leaf[0])), keep = S.ever ? 1 : st.keep;
