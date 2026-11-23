@@ -12,7 +12,7 @@ Nov 22 evening (Albert 18:51-18:55, "Can you do A B and C?", built while he drov
 - [x] A (26f0fac1): mission with nobody picked says Pick troops first; red box = set on missions, none on Exit; spent fields/shafts show idle; Allies switch works; rivals named by dealt personality; rival towns vary (seeded site pick); willows (trees read the relief); fallen alert place (a felled building's by was overwritten by its killer); alerts use shown unit names; Pioneer out of army orders
 - [x] B part 1 (eae3a055): route tracker, the march line follows the real path
 - [ ] B part 2, bridges (spec-roads option A): not started; needs new building art, a deck rule in walkable and hAt, placement on water, save rebuild, burn rule, and the computers' use. Too big to finish safely unattended
-- [ ] C, more resources: waits for his answer: (a) bigger finds, (b) faster gathering, (c) finds running dry too fast, (d) too much hand management
+- [x] C (b2c80fa5, his answer 19:58: few resources outside the home pocket, too many trees): far gold, stone, iron piles 3x Mid's, the ring's 3 → 5 piles; trees a corner 2586 → 1550 (map trees about 8,100 → 4,900); gold piles outside home on seed 7: 62 → 90 (tuning)
 - [ ] still to look into: "tap to move and they don't move" (no repro yet; copy the log when it happens)
 Build order agreed (Albert, Nov 22 14:03 "Build"), one area per build, one preview each:
 1. The army: War card Step 5 Mode (formations and courage, his Nov 21 design below), Hold that holds (die in place), stuck orders and "no way"
