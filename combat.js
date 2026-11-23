@@ -149,6 +149,7 @@ function flee(u) { if (K.t > u.routAt + FK.stat(u.code, u.side, 'rout')) { Objec
 function unjam(u, dt) { if (u.job !== 'march' || !u.path || u.target || u.drill || u.goal == null) { u.jam = u.jams = 0; u.best = null; return; } const d = gap(u, mid(u.goal)), J = D.jam; // E2670
   if (u.best == null || d < u.best - J.gain) { u.best = d; u.jam = 0; return; } if (!u.mps || (u.jam += dt) < J.secs) return; u.jam = 0; u.best = null;
   if (!u.jams++) march(u, u.goal); else Object.assign(u, { path: null, goal: u.k, job: 'hold', jams: 0 }); }
+const struck = (u) => !!(u.hitBy && u.hitBy.kind === 'unit' && K.t - u.hitT < D.scan && alive(u.hitBy) && enemies(u, u.hitBy)); // E2703
 function brain(u, dt, look) { // E396
   if (u.job === 'rout') { if (routing(u)) flee(u); else if (!u.path) u.job = 'idle'; return true; }
   nerve(u, dt); if (routing(u)) return true; drillHold(u); unjam(u, dt); if (u.amb && ambushTick(u)) return true;
@@ -169,7 +170,7 @@ function brain(u, dt, look) { // E396
     t = c || (t && t.kind === 'bld' ? t : null); }
   if (t && !u.focus && ((u.stand || (temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null)) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
   if (!t && u.stand && !u.focus) t = nearest(u, s.rng); // E2669
-  if (u.sent && !u.focus && (onMarch(u) || u.was != null)) t = null; // E1092
+  if (u.sent && !u.focus && (onMarch(u) || u.was != null)) t = struck(u) ? t || u.hitBy : null; // E1092 E2701
   u.pacex = shapeOf(u).spd * (marching(u) && u.slow ? u.slow : 1) * (u.chg ? CH.spd * FK.stat(u.code, u.side, 'charge') : u.tire ?? D.bases.pace);
   if (t && u.target !== t) { if (u.job !== 'fight') u.was = isIdle(u) ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
   else if (!t && u.job === 'fight') { u.target = null; u.path = null; if (u.was != null) march(u, u.was); else u.job = 'idle'; u.was = null; }

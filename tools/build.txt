@@ -1,11 +1,8 @@
-# Build: chosen numbers typed in the code go to the books (Albert, Nov 23 11:15 "Build for cleanup"). Must play exactly as kept (--same-play).
-7aa7ff1
-index.html
+# Build: his answers of Nov 23 11:15: soldiers sent at archers run in (Herodotus, Marathon); a band on the march that is struck kills the thing and keeps going (his N423); elephant sources looked up. Changes play: its own preview.
+5c3bb28
 combat.js
-ai.js
-sound.js
-books/measure.js
-books/sound.js
 books/comments.js
+books/citations.js
 tools/check.py
+tools/kept.json
 LIST.md
