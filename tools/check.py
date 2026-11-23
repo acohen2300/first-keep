@@ -531,7 +531,7 @@ async def check_game():
     rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
     rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Archers 8', 'Cavalry 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
     mr, me, ma = await missions()
-    rule('a mission tapped with nobody picked first picks All, then arms', ma == (24, True), f'picked, Move armed: {ma}')
+    rule('a mission tapped with nobody picked does nothing and says Pick troops first (Albert, Nov 22: it sent the whole army)', ma == (0, False), f'picked, Move armed: {ma}')
     rule('the mission row reads Attack, Move, Defend, Fall back, Retreat, then the bell tile (Hold moved to Mode, Nov 22)', mr == ['Attack', 'Move', 'Defend', 'Fall back', 'Retreat', 'bell'], f'row: {mr}')
     rule('the eye: with the army out of view, tapped it drops the counts to the soldiers on screen and shows set; tapped again, all count', [w.split()[-1] for w, _ in me] == ['24', '0', '24'] and [on for _, on in me] == [False, True, False], f'All word and eye set, before and after two taps: {me}')
     cn, cf, cd = await courage('normal'), await courage('focused'), await courage('death')
