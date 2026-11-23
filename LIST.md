@@ -13,6 +13,8 @@ Nov 22 evening (Albert 18:51-18:55, "Can you do A B and C?", built while he drov
 - [x] B part 1 (eae3a055): route tracker, the march line follows the real path
 - [ ] B part 2, bridges (spec-roads option A): not started; needs new building art, a deck rule in walkable and hAt, placement on water, save rebuild, burn rule, and the computers' use. Too big to finish safely unattended
 - [x] C (b2c80fa5, his answer 19:58: few resources outside the home pocket, too many trees): far gold, stone, iron piles 3x Mid's, the ring's 3 → 5 piles; trees a corner 2586 → 1550 (map trees about 8,100 → 4,900); gold piles outside home on seed 7: 62 → 90 (tuning)
+- [x] saves (Albert 20:54, a reload lost a whole game: Build C changed the map, the save was refused, one slot, the new game wrote over it): every build now has its own link fresh/vN/ (v101 first), fresh/ sends you to the newest; a refused save is kept, never written over; v101 took up the game left in fresh/. Fix 2 (self-contained saves) held: argued once, see chat
+- Rule for Claude: a build that changes map-making is flagged before publishing
 - [ ] still to look into: "tap to move and they don't move" (no repro yet; copy the log when it happens)
 Build order agreed (Albert, Nov 22 14:03 "Build"), one area per build, one preview each:
 1. The army: War card Step 5 Mode (formations and courage, his Nov 21 design below), Hold that holds (die in place), stuck orders and "no way"
