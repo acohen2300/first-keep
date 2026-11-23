@@ -6,6 +6,7 @@
 # Every build first writes tools/build.txt: the commit it starts from on the first line, then each file it may change, one a line. Any other file changed fails.
 import math, asyncio, json, pathlib, re, sys
 import run
+from collections import Counter
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 KEPT = ROOT / 'tools' / 'kept.json'
@@ -19,6 +20,7 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
 NO_UNIT = 0
 # Ceilings that may only go down (Albert, Nov 23: the rules become gates, so drift fails the check on its own)
 TYPED = {'index.html': 4563, 'menu.js': 24, 'econ.js': 9, 'combat.js': 10, 'ai.js': 3, 'sound.js': 16}  # numbers other than 0 and 1 typed in the code (rule 1; most of index.html's are the art)
+KINDS = {'science': 'Sourced', 'paper': 'Sourced', 'history': 'Sourced', 'source': 'Sourced', 'web': 'Sourced', 'note': 'Derived', 'design': 'Chosen', 'chosen': 'Chosen', 'art': 'Chosen', 'game': 'Chosen'}   # a source's kind, and what a number it backs is
 SPARE_COMMENTS, LOOSE_CITATIONS = 0, 0   # comments the code never uses; sources (not his rulings) no entry names
 BUILD = ROOT / 'tools' / 'build.txt'       # the build's own list: the commit it starts from, then every file it may change (rule 11)
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
@@ -110,9 +112,16 @@ def check_books():
     spare = sorted(set(E) - used, key=lambda c: int(c[1:]))
     rule(f'comments the code never uses: no more than {SPARE_COMMENTS} (may only go down)', len(spare) <= SPARE_COMMENTS, f'{len(spare)}' + (', e.g. ' + ', '.join(spare[:8]) if spare else ''))
     cited = {n for b in B.values() for e in b.values() for n in e.get('cite', [])} | {n for e in E.values() for n in re.findall(r'\bN\d+\b', e['text'])}   # an entry's cite, or a comment that names its source in its words
-    record = {c for c, e in N.items() if e.get('kind') == 'design' or e['text'].startswith(('Albert', 'Design:'))}   # Albert's rulings: the record, kept whether or not an entry names them
+    odd = sorted((c for c, e in N.items() if e.get('kind') not in KINDS), key=lambda c: int(c[1:]))
+    rule('every source says its kind: ' + ', '.join(f'{k} ({v})' for k, v in KINDS.items()), not odd, f'{len(odd)} without, e.g. ' + ', '.join(odd[:8]) if odd else f'{len(N)} sources')
+    record = {c for c, e in N.items() if e.get('kind') == 'design'}   # Albert's rulings: the record, kept whether or not an entry names them
     loose = sorted(set(N) - cited - record, key=lambda c: int(c[1:]))
     rule(f'sources no entry names (his rulings aside): no more than {LOOSE_CITATIONS} (may only go down)', len(loose) <= LOOSE_CITATIONS, f'{len(loose)}' + (', e.g. ' + ', '.join(loose[:8]) if loose else ''))
+    # every entry Sourced (a source outside the game says it), Derived (a law works it out, or it was measured on the game), or Chosen (his call, or a design or another game's); counted, not stored, so it can't drift from the cites
+    how = lambda e: 'Sourced' if any(KINDS.get(N.get(n, {}).get('kind')) == 'Sourced' for n in e.get('cite', [])) else 'Derived' if e.get('law') or any(N.get(n, {}).get('kind') == 'note' for n in e.get('cite', [])) else 'Chosen'
+    tally = Counter(how(e) for b in B.values() for e in b.values() if 'value' in e)
+    why = [c for b in B.values() for c, e in b.items() if 'value' in e and how(e) == 'Chosen' and not any(KINDS.get(N.get(n, {}).get('kind')) == 'Chosen' for n in e.get('cite', [])) and 'tuning' not in e.get('name', '').lower()]
+    rule('every entry is Sourced, Derived or Chosen, and a Chosen one says why (his call, a design, another game, or tuning)', not why, f'{len(why)} without, e.g. ' + ', '.join(why[:8]) if why else ', '.join(f'{k} {tally[k]}' for k in ('Sourced', 'Derived', 'Chosen')))
     # units
     unset = sum(1 for e in B['measure'].values() for u in (e['unit'].values() if isinstance(e.get('unit'), dict) else [e.get('unit')]) if u == 'unset')
     rule('units: none unset', unset == 0, f'{unset} unset')
