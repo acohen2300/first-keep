@@ -143,7 +143,7 @@ function nerve(u, dt) { let m = u.mor; const full = MO.full * (1 - D.exposure.ne
   befall(u.ord, 'broke'); Object.assign(u, { job: 'rout', routAt: K.t, target: null, focus: null, path: null, broke: true }); if (u.side === ME && !(K.t - routSaid < MO.say)) { routSaid = K.t; FK.fire('event', 'rout', u, u.bn != null ? WD.squads[u.bn] : WD.all); } }
 let routSaid = -Infinity, homeT = 0, ordT = HU.beat; const sparks = [], tracers = [];
 // E970
-function flee(u) { if (K.t > u.routAt + FK.stat(u.code, u.side, 'rout')) { Object.assign(u, { job: 'idle', routAt: null, mor: MO.after, path: null }); const f = nearest(u, FK.stat(u.code, u.side, 'sight')); if (f) fight(u, f); else if (u.goal != null && u.side === ME) Object.assign(u, { job: 'hold', goal: u.k }); else if (u.home) march(u, FK.tileAt(u.home.bx, u.home.by)); return; } // E395
+function flee(u) { if (K.t > u.routAt + FK.stat(u.code, u.side, 'rout')) { Object.assign(u, { job: 'idle', routAt: null, mor: MO.after, path: null }); const f = nearest(u, FK.stat(u.code, u.side, 'sight')); if (f) fight(u, f); else if (backOff(u)) u.sent = true; else if (u.goal != null && u.side === ME) Object.assign(u, { job: 'hold', goal: u.k }); else if (u.home) march(u, FK.tileAt(u.home.bx, u.home.by)); return; } // E395
   if (u.path || !due(u.rp)) return; u.rp = D.repath; const f = nearest(u, MO.flee), h = home(u.side) || u, [dx, dy] = f ? dir(u.bx - f.bx, u.by - f.by) : dir(h.bx - u.bx, h.by - u.by);
   if (FK.go(u, FK.tileAt(u.bx + dx * MO.run * T, u.by + dy * MO.run * T))) u.then = 'rout'; }
 function unjam(u, dt) { if (u.job !== 'march' || !u.path || u.target || u.drill || u.goal == null) { u.jam = u.jams = 0; u.best = null; return; } const d = gap(u, mid(u.goal)), J = D.jam; // E2670
