@@ -25,7 +25,7 @@ Build order agreed (Albert, Nov 22 14:03 "Build"), one area per build, one previ
 
 His calls, open:
 1. Season rhythm (winter to build and research, spring to war): yes or no
-2. Steward (rations, stores, routes, idle villagers, each showing its effect in numbers): a Town Center tab or its own building
+2. Steward: [x] built v102 (Nov 23, N569): a tab on the Store (research-only, Age 1); Off / Idle & new / All workers; a mix per resource (tap adds a part, 0-5); idle and new villagers go where the mix is short; All moves one worker a turn; each tile shows the share asked and the share now at work; computers keep their own management. Open: a yield with no find in reach is skipped silently
 3. Forward base: A, a Camp he places (rally, supply, healing, status), or B, any castle far from home counts
 4. Surplus: keep "no surplus selling" (Nov 5, N202) or give it an outlet; the rivals selling surplus is held back for this
 5. Garrison villagers' slot on the War card; Idle pulling a posted group; box-select starting with a touch-and-hold (his no long press rule)
