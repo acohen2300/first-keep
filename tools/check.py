@@ -109,7 +109,7 @@ def check_books():
     rule('every comment code in the code is in the Comments book', not lost, f'{len(lost)} missing, e.g. ' + ', '.join(lost[:8]) if lost else f'{len(used)} codes')
     spare = sorted(set(E) - used, key=lambda c: int(c[1:]))
     rule(f'comments the code never uses: no more than {SPARE_COMMENTS} (may only go down)', len(spare) <= SPARE_COMMENTS, f'{len(spare)}' + (', e.g. ' + ', '.join(spare[:8]) if spare else ''))
-    cited = {n for b in B.values() for e in b.values() for n in e.get('cite', [])}
+    cited = {n for b in B.values() for e in b.values() for n in e.get('cite', [])} | {n for e in E.values() for n in re.findall(r'\bN\d+\b', e['text'])}   # an entry's cite, or a comment that names its source in its words
     record = {c for c, e in N.items() if e.get('kind') == 'design' or e['text'].startswith(('Albert', 'Design:'))}   # Albert's rulings: the record, kept whether or not an entry names them
     loose = sorted(set(N) - cited - record, key=lambda c: int(c[1:]))
     rule(f'sources no entry names (his rulings aside): no more than {LOOSE_CITATIONS} (may only go down)', len(loose) <= LOOSE_CITATIONS, f'{len(loose)}' + (', e.g. ' + ', '.join(loose[:8]) if loose else ''))
