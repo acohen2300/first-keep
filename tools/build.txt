@@ -10,3 +10,4 @@ books/words.js
 tools/check.py
 tools/kept.json
 LIST.md
+books/tech.js
