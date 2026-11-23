@@ -295,7 +295,7 @@ function render(force) { if (!force && S.down) return; for (const k in ARGS) del
 const argOf = (a) => ARGS[a] ?? (a === '' || a == null ? null : isNaN(a) ? a : Number(a));
 function click(e) { const b = e.target.closest('[data-v]'); if (!b) return; const [verb, a, a2] = b.dataset.v.split('|'); if (verb !== 'newgame') S.sure = false; if (b.closest('.mt') && S.subject) S.cs = b.dataset.v; // E1136
   if (verb === 'tab') { FK.fire('event', 'tap', null); S.tab = S.tab === a ? null : a; if (S.tab !== 'Build') S.ghost = null; else { S.group = Object.keys(GROUPS)[0]; const [w, h] = FK.size(); hintAt(tileK(w * P.half, h * P.half)); } render(true); return; } act(verb, argOf(a), argOf(a2)); if (b.closest('#qa')) render(true); } // E730
-FK.on('begin', () => { S.game = { ...S.opt }; FK.fog(OPTS.fog[S.opt.fog ?? 0][1]); // E872
+FK.on('begin', () => { S.game = { ...S.opt }; FK.K.allies = ruleOn('allies'); FK.fog(OPTS.fog[S.opt.fog ?? 0][1]); // E872
  FK.HZ.clear(); for (const id of S.opt.hz) FK.HZ.add(id); if (ruleOn('random')) for (const [, id] of OPTS.hazard) if (FK.rng() < D.hazards.lot) FK.HZ.add(id); }); // E705
 const qaEl = document.createElement('div'); qaEl.id = 'qa'; document.body.appendChild(qaEl);
 const popAt = (x, y, foot = y) => { const m = SCR.mold, [w] = FK.size(), up = y - qaEl.offsetHeight - m.slot; qaEl.style.left = Math.min(w - qaEl.offsetWidth - m.gap, Math.max(m.gap, x - qaEl.offsetWidth * P.half)) + 'px'; qaEl.style.top = (up < topEl.getBoundingClientRect().bottom + m.gap ? foot + m.slot : up) + 'px'; }; // E817
