@@ -1,6 +1,5 @@
-# Build: LIST.md split (Albert, Nov 23 14:19 "Build"): RULINGS.md holds his live calls, LIST.md the open work, the old list archived in docs/log/. No game file changes.
-2a7bb8e
-RULINGS.md
+# Build: units (Albert, Nov 23 14:27 "Build"): every number in the Measurements book says its unit. No game file changes; must play exactly as kept.
+d7e6622
+books/measure.js
+tools/check.py
 LIST.md
-RULES.md
-docs/log/LIST-to-2026-11-23.md

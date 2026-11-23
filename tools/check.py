@@ -120,7 +120,7 @@ def check_books():
     bare = 0
     for e in B['measure'].values():
         v, u = e['value'], e.get('unit'); n = leaves(v)
-        bare += 0 if isinstance(u, str) or (isinstance(v, list) and u) else n - sum(leaves(x) for k, x in v.items() if k in u) if isinstance(v, dict) and isinstance(u, dict) else n
+        bare += 0 if isinstance(u, str) or (isinstance(v, list) and u) or (isinstance(u, dict) and '*' in u) else n - sum(leaves(x) for k, x in v.items() if k in u) if isinstance(v, dict) and isinstance(u, dict) else n  # '*': every key of the table has the same fields, said once
     rule(f'units: no more than {NO_UNIT} numbers inside tables with no unit said (open work; may only go down)', bare <= NO_UNIT, f'{bare}')
 
 async def play(after_another=False):
