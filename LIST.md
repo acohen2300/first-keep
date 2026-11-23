@@ -2,6 +2,14 @@
 
 Agreed Nov 20. One build between previews. Order is top to bottom.
 
+## Handoff, Nov 23 06:10 (start the next chat here)
+- Latest build: v102 (https://acohen2300.github.io/first-keep/fresh/v102/). Every publish goes to its own fresh/vN/ folder; fresh/ forwards to the newest. A game stays on the build it started on.
+- Built since the Nov 22 handoff: army Mode (Hold on/off overrides courage; Normal/Focused/To death; Formation door: Line, Specialty, Wide), stuck orders, 18 review fixes (review/STATUS.md on fresh-notes), Build A, route tracker, Build C (more far resources, 40% fewer trees), save safety, the Steward (Store tab).
+- Waiting for his "build": passive rivals. Findings: his 277-minute match was on Easy (diff 0: odds +0.1, waves +3, 6 min safe); computers attack only when they think they win (odds vs his visible army and towers, need 0.5-0.65); 7 waves in 277 min; no raids outside waves. Proposed, same rules for every side: (a) raids that do not wait for odds, (b) odds judged at the strike point only, (c) use it or lose it when the army is full and idle, (d) spread the targets. Open: does Easy get them too (Claude: yes, gentler)
+- Next after that: bridges (spec-roads option A); freezes (Build 3 frame findings); rule clean-up last
+- Still no repro: "tap to move and they don't move" (ask for the log right after)
+- Rule for Claude: flag any build that changes map-making before publishing
+
 ## Handoff, Nov 22 (after his 277-minute match, a win; logs read in chat)
 
 Read this first. The reviewers' 18 reports are on the branch `fresh-notes`, folder `review/`. Where each finding stands: `review/STATUS.md` (Nov 22): round 2 fixed most; 18 more fixed Nov 22; 9 wait for his call; the frame findings go with Build 3, the rule clean-up last.
