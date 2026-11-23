@@ -6,3 +6,4 @@ books/citations.js
 tools/check.py
 tools/kept.json
 LIST.md
+books/measure.js
