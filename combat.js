@@ -59,7 +59,7 @@ function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) :
   if (t.kind === 'unit' && FK.inWoods(t.k)) { if (!melee) d *= Math.exp(-D.woods.stems * D.woods.trunk * FK.woodsLine(a, t)); // E875
     else { let n = 0; FK.unitsNear(t, FL.line * D.tile, (v) => { if (v.target === t && v.side === a.side && alive(v)) n++; }); d /= Math.max(1, n); } } // E876
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
-function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (isIdle(v) || v.job === 'hold' || (v.sent && onMarch(v))) && temperOf(v) !== AR.temper.hold && !v.stand && !tame(v, a) && enemies(v, a)) { v.was = isIdle(v) ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019
+function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (u && t.kind === 'unit' && isEl(t) && ranged(a)) t.mor = Math.max(0, t.mor - (EL.panic * d) / t.hpMax); // E2706 if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (isIdle(v) || v.job === 'hold' || (v.sent && onMarch(v))) && temperOf(v) !== AR.temper.hold && !v.stand && !tame(v, a) && enemies(v, a)) { v.was = isIdle(v) ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019
   sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
   if (u && SIDES[a.side] && !SIDES[t.side]) ECON.struck(a.side, groupOf(t)); // E518
   if (u) { FK.impact(a, t); if (ranged(a)) shot(a, t, W[FK.SH[a.code].body].height); if (!SIDES[t.side]) { t.aggro = a; if (t.job !== 'fight' && stat(t).atk) fight(t, a); } if (t.kind === 'bld') ECON.shot(a, t, d); }
@@ -136,9 +136,12 @@ function formHome() { const at = new Map(); for (const u of units()) if (armed(u
     const cols = list.map((a) => Math.min(GR.cols, Math.ceil(Math.sqrt(a.length * GR.block)))); let x0 = half(-(sum(cols, (c) => c + 1) - 1) * GR.gap);
     list.forEach((a, bi) => { a.forEach((u, i) => { const c = (x0 + ((i % cols[bi]) + 0.5) * GR.gap) * T, r = out + Math.floor(i / cols[bi]) * GR.gap * T; u.home = { bx: b.bx + fx * r - fy * c, by: b.by + fy * r + fx * c }; if (isIdle(u) && !u.target && !u.path) [u.fx, u.fy] = [fx, fy]; }); x0 += (cols[bi] + 1) * GR.gap; }); } }
 // E239
+const EL = D.elephant, isEl = (u) => (stat(u).tags || []).includes('elephant'); // E2708
+function trample(u, t) { if (!isEl(u) || ranged(u) || t.kind !== 'unit') return; const [fx, fy] = dir(t.bx - u.bx, t.by - u.by), r = stat(u).rng, S = []; FK.unitsNear(u, (r + FL.melee) * T, (v) => { if (v === t || v.inside || !alive(v) || !enemies(u, v) || edgeDist(u, v) > r) return; const [vx, vy] = dir(v.bx - u.bx, v.by - u.by); if (vx * fx + vy * fy >= EL.arc) S.push(v); }); for (const v of S) hit(u, v); } // E2704
+function amok(u) { const r = stat(u).rng, S = []; FK.unitsNear(u, (r + FL.melee) * T, (v) => { if (!v.inside && alive(v) && v.kind === 'unit' && edgeDist(u, v) <= r && !(K.t - (v.amokT ?? -Infinity) < EL.amok)) S.push(v); }); for (const v of S) { v.amokT = K.t; FK.harm(v, damage(u, v), u); if (!alive(v)) die(v, u); } } // E2707
 function nerve(u, dt) { let m = u.mor; const full = MO.full * (1 - D.exposure.nerve * FK.exposure(u.code, u.side)); // E809
   if (!u.target) { const near = FK.bldsNear(u.bx, u.by, MO.shelterR * T, (b) => b.side === u.side && up(b) && (FK.has(b, 'Shoot') || FK.has(b, 'Line') || FK.has(b, 'Gate')) && gap(u, b) < MO.shelterR); m = FK.relax(m, full, MO.tau / FK.stat(u.code, u.side, 'rest') / (near ? MO.shelter * FK.stat(u.code, u.side, 'shelter') : MO.front), dt); }
-  else { const us = [u], them = []; FK.unitsNear(u, MO.crowd * T, (v) => { if (armed(v) && alive(v)) (v.side === u.side ? us : atWar(u.side, v.side) ? them : []).push(v); }); if (them.length > us.length * MO.outnumbered) m -= MO.odds * dt * grit(u); }
+  else { const us = [u], them = []; FK.unitsNear(u, MO.crowd * T, (v) => { if (armed(v) && alive(v)) (v.side === u.side ? us : atWar(u.side, v.side) ? them : []).push(v); }); if (them.length > us.length * MO.outnumbered) m -= MO.odds * dt * grit(u); if (!isEl(u) && them.some(isEl)) m -= EL.fear * dt * grit(u); } // E2705
   u.mor = Math.min(full, Math.max(0, m)); if (u.mor > 0 || !grit(u) || stat(u).bonly || u.fb > K.t) return;
   befall(u.ord, 'broke'); Object.assign(u, { job: 'rout', routAt: K.t, target: null, focus: null, path: null, broke: true }); if (u.side === ME && !(K.t - routSaid < MO.say)) { routSaid = K.t; FK.fire('event', 'rout', u, u.bn != null ? WD.squads[u.bn] : WD.all); } }
 let routSaid = -Infinity, homeT = 0, ordT = HU.beat; const sparks = [], tracers = [];
@@ -151,7 +154,7 @@ function unjam(u, dt) { if (u.job !== 'march' || !u.path || u.target || u.drill 
   if (!u.jams++) march(u, u.goal); else Object.assign(u, { path: null, goal: u.k, job: 'hold', jams: 0 }); }
 const struck = (u) => !!(u.hitBy && u.hitBy.kind === 'unit' && K.t - u.hitT < D.scan && alive(u.hitBy) && enemies(u, u.hitBy)); // E2703
 function brain(u, dt, look) { // E396
-  if (u.job === 'rout') { if (routing(u)) flee(u); else if (!u.path) u.job = 'idle'; return true; }
+  if (u.job === 'rout') { if (routing(u)) { flee(u); if (isEl(u)) amok(u); } else if (!u.path) u.job = 'idle'; return true; }
   nerve(u, dt); if (routing(u)) return true; drillHold(u); unjam(u, dt); if (u.amb && ambushTick(u)) return true;
   if (u.chg && u.chg < K.t) { u.chg = null; u.tire = CH.slow; } if (u.tire) u.tire = FK.relax(u.tire, D.bases.pace, CH.tired, dt); // E408
   if (u.hp < u.hpMax && !u.target && !u.unfed && FK.bldsNear(u.bx, u.by, D.shelter.r * T, (b) => b.side === u.side && FK.has(b, 'Shelter') && up(b) && gap(u, b) < D.shelter.r)) u.hp = FK.relax(u.hp, u.hpMax, u.hpMax / FK.stat(u.code, u.side, 'garrison'), dt);
@@ -311,7 +314,7 @@ FK.on('tick', (dt) => {
     if (u.job !== 'fight') continue; const t = u.target; if (u.path && armed(u)) u.then = 'fight'; if (!t || !alive(t)) { u.target = null; u.path = null; if (u.was != null && armed(u)) march(u, u.was); else u.job = 'idle'; continue; }
     if (edgeDist(u, t) <= (ranged(u) ? hillReach(s.rng, 0, dropTo(u, t)) : s.rng) + D.near.slack) { if (u.kT > K.t - D.kite.hold && u.path) continue; u.path = null; [u.fx, u.fy] = dir(t.bx - u.bx, t.by - u.by); u.face = Math.sign(u.fx) || u.face; // E398
       const f = look && !due(u.cd) && kiteOf(u) && nearest(u, D.kite.near, u, (v) => !ranged(v)); if (f) { const [dx, dy] = dir(u.bx - f.bx, u.by - f.by), x = u.bx + dx * D.kite.back * T, y = u.by + dy * D.kite.back * T, n = Math.ceil(D.kite.back); if (Array.from({ length: n }, (_, s) => FK.tileAt(u.bx + ((x - u.bx) * (s + 1)) / n, u.by + ((y - u.by) * (s + 1)) / n)).every((k) => FK.walkable(k, u))) { Object.assign(u, { path: [[x, y]], at: 0, then: 'fight', kT: K.t }); continue; } } // E1541
-      if (due(u.cd)) { hit(u, t); u.cd = s.rof; } } else if (!u.path && due(u.rp)) { u.rp = D.repath; if (!toward(u, t)) breach(u, t); else if (armed(u)) u.then = 'fight'; } } // E1487
+      if (due(u.cd)) { hit(u, t); trample(u, t); u.cd = s.rof; } } else if (!u.path && due(u.rp)) { u.rp = D.repath; if (!toward(u, t)) breach(u, t); else if (armed(u)) u.then = 'fight'; } } // E1487
   ordT -= dt; if (due(ordT)) { ordT = HU.beat; ordersTick(); fallTick(); } if (FK.every(D.beats.natives)) raids(); if (FK.every(D.beats.slow)) for (const o of D.players) if (o !== ME) loot(o); // E1435
   waves.forEach((w, side) => { if (!w) return; w.t += dt; if (armyFree(side, 'rout').length < D.breakAt * w.n0) recall(side); });
 });

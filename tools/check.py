@@ -388,6 +388,22 @@ async def rush():
         for _ in range(15): await run.step(pg, 1); close = min(close, await pg.evaluate(LOOK))
         return close
 
+async def elephant():
+    """The war elephant (Nov 23): its blow tramples more than the man it strikes; enemy foot fighting near it lose nerve; arrows shake it, less once armoured; gone amok it tramples its own side."""
+    SET = """(() => { const h = fk.seatOf(0), N = fk.N, T = fk.D.tile, at = (dx, dy) => fk.tileAt(h.bx + dx * T, h.by + dy * T), block = (c, side, k0, n, into) => { for (let d = 0; d < 12 && into.length < n; d++) for (let dx = -d; dx <= d && into.length < n; dx++) for (const dy of [-d, d]) { const k = k0 + dx + dy * N; const e = into.length < n && fk.walkable(k) && !units.some((u) => u.k === k) && fk.spawn(c, side, k, fk.rng); if (e) into.push(e); } return into; };
+      window.EL = block('UM12', 0, at(30, 6), 1, []); window.PACK = block('UM1', 2, at(32, 6), 8, []); for (const u of PACK) Object.assign(u, { job: 'hold', goal: u.k }); WAR.fight(EL[0], PACK[0]);
+      window.AMOK = block('UM12', 0, at(30, 30), 1, []); window.OWN = block('UM1', 0, at(30, 30), 5, []).filter((u) => u !== AMOK[0]); Object.assign(AMOK[0], { job: 'rout', routAt: K.t, broke: true, mor: 0 });
+      window.SHOT = [...block('UM12', 0, at(-30, 6), 1, []), ...block('UM12', 0, at(-30, 30), 1, [])]; })()"""
+    LOOK = "(() => { const hurt = (S) => S.filter((u) => !units.includes(u) || u.hp < u.hpMax).length; return [hurt(PACK), Math.min(...PACK.filter((u) => units.includes(u)).map((u) => u.mor)), hurt(OWN)]; })()"
+    SHOOT = "(() => { const B = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Archers') || units.find((u) => u.side === 0 && fk.SH[u.code].class === 'Archers'); const r = SHOT.map((e) => { e.mor = 1; for (let i = 0; i < 10; i++) WAR.hit(B, e); return 1 - e.mor; }); return r; })()"
+    async with run.game(SEED, test=True) as pg:
+        await pg.evaluate("[1, 3].forEach((s) => WAR.treaty(0, s, 'peace'))"); await pg.evaluate(CALM); await run.step(pg, 10); await pg.evaluate(SET); await run.step(pg, 8)
+        trampled, fear, own = await pg.evaluate(LOOK)
+        bare = await pg.evaluate(SHOOT)
+        await pg.evaluate("(() => { const t = BOOKS.tech; const c = Object.keys(t).find((k) => t[k].key === 'elephantarmour'); fk.learn ? fk.learn(0, c) : null; return c; })()")
+        armoured = await pg.evaluate(SHOOT)
+        return trampled, fear, own, bare, armoured
+
 async def full_lines():
     """Two barracks of yours: a Train tap on one whose line is full goes to the other's line, with a note naming where it went; with both full it is refused."""
     async with run.game(SEED, test=True) as pg:
@@ -608,6 +624,8 @@ async def check_game():
     rule('a group moved past archers who shoot it kills them and goes on to its spot', sm[1] == 5 and sm[2] >= 1, f'of ours left, archers down of 5, ours at the spot: {sm}')
     rc = await rush()
     rule('foot sent at archers run in under the arrows and get within 3 tiles of them', rc < 3, f'closest any came: {rc:.1f} tiles')
+    et, ef, eo, eb, ea = await elephant()
+    rule('the war elephant: its blow tramples more than the one man it strikes, enemy foot near it lose nerve, arrows shake it, and gone amok it tramples its own', et >= 2 and ef < 1 and eo >= 1 and eb[0] > 0, f'enemy foot hurt in 8 s: {et} of 8; their least nerve: {ef:.2f}; own foot hurt by the amok one: {eo}; nerve lost to ten arrows, bare and armoured: {eb[0]:.2f}, {ea[0]:.2f}')
     fl, fe = await full_lines()
     rule('a Train tap on a full line goes to the least busy barracks with room, says so in a note, and is refused only when every line is full', fl[1:5] == [fl[0], True, fl[0], 1] and fl[5] == fl[11] and fl[6:11] == [fl[0], False, fl[0], fl[0], 1] and not fe, f'line size, first filled, tap taken, the two lines, the note, second filled, last tap taken, the two lines, refused: {fl}; errors: {fe[:2]}')
     ti = await thin_ice()

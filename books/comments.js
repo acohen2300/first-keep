@@ -1244,5 +1244,10 @@ BOOK("comments", {
  "E2700": {"text": "The Steward tab (N569): the first tile turns it Off, to Idle & new, to All workers, and counts the villagers it has sent; one tile per yield adds a part to the mix (back to none past the most), showing the share asked for and the share now at work, lit while that yield is short"},
  "E2701": {"text": "a soldier on the march (sent) does not stop for foes on the way, unless one strikes him: then he fights back, and goes on to his goal once that fight is over (Albert, Nov 20 05:01, N423: if they are attacked they should kill the thing and keep going; Nov 23: the marching problem is fixed by the front-line rule); every side alike, so a computer's wave caught on the road fights back"},
  "E2702": {"text": "a foot or horse soldier whose foe shoots, once inside that foe's reach and short of his own, breaks into a run (the charge, D249) to close: Herodotus 6.112, the Athenians at Marathon charged the Persian archers at a run (N572; Albert, Nov 23: the soldiers should try to get at them); once per foe"},
- "E2703": {"text": "struck: a foe's blow landed on him within the last scan (D.scan) and that foe still stands"}
+ "E2703": {"text": "struck: a foe's blow landed on him within the last scan (D.scan) and that foe still stands"},
+ "E2704": {"text": "trample (Albert, Nov 23, N570): an elephant's blow also lands on every foe within its reach in front of it, within the half-angle whose cosine is D463 arc, as war elephants trampled infantry"},
+ "E2705": {"text": "a foot or horse soldier fighting within the crowd of an enemy elephant loses D463 fear of nerve a second (N571: their sight, smell and trumpeting terrified men and horses)"},
+ "E2706": {"text": "an elephant struck by a shot or a thrown blow loses D463 panic × the share of its health the blow took from its nerve (N573: concentrated missile fire made elephants turn and flee)"},
+ "E2707": {"text": "an elephant gone amok (routing) tramples whoever is within its reach, friend or foe, each at most once each D463 amok s (N573: wounded elephants turned on their own troops); its own side takes the blow too"},
+ "E2708": {"text": "isEl: a soldier of the elephant kind (its stat tags)"}
 });

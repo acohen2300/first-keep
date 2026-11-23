@@ -1,9 +1,12 @@
-# Build: his answers of Nov 23 11:15: soldiers sent at archers run in (Herodotus, Marathon); a band on the march that is struck kills the thing and keeps going (his N423); elephant sources looked up. Changes play: its own preview.
-5c3bb28
+# Build: the elephant (Albert, Nov 23 12:32 "Build"): trample, fear on foot and horse, panic under missiles, an amok elephant tramples its own side, Elephant armour, the sourced upkeep (elephant and horse). Changes play: its own preview.
+6792b92
 combat.js
+books/measure.js
+books/tech.js
+books/shells.js
 books/comments.js
 books/citations.js
+books/words.js
 tools/check.py
 tools/kept.json
 LIST.md
-books/measure.js
