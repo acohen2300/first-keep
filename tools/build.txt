@@ -1,13 +1,6 @@
-# Build: the elephant (Albert, Nov 23 12:32 "Build"): trample, fear on foot and horse, panic under missiles, an amok elephant tramples its own side, Elephant armour, the sourced upkeep (elephant and horse). Changes play: its own preview.
-6792b92
-combat.js
-books/measure.js
-books/tech.js
-books/shells.js
-books/comments.js
-books/citations.js
-books/words.js
-tools/check.py
-tools/kept.json
+# Build: LIST.md split (Albert, Nov 23 14:19 "Build"): RULINGS.md holds his live calls, LIST.md the open work, the old list archived in docs/log/. No game file changes.
+2a7bb8e
+RULINGS.md
 LIST.md
-menu.js
+RULES.md
+docs/log/LIST-to-2026-11-23.md

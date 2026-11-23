@@ -1,6 +1,6 @@
 # First Keep — Rules
 
-Read this before any work. Nothing else is required reading.
+Read this and RULINGS.md (Albert's live calls) before any work. Nothing else is required reading. LIST.md is the open work; docs/log/ is history.
 
 ## Code
 
