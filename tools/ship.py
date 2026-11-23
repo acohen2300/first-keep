@@ -33,4 +33,8 @@ def ship(out):
     for f in ('sw.js', 'manifest.webmanifest'): shutil.copy(ROOT / f, out / f)
     return (out / 'index.html').stat().st_size
 
+def door(to):
+    # fresh/ itself: a page that sends the phone on to the newest build's own folder (Albert, Nov 22 21:03); it keeps no game of its own
+    return f'<!DOCTYPE html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta http-equiv="refresh" content="0; url={to}"><title>First Keep</title><script>location.replace({json.dumps(to)} + location.hash)</script><a href="{to}">First Keep</a>'
+
 if __name__ == '__main__': print(f'{ship(sys.argv[1]):,} bytes')
