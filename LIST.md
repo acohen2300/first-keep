@@ -2,6 +2,17 @@
 
 Agreed Nov 20. One build between previews. Order is top to bottom.
 
+## Handoff, Nov 23 07:30 (start the next chat here)
+Audit of Fri 21:16 → v102 (Albert, 06:10: "lost in the weeds"): code healthy (check PASS), rules drifted. His plan, agreed 06:31: feature freeze until the cleanup is done; then, in order:
+1. [x] Honest tests: two-groups back to under 1 tile (b2c80fa had loosened it to 2); front_line now fails if ours pass their front or we lose more than they do (it passed at 16 lost against 2)
+2. [x] Rule gates (ceilings only go down): typed numbers per code file (rule 1), unused comments 36, loose citations 78, and `tools/build.txt` (rule 11: only named files may change)
+3. [ ] Cleanup builds, one rule each, each `--same-play`: dead book entries; typed numbers into the books; the 1,735 numbers with no unit
+4. [ ] Rebuild the stuck-soldier cluster as one part (unjam, backOff, apart, stand, push-aside): changes play, its own build and his playtest
+5. [ ] LIST.md split: RULINGS.md (live calls only) and an archived log
+Rule fixes that go in the cleanup: the Train tile's what-beats-what back (N386; 308f76e took it out, fix the crowding instead); one load weight, 2.5 kg a wood and a full load of 8, not 10 (the 18-20 kg cap, Knapik N400; slower trips); cold ration 0.385 cited to N275 (open the source first); the laws' fog text (QAN) says fog of war is a Start-page option; the five paid research that do nothing get their effects (Midwives, Local guides, Law code, Magistrates, Chimney's warmth; changes play, own build)
+His calls Nov 23, after the freeze: the computers may sell surplus (lifts N202's ban); making them try new things is its own job; weather fog stays in; pioneers by person in early ages, by machine later, with sources; sides are seats coloured red, blue, green (maybe yellow), the strategy behind each hidden; his side is blue; zeal and priests to fix, not a priority; the stampede gets real damage only with sources and a warning and a defence; the circus he has never seen; every sound present and making sense, the under-attack sound first (none found: the horn plays on his own march order); 8 sounds written but never played (zeal, stampede, circus, roar, rumble, hand guns, siege guns, tribute); green/red double meanings, prices, bell, top bar, steppers go to the colour talk, and what matters is a 44 px tap area, not the size shown
+Welcome back full width (c532df9): a design change, not urgent. Sprints may suspend the rules (his reason Sat night: cover ground)
+
 ## Handoff, Nov 23 06:10 (start the next chat here)
 - Latest build: v102 (https://acohen2300.github.io/first-keep/fresh/v102/). Every publish goes to its own fresh/vN/ folder; fresh/ forwards to the newest. A game stays on the build it started on.
 - Built since the Nov 22 handoff: army Mode (Hold on/off overrides courage; Normal/Focused/To death; Formation door: Line, Specialty, Wide), stuck orders, 18 review fixes (review/STATUS.md on fresh-notes), Build A, route tracker, Build C (more far resources, 40% fewer trees), save safety, the Steward (Store tab).
