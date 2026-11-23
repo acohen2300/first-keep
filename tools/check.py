@@ -16,6 +16,8 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
     (13, ['Hard', 'Persian', 'Conquest', 'Silk Road', 'Hardest', 'Famine', 'Weather', 'Drought', 'Outlaws', 'Plague'], 25),
 ]
 NO_UNIT = 1735
+# Ceilings that may only go down (Albert, Nov 23: the rules become gates, so drift fails the check on its own)
+TYPED = {'index.html': 4590, 'menu.js': 24, 'econ.js': 9, 'combat.js': 13, 'ai.js': 8, 'sound.js': 35}  # numbers other than 0 and 1 typed in the code (rule 1; most of index.html's are the art)
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
 
 fails = []
@@ -29,6 +31,45 @@ def books():
         m = re.search(r'BOOK\("(\w+)",\s*(\{.*\})\);?\s*$', f.read_text(encoding='utf-8'), re.S)
         out[m.group(1)] = json.loads(m.group(2))
     return out
+
+def typed(src):
+    """The numbers typed in JavaScript other than 0 and 1, outside strings and comments (the parts of a template string inside ${} are code and count)."""
+    out, i, n, stack = [], 0, len(src), []   # stack: '`' inside a template's text, '{' inside code (a ${} or a brace opened within it)
+    while i < n:
+        c = src[i]
+        if stack and stack[-1] == '`':
+            if c == '\\': i += 2; continue
+            if c == '`': stack.pop(); i += 1; continue
+            if src.startswith('${', i): stack.append('{'); i += 2; continue
+            i += 1; continue
+        if src.startswith('//', i): i = src.find('\n', i); i = n if i < 0 else i; continue
+        if src.startswith('/*', i): i = src.find('*/', i + 2); i = n if i < 0 else i + 2; continue
+        if c in '\'"':
+            i += 1
+            while i < n and src[i] != c and src[i] != '\n': i += 2 if src[i] == '\\' else 1
+            i += 1; continue
+        if c == '`': stack.append('`'); i += 1; continue
+        if c == '{' and stack: stack.append('{')
+        if c == '}' and stack and stack[-1] == '{': stack.pop()
+        m = re.match(r'(\d+\.?\d*(?:e[+-]?\d+)?|\.\d+)', src[i:i + 40]) if (c.isdigit() or (c == '.' and src[i + 1:i + 2].isdigit())) and not (src[i - 1:i].isalnum() or src[i - 1:i] in '_$') else None
+        if m:
+            if m.group(1) not in ('0', '1', '0.', '1.'): out.append(m.group(1))
+            i += len(m.group(1)); continue
+        i += 1
+    return out
+
+def scripts(f):
+    t = (ROOT / f).read_text(encoding='utf-8')
+    return '\n'.join(re.findall(r'<script[^>]*>(.*?)</script>', t, re.S)) if f.endswith('.html') else t
+
+def check_rules():
+    # rule 1: typed numbers, by file, may only go down
+    over = []
+    for f in CODE:
+        k = len(typed(scripts(f)))
+        if k > TYPED[f]: over.append(f'{f} {k} > {TYPED[f]}')
+        elif k < TYPED[f]: print(f'note  {f}: {k} typed numbers, under its ceiling of {TYPED[f]}: lower TYPED to {k}')
+    rule('rule 1: no new typed numbers in the code (ceilings may only go down)', not over, ', '.join(over) if over else ', '.join(f'{f} {TYPED[f]}' for f in CODE))
 
 def check_books():
     B = books(); N, Q, E = B['citations'], B['laws'], B['comments']
@@ -567,6 +608,7 @@ async def check_game():
     if '--same-play' in sys.argv: rule('plays exactly as the kept match' + ('es' if d else ''), same, detail)
     else: print('note  ' + ('plays exactly as kept' if same else 'plays differently from kept: ' + detail))
 
+check_rules()
 check_books()
 asyncio.run(check_game())
 print('\nPASS' if not fails else f'\nFAIL: {len(fails)} rule(s)')
