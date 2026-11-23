@@ -465,6 +465,16 @@ async def big_move():
         await pg.evaluate(CALM); await run.step(pg, 20); await pg.evaluate(GROW, 50); await run.step(pg, 5); n = await pg.evaluate(GO); await run.step(pg, 120)
         return n, await pg.evaluate("[!!ZO.arrived, ARMY.filter((u) => u.hp > 0 && u.job === 'march').length]")
 
+async def steward():
+    """A Store's Steward tab (N569): its six tiles; set to Idle & new, six idle villagers are sent to work; set to All workers with a wood-heavy mix, workers move to wood."""
+    TAP = "(v) => { const b = [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v); if (!b) return null; b.click(); return [...document.querySelectorAll('#base .mt .cell')].map((b) => b.textContent.trim()); }"
+    STORE = "(() => { const h = fk.seatOf(0), N = fk.N, k0 = fk.tileAt(h.bx, h.by); let t = null; for (let r = 7; r < 30 && !t; r++) for (let dd = -r; dd <= r && !t; dd++) for (const [i, j] of [[k0 % N + dd, Math.floor(k0 / N) - r], [k0 % N + dd, Math.floor(k0 / N) + r]]) if (!t && ECON.canPlace('BI4', i, j)) { t = fk.build('BI4', i, j, fk.SIDES[0].col); t.done = 1; t.hp = t.hpMax = fk.stat('BI4', 0, 'hp'); } if (fk.paused()) fk.pause(false); MENU.S.tab = null; MENU.S.subject = t; MENU.render(true); return !!t; })()"
+    async with run.game(SEED, test=True) as pg:
+        await pg.evaluate(CALM); await run.step(pg, 10); await pg.evaluate(STORE); await pg.evaluate(TAP, 'ctab|Steward|'); t = await pg.evaluate(TAP, 'stew||')
+        await pg.evaluate("units.filter((u) => u.side === 0 && fk.has(u, 'Gather')).forEach((u) => { u.job = 'idle'; u.target = null; u.path = null; u.then = null; })"); await run.step(pg, 8)
+        idle = await pg.evaluate("ECON.stewNow(0).n.idle"); await pg.evaluate(TAP, 'stew||'); await pg.evaluate("ECON.stewOf(0).mix = { food: 1, wood: 5, gold: 0, stone: 0, iron: 0 }"); await run.step(pg, 20)
+        return t, idle, await pg.evaluate("ECON.stewNow(0).n")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -543,6 +553,8 @@ async def check_game():
     rule('Specialty: foot in front, archers behind them, siege at the back, cavalry off the right flank', ml['Archers'][0] < ml['Foot'][0] - 2 and ml['Engines'][0] < ml['Archers'][0] and ml['Riders'][1] > ml['Foot'][1] + 3, f'[forward, right] tiles: {ml}')
     bn, ba = await big_move()
     rule('a big army moved at once arrives: no soldier walks in place short of his spot', ba == [True, 0], f'{bn} soldiers; two minutes on, arrived and still marching: {ba}')
+    st, si, sn = await steward()
+    rule('the Store\'s Steward (Albert, Nov 23): six tiles, Idle & new sends idle villagers to work, All workers moves workers to match the mix', st is not None and len(st) == 6 and st[0].startswith('Steward') and si == 0 and sn['wood'] > sn['food'], f'tiles {st}; idle after {si}; at work {sn}')
     fb = await falls()
     rule('Fall back: the picked foot walk away from a nearby enemy group, re-form, then go back in at the enemies they left', fb[0][1] > 0 and max(g for g, _, _ in fb) > fb[0][0] + 2 and fb[-1][1] == 0 and fb[-1][2] > 0, f'gap in tiles, falling back, fighting those left, every 2 s: {[(round(g, 1), a, b) for g, a, b in fb]}')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}

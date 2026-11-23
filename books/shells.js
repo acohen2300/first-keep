@@ -41,7 +41,7 @@ BOOK("shells", {
  "BI1": {"name": "Mill", "layer": 110, "size": "D9", "style": "Closed", "look": "mill", "material": "timber", "ticks": ["Drop-off", "Health", "Burn", "Research"], "drop": ["food"], "cite": ["N144", "N206"]},
  "BI2": {"name": "Lumber camp", "layer": 110, "size": "D9", "style": "Closed", "look": "lumber", "material": "timber", "ticks": ["Drop-off", "Health", "Burn", "Research"], "drop": ["wood"], "cite": ["N144", "N206"]},
  "BI3": {"name": "Mining camp", "layer": 110, "size": "D9", "style": "Closed", "look": "mining", "material": "timber", "ticks": ["Drop-off", "Health", "Research", "Shaft", "Store"], "drop": ["gold", "stone", "iron"], "yield": "gold", "rate": "D88.gold", "cite": ["N144"]},
- "BI4": {"name": "Store", "layer": 110, "size": "D9", "style": "Closed", "look": "store", "material": "timber", "ticks": ["Health", "Research"], "cite": ["N144"]},
+ "BI4": {"name": "Store", "layer": 110, "size": "D9", "style": "Closed", "look": "store", "material": "timber", "ticks": ["Health", "Research", "Steward"], "cite": ["N144", "N569"]},
  "BI5": {"name": "Depot", "layer": 110, "size": "D8", "style": "Closed", "look": "depot", "material": "timber", "ticks": ["Drop-off", "Supply", "Health", "Burn"], "cite": ["N144", "N198", "N206"], "drop": ["food", "wood", "gold", "stone", "iron"]},
  "BI6": {"name": "Mint", "layer": 110, "size": "D9", "style": "Closed", "look": "mint", "material": "timber", "ticks": ["Make", "Health", "Research", "Repeat"], "cite": ["N144", "N195"], "yield": "gold"},
  "BI7": {"name": "Foundry", "layer": 110, "size": "D9", "style": "Closed", "look": "foundry", "material": "timber", "ticks": ["Make", "Health", "Research", "Repeat"], "cite": ["N144", "N195"], "yield": "iron"},
