@@ -8,6 +8,12 @@ Read this first. The reviewers' 18 reports are on the branch `fresh-notes`, fold
 
 What the match showed, worst first: armies broke all at once at every Town Center (no courage, Hold does not hold); the economy did not run itself (idle villagers, winter starvation until he doubled food workers by hand, 300k banked with nothing to buy, pop cap 180, "That line is full" 553 times); no information (no scout report, no warning before winter, a resource running out or a break); orders that never arrived (T27 sat 46 min, V25 12 min; "no way" on 79 men at 98:32); rivals sat on hoards and did not attack for long stretches; freezes up to 1.5 s in fights.
 
+Nov 22 evening (Albert 18:51-18:55, "Can you do A B and C?", built while he drove):
+- [x] A (26f0fac1): mission with nobody picked says Pick troops first; red box = set on missions, none on Exit; spent fields/shafts show idle; Allies switch works; rivals named by dealt personality; rival towns vary (seeded site pick); willows (trees read the relief); fallen alert place (a felled building's by was overwritten by its killer); alerts use shown unit names; Pioneer out of army orders
+- [x] B part 1 (eae3a055): route tracker, the march line follows the real path
+- [ ] B part 2, bridges (spec-roads option A): not started; needs new building art, a deck rule in walkable and hAt, placement on water, save rebuild, burn rule, and the computers' use. Too big to finish safely unattended
+- [ ] C, more resources: waits for his answer: (a) bigger finds, (b) faster gathering, (c) finds running dry too fast, (d) too much hand management
+- [ ] still to look into: "tap to move and they don't move" (no repro yet; copy the log when it happens)
 Build order agreed (Albert, Nov 22 14:03 "Build"), one area per build, one preview each:
 1. The army: War card Step 5 Mode (formations and courage, his Nov 21 design below), Hold that holds (die in place), stuck orders and "no way"
    - [x] built Nov 22 (preview f636767c): Mode tiles (Line, Specialty, Wide; Normal, Focused, To death), Hold never breaks or leaves its spot, jammed orders arrive (D452–D454, N565–N566). Still open: Focused/To death do not yet keep their target on retarget; Wide and crescent trade nothing in combat yet (tuning); 'no way' in his log is soldiers with no path to foes behind walls (D400 handles it); Hold only strikes foes within reach
