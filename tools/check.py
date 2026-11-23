@@ -150,15 +150,23 @@ async def draw():
         return await run.pictures(pg), list(pg.errors), placed, steps
 
 async def orders():
-    """Two groups, two orders: the foot to one spot, then the archers to another. Each must end at its own spot, and soldiers never picked must not move."""
-    WHERE = "(() => { const at = (f) => { const U = units.filter((u) => u.side === 0 && f(fk.SH[u.code].class)); return [U.reduce((a, u) => a + u.bx, 0) / U.length, U.reduce((a, u) => a + u.by, 0) / U.length]; }; return { foot: at((c) => c === 'Foot'), archers: at((c) => c === 'Archers'), rest: at((c) => c === 'Riders' || c === 'Engines'), tile: fk.D.tile }; })()"
+    """Two groups, two orders: the foot to one spot, then the archers to another. Each must end at its own spot, and every soldier never picked must be back where he stood (he may give way while a group passes)."""
+    WHERE = "(() => { const at = (f) => { const U = units.filter((u) => u.side === 0 && f(fk.SH[u.code].class)); return [U.reduce((a, u) => a + u.bx, 0) / U.length, U.reduce((a, u) => a + u.by, 0) / U.length]; }; return { foot: at((c) => c === 'Foot'), archers: at((c) => c === 'Archers'), rest: units.filter((u) => u.side === 0 && ['Riders', 'Engines'].includes(fk.SH[u.code].class)).map((u) => [u.bx, u.by, !!u.path]), tile: fk.D.tile }; })()"
     SEND = "([who, x, y]) => { const tap = (v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); tap('mwho|' + who + '|'); tap('mord|move|'); const spot = fk.tileMid(fk.hitAt(x, y)[0]); fk.tap(x, y); return spot; }"
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate("[1, 2, 3].forEach((s) => WAR.treaty(0, s, 'peace'))")  # the computers' early waves (dealt per match) would otherwise fight the soldiers never picked
-        await run.step(pg, 40); await pg.evaluate("document.querySelector('[data-v=\"war||\"]').click()"); was = await pg.evaluate(WHERE)
-        a = await pg.evaluate(SEND, ['Foot', 70, 250]); await run.step(pg, 30); b = await pg.evaluate(SEND, ['Archers', 320, 250]); await run.step(pg, 40); now = await pg.evaluate(WHERE)
-        far = lambda p, q: math.hypot(p[0] - q[0], p[1] - q[1]) / now['tile']
-        return far(now['foot'], a), far(now['archers'], b), far(now['rest'], was['rest']), far(a, b)
+        await run.step(pg, 40)
+        for _ in range(12):  # the test army is still walking to its first places (a siege engine takes over a minute): measure from when all stand
+            if not any(r[2] for r in (await pg.evaluate(WHERE))['rest']): break
+            await run.step(pg, 10)
+        await pg.evaluate("document.querySelector('[data-v=\"war||\"]').click()"); was = await pg.evaluate(WHERE)
+        far = lambda p, q: math.hypot(p[0] - q[0], p[1] - q[1]) / was['tile']
+        off = lambda now: max(far(p, q) for p, q in zip(now['rest'], was['rest']))
+        a = await pg.evaluate(SEND, ['Foot', 70, 250]); most = 0
+        for _ in range(6): await run.step(pg, 5); most = max(most, off(await pg.evaluate(WHERE)))
+        b = await pg.evaluate(SEND, ['Archers', 320, 250])
+        for _ in range(8): await run.step(pg, 5); now = await pg.evaluate(WHERE); most = max(most, off(now))
+        return far(now['foot'], a), far(now['archers'], b), off(now), far(a, b), most, any(r[2] for r in was['rest'])
 
 async def stands():
     """The picked foot make a wall and keep it; soldiers not picked do not; a new order drops it. (The Wall button is gone until Mode is built: the wall is called straight.)"""
@@ -543,8 +551,8 @@ async def check_game():
     rule('a building can be picked and placed from the Build menu', placed == 1, f'{placed} placed, taps landed: {steps}')
     rule('20 seconds on screen, no errors', not errs, '; '.join(errs[:2]))
     rule(f'pictures in memory under {PICTURES_MB} MB', pics['mb'] <= PICTURES_MB, f"{pics['count']} pictures, {pics['mb']} MB")
-    fa, ab, moved, apart = await orders()
-    rule('two groups keep their own orders: each ends at its own spot, soldiers never picked stay put (under 1 tile; loosened to 2 on Nov 22 to fit Build C, put back Nov 23)', max(fa, ab) < apart / 2 and moved < 1, f'foot {fa:.1f} tiles from its spot, archers {ab:.1f} from theirs, the spots {apart:.1f} apart; the rest moved {moved:.1f}')
+    fa, ab, moved, apart, most, walking = await orders()
+    rule('two groups keep their own orders: each ends at its own spot, and every soldier never picked ends where he stood (the worst one under 1 tile; he may give way while a group passes)', max(fa, ab) < apart / 2 and moved < 1 and not walking, f'foot {fa:.1f} tiles from its spot, archers {ab:.1f} from theirs, the spots {apart:.1f} apart; of those never picked the worst ended {moved:.1f} tiles off, the farthest any gave way {most:.1f}')
     held, after = await stands()
     rule('a wall stands until the next order: the picked foot hold it two minutes on, the archers never picked do not, a move drops it', held[0] > 0 and held[1] == 0 and after[0] == 0, f'{held[0]} foot in the wall after two minutes, {held[1]} archers; {after[0]} after a move')
     far, idle, gone = await chase()
