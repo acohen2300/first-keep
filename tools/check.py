@@ -18,6 +18,7 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
 NO_UNIT = 1735
 # Ceilings that may only go down (Albert, Nov 23: the rules become gates, so drift fails the check on its own)
 TYPED = {'index.html': 4590, 'menu.js': 24, 'econ.js': 9, 'combat.js': 13, 'ai.js': 8, 'sound.js': 35}  # numbers other than 0 and 1 typed in the code (rule 1; most of index.html's are the art)
+SPARE_COMMENTS, LOOSE_CITATIONS = 36, 78   # comments the code never uses; citations no entry names
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
 
 fails = []
@@ -90,9 +91,10 @@ def check_books():
     lost = sorted(used - set(E), key=lambda c: int(c[1:]))
     rule('every comment code in the code is in the Comments book', not lost, f'{len(lost)} missing, e.g. ' + ', '.join(lost[:8]) if lost else f'{len(used)} codes')
     spare = sorted(set(E) - used, key=lambda c: int(c[1:]))
-    print(f'note  {len(spare)} comments in the book are not used by the code' + (', e.g. ' + ', '.join(spare[:8]) if spare else ''))
+    rule(f'comments the code never uses: no more than {SPARE_COMMENTS} (may only go down)', len(spare) <= SPARE_COMMENTS, f'{len(spare)}' + (', e.g. ' + ', '.join(spare[:8]) if spare else ''))
     cited = {n for b in B.values() for e in b.values() for n in e.get('cite', [])}
-    print(f'note  {len(set(N) - cited)} of {len(N)} citations are named by no entry')
+    loose = len(set(N) - cited)
+    rule(f'citations no entry names: no more than {LOOSE_CITATIONS} of {len(N)} (may only go down)', loose <= LOOSE_CITATIONS, f'{loose}')
     # units
     unset = sum(1 for e in B['measure'].values() for u in (e['unit'].values() if isinstance(e.get('unit'), dict) else [e.get('unit')]) if u == 'unset')
     rule('units: none unset', unset == 0, f'{unset} unset')
