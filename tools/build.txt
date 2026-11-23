@@ -1,10 +1,15 @@
-# Build: the soldier rebuild (Albert, Nov 23 07:34 "Build"): the two failing checks made true, the stuck-soldier patches as one part.
-58cfea7
-tools/check.py
-tools/kept.json
-combat.js
-index.html
-books/measure.js
+# Build: dead book entries out (Albert, Nov 23 08:42 "Build"). Must play exactly as kept (--same-play).
+ca412be
 books/comments.js
 books/citations.js
+books/measure.js
+books/words.js
+books/sprites.js
+books/sound.js
+books/mass.js
+books/screen.js
+books/tech.js
+books/colours.js
+books/laws.js
+tools/check.py
 LIST.md

@@ -19,7 +19,7 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
 NO_UNIT = 1735
 # Ceilings that may only go down (Albert, Nov 23: the rules become gates, so drift fails the check on its own)
 TYPED = {'index.html': 4590, 'menu.js': 24, 'econ.js': 9, 'combat.js': 13, 'ai.js': 8, 'sound.js': 35}  # numbers other than 0 and 1 typed in the code (rule 1; most of index.html's are the art)
-SPARE_COMMENTS, LOOSE_CITATIONS = 36, 78   # comments the code never uses; citations no entry names
+SPARE_COMMENTS, LOOSE_CITATIONS = 12, 78   # comments the code never uses; citations no entry names
 BUILD = ROOT / 'tools' / 'build.txt'       # the build's own list: the commit it starts from, then every file it may change (rule 11)
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
 
@@ -101,7 +101,7 @@ def check_books():
     lost = sorted({f'{c}→{q}' for b in B.values() for c, e in b.items() for q in e.get('law', []) if q not in Q})
     rule('every law named is in the Laws book', not lost, f'{len(lost)} missing, e.g. ' + ', '.join(lost[:6]) if lost else '')
     # code ↔ comments, both ways
-    used = set(re.findall(r'// (E\d+)\b', code)) | set(re.findall(r'\((E\d+)\)', code))
+    used = {c for n in re.findall(r'//[^\n]*|/\*.*?\*/', code, re.S) for c in re.findall(r'\b(E\d+)\b', n)} | set(re.findall(r'\((E\d+)\)', code))  # every code in a // or /* */ comment, a second code on a line included
     lost = sorted(used - set(E), key=lambda c: int(c[1:]))
     rule('every comment code in the code is in the Comments book', not lost, f'{len(lost)} missing, e.g. ' + ', '.join(lost[:8]) if lost else f'{len(used)} codes')
     spare = sorted(set(E) - used, key=lambda c: int(c[1:]))
