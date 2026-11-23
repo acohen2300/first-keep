@@ -5,7 +5,6 @@ BOOK("citations", {
  "N3": {"text":"JPL, Approximate Positions of the Planets (1800–2050)","opened":true},
  "N4": {"text":"Mallama & Hilton (2018), colour indices","opened":true},
  "N5": {"text":"Ballesteros (2012), colour index to temperature","opened":true},
- "N6": {"text":"(retired: satellites cut, Stone Age)","opened":true},
  "N7": {"text":"Gabriel & Neumann (1962), QJRMS 88","opened":true},
  "N8": {"text":"Jennings, Winchell, Livneh & Molotch (2018), Nature Communications 9:1148","opened":true},
  "N9": {"text":"Atlas, Srivastava & Sekhon (1973); Gunn & Kinzer (1949)","opened":true},
