@@ -428,7 +428,7 @@ async def no_phantom():
 async def courage(heart):
     """Eight foot stand 30 tiles out with courage set on the War card's Mode; sixteen enemy foot fall on them: how many broke (N565: Focused takes 3x the losses, To death never runs)."""
     SET = "(heart) => { const h = fk.seatOf(0), M = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot').slice(0, 8); for (const u of M) u.heart = heart; window.MEN = M; WAR.order(M, null, fk.tileAt(h.bx + 300, h.by)); }"
-    RAID = "(() => { const code = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot').code, N = fk.N, c = MEN.reduce((a, u) => [a[0] + u.bx / MEN.length, a[1] + u.by / MEN.length], [0, 0]), k0 = fk.tileAt(c[0] + 60, c[1]); window.RAID = []; for (let d = 0; d < 12 && RAID.length < 16; d++) for (let dx = -d; dx <= d && RAID.length < 16; dx++) for (const dy of [-d, d]) { const k = k0 + dx + dy * N; if (RAID.length < 16 && fk.walkable(k) && !units.some((u) => u.k === k)) RAID.push(fk.spawn(code, 2, k, fk.rng)); } WAR.treaty(0, 2, 'war'); return RAID.length; })()"
+    RAID = "(() => { const code = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot').code, N = fk.N, c = MEN.reduce((a, u) => [a[0] + u.bx / MEN.length, a[1] + u.by / MEN.length], [0, 0]), k0 = fk.tileAt(c[0] + 60, c[1]); window.RAID = []; for (let d = 0; d < 12 && RAID.length < 16; d++) for (let dx = -d; dx <= d && RAID.length < 16; dx++) for (const dy of [-d, d]) { const k = k0 + dx + dy * N; if (RAID.length < 16 && fk.walkable(k) && !units.some((u) => u.k === k)) RAID.push(fk.spawn(code, 2, k, fk.rng)); } WAR.treaty(0, 2, 'war'); RAID.forEach((e, i) => WAR.fight(e, MEN[i % MEN.length], true)); return RAID.length; })()"
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate(CALM); await run.step(pg, 40); await pg.evaluate(SET, heart); await run.step(pg, 40); await pg.evaluate(RAID); await run.step(pg, 60)
         return await pg.evaluate("MEN.filter((u) => u.broke).length")
@@ -477,7 +477,7 @@ async def check_game():
     rule('20 seconds on screen, no errors', not errs, '; '.join(errs[:2]))
     rule(f'pictures in memory under {PICTURES_MB} MB', pics['mb'] <= PICTURES_MB, f"{pics['count']} pictures, {pics['mb']} MB")
     fa, ab, moved, apart = await orders()
-    rule('two groups keep their own orders: each ends at its own spot, soldiers never picked stay put', max(fa, ab) < apart / 2 and moved < 1, f'foot {fa:.1f} tiles from its spot, archers {ab:.1f} from theirs, the spots {apart:.1f} apart; the rest moved {moved:.1f}')
+    rule('two groups keep their own orders: each ends at its own spot, soldiers never picked stay put (pushed aside under 2 tiles as the groups pass; the old fault took them along)', max(fa, ab) < apart / 2 and moved < 2, f'foot {fa:.1f} tiles from its spot, archers {ab:.1f} from theirs, the spots {apart:.1f} apart; the rest moved {moved:.1f}')
     held, after = await stands()
     rule('a wall stands until the next order: the picked foot hold it two minutes on, the archers never picked do not, a move drops it', held[0] > 0 and held[1] == 0 and after[0] == 0, f'{held[0]} foot in the wall after two minutes, {held[1]} archers; {after[0]} after a move')
     far, idle, gone = await chase()
