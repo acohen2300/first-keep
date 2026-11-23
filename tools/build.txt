@@ -1,5 +1,8 @@
-# Build: units (Albert, Nov 23 14:27 "Build"): every number in the Measurements book says its unit. No game file changes; must play exactly as kept.
-d7e6622
-books/measure.js
+# Build: sources (Albert, Nov 23 17:41 "Build"): every source an entry names, or retired with its reason. No game file changes; must play exactly as kept.
+4173a76
 tools/check.py
+books/citations.js
+books/laws.js
+books/colours.js
 LIST.md
+docs/log/sources-retired-2026-11-23.md
