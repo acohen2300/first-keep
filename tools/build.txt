@@ -1,13 +1,11 @@
-# Build: the war elephant and the soldiers who stood under arrows (Albert, Nov 23 10:00 "Build": update the elephant, its force, health and whatever else). Changes play: its own preview.
-462a424
+# Build: chosen numbers typed in the code go to the books (Albert, Nov 23 11:15 "Build for cleanup"). Must play exactly as kept (--same-play).
+7aa7ff1
+index.html
+combat.js
+ai.js
+sound.js
 books/measure.js
-books/mass.js
-books/shells.js
+books/sound.js
 books/comments.js
-books/citations.js
-books/laws.js
-books/words.js
 tools/check.py
-tools/kept.json
 LIST.md
-books/tech.js

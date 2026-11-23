@@ -68,11 +68,11 @@ function fractal2(roll, K, Dim, scale) { const H = 2 - Dim, w = Array.from({ len
 // ── The coast (E13)
 // E14
 function makeCoast(roll) {
-  const home = fractal(roll, 10, 1.25), free = [0, 1, 2, 3].map(() => fractal(roll, 10, 1.25)), Z3 = D.zone[2], BLEND = D.edge;
+  const home = fractal(roll, D.mapgen.home.terms, D.mapgen.home.dim), free = [0, 1, 2, 3].map(() => fractal(roll, D.mapgen.home.terms, D.mapgen.home.dim)), Z3 = D.zone[2], BLEND = D.edge;
   return (side, pos) => { // E15
     const s = Math.min(pos, D.board - pos), w = clamp((s - Z3) / BLEND, 0, 1);
     const out = (1 - w) * home((s / Z3) * Math.PI) + w * free[side]((pos / D.board) * 2 * Math.PI); // E16
-    return [D.wander * out, clamp((out - 0.2) / 0.3, 0, 1)];
+    return [D.wander * out, clamp((out - D.mapgen.wander.from) / D.mapgen.wander.span, 0, 1)];
   };
 }
 
@@ -123,7 +123,7 @@ function stamp(bx, by, r, fn) { // E25
 const between = (roll, [lo, hi]) => lo + roll() * (hi - lo), count = (roll, [lo, hi]) => Math.floor(between(roll, [lo, hi + 1]));
 // E27
 function wanderLine(roll, a, b, wander, ok) {
-  const len = Math.hypot(b[0] - a[0], b[1] - a[1]), nx = -(b[1] - a[1]) / len, ny = (b[0] - a[0]) / len, f = fractal(roll, 6, 1.3), pts = [];
+  const len = Math.hypot(b[0] - a[0], b[1] - a[1]), nx = -(b[1] - a[1]) / len, ny = (b[0] - a[0]) / len, f = fractal(roll, D.mapgen.river.terms, D.mapgen.river.dim), pts = [];
   for (let t = 0; t <= 1; t += 4 / len) { const s = wander * f(t * Math.PI) * Math.sin(t * Math.PI); pts.push([a[0] + (b[0] - a[0]) * t + nx * s, a[1] + (b[1] - a[1]) * t + ny * s]); }
   return ok && !pts.every(([x, y]) => ok(x, y)) ? null : pts;
 }
@@ -160,7 +160,7 @@ function makeTerrain(roll) {
     const a = Math.sqrt((all.length * T * T) / Math.PI); for (const q of all) LAKER[q] = a / D.upm; if (all.length >= NA.least) { const [x, y] = at(deep); lakes.push({ x, y, r: inner[deep], a }); } }
   for (let k = 0; k < n; k++) if (CL[k] && !up[k]) { const pts = []; let w = 0; for (let q = k; CL[q]; q = to[q]) { pts.push(at(q)); w += CL[q]; if (up[q] > 1) break; up[q] = 2; } if (pts.length > 1) RIV.push({ pts, w: w / pts.length }); }
   // E33
-  for (const R of RIV) for (const [x, y] of [...R.pts.filter(([x, y]) => laneDist(x, y) < D.lane).filter((p, i) => i % 10 === 0), R.pts[Math.floor(between(roll, [R.pts.length * 0.3, R.pts.length * 0.7]))]]) wadeTo(x, y, R.w + D.ford * half, D.wade * half);
+  for (const R of RIV) for (const [x, y] of [...R.pts.filter(([x, y]) => laneDist(x, y) < D.lane).filter((p, i) => i % D.mapgen.ford.every === 0), R.pts[Math.floor(between(roll, [R.pts.length * D.mapgen.ford.from, R.pts.length * D.mapgen.ford.to]))]]) wadeTo(x, y, R.w + D.ford * half, D.wade * half);
   for (const L of lakes) { const a = Math.atan2(MID - L.y, MID - L.x), far = L.a * D.lakeFord.reach; for (let d = -far; d <= far; d += T) wadeTo(L.x + Math.cos(a) * d, L.y + Math.sin(a) * d, D.ford * D.lakeFord.wide, D.wade * D.lakeFord.deep); } // E1018
 }
 function makeForest(roll) {
@@ -199,7 +199,7 @@ function put(kind, k, roll, size = 1, v = Math.floor(roll() * 3), amount = KIND[
   const i = k % N, j = (k - i) / N, [bx, by] = toBoard((i + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter, (j + 0.5) * D.tile + (roll() * 2 - 1) * D.jitter), [vx, vy] = toView(bx, by, H[k]);
   TV++; things.push({ kind, k, bx, by, vx, vy, amount, size, v }); WALKV++; OCC[k] = +!KIND[kind].open; if (KIND[kind].r) stamp(bx, by, KIND[kind].r, (q) => { OCC[q] = 1; });
 }
-const reachOf = (n) => Math.sqrt(n / Math.PI) * D.tile + 1.5 * D.tile;
+const reachOf = (n) => Math.sqrt(n / Math.PI) * D.tile + D.reachPad * D.tile;
 function cluster(kind, bx, by, n, roll, total) { // E46
   const got = []; stamp(bx, by, reachOf(n), (k, d) => { if (free(k)) got.push([d, k]); });
   const ks = got.sort((a, b) => a[0] - b[0]).slice(0, n).map(([, k]) => k), amount = total && total / ks.length; for (const k of ks) if (kind === 'tree') { FOR[k] = 1; if (amount) TREEAMT.set(k, amount); } else put(kind, k, roll, undefined, undefined, amount); return ks;
@@ -386,7 +386,7 @@ const cam = { x: 0, y: 0, z: 1 }, show = { speed: D.speeds.at(0), P: /[?&]fps\b/
 let cw, ch, dpr, zmin, zmax = D.open.most / (W.person.height * D.upm), want = true, camSeen = '';
 const toScreen = (vx, vy) => [(vx - cam.x) * cam.z + cw / 2, (vy - cam.y) * cam.z + ch / 2];
 const S = (sx, sy, h) => { const [x, y] = V(sx, sy, h); return toScreen(x, y); };
-function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - 24) / (r - l), (ch - 200) / (b - t)); zmin = cam.z / 2; }
+function fit() { const [l, t] = toView(B0, B0, D.land), [r, b] = toView(B1, B1, 0); cam.x = (l + r) / 2; cam.y = (t + b) / 2; cam.z = Math.min((cw - D.camfit.side) / (r - l), (ch - D.camfit.top) / (b - t)); zmin = cam.z / 2; }
 function resize() { const [w0, h0] = [cw, ch]; dpr = Math.min(2, devicePixelRatio || 1) * (show.res || 1); cw = innerWidth; ch = innerHeight; canvas.width = cw * dpr; canvas.height = ch * dpr; if (cw !== w0 || ch !== h0) fit(); dirty(); } // E698
 function dirty() { want = true; } // E973
 // ── The door (E65)
@@ -1117,7 +1117,7 @@ const JB = Symbol('job'), JOBS = new Set(D.jobs), ODD = new Set(); // E1041
 function jobDoor(u) { const j = u.job; Object.defineProperty(u, 'job', { get() { return this[JB].j; }, set(v) { const r = this[JB]; if (v === r.j) return; if (!JOBS.has(v)) ODD.add(v); r.was = r.j; r.j = v; r.t = K.t; }, enumerable: true, configurable: true }); u[JB] = { j, was: null, t: K.t }; return u; }
 const jobRec = (u) => u[JB] || { j: u.job, was: null, t: null }, isIdle = (u) => u.job === 'idle';
 function spawn(code, side, k, roll) { // E92
-  const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + between(roll, [-D.jitter, D.jitter]), by: by + between(roll, [-D.jitter, D.jitter]), k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, born: K.t, face: 1, t: roll() * 10, wait: 0, alt: units.length % CUT.alt };
+  const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + between(roll, [-D.jitter, D.jitter]), by: by + between(roll, [-D.jitter, D.jitter]), k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, born: K.t, face: 1, t: roll() * D.camfit.phase, wait: 0, alt: units.length % CUT.alt };
   jobDoor(u); place(u); units.push(u); file(UG, D.grid.unit, u); fire('spawn', u); return u;
 }
 const harm = (t, n, by = null) => { t.hp -= n; t.hitBy = by; t.hitT = K.t; return t.hp; }; // E1042
@@ -1214,7 +1214,7 @@ const groundAt = (k) => (iced(k) ? G.ice : snowAt(k) > G.snow.covers ? G.snow : 
 let jolt = { t: 0, px: 0 };
 function impact(a, t) { // E112
   if (t.kind !== 'unit') { fire('event', 'hitBld', t); return 0; }
-  const b = blowOf(a.code), moving = a.mps > 0.1, ms = moving || !b ? massOf(a.code) : b.kg, vs = moving ? a.mps : b ? b.mps : stat(a.code, a.side, 'spd');
+  const b = blowOf(a.code), moving = a.mps > D.still, ms = moving || !b ? massOf(a.code) : b.kg, vs = moving ? a.mps : b ? b.mps : stat(a.code, a.side, 'spd');
   const v = (ms * vs) / (ms + massOf(t.code)), dx = t.bx - a.bx, dy = t.by - a.by, dd = Math.hypot(dx, dy) || 1;
   t.slide = { vx: (dx / dd) * v, vy: (dy / dd) * v };
   if (v >= D.jolt.from && inSight(t)) jolt = { t: D.jolt.s, px: Math.min(D.jolt.max, v * D.jolt.px) };
@@ -1277,7 +1277,7 @@ function trapArt(x, y, s, t) { const A = TRAPS[t.done < D.camp.built ? 'site' : 
   ctx.beginPath(); for (const [px, py] of at) for (const [a, b, c, d] of A.lines || []) { ctx.moveTo(x + (~~px + a) * s, y + (~~py + b) * s); ctx.lineTo(x + (~~px + c) * s, y + (~~py + d) * s); } ctx.stroke(); ctx.restore(); }
 const DOT = Object.fromEntries(Object.entries(SPRITE.nodes.dot).map(([k, v]) => [k, { gold: C.gold, rock: ROCK, ruin: RUIN, rocklit: ROCKLIT }[v] || v])); // E121
 // ── Floor 6, climate (E122)
-const K = { ev: {}, t: 0, alt: 0, light: 1, temp: 10, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: null, iceOn: null, fog: 0, dew: null, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
+const K = { ev: {}, t: 0, alt: 0, light: 1, temp: D.air.start, wet: 0, rain: 0, snowing: 0, snow: 0, fds: 0, ice: null, iceOn: null, fog: 0, dew: null, storm: 0, flash: 0, flashT: -9, strikeT: 0, bolts: [], hour: 0, wetHour: false };
 const SEASONS = fromBook('words').seasons; // E2280
 const yt = () => K.t + D.startIn * D.season; // E862
 const season = () => Math.floor(yt() / D.season) % 4, dayPhase = () => (K.t % D.day) / D.day;
@@ -1301,14 +1301,14 @@ on('start', () => { GUST = fractal(dice(seed ^ WX.wind.seed), WX.wind.k, WX.wind
 // E126
 function climate(dt) {
   K.t0 = K.t; K.t += dt; const sn = season(), f = (yt() / D.season) % 1, mean = D.temps[sn] + (D.temps[(sn + 1) % 4] - D.temps[sn]) * (0.5 - 0.5 * Math.cos(f * Math.PI)); // E127
-  K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - 0.6);
+  K.alt = sunAlt(); K.light = lightAt(K.alt); K.temp = mean + D.swing * (K.light - D.air.mid);
   const hour = Math.floor(K.t / HOUR), was = K.wetHour, fresh = hour !== K.hour; if (fresh) { K.hour = hour; ahead(was); if (K.wetHour !== was) { const r = K.wetHour ? rnd(-1, 1) : 0; K.I = Math.abs(r); K.dir = Math.sign(r); } K.storm = K.I >= D.stormAt; }
   const falling = K.wetHour ? (K.temp <= 1 ? 'snow' : 'rain') : null; if (fresh) turned(was, falling); // E128
-  const ease = Math.min(1, dt / 12); K.rain += ((falling === 'rain') * K.I - K.rain) * ease; K.snowing += ((falling === 'snow') * K.I - K.snowing) * ease; // E129
+  const ease = Math.min(1, dt / D.air.ease); K.rain += ((falling === 'rain') * K.I - K.rain) * ease; K.snowing += ((falling === 'snow') * K.I - K.snowing) * ease; // E129
   K.dew ??= K.temp - D.swing; if (falling) K.dew = K.temp; const es = (T) => FW.e * Math.exp((FW.a * T) / (FW.b + T)), air = (FW.Rv * (K.temp + FW.K0)) / FW.per, top = es(K.temp) + FW.lwc * air, lt = Math.log(top / FW.e); if (es(K.dew) > top) K.dew = (FW.b * lt) / (FW.a - lt); // E133
   const s = sky(K.rain, K.snowing, Math.abs(K.wind) > FW.calm ? null : Math.max(0, (es(K.dew) - es(K.temp)) / air)); K.vis = s.vis; K.fog = 1 - Math.exp(-s.fog); K.beta = s.fog; K.wind = K.dir * s.wind * (1 + WX.wind.gust * GUST(K.t / WX.wind.period)); K.blizT = blizzard(s) ? K.blizT + dt : 0; K.bliz = K.blizT >= WX.blizzard.hours * HOUR; // E376
-  const raining = K.rain > 0.1, soak = raining || (K.snow > 0 && K.temp > 0); K.wet = relax(K.wet, +soak, soak ? D.wetUp : D.dryOut, dt); // E130
-  if (K.snowing > 0.1) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (raining ? 2 : 1) * dt); // E131
+  const raining = K.rain > D.air.wet, soak = raining || (K.snow > 0 && K.temp > 0); K.wet = relax(K.wet, +soak, soak ? D.wetUp : D.dryOut, dt); // E130
+  if (K.snowing > D.air.wet) K.snow += D.snowfall * K.snowing * dt; if (K.temp > 0) K.snow = Math.max(0, K.snow - D.melt * K.temp * (raining ? D.air.melt : 1) * dt); // E131
   if (K.temp < 0) { K.fds += -K.temp * dt; if (K.wet > D.groundIce.wet) K.gfd = Math.min(D.groundIce.fdd, K.gfd - K.temp * dt); } // E132
   else { K.fds = Math.max(0, K.fds - K.temp * dt * 4); const i = sheet(), m = i - Math.min(i, D.groundIce.melt * K.temp * dt); K.gfd = m * m * D.groundIce.fdd; } K.ice = clamp(Math.floor((ICE.steps * fddDays()) / ICE.span), 0, ICE.steps); K.iceOn = Math.floor(fddDays() / ICE.key) + HOLES.size; if (!K.fds) HOLES.clear(); // E364
   if (K.storm) { K.strikeT -= dt; if (K.strikeT <= 0) { const sh = D.strike.share; K.strikeT = -((D.strike.summer * Math.max(...sh)) / sh[season()]) * Math.log(1 - rng()); strike(); } } // E135
@@ -1329,7 +1329,7 @@ function snowIce(snow) { const key = K.ice + '|' + Math.round(snow * ICE.snowSte
   q.drawImage(tint(C.ground.rim, ICE.rim), 0, 0); q.drawImage(tint(C.ground.snow, 0), 0, 0); q.globalCompositeOperation = 'source-atop'; q.fillStyle = C.ground.ice; q.globalAlpha = ICE.scour; const r = NS_rng(seed), [sw, shh] = ICE.streak;
   for (let i = ICE.streaks; i--; ) { q.beginPath(); q.ellipse(r() * W2, r() * H2, sw * (TREE.half + r()), shh, Math.sign(K.wind || 1) * ICE.lean, 0, Math.PI + Math.PI); q.fill(); } return c; }
 function drawSkin() { // E139
-  const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(0.85, K.snow / G.snow.full);
+  const [gx, gy] = toScreen(-ox, -oy), w = gw * cam.z, h = gh * cam.z, snow = Math.min(D.air.cover, K.snow / G.snow.full);
   if (K.ice) { ctx.save(); ctx.globalAlpha = ICE.a; ctx.drawImage(ICEM[K.ice - 1], gx, gy, w, h); if (snow > ICE.dust) { ctx.globalAlpha = snow; ctx.drawImage(snowIce(snow), gx, gy, w, h); } ctx.restore(); } // E781
   if (K.ice) { const z = cam.z, T = D.tile; ctx.save(); for (const k of HOLES.keys()) { const [x, y] = toScreen(...toView(...tileMid(k), 0)); ctx.fillStyle = WATER[1]; ctx.strokeStyle = C.ground.crack; ctx.lineWidth = ICE.line; ctx.beginPath(); oval(ctx, x, y, ICE.hole * T * z, ICE.hole * T * z * TILT); ctx.fill(); ctx.stroke(); } // E791
     ctx.strokeStyle = C.ground.crack; ctx.lineWidth = ICE.line; for (const [k, t] of CRACK) { const [x, y] = toScreen(...toView(...tileMid(k), 0)), r = NS_rng(k), grow = Math.min(1, (K.t - t) / ICE.warn) * ICE.hole * T * z; ctx.beginPath(); for (let i = ICE.rays; i--; ) { let a = r() * Math.PI * 2, px = x, py = y; ctx.moveTo(px, py); for (let s = ICE.rays; s--; ) { a += (r() - TREE.half) * ICE.zig; px += (Math.cos(a) * grow) / ICE.rays; py += (Math.sin(a) * grow * TILT) / ICE.rays; ctx.lineTo(px, py); } } ctx.stroke(); } ctx.restore(); }
@@ -1352,7 +1352,7 @@ function drawSky(dt) { // E140
   if (evOn('meteor')) { const e = K.ev.cur, [dx, dy, tail, lw, r] = ER.meteor.streak, f = Math.min(1, (K.t - e.t0) / (e.until - e.t0)), [x1, y1] = toScreen(...toView(...e.at, null)), x = x1 - dx * (1 - f), y = y1 - dy * (1 - f); // E579
     ctx.strokeStyle = ctx.fillStyle = C.wild.streak; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x - dx * tail, y - dy * tail); ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.arc(x, y, r, 0, A.round * RAD); ctx.fill(); }
   wash(SKYC.flash, Math.min(STK.cap, Math.max(K.flash, ...K.bolts.map((b) => b.f * boltEnv(b, wallT() - b.w)))));
-  const night0 = MO.dark * (1 - clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), 0, 1)), dusk = clamp(1 - Math.abs(K.alt) / 8, 0, 1) * 0.18; // E143
+  const night0 = MO.dark * (1 - clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), 0, 1)), dusk = clamp(1 - Math.abs(K.alt) / D.air.dusk.alt, 0, 1) * D.air.dusk.glow; // E143
   const veil0 = WX.veil * (1 - Math.exp((-WX.k * cw) / px / K.vis)), most = 1 - Math.pow(2, -MO.stops), both = 1 - (1 - Math.min(1, night0)) * (1 - Math.min(1, veil0)), keep = both > most ? most / both : 1, veil = veil0 * keep, night = night0 * keep; wash(SKYC.veil, veil); // E381
   wash(SKYC.glow, dusk); wash(SKYC.blue, night);  if (K.sky === 'frost') wash(SKYC.rime, BD.frost); flushWash(); skyBand(); // E144
 }
@@ -1493,7 +1493,7 @@ const FAM = D.familiar, FAMC = Math.ceil(N / FAM.cell), FAMT = new Map(), famCel
 const fam = (side, k) => (!SIDES[side] ? 1 : Math.max(+bldsNear(...tileMid(k), FAM.home * D.tile, (b) => b.side === side && b.done >= 1), Math.exp(-(K.t - famOf(side)[famCell(k)]) / FAM.tau))); // E811
 const inSight = (t, side = ME, eye) => !t || !SIDES[t.side] || !SIDES[side] || t.side === side || !FOGON || seenNow(t, side) || (!!eye && dist(eye, t) < sightOf(eye) && sees(eye, t)); // E624
 // E150
-function shadowVec(h) { const sun = clamp(K.alt / A.fade, 0, 1) * 0.35 * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, A.low) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
+function shadowVec(h) { const sun = clamp(K.alt / A.fade, 0, 1) * D.air.shade * K.light, moon = K.moonAlt > 0 && MO.cast * K.moonLit * nightOf(), by = moon > sun, alt = Math.max(by ? K.moonAlt : K.alt, A.low) * RAD, len = Math.min(D.shadowMax, 1 / Math.tan(alt)) * h, th = 2 * Math.PI * (dayPhase() + by * moonPhase()) + Math.PI / 2; return [Math.cos(th) * len, Math.sin(th) * len * TILT, Math.max(sun, moon)]; } // E151
 function drawShadows(s) { // E152
   const [dx, dy, a] = shadowVec(1); if (a < 0.02) return; ctx.save(); ctx.globalAlpha = a; ctx.fillStyle = C.sky.shadow;
   for (const t of blds()) { if (fire('hide', t)) continue; const h = (BLDTOP[B[t.code][3]] || 40) * 0.7, [x, y] = toScreen(t.vx, t.vy); if (x < -200 * s || x > cw + 200 * s || y < -200 * s || y > ch + 200 * s) continue; // E2642
@@ -1798,7 +1798,7 @@ on('draw', (c) => { if (!press || press.moved) return; const f = (performance.no
   if (!press.mode && f > 0) { c.lineWidth = TM.ring; c.beginPath(); c.arc(press.x0, press.y0, TO.ring, TM.top, TM.top + f * TM.turn); c.stroke(); }
   else if (press.mode === 'box') { const x = Math.min(press.x0, press.x), y = Math.min(press.y0, press.y), w = Math.abs(press.x - press.x0), h = Math.abs(press.y - press.y0); c.lineWidth = fl; c.strokeRect(x, y, w, h); c.globalAlpha = fa; c.fillRect(x, y, w, h); }
   c.restore(); });
-canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.0015)); camStop(); keepOn(); dirty(); }, { passive: false });
+canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * D.camfit.wheel)); camStop(); keepOn(); dirty(); }, { passive: false });
 // E165
 const today = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
 function start(sd, S = null) { FOR.fill(0); OCC.fill(0); MARSH.fill(0); NOWAY.clear(); SEEN.clear(); VIS.clear(); EXPL.clear(); CAST.clear(); MEM.clear(); FAMT.clear(); topN = -1; GATES.clear(); seeT = 0; fightT = null; paused = false; seenErr.clear(); K.t = K.flood = K.snow = K.fds = K.gfd = K.wet = K.rain = K.snowing = K.fog = K.storm = K.flash = K.hour = K.strikeT = K.I = K.dir = K.wind = K.blizT = jolt.t = 0; K.wetHour = K.bliz = false; K.vis = Infinity; K.dew = null; K.told = NaN; K.bolts = []; things = []; units = []; pick = []; DEEPV++; for (const d of DEEP) d.length = 0; makeGround(S ? S.seed : sd || Number(location.hash.slice(1)) || today(), !!S); makeUnits(dice(seed + 1)); fire('start'); for (const [name, a] of Object.entries(ARR())) BASE0[name] = a.slice(); BASE0.things = things.slice(); BASE0.shot = things.map((t) => ({ ...t })); if (S) load(S); else fire('begin'); dirty(); } // E2620

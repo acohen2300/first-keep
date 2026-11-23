@@ -3,7 +3,7 @@
 window.AI = (() => {
 const { D, B, SIDES, N, isIdle } = FK;
 // E170
-const whole = FK.things, things = FK.rest, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
+const whole = FK.things, things = FK.rest, units = FK.units, Y = ECON.YIELDS, [FOOD, WOOD, GOLD, STONE, IRON] = Y, A = D.ai, AT = A.turn, MX = A.mix, RG = A.ring, WV = A.wave, SV = A.save, CO = AT.counter, EC = AT.econ, [MINUTE] = D.minute;
 const clock = SIDES.map(() => 0), rates = new Map(), mind = SIDES.map(() => ({})), of = (x) => x || 0, per = (side) => dealt(side); // E1401
 const home = FK.seatOf, born = (h) => FK.trains(h.code)[0]; // E242
 const bought = FK.bought; // E243
@@ -24,7 +24,7 @@ const SN = fromBook('words').end, SN0 = [...SN.sides], naming = () => { const se
 const dealt = (side) => { const sd = FK.seed(); if (!hand || hand.seed !== sd) { hand = { seed: sd, P: deal(sd) }; naming(); } return hand.P[side]; }; // E1401
 // E245
 function spot(code, bx, by, rmin = 0, side, rmax = D.ai.reach) { const n = B[code][1], [sx, sy] = FK.fromBoard(bx, by), ci = Math.floor(sx / D.tile - n / 2), cj = Math.floor(sy / D.tile - n / 2), [fx, fy, cols] = (per(side) || {}).face || [1, 1, false], at = (a, b) => (cols ? [ci + fx * b, cj + fy * a] : [ci + fx * a, cj + fy * b]); // E2461
-  for (let r = rmin; r < rmax; r++) { const ok = []; for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i += j === -r || j === r ? 1 : 2 * r) { const [x, y] = at(i, j); if (ECON.canPlace(code, x, y, side, true, true)) ok.push([x, y]); } if (ok.length) return ok[Math.floor(FK.NS_rng(FK.seed() * 7 + (side ?? 0) * 7919 + [...code].reduce((h, c) => h * 31 + c.charCodeAt(0), 0) % 100003 + count(side, code) * 131)() * ok.length)]; } return null; } // E2687
+  for (let r = rmin; r < rmax; r++) { const ok = []; for (let j = -r; j <= r; j++) for (let i = -r; i <= r; i += j === -r || j === r ? 1 : 2 * r) { const [x, y] = at(i, j); if (ECON.canPlace(code, x, y, side, true, true)) ok.push([x, y]); } if (ok.length) return ok[Math.floor(FK.NS_rng(FK.seed() * MX.seed + (side ?? 0) * MX.side + [...code].reduce((h, c) => h * MX.char + c.charCodeAt(0), 0) % MX.mod + count(side, code) * MX.count)() * ok.length)]; } return null; } // E2687
 function raise(side, code, bx, by, rmin, rmax) { if (!ECON.canPay(side, D.cost[code] || {}) || ECON.capWhy(side, code)) return null; const at = spot(code, bx, by, rmin, side, rmax); // E686
   if (!at) return null; const t = ECON.plan(side, code, ...at, true); if (!t) return null; let n = 0; for (const u of ECON.villagersOf(side).sort((a, b) => dist(a, t) - dist(b, t))) if (n < D.ai.builders && (isIdle(u) || u.job === 'wait' || ECON.jobOf(u) !== 'build')) { ECON.buildAt(u, t); n++; } return t; }
 function wallPlan(h) { const H = D.place.half, R = WP.ring + H, ci = h.i + h.n * H, cj = h.j + h.n * H, mid = FK.MID / D.tile, base = Math.atan2(mid - cj, mid - ci), off = new Map(); let pi = null, pj = null; // E331
