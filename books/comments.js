@@ -1248,5 +1248,6 @@ BOOK("comments", {
  "E2692": {"text": "Each computer is named after the personality it was dealt this match (Albert, Nov 22 18:55, option a): aggressive Raiders, balanced Rivals, defensive Fortress; when two share one, the second and third carry their colour (Green Fortress). The names are written into the words' side list each deal, from a kept copy of the book's"},
  "E2693": {"text": "A tree's kind is weighed by the drawn land it stands on (RELIEF: the hills and hollows), not the flat height every tree tile shares (Albert, Nov 22 18:55: okay; review idx1.md 2); before, every tree read as the plain, so Willow never grew and the hill kinds were rare"},
  "E2694": {"text": "Who felled a building is kept as killer, as for a unit (Albert, Nov 22: the fallen alert named the wrong place): it was written over the building's by, its board height, so every 'has fallen at' read row 1 (I1) whatever the place"},
- "E2695": {"text": "An attack alert names the unit as the game shows it (its rank and civ name), not the shell's base name: Albert saw 'your cataphract' with no unit by that name"}
+ "E2695": {"text": "An attack alert names the unit as the game shows it (its rank and civ name), not the shell's base name: Albert saw 'your cataphract' with no unit by that name"},
+ "E2696": {"text": "The Pioneer (it fells the woods it walks through) is no fighter: like healers, priests and spies it is left out of the army's picks and orders, and is sent on its own (Albert, Nov 22: the Pioneer was swept into army orders)"}
 });
