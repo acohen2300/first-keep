@@ -3,6 +3,7 @@
 #   python3 tools/check.py --same-play  also fail if the match plays differently from the kept one (for builds that must not change play)
 #   python3 tools/check.py --accept     keep this build's match as the new one to compare against (for builds meant to change play)
 #   python3 tools/check.py --deep       also replay three longer matches (other peoples, scenarios, every hazard); slow, for builds that touch much
+# Every build first writes tools/build.txt: the commit it starts from on the first line, then each file it may change, one a line. Any other file changed fails.
 import math, asyncio, json, pathlib, re, sys
 import run
 
@@ -19,6 +20,7 @@ NO_UNIT = 1735
 # Ceilings that may only go down (Albert, Nov 23: the rules become gates, so drift fails the check on its own)
 TYPED = {'index.html': 4590, 'menu.js': 24, 'econ.js': 9, 'combat.js': 13, 'ai.js': 8, 'sound.js': 35}  # numbers other than 0 and 1 typed in the code (rule 1; most of index.html's are the art)
 SPARE_COMMENTS, LOOSE_CITATIONS = 36, 78   # comments the code never uses; citations no entry names
+BUILD = ROOT / 'tools' / 'build.txt'       # the build's own list: the commit it starts from, then every file it may change (rule 11)
 PICTURES_MB = 192             # chosen: half of iPhone Safari's 384 MB ceiling for pictures held in memory
 
 fails = []
@@ -71,6 +73,18 @@ def check_rules():
         if k > TYPED[f]: over.append(f'{f} {k} > {TYPED[f]}')
         elif k < TYPED[f]: print(f'note  {f}: {k} typed numbers, under its ceiling of {TYPED[f]}: lower TYPED to {k}')
     rule('rule 1: no new typed numbers in the code (ceilings may only go down)', not over, ', '.join(over) if over else ', '.join(f'{f} {TYPED[f]}' for f in CODE))
+    # rule 11: every file changed since the build began is named in the build's list; the rest are proven untouched by diff
+    import subprocess
+    if not BUILD.exists(): rule('rule 11: the build names the files it may change (tools/build.txt)', False, 'no tools/build.txt'); return
+    lines = [l.strip() for l in BUILD.read_text(encoding='utf-8').splitlines() if l.strip() and not l.startswith('#')]
+    since, named = lines[0], set(lines[1:]) | {'tools/build.txt'}
+    git = lambda *a: subprocess.run(['git', *a], cwd=ROOT, capture_output=True, text=True)
+    r = git('diff', '--name-only', since)
+    if r.returncode: rule('rule 11: the build names the files it may change (tools/build.txt)', False, f'cannot diff from {since}: {r.stderr.strip()[:120]}'); return
+    new = git('ls-files', '--others', '--exclude-standard').stdout.split()
+    changed = set(r.stdout.split()) | set(new)
+    stray = sorted(changed - named)
+    rule(f'rule 11: only the files the build names changed since {since}; every other file is untouched by diff', not stray, ', '.join(stray[:8]) if stray else f'{len(changed)} changed, all named')
 
 def check_books():
     B = books(); N, Q, E = B['citations'], B['laws'], B['comments']

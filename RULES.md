@@ -21,6 +21,7 @@ Read this before any work. Nothing else is required reading.
 
 - Talk and build are separate. Nothing is built until Albert says "build".
 - One build between previews. Each change inside it is its own commit, so one can be undone without the rest.
+- Each build starts by writing `tools/build.txt`: the commit it starts from, then every file it may change. The check fails if any other file changed (rule 11).
 - No changing a call mid-build. A changed call goes in the next build.
 - Before publishing: `python3 tools/check.py` must print PASS. `python3 tools/publish.py "what it is"` runs it and puts the build on the phone at `/first-keep/fresh/`.
 - No helper agents unless Albert asks for one.

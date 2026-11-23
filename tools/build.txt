@@ -1,0 +1,5 @@
+# Build: honest tests and rule gates (Albert, Nov 23 07:16 "Build"). No game file changes.
+ff19613
+tools/check.py
+RULES.md
+LIST.md
