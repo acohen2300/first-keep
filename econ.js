@@ -170,7 +170,7 @@ function mend(u, t, dt) { const M = t.hpMax, heal = Math.min(M - t.hp, (M / D.bu
   if (Object.keys(due).some((y) => Math.floor(due[y]) > SIDES[u.side].store[y])) { if (u.side === ME) FK.fire('event', 'short', t); return back(u); }
   t.rd = {}; for (const y in due) { spend(u.side, y, Math.floor(due[y]), 'repairs'); t.rd[y] = due[y] - Math.floor(due[y]); } t.hp += heal; }
 // E308
-const goHome = (u) => { const h = u.att === 'focus' && !posted(u) && FK.seatOf(u.side); if (h) walkTo(u, h.bx, h.by); return !!h; }, lose = (u) => { u.lost = u.lost || { x: u.bx, y: u.by, t: bell }; if (u.load) carry(u); else if (!goHome(u)) look(u); }; // E1089
+const goHome = (u) => { const h = u.att === 'focus' && !posted(u) && FK.seatOf(u.side); if (h) walkTo(u, h.bx, h.by); return !!h; }, spent = (t) => t.kind === 'bld' && t.max && t.amount <= 0 && !FK.has(t, 'Regrow'), /* E2690 */ lose = (u) => { u.lost = u.lost || { x: u.bx, y: u.by, t: bell }; if (u.load) carry(u); else if (!goHome(u)) look(u); }; // E1089
 function look(u) { const n = bestFind(u, u.carry, u.lost); if (n) return gatherAt(u, n); if (u.patch) return unbox(u); idle(u); } // E1299
 // E309
 function startWork(u, b) { if (post(b)) { if (full(u, b)) return false; gatherAt(u, b); return true; } const ys = FK.SH[b.code].drop || [], t = ys.length < YIELDS.length && ys.map((y) => bestFind(u, y)).find(Boolean); if (t) gatherAt(u, t); return !!t; }
@@ -231,7 +231,7 @@ FK.on('tick', (dt) => {
   nature(dt);
   for (const t of WK) t.wk = t.crew = 0; WK.length = 0; for (const u of units()) { const j = jobOf(u), t = u.target; if (!t || !(j || u.job === 'build')) continue; if (!t.wkd) { t.wkd = true; WK.push(t); } if (j && j !== 'build') t.wk++; else if (u.job === 'build') t.crew++; } for (const t of WK) t.wkd = false;
   for (const u of units()) { if (u.inside && (u.inside.gone || u.job !== 'inside')) { const e = u.emg && u.inside.gone; out(u); if (e) u.emg = u.scared = true; else if (FK.has(u, 'Gather') && isIdle(u)) resume(u); } if (u.job === 'shelter' && !u.path) enter(u); if (!FK.has(u, 'Gather') || u.path || u.inside || u.den) continue; const t = u.target; // E2504
-    if (u.job === 'gather') { if (!t || !alive(t)) { lose(u); continue; } if (!beside(u, t)) { gatherAt(u, t); continue; }
+    if (u.job === 'gather') { if (!t || !alive(t) || spent(t)) { lose(u); continue; } if (!beside(u, t)) { gatherAt(u, t); continue; }
       u.tool = FK.WORK[t.kind] ?? FK.WORK.other; stroke(u, t, 'work'); const cap = FK.stat(u.code, u.side, 'carry'), g = rateOf(t, u.side) * dt * hungerOf(u.side) * D.health.work ** (u.sick > FK.K.t) * D.events.rows.circus.mul ** (u.cheer > FK.K.t), n = Math.min(g, t.amount ?? g, cap - u.load); t.workT = bell; // E347
       if (FK.has(t, 'Make')) { make(u.side, t, g); continue; } if (FK.has(t, 'Flock')) { earn(u.side, 'food', g, 'gather'); continue; } if (FK.has(t, 'Store')) { earn(u.side, yieldOf(t), n, 'gather'); if (t.max) t.amount -= n; continue; } u.load += n; if (t.kind !== 'bld') FK.take(t, n); else if (t.max) { t.amount -= n; const root = FK.has(t, 'Regrow') && D.regrow[t.kind].root; if (root && t.amount <= 0) { t.amount = t.max * root; t.bare = true; } } if (u.load >= cap - D.full || (!n && u.load)) carry(u); }
     else if (u.job === 'carry') { const b = FK.dropFor(u, u.carry); if (!b || !beside(u, b)) { carry(u); continue; } earn(u.side, u.carry, u.load, 'gather'); u.got = (u.got || 0) + u.load; hist(u, u.carry, u.load); u.load = 0; if (u.side === ME) FK.fire('event', 'drop.' + u.carry, b);
