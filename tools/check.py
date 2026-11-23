@@ -16,7 +16,7 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
     (12, ['Easy', 'Han', '30 min', 'Siege'], 20),
     (13, ['Hard', 'Persian', 'Conquest', 'Silk Road', 'Hardest', 'Famine', 'Weather', 'Drought', 'Outlaws', 'Plague'], 25),
 ]
-NO_UNIT = 1731
+NO_UNIT = 0
 # Ceilings that may only go down (Albert, Nov 23: the rules become gates, so drift fails the check on its own)
 TYPED = {'index.html': 4563, 'menu.js': 24, 'econ.js': 9, 'combat.js': 10, 'ai.js': 3, 'sound.js': 16}  # numbers other than 0 and 1 typed in the code (rule 1; most of index.html's are the art)
 SPARE_COMMENTS, LOOSE_CITATIONS = 0, 13   # comments the code never uses; sources (not his rulings) no entry names
@@ -121,7 +121,7 @@ def check_books():
     for e in B['measure'].values():
         v, u = e['value'], e.get('unit'); n = leaves(v)
         bare += 0 if isinstance(u, str) or (isinstance(v, list) and u) or (isinstance(u, dict) and '*' in u) else n - sum(leaves(x) for k, x in v.items() if k in u) if isinstance(v, dict) and isinstance(u, dict) else n  # '*': every key of the table has the same fields, said once
-    rule(f'units: no more than {NO_UNIT} numbers inside tables with no unit said (open work; may only go down)', bare <= NO_UNIT, f'{bare}')
+    rule(f'units: every number in the Measurements book says its unit ({NO_UNIT} allowed without)', bare <= NO_UNIT, f'{bare}')
 
 async def play(after_another=False):
     async with run.game(SEED) as pg:
