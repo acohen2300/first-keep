@@ -1,15 +1,12 @@
-# Build: dead book entries out (Albert, Nov 23 08:42 "Build"). Must play exactly as kept (--same-play).
-ca412be
+# Build: the war elephant and the soldiers who stood under arrows (Albert, Nov 23 10:00 "Build": update the elephant, its force, health and whatever else). Changes play: its own preview.
+462a424
+books/measure.js
+books/mass.js
+books/shells.js
 books/comments.js
 books/citations.js
-books/measure.js
-books/words.js
-books/sprites.js
-books/sound.js
-books/mass.js
-books/screen.js
-books/tech.js
-books/colours.js
 books/laws.js
+books/words.js
 tools/check.py
+tools/kept.json
 LIST.md
