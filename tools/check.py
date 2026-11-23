@@ -379,6 +379,15 @@ async def struck_on_march():
         await pg.evaluate("[1, 3].forEach((s) => WAR.treaty(0, s, 'peace'))"); await pg.evaluate(CALM); await run.step(pg, 10); await pg.evaluate(SET); await run.step(pg, 70)
         return await pg.evaluate(LOOK)
 
+async def rush():
+    """Fourteen of our foot are sent at fourteen archers coming on to shoot them: once under the arrows they run in (Herodotus 6.112, Marathon), so they get within 3 tiles of the archers, not stand off at their range."""
+    SET = "(() => { const h = fk.seatOf(0), N = fk.N, T = fk.D.tile, code = (cls) => units.find((u) => u.side === 0 && fk.SH[u.code].class === cls).code, block = (c, side, k0, n, into) => { for (let d = 0; d < 12 && into.length < n; d++) for (let dx = -d; dx <= d && into.length < n; dx++) for (const dy of [-d, d]) { const k = k0 + dx + dy * N; const e = into.length < n && fk.walkable(k) && !units.some((u) => u.k === k) && fk.spawn(c, side, k, fk.rng); if (e) into.push(e); } return into; }; window.OURS = block(code('Foot'), 0, fk.tileAt(h.bx + 30 * T, h.by + 6 * T), 14, []); window.BOWS = block(code('Archers'), 2, fk.tileAt(h.bx + 42 * T, h.by + 6 * T), 14, []); WAR.attack(2, OURS[0].k, BOWS); WAR.order(OURS, BOWS[0], BOWS[0].k); })()"
+    LOOK = "(() => { const O = OURS.filter((u) => units.includes(u)), B = BOWS.filter((u) => units.includes(u)); return Math.min(99, ...O.map((u) => Math.min(...B.map((v) => Math.hypot(v.bx - u.bx, v.by - u.by) / fk.D.tile)))); })()"
+    async with run.game(SEED, test=True) as pg:
+        await pg.evaluate("[1, 3].forEach((s) => WAR.treaty(0, s, 'peace'))"); await pg.evaluate(CALM); await run.step(pg, 10); await pg.evaluate(SET); close = 99
+        for _ in range(15): await run.step(pg, 1); close = min(close, await pg.evaluate(LOOK))
+        return close
+
 async def full_lines():
     """Two barracks of yours: a Train tap on one whose line is full goes to the other's line, with a note naming where it went; with both full it is refused."""
     async with run.game(SEED, test=True) as pg:
@@ -597,6 +606,8 @@ async def check_game():
     rule('a tap on one man of a group coming on: nobody goes for the man tapped at the back, every soldier fights a man of its front, never one deeper unless that man is striking him, none of ours past their front, and a minute on we have lost fewer than they have (its own promise, never checked until Nov 23); a group gone back into its own town is let go', fb == 0 and fd == 0 and fc == 0 and fp == 0 and fm < ff, f'on the man tapped: {fb}; most on a man deeper than the front: {fd}; most of ours past their front: {fp}; a minute on, lost {fm} of 20, they lost {ff} of 20' + f'; {ft} of theirs put back in their town, {fc} of ours still on them 3 s later')
     sm = await struck_on_march()
     rule('a group moved past archers who shoot it kills them and goes on to its spot', sm[1] == 5 and sm[2] >= 1, f'of ours left, archers down of 5, ours at the spot: {sm}')
+    rc = await rush()
+    rule('foot sent at archers run in under the arrows and get within 3 tiles of them', rc < 3, f'closest any came: {rc:.1f} tiles')
     fl, fe = await full_lines()
     rule('a Train tap on a full line goes to the least busy barracks with room, says so in a note, and is refused only when every line is full', fl[1:5] == [fl[0], True, fl[0], 1] and fl[5] == fl[11] and fl[6:11] == [fl[0], False, fl[0], fl[0], 1] and not fe, f'line size, first filled, tap taken, the two lines, the note, second filled, last tap taken, the two lines, refused: {fl}; errors: {fe[:2]}')
     ti = await thin_ice()
