@@ -16,7 +16,7 @@ DEEP = [  # (seed, labels tapped on the new-game screen, game minutes)
     (12, ['Easy', 'Han', '30 min', 'Siege'], 20),
     (13, ['Hard', 'Persian', 'Conquest', 'Silk Road', 'Hardest', 'Famine', 'Weather', 'Drought', 'Outlaws', 'Plague'], 25),
 ]
-NO_UNIT = 1735
+NO_UNIT = 1731
 # Ceilings that may only go down (Albert, Nov 23: the rules become gates, so drift fails the check on its own)
 TYPED = {'index.html': 4563, 'menu.js': 24, 'econ.js': 9, 'combat.js': 10, 'ai.js': 3, 'sound.js': 16}  # numbers other than 0 and 1 typed in the code (rule 1; most of index.html's are the art)
 SPARE_COMMENTS, LOOSE_CITATIONS = 0, 13   # comments the code never uses; sources (not his rulings) no entry names
@@ -73,6 +73,9 @@ def check_rules():
         if k > TYPED[f]: over.append(f'{f} {k} > {TYPED[f]}')
         elif k < TYPED[f]: print(f'note  {f}: {k} typed numbers, under its ceiling of {TYPED[f]}: lower TYPED to {k}')
     rule('rule 1: no new typed numbers in the code (ceilings may only go down)', not over, ', '.join(over) if over else ', '.join(f'{f} {TYPED[f]}' for f in CODE))
+    # a comment code ends its line: anything after // E123 on the same line is commented out (Nov 23: a code put mid-line silently cut the rest of hit())
+    cut = [f'{f}:{n}' for f in CODE for n, l in enumerate((ROOT / f).read_text(encoding='utf-8').split('\n'), 1) for m in re.finditer(r'// (E\d+)', l) if not re.fullmatch(r'(\s+E\d+)*\s*', l[m.end():])]
+    rule('every // E code ends its line, so no code hides behind a comment', not cut, ', '.join(cut[:6]))
     # rule 11: every file changed since the build began is named in the build's list; the rest are proven untouched by diff
     import subprocess
     if not BUILD.exists(): rule('rule 11: the build names the files it may change (tools/build.txt)', False, 'no tools/build.txt'); return
