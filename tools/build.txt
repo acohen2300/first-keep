@@ -1,4 +1,8 @@
-# Build: record the clock ruling (Albert, Nov 24 00:30 "Check again"): his Nov 19 12:37 clock, lost in the Nov 20 05:51 purge, goes back into RULINGS.md and LIST.md. Docs only; must play exactly as kept.
-9a13c69
-RULINGS.md
+# Build: the pathing fix (Albert, Nov 24 06:49 "Let's do the pathing fix now"): a wave leaves only with a whole route to its mark, else that rival is left alone a while; a wave whose every soldier stands with no way on, short of its mark, turns home at once. Changes how the rivals play.
+e5382b3
+combat.js
+ai.js
+books/measure.js
+books/comments.js
+tools/check.py
 LIST.md
