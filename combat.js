@@ -108,7 +108,7 @@ const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { 
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
 FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= 0) { const G = guardsOf(c).filter(alive); c.convoy = G.length > 0 && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046
 function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, wall: false, stand: false, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
-function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; dress(army, k); if (side === ME) FK.fire('event', 'march', army[0]); return army.length; }
+function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; if (!dress(army, k)) { waves[side] = null; return 0; } if (side === ME) FK.fire('event', 'march', army[0]); return army.length; } // E2710
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
 // E392
 function slots(S, shape, drill) { const n = S.length, nf = sum(S, (u) => !ranged(u)), turn = 2 * Math.PI, ring = (Math.max(nf, GR.ring) * GR.gap) / turn, w = shape === 'wide' ? SP.wide : 1; // E2664

@@ -1250,5 +1250,8 @@ BOOK("comments", {
  "E2706": {"text": "an elephant struck by a shot or a thrown blow loses D463 panic × the share of its health the blow took from its nerve (N573: concentrated missile fire made elephants turn and flee)"},
  "E2707": {"text": "an elephant gone amok (routing) tramples whoever is within its reach, friend or foe, each at most once each D463 amok s (N573: wounded elephants turned on their own troops); its own side takes the blow too"},
  "E2708": {"text": "isEl: a soldier of the elephant kind (its stat tags)"},
- "E2709": {"text": "The side that felled the last seat is the building's killer (Nov 23: the line still read its by, since Nov 22 the board row, so a fallen side's store went to nobody, or to the side whose number the row was)"}
+ "E2709": {"text": "The side that felled the last seat is the building's killer (Nov 23: the line still read its by, since Nov 22 the board row, so a fallen side's store went to nobody, or to the side whose number the row was)"},
+ "E2710": {"text": "A wave sets out only on a whole route to its mark: with none it is no wave, and the attack says so (Nov 24: a wave was kept with no route found, its soldiers left standing)"},
+ "E2711": {"text": "A rival no route reaches now is left alone cool s, so the next turn weighs another (Nov 24: red sent wave after wave at a town no land route reached)"},
+ "E2712": {"text": "No way on: every soldier of the wave stands with no route and no blow taken within fight s, lost tiles or more short of its mark, so it turns home at once rather than standing stall s (Nov 24: red's waves stood 45 s on a river bank, 150 tiles short)"}
 });
