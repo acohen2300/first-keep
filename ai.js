@@ -124,7 +124,7 @@ function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side),
   yield; const move = (u, y) => { const f = u && ECON.bestFind(u, y); if (f) ECON.gatherAt(u, f); }, giver = (y) => vs.find((v) => ECON.jobOf(v) === y && of(v.load) < AT.carry && !(ECON.posted(v) && FK.has(v.target, 'Make')));
   if (first) { const tb = famine && first === FOOD ? Infinity : plan[first].t; if (idle) move(idle, first);
     else { let d = null, dv = -Infinity; for (const y of Y) { const Q = plan[y], gain = Q.inc - Q.rho; if (y === first || !Q.n || (famine && y === FOOD)) continue; const after = Q.short && (pos(gain) ? Q.short / gain : Infinity); // E540
-        if (Q.short ? after >= tb : runsOut(side, y, Q, Q.n - 1, ECON.outOf(side, y) / MINUTE, of(all[y]), isFinite(tb) && tb)) continue; const v = Q.short ? tb - after : Infinity; if (v > dv) { dv = v; d = y; } }
+        if (Q.short ? after >= tb : runsOut(side, y, Q, Q.n - 1, ECON.outOf(side, y) / MINUTE, of(all[y]), isFinite(tb) && tb)) continue; const v = Q.short ? tb - after : Infinity; if (v > dv || (v === dv && (s.store[y] - s.store[d] || Q.n - plan[d].n) > 0)) { dv = v; d = y; } } // E2718
       if (d) move(giver(d), first); } }
   else { const X = AT.mix, M0 = Object.fromEntries(Y.map((y, i) => [y, P.mix[i]])), M1 = s.age ? M0 : young(M0, X.stone), M = s.age < X.iron ? young(M1, X.early) : P.wonder ? Object.fromEntries(Y.map((y) => [y, M1[y] + X.wonder])) : M1; // E541
     const all = total(Y, (y) => M[y]) || 1, [[top, gap], ...rest] = Y.map((y) => [y, (M[y] / all) * vs.length - plan[y].n]).sort((a, b) => b[1] - a[1]), [low] = rest.at(-1); if (idle) move(idle, top); else if (gap >= 1) move(giver(low), top); }
