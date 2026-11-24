@@ -1,8 +1,14 @@
-# Build: the pathing fix (Albert, Nov 24 06:49 "Let's do the pathing fix now"): a wave leaves only with a whole route to its mark, else that rival is left alone a while; a wave whose every soldier stands with no way on, short of its mark, turns home at once. Changes how the rivals play.
-e5382b3
-combat.js
+# Build: batch A, fixes (Albert, Nov 24 18:20 "Build it all let's go"): rivals fix their own shortages; the log keeps each warning's first time; stampede, own-side kills, drowning, "no way". Changes how the rivals play.
+238d3d3
 ai.js
+econ.js
+combat.js
+menu.js
+index.html
 books/measure.js
 books/comments.js
+books/words.js
+books/citations.js
 tools/check.py
+tools/build.txt
 LIST.md
