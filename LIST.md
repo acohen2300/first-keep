@@ -3,7 +3,7 @@
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
 ## Now
-- Latest build: v106 (https://acohen2300.github.io/first-keep/fresh/v106/)
+- Latest build: v108 (https://acohen2300.github.io/first-keep/fresh/v108/)
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
@@ -43,6 +43,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - Stampede killed soldiers too (2 of his, 1 of red's, minute 201)
 - Over the cap again: red 171 to 174 of 168, green 186 of 180
 - 350 taps met "That line is full", 63 "No room"; he removed 25 of his own villagers to fit soldiers
+- [x] Rival waves stood about 150 tiles short of his town and went home (Nov 24, the pathing build): a soldier's jam check measured the straight line to his place, so a road bending round water read as a jam and he stood; now it counts road left. Also: a wave sets out only on a whole route, and one stood with no way on turns home at once. Traced on seed 2865904926: red reached 15 tiles of his town three times in 25 minutes, white 24
 - Red sat on 24 villagers and 9 soldiers to minute 48; white sat at 180 with no goal for over 100 minutes; no rival touched a building of his until minute 206 (his town: a river north, sea south and west, one wall with towers east)
 - His two Mints likely turned 8,800 stone into gold he did not need: stone at 0 from minute 116 (not traced)
 - Frames of 1.9 s at minute 115 and 1.2 s at minute 141 (ask: paused?)
