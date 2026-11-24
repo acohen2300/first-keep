@@ -34,6 +34,19 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - A rival sat on 25,000 wood, 14,000 stone, 12,000 iron with a full army and no goal (the selling-surplus job)
 - Keep this log as the benchmark for after step 3
 
+## From his second v106 match, Nov 23 (237 min, seed 3378513659, golden; read from the copied log)
+- [x] A fallen side's store went to nobody (his find: "why am I not getting food from killing other towns?"): the side-falls line read the building's old by, since Nov 22 its board row; fixed, with a test that fells a side (v107)
+- White's villagers drowned in batches, about 88 in the match (13 at minute 93, 14 at 96, 41 from 202 to 208); cause unknown
+- "No way": 30 or more orders, up to 104 soldiers at once, on his attacks at A9 to A11 and on town centers
+- Stampede killed soldiers too (2 of his, 1 of red's, minute 201)
+- Over the cap again: red 171 to 174 of 168, green 186 of 180
+- 350 taps met "That line is full", 63 "No room"; he removed 25 of his own villagers to fit soldiers
+- Red sat on 24 villagers and 9 soldiers to minute 48; white sat at 180 with no goal for over 100 minutes; no rival touched a building of his until minute 206 (his town: a river north, sea south and west, one wall with towers east)
+- His two Mints likely turned 8,800 stone into gold he did not need: stone at 0 from minute 116 (not traced)
+- Frames of 1.9 s at minute 115 and 1.2 s at minute 141 (ask: paused?)
+- Traps: the code runs each beat but nothing lays one; drop the trap look-up until the natives' design pass
+- For after the freeze (his asks, Nov 23 22:27): a side fights on after its last seat falls, until its last person is dead, its people shown on the map; food from conquest
+
 ## Open, older
 - "Tap to move and they don't move": no repro yet (copy the log right after it happens)
 - Tapping one of your own soldiers while giving an order changes the pick
