@@ -1,14 +1,18 @@
-# Build: batch A, fixes (Albert, Nov 24 18:20 "Build it all let's go"): rivals fix their own shortages; the log keeps each warning's first time; stampede, own-side kills, drowning, "no way". Changes how the rivals play.
-238d3d3
+# Build: batch A, fixes; batch B, cards and controls (Albert, Nov 24 18:20 "Build it all let's go"): rivals fix their own shortages; the log; stampede, ice, "no way"; the villager card with Build and clear jobs, caps shown, one look for the cards, Mode and formations as ruled, boarding up. Changes how the rivals play.
+
 ai.js
 econ.js
 combat.js
 menu.js
 index.html
+sound.js
 books/measure.js
 books/comments.js
 books/words.js
 books/citations.js
+books/screen.js
+books/laws.js
+books/tech.js
 tools/check.py
 tools/build.txt
 LIST.md
