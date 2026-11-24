@@ -9,7 +9,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
   2b. [x] Units book (Nov 23): books/units.js, 120 words; 160 spellings down to one each (s/seconds, px/pixels, °C/degrees C; "power" the exponent is now "exponent", upkeep's "shares" are "person shares", the world's "units" are "world units"); the check refuses a unit not in the book
   3. [ ] Rule fixes that change play, one build each with his playtest: what-beats-what back on the Train tile; full load 8 at 2.5 kg (one weight, D53 vs W24); cold ration 0.385 (open N275 first); the laws' fog text (QAN); the five dead research get their effects
-  - The clock (his Nov 19 ruling, never built, lost in the Nov 20 purge): D20 day 240 to 300 s, D21 season 360 to 900, D22 year 1,440 to 3,600, night 25% of the day; re-time what hangs on them (ice degree-days, fish's yearly regrowth, fields and tree farms' 36 min, upkeep, dry days, leaf stages), the economy kept per minute of play. Source: docs/3 Locks/Drafts/03 Time - the clocks.md at commit 442a1fa^
+  - Deferred (his call, Nov 24: "too complex for now"): the clock (his Nov 19 ruling, never built, lost in the Nov 20 purge): D20 day 240 to 300 s, D21 season 360 to 900, D22 year 1,440 to 3,600, night 25% of the day; re-time what hangs on them (ice degree-days, fish's yearly regrowth, fields and tree farms' 36 min, upkeep, dry days, leaf stages), the economy kept per minute of play. Source: docs/3 Locks/Drafts/03 Time - the clocks.md at commit 442a1fa^
   - Sweep the Nov 20 purge (commit 442a1fa^, docs/3 Locks and docs/4 Now) for other rulings that were owed and are not in RULINGS.md
   - From the look-up (docs/log/chosen-lookup-2026-11-23.md, 25 of 60 done), for his call, each its own build: wade to 1.0 m (D24) or deepen the river; wolf packs of about 6; mortar's line at 4.4 °C; the boar 1.14 of a deer; the day's swing about 11 °C; the winter −2 °C; decide what a unit of food weighs before the load at 8
 - After the freeze: the computers selling surplus; computers trying new things; pioneers by person, then machine; sounds (the under-attack sound first; 8 written but never played); bridges (spec on branch fresh-notes, review/spec-roads.md); zeal and priests
@@ -49,6 +49,20 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - Frames of 1.9 s at minute 115 and 1.2 s at minute 141 (ask: paused?)
 - Traps: the code runs each beat but nothing lays one; drop the trap look-up until the natives' design pass
 - For after the freeze (his asks, Nov 23 22:27): a side fights on after its last seat falls, until its last person is dead, its people shown on the map; food from conquest
+
+## From his v108 match, Nov 24 (123 min, seed 3151351816, fertile, Easy, a win; read from the copied log)
+- Rivals don't fix their own shortages: side 2 under 100 wood from minute 1 to 56 and at 0 to 40 for most of 58 to 111 with 93 villagers, army stuck at 141, goal stuck 40 minutes; side 3 at 37 stone from minute 68 to the end. First to fix
+- The copied log folds every "X is attacked at Y" into one line (keyed on the last 4 words): 1,253 warnings show as one at 122:48, so when attacks began is lost, and nothing else reached the news after the first one (not even a side falling?); check whether the feed in the game does the same
+- Side 1 killed 6 of its own soldiers (amok elephants? with the own-side kills above)
+- Confirmed working: rival waves reached his town (minutes 8, 46, 49, 81; at 84 he lost 7 villagers and 2 soldiers); spoils at 117 (63,651); no rival over the cap; worst frame 0.8 s
+- Easy is too easy: his army sat at 42 to 46 from minute 50 to 103 with 20,000 food and room for 52 more, and still won; nothing pressures a big bank (a balance call, his). Next: his Normal match
+
+## His v107 play notes, Nov 24 (screens looked at Nov 24)
+- One layout pass for the cards, as one build: the bottom has two dark shadows that meet in a double edge; Hide is a lone "−" floating over the map above the bar; "Villager › Food" reads as a path, not her work ("Gathering food"); two Villager labels stacked (gold chip and green chip; he wants the gold one "Villager Control"); separators "→" on Pause and "›" on the cards; "pick troops" (own tab above the bar) and "choose a job below" (inline, mid-row) differ in place and size
+- The pause menu takes about 30% of the screen for 6 buttons (Speed and Sounds side by side?)
+- White outlines on the job boxes, war buttons and speed boxes mean nothing (with the colour talk)
+- His call: the villager card shows town-wide job counts and no Build; should it show that villager (her job, plus Build) and leave the town board to the Jobs tab? (Claude: yes)
+- His call: every start looks the same by his Nov 10 ruling #6 (the home finds at fixed spots, the home river cut fixed); keep, or rotate/mirror the layout each game? (Claude: rotate/mirror, spacing kept fair)
 
 ## Open, older
 - "Tap to move and they don't move": no repro yet (copy the log right after it happens)
