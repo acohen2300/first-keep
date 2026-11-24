@@ -62,6 +62,7 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - Zeal and priests: to be fixed, not the priority (Nov 23)
 
 ## Economy and world
+- The clock (Nov 19, 12:37; lost in the Nov 20 purge, restored Nov 24): a year is an hour (3,600 s), four seasons of 900 s, three days a season (a day 300 s, 12 a year), night 25% of the day (75 s); the economy kept per minute of play; work speed kept as a declared game rule. Night at 25% is his call, not nature's (real night averages half the day); it replaces the Nov 11 "length as nature's" for length (the gradual transitions stay)
 - A full load is 8 (2.5 kg a wood) (Nov 23)
 - Cold ration 0.385, cited to its source (Nov 23)
 - Fog of war is a Start-page option; weather fog stays in (Nov 23)

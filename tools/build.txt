@@ -1,6 +1,4 @@
-# Build: a fallen side's store goes to its conqueror (Albert, Nov 23 22:33 "Let's finish the bug fixes"): the side-falls line read the building's old by (now its board row) for its killer. Changes play when a side falls.
-14a416c
-econ.js
-tools/check.py
-books/comments.js
+# Build: record the clock ruling (Albert, Nov 24 00:30 "Check again"): his Nov 19 12:37 clock, lost in the Nov 20 05:51 purge, goes back into RULINGS.md and LIST.md. Docs only; must play exactly as kept.
+9a13c69
+RULINGS.md
 LIST.md
