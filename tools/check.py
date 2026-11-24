@@ -131,6 +131,20 @@ def check_books():
         v, u = e['value'], e.get('unit'); n = leaves(v)
         bare += 0 if isinstance(u, str) or (isinstance(v, list) and u) or (isinstance(u, dict) and '*' in u) else n - sum(leaves(x) for k, x in v.items() if k in u) if isinstance(v, dict) and isinstance(u, dict) else n  # '*': every key of the table has the same fields, said once
     rule(f'units: every number in the Measurements book says its unit ({NO_UNIT} allowed without)', bare <= NO_UNIT, f'{bare}')
+    # the Units book: one word per unit; 'A per B' is a word over the 'one' of another ('per B' alone is a rate)
+    words, ones = {e['word'] for e in B['units'].values()}, {e['one'] for e in B['units'].values() if 'one' in e}
+    def known(u):
+        if u in words: return True
+        head, *tail = ('' if u.startswith('per ') else u.split(' per ')[0]), *(u[4:] if u.startswith('per ') else u.partition(' per ')[2]).split(' per ')
+        return (head == '' or head in words) and tail != [''] and all(t in ones for t in tail)
+    said = set()
+    def walk(u): said.add(u) if isinstance(u, str) else [walk(x) for x in (u.values() if isinstance(u, dict) else u or [])]
+    for e in B['measure'].values(): walk(e.get('unit'))
+    odd = sorted(u for u in said if not known(u))
+    rule('units: every unit said is in the Units book', not odd, ', '.join(odd[:8]) if odd else f'{len(said)} said, {len(words)} words')
+    twice = sorted(w for w in words if sum(1 for e in B['units'].values() if e['word'] == w) > 1)
+    spare = sorted(w for w in words if not any(u == w or u.startswith(w + ' per ') for u in said) and not any(e['word'] == w and e.get('one') and any(u.endswith('per ' + e['one']) or (' per ' + e['one'] + ' per ') in u for u in said) for e in B['units'].values()))
+    rule('units: no word twice, none unused', not twice and not spare, ', '.join(twice + spare))
 
 async def play(after_another=False):
     async with run.game(SEED) as pg:
