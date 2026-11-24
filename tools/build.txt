@@ -1,6 +1,6 @@
-# Build: the Chosen look-up, batch 2 (Albert, Nov 23 20:09 "Build"): sources looked up, two cited where they agree, no number changed. Must play exactly as kept.
-99c88a7
-books/citations.js
-books/measure.js
+# Build: a fallen side's store goes to its conqueror (Albert, Nov 23 22:33 "Let's finish the bug fixes"): the side-falls line read the building's old by (now its board row) for its killer. Changes play when a side falls.
+14a416c
+econ.js
+tools/check.py
+books/comments.js
 LIST.md
-docs/log/chosen-lookup-2026-11-23.md
