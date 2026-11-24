@@ -1249,5 +1249,6 @@ BOOK("comments", {
  "E2705": {"text": "a foot or horse soldier fighting within the crowd of an enemy elephant loses D463 fear of nerve a second (N571: their sight, smell and trumpeting terrified men and horses)"},
  "E2706": {"text": "an elephant struck by a shot or a thrown blow loses D463 panic × the share of its health the blow took from its nerve (N573: concentrated missile fire made elephants turn and flee)"},
  "E2707": {"text": "an elephant gone amok (routing) tramples whoever is within its reach, friend or foe, each at most once each D463 amok s (N573: wounded elephants turned on their own troops); its own side takes the blow too"},
- "E2708": {"text": "isEl: a soldier of the elephant kind (its stat tags)"}
+ "E2708": {"text": "isEl: a soldier of the elephant kind (its stat tags)"},
+ "E2709": {"text": "The side that felled the last seat is the building's killer (Nov 23: the line still read its by, since Nov 22 the board row, so a fallen side's store went to nobody, or to the side whose number the row was)"}
 });

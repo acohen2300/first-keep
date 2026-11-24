@@ -430,6 +430,15 @@ async def elephant():
         armoured = await pg.evaluate(SHOOT)
         return trampled, fear, own, bare, armoured
 
+async def spoils():
+    """A fallen side's store goes to the side that felled its last seat (Nov 23: it went to nobody; the line read the building's board row for its killer)."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 5)
+        return await pg.evaluate("""(() => { const S = SIDES, Y = ['food', 'wood', 'stone', 'gold', 'iron']; Object.assign(S[2].store, { food: 111, wood: 2222, stone: 3333, gold: 4444, iron: 555 });
+          const had = Y.map((y) => S[0].store[y]), theirs = Y.map((y) => S[2].store[y]), killer = units.find((u) => u.side === 0);
+          for (const b of fk.blds().filter((b) => b.side === 2 && fk.has(b, 'Seat'))) WAR.die(b, killer);
+          return [Y.map((y, i) => S[0].store[y] - had[i] >= theirs[i]), Y.map((y) => S[2].store[y]), ECON.fell(2)]; })()""")
+
 async def full_lines():
     """Two barracks of yours: a Train tap on one whose line is full goes to the other's line, with a note naming where it went; with both full it is refused."""
     async with run.game(SEED, test=True) as pg:
@@ -652,6 +661,8 @@ async def check_game():
     rule('foot sent at archers run in under the arrows and get within 3 tiles of them', rc < 3, f'closest any came: {rc:.1f} tiles')
     et, ef, eo, eb, ea = await elephant()
     rule('the war elephant: its blow tramples more than the one man it strikes, enemy foot near it lose nerve, arrows shake it, and gone amok it tramples its own', et >= 2 and ef < 1 and eo >= 1 and eb[0] > 0, f'enemy foot hurt in 8 s: {et} of 8; their least nerve: {ef:.2f}; own foot hurt by the amok one: {eo}; nerve lost to ten arrows, bare and armoured: {eb[0]:.2f}, {ea[0]:.2f}')
+    sp = await spoils()
+    rule('a fallen side\'s whole store goes to the side that felled its last seat', sp[2] and all(sp[0]) and not any(sp[1]), f'fell: {sp[2]}; the conqueror got all of each yield: {sp[0]}; left with the fallen: {sp[1]}')
     fl, fe = await full_lines()
     rule('a Train tap on a full line goes to the least busy barracks with room, says so in a note, and is refused only when every line is full', fl[1:5] == [fl[0], True, fl[0], 1] and fl[5] == fl[11] and fl[6:11] == [fl[0], False, fl[0], fl[0], 1] and not fe, f'line size, first filled, tap taken, the two lines, the note, second filled, last tap taken, the two lines, refused: {fl}; errors: {fe[:2]}')
     ti = await thin_ice()
