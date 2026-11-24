@@ -1,8 +1,9 @@
-# Build: sources (Albert, Nov 23 17:41 "Build"): every source an entry names, or retired with its reason. No game file changes; must play exactly as kept.
-4173a76
+# Build: the Units book (Albert, Nov 23 19:19 "Build"): one word per unit, the check refuses any other; tonight's match bugs on the list; the Chosen numbers looked up, none changed. No game file changes; must play exactly as kept.
+5f32b4d
 tools/check.py
+books/units.js
+books/measure.js
 books/citations.js
-books/laws.js
-books/colours.js
 LIST.md
-docs/log/sources-retired-2026-11-23.md
+RULES.md
+docs/log/chosen-lookup-2026-11-23.md
