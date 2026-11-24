@@ -7,6 +7,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
+  2b. [x] Units book (Nov 23): books/units.js, 120 words; 160 spellings down to one each (s/seconds, px/pixels, °C/degrees C; "power" the exponent is now "exponent", upkeep's "shares" are "person shares", the world's "units" are "world units"); the check refuses a unit not in the book
   3. [ ] Rule fixes that change play, one build each with his playtest: what-beats-what back on the Train tile; full load 8 at 2.5 kg (one weight, D53 vs W24); cold ration 0.385 (open N275 first); the laws' fog text (QAN); the five dead research get their effects
 - After the freeze: the computers selling surplus; computers trying new things; pioneers by person, then machine; sounds (the under-attack sound first; 8 written but never played); bridges (spec on branch fresh-notes, review/spec-roads.md); zeal and priests
 
@@ -19,6 +20,18 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - Groups break at about 30% losses and archer-heavy armies broke in every fight
 - His amok elephant killed 4 of his own (working as ruled; noted)
 - A band holds while the foe comes on, also under archers who stop at range (partly fixed: they run in)
+
+## From his v106 match, Nov 23 (155 min, seed 1845505063, stony; read from the copied log, not yet traced in code)
+- A rival over the people cap: white at 186 of 180 from minute 107 to 117
+- 8 of his villagers lost to "stampede" at 137:00 with no elephants of his own; cause unknown; no warning he would see
+- Own-side kills: 1 of his at 134:00; 3 of white's by white at 154:00 (white had war elephants: amok?)
+- The copied log orders the sides two ways: stores and armies as you, red, green, white; losses as you, green, red, white
+- Warnings don't reach him: he never opened the news feed in 155 minutes (the stampede, the wall, the elephant under attack were all there); they belong in sound and on the map (with the sounds work). The feed also printed about 60 wall lines for one choke point
+- Frames of 1.0 s at minute 98 and 1.1 s at minute 121 (ask: paused?)
+- He starved at food 0 to 1 from 147 to 153 holding 13,900 stone; upkeep took about 70% of income at a full army (D211 as built; a balance call, his)
+- 129 taps met "That line is full", 37 "No room: build a dwelling" (evidence for the people-cell item above); Mode refused twice behind Formations
+- A rival sat on 25,000 wood, 14,000 stone, 12,000 iron with a full army and no goal (the selling-surplus job)
+- Keep this log as the benchmark for after step 3
 
 ## Open, older
 - "Tap to move and they don't move": no repro yet (copy the log right after it happens)
