@@ -24,7 +24,7 @@ const gap = (u, p) => FK.dist(u, p) / T, dir = (dx, dy) => { const d = Math.hypo
 const ranged = (u) => stat(u).rng > FL.melee, routing = (u) => u.job === 'rout' && u.routAt != null, clsOf = (c) => FK.SH[c].class, rider = (u) => clsOf(u.code) === 'Riders', engine = (u) => clsOf(u.code) === 'Engines';
 const TK = FK.TK, knows = (side, k) => !!SIDES[side] && SIDES[side].techs.has(TK[k]); // E382
 // E383
-const SQ = { plan: [], form: [], temper: [], intent: [], sel: null }, SHAPES = Object.keys(FM).filter((k) => !['column', 'wide', 'crescent'].includes(k)), DIAL = { temper: WD.tempers, form: SHAPES, intent: WD.intents };
+const SQ = { plan: [], form: [], temper: [], intent: [], sel: null }, SHAPES = Object.keys(FM).filter((k) => !['column', 'wide', 'crescent', 'battery'].includes(k)), DIAL = { temper: WD.tempers, form: SHAPES, intent: WD.intents };
 const fresh = () => { SQ.plan = WD.squads.map(() => ({})); SQ.temper = WD.squads.map(() => AR.temper.guard); SQ.form = WD.squads.map(() => SHAPES.indexOf('line')); SQ.intent = WD.squads.map(() => AR.intent.engage); SQ.sel = null; };
 const mine = (u) => u.side === ME && u.bn != null, temperOf = (u) => (u.wall ? AR.temper.hold : mine(u) ? SQ.temper[u.bn] : AR.temper.guard), temper = (u) => D.tempers[temperOf(u)], intent = (u) => (mine(u) ? SQ.intent[u.bn] : AR.intent.engage);
 const SP = D.specialty, grit = (u) => (u.stand || u.heart === 'death' ? 0 : u.heart === 'focused' ? 1 / D.courage.focused : 1); // E2662
@@ -58,6 +58,7 @@ function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) :
   if (armed(t)) { const F = shapeOf(t); if (beast(a)) d *= MO.wild; if (routing(t)) d *= MO.routHit; if (t.fb > K.t) d *= FB.hit; d *= FK.stat(t.code, t.side, 'armor') * F.hit * (rider(a) ? F.vsRiders : 1); if (melee && fromWhere(t, a) < FL.behind) d *= D.flank; }
   if (t.kind === 'unit' && FK.inWoods(t.k)) { if (!melee) d *= Math.exp(-D.woods.stems * D.woods.trunk * FK.woodsLine(a, t)); // E875
     else { let n = 0; FK.unitsNear(t, FL.line * D.tile, (v) => { if (v.target === t && v.side === a.side && alive(v)) n++; }); d /= Math.max(1, n); } } // E876
+  if (!melee && armed(t)) d *= shapeOf(t).vsShot; // E2728
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
 function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (u && t.kind === 'unit' && isEl(t) && ranged(a)) t.mor = Math.max(0, t.mor - (EL.panic * d) / t.hpMax); if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (isIdle(v) || v.job === 'hold' || (v.sent && onMarch(v))) && temperOf(v) !== AR.temper.hold && !v.stand && !tame(v, a) && enemies(v, a)) { v.was = isIdle(v) ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019 E2706
   sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
@@ -113,10 +114,10 @@ function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign
 function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; if (!dress(army, k)) { waves[side] = null; return 0; } if (side === ME) FK.fire('event', 'march', army[0]); return army.length; } // E2710
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
 // E392
-function slots(S, shape, drill) { const n = S.length, nf = sum(S, (u) => !ranged(u)), turn = 2 * Math.PI, ring = (Math.max(nf, GR.ring) * GR.gap) / turn, w = shape === 'wide' ? SP.wide : 1; // E2664
+function slots(S, shape, drill) { const n = S.length, nf = sum(S, (u) => !ranged(u)), turn = 2 * Math.PI, ring = (Math.max(nf, GR.ring) * GR.gap) / turn, w = shape === 'wide' || shape === 'battery' ? SP.wide : 1; /* E2727 */ // E2664
   const cols = { column: Math.min(n, GR.column), square: Math.ceil(Math.sqrt(n)), front: n, choke: (drill && drill.cols) || GR.choke }[shape] || Math.min(GR.most, Math.max(1, Math.round(Math.sqrt(n * GR.rows))));
   return S.map((u, i) => { let c, r; if (shape === 'support') { const on = i < nf, m = Math.max(1, on ? nf : n - nf), j = on ? i : i - nf, rr = on ? ring : Math.max(0, ring - GR.gap) * Math.sqrt((j + 0.5) / m); [c, r] = [Math.cos((j / m) * turn) * rr, Math.sin((j / m) * turn) * rr]; }
-    else { const ri = shape === 'wedge' ? Math.floor(half(Math.sqrt(8 * i + 1) - 1)) : Math.floor(i / cols); c = (shape === 'wedge' ? i - half(ri * (ri + 1) + ri) : (i % cols) - half(cols - 1) + (shape === 'wide' && ri % 2 ? half(1) : 0)) * GR.gap * w; r = -ri * GR.gap * w; }
+    else { const ri = shape === 'wedge' ? Math.floor(half(Math.sqrt(8 * i + 1) - 1)) : Math.floor(i / cols); c = (shape === 'wedge' ? i - half(ri * (ri + 1) + ri) : (i % cols) - half(cols - 1) + ((shape === 'wide' || shape === 'battery') && ri % 2 ? half(1) : 0)) * GR.gap * w; r = -ri * GR.gap * w; }
     const R = drill && drill.arc ? drill.arc.r : shape === 'crescent' ? Math.max(GR.gap, (n * GR.gap) / (SP.arc * turn)) : 0; if (R) { const a = ((i - half(n)) * GR.gap + half(GR.gap)) / R; [c, r] = [Math.sin(a) * R, R - Math.cos(a) * R]; } // E407
     return [c, r]; }); }
 function blocks(S) { const by = new Map(), at = new Map(), sp = SP.spare * GR.gap; for (const u of S) { const c = SP.place[clsOf(u.code)] ? clsOf(u.code) : 'Foot'; (by.get(c) || by.set(c, []).get(c)).push(u); } // E2665
@@ -172,6 +173,7 @@ function brain(u, dt, look) { // E396
     if (!c && (onMarch(u) || u.job === 'hold' || u.was != null)) c = foeBld(u, sight);
     if (c && c !== u.focus && tame(u, c)) c = null; // E936
     if (c && c.kind === 'bld' && u.broke) c = null; // E1279
+    if (c && c.kind === 'unit' && ranged(u) && shapeOf(u) === FM.crescent) { let m = null; FK.unitsNear(u, AR.group * T, (v) => { if (!m && v !== u && v.side === u.side && v.form === u.form && v.target && v.target !== c && v.target.kind === 'unit' && alive(v.target) && enemies(u, v.target) && d(v.target) <= s.rng) m = v.target; }); if (m) c = m; } // E2729
     t = c || (t && t.kind === 'bld' ? t : null); }
   if (t && !u.focus && ((u.stand || (temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null)) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
   if (!t && u.stand && !u.focus) t = nearest(u, s.rng); // E2669
