@@ -1,9 +1,6 @@
-# Build: the Units book (Albert, Nov 23 19:19 "Build"): one word per unit, the check refuses any other; tonight's match bugs on the list; the Chosen numbers looked up, none changed. No game file changes; must play exactly as kept.
-5f32b4d
-tools/check.py
-books/units.js
-books/measure.js
+# Build: the Chosen look-up, batch 2 (Albert, Nov 23 20:09 "Build"): sources looked up, two cited where they agree, no number changed. Must play exactly as kept.
+99c88a7
 books/citations.js
+books/measure.js
 LIST.md
-RULES.md
 docs/log/chosen-lookup-2026-11-23.md
