@@ -430,6 +430,18 @@ async def elephant():
         armoured = await pg.evaluate(SHOOT)
         return trampled, fear, own, bare, armoured
 
+async def no_way():
+    """A wave leaves only on a whole route (none: no wave, and that rival is left alone a while); a wave stood with no way on, short of its mark, turns home at once (Nov 24: red's waves stood on a river bank, 150 tiles short, then went again)."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 5)
+        return await pg.evaluate("""(() => { const N = FK.N, wet = (k) => { const i = k % N, j = (k - i) / N; for (let dj = -6; dj <= 6; dj++) for (let di = -6; di <= 6; di++) { const q = (j + dj) * N + i + di; if (i + di < 0 || j + dj < 0 || i + di >= N || j + dj >= N || FK.walkable(q)) return false; } return true; };
+          let sea = -1; for (let k = 0; k < N * N && sea < 0; k += 7) if (wet(k)) sea = k;
+          const army = (s) => fk.units().filter((u) => u.side === s && ECON.soldier(u.code)), seat = (s) => fk.blds().find((b) => b.side === s && fk.has(b, 'Seat')), mk = (s, n) => { const h = seat(s); for (let i = 0; i < n; i++) FK.spawn('UM2', s, FK.tileAt(h.bx + 40 + i * 12, h.by + 40), FK.rng); return army(s); };
+          const A = mk(2, 6), none = WAR.attack(2, sea, A), noWave = WAR.waves[2] === null;
+          const h0 = seat(0), far = FK.tileAt(h0.bx, h0.by), went = WAR.attack(2, far, A), w = WAR.waves[2]; Object.assign(w, { S: A, to: 0, bid: false, d: Infinity, pt: FK.K.t });
+          AI.decideWar(2, AI.per(2)); const kept = !!WAR.waves[2]; for (const u of A) Object.assign(u, { job: 'hold', path: null, hurtT: -1e9 });
+          AI.decideWar(2, AI.per(2)); return { sea: sea >= 0, none, noWave, went, kept, home: WAR.waves[2] === null, cool: (AI.mind[2].cool || {})[0] > FK.K.t }; })()""")
+
 async def spoils():
     """A fallen side's store goes to the side that felled its last seat (Nov 23: it went to nobody; the line read the building's board row for its killer)."""
     async with run.game(SEED, test=True) as pg:
@@ -661,6 +673,8 @@ async def check_game():
     rule('foot sent at archers run in under the arrows and get within 3 tiles of them', rc < 3, f'closest any came: {rc:.1f} tiles')
     et, ef, eo, eb, ea = await elephant()
     rule('the war elephant: its blow tramples more than the one man it strikes, enemy foot near it lose nerve, arrows shake it, and gone amok it tramples its own', et >= 2 and ef < 1 and eo >= 1 and eb[0] > 0, f'enemy foot hurt in 8 s: {et} of 8; their least nerve: {ef:.2f}; own foot hurt by the amok one: {eo}; nerve lost to ten arrows, bare and armoured: {eb[0]:.2f}, {ea[0]:.2f}')
+    nw = await no_way()
+    rule('a wave leaves only on a whole route to its mark, and turns home at once when it stands with no way on', nw['sea'] and nw['none'] == 0 and nw['noWave'] and nw['went'] > 0 and nw['kept'] and nw['home'] and nw['cool'], str(nw))
     sp = await spoils()
     rule('a fallen side\'s whole store goes to the side that felled its last seat', sp[2] and all(sp[0]) and not any(sp[1]), f'fell: {sp[2]}; the conqueror got all of each yield: {sp[0]}; left with the fallen: {sp[1]}')
     fl, fe = await full_lines()
