@@ -9,6 +9,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
   2b. [x] Units book (Nov 23): books/units.js, 120 words; 160 spellings down to one each (s/seconds, px/pixels, °C/degrees C; "power" the exponent is now "exponent", upkeep's "shares" are "person shares", the world's "units" are "world units"); the check refuses a unit not in the book
   3. [ ] Rule fixes that change play, one build each with his playtest: what-beats-what back on the Train tile; full load 8 at 2.5 kg (one weight, D53 vs W24); cold ration 0.385 (open N275 first); the laws' fog text (QAN); the five dead research get their effects
+  - From the look-up (docs/log/chosen-lookup-2026-11-23.md, 25 of 60 done), for his call, each its own build: wade to 1.0 m (D24) or deepen the river; wolf packs of about 6; mortar's line at 4.4 °C; the boar 1.14 of a deer; the day's swing about 11 °C; the winter −2 °C; decide what a unit of food weighs before the load at 8
 - After the freeze: the computers selling surplus; computers trying new things; pioneers by person, then machine; sounds (the under-attack sound first; 8 written but never played); bridges (spec on branch fresh-notes, review/spec-roads.md); zeal and priests
 
 ## Raised Nov 23, not decided (his to call)
