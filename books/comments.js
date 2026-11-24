@@ -1254,5 +1254,6 @@ BOOK("comments", {
  "E2710": {"text": "A wave sets out only on a whole route to its mark: with none it is no wave, and the attack says so (Nov 24: a wave was kept with no route found, its soldiers left standing)"},
  "E2711": {"text": "A rival no route reaches now is left alone cool s, so the next turn weighs another (Nov 24: red sent wave after wave at a town no land route reached)"},
  "E2712": {"text": "No way on: every soldier of the wave stands with no route and no blow taken within fight s, lost tiles or more short of its mark, so it turns home at once rather than standing stall s (Nov 24: red's waves stood 45 s on a river bank, 150 tiles short)"},
- "E2713": {"text": "Progress is counted in tiles of road left, not the straight line to his place: a road that bends round a lake or river walks sideways a long way without coming nearer, and that is not a jam (Albert, Nov 24: red's waves stood 150 tiles short of his town)"}
+ "E2713": {"text": "Progress is counted in tiles of road left, not the straight line to his place: a road that bends round a lake or river walks sideways a long way without coming nearer, and that is not a jam (Albert, Nov 24: red's waves stood 150 tiles short of his town)"},
+ "E2714": {"text": "The log's news folds a warning into the one before only when it says the same thing (its words with the places masked), not just the same last words, and keeps when the run began as well as when it last came: 1,253 attacks on every kind of his folded into one line at 122:48 in his v108 log (Albert, Nov 24)"}
 });
