@@ -61,8 +61,12 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - One layout pass for the cards, as one build: the bottom has two dark shadows that meet in a double edge; Hide is a lone "−" floating over the map above the bar; "Villager › Food" reads as a path, not her work ("Gathering food"); two Villager labels stacked (gold chip and green chip; he wants the gold one "Villager Control"); separators "→" on Pause and "›" on the cards; "pick troops" (own tab above the bar) and "choose a job below" (inline, mid-row) differ in place and size
 - The pause menu takes about 30% of the screen for 6 buttons (Speed and Sounds side by side?)
 - White outlines on the job boxes, war buttons and speed boxes mean nothing (with the colour talk)
-- His call: the villager card shows town-wide job counts and no Build; should it show that villager (her job, plus Build) and leave the town board to the Jobs tab? (Claude: yes)
-- His call: every start looks the same by his Nov 10 ruling #6 (the home finds at fixed spots, the home river cut fixed); keep, or rotate/mirror the layout each game? (Claude: rotate/mirror, spacing kept fair)
+- His call (Nov 24 18:18): the villager card keeps the jobs and gets Build; the job numbers must read clearly
+- His call (Nov 24 18:18): the home pocket keeps the same finds every game, laid out at random inside it (supersedes Nov 10 #6's fixed spots; Claude: each find kept at its distance from the Town Center, only the direction varies, so it stays fair); the home water is a straight cut with a pond at its end every game, "boring": it must differ each game. A map-making change: flag before publishing
+- His call (Nov 24 18:18): the caps must show (the people cell before the cap, and the army ceiling)
+- Mode and formations don't work as ruled (RULINGS: Mode, Formations; Nov 21 and 22): Mode is locked behind the Formations research, but Hold and courage are to be the main controls with formations behind a door; in combat a shape only changes riders' blows and the blows taken (×0.7 to ×1.3); Wide and Crescent change nothing; no shape's speed is used (not even the march column); Battery is laid out as Wide and not named. Each shape needs an effect he can feel, with sources
+- Boarding up (his Nov 11 Prep, kept Nov 20 with shelter and garrison): the code is there (econ.js prep, boardIn) but nothing calls it. His Nov 24 note: the Town Center can't hold everyone, so the alarm must also fill castles, towers and other buildings
+- Trade routes are totally broken and need a major overhaul and redesign (his words, Nov 24); what fails not yet traced
 
 ## Open, older
 - "Tap to move and they don't move": no repro yet (copy the log right after it happens)
