@@ -621,6 +621,19 @@ async def steward():
         idle = await pg.evaluate("ECON.stewNow(0).n.idle"); await pg.evaluate(TAP, 'stew||'); await pg.evaluate("ECON.stewOf(0).mix = { food: 1, wood: 5, gold: 0, stone: 0, iron: 0 }"); await run.step(pg, 20)
         return t, idle, await pg.evaluate("ECON.stewNow(0).n")
 
+async def batch_ab():
+    """Nov 24 builds: Wide takes half from an arrow, Line all of it; a computer short of a yield takes a hand from the yield it has most of; the people cell reads people over room; the villager card has Build and its tiles say how many work each job."""
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 5)
+        a = await pg.evaluate("""(() => { const A = fk.units().filter((u) => u.side === 0 && ECON.soldier(u.code)), arch = A.find((u) => WAR.ranged(u)), foot = A.find((u) => !WAR.ranged(u)); foot.form = 'line'; const line = WAR.damage(arch, foot); foot.form = 'wide'; const vk = WAR.shapeOf(foot) === D.forms.wide, wide = WAR.damage(arch, foot); foot.form = 'line';
+          const s = 2, V = ECON.villagersOf(s), S = FK.SIDES[s]; for (const v of V) { const f = ECON.bestFind(v, 'iron') || ECON.bestFind(v, 'gold'); if (f) ECON.gatherAt(v, f); v.load = 0; } Object.assign(S.store, { food: 5000, wood: 0, stone: 5000, gold: 400, iron: 9000 }); const was = V.filter((v) => ECON.jobOf(v) === 'iron').length;
+          return { line, wide, vk, was }; })()""")
+        await run.step(pg, 90)
+        b = await pg.evaluate("""(() => { const V = ECON.villagersOf(2), J = {}; for (const v of V) { const j = ECON.jobOf(v) || v.job; J[j] = (J[j] || 0) + 1; } const cell = [...document.querySelectorAll('.strip .cell')].map((c) => c.textContent.trim()).find((t) => /^[0-9]+[/][0-9]+$/.test(t)) || null;
+          FK.select(fk.units().find((u) => u.side === 0 && fk.has(u, 'Gather'))); MENU.render(true); const card = [...document.querySelectorAll('#base [data-v]')].map((x) => x.dataset.v), tile = [...document.querySelectorAll('#base .cell')].map((c) => c.textContent.trim()).find((t) => /Food/.test(t)) || '';
+          return { jobs: J, cell, build: card.includes('mtab|Build|'), tile }; })()""")
+        return a, b
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -673,6 +686,11 @@ async def check_game():
     rule('foot sent at archers run in under the arrows and get within 3 tiles of them', rc < 3, f'closest any came: {rc:.1f} tiles')
     et, ef, eo, eb, ea = await elephant()
     rule('the war elephant: its blow tramples more than the one man it strikes, enemy foot near it lose nerve, arrows shake it, and gone amok it tramples its own', et >= 2 and ef < 1 and eo >= 1 and eb[0] > 0, f'enemy foot hurt in 8 s: {et} of 8; their least nerve: {ef:.2f}; own foot hurt by the amok one: {eo}; nerve lost to ten arrows, bare and armoured: {eb[0]:.2f}, {ea[0]:.2f}')
+    ab0, ab1 = await batch_ab()
+    rule('Wide takes half of an arrow that Line takes whole (Albert\'s Nov 21 Wide, derived from its spacing)', ab0['vk'] and abs(ab0['wide'] - ab0['line'] * 0.5) < 1e-6 and ab0['line'] > 0, f'line {ab0["line"]:.2f}, wide {ab0["wide"]:.2f}')
+    rule('a computer with no wood and 9,000 iron takes hands off iron for wood within a minute and a half', ab1['jobs'].get('wood', 0) > 0 and ab1['jobs'].get('iron', 0) < ab0['was'], f'on iron at the start {ab0["was"]}, after: {ab1["jobs"]}')
+    rule('the people cell reads people over room before the cap (Albert, Nov 24: caps showing)', ab1['cell'] is not None, f'cell: {ab1["cell"]}')
+    rule('the villager card has Build, and its job tile says how many work that job', ab1['build'] and 'working' in ab1['tile'], f'Build: {ab1["build"]}; tile: {ab1["tile"]!r}')
     nw = await no_way()
     rule('a wave leaves only on a whole route to its mark, and turns home at once when it stands with no way on', nw['sea'] and nw['none'] == 0 and nw['noWave'] and nw['went'] > 0 and nw['kept'] and nw['home'] and nw['cool'], str(nw))
     sp = await spoils()
