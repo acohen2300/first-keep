@@ -1,23 +1,7 @@
-# Build (Albert, Nov 25 01:22 "Build"): the map change (home water and layout, his call Nov 24) with the two faults it showed (a villager walking past free bushes; foot routing under archers before reaching them); the step 3 rule fixes (what beats what, load 8, cold ration, fog text, the five dead research); leftovers (news when a rival's seat falls, survivors shown, rivals board up, the wood at a wall's end). Changes the map and how the game plays.
-9595266
-ai.js
-econ.js
-combat.js
-menu.js
-index.html
-sound.js
+# Build (Albert, Nov 25 06:59 "Ok try it", after "the only decision is whether to say build for the two-number change"): the picture never drops below full resolution, and one steady frame rate of 30 (the draw budget's two numbers, D321). Nothing else. Does not change the map or how the game plays.
+2bf4bca
 books/measure.js
-books/comments.js
-books/words.js
-books/citations.js
-books/screen.js
-books/tech.js
-books/laws.js
-books/sound.js
-books/mass.js
-books/shells.js
 tools/check.py
-tools/kept.json
 tools/build.txt
 LIST.md
 RULINGS.md
