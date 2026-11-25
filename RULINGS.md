@@ -8,7 +8,7 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - Talk and build are separate; nothing is built until he says "build" (Nov 21)
 - When he says something that goes against RULES.md or a ruling here, Claude names the rule or ruling before acting on it; then his call stands, and this file is updated (Nov 23)
 - On a call he has made, Claude may argue back at most twice, with backup each time; then his call stands (Nov 20)
-- Feature freeze while the cleanup runs; cleanup builds must play exactly as kept (`--same-play`) (Nov 23)
+- The feature freeze during the cleanup is best effort, not a hard rule: things evolve (Nov 25; a hard freeze Nov 23); a build that should not change play must play exactly as kept (`--same-play`) (Nov 23)
 - A sprint may suspend the rules to cover ground; it ends with a rule audit before the next build (Nov 23)
 - Every build publishes to its own link, fresh/vN/; fresh/ forwards to the newest; a game stays on the build it started on (Nov 22)
 - A save that will not open is never written over (Nov 22)
@@ -19,7 +19,7 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - The same logic for every side; the computers play their best to win, with no rules on what they may do (Nov 22, Nov 23)
 - The computers may sell surplus (lifts the Nov 5 ban) (Nov 23)
 - Rivals must not play the same way every game; making them try new things is its own job (Nov 22, Nov 23)
-- Every hardship needs a way for the player to see it coming and manage it (Nov 22)
+- A real-life hardship goes in only where the player can see it coming and answer it, and each needs a counter (a research or an action); looks with no effect on play are fine if they cost next to nothing (Nov 22, Nov 25)
 
 ## Sides and colours
 - Each colour is a side (a seat); the strategy dealt behind it is hidden and changes each match (Nov 23)
@@ -35,6 +35,10 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - Everything has a sound, and each must make sense; the under-attack sound first (Nov 23)
 - What-beats-what on the Train tile comes back; fix its crowding, not the feature (Nov 23)
 - Welcome back full width: a design change, not urgent (Nov 23)
+- The picture never drops below full resolution to save frames, and the game holds one frame rate, 30 (Nov 25, after Build 41 beside v111; replaces the dynamic resolution of Nov 10 and the 60 of Nov 8). The check gates it
+- The quick action (a tap on open ground for Attack, Build, Rally) is dropped (Nov 25)
+- No blur on menus: too expensive (Nov 25; replaces the frosted glass of Nov 9)
+- The small map was lost by accident, not cut: its drawing is still in the code with no place on screen (Nov 25); where it goes is his to call
 
 ## The War card (army control)
 - Title line: Home, Troops | Mode | Mission, a small eye icon (on screen only), W (Nov 21)
@@ -66,6 +70,7 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - A full load is 8 (2.5 kg a wood) (Nov 23)
 - Cold ration 0.385, cited to its source (Nov 23)
 - Fog of war is a Start-page option; weather fog stays in (Nov 23)
+- Wind stays: it carries rain, snow and fog; it does not slow anyone walking and does not move arrows (no way to aim against it). Ripples on water are wanted as looks only, if they cost next to nothing (Nov 25; replaces the cut of Nov 4). No wind chill is added: exposure is cold and wet, each with its research
 - The five paid research that do nothing get their effects built (Midwives, Local guides, Law code, Magistrates, Chimney's warmth) (Nov 23)
 - The stampede gets real damage only if sourced, with a warning and a way to protect against it (Nov 23)
 - The ending: when a side's last Town Center falls, the side that felled it takes the whole store at once; the fallen keep the starting stores and fight on; their villagers try to rebuild; a side is beaten when its last villager is dead; its soldiers left fight on until killed (Nov 24)
@@ -82,3 +87,12 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - Keep, works: garrison, ice and floods, the copy log, replant all, later-age building art, fronts, unit history
 - Keep, to fix: camps and wagons, charge, shelter / reinforce / boarding up (one villager-defence feature with garrison), priests, spies, schooling, diplomacy, traps / ambushes / ransom (with the natives), guide and help, trade, hunt, the bank (redesign), repair, rebellion (with vassals), the replant button
 - Parked: one art palette (dropped), sprite colours into the sprites book, building shapes as data
+
+## Older calls, sorted Nov 25 (so parked means written down)
+- Keep: quick start (a Mill, a Lumber camp, two houses, a mine, a richer pocket; Nov 8), design talk first
+- To discuss: race mode and simple mode (Nov 8)
+- Parked: the Games and town recreation, the hidden age a full truce unlocks (Oct 29)
+- Wanted, not now: the after-match screen (replay, compare with past games; Oct 29)
+- Meant to be in, to test and fix: the scouting timer, stealth, bribes and contracts, the outlaw's bounty and pardon (Nov 8). Bribe for misfits and the spy's stealth are in; no bounty, pardon, contract or scouting timer found
+- In, not good enough: torches and lights at night (Nov 10)
+- Cut: the Apartment (its shell, cost and Fired brick's room are leftovers to clean)

@@ -2,7 +2,15 @@
 
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
-## Handoff, Nov 25 03:55 (read this first in a new chat)
+## Handoff, Nov 25 07:15 (read this first in a new chat; the 03:55 handoff below still stands)
+- The audit (his ask, Nov 25 04:24): an 89-row ledger of rules and features with proof, a Sheet in his Claude artifacts ("First Keep — Audit Ledger (v111, Nov 25)"). Rules found broken: the freeze (now best effort, his call), one build between previews, the sprint's rule audit, tests changed with the code, lean (the code grew 641 to 690 KB, Nov 20 to 25)
+- Found broken beyond his own reports: the Score card and Relations tab name the sides Raiders, Fortress, Rivals (RULINGS: the strategy behind a colour is hidden); the small map's drawing has no place on screen (menu.js only ever calls miniBox(null)); the Trade post is in no Build tab and the Trade stop's card has only Exit; the Castle is on the Keep tab's list but did not show at Classical with full stores (not traced)
+- Build 41 (the root of the site, his phone's home-screen game, late October): he says it plays better, smooth, clean, crisp. Measured beside v111 on the same headless phone: it holds 2x and about 30 frames (median frame 33 ms, worst 67; v111 50 and 200, having dropped to 1.5x); 50 pictures and 19 MB in memory against 164 and 100 MB; flat fills with dark outlines on a darker ground; a second strip, the small map and its button on screen. Untouched for 15 game minutes on two seeds: a villager gathers about 34 a minute against 17; each rival holds 11 to 17 soldiers against 2 to 6. He asked to carry everything over except the pace (not yet a ruling); the camera's turn is undecided
+- This build (v112, his "Ok try it", 06:59): the draw budget never lowers the resolution and holds one rate, 30 (D321 res all 1, lv.fps 0; D98 stays 60 because the beats' phases are counted in it). A gate in the check. Risk told to him: with no pixels to shed, a heavy scene may run under 30. The 2x zoom cap (D370) stays
+- The way of working he agreed to try: one small build, he plays a match, writes the five things that bothered him most, the top one is fixed, he plays again
+- Talked, NOT built: the wind's drag on walkers comes out (his ruling, Nov 25); the small map's place; the art (flat fills, dark outlines, darker ground); the second strip; the code laid out by subject as Build 41's 39 files; the function map run and a keep / park / cut pass by feature; the ledger's "works" rows as a publishing gate
+
+## Handoff, Nov 25 03:55
 - State: v111 is live and is the latest; branch fresh is clean and pushed; nothing is half built. He was mid-match on v111 (seed 3722756510, Easy, minute 38 when he copied the log)
 - Talked, NOT built (each waits for his "build"):
   - Research tile: the line saying what a research does is gone from the tile (the text exists, shown only after buying). Options given: 1 effect replaces cost when affordable; 2 first tap shows the effect on the hint line, second tap buys (Claude's pick); 3 both on the tile, small. Terse effect words ("Pushing -15%") to be rewritten plainly. He has not picked
@@ -15,7 +23,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - Standing rules: RULES.md and RULINGS.md; talk and build are separate (nothing built until he says "build"); critical, unvarnished, at most two push-backs with backup; name the rule or ruling when he goes against one; sources set numbers; each change its own commit; tools/build.txt starts every build; no helper agents unless asked; flag map-making changes before publishing; publish with tools/publish.py (each build its own link, fresh/vN)
 
 ## Now
-- Latest build: v111 (https://acohen2300.github.io/first-keep/fresh/v111/)
+- Latest build: v112 (https://acohen2300.github.io/first-keep/fresh/v112/): fixed sharpness and one frame rate; v111 before it
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
