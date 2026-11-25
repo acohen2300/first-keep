@@ -2,6 +2,18 @@
 
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
+## Handoff, Nov 25 03:55 (read this first in a new chat)
+- State: v111 is live and is the latest; branch fresh is clean and pushed; nothing is half built. He was mid-match on v111 (seed 3722756510, Easy, minute 38 when he copied the log)
+- Talked, NOT built (each waits for his "build"):
+  - Research tile: the line saying what a research does is gone from the tile (the text exists, shown only after buying). Options given: 1 effect replaces cost when affordable; 2 first tap shows the effect on the hint line, second tap buys (Claude's pick); 3 both on the tile, small. Terse effect words ("Pushing -15%") to be rewritten plainly. He has not picked
+  - Snow: it does fall and build up, but in his seed it fell at night (about 22:00 to 05:00) and was full by sunrise, in 6 paint steps, about 33 s bare to full; he has never once seen a flake. Proposed: visible night flakes, slower build-up (needs a source), smooth whitening, the same for melting. Snow depth drives movement and cold, so slowing it changes play
+  - Night: his question "can we shorten the night without changing the clock": yes. The sun follows real astronomy at 45 degrees (night about half the day, over 60% in winter). Proposed: sun up 75% of each day (his Nov 19 ruling of 25% night), day stays 240 s, a small summer/winter difference kept (20% to 30% night), the top-bar clock kept even (sunset near 21:00, sunrise near 03:00). Side effects: warmer on average (less snow and ice; check rivers still freeze), less time at short sight. A book entry must say it is his ruling, not a source
+  - Villagers stopping, idling, then going far (his v111 match): most likely the danger rule, inferred from timing (red's waves at E26 at minutes 31 and 38; 19 walking at 33, 43 idle at 34, back at 35; 20 idle at 37 to 38), not read from the log (those messages go to Mail only, not the log's news). The rule: a find within about 11 tiles of a foe is unsafe for about 45 s after; she drops it, takes the best safe find (may be far) and stays there; with none she idles and after 60 s walks to the Town Center. Proposed: she remembers her spot and returns; waits near home; the log records it with the reason; one clear notice, not a Mail line each. His call open: flee when foes are near (Claude: yes, with those fixes) or only when hit. He said "ignore the badge" about his screenshots
+  - His call open: archers strike spearmen x 2 (ten spearmen kill five archers on open ground and lose seven)
+- His worry, Nov 25 03:51: "we built fixes and patches. Are we being careful? Game play is getting refined in some areas but seems to break in others." Claude's answer: partly not. Four builds (v108 to v111) and about 40 play changes in 30 hours against one full match played; the kept match was re-accepted three builds running, so that gate caught nothing; four tests were changed in v111 in the same build as the code (courage, the tower, the far way, the run in); some fixes not proven on his case ("no way" not replayed on his map; the alarm sound not heard); the no-break-in-the-run rule was written at 2 am to make a failing test pass (sourced to Marathon, N572). Old faults also show now because rivals reach his town (the alarm, warnings, fleeing)
+- Proposed way of working, awaiting his yes: one gameplay theme a build and he plays a match before the next (screen and wording fixes may batch); a health report each build from two or three fixed long computer matches (idle villagers, rival armies, waves arriving, deaths by cause); no test changed in the same build as play unless shown to him first; before each build say what it could break. Proposed next build: villagers only
+- Standing rules: RULES.md and RULINGS.md; talk and build are separate (nothing built until he says "build"); critical, unvarnished, at most two push-backs with backup; name the rule or ruling when he goes against one; sources set numbers; each change its own commit; tools/build.txt starts every build; no helper agents unless asked; flag map-making changes before publishing; publish with tools/publish.py (each build its own link, fresh/vN)
+
 ## Now
 - Latest build: v111 (https://acohen2300.github.io/first-keep/fresh/v111/)
 - Cleanup (feature freeze until done), in order:
@@ -15,9 +27,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - After the freeze: the computers selling surplus; computers trying new things; pioneers by person, then machine; sounds (the under-attack sound first; 8 written but never played); bridges (spec on branch fresh-notes, review/spec-roads.md); zeal and priests
 
 ## Raised Nov 23, not decided (his to call)
-- The people cell: no warning before the cap, and it switches format at the cap; the army ceiling is a second hidden limit (options A, B, C in chat; Claude: A)
 - The copy log counts paused time as a slow frame
-- Mode (Hold, courage) is locked behind the Formations research; is that meant?
 - The alarm sends the whole town into hiding for one raid on one camp (52 idle for two minutes)
 - Rival 1 starves from about minute 23 (27 villagers, food at 0 to 30)
 - Groups break at about 30% losses and archer-heavy armies broke in every fight
