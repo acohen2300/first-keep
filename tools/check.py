@@ -649,6 +649,14 @@ async def fish_and_walls():
         f = await pg.evaluate("[FV.filter((u) => u.target && u.target.code === 'BCT2' && u.job === 'gather').length, fk.blds().filter((b) => b.side === 0 && b.code === 'BCT2' && b.done >= 1).length]")
         return w, f
 
+async def dead_research():
+    """Nov 25: the research that did nothing: Chimney's warmth, Law code and Magistrates, Local guides and Midwives each move a share the game reads; with Midwives two villagers at the head of a line train together."""
+    async with run.game(SEED) as pg:
+        await run.step(pg, 2)
+        a = await pg.evaluate("""(() => { const st = (k, c = '') => FK.stat(c, 0, k), was = [st('warm'), st('push'), st('guides'), st('twin', 'UV')]; for (const c of ['O47', 'O163', 'O164', 'O260', 'O42']) { FK.SIDES[0].techs.add(c); FK.learn(0, c); } FK.SIDES[0].store.food = 9999; for (const u of ECON.villagersOf(0).slice(4)) WAR.die(u, null, 'test'); const tc = fk.seatOf(0); tc.q = []; ECON.queue(tc, 'UV'); ECON.queue(tc, 'UV'); window.ZTC = tc; window.ZN0 = ECON.villagersOf(0).length; return [was, [st('warm'), st('push'), st('guides'), st('twin', 'UV')], tc.qt]; })()""")
+        await run.step(pg, a[2] + 2)
+        return a, await pg.evaluate("ECON.villagersOf(0).length - ZN0")
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -709,6 +717,8 @@ async def check_game():
     fw0, fw1 = await fish_and_walls()
     rule('fishing with no Dock: the villagers lay Docks by the water and fish there (Albert, Nov 24: no way to fish)', fw0[1] == [True, True] and fw1[0] == 2 and fw1[1] >= 1, f'sent {fw0[1]}; fishing at a Dock, Docks standing: {fw1}')
     rule('a wall piece stands on a bank and in wading water, never in deep water, so a wall can run to the water with no gap (Albert, Nov 24)', fw0[0] == [True, True, False], f'bank, wading, deep: {fw0[0]}')
+    dr, dn = await dead_research()
+    rule('the research that did nothing now moves what the game reads: warmth, push, guides, twin; with Midwives two villagers train in the time of one', dr[0] == [0, 1, 1, 0] and dr[1][0] > 0 and dr[1][1] < 1 and dr[1][2] < 1 and dr[1][3] > 0 and dn == 2, f'before {dr[0]}, after {dr[1]}; villagers out after one training time: {dn}')
     nw = await no_way()
     rule('a wave leaves only on a whole route to its mark, and turns home at once when it stands with no way on', nw['sea'] and nw['none'] == 0 and nw['noWave'] and nw['went'] > 0 and nw['kept'] and nw['home'] and nw['cool'], str(nw))
     sp, sq = await spoils()
