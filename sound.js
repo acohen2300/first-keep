@@ -41,7 +41,7 @@ function play(name, where, delay = 0) {
   for (const [kind, ...a] of r.slice(1)) { if (kind === 'tone') a[3] *= v; else if (kind === 'hiss') a[1] *= v; else a[2] *= v; PART[kind](at, to, ...a); }
 }
 FK.on('event', (name, t, u) => {
-  if (name === 'raid') { if (Math.abs(FK.K.t - (last.raid ?? -Infinity)) < HB.alarm[0]) return; last.raid = FK.K.t; t = u = null; } // E2744: heard wherever the camera is, once in the alarm's gap
+  if (name === 'raid') { if (Math.abs(FK.K.t - (last.raid ?? -Infinity)) < HB.alarm[0]) return; last.raid = FK.K.t; t = u = null; } // E2744
   const s = name === 'work' ? t && t.kind !== 'bld' && SH[KIND[t.kind].code].sound : name === 'pick' ? t && SH[t.code].voice : HB.on[name];
   if (s) play(s, t || u);
   const ms = HB.haptic[name]; if (ms && navigator.vibrate && on) try { navigator.vibrate(ms); } catch (e) {}

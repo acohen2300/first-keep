@@ -145,7 +145,7 @@ function amok(u) { const r = stat(u).rng, S = []; FK.unitsNear(u, (r + FL.melee)
 function nerve(u, dt) { let m = u.mor; const full = MO.full * (1 - D.exposure.nerve * FK.exposure(u.code, u.side)); // E809
   if (!u.target) { const near = FK.bldsNear(u.bx, u.by, MO.shelterR * T, (b) => b.side === u.side && up(b) && (FK.has(b, 'Shoot') || FK.has(b, 'Line') || FK.has(b, 'Gate')) && gap(u, b) < MO.shelterR); m = FK.relax(m, full, MO.tau / FK.stat(u.code, u.side, 'rest') / (near ? MO.shelter * FK.stat(u.code, u.side, 'shelter') : MO.front), dt); }
   else { const us = [u], them = []; FK.unitsNear(u, MO.crowd * T, (v) => { if (armed(v) && alive(v)) (v.side === u.side ? us : atWar(u.side, v.side) ? them : []).push(v); }); if (them.length > us.length * MO.outnumbered) m -= MO.odds * dt * grit(u); if (!isEl(u) && them.some(isEl)) m -= EL.fear * dt * grit(u); } // E2705
-  u.mor = Math.min(full, Math.max(0, m)); if (u.mor > 0 || !grit(u) || stat(u).bonly || u.fb > K.t) return;
+  u.mor = Math.min(full, Math.max(0, m)); if (u.mor > 0 || !grit(u) || stat(u).bonly || u.fb > K.t || (u.chg && u.rush)) return; // E2741
   befall(u.ord, 'broke'); Object.assign(u, { job: 'rout', routAt: K.t, target: null, focus: null, path: null, broke: true }); if (u.side === ME && !(K.t - routSaid < MO.say)) { routSaid = K.t; FK.fire('event', 'rout', u, u.bn != null ? WD.squads[u.bn] : WD.all); } }
 let routSaid = -Infinity, homeT = 0, ordT = HU.beat; const sparks = [], tracers = [];
 // E970
@@ -178,7 +178,7 @@ function brain(u, dt, look) { // E396
   if (t && !u.focus && ((u.stand || (temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null)) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
   if (!t && u.stand && !u.focus) t = nearest(u, s.rng); // E2669
   if (u.sent && !u.focus && (onMarch(u) || u.was != null)) t = struck(u) ? t || u.hitBy : null; // E1092 E2701
-  if (t && t.kind === 'unit' && !ranged(u) && ranged(t) && !u.chg && u.rush !== t && d(t) > s.rng && d(t) <= stat(t).rng) { u.rush = t; u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } // E2702 E2741
+  if (t && t.kind === 'unit' && !ranged(u) && ranged(t) && !u.chg && u.rush !== t && d(t) > s.rng && d(t) <= stat(t).rng) { u.rush = t; u.chg = K.t + CH.secs; } // E2702
   u.pacex = shapeOf(u).spd * (marching(u) && u.slow ? u.slow : 1) * (u.chg ? CH.spd * FK.stat(u.code, u.side, 'charge') : u.tire ?? D.bases.pace);
   if (t && u.target !== t) { if (u.job !== 'fight') u.was = isIdle(u) ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
   else if (!t && u.job === 'fight') { u.target = null; u.path = null; if (u.was != null) march(u, u.was); else u.job = 'idle'; u.was = null; }
