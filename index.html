@@ -78,7 +78,7 @@ function makeCoast(roll) {
 
 // ── The ground (E17)
 const H = new Float32Array(N * N), DEP = new Float32Array(N * N), CH = new Float32Array(N * N * 4), FOR = new Uint8Array(N * N); // E18
-let coast, seed, lakes = [], RIV = [], GLADES = [], ROADS = []; const MARSH = new Uint8Array(N * N), ROAD = new Uint8Array(N * N), STRIP = new Uint8Array(N * N), LAKER = new Float32Array(N * N), RUN = new Uint8Array(N * N), RELIEF = new Float32Array(N * N); // E19
+let coast, seed, lakes = [], RIV = [], GLADES = [], ROADS = [], HOMEPLAN = []; const MARSH = new Uint8Array(N * N), ROAD = new Uint8Array(N * N), STRIP = new Uint8Array(N * N), LAKER = new Float32Array(N * N), RUN = new Uint8Array(N * N), RELIEF = new Float32Array(N * N); // E19
 function depthAt(bx, by) { // E20
   const dl = bx - B0, dr = B1 - bx, dt = by - B0, db = B1 - by, dx = Math.min(dl, dr), dy = Math.min(dt, db);
   const side = dx < dy ? (dl < dr ? 0 : 1) : dt < db ? 2 : 3, pos = clamp(dx < dy ? by - B0 : bx - B0, 0, D.board);
@@ -136,7 +136,13 @@ function spread(src, lim) { const far = new Float32Array(N * N).fill(Infinity), 
 function makeTerrain(roll) {
   // E30
   const NA = D.nature, CV = NA.cove, [pu, pv] = D.pond, half = 1 / 2, wadeTo = (x, y, r, d) => stamp(x, y, r, (k) => { H[k] = Math.max(H[k], -d); });
-  for (let c = 0; c < 4; c++) { for (let v = pv; v >= CV.to; v -= CV.step) channel([corner(c, pu, v)], CV.w, D.riverDeep); channel([corner(c, pu, pv)], D.pondR, D.lakeDeep); wadeTo(...corner(c, pu, (pv - D.pondR) * half), CV.w + D.ford * half, D.wade * half); }
+  const HW = D.homeWater, hw = dice(seed ^ HW.seed), kind = HW.kinds[Math.floor(hw() * HW.kinds.length)], [tu, tv] = D.tc, R = Math.hypot(pu - tu, pv - tv); HOMEPLAN = []; // E2731
+  for (let c = 0; c < 4; c++) { const turn = between(hw, [-HW.turn, HW.turn]) * RAD, mirror = hw() < half, phi = between(hw, HW.at) * RAD, P = [tu + R * Math.cos(phi), tv + R * Math.sin(phi)], toV = P[1] < P[0], L = toV ? P[1] - CV.to : P[0] - CV.to, ph = hw() * A.round * RAD; HOMEPLAN.push({ turn, mirror });
+    const along = (t) => { const w = HW.wave.a * Math.sin((t / HW.wave.len) * A.round * RAD + ph); return toV ? [P[0] + w, P[1] - t] : [P[0] - t, P[1] + w]; }, stream = (most) => { for (let t = 0; t <= most; t += CV.step) channel([corner(c, ...along(t))], CV.w, D.riverDeep); };
+    if (kind === 'creek') { stream(L); channel([corner(c, ...P)], D.pondR, D.lakeDeep); wadeTo(...corner(c, ...along(L * half)), CV.w + D.ford * half, D.wade * half); }
+    else if (kind === 'spring') { stream(L * HW.spring.len); channel([corner(c, ...P)], D.pondR * HW.spring.r, D.lakeDeep); }
+    else if (kind === 'lake') { for (let i = 0; i < HW.lake.n; i++) { const a = hw() * A.round * RAD, d = hw() * D.pondR * HW.lake.spread; channel([corner(c, P[0] + d * Math.cos(a), P[1] + d * Math.sin(a))], D.pondR * between(hw, HW.lake.r), D.lakeDeep); } }
+    else channel([corner(c, ...P)], D.pondR, D.lakeDeep); }
   // E31
   const n = N * N, T = D.tile, at = (k) => toBoard(((k % N) + half) * T, (Math.floor(k / N) + half) * T), own = fractal2(roll, NA.waves, NA.dim, NA.wave), wild = fractal2(roll, NA.waves, NA.dim, NA.wave), homes = RING.map((_, c) => corner(c, ...D.tc)), flat = new Uint8Array(n);
   MARSH.fill(0); RUN.fill(0); MTWI.fill(0); lakes = []; RIV = [];
@@ -208,7 +214,7 @@ function makeThings(roll) {
   // E47
   const LS = D.lands, names = Object.keys(LS.rows), lr = dice(seed ^ LS.seed), fixed = new Set(), [, z2, z3] = D.zone; land = names[Math.floor(lr() * names.length)]; const LD = LS.rows[land];
   CORNERS.forEach((_, c) => { const hr = dice(seed ^ 0x9e3779b9), spot3 = (n) => { for (let t = D.tries.spot; t--; ) { const r = between(hr, [z2 + reachOf(n), z3 - reachOf(n)]), a = hr() * QT * RAD, [x, y] = corner(c, r * Math.cos(a), r * Math.sin(a)); if (laneDist(x, y) >= D.lane + D.tile && free(tileAt(x, y))) return [x, y]; } return null; };
-    for (const kind in D.z1) { const { n, amount } = pocketOf(kind), x = PK.near[kind]; cluster(kind, ...corner(c, ...D.z1[kind]), Math.round(n * x), hr, amount * x).forEach((k) => fixed.add(k)); }
+    for (const kind in D.z1) { const { n, amount } = pocketOf(kind), x = PK.near[kind], [tu, tv] = D.tc, [zu, zv] = D.z1[kind], { turn, mirror } = HOMEPLAN[c] || { turn: 0, mirror: false }, [du, dv] = mirror ? [zv - tv, zu - tu] : [zu - tu, zv - tv], at = [tu + du * Math.cos(turn) - dv * Math.sin(turn), tv + du * Math.sin(turn) + dv * Math.cos(turn)]; /* E2732 */ cluster(kind, ...corner(c, ...at), Math.round(n * x), hr, amount * x).forEach((k) => fixed.add(k)); }
     for (const [kind, [n, each]] of [...Object.entries(D.Z3.finds), ...(LD.extra ? [[LD.extra, D.Z3.finds[LD.extra]]] : [])]) { const at = spot3(n); if (at) cluster(kind, ...at, n, hr, each * n * PK.findSize[kind]); } }); // E653
   for (const g of GLADES) if (g.rich) { const K = Object.keys(PK.home).filter((kind) => !WOODS.has(kind)), a0 = roll() * A.round * RAD, GL = D.forest.glade; K.forEach((kind, i) => { const [n, each] = PK.home[kind], a = a0 + (i * A.round * RAD) / K.length; cluster(kind, g.x + Math.cos(a) * g.r * GL.out, g.y + Math.sin(a) * g.r * GL.out, n, roll, each * n * PK.rich * PK.homeRich * PK.findSize[kind]).forEach((k) => fixed.add(k)); }); } // E1087
   // E48
