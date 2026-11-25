@@ -83,6 +83,12 @@ function chaseCrown(side, put) { const s = SIDES[side], has = (c) => blds(side, 
   if (ECON.opened() && ECON.nextAge(side) === D.age.hidden && !s.aging) ECON.ageUp(side);
   if (s.age === D.age.hidden) { const [lab] = last.map((c) => T[c].value.at); if (!has(lab)) put(lab); else last.some((c) => ECON.research(side, c)); } }
 function* whileHome(side, gen) { while (home(side) && !gen.next().done) yield; } // E1021
+const SEAT = () => Object.keys(D.cost).find((c) => FK.SH[c] && FK.has({ code: c }, 'Seat') && Object.keys(D.cost[c]).length); // E2731
+function* rebuilding(side) { const s = SIDES[side], vs = ECON.villagersOf(side); if (!vs.length || home(side)) return; const tc = SEAT(), c = WAR.centreOf(vs), site = blds(side, tc).find((b) => !up(b)); // E2731
+  if (site) { if (!vs.some((u) => u.target === site)) ECON.autoBuilder(side, site); return; } yield;
+  if (ECON.canPay(side, D.cost[tc])) { raise(side, tc, c.bx, c.by, ...RG.build); return; } yield;
+  const lack = Y.filter((y) => of(D.cost[tc][y]) > s.store[y]); for (const y of lack) { yield; const f = vs.map((u) => ECON.bestFind(u, y)).find(Boolean); if (!f) continue; const d = FK.dropFor({ side, bx: f.bx, by: f.by }, y); if (!(d && dist(d, f) < AT.drop.near * D.tile) && camps[y] && !rising(side, camps[y])) raise(side, camps[y], f.bx, f.by, ...RG.drop); }
+  yield; let i = 0; for (const u of vs) { if (!lack.length) break; if (ECON.jobOf(u) === 'build' || (ECON.jobOf(u) && lack.includes(ECON.jobOf(u)))) continue; const y = lack[i++ % lack.length], f = ECON.bestFind(u, y); if (f) ECON.gatherAt(u, f); } }
 function* thinking(side) { const s = SIDES[side], P = per(side), h = home(side), m = mind[side]; if (!h || !P) return; const R = s.store, vs = ECON.villagersOf(side), armyN = WAR.armyOf(side).length, t = FK.K.t, put = (code, at, [r0, r1]) => raise(side, code, at.bx, at.by, r0, r1), jobs = ECON.jobs(side), vil = born(h);
   if (t - of(m.siteT) >= AT.site) { m.siteT = t; for (const b of blds(side)) if (!up(b) && !ECON.wallish(b) && !vs.some((u) => u.target === b)) ECON.autoBuilder(side, b); }
   yield; const due = {}, flat = s.age >= AT.apart.age && ECON.canPay(side, AT.apart.cost) && !ECON.capWhy(side, A.apartment) ? A.apartment : HOUSE; // E530
@@ -178,7 +184,7 @@ const level = () => { DF = A.diff[MENU.S.game.diff]; };
 FK.on('begin', () => { level(); per(D.players[1]); const them = D.players.filter((s) => s !== ME); them.forEach((s, i) => { clock[s] = (DF.react * i) / them.length; }); for (const side of D.players) { if (side === ME) continue; const h = home(side); if (!h) continue; for (const code of A.start) { const [r0, r1] = RG.start, at = spot(code, h.bx, h.by, r0, side, r1); if (!at) continue; const t = ECON.site(side, code, ...at); if (t) { t.done = D.rising.done; t.hp = t.hpMax; FK.wear(t); } } } }); // E712
 FK.on('start', () => { rates.clear(); rings.clear(); // E683
   claimT.clear(); helped.clear(); league = null; mind.forEach((_, i) => { mind[i] = {}; }); });
-FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] -= DF.react; FK.task('think' + side, whileHome(side, thinking(side))); } } });
+FK.on('tick', (dt) => { if (ECON.result()) return; if (FK.every(D.beats.slow)) leagueTick(); for (const side of D.players) { if (side === ME) continue; clock[side] += dt; if (clock[side] >= DF.react) { clock[side] -= DF.react; FK.task('think' + side, home(side) ? whileHome(side, thinking(side)) : ECON.fell(side) ? (function* () {})() : rebuilding(side)); } } }); // E2731
 FK.on('save', (X) => { X.ai = { clock, rings, claimT, helped, league, mind, hand }; }); // E668 E2674
 FK.on('load', ({ ai: M }) => { league = M.league; if (M.hand && M.hand.seed === FK.seed()) { hand = M.hand; naming(); } const keep = { clock, rings, claimT, helped, mind }; for (const k in keep) FK.refill(keep[k], M[k]); rates.clear(); level(); });
 return { think: (side) => FK.finish(thinking(side)), mind, spot, raise, wallPlan, gapOnRoad, chokeClaim, peaceAll, diplomacy, allyDuty, leagueTick, bestCounter, goalOf, needOf, runsOut, rateFrom, plotPays, decideWar, cap, aim, per, goal: (side) => (goalOf(side, per(side), false) || {}).what || null }; // E1401

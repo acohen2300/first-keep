@@ -49,8 +49,10 @@ const many = (side, c) => FK.blds().filter((t) => t.side === side && t.code === 
 const YAGE = {}, yieldAge = (y) => { if (y in YAGE) return YAGE[y]; let a = Infinity; const see = (cost, age) => { if (cost && y in cost && age < a) a = age; }; for (const c in D.cost) if (!FK.SH[c] || !FK.SH[c].civ) see(D.cost[c], D.bldAge[c] ?? (FK.SH[c] && FK.SH[c].age ? D.ages.indexOf(FK.SH[c].age) : 0)); for (const c in T) if (!T[c].value.civ) see(T[c].value.cost, T[c].value.age ?? 0); D.age.cost.forEach((cost, i) => see(cost, i - 1)); return (YAGE[y] = a); }; // E734
 const limitOf = (side, c) => { const cp = Object.values(FK.stat(c, side, 'limit') || {}); return cp.length ? cp[SIDES[side].age] ?? cp.at(-1) : null; }; // E2061
 function lockWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1); // E851
+  if (FK.has({ code: c }, 'Seat') && !FK.seatOf(side)) return ''; // E2734
   if (D.bldAge[c] > age) return `${D.ages[D.bldAge[c]]} age`; if (D.bldTech[c] && !SIDES[side].techs.has(TK[D.bldTech[c]])) return SAY.research.replace('{name}', T[TK[D.bldTech[c]]].name); if (D.bldNeeds[c] && !things().some((t) => t.side === side && t.code === D.bldNeeds[c] && up(t))) return SAY.standing.replace('{b}', FK.SH[D.bldNeeds[c]].name); return cp.length && !n ? SAY.laterAge : ''; }
 function capWhy(side, c) { const cp = Object.values(FK.stat(c, side, 'limit') || {}), age = SIDES[side].age, n = cp[age] ?? cp.at(-1), lock = lockWhy(side, c); // E313
+  if (FK.has({ code: c }, 'Seat') && !FK.seatOf(side)) return ''; // E2734
   if (lock) return lock; return !cp.length || many(side, c) < n ? '' : SAY.limit.replace('{n}', n) + (cp[age + 1] > n ? SAY.more : ''); }
 const byWater = (i, j, n, r) => { for (let y = j - r; y < j + n + r; y++) for (let x = i - r; x < i + n + r; x++) if (x >= 0 && y >= 0 && x < N && y < N && (H[y * N + x] <= 0 || FK.MARSH[y * N + x])) return true; return false; }; // E1068
 const TOUCH = new Set(P.touch), laneOf = (c) => P.lanes[c] ?? P.lane, gapOf = (c, d) => (TOUCH.has(c) && TOUCH.has(d) ? 0 : Math.max(laneOf(c), laneOf(d))); // E1294
@@ -256,7 +258,8 @@ FK.on('tick', (dt) => {
   if (FK.every(DG.beat)) { dangerMap(); watch(); sites(); homeIdle(); } if (FK.every(DG.look)) leave(); if (FK.every(FL.look)) for (const u of units()) if (FK.has(u, 'Gather') && SIDES[u.side]) fright(u, FK.seatOf(u.side)); if (FK.every(D.peaceBeat)) judge();
 });
 FK.on('gone', (t) => { t.gone = true; if (SIDES[t.side] && (t.q || []).some((c) => D.ages.includes(c))) SIDES[t.side].aging = 0; }); // E2561
-FK.on('gone', (t) => { if (FK.has(t, 'Wonder') && t.held != null) tell(EW.lost[+(t.side !== ME)], { side: EW.sides[t.side] }); if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side) || fell.has(t.side) || things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) return; fall(t.side, t.killer); }); // E2709
+FK.on('gone', (t) => { if (FK.has(t, 'Wonder') && t.held != null) tell(EW.lost[+(t.side !== ME)], { side: EW.sides[t.side] }); if (result || !FK.has(t, 'Seat') || !D.players.includes(t.side) || fell.has(t.side) || things().some((q) => FK.has(q, 'Seat') && q.side === t.side)) return; sack(t.side, t.killer); }); // E2709 E2732
+FK.on('tick', () => { if (result || !FK.every(D.beats.slow)) return; for (const p of D.players) if (!fell.has(p) && !FK.seatOf(p) && !villagersOf(p).length) fall(p); }); // E2733
 FK.on('start', () => { result = emg = FK.near = null; bell = 0; warnT = -Infinity; fell.clear(); rang.clear(); turned = Math.floor(FK.yt() / D.season); harvest = D.harvest.at(-1); for (const s of SIDES) Object.assign(s, fresh(), { store: { ...D.start }, capA: null }); for (const s of D.players) { scares[s] = []; delete FK.DANGER[s]; } // E225
   for (const side of D.players) villagersOf(side).forEach((u, i) => { const f = bestFind(u, D.first.jobs[i] || D.first.rest); if (f) gatherAt(u, f); }); });
 // E436
@@ -333,8 +336,8 @@ function sites() { if (emg) return; for (const t of FK.blds()) if (SIDES[t.side]
   if (!FK.reached(t.side, t, t.bx, t.by)) { if (t.side === ME && !t.told) tell(SAY.site, { b: FK.SH[t.code].name }); t.told = true; continue; } t.told = false; if (wallish(t) && wallsBusy(t.side)) continue;
   const [v] = villagersOf(t.side).filter((v) => (idleU(v)) && !v.inside && !v.den && !v.emg && R.has(v.k)).sort((a, b) => dist(a, t) - dist(b, t)); if (v) buildAt(v, t); } }
 // E447
-function fall(side, by) { fell.add(side); const s = SIDES[side]; if (SIDES[by] && by !== side) { const got = { ...s.store }; for (const t of things()) if (t.kind === 'bld' && t.side === side) for (const [y, n] of Object.entries(D.cost[t.code] || {})) add(got, y, Math.floor(n * D.plunder)); for (const y in got) { earn(by, y, got[y], 'loot'); spend(side, y, s.store[y], 'loot'); } }
-  for (const u of units().filter((u) => u.side === side)) WAR.die(u, null, 'fell with its side'); for (const t of FK.blds().filter((t) => t.side === side)) FK.unbuild(t);
+function sack(side, by) { const s = SIDES[side]; if (SIDES[by] && by !== side) for (const y in s.store) { const n = s.store[y]; if (n > 0) { earn(by, y, n, 'loot'); spend(side, y, n, 'loot'); } } for (const y in D.start) s.store[y] = Math.max(s.store[y] || 0, D.start[y]); if (side === ME) tell(EW.seatLost, {}); else tell(EW.seatFell, { side: EW.sides[side] }); } // E2732
+function fall(side) { fell.add(side); // E2733
   const left = D.players.filter((p) => !fell.has(p)), n = Math.floor((D.armyMax * D.fallen.share) / left.length); for (const p of left) SIDES[p].capA = ~~SIDES[p].capA + n; if (side !== ME) { tell(EW.fallen, { side: EW.sides[side], have: EW.have[+!EW.sides[side].endsWith('s')] }); if (left.includes(ME)) tell(EW.shared, { n }); } }
 const wonderUp = () => things().filter((q) => FK.has(q, 'Wonder') && up(q) && q.held != null).sort((a, b) => a.held - b.held)[0]; // E1071
 function judge() { if (result) return; const t = MENU.clock(bell), rivals = D.players.filter((p) => p !== ME); if (fell.has(ME)) return finish(false, EW.fell, { t }); if (rivals.every((p) => fell.has(p))) return finish(true, EW.rivals, { t }); // E448

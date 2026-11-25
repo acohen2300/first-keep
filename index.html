@@ -1095,7 +1095,7 @@ function searchPath(from, goal, near, most, who, thru) { // E90 E2716
 const DANGER = {}, REACH = new Map(); let WALKV = 0; // E452
 function reach(side) { const h = things.find((t) => t.side === side && has(t, 'Seat')), who = units.find((u) => u.side === side) || null; // E453
   const key = [K.iceOn, K.flood > K.t, h && h.i, stat('', side, 'flood'), ...[...GATES.values()].map((s) => fire('shut', s, who))].join(), r = REACH.get(side), [stale] = D.beats.slow; if (r && r.key === key && (r.v === WALKV || (K.t >= r.t && K.t - r.t < stale))) return r.set; // E1014
-  const seen = new Uint8Array(N * N), Q = []; if (h) stamp(h.bx, h.by, h.n * D.tile, (k) => { if (!seen[k] && walkable(k, who)) { seen[k] = true; Q.push(k); } });
+  const seen = new Uint8Array(N * N), Q = []; if (h) stamp(h.bx, h.by, h.n * D.tile, (k) => { if (!seen[k] && walkable(k, who)) { seen[k] = true; Q.push(k); } }); else for (const u of units) if (u.side === side && !seen[u.k] && walkable(u.k, who)) { seen[u.k] = true; Q.push(u.k); } // E2734
   for (const k of Q) around(k, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who);
   const set = { has: (k) => !!seen[k] }; REACH.set(side, { key, set, seen, who, v: WALKV, t: K.t }); return set; }
 function opened(k) { labOpen(k); for (const r of REACH.values()) { const { seen, who } = r; if (seen[k] || !walkable(k, who)) continue; let joined = false; around(k, (q) => { joined = joined || !!seen[q]; }, who); if (!joined) continue; const Q = [k]; seen[k] = true; for (const p of Q) around(p, (q) => { if (!seen[q]) { seen[q] = true; Q.push(q); } }, who); } } // E978
