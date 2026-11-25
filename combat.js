@@ -178,7 +178,7 @@ function brain(u, dt, look) { // E396
   if (t && !u.focus && ((u.stand || (temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null)) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
   if (!t && u.stand && !u.focus) t = nearest(u, s.rng); // E2669
   if (u.sent && !u.focus && (onMarch(u) || u.was != null)) t = struck(u) ? t || u.hitBy : null; // E1092 E2701
-  if (t && t.kind === 'unit' && !ranged(u) && ranged(t) && !u.chg && u.rush !== t && d(t) > s.rng && d(t) <= stat(t).rng) { u.rush = t; u.chg = K.t + CH.secs; } // E2702
+  if (t && t.kind === 'unit' && !ranged(u) && ranged(t) && !u.chg && u.rush !== t && d(t) > s.rng && d(t) <= stat(t).rng) { u.rush = t; u.chg = K.t + CH.secs; u.mor = Math.min(MO.full, u.mor + CH.nerve); } // E2702 E2741
   u.pacex = shapeOf(u).spd * (marching(u) && u.slow ? u.slow : 1) * (u.chg ? CH.spd * FK.stat(u.code, u.side, 'charge') : u.tire ?? D.bases.pace);
   if (t && u.target !== t) { if (u.job !== 'fight') u.was = isIdle(u) ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
   else if (!t && u.job === 'fight') { u.target = null; u.path = null; if (u.was != null) march(u, u.was); else u.job = 'idle'; u.was = null; }
