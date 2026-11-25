@@ -3,7 +3,7 @@
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
 ## Now
-- Latest build: v109 (https://acohen2300.github.io/first-keep/fresh/v109/)
+- Latest build: v110 (https://acohen2300.github.io/first-keep/fresh/v110/)
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
@@ -48,7 +48,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - His two Mints likely turned 8,800 stone into gold he did not need: stone at 0 from minute 116 (not traced)
 - Frames of 1.9 s at minute 115 and 1.2 s at minute 141 (ask: paused?)
 - Traps: the code runs each beat but nothing lays one; drop the trap look-up until the natives' design pass
-- For after the freeze (his asks, Nov 23 22:27): a side fights on after its last seat falls, until its last person is dead, its people shown on the map; food from conquest
+- [x] The ending (v110): the felling side takes the store, the fallen keep the starting stores, fight on and rebuild (a computer raised its Town Center again in about 2 minutes in a test); beaten at the last villager, soldiers fight on. Still open: its people shown on the map
 
 ## From his v108 match, Nov 24 (123 min, seed 3151351816, fertile, Easy, a win; read from the copied log)
 - [x] Rivals didn't fix their own shortages (Nov 24, v109): given a short yield, a computer took its hand from the first yield in the list, not the one it had most of, and never from a post; traced on his seed, one side sat 17 to 21 on iron with 2,600 banked; after: no yield piles up, the side grew to 50 villagers (from 33 to 42). Note: the log's rows run you, red, green, white (not side number), so the side short of wood in v108 was green (row 3)
@@ -67,6 +67,12 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - [x] Formations (v109): Wide and Battery take half from arrows and siege shot (derived from their spacing); Crescent's archers all shoot one foe; siege's Specialty named Battery. Correction: Mode was not locked (only the formation tiles behind the door wait for the research, as ruled), and each shape's speed was in use
 - [x] Boarding up (v109): the War card's bell tile is split, bell = alarm, boarded house = Prep. Still open: the computers never board up
 - Trade routes are totally broken and need a major overhaul and redesign (his words, Nov 24); what fails not yet traced
+
+## His Nov 24 evening calls (v110)
+- [x] Ice, one set of rules: the rivals cross by a mode their nature picks (raiders step on, rivals single file, fortresses thin out) under the same rules as yours; the computer-only load check is gone
+- [x] Walls to the edge: a wall piece may stand on a bank, in wading water and beside trees, so a wall runs to deep water or the wood with no gap (the bank slope and the lane kept from trees left a gap)
+- [x] Fishing: a villager sent to fish with no Dock in reach lays one (if paid for) and fishes there; else a note says a Dock is needed. Each Dock holds one fisher, so two villagers lay two Docks
+- Still open: the wood's edge lets foot through (woods are walkable to them), so a wall to a wood can still be gone round through the trees
 
 ## Open, older
 - "Tap to move and they don't move": no repro yet (copy the log right after it happens)

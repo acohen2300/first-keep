@@ -637,6 +637,18 @@ async def batch_ab():
           return { jobs: J, cell, build: card.includes('mtab|Build|'), tile }; })()""")
         return a, b
 
+async def fish_and_walls():
+    """Nov 24: villagers sent to fish with no Dock lay one and fish; a wall piece may stand on a bank and in wading water, not in deep water."""
+    async with run.game(SEED) as pg:
+        await run.step(pg, 2)
+        w = await pg.evaluate("""(() => { const N = FK.N, H = FK.H, h = FK.seatOf(0), i0 = Math.floor(h.bx / D.tile), j0 = Math.floor(h.by / D.tile); let bank = null, shallow = null, deep = null;
+          for (let r = 1; r < 80 && !(bank && shallow && deep); r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) { const i = i0 + dx, j = j0 + dy, k = j * N + i; if (FK.OCC[k] || FK.FOR[k]) continue; if (!bank && H[k] > 0 && H[k] < D.land) bank = [i, j]; if (!shallow && H[k] <= 0 && H[k] > -D.wade / 2) shallow = [i, j]; if (!deep && H[k] < -D.wade) deep = [i, j]; }
+          const fish = fk.things().filter((f) => fk.has(f, 'Catch')).sort((a, b) => fk.dist(a, h) - fk.dist(b, h))[0], V = ECON.villagersOf(0).slice(0, 2); window.FV = V; window.F0 = FK.SIDES[0].store.food; const sent = V.map((u) => ECON.gatherAt(u, fish));
+          return [[bank, shallow, deep].map((p) => !!p && ECON.canPlace('BW1', p[0], p[1], 0)), sent]; })()""")
+        await run.step(pg, 90)
+        f = await pg.evaluate("[FV.filter((u) => u.target && u.target.code === 'BCT2' && u.job === 'gather').length, fk.blds().filter((b) => b.side === 0 && b.code === 'BCT2' && b.done >= 1).length]")
+        return w, f
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -694,6 +706,9 @@ async def check_game():
     rule('a computer with no wood and 9,000 iron takes hands off iron for wood within a minute and a half', ab1['jobs'].get('wood', 0) > 0 and ab1['jobs'].get('iron', 0) < ab0['was'], f'on iron at the start {ab0["was"]}, after: {ab1["jobs"]}')
     rule('the people cell reads people over room before the cap (Albert, Nov 24: caps showing)', ab1['cell'] is not None, f'cell: {ab1["cell"]}')
     rule('the villager card has Build, and its job tile says how many work that job', ab1['build'] and 'working' in ab1['tile'], f'Build: {ab1["build"]}; tile: {ab1["tile"]!r}')
+    fw0, fw1 = await fish_and_walls()
+    rule('fishing with no Dock: the villagers lay Docks by the water and fish there (Albert, Nov 24: no way to fish)', fw0[1] == [True, True] and fw1[0] == 2 and fw1[1] >= 1, f'sent {fw0[1]}; fishing at a Dock, Docks standing: {fw1}')
+    rule('a wall piece stands on a bank and in wading water, never in deep water, so a wall can run to the water with no gap (Albert, Nov 24)', fw0[0] == [True, True, False], f'bank, wading, deep: {fw0[0]}')
     nw = await no_way()
     rule('a wave leaves only on a whole route to its mark, and turns home at once when it stands with no way on', nw['sea'] and nw['none'] == 0 and nw['noWave'] and nw['went'] > 0 and nw['kept'] and nw['home'] and nw['cool'], str(nw))
     sp, sq = await spoils()
