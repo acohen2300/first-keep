@@ -93,6 +93,9 @@ def check_rules():
 
 def check_books():
     B = books(); N, Q, E = B['citations'], B['laws'], B['comments']
+    # the picture stays sharp and the rate steady (Albert, Nov 25, after Build 41 beside v111): the draw budget may shed shadows and motion, never pixels, and holds one frame rate
+    dr = next(e['value'] for e in B['measure'].values() if e.get('key') == 'draw')
+    rule('the picture never drops below full resolution, and the game holds one frame rate', all(r == 1 for r in dr['res']) and dr['lv']['fps'] == 0, f"res {dr['res']}, the rate from level {dr['lv']['fps']}: {dr['fps']} a second")
     code = '\n'.join((ROOT / f).read_text(encoding='utf-8') for f in CODE)
     # one home: a code is in one book only
     seen = {}; twice = []
