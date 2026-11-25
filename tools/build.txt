@@ -16,3 +16,4 @@ books/tech.js
 tools/check.py
 tools/build.txt
 LIST.md
+tools/kept.json
