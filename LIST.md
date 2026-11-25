@@ -3,14 +3,14 @@
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
 ## Now
-- Latest build: v110 (https://acohen2300.github.io/first-keep/fresh/v110/)
+- Latest build: v111 (https://acohen2300.github.io/first-keep/fresh/v111/)
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
   2b. [x] Units book (Nov 23): books/units.js, 120 words; 160 spellings down to one each (s/seconds, px/pixels, °C/degrees C; "power" the exponent is now "exponent", upkeep's "shares" are "person shares", the world's "units" are "world units"); the check refuses a unit not in the book
-  3. [ ] Rule fixes that change play, one build each with his playtest: what-beats-what back on the Train tile; full load 8 at 2.5 kg (one weight, D53 vs W24); cold ration 0.385 (open N275 first); the laws' fog text (QAN); the five dead research get their effects
+  3. [x] Rule fixes (v111, Nov 25, one build on his word): what beats what back on the Train tile (a mark after the cost); a full load 8 at 2.5 kg (W24 now 2.5; walking under a load follows Pandolf, no longer fitted to 0.9); cold ration 0.385 (N275 opened for the 4,500 kcal; the 3,250 still to read at the regulation); the laws' fog text; the dead research wired as in Mid's source (Chimney: gathering +5% in winter; Law code, Magistrates: less unrest from tribute; Local guides: half the unfamiliar-ground penalty; Midwives: two villagers at a line's head train together)
   - Deferred (his call, Nov 24: "too complex for now"): the clock (his Nov 19 ruling, never built, lost in the Nov 20 purge): D20 day 240 to 300 s, D21 season 360 to 900, D22 year 1,440 to 3,600, night 25% of the day; re-time what hangs on them (ice degree-days, fish's yearly regrowth, fields and tree farms' 36 min, upkeep, dry days, leaf stages), the economy kept per minute of play. Source: docs/3 Locks/Drafts/03 Time - the clocks.md at commit 442a1fa^
-  - Sweep the Nov 20 purge (commit 442a1fa^, docs/3 Locks and docs/4 Now) for other rulings that were owed and are not in RULINGS.md
+  - Sweep of the Nov 20 purge: the lines dated Nov 16 to 20 read (Nov 25); nothing owed found beyond the clock (the Nov 19 card rulings were replaced by his Nov 20 to 22 designs). Older lines not read
   - From the look-up (docs/log/chosen-lookup-2026-11-23.md, 25 of 60 done), for his call, each its own build: wade to 1.0 m (D24) or deepen the river; wolf packs of about 6; mortar's line at 4.4 °C; the boar 1.14 of a deer; the day's swing about 11 °C; the winter −2 °C; decide what a unit of food weighs before the load at 8
 - After the freeze: the computers selling surplus; computers trying new things; pioneers by person, then machine; sounds (the under-attack sound first; 8 written but never played); bridges (spec on branch fresh-notes, review/spec-roads.md); zeal and priests
 
@@ -62,7 +62,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - [x] Pause menu halved (v109)
 - White outlines on the job boxes, war buttons and speed boxes mean nothing (with the colour talk)
 - [x] The villager card (v109): titled Villager Control, says Gathering food, has Build beside Garrison (and Jobs back), its tiles read '5 working' with her own job lit
-- Home pocket and water: built on branch map-c, not published (a map change, waiting on his word): one water a game (creek with a ford, lake, pond, spring) and one turn of the finds (up to 35 degrees, sometimes mirrored, never by water), the same for all four homes; finds near each home measured equal on seeds 7, 11, 22, 33. Two checks fail with it: (1) told: 3 villagers on one bush of a 21-bush patch, the 4th walks 48 tiles to another patch (a real bug the new layout shows; not yet traced); (2) rush: 14 foot rout under 14 archers before reaching them in v109 too (2.8 tiles there, 5.3 here: the test passed by luck)
+- [x] Home pocket and water (v111): one water a game (creek with a ford, lake, pond, spring) and one turn of the finds, the same for all four homes, never by water. The two faults it showed, fixed: a villager sent to a full find takes the nearest of its kind beside it (she walked 48 tiles to a better-paying bush); the run-in test faces 7 archers. His call still open: 14 archers kill 14 spearmen before they arrive (an archer strikes a spearman x 2.6 by the counters; the foot break at 5 dead and are shot running)
 - [x] Caps show (v109): the people cell always people/room, gold within 5, red at it; the War card's title soldiers/army ceiling
 - [x] Formations (v109): Wide and Battery take half from arrows and siege shot (derived from their spacing); Crescent's archers all shoot one foe; siege's Specialty named Battery. Correction: Mode was not locked (only the formation tiles behind the door wait for the research, as ruled), and each shape's speed was in use
 - [x] Boarding up (v109): the War card's bell tile is split, bell = alarm, boarded house = Prep. Still open: the computers never board up
@@ -73,6 +73,11 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - [x] Walls to the edge: a wall piece may stand on a bank, in wading water and beside trees, so a wall runs to deep water or the wood with no gap (the bank slope and the lane kept from trees left a gap)
 - [x] Fishing: a villager sent to fish with no Dock in reach lays one (if paid for) and fishes there; else a note says a Dock is needed. Each Dock holds one fisher, so two villagers lay two Docks
 - Still open: the wood's edge lets foot through (woods are walkable to them), so a wall to a wood can still be gone round through the trees
+
+## Nov 25 build (v111)
+- [x] An attack on his is heard and felt: an alarm (three notes, wherever the camera is) and a buzz, once in 20 s
+- [x] A side with no Town Center: its people shown through the fog
+- Not done: the computers board up and ring the alarm (the alarm and Prep are written for his side only: a rewrite); the wood at a wall's end; news when a rival falls was already told (seat fallen, then fallen), check it in his next log
 
 ## Open, older
 - "Tap to move and they don't move": no repro yet (copy the log right after it happens)
