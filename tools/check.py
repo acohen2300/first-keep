@@ -340,7 +340,7 @@ async def logs():
         await run.step(pg, 64)
         L = json.loads(await pg.evaluate("MENU.logText()"))
         end = [r for r in L['orders'] if r[1] == 'ended']
-        lost = {k: v for r in L['rows'] for k, v in (r.get('lost') or {}).get('0', {}).items()}
+        lost = {k: v for r in L['rows'] for k, v in (r.get('lost') or {}).get(L['sides'][0], {}).items()}  # the log names sides by colour since Nov 24
         return (end[-1][3] if end else None), lost
 
 async def home():
