@@ -13,6 +13,7 @@ books/citations.js
 books/screen.js
 books/tech.js
 books/laws.js
+books/sound.js
 books/mass.js
 books/shells.js
 tools/check.py
