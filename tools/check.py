@@ -701,7 +701,7 @@ async def check_game():
     fl, fe = await full_lines()
     rule('a Train tap on a full line goes to the least busy barracks with room, says so in a note, and is refused only when every line is full', fl[1:5] == [fl[0], True, fl[0], 1] and fl[5] == fl[11] and fl[6:11] == [fl[0], False, fl[0], fl[0], 1] and not fe, f'line size, first filled, tap taken, the two lines, the note, second filled, last tap taken, the two lines, refused: {fl}; errors: {fe[:2]}')
     ti = await thin_ice()
-    rule('thin ice: no soldier of any side gets a way onto ice too thin to bear him at the safe load, none drowns, the ice stays whole; ice that bears yours lets them on, not the computer\'s', ti is not None and ti[0] == [False] * 4 and ti[1] == [0, 0] and ti[2] == [True, False] and not ti[3], f'ways {ti and ti[0]}, drowned and holes {ti and ti[1]}, bears (yours, computer) {ti and ti[2]}, errors {ti and ti[3]}')
+    rule('thin ice: no soldier of any side gets a way onto ice too thin to bear him at the safe load, none drowns, the ice stays whole; ice that bears yours lets the computer\'s on as well, one set of rules for every side (Albert, Nov 24)', ti is not None and ti[0] == [False] * 4 and ti[1] == [0, 0] and ti[2] == [True, True] and not ti[3], f'ways {ti and ti[0]}, drowned and holes {ti and ti[1]}, bears (yours, computer) {ti and ti[2]}, errors {ti and ti[3]}')
     ac, ae = await alarmed()
     rule('the alarm leaves nobody idle in the open: every building with room fills, the rest gather beside the town center', ac['n'] >= 40 and ac['open'] == 0 and ac['other'] == 0 and ac['inside'] == min(ac['room'], ac['n']) and not ae, f'{ac}, errors {ae}')
     ws, w0, w1 = await walled()
