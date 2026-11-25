@@ -1540,7 +1540,7 @@ const lux = () => { const S = EYE.sun, [full, quarter] = EYE.moon; const i = Mat
   return ((K.alt < a0 ? null : l0 * (l1 / l0) ** f) + full * K.moonLit ** Math.log2(full / quarter) * Math.max(0, Math.sin((K.moonAlt * Math.PI) / EYE.deg)) + EYE.star) * (K.wetHour ? EYE.overcast / EYE.star : 1) * (1 + Math.min(1, K.snow / G.snow.full) * (EYE.albedo.snow / EYE.albedo.grass - 1)); }; // E717
 const XP = D.exposure, exposure = (code, side) => clamp(stat(code, side, 'chill') * (clamp((XP.cold - K.temp) / XP.span, 0, 1) * stat(code, side, 'cold') + Math.min(1, K.wet) * stat(code, side, 'wet')), 0, 1); // E808
 const sightOf = (t) => { const lamp = (t.kind === 'bld' && stat(t.code, t.side, 'lamp')) || null, a = clamp(Math.log(lux() / EYE.floor) / Math.log(EYE.ref / EYE.floor), 0, 1); const m = stat(t.code, t.side, 'sight') / stat(t.code, null, 'sight'); return Math.min(m * Math.sqrt(EYE.earth * stat(t.code, t.side, 'eye')) * D.upm, m * EYE.day * D.upm * (1 - (1 - a) * (1 - lamp)), K.vis * D.upm); }; // E600
-on('hide', (t) => !inSight(t) && !(t.kind === 'bld' && memOf(ME).has(t))); // E603
+on('hide', (t) => !inSight(t) && !(t.kind === 'bld' && memOf(ME).has(t)) && !(t.kind === 'unit' && SIDES[t.side] && t.side !== ME && !seatOf(t.side))); // E603 E2745
 // E604
 let lessMotion = false; try { lessMotion = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 const DRAW = { lvl: null, ema: null, slow: null, fast: null, alpha: 1 }, still = () => lessMotion || DRAW.lvl >= DRW.lv.motion, rate = () => (resting() ? D.rest.idle : DRAW.lvl >= DRW.lv.fps ? DRW.fps : D.fps); // E822
