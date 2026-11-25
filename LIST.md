@@ -3,7 +3,7 @@
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
 ## Now
-- Latest build: v108 (https://acohen2300.github.io/first-keep/fresh/v108/)
+- Latest build: v109 (https://acohen2300.github.io/first-keep/fresh/v109/)
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
@@ -26,9 +26,9 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 
 ## From his v106 match, Nov 23 (155 min, seed 1845505063, stony; read from the copied log, not yet traced in code)
 - A rival over the people cap: white at 186 of 180 from minute 107 to 117
-- 8 of his villagers lost to "stampede" at 137:00 with no elephants of his own; cause unknown; no warning he would see
+- [x] 8 of his villagers lost to the stampede (v109: no blow until sourced)
 - Own-side kills: 1 of his at 134:00; 3 of white's by white at 154:00 (white had war elephants: amok?)
-- The copied log orders the sides two ways: stores and armies as you, red, green, white; losses as you, green, red, white
+- [x] The log's two side orders (v109): rows by colour order, losses by side number; now both by colour
 - Warnings don't reach him: he never opened the news feed in 155 minutes (the stampede, the wall, the elephant under attack were all there); they belong in sound and on the map (with the sounds work). The feed also printed about 60 wall lines for one choke point
 - Frames of 1.0 s at minute 98 and 1.1 s at minute 121 (ask: paused?)
 - He starved at food 0 to 1 from 147 to 153 holding 13,900 stone; upkeep took about 70% of income at a full army (D211 as built; a balance call, his)
@@ -38,9 +38,9 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 
 ## From his second v106 match, Nov 23 (237 min, seed 3378513659, golden; read from the copied log)
 - [x] A fallen side's store went to nobody (his find: "why am I not getting food from killing other towns?"): the side-falls line read the building's old by, since Nov 22 its board row; fixed, with a test that fells a side (v107)
-- White's villagers drowned in batches, about 88 in the match (13 at minute 93, 14 at 96, 41 from 202 to 208); cause unknown
-- "No way": 30 or more orders, up to 104 soldiers at once, on his attacks at A9 to A11 and on town centers
-- Stampede killed soldiers too (2 of his, 1 of red's, minute 201)
+- [x] White's villagers drowned in batches (v109): the computers crowded the ice past what it bears; now a computer's man steps onto an ice tile only while it bears him with those on it (not traced on that match's own ice)
+- [x] "No way" (v109): with no wall on the straight line, a search that may pass through foe buildings finds the one in the way, and the soldiers strike it (not replayed on his map)
+- [x] The stampede (v109): no blow until its damage is sourced, with a warning and a way to protect (RULINGS, Nov 23)
 - Over the cap again: red 171 to 174 of 168, green 186 of 180
 - 350 taps met "That line is full", 63 "No room"; he removed 25 of his own villagers to fit soldiers
 - [x] Rival waves stood about 150 tiles short of his town and went home (Nov 24, the pathing build): a soldier's jam check measured the straight line to his place, so a road bending round water read as a jam and he stood; now it counts road left. Also: a wave sets out only on a whole route, and one stood with no way on turns home at once. Traced on seed 2865904926: red reached 15 tiles of his town three times in 25 minutes, white 24
@@ -51,21 +51,21 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - For after the freeze (his asks, Nov 23 22:27): a side fights on after its last seat falls, until its last person is dead, its people shown on the map; food from conquest
 
 ## From his v108 match, Nov 24 (123 min, seed 3151351816, fertile, Easy, a win; read from the copied log)
-- Rivals don't fix their own shortages: side 2 under 100 wood from minute 1 to 56 and at 0 to 40 for most of 58 to 111 with 93 villagers, army stuck at 141, goal stuck 40 minutes; side 3 at 37 stone from minute 68 to the end. First to fix
-- The copied log folds every "X is attacked at Y" into one line (keyed on the last 4 words): 1,253 warnings show as one at 122:48, so when attacks began is lost, and nothing else reached the news after the first one (not even a side falling?); check whether the feed in the game does the same
-- Side 1 killed 6 of its own soldiers (amok elephants? with the own-side kills above)
+- [x] Rivals didn't fix their own shortages (Nov 24, v109): given a short yield, a computer took its hand from the first yield in the list, not the one it had most of, and never from a post; traced on his seed, one side sat 17 to 21 on iron with 2,600 banked; after: no yield piles up, the side grew to 50 villagers (from 33 to 42). Note: the log's rows run you, red, green, white (not side number), so the side short of wood in v108 was green (row 3)
+- [x] The copied log folded every attack warning into one line (v109): a line folds only into the same words, and keeps when the run began and when it last came; the log now names sides by colour, and a sides line gives each row's colour. Still open: no news when a rival falls; warnings never reach him (sound and map, with the sounds work)
+- Green killed 6 of its own soldiers at minute 54: green had 3 war elephants then; amok as ruled (RULINGS, Elephants, Nov 23). Not a bug
 - Confirmed working: rival waves reached his town (minutes 8, 46, 49, 81; at 84 he lost 7 villagers and 2 soldiers); spoils at 117 (63,651); no rival over the cap; worst frame 0.8 s
 - Easy is too easy: his army sat at 42 to 46 from minute 50 to 103 with 20,000 food and room for 52 more, and still won; nothing pressures a big bank (a balance call, his). Next: his Normal match
 
 ## His v107 play notes, Nov 24 (screens looked at Nov 24)
-- One layout pass for the cards, as one build: the bottom has two dark shadows that meet in a double edge; Hide is a lone "−" floating over the map above the bar; "Villager › Food" reads as a path, not her work ("Gathering food"); two Villager labels stacked (gold chip and green chip; he wants the gold one "Villager Control"); separators "→" on Pause and "›" on the cards; "pick troops" (own tab above the bar) and "choose a job below" (inline, mid-row) differ in place and size
-- The pause menu takes about 30% of the screen for 6 buttons (Speed and Sounds side by side?)
+- [x] Card pass (v109): touching dark patches drawn as one (no doubled shadow); Hide a round chevron button; the pause card half as tall, Speed and Sounds side by side; one separator (›); every card's hint in one place. Still open: the white outlines (he set them full Nov 21: 'tile outlines full, odim 35 → 100'), with the colour talk
+- [x] Pause menu halved (v109)
 - White outlines on the job boxes, war buttons and speed boxes mean nothing (with the colour talk)
-- His call (Nov 24 18:18): the villager card keeps the jobs and gets Build; the job numbers must read clearly
-- His call (Nov 24 18:18): the home pocket keeps the same finds every game, laid out at random inside it (supersedes Nov 10 #6's fixed spots; Claude: each find kept at its distance from the Town Center, only the direction varies, so it stays fair); the home water is a straight cut with a pond at its end every game, "boring": it must differ each game. A map-making change: flag before publishing
-- His call (Nov 24 18:18): the caps must show (the people cell before the cap, and the army ceiling)
-- Mode and formations don't work as ruled (RULINGS: Mode, Formations; Nov 21 and 22): Mode is locked behind the Formations research, but Hold and courage are to be the main controls with formations behind a door; in combat a shape only changes riders' blows and the blows taken (×0.7 to ×1.3); Wide and Crescent change nothing; no shape's speed is used (not even the march column); Battery is laid out as Wide and not named. Each shape needs an effect he can feel, with sources
-- Boarding up (his Nov 11 Prep, kept Nov 20 with shelter and garrison): the code is there (econ.js prep, boardIn) but nothing calls it. His Nov 24 note: the Town Center can't hold everyone, so the alarm must also fill castles, towers and other buildings
+- [x] The villager card (v109): titled Villager Control, says Gathering food, has Build beside Garrison (and Jobs back), its tiles read '5 working' with her own job lit
+- [x] Home pocket and water (built Nov 24, not published; a map change, waiting on his word): one water a game for all four homes (creek with a ford, lake, pond, spring) away from the finds; the finds turned up to 35 degrees and sometimes mirrored, kept at their distances
+- [x] Caps show (v109): the people cell always people/room, gold within 5, red at it; the War card's title soldiers/army ceiling
+- [x] Formations (v109): Wide and Battery take half from arrows and siege shot (derived from their spacing); Crescent's archers all shoot one foe; siege's Specialty named Battery. Correction: Mode was not locked (only the formation tiles behind the door wait for the research, as ruled), and each shape's speed was in use
+- [x] Boarding up (v109): the War card's bell tile is split, bell = alarm, boarded house = Prep. Still open: the computers never board up
 - Trade routes are totally broken and need a major overhaul and redesign (his words, Nov 24); what fails not yet traced
 
 ## Open, older
