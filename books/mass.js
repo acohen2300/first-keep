@@ -26,5 +26,5 @@ BOOK("mass", {
  "W21": {"key":"crossbow","value":{"kg":5,"blow":{"kg":0.1,"mps":62}},"name":"a crossbow, its blow a bolt","cite":["N177","N524"],"law":["QBT"]},
  "W22": {"key":"gun","value":{"kg":5,"blow":{"kg":0.02,"mps":449}},"name":"a matchlock gun, its blow a ball","cite":["N177","N524"],"law":["QBT"]},
  "W23": {"key":"elephant","value":{"kg":3600,"height":2.7,"com":1.5,"foot":0.45,"stride":2.5},"name":"a war elephant","cite":["N177","N524"],"law":["QBS","QBT","QBU","QCB"]},
- "W24": {"key":"carried","value":{"kg":1.4019},"name":"a unit of a load carried: set so a full load (D87) is Mid's 0.9 of the walk under Pandolf (QCB)","cite":["N173","N185"],"law":["QCB"]}
+ "W24": {"key":"carried","value":{"kg":2.5},"name":"a unit of a load carried: 2.5 kg, the one weight of a unit (Albert, Nov 19 and Nov 23; D53), so a full load of 8 (D87) is 20 kg; the walk under it follows Pandolf (QCB) and is no longer set to Mid's 0.9 (it was 1.4019 kg, fitted to that)","cite":["N173","N185","N398","N400"],"law":["QCB"]}
 });
