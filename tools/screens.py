@@ -68,7 +68,8 @@ async def walk(root):
         if await click(pg, 'war', 'War'):
             for k in await pg.evaluate(KEYS, 'mwho'): await click(pg, k, f'War › {k}')   # New, then each type (the frame of Nov 26)
             for k in await pg.evaluate(KEYS, 'mtyp'): await click(pg, k, f'War › {k}')
-            for k in ('mord|move|', 'mhold', 'mmode|heart|death|', 'mpause', 'mord|defend|', 'mord|retreat|', 'mord|retreat|', 'mord|attack|'): await click(pg, k, f'War › {k}')   # Retreat twice: on, then stopped where they stand
+            for k in ('mhold', 'mmode|heart|death|', 'mpause', 'mord|defend|', 'mord|retreat|', 'mord|retreat|'): await click(pg, k, f'War › {k}')   # Retreat twice: on, then stopped where they stand
+            await pg.evaluate("fk.select(null); fk.tap(150, 300); MENU.render(true)"); await snap(pg, 'War › a spot primed'); await click(pg, 'mwho|Foot|', 'War › a spot primed, Foot picked'); await click(pg, 'mord|move|', 'War › Move fired')
             await click(pg, 'mback', 'War closed by Exit')
         shots['errors'] = '\n'.join(pg.errors)
     return shots
