@@ -1,7 +1,13 @@
-# Build (Albert, Nov 25 06:59 "Ok try it", after "the only decision is whether to say build for the two-number change"): the picture never drops below full resolution, and one steady frame rate of 30 (the draw budget's two numbers, D321). Nothing else. Does not change the map or how the game plays.
-2bf4bca
+# Build (Albert, Nov 25 23:13 "We might as well. Let's do it", then his three answers: scope "Step 1 plus Pause", Custom+ "Cut it", the new tab row "Everywhere"): the tab row Home, Jobs, Build, War on every card, each word in its own shaded box, the open one glowing green (the round Home, the round W, the gold title and the fold arrow go; Idle on Jobs boxed like the minus and plus); War opens to two small cards, War > Attack | Move, words only, the whole box lit when a switch is on; the troops bar ends in one minus and one plus (Custom+ cut and parked); Hold survives a Move; To death is one switch; Pause on the Attack card (troops hold fire, being hit ends it). Changes how the game plays (orders, Hold, Pause). Does not change the map.
+21c45af
+menu.js
+combat.js
+books/words.js
+books/screen.js
+books/comments.js
 books/measure.js
 tools/check.py
+tools/screens.py
 tools/build.txt
 LIST.md
 RULINGS.md
