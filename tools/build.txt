@@ -1,11 +1,10 @@
-# Build (Albert, Nov 25 23:13 "We might as well. Let's do it", then his three answers: scope "Step 1 plus Pause", Custom+ "Cut it", the new tab row "Everywhere"): the tab row Home, Jobs, Build, War on every card, each word in its own shaded box, the open one glowing green (the round Home, the round W, the gold title and the fold arrow go; Idle on Jobs boxed like the minus and plus); War opens to two small cards, War > Attack | Move, words only, the whole box lit when a switch is on; the troops bar ends in one minus and one plus (Custom+ cut and parked); Hold survives a Move; To death is one switch; Pause on the Attack card (troops hold fire, being hit ends it). Changes how the game plays (orders, Hold, Pause). Does not change the map.
-21c45af
+# Build (Albert, Nov 26 12:20 "Ok build", after the morning's mock-ups on his screenshots, 08:00 to 12:08): one frame for every card. Six equal columns; the tab row Home, Jobs, Build, War with Exit top right on every card; a thin control row and a tall row, shaded boxes with gaps, green for where you are and red for what is picked. Jobs and Build keep what their buttons do. War: New, Foot, Archers, Cavalry, Siege, then minus and plus; Attack, Move, Hold, a gap, and one pad of four switches, To Death, Defend, Stop, Retreat (All, Idle, In view and the two small cards go; Retreat is a switch). Left off this build, his to place: the formation pad, Shelter and Prep. Changes how the War card is used (picking, Retreat). Does not change the map or how a match with no taps plays.
+eb4a7fd
 menu.js
-combat.js
 books/words.js
 books/screen.js
 books/comments.js
-books/measure.js
+books/citations.js
 tools/check.py
 tools/screens.py
 tools/build.txt
