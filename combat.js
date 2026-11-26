@@ -60,7 +60,7 @@ function damage(a, t, base = dmgOf(a)) { const A = a.kind === 'unit' ? stat(a) :
     else { let n = 0; FK.unitsNear(t, FL.line * D.tile, (v) => { if (v.target === t && v.side === a.side && alive(v)) n++; }); d /= Math.max(1, n); } } // E876
   if (!melee && armed(t)) d *= shapeOf(t).vsShot; // E2728
   return stat(t).rarmor && !melee ? d * stat(t).rarmor : d; }
-function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (u && t.kind === 'unit' && isEl(t) && ranged(a)) t.mor = Math.max(0, t.mor - (EL.panic * d) / t.hpMax); if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (isIdle(v) || v.job === 'hold' || (v.sent && onMarch(v))) && temperOf(v) !== AR.temper.hold && !v.stand && !tame(v, a) && enemies(v, a)) { v.was = isIdle(v) ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019 E2706
+function hit(a, t, base) { if (a.kind === 'unit' && caught(a, t)) return ECON.takePrisoner(a.side, t); const d = damage(a, t, base), u = a.kind === 'unit'; FK.harm(t, d, a); t.hurtT = K.t; if (t.kind === 'unit' && t.mute) { t.mute = false; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side) v.mute = false; }); } /* E2747 */ if (u && t.kind === 'unit' && isEl(t) && ranged(a)) t.mor = Math.max(0, t.mor - (EL.panic * d) / t.hpMax); if (SIDES[t.side]) FK.fire('event', 'struck', t, a); if (u && t.kind === 'unit' && SIDES[t.side] && alive(a) && !(K.t - t.cryT < D.scan)) { t.cryT = K.t; FK.unitsNear(t, MO.crowd * T, (v) => { if (v.side === t.side && armed(v) && alive(v) && !v.target && !v.inside && (isIdle(v) || v.job === 'hold' || (v.sent && onMarch(v))) && temperOf(v) !== AR.temper.hold && !v.stand && !tame(v, a) && enemies(v, a)) { v.was = isIdle(v) ? null : v.goal; fight(v, a, true); v.path = null; } }); } // E1019 E2706
   sparks.push({ x: t.bx, y: t.by, t: K.t }); sparks.splice(0, sparks.length - FLY.sparks); // E231
   if (u && SIDES[a.side] && !SIDES[t.side]) ECON.struck(a.side, groupOf(t)); // E518
   if (u) { FK.impact(a, t); if (ranged(a)) shot(a, t, W[FK.SH[a.code].body].height); if (!SIDES[t.side]) { t.aggro = a; if (t.job !== 'fight' && stat(t).atk) fight(t, a); } if (t.kind === 'bld') ECON.shot(a, t, d); }
@@ -110,7 +110,7 @@ function recall(side) { const w = waves[side]; waves[side] = null; homeAll(w && 
 const guardsOf = (t) => units().filter((u) => u.esc === t), guard = (S, t) => { const room = t && D.trade.guard - guardsOf(t).length; S.filter((u) => armed(u) && u.esc !== t).filter((u, i) => !t || i < room).forEach((u) => Object.assign(u, { esc: t, home: t })); }; // E493
 FK.on('gone', (t) => { for (const u of guardsOf(t)) Object.assign(u, { esc: null, home: null }); });
 FK.on('tick', () => { for (const c of units()) if (FK.has(c, 'Trade') && c.side >= 0) { const G = guardsOf(c).filter(alive); c.convoy = G.length > 0 && G.some((g) => gap(g, c) > D.trade.near * D.trade.wait); } }); // E1046
-function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, wall: false, stand: false, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
+function homeAll(S) { for (const u of S) { const h = home(u.side); Object.assign(u, { job: 'rout', routAt: null, target: null, goal: null, then: 'idle', ord: null, sent: false, drill: null, wall: false, stand: false, mute: false, amb: null, hid: false, esc: null }); if (!h || !FK.goBy(u, h)) u.job = 'idle'; } }
 function attack(side, k, army = orders(side)) { if (!army.length) return 0; waves[side] = { n0: army.length, k, t: 0, hp: 0 }; if (!dress(army, k)) { waves[side] = null; return 0; } if (side === ME) FK.fire('event', 'march', army[0]); return army.length; } // E2710
 const armyOf = (side) => units().filter((u) => u.side === side && ECON.soldier(u.code)), BUSY = { rout: (u) => u.job === 'rout' }, armyFree = (side, ...skip) => armyOf(side).filter((u) => !skip.some((k) => BUSY[k](u))); // E372
 // E392
@@ -178,6 +178,7 @@ function brain(u, dt, look) { // E396
   if (t && !u.focus && ((u.stand || (temperOf(u) === AR.temper.hold && u.side === ME && u.job !== 'march' && u.was == null)) || drillOn(u) || u.fb > K.t) && d(t) > s.rng) t = null;
   if (!t && u.stand && !u.focus) t = nearest(u, s.rng); // E2669
   if (u.sent && !u.focus && (onMarch(u) || u.was != null)) t = struck(u) ? t || u.hitBy : null; // E1092 E2701
+  if (u.mute) t = u.focus = null; // E2747
   if (t && t.kind === 'unit' && !ranged(u) && ranged(t) && !u.chg && u.rush !== t && d(t) > s.rng && d(t) <= stat(t).rng) { u.rush = t; u.chg = K.t + CH.secs; } // E2702
   u.pacex = shapeOf(u).spd * (marching(u) && u.slow ? u.slow : 1) * (u.chg ? CH.spd * FK.stat(u.code, u.side, 'charge') : u.tire ?? D.bases.pace);
   if (t && u.target !== t) { if (u.job !== 'fight') u.was = isIdle(u) ? null : u.goal; fight(u, t, t === u.focus); u.path = null; }
@@ -215,8 +216,9 @@ function frontOf(O) { const B = O.band; if (B.at === K.t) return B; const us = u
   const c = centreOf(us), f = centreOf(F), [dx, dy] = dir(c.bx - f.bx, c.by - f.by), dt = K.t - B.t0, near = Math.min(...F.map((v) => gap(c, v))); if (dt >= FR.span) Object.assign(B, { come: ((f.bx - B.f.bx) * dx + (f.by - B.f.by) * dy) / T / dt > FR.come, f, t0: K.t }); return Object.assign(B, { c, near, front: F.filter((v) => gap(c, v) <= near + FR.deep) }); } // E1563
 function onFront(u, look) { const B = frontOf(u.ord), h = u.hitBy, F = B.c ? B.front : []; if (h && h.kind === 'unit' && K.t - u.hitT < D.scan && alive(h) && enemies(u, h) && edgeDist(u, h) <= Math.max(stat(u).rng, FL.melee)) return h; if (!look && F.includes(u.focus) && enemies(u, u.focus)) return u.focus; return F.reduce((a, v) => (enemies(u, v) && (!a || gap(u, v) < gap(u, a)) ? v : a), null); } // E1564
 function order(S, t, k) { const sol = S.filter(armed), vil = S.filter((u) => FK.has(u, 'Gather')), theirs = t && t.side !== ME; // E413
-  for (const u of S) { u.go = true; u.wall = false; u.broke = false; u.stand = false; } // E946
+  for (const u of S) { u.go = true; u.wall = false; u.broke = false; } // E946
   if (theirs && SIDES[t.side] && !atWar(ME, t.side)) { say(WO.foeFirst); return null; }
+  if (theirs) for (const u of sol) { u.mute = false; if (u.stand && edgeDist(u, t) > stat(u).rng) u.stand = false; } // E2747
   for (const v of vil) v.focus = v.told = null; // E1027
   if (theirs && t.kind === 'unit') { if (FK.has(t, 'Prey')) for (const v of vil) ECON.hunt(ME, t, v); }
   else if (t && t.kind === 'bld') { for (const v of vil) if (!up(t) || t.hp < t.hpMax - D.repair.within) ECON.buildAt(v, t); else if (ECON.startWork(v, t)) { if (v.att === 'focus') v.focus = v.target; } else walkTo(v, t); } // E1053
