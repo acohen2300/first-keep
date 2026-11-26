@@ -66,13 +66,10 @@ async def walk(root):
             await pg.evaluate("fk.select(null); MENU.S.subject = null; MENU.S.who = null; MENU.render(true)")
         # the war controls
         if await click(pg, 'war', 'War'):
-            for k in await pg.evaluate(KEYS, 'mwho'): await click(pg, k, f'War › {k}')
-            for k in await pg.evaluate(KEYS, 'mord'): await click(pg, k, f'War › {k}')
-            for k in await pg.evaluate(KEYS, 'mscr'): await click(pg, k, f'War › {k}')
+            for k in await pg.evaluate(KEYS, 'mwho'): await click(pg, k, f'War › {k}')   # New, then each type (the frame of Nov 26)
             for k in await pg.evaluate(KEYS, 'mtyp'): await click(pg, k, f'War › {k}')
-            for k in ('mpause', 'mmode|heart|death|', 'mord|move|', 'mdoor|form|', 'mhold', 'mord|attack|'): await click(pg, k, f'War › {k}')
-            await click(pg, 'shelter', 'War › shelter'); await click(pg, 'work', 'War › work')
-            await click(pg, 'war', 'War closed')
+            for k in ('mord|move|', 'mhold', 'mmode|heart|death|', 'mpause', 'mord|defend|', 'mord|retreat|', 'mord|retreat|', 'mord|attack|'): await click(pg, k, f'War › {k}')   # Retreat twice: on, then stopped where they stand
+            await click(pg, 'mback', 'War closed by Exit')
         shots['errors'] = '\n'.join(pg.errors)
     return shots
 
