@@ -29,7 +29,11 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 
 ## Controls and screen
 - No long press and no double tap (Nov 21)
-- What matters is a 44 px tap area, not the size shown (Nov 23)
+- What matters is a 44 px tap area, not the size shown (Nov 23). The bar's frame of Nov 26 goes under it by his drawing: a tab reaches up over the map to 47 px, the tall row is 46, but a thin-row box takes 30 px and a pad switch 23
+- The bar's frame, on every card (Nov 26): six equal columns; three rows, the tab row 19 px, the thin row 21, the tall row 46; 6 px between the rows, 3 px between boxes and to the screen's edges ("My ideal padding for everything is 3px"); every box shaded, with gaps, no white bars except inside War's pad; a green edge is where you are (the open tab, the open Build group), a red edge what is picked or switched on
+- Exit is on every card, top right in the tab row, the same size as Home, Jobs, Build and War ("Exit is on all menus and it's weird to not have it bc of muscle memory", Nov 26; replaces Exit on each card's own row and the "No Exit" on War of Nov 25)
+- Jobs (Nov 26): the thin row is Idle, then a minus and plus over each job; the tall row People and the five jobs, icons kept
+- Build (Nov 26): the thin row is Town, Work, Army, Keep, Tech as boxes a column wide, smaller letters than the tabs; the tall row the six buildings
 - Top bar: one strip of readings (five stores, people, season, rank); pause and Mail are clear icons under it at the right (Nov 20)
 - Words floating over the map get a dark glow behind them, strong over a bright ground and gone over a dark one (Nov 21)
 - Everything has a sound, and each must make sense; the under-attack sound first (Nov 23)
@@ -41,21 +45,24 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - The small map was lost by accident, not cut: its drawing is still in the code with no place on screen (Nov 25); where it goes is his to call
 
 ## The War card (army control)
-- The tab row on every card: Home, Jobs, Build, War as words, each in its own shaded box, no pipes, no outlines, tight top and bottom; the open one glows green as Town does in Build. The round Home, the round W, the gold title and the fold arrow are gone; Idle on Jobs is boxed like the minus and plus (Nov 25)
-- War opens to two small cards: War > Attack | Move. Troops are always picked first, then one of the two orders; each is a deliberate choice. No Exit, no hint line, no Troops, Mode or Mission views; In view in words where the eye was (Nov 25; replaces the title line of Nov 21)
-- Cards read in words only: no capitals, no icons; a switch that is on lights its whole box, no ring inside a box (Nov 25)
-- Control line: All | Idle | Foot | Archers | Cavalry | Siege, then one minus and one plus that act on the type last tapped; quantity by type stays (Nov 25; Custom+ is cut and parked, replaces Nov 21)
+- The tab row on every card: Home, Jobs, Build, War and Exit as words, each in its own shaded box, all one size, no pipes, no outlines; the open one glows green as Town does in Build. The round Home, the round W, the gold title and the fold arrow are gone; Idle on Jobs is boxed like the minus and plus (Nov 25, Nov 26)
+- War is one card (Nov 26; replaces the two small cards of Nov 25). Thin row: New, Foot, Archers, Cavalry, Siege, then one minus and one plus. Tall row: Attack, Move, Hold as their own boxes, an empty slot, then one pad of four switches split by bars, no gaps: To Death, Defend, Stop, Retreat. Troops are always picked first, then the order; no hint line
+- The War card reads in words only, no icons; a switch that is on lights its whole box, no ring inside a box (Nov 25); To Death takes a capital D (Nov 26)
+- Troop row: New | Foot | Archers | Cavalry | Siege, then one minus and one plus that act on the type last tapped; quantity by type stays. All, Idle and In view are cut: every type lit is All ("Why do we need all if you can just tap all the sections at the same time", Nov 26; replaces Nov 25; Custom+ cut and parked Nov 25)
+- New: a simple selector that picks only the newly made soldiers from the town (Nov 26). Built as: a soldier trained and never given an order; any order takes him out of New for good
 - Attack is loose and picks a target; there is no formation on an attack. Move is the strategic order (Nov 25)
-- Attack card: Pause, To death, Defend, Shelter, Prep, Retreat. Move card: Formation, Hold, then Advance and Fall back only while Hold is on, Retreat (Nov 25; Advance and Fall back not built yet)
+- Advance and Fall back are not built; their place on the Nov 26 card is not set (Nov 25: only while Hold is on)
 - Hold: stop where you stand and stay; a switch; it survives a Move; it overrides courage (a holding group never breaks) (Nov 22, Nov 25)
 - Attack on a holding group: in reach they keep holding, out of reach Hold switches off (Nov 25)
 - Formation: wait for one another and form up; independent of Hold (either, both or neither) (Nov 25; built so far: the shapes only). Shapes: Line, Specialty (foot Square, archers Crescent, cavalry Wedge, siege Battery), Wide (Nov 21)
 - To death: one switch for attacks that are not holding; they never run. Normal is the default and has no button; Focused is cut from the card (Nov 25; replaces the three courages of Nov 21)
-- Pause: a switch on Attack; paused troops hold fire; being hit ends it (Nov 25)
+- Stop ("Stop is pause", Nov 26; was Pause): a switch on the pad; stopped troops hold fire; being hit ends it (Nov 25)
+- Retreat is a switch (Nov 26): on, the picked group walks home and the box is lit; tapped again they stop where they stand, in the state a move that has arrived leaves them in, not on Hold; the light goes out when they arrive or get a new order; turning it on switches Hold off
 - Advance and Fall back: step orders for a holding group, loose or formed, shown only while Hold is on; Fall back is the mirror of Advance; the old Fall back (out of reach, re-form, go back in) is off the card (Nov 25; replaces Nov 21)
 - Defend: tap Defend, then the unit or building; the defended one shows it is defended (Nov 21)
 - With nobody picked, Defend and Retreat do nothing and say so (Nov 22)
-- Shelter and Prep live on the Attack card as full boxes (Nov 25)
+- Shelter and Prep are off the War card; where they go is his to call ("I'll work on this later today", Nov 26; replaces Nov 25). Until then neither has a button
+- The formation page is his to design next ("What we lost so far is a proper formation page", "I'll work on that next", Nov 26). Until then formations have no button; a formation still needs Retreat and Hold beside it ("You still need retreat in formations. And you need hold")
 - Garrison villagers stays on the War card (Nov 21)
 - Wanted, not built: a camera snap to idle soldiers, a follow camera (Nov 21)
 - Attacking a group: hit its front line, move with them, not past them (Nov 21)

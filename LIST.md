@@ -2,6 +2,25 @@
 
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
+## Handoff, Nov 26 midday (read this first in a new chat; the handoffs below still stand)
+- The morning (08:00 to 12:08): he redesigned the bottom bar on his own screenshots, about forty mock-ups drawn by Claude on them. At 12:20, leaving his phone, he said "Ok build" to the scope Claude listed. This build is v114; v113 stays at its own link
+- Built (v114): one frame for every card (RULINGS, Controls and screen): six columns, three rows (19, 21, 46 px), 6 px between rows, 3 px between boxes; Exit top right in the tab row on every card; Jobs and Build laid out in it (layout only); the War card as one card: New, Foot, Archers, Cavalry, Siege, minus and plus; Attack, Move, Hold; the pad To Death, Defend, Stop, Retreat. Retreat is a switch. New is the soldiers never ordered. Cut: All, Idle (on War), In view, the two small Attack and Move cards
+- Changes how the War card is used; a match with no taps plays exactly as kept (the check's kept match)
+- Left out, his to design: the formation page ("I'll work on that next"); Shelter and Prep ("I'll work on this later today"). Until then formations, Shelter, Prep (and Work while the alarm is on) have no button; their code is untouched (the verbs mmode form, shelter, prep, work)
+- Offered by Claude, no verdict from him: the pad follows the lit command (Attack: To Death, Defend, Stop, Retreat; Move: Line, Specialty, Wide, Retreat), which would put formations on the card without a new row. His own half-idea: formations in the empty slot, turning the pad into four new options ("I don't want to do it… but I really liked the space visually. I'm not sure")
+- Built on Claude's reading where he gave no ruling, to confirm or change:
+  - War opens with nobody picked unless soldiers already are (v113 picked All; All is cut). Claude had proposed "opens on whoever was picked last", but every order ends the pick (Nov 21), so there is no last pick to open on
+  - With nobody picked, Retreat and Defend still do nothing and say Pick troops first (his Nov 22 ruling). Claude's listed assumption "Retreat with nobody picked sends everyone home" went against that ruling and was not built
+  - New is exclusive of the type boxes: New lit puts the types out; a type tapped while New is lit starts a pick of that type from the whole army. To Death alone does not take a soldier out of New (it is a setting, not an order)
+  - Putting out the last lit type picks nobody (v113 picked everyone)
+  - Idle stays on Jobs, first slot, without its pin icon
+  - Defend still acts once and does not stay lit (he said all four pad items "can be lit technically"; what a lit Defend means is not ruled)
+  - Building and unit cards (Town Center, Villager, a find) keep their own row of words in the thin row, at the new height, less Exit; they were not in the mock-ups
+  - A building to place lost its brown ring (the box is the shade, the picked one the red edge), to match the mock-up
+- Against a ruling, by his drawing, named here: the 44 px tap area (Nov 23). A thin-row box takes 30 px of height and a pad switch 23; tabs (47) and the tall row (46) keep it. If taps miss on the phone, the thin row and the pad are where
+- Found, not fixed: his phone draws the bar's letters about a fifth smaller than the same build in the test browser at the same scale (Home 28 px tall on his screenshot, 35 in the runner; boxes identical), most likely a text-size setting in his browser; the letters were sized to the mock-ups as his phone shows them. The Mail panel is 0.7 px narrower (the bar's side gap went from 2 to 3 px), which re-wraps one of its lines. Old CSS for the round eye and the mission grid is still in menu.js (dead since Nov 25, line E1443)
+- Tests changed with the code in this build (told to him, as the Nov 25 way of working asks): the troop boxes, the War row, picks, patches, the lit boxes and the wall test were rewritten to the new card; new: Retreat as a switch, New. tools/screens.py's War walk follows the new card
+
 ## Handoff, Nov 25 night (read this first in a new chat; the handoffs below still stand)
 - He played two long matches on v112 (the second: Hard, seed 4251537414, 388 min, a win, score 120,846, no errors) and listed what bothers him. Army control is his number one: "Controlling the army is the key to winning"; surgical placement is the fun
 - This build (v113, his "We might as well. Let's do it", Nov 25 23:13; scope "Step 1 plus Pause", Custom+ "Cut it", the tab row "Everywhere"): the tab row on every card; War > Attack | Move as two small cards; one minus and plus on the troops bar; Hold survives a Move; To death one switch; Pause. Changes play, so it does not replay the kept match
@@ -35,7 +54,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - Standing rules: RULES.md and RULINGS.md; talk and build are separate (nothing built until he says "build"); critical, unvarnished, at most two push-backs with backup; name the rule or ruling when he goes against one; sources set numbers; each change its own commit; tools/build.txt starts every build; no helper agents unless asked; flag map-making changes before publishing; publish with tools/publish.py (each build its own link, fresh/vN)
 
 ## Now
-- Latest build: v112 (https://acohen2300.github.io/first-keep/fresh/v112/): fixed sharpness and one frame rate; v111 before it
+- Latest build: v114 (https://acohen2300.github.io/first-keep/fresh/v114/): the bar in one frame; v113 before it (the two small War cards)
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why
