@@ -1,8 +1,13 @@
-# Build (Albert, Nov 26 12:20 "Ok build", after the morning's mock-ups on his screenshots, 08:00 to 12:08): one frame for every card. Six equal columns; the tab row Home, Jobs, Build, War with Exit top right on every card; a thin control row and a tall row, shaded boxes with gaps, green for where you are and red for what is picked. Jobs and Build keep what their buttons do. War: New, Foot, Archers, Cavalry, Siege, then minus and plus; Attack, Move, Hold, a gap, and one pad of four switches, To Death, Defend, Stop, Retreat (All, Idle, In view and the two small cards go; Retreat is a switch). Left off this build, his to place: the formation pad, Shelter and Prep. Changes how the War card is used (picking, Retreat). Does not change the map or how a match with no taps plays.
-eb4a7fd
+# Build (Albert, Nov 26 16:44 "Build", after the control rule sheet talked through 14:41 to 16:42): one way to command soldiers. Pick by a tap (adds, a second tap drops), the box (0.25 s hold, soldiers only when it holds any) or the card's boxes; with soldiers picked a tap on an enemy attacks it and a tap on ground moves them; with nobody picked a tap primes a target (yellow ring) and Attack or Move on the card fire at it. Picked soldiers wear a green ring, a target under attack a red one. A tap on your own building is never a troop order. Cut: the armed Attack and Move, place-first and its dashed ring, double tap, re-picking by an old Move ring, enemy cards. Also: soldiers sent at an enemy unit seek it. Changes how every order is given. Does not change how a match with no taps plays.
+0ee2c25
 menu.js
+index.html
+combat.js
+econ.js
 books/words.js
 books/screen.js
+books/measure.js
+books/sprites.js
 books/comments.js
 books/citations.js
 tools/check.py
