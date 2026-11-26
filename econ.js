@@ -103,7 +103,7 @@ function queue(b, code) { const t = lineAt(b, code); if (!up(b) || !FK.trains(b.
 function unqueue(b, i = b.q && b.q.length - 1) { if (!b.q || !b.q[i]) return; const [code] = b.q.splice(i, 1); b.qt2 = null; if (!i) b.qt = b.q.length ? timeOf(b.side, b.q[0]) : 0; // E931
   payBack(b.side, priceOf(b.side, code, b), FK.SH[code] || code.plan ? 'units' : 'research'); if (D.ages.includes(code)) SIDES[b.side].aging = 0; if (!b.q.length) b.qt = 0; }
 // E956
-function spawnBy(b, code) { const s = FK.spotFor({ ...b, by: b.by + b.n * D.tile }, b); if (!s) return null; const u = FK.spawn(code, b.side, FK.tileAt(s.x, s.y), FK.rng); u.bx = s.x; u.by = s.y; u.hb = b; FK.place(u); const fl = SIDES[b.side].flag; if (fl != null && WAR.armed(u)) { const S = [u, ...FK.units().filter((v) => v !== u && v.side === b.side && v.rally === fl && WAR.armed(v) && !v.target && (v.job === 'march' || v.job === 'hold'))]; WAR.dress(S, fl); for (const v of S) Object.assign(v, { rally: fl, sent: true }); } return u; } // E311
+function spawnBy(b, code) { const s = FK.spotFor({ ...b, by: b.by + b.n * D.tile }, b); if (!s) return null; const u = FK.spawn(code, b.side, FK.tileAt(s.x, s.y), FK.rng); u.bx = s.x; u.by = s.y; u.hb = b; FK.place(u); return u; } // E311
 // E402
 const musterN = sumCost, readyAt = (side, c) => things().filter((t) => t.side === side && up(t) && FK.trains(t.code, side).includes(c)).length;
 function musterCost(side, plan) { const cost = {}, ks = Object.keys(plan); for (const c of ks) addRes(cost, priceOf(side, c), plan[c] * D.muster.cost); return { cost, t: Math.ceil(Math.max(...ks.map((c) => (plan[c] * timeOf(side, c)) / readyAt(side, c))) * D.muster.time) }; }
