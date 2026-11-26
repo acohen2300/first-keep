@@ -2,6 +2,17 @@
 
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
+## Handoff, Nov 26 evening (read this first in a new chat; the handoffs below still stand)
+- After v114 he asked what was messy; Claude found four ways to pick soldiers and four to send them that did not share rules (place-first, the armed Attack and Move, the tap table under mixed picks, double tap, a hold, re-picking by a Move ring). He called it horrible, and the two of them wrote a one-page rule sheet line by line (14:41 to 16:42). He said "Build" at 16:44. This build is v115; the sheet is in RULINGS.md (Commanding soldiers)
+- The agreed plan, step by step: 1 the rule sheet (done); 2 build the cleanup to match it (this build), then he plays a match; 3 homes for formations, Shelter, Prep and Defend, each with its rule written first; 4 the other cards (building, villager, resource) into the frame, replacing the old styles under the frame instead of covering them; 5 engine meaning: Attack on open ground, Defend as a standing guard, Formation as wait and form up, hitting a group's front line
+- Deleted in v115, not switched off: the War card's own tap logic and its armed state, place-first and the dashed ring and crosshair code, double tap, re-picking by a Move ring, the unused hold event, enemy cards' way in, the army rally flag (read in three places, set nowhere), the round eye and mission-grid styles, two unused timings and two unused book entries
+- "Seeks the enemy" (his ask in the same build): reproduced before touching it. Sent straight at one enemy soldier who keeps walking away, cavalry catch him and foot follow him the whole way; the engine seeks. What failed for him was the card: with Move lit, a tap on an enemy walked to where he stood and ignored him. The sheet removes that (a tap on an enemy always attacks), and the check now gates it through a real tap. No engine change was made
+- Not gated by a test: an order that cannot be carried out keeps the pick (the code path is there; no reliable way found to make an order fail in the test match)
+- Changed beyond the sheet, to confirm: villagers also add to the pick on a tap (his words were "YOUR units"); a soldier and a villager never share a pick by taps (the tap replaces); the New box is lit when everyone picked has never been ordered, and no longer puts the type boxes out, since the boxes now read the pick
+- Still his to rule: where Dismiss for a soldier goes; garrison; the colour table; the Defend ring; X-then-override (tap Attack first) in step 5
+- The style layering from v114 is still there (step 4)
+- Tests changed with the code, each listed in the commit: orders, the wall, picks, the War row, the lit boxes, the far way; new: the rule sheet's lines by real taps, the box by a real press, seeking
+
 ## Handoff, Nov 26 midday (read this first in a new chat; the handoffs below still stand)
 - The morning (08:00 to 12:08): he redesigned the bottom bar on his own screenshots, about forty mock-ups drawn by Claude on them. At 12:20, leaving his phone, he said "Ok build" to the scope Claude listed. This build is v114; v113 stays at its own link
 - Built (v114): one frame for every card (RULINGS, Controls and screen): six columns, three rows (19, 21, 46 px), 6 px between rows, 3 px between boxes; Exit top right in the tab row on every card; Jobs and Build laid out in it (layout only); the War card as one card: New, Foot, Archers, Cavalry, Siege, minus and plus; Attack, Move, Hold; the pad To Death, Defend, Stop, Retreat. Retreat is a switch. New is the soldiers never ordered. Cut: All, Idle (on War), In view, the two small Attack and Move cards
@@ -54,7 +65,7 @@ Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/
 - Standing rules: RULES.md and RULINGS.md; talk and build are separate (nothing built until he says "build"); critical, unvarnished, at most two push-backs with backup; name the rule or ruling when he goes against one; sources set numbers; each change its own commit; tools/build.txt starts every build; no helper agents unless asked; flag map-making changes before publishing; publish with tools/publish.py (each build its own link, fresh/vN)
 
 ## Now
-- Latest build: v114 (https://acohen2300.github.io/first-keep/fresh/v114/): the bar in one frame; v113 before it (the two small War cards)
+- Latest build: v115 (https://acohen2300.github.io/first-keep/fresh/v115/): one way to command soldiers; v114 before it (the bar in one frame)
 - Cleanup (feature freeze until done), in order:
   1. [x] Units (Nov 23): every number in the Measurements book says its unit, 1,731 -> 0; the gate is 0. Coarse on purpose: a few art arrays say only "drawing" (sinkhole crack, scars, flag curve, pile box, figure marks), for the art cleanup
   2. [x] Sources (Nov 23): 5 linked, 8 retired (docs/log/sources-retired-2026-11-23.md); every source has a kind; 905 entries: Sourced 371, Derived 97, Chosen 437, every Chosen one says why

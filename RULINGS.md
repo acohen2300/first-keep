@@ -28,7 +28,7 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - The Start page's Allies switch lets the computers or him join together (Nov 22)
 
 ## Controls and screen
-- No long press and no double tap (Nov 21)
+- No long press and no double tap (Nov 21). One exception, his call: the drag box starts after a 0.25 s hold ("The drag box I use a lot… keep for now", Nov 26; it was 0.32)
 - What matters is a 44 px tap area, not the size shown (Nov 23). The bar's frame of Nov 26 goes under it by his drawing: a tab reaches up over the map to 47 px, the tall row is 46, but a thin-row box takes 30 px and a pad switch 23
 - The bar's frame, on every card (Nov 26): six equal columns; three rows, the tab row 19 px, the thin row 21, the tall row 46; 6 px between the rows, 3 px between boxes and to the screen's edges ("My ideal padding for everything is 3px"); every box shaded, with gaps, no white bars except inside War's pad; a green edge is where you are (the open tab, the open Build group), a red edge what is picked or switched on
 - Exit is on every card, top right in the tab row, the same size as Home, Jobs, Build and War ("Exit is on all menus and it's weird to not have it bc of muscle memory", Nov 26; replaces Exit on each card's own row and the "No Exit" on War of Nov 25)
@@ -44,11 +44,22 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - No blur on menus: too expensive (Nov 25; replaces the frosted glass of Nov 9)
 - The small map was lost by accident, not cut: its drawing is still in the code with no place on screen (Nov 25); where it goes is his to call
 
+## Commanding soldiers: the rule sheet (Nov 26, built in v115; replaces every earlier tap rule for soldiers)
+- Picking, three ways and no others: a tap on a soldier (he joins the pick; a tap on one already in drops him), the drag box (soldiers only when it holds any), the boxes on the War card. The card always shows the pick: a type box is lit when any of its soldiers are picked and reads picked/there
+- With soldiers picked, a tap on the map is the order, no button: on an enemy unit or building they attack it and seek it; on ground they march there. The pick ends when the order goes out; an order that cannot be carried out says why and keeps the pick
+- With nobody picked, a tap on an enemy unit or building primes it (a yellow ring) and opens War; open ground primes only while War is open. One target at a time: a new tap replaces it, a tap on it lets it go, Exit drops it. With War closed a tap on open ground does nothing. Enemies have no card ("There is no need")
+- Attack and Move are fire buttons: they send the picked soldiers at the primed target and are dim without one. They never arm and never stay lit. Tapping one first to force the other meaning (attack toward open ground, move beside an enemy) waits for the engine work; until then Attack at ground is the same march as Move
+- A tap on one of your own buildings is never a troop order: it opens the building's card and lets the soldiers go. Villagers keep the Nov 12 tap table
+- Rings on the map: green on picked soldiers, yellow on the primed target, red on whatever your soldiers have been sent at. No ring on soldiers under an order. No dashed white ring. The full colour table (picked, primed, under attack, defended, where you are) is still owed
+- The switches (Hold, To Death, Stop, Retreat) act at once and keep the pick, so a ground tap after one still sends them
+- Cut: the armed Attack and Move, place-first, double tap, re-picking a group by its old Move ring, every hold but the box
+- Parked: garrisoning soldiers in buildings; Dismiss for a soldier (there is none today; the soldier's own card was empty and is gone); the Defend ring with its count of guards (his idea, Nov 26: yellow, any number of guards on any number of things)
+
 ## The War card (army control)
 - The tab row on every card: Home, Jobs, Build, War and Exit as words, each in its own shaded box, all one size, no pipes, no outlines; the open one glows green as Town does in Build. The round Home, the round W, the gold title and the fold arrow are gone; Idle on Jobs is boxed like the minus and plus (Nov 25, Nov 26)
-- War is one card (Nov 26; replaces the two small cards of Nov 25). Thin row: New, Foot, Archers, Cavalry, Siege, then one minus and one plus. Tall row: Attack, Move, Hold as their own boxes, an empty slot, then one pad of four switches split by bars, no gaps: To Death, Defend, Stop, Retreat. Troops are always picked first, then the order; no hint line
+- War is one card (Nov 26; replaces the two small cards of Nov 25). Thin row: New, Foot, Archers, Cavalry, Siege, then one minus and one plus. Tall row: Attack, Move, Hold as their own boxes, an empty slot, then one pad of four switches split by bars, no gaps: To Death, Defend, Stop, Retreat. No hint line. How it commands: the rule sheet above
 - The War card reads in words only, no icons; a switch that is on lights its whole box, no ring inside a box (Nov 25); To Death takes a capital D (Nov 26)
-- Troop row: New | Foot | Archers | Cavalry | Siege, then one minus and one plus that act on the type last tapped; quantity by type stays. All, Idle and In view are cut: every type lit is All ("Why do we need all if you can just tap all the sections at the same time", Nov 26; replaces Nov 25; Custom+ cut and parked Nov 25)
+- Troop row: New | Foot | Archers | Cavalry | Siege, then one minus and one plus that act on the type last tapped; quantity by type stays. A type box tapped adds all of that type, tapped again drops them. All, Idle and In view are cut: every type lit is All ("Why do we need all if you can just tap all the sections at the same time", Nov 26; replaces Nov 25; Custom+ cut and parked Nov 25)
 - New: a simple selector that picks only the newly made soldiers from the town (Nov 26). Built as: a soldier trained and never given an order; any order takes him out of New for good
 - Attack is loose and picks a target; there is no formation on an attack. Move is the strategic order (Nov 25)
 - Advance and Fall back are not built; their place on the Nov 26 card is not set (Nov 25: only while Hold is on)
