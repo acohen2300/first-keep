@@ -1783,7 +1783,7 @@ const TO = D.touch, TM = SPRITE.touch; let press = null, holdT = null; const one
 canvas.addEventListener('pointerdown', (e) => { canvas.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY, e.clientX, e.clientY]); clearTimeout(holdT);
   if (!one()) { if (press && press.mode) fire('drop', press, true); press = null; return; }
   press = { x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, t: performance.now(), mode: null }; fire('press', press);
-  if (!press.mode) holdT = setTimeout(() => { if (!press || press.moved || press.mode) return; fire('hold', press, ...hitAt(press.x0, press.y0)); press.mode = press.mode || 'box'; }, TO.hold); }); // E865
+  if (!press.mode) holdT = setTimeout(() => { if (!press || press.moved || press.mode) return; press.mode = 'box'; }, TO.hold); }); // E865
 canvas.addEventListener('pointermove', (e) => {
   if (!ptrs.has(e.pointerId)) return;
   const was = ptrs.get(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY, was[2], was[3]]);
