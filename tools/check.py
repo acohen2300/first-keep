@@ -242,11 +242,11 @@ async def defends():
         return await pg.evaluate(LOOK)
 
 async def troops():
-    """The Troops controller: a class trimmed with minus keeps its count when another class is added, All brings everyone back, and with the army out of view the On Screen box alone picks nobody."""
+    """The troops bar: a class trimmed with its minus keeps its count when another class is added, All brings everyone back, and with the army out of view In view alone picks nobody."""
     TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return fk.picked().length; }"
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40); got = []
-        for v in ('war||', 'mwho|Riders|', 'mview|troops|', 'mtyp|UM10|-1', 'mwho|Foot|', 'mwho||'): got.append(await pg.evaluate(TAP, v))
+        for v in ('war||', 'mwho|Riders|', 'mtyp|Riders|-1', 'mwho|Foot|', 'mwho||'): got.append(await pg.evaluate(TAP, v))
         words = await pg.evaluate("[...document.querySelectorAll('#base .mctl .who button')].map((b) => b.textContent.trim())")
         await pg.evaluate("(() => { fk.cam.x += 3 * fk.size()[0] / fk.cam.z; MENU.render(true); })()")
         got.append(await pg.evaluate(TAP, 'mscr|1|')); got.append(await pg.evaluate(TAP, 'mscr|1|'))
@@ -502,25 +502,25 @@ async def alarmed():
 async def missions():
     """The War card's mission row and its eye: the six missions in order, then the bell tile; with the army out of view the eye drops every count to the soldiers on screen, and a second tap brings them back."""
     TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return fk.picked().length; }"
-    ALL = "(() => [document.querySelector('#base .mctl .who button').textContent.trim(), !!document.querySelector('.mpath .eye.on')])()"
+    ALL = "(() => [document.querySelector('#base .mctl .who button').textContent.trim(), !!document.querySelector('.mpath .iv.on')])()"
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40); await pg.evaluate(TAP, 'war||')
-        row = await pg.evaluate("[...document.querySelectorAll('#base .mt.M .cell')].map((b) => b.textContent.trim() || (b.querySelector('svg') && b.classList.contains('bell') ? 'bell' : ''))")
+        row = await pg.evaluate("[...document.querySelectorAll('#base .mt.W .cell')].map((b) => b.textContent.trim())")
         await pg.evaluate("(() => { fk.cam.x += 3 * fk.size()[0] / fk.cam.z; MENU.render(true); })()")
         seen = [await pg.evaluate(ALL)]
         for _ in range(2): await pg.evaluate(TAP, 'mscr|1|'); seen.append(await pg.evaluate(ALL))
-        await pg.evaluate("fk.select(null)"); n = await pg.evaluate(TAP, 'mord|move|')
-        armed = await pg.evaluate("[...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === 'mord|move|').querySelector('.bx') !== null")
-        return row, seen, (n, armed)
+        await pg.evaluate("fk.select(null)"); n = await pg.evaluate(TAP, 'mord|retreat|'); m = await pg.evaluate(TAP, 'mord|move|')
+        return row, seen, (n, m, await pg.evaluate("[...document.querySelectorAll('#base .mt.W .cell')].map((b) => b.textContent.trim())"))
 
 async def falls():
-    """Fall back: three enemy foot stand three tiles from the foot; the foot are picked and told Fall back through the war menu: they walk away from the enemies, re-form, then go back in at the enemies they left."""
+    """Fall back (off the War card since Nov 25, until Advance and Fall back are built; called straight): three enemy foot stand three tiles from the foot; the foot are picked and told Fall back: they walk away from the enemies, re-form, then go back in at the enemies they left."""
     TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
     GAP = "(() => { const F = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot' && u.hp > 0), m = (S) => [S.reduce((a, u) => a + u.bx, 0) / S.length, S.reduce((a, u) => a + u.by, 0) / S.length], [ax, ay] = m(F), L = FOES.filter((u) => u.hp > 0), [bx, by] = L.length ? m(L) : [ax, ay]; return [Math.hypot(ax - bx, ay - by) / fk.D.tile, F.filter((u) => u.fall).length, F.filter((u) => FOES.includes(u.target)).length]; })()"
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40)
         await pg.evaluate("(() => { const F = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot'), e = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot'), c = F[0], T = fk.D.tile; window.FOES = []; for (let n = 0; n < 3; n++) { const z = fk.spawn(e.code, 2, fk.tileAt(c.bx + (3 + n) * T, c.by), fk.rng); if (z) FOES.push(z); } })()")
-        for v in ('war||', 'mwho|Foot|', 'mord|fall|'): await pg.evaluate(TAP, v)
+        for v in ('war||', 'mwho|Foot|'): await pg.evaluate(TAP, v)
+        await pg.evaluate("WAR.fallBack(fk.picked())")
         seen = []
         for _ in range(6): seen.append(await pg.evaluate(GAP)); await run.step(pg, 2)
         return seen
@@ -593,19 +593,33 @@ async def hold_fast():
     LOOK = "(() => { const A = MEN.filter((u) => units.includes(u) && u.hp > 0); return [+Math.max(0, ...A.map((u) => Math.hypot(u.bx - AT.get(u)[0], u.by - AT.get(u)[1]) / fk.D.tile)).toFixed(1), MEN.filter((u) => u.broke).length, A.length]; })()"
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate(CALM); await run.step(pg, 40); await pg.evaluate(OUT); await run.step(pg, 60)
-        for v in ('war||', 'mwho|Foot|', 'mview|mode|', 'mhold||'): await pg.evaluate(TAP, v)
+        for v in ('war||', 'mwho|Foot|', 'mord|move|', 'mhold||'): await pg.evaluate(TAP, v)
         await run.step(pg, 3); n = await pg.evaluate(RAID); await run.step(pg, 60)
         return n, await pg.evaluate(LOOK)
 
+async def hold_pause():
+    """Hold and Pause (Albert, Nov 25): held foot are moved and must still hold on arrival, then are sent at a foe far out of reach and Hold must be off; archers are paused, six enemy foot are set seven tiles off: the archers take no target until one of them is hit."""
+    FOES = "(n) => { const A = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Archers'), code = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot').code, N = fk.N, c = A.reduce((a, u) => [a[0] + u.bx / A.length, a[1] + u.by / A.length], [0, 0]), k0 = fk.tileAt(c[0] + n * fk.D.tile, c[1]); window.ARC = A; window.FOES = []; for (let d = 0; d < 12 && FOES.length < 6; d++) for (let dx = -d; dx <= d && FOES.length < 6; dx++) for (const dy of [-d, d]) { const k = k0 + dx + dy * N; if (FOES.length < 6 && fk.walkable(k) && !units.some((u) => u.k === k)) FOES.push(fk.spawn(code, 2, k, fk.rng)); } for (const u of A) u.mute = true; WAR.treaty(0, 2, 'war'); FOES.forEach((e, i) => WAR.fight(e, A[i % A.length], true)); }"
+    SEEN = "(() => [ARC.filter((u) => u.target).length, ARC.some((u) => u.mute) && ARC.every((u) => u.mute || u.hp <= 0), FOES.filter((e) => e.hp < e.hpMax || e.hp <= 0).length])()"
+    async with run.game(SEED, test=True) as pg:
+        await pg.evaluate(CALM); await run.step(pg, 40)
+        a = await pg.evaluate("(() => { const h = fk.seatOf(0), M = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot'); window.MEN = M; for (const u of M) u.stand = true; WAR.order(M, null, fk.tileAt(h.bx + 300, h.by)); return MEN.every((u) => u.stand); })()")
+        await run.step(pg, 60)
+        b = await pg.evaluate("MEN.every((u) => u.stand && u.job === 'hold')")
+        c = await pg.evaluate("(() => { const f = units.find((u) => u.side === 2 && fk.SH[u.code].class); WAR.treaty(0, 2, 'war'); WAR.order(MEN, f, null); const on = MEN.some((u) => u.stand); WAR.homeAll(MEN); WAR.treaty(0, 2, 'peace'); return on; })()")
+        await pg.evaluate(FOES, 7); await run.step(pg, 1); early = (await pg.evaluate(SEEN))[:2]
+        await run.step(pg, 39); late = await pg.evaluate(SEEN)
+        return [a, b, c], [early, [late[0], await pg.evaluate("ARC.some((u) => u.mute)"), late[2]]]
+
 async def modes():
     """The War card's Mode: its six tiles and which are boxed; Specialty set on the whole army, then a move: where each class stands, [forward, right] in tiles from the spot (N565)."""
-    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return [...document.querySelectorAll('#base .mt .cell')].map((b) => b.textContent.trim() + (b.querySelector('.bx') ? '*' : '')); }"
+    TAP = "(v) => { [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click(); return [...document.querySelectorAll('#base .mt .cell')].map((b) => b.textContent.trim() + (b.classList.contains('lit') ? '*' : '')); }"
     GO = "() => { const h = fk.seatOf(0), A = units.filter((u) => u.side === 0 && fk.SH[u.code].class); window.ARMY = A; window.GOAL = fk.tileAt(h.bx, h.by - 300); WAR.order(A, null, GOAL); }"
     LOOK = "(() => { const [gx, gy] = fk.tileMid(GOAL), f = [ARMY[0].fx, ARMY[0].fy], by = {}; for (const u of ARMY) { const dx = (u.bx - gx) / fk.D.tile, dy = (u.by - gy) / fk.D.tile; (by[fk.SH[u.code].class] ||= []).push([dx * f[0] + dy * f[1], -dx * f[1] + dy * f[0]]); } const m = (L, i) => L.reduce((a, p) => a + p[i], 0) / L.length; return Object.fromEntries(Object.entries(by).map(([c, L]) => [c, [+m(L, 0).toFixed(1), +m(L, 1).toFixed(1)]])); })()"
     async with run.game(SEED, test=True) as pg:
         await pg.evaluate(CALM); await run.step(pg, 40)
         for v in ('war||', 'mwho||'): await pg.evaluate(TAP, v)
-        a = await pg.evaluate(TAP, 'mview|mode|'); b = await pg.evaluate(TAP, 'mmode|heart|death|'); c = await pg.evaluate(TAP, 'mdoor|form|'); d = await pg.evaluate(TAP, 'mmode|form|specialty|'); e = await pg.evaluate(TAP, 'mdoor||')
+        a = await pg.evaluate(TAP, 'mord|attack|'); b = await pg.evaluate(TAP, 'mmode|heart|death|'); c = await pg.evaluate(TAP, 'mord|move|'); d = await pg.evaluate(TAP, 'mdoor|form|'); e = await pg.evaluate(TAP, 'mmode|form|specialty|')
         await pg.evaluate(GO); await run.step(pg, 90)
         return [a, b, c, d, e], await pg.evaluate(LOOK)
 
@@ -744,18 +758,21 @@ async def check_game():
     ns, nt, nw = await no_phantom()
     rule('a villager with no path to a farm leaves no one counted on it: it shows idle and the next villager sent works it', ns == [False, 0, True] and nt and nw == [True, 1], f'on it, counted, idle after the failed walk: {ns}; the next taken: {nt}; on it and counted two seconds on: {nw}')
     tr, tw = await troops()
-    rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, the eye (on screen only) picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, Troops, minus, Foot, All, eye on, eye off): {tr}')
-    rule('the troop words say how many each would pick', tw[:6] == ['All 24', 'Idle 24', 'Foot 10', 'Archers 8', 'Cavalry 4', 'Siege 2'] and len(tw) == 7, f'words: {tw}')
+    rule('troop words: a class trimmed with minus keeps its count when another is added, All brings everyone back, In view picks nobody when the army is out of view and a second tap brings everyone back', tr == [24, 4, 3, 13, 24, 0, 24], f'picked after each tap (War, Cav, minus, Foot, All, In view on, In view off): {tr}')
+    rule('the troop words say how many each would pick', tw == ['All 24', 'Idle 24', 'Foot 10', 'Archers 8', 'Cavalry 4', 'Siege 2'], f'words: {tw}')
     mr, me, ma = await missions()
-    rule('a mission tapped with nobody picked does nothing and says Pick troops first (Albert, Nov 22: it sent the whole army)', ma == (0, False), f'picked, Move armed: {ma}')
-    rule('the mission row reads Attack, Move, Defend, Fall back, Retreat, then the bell tile (Hold moved to Mode, Nov 22)', mr == ['Attack', 'Move', 'Defend', 'Fall back', 'Retreat', 'bell'], f'row: {mr}')
-    rule('the eye: with the army out of view, tapped it drops the counts to the soldiers on screen and shows set; tapped again, all count', [w.split()[-1] for w, _ in me] == ['24', '0', '24'] and [on for _, on in me] == [False, True, False], f'All word and eye set, before and after two taps: {me}')
+    rule('with nobody picked, Retreat does nothing and says Pick troops first (Albert, Nov 22: it sent the whole army), and Move only opens its card: Formation, Hold, Retreat', ma == (0, 0, ['Formation', 'Hold', 'Retreat']), f'picked after Retreat, after Move, the Move card: {ma}')
+    rule('the Attack card reads Pause, To death, Defend, Shelter, Prep, Retreat (Albert, Nov 25: two small cards, words only)', mr == ['Pause', 'To death', 'Defend', 'Shelter', 'Prep', 'Retreat'], f'row: {mr}')
+    rule('In view: with the army out of view, tapped it drops the counts to the soldiers on screen and shows set; tapped again, all count', [w.split()[-1] for w, _ in me] == ['24', '0', '24'] and [on for _, on in me] == [False, True, False], f'All word and In view set, before and after two taps: {me}')
     cn, cf, cd = await courage('normal'), await courage('focused'), await courage('death')
     rule('courage on the War card: eight foot set upon by sixteen; Normal ones break, Focused hold three times the losses, To death never run', cn > 0 and cf < cn and cd == 0, f'broke after a minute: Normal {cn}, Focused {cf}, To death {cd}')
     hn, hl = await hold_fast()
     rule('Hold is die in place: the held foot neither move from their spot nor break with twenty foes on them', hn > 0 and hl[0] < 1.5 and hl[1] == 0, f'{hn} held; a minute on, the farthest moved {hl[0]} tiles, {hl[1]} broke, {hl[2]} alive')
     mt, ml = await modes()
-    rule('the Mode row reads Hold, Normal, Focused, To death and a door to the formations (Line, Specialty, Wide, Back), red-boxing what the picked soldiers have', mt == [['Hold', 'Normal*', 'Focused', 'To death', 'LineFormation›'], ['Hold', 'Normal', 'Focused', 'To death*', 'LineFormation›'], ['Line*', 'Specialty', 'Wide', '‹ Back'], ['Line', 'Specialty*', 'Wide', '‹ Back'], ['Hold', 'Normal', 'Focused', 'To death*', 'SpecialtyFormation›']], f'{mt}')
+    A6 = ['Pause', 'To death', 'Defend', 'Shelter', 'Prep', 'Retreat']
+    rule('the two War cards light the whole box of a switch that is on: To death on the Attack card; on the Move card Formation, which shows the shape, and a tap on the shape steps it', mt == [A6, ['Pause', 'To death*'] + A6[2:], ['Formation', 'Hold', 'Retreat'], ['Formation*', '›LineShape', 'Hold', 'Retreat'], ['Formation*', '›SpecialtyShape', 'Hold', 'Retreat']], f'{mt}')
+    hp = await hold_pause()
+    rule('Hold survives a Move and ends on an Attack out of reach; paused archers take no target with foes in range, and being hit ends the pause', hp[0] == [True, True, False] and hp[1][0] == [0, True] and hp[1][1][1] is False and hp[1][1][2] > 0, f'held after the order, held on arrival, held after an attack out of reach: {hp[0]}; paused archers with a target and all still paused at 1 s: {hp[1][0]}; at 40 s targets, any paused, foes hurt or dead: {hp[1][1]}')
     rule('Specialty: foot in front, archers behind them, siege at the back, cavalry off the right flank', ml['Archers'][0] < ml['Foot'][0] - 2 and ml['Engines'][0] < ml['Archers'][0] and ml['Riders'][1] > ml['Foot'][1] + 3, f'[forward, right] tiles: {ml}')
     bn, ba = await big_move()
     rule('a big army moved at once arrives: no soldier walks in place short of his spot', ba == [True, 0], f'{bn} soldiers; two minutes on, arrived and still marching: {ba}')
