@@ -1,6 +1,14 @@
-# Build (Albert, Nov 27 09:57 to 10:00, the handoff): documents only. The 12 checks go back into RULES.md, the Nov 26 audit becomes its own file, LIST.md opens with a Start here block for a new chat. No game file changes; nothing is published.
-cd4e60e
-RULES.md
-LIST.md
-docs/log/Audit-2026-11-26.md
+# Build (Albert, Nov 27 15:37: "Ok build."): v119, the hands. Attack and Move arm again (three doors, one command); Help is a sheet with its title row and Close; a second fault shows the real pause screen; the next ghost after a building steps the smallest gap the pair may keep and continues the pattern. The War card's touch sizes were in the plan and are out: they need a taller frame, his call. Records: the Nov 27 rulings, the audit of v118 as its own file, LIST's Start here.
+a82f78d
+menu.js
+econ.js
+index.html
+books/measure.js
+books/screen.js
+books/comments.js
+books/citations.js
+tools/check.py
 tools/build.txt
+RULINGS.md
+LIST.md
+docs/log/Audit-2026-11-27.md

@@ -2,24 +2,25 @@
 
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
-## Start here (written Nov 27 10:05 for a new chat; the handoffs below are the detail)
-- Latest build: v118, https://acohen2300.github.io/first-keep/fresh/v118/ . Branch `fresh`. Each build has its own link; v113 to v118 all stand
-- What happens next: he plays a full match on v118, pastes every part of the copied log (check each part's head and END line before reading) and gives his top five complaints. Nothing else is built before that
-- Read first: RULES.md (the 12 rules, the 12 checks, how we work), then RULINGS.md (his calls; "Commanding soldiers" is the control rule sheet), then the Nov 26 handoffs below
-- How he works: talk and build are separate, nothing is built until he says "build"; short answers, he is on his phone; correct him flatly, argue back at most twice with backup, then his call stands; Claude builds alone, no helper agents
-- The plan (agreed Nov 26): 1 the control rule sheet (done) · 2 build it (done, v115), then his match (owed) · 3 homes for formations, Shelter, Prep and Defend, each with its rule written first · 4 the other cards into the frame, replacing the old styles under it · 5 engine meaning: Attack on open ground, Defend as a standing guard, Formation as wait and form up, hitting a group's front line
-- Open rulings, his to make:
-  1. Where Dismiss for a soldier goes (there is none today)
-  2. Garrisoning soldiers in buildings
-  3. The colour table: picked, primed, under attack, defended, where you are
-  4. The Defend ring with its count of guards (his idea)
-  5. The four differences between him and the rivals (docs/log/Audit-2026-11-26.md, item 4)
-  6. Whether to trace the old battalion system
-  7. The Build tab's hint: show it or cut it
-  8. The ghost: always pull to the minimum, and where it first appears (v117 notes below)
-  9. To confirm from v115: villagers also add to the pick on a tap; New no longer puts the type boxes out
-- Known and not built: formations, Shelter and Prep have no button; the style layering from v114 (step 4); an order that fails keeping the pick has no test; the log's part size (30,000 characters) is a guess to set from his first paste
-- The audit in full: docs/log/Audit-2026-11-26.md
+## Start here (written Nov 27 16:30 for a new chat; the handoffs below are the detail)
+- Latest build: v119, https://acohen2300.github.io/first-keep/fresh/v119/ . Branch `fresh`. Each build has its own link; v113 to v118 all stand
+- What v119 is, the hands build ("Ok build.", Nov 27 15:37): Attack and Move arm again (three doors, one command); Help opens and closes; a second fault no longer hides the bar; the next ghost steps the true gap and continues the pattern. Each has a real-tap rule in the check
+- What happens next: he plays a full match on v119 and pastes every part of the copied log. Claude owes parts 4 to 6 of his audit brief (market against the ten best in the genre, how to level up, known unknowns) and runs them while he plays; and two or three frame options for the War card's touch sizes
+- Read first: RULES.md, then RULINGS.md ("Commanding soldiers" and the Nov 27 section at its foot), then docs/log/Audit-2026-11-27.md: the 56 faults and the six builds that take them
+- How he works: talk and build are separate, nothing is built until he says "build"; short answers, he is on his phone; correct him flatly, argue back at most twice with backup, then his call stands; Claude builds alone, no helper agents. After the catch-up his match notes drive the order, not the audit's list
+- The builds after v119, in order, one between previews: 2 cleanup (his ruled cuts, dead code, the 11 dead research hidden; no change to play) · 3 rules bugs · 4 the safety net (save and offline checks, icon, version stamp) · 5 speed and memory (needs his phone) · 6 doors, each designed first: Shelter and Prep, Formations with Advance and Fall back, the quick homes, Vassals last. Pacing is its own build once he gives the three numbers
+- Open rulings, his to make (the Nov 27 list in RULINGS.md has the detail):
+  1. How long an undefended player should last on Easy, Normal and Hard (today 71 minutes on Normal, 63 on Hard)
+  2. What Hold means during a march
+  3. Gift: build it or remove the button
+  4. Outlaws and natives only ever fight him: intended or not
+  5. Whether computers should shelter and sell surplus
+  6. Whether an order keeps the pick while War is open
+  7. The War card's touch sizes: which taller frame
+  8. Did he stop using the drag box since v115's quarter-second hold because it stopped working for him (0 boxes in his 22-minute v118 match)?
+  9. Still open from Nov 26: Dismiss for a soldier, garrisoning, the colour table, the Defend ring, where the ghost first appears
+- Known and not built in v119: the War card's touch sizes; villagers and mixed picks still order through `tapDo`; Hold during a march; the build still calls itself v100 · 12
+- Owed by him: part 2 of his v118 log, if he still has it
 
 ## Handoff, Nov 26 evening (read this first in a new chat; the handoffs below still stand)
 - 22:33 to 22:37: he asked for a fuller copied log, the whole match, not capped; split into parts was his idea ("two reports 1 and 2", "you can do 3"). "Build" at 22:37; he plays a full match on v118 next. v118: the log keeps a short row for every map tap (who was picked, what it became), every button, every box, every pan that rested at least half the box hold first, every building placed or cancelled; the head carries the screen and the drawn size of a tab's letters and the stored tap counts; errors 60; orders and news to 100,000 (no match reaches it; a number, not a true absence of a cap); the copy is cut at 30,000 characters a part, a guess to set from his first real paste. When he pastes: check every part is there by its head and END line before reading; first questions to answer from it: how often a map tap became none, how many pans were near-miss boxes (is 0.25 s right), which War box he taps first, the letter size against the tab box

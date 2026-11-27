@@ -46,15 +46,15 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - No blur on menus: too expensive (Nov 25; replaces the frosted glass of Nov 9)
 - The small map was lost by accident, not cut: its drawing is still in the code with no place on screen (Nov 25); where it goes is his to call
 
-## Commanding soldiers: the rule sheet (Nov 26, built in v115; replaces every earlier tap rule for soldiers)
+## Commanding soldiers: the rule sheet (Nov 26, built in v115; arming put back Nov 27, v119; replaces every earlier tap rule for soldiers)
 - Picking, three ways and no others: a tap on a soldier (he joins the pick; a tap on one already in drops him), the drag box (soldiers only when it holds any), the boxes on the War card. The card always shows the pick: a type box is lit when any of its soldiers are picked and reads picked/there
 - With soldiers picked, a tap on the map is the order, no button: on an enemy unit or building they attack it and seek it; on ground they march there. The pick ends when the order goes out; an order that cannot be carried out says why and keeps the pick
 - With nobody picked, a tap on an enemy unit or building primes it (a yellow ring) and opens War; open ground primes only while War is open. One target at a time: a new tap replaces it, a tap on it lets it go, Exit drops it. With War closed a tap on open ground does nothing. Enemies have no card ("There is no need")
-- Attack and Move are fire buttons: they send the picked soldiers at the primed target and are dim without one. They never arm and never stay lit. Tapping one first to force the other meaning (attack toward open ground, move beside an enemy) waits for the engine work; until then Attack at ground is the same march as Move
+- Attack and Move arm (Nov 27, v119; "never arm" is withdrawn: 15 of his 16 taps on them were refused in his v118 match, and he had asked for arming). Three doors, one command, "just the door is different": the troops first, then the command, then the map; the command first, then the troops, then the map; the target first, then the troops, then the command. A tap with no target lights the box, with or without soldiers picked; the next tap on the map is the order and the light goes out; tapped again it goes out; the other one takes the light; closing War puts it out. Picking troops never sends anyone. A tap on an enemy always attacks, even with Move lit. With a target primed and troops picked they fire at once, as before. Dim only when you have no soldiers. Attack toward open ground and move beside an enemy still wait for the engine work; until then Attack at ground is the same march as Move
 - A tap on one of your own buildings is never a troop order: it opens the building's card and lets the soldiers go. Villagers keep the Nov 12 tap table
 - Rings on the map: green on picked soldiers, yellow on the primed target, red on whatever your soldiers have been sent at. No ring on soldiers under an order. No dashed white ring. The full colour table (picked, primed, under attack, defended, where you are) is still owed
 - The switches (Hold, To Death, Stop, Retreat) act at once and keep the pick, so a ground tap after one still sends them
-- Cut: the armed Attack and Move, place-first, double tap, re-picking a group by its old Move ring, every hold but the box
+- Cut: place-first, double tap, re-picking a group by its old Move ring, every hold but the box (the armed Attack and Move were cut here on Nov 26 and are back, above)
 - Parked: garrisoning soldiers in buildings; Dismiss for a soldier (there is none today; the soldier's own card was empty and is gone); the Defend ring with its count of guards (his idea, Nov 26: yellow, any number of guards on any number of things)
 
 ## The War card (army control)
@@ -120,3 +120,15 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 - Meant to be in, to test and fix: the scouting timer, stealth, bribes and contracts, the outlaw's bounty and pardon (Nov 8). Bribe for misfits and the spy's stealth are in; no bounty, pardon, contract or scouting timer found
 - In, not good enough: torches and lights at night (Nov 10)
 - Cut: the Apartment (its shell, cost and Fired brick's room are leftovers to clean)
+
+## Nov 27: the audit of v118 and what he ruled (the audit: docs/log/Audit-2026-11-27.md)
+- The next ghost after a building continues the pattern (v119): the same step as the last two, at the smallest gap the pair may keep (1 between houses; it stepped 2); blocked, it starts the next row beside the row's first building. "Don't touch the grid lines in green I love them"
+- Fire and tight building: no extra gap rule. "If fire can jump from one house to another with a 1 space gap then it should get burnt down I suppose"
+- Help is a sheet with a title row and Close (v119). A second fault shows the real pause screen (v119)
+- His keep, cut and park calls on what is built with no way in: Schooling park · Vassals keep ("a very good and important system"; needs its rule sheet, a card and the computers using it; design first, built last) · the old battalion system (squads, plans, direct orders) cut, but Muster stays · Charge keep and give a home ("more important we need advance and fall back") · Trade post keep and fix · the small map keep and fix · the follow camera keep and refine · the Build tab's hint cut · traps and ambushes parked until natives are built, the trap code turned off until then · Crowns park · Formations "Priority. Keep. Fix. Refine. Build out." · Shelter, All clear and Prep "refine and build"
+- Muster, his redesign: one per class, the button in that class's building (Barracks for foot, Stable for cavalry, and so on), and a research in each building for its muster once the main Muster is learned
+- Order he agreed for those: the cleanup build, Shelter and Prep, Formations with Advance and Fall back, the quick homes (Trade post, follow camera, small map, Charge), Vassals last
+- After the catch-up his match notes drive the order, not the audit's list
+- Open, his to make: how long an undefended player should last on each difficulty (today 63 minutes on Hard, 71 on Normal; Claude's starting offer 12, 20 and 30) · what Hold means during a march (today it ends the march and says nothing) · Gift: build it or remove the button · outlaws and natives only ever fight him, never the computers: intended or not · whether computers should shelter and sell surplus · whether an order should keep the pick while War is open · "Buildings first" and "No pursuit" · the War card's touch sizes (below)
+- The War card's touch sizes cannot reach 44 px inside the Nov 26 frame (thin row 21, tall row 46, 6 between: the thin row takes a 30 px touch, the four switches 23 each). It needs taller rows; Claude owes him two or three frame options with pixel numbers, and he picks
+
