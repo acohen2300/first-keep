@@ -1,7 +1,9 @@
-# Build (Albert, Nov 26 22:18 "Build"): the building ghost snaps to the true minimum beside one of yours. The older fixed option of one lane (2 tiles) apart is removed, so a house snaps to 1 from a house and a farm against a farm. Changes where the ghost lands near a building; a match with no taps plays the same (only the player's ghost uses this snap).
-8f2dfea
-econ.js
+# Build (Albert, Nov 26 22:37 "Build and after you're done I'll play a full match on 118"): the copied log covers the whole match and what the thumbs did. Added: every tap on the map and what it became, every button tap, box drags and holds that fell short of a box, a building placed against where the finger held it, the phone's screen and the drawn size of the bar's letters, the stored tap counts; errors kept go from 20 to 60; the caps on orders and news are lifted. The copy comes in parts of a safe size (Copy log 1 of 3), each marked. Records only: does not change how the game plays or looks beyond the button's label.
+e0b7959
+menu.js
+index.html
 books/measure.js
+books/words.js
 books/comments.js
 books/citations.js
 tools/check.py
