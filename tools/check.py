@@ -569,6 +569,18 @@ async def ghost_snap():
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 40); return await pg.evaluate(JS), pg.errors[:2]
 
+async def thumbs():
+    """The copied log records what the thumbs did, for the whole match, and copies in marked parts (Albert, Nov 26, N584): a soldier tapped, the ground tapped, a type box, a tap that primes, a box by a real press; then the parts put back together are the whole log, and each part is headed and closed with its number."""
+    async with run.game(SEED, test=True) as pg:
+        await pg.evaluate("[1, 2, 3].forEach((s) => WAR.treaty(0, s, 'peace'))"); await pg.evaluate(CALM); await run.step(pg, 60); await pg.evaluate(CTL)
+        xy = await pg.evaluate("(() => { const F = Z.cls('Foot'); Z.mt(F[0]); const [x, y] = fk.toScreen(F[0].vx, F[0].vy); fk.tap(x + 100, y - 90); MENU.render(true); Z.tap('war||'); if (!MENU.S.war) Z.tap('war||'); fk.tap(150, 300); MENU.render(true); Z.tap('mwho|Archers|'); Z.tap('mord|move|'); const A = Z.cls('Archers'); fk.cam.x = A[0].vx; fk.cam.y = A[0].vy; MENU.render(true); return fk.toScreen(A[0].vx, A[0].vy); })()")
+        hold = await pg.evaluate('D.touch.hold'); await run.step(pg, 1)
+        await pg.mouse.move(xy[0] - 150, xy[1] - 150); await pg.mouse.down(); await pg.wait_for_timeout(hold + 40); await pg.mouse.move(xy[0], xy[1], steps=4); await pg.mouse.move(xy[0] + 150, xy[1] + 110, steps=4); await pg.mouse.up(); await pg.wait_for_timeout(100)
+        await pg.mouse.move(60, 200); await pg.mouse.down(); await pg.wait_for_timeout(hold - 70); await pg.mouse.move(120, 260, steps=4); await pg.mouse.up(); await pg.wait_for_timeout(100)
+        return await pg.evaluate("""(() => { const T = MENU.log.taps, full = MENU.logText(), J = JSON.parse(full), size = D.log.part; D.log.part = Math.ceil(full.length / 3); const Q = MENU.logParts(); D.log.part = size;
+          return { map: T.filter((r) => r[1] === 'm').map((r) => r.slice(2)), buttons: T.filter((r) => r[1] === 'b').map((r) => r[2] + ':' + r[3]), box: T.filter((r) => r[1] === 'x').length, pan: T.filter((r) => r[1] === 'p').length, head: [J.taps.length === T.length, J.screen.length, typeof J.counts, D.log.orders, D.log.news, D.log.errors],
+            parts: [Q.length, Q.map((q) => q.split('\\n').slice(1, -1).join('\\n')).join('') === full, Q.every((q, i) => q.startsWith('FIRST KEEP LOG') && q.includes('part ' + (i + 1) + ' of ' + Q.length + '\\n') && q.endsWith('END part ' + (i + 1) + ' of ' + Q.length))] }; })()"""), pg.errors[:2]
+
 async def falls():
     """Fall back (off the War card since Nov 25, until Advance and Fall back are built; called straight): three enemy foot stand three tiles from the foot; the foot are picked and told Fall back: they walk away from the enemies, re-form, then go back in at the enemies they left."""
     TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
@@ -831,6 +843,9 @@ async def check_game():
          and (rf['home'], rf['lit'], rf['hold'], rf['jobs']) == (0, False, 0, 'idle') and rf['far'] < rb['far'] - 10 and not re_,
          f'after a move that arrived their state is {rw}; on Hold: {ra}; Retreat on: {rb}; 6 s on: {rc}; tapped again: {rd}; farthest moved in the next 20 s: {rm} tiles; on again, 2 min on: {rf}; errors {re_}')
     gs, ge = await ghost_snap()
+    th, te = await thumbs()
+    rule('the log records what the thumbs did (N584): a tap on a soldier is an add, a tap on ground with him picked an order, a tap on ground with nobody picked and War open a prime; the buttons tapped, done or refused; a box and a pan that fell short of one', th['map'] == [['n', 'add', 0, 1], ['Ws', 'order', 1, 0], ['Wn', 'prime', 0, 0]] and th['buttons'][-2:] == ['mwho|Archers:1', 'mord|move:1'] and th['box'] == 1 and th['pan'] == 1 and not te, f"map taps {th['map']}; buttons {th['buttons']}; boxes {th['box']}, near-miss pans {th['pan']}; errors {te}")
+    rule('the copied log carries the taps, the screen and the tap counts, keeps the whole match (no cap a match can reach), and copies in parts that put back together are the whole log, each headed and closed with its number', th['head'][:3] == [True, 8, 'object'] and th['head'][3] >= 100000 and th['head'][4] >= 100000 and th['head'][5] == 60 and th['parts'] == [3, True, True], f"taps in the copy, screen readings, counts, most orders, news, errors kept: {th['head']}; parts, rejoined whole, marked: {th['parts']}")
     rule('the building ghost, held one tile past the smallest gap a pair may keep and a row off, snaps to that gap: 1 between houses (it stopped at 2), 0 between farms; held in line on a spot that fits it stays under the finger (Albert, Nov 26)', gs['House'] == [1, 1, 1, 2] and gs['Farm'] == [0, 0, 1, 1] and gs['Mill'][0] == 2 and not ge, f'[smallest gap allowed, gap it landed at, rows off, gap when held in line on a spot that fits]: {gs}; errors {ge}')
     ct = await controls()
     rule('picking on the map (N582): a tap on a soldier picks him and opens War, a tap on another adds him and the card shows both (picked/there), a tap on one already picked drops him', ct['pick'] == [1, True, 2, 'Foot 1/10*', 'Archers 1/8*', 1], f"{ct['pick']}")
