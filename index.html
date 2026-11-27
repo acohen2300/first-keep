@@ -1125,7 +1125,7 @@ const tileMid = (k) => { const i = k % N; return toBoard((i + 0.5) * D.tile, ((k
 const nextTo = (k) => (q) => Math.abs((q % N) - (k % N)) <= 1 && Math.abs(Math.floor(q / N) - Math.floor(k / N)) <= 1 && q !== k;
 const JB = Symbol('job'), JOBS = new Set(D.jobs), ODD = new Set(); // E1041
 function jobDoor(u) { const j = u.job; Object.defineProperty(u, 'job', { get() { return this[JB].j; }, set(v) { const r = this[JB]; if (v === r.j) return; if (!JOBS.has(v)) ODD.add(v); r.was = r.j; r.j = v; r.t = K.t; }, enumerable: true, configurable: true }); u[JB] = { j, was: null, t: K.t }; return u; }
-const jobRec = (u) => u[JB] || { j: u.job, was: null, t: null }, isIdle = (u) => u.job === 'idle';
+const isIdle = (u) => u.job === 'idle';
 function spawn(code, side, k, roll) { // E92
   const [bx, by] = tileMid(k), u = { kind: 'unit', code, side, bx: bx + between(roll, [-D.jitter, D.jitter]), by: by + between(roll, [-D.jitter, D.jitter]), k, vx: 0, vy: 0, path: null, at: 0, job: 'idle', target: null, load: 0, carry: null, born: K.t, face: 1, t: roll() * D.camfit.phase, wait: 0, alt: units.length % CUT.alt };
   jobDoor(u); place(u); units.push(u); file(UG, D.grid.unit, u); fire('spawn', u); return u;
