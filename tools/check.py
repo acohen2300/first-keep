@@ -563,6 +563,12 @@ async def seeks():
         for _ in range(6): await run.step(pg, 6); b = await pg.evaluate(LOOK)
         return a, b, pg.errors[:2]
 
+async def ghost_snap():
+    """The building ghost snaps to the smallest gap a pair may keep (Albert, Nov 26, N583): a house, a farm and a mill are stood near the Town Center, and a second of each is held one tile past its true gap and one row off; the house lands at 1 (it used to stop at 2) and the farm at 0; the mill, whose true gap is the old lane, is read for the record. Held in the same row on a spot that fits, it stays under the finger."""
+    JS = "(() => { const out = {}, codeOf = (n) => Object.keys(fk.SH).find((c) => fk.SH[c].name === n), h = fk.seatOf(0), tol = D.place.tol.least; for (const name of ['House', 'Farm', 'Mill']) { const c = codeOf(name); let b = null; for (let r = 6; r < 30 && !b; r++) for (const [dx, dy] of [[r, 0], [0, r], [-r, 0], [0, -r], [r, r], [-r, -r]]) { const i = h.i + dx, j = h.j + dy; if (!b && ECON.canPlace(c, i, j, 0, true) && [1, 2, 3, 4, 5, 6, 7, 8].every((d) => ECON.canPlace(c, i + d + 3, j, 0, true))) b = fk.build(c, i, j, fk.SIDES[0].col); } const n = b.n, min = [0, 1, 2, 3, 4].find((g) => ECON.canPlace(c, b.i + n + g, b.j, 0, true)), [x, y] = ECON.spot(0, c, b.i + n + min + 1, b.j + 1, tol), [x2] = ECON.spot(0, c, b.i + n + min + 1, b.j, tol); out[name] = [min, x - b.i - n, y - b.j, x2 - b.i - n]; } return out; })()"
+    async with run.game(SEED, test=True) as pg:
+        await run.step(pg, 40); return await pg.evaluate(JS), pg.errors[:2]
+
 async def falls():
     """Fall back (off the War card since Nov 25, until Advance and Fall back are built; called straight): three enemy foot stand three tiles from the foot; the foot are picked and told Fall back: they walk away from the enemies, re-form, then go back in at the enemies they left."""
     TAP = "(v) => [...document.querySelectorAll('[data-v]')].find((b) => b.dataset.v === v).click()"
@@ -824,6 +830,8 @@ async def check_game():
          (ra['hold'], ra['lit']) == (10, False) and (rb['picked'], rb['home'], rb['hold'], rb['lit']) == (10, 10, 0, True) and rc['far'] < rb['far'] - 1 and (rd['picked'], rd['home'], rd['hold'], rd['lit'], rd['jobs']) == (10, 0, 0, False, rw) and rm < 1.5 and re2['home'] == 0
          and (rf['home'], rf['lit'], rf['hold'], rf['jobs']) == (0, False, 0, 'idle') and rf['far'] < rb['far'] - 10 and not re_,
          f'after a move that arrived their state is {rw}; on Hold: {ra}; Retreat on: {rb}; 6 s on: {rc}; tapped again: {rd}; farthest moved in the next 20 s: {rm} tiles; on again, 2 min on: {rf}; errors {re_}')
+    gs, ge = await ghost_snap()
+    rule('the building ghost, held one tile past the smallest gap a pair may keep and a row off, snaps to that gap: 1 between houses (it stopped at 2), 0 between farms; held in line on a spot that fits it stays under the finger (Albert, Nov 26)', gs['House'] == [1, 1, 1, 2] and gs['Farm'] == [0, 0, 1, 1] and gs['Mill'][0] == 2 and not ge, f'[smallest gap allowed, gap it landed at, rows off, gap when held in line on a spot that fits]: {gs}; errors {ge}')
     ct = await controls()
     rule('picking on the map (N582): a tap on a soldier picks him and opens War, a tap on another adds him and the card shows both (picked/there), a tap on one already picked drops him', ct['pick'] == [1, True, 2, 'Foot 1/10*', 'Archers 1/8*', 1], f"{ct['pick']}")
     rule('with soldiers picked a tap on the map is the order, no button: on ground they march there, on an enemy they are sent at it; the pick ends', ct['move'] == [0, 10] and ct['attack'][0] == 0 and ct['attack'][1] == ct['attack'][2] > 0, f"ground: picked after, marching {ct['move']}; enemy: picked after, sent at him, cavalry {ct['attack']}")
