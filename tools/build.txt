@@ -1,4 +1,4 @@
-# Build (Albert, Nov 26 19:16 "Build", after the evening's code audit): two safe items. A save moved from the old store is deleted there only once the new copy is written. Cut: menu state that was written and never read (drag, mid, tool, ro) and two functions nothing calls (jobRec, loses). Does not change how the game plays or looks.
+# Build (Albert, Nov 26 19:16 "Build", after the evening's code audit): two safe items. A save moved from the old store is deleted there only once the new copy is written. Cut: menu state that was written and never read (drag, mid, tool, ro) and one function nothing calls (loses). Does not change how the game plays or looks.
 0c3570d
 index.html
 menu.js
