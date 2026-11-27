@@ -29,6 +29,7 @@ A changed call replaces its line here (the old one goes to the log, `docs/log/`)
 
 ## Controls and screen
 - No long press and no double tap (Nov 21). One exception, his call: the drag box starts after a 0.25 s hold ("The drag box I use a lot… keep for now", Nov 26; it was 0.32)
+- The building ghost snaps beside one of yours at the smallest gap that pair may keep: 1 between houses, touching for farms, 2 otherwise. On a spot that already fits it stays under the finger (Nov 26; it used to stop one lane out)
 - What matters is a 44 px tap area, not the size shown (Nov 23). The bar's frame of Nov 26 goes under it by his drawing: a tab reaches up over the map to 47 px, the tall row is 46, but a thin-row box takes 30 px and a pad switch 23
 - The bar's frame, on every card (Nov 26): six equal columns; three rows, the tab row 19 px, the thin row 21, the tall row 46; 6 px between the rows, 3 px between boxes and to the screen's edges ("My ideal padding for everything is 3px"); every box shaded, with gaps, no white bars except inside War's pad; a green edge is where you are (the open tab, the open Build group), a red edge what is picked or switched on
 - Exit is on every card, top right in the tab row, the same size as Home, Jobs, Build and War ("Exit is on all menus and it's weird to not have it bc of muscle memory", Nov 26; replaces Exit on each card's own row and the "No Exit" on War of Nov 25)
