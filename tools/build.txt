@@ -1,17 +1,7 @@
-# Build (Albert, Nov 26 16:44 "Build", after the control rule sheet talked through 14:41 to 16:42): one way to command soldiers. Pick by a tap (adds, a second tap drops), the box (0.25 s hold, soldiers only when it holds any) or the card's boxes; with soldiers picked a tap on an enemy attacks it and a tap on ground moves them; with nobody picked a tap primes a target (yellow ring) and Attack or Move on the card fire at it. Picked soldiers wear a green ring, a target under attack a red one. A tap on your own building is never a troop order. Cut: the armed Attack and Move, place-first and its dashed ring, double tap, re-picking by an old Move ring, enemy cards. Also: soldiers sent at an enemy unit seek it. Changes how every order is given. Does not change how a match with no taps plays.
-0ee2c25
-menu.js
+# Build (Albert, Nov 26 19:16 "Build", after the evening's code audit): two safe items. A save moved from the old store is deleted there only once the new copy is written. Cut: menu state that was written and never read (drag, mid, tool, ro) and two functions nothing calls (jobRec, loses). Does not change how the game plays or looks.
+0c3570d
 index.html
-combat.js
-econ.js
-books/words.js
-books/screen.js
-books/measure.js
-books/sprites.js
+menu.js
 books/comments.js
-books/citations.js
-tools/check.py
-tools/screens.py
 tools/build.txt
 LIST.md
-RULINGS.md
