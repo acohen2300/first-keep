@@ -70,7 +70,7 @@ const around = [...new Set(D.ways.flat())].sort((a, b) => a - b);
 function snap(side, c, i, j, tol) { const [, n] = B[c]; let best = [i, j], bd = tol; if (wallish({ code: c })) return best; // E316
   const take = (x, y) => { const d = Math.hypot(x - i, y - j); if (d < bd && canPlace(c, x, y, side)) [best, bd] = [[x, y], d]; };
   for (const b of things()) if (b.kind === 'bld' && b.side === side && !wallish(b)) { const h = (b.n - n) * P.half, ci = b.i + h, cj = b.j + h, R = (b.n + n) * P.half + tol + P.near;
-    if (Math.abs(ci - i) <= R && Math.abs(cj - j) <= R) for (const g of new Set([gapOf(c, b.code), ...P.gaps])) { for (const x of [b.i - n - g, b.i + b.n + g]) for (const y of [Math.round(cj), b.j, b.j + b.n - n, j]) take(x, y); for (const y of [b.j - n - g, b.j + b.n + g]) for (const x of [Math.round(ci), b.i, b.i + b.n - n, i]) take(x, y); }
+    if (Math.abs(ci - i) <= R && Math.abs(cj - j) <= R) { const g = gapOf(c, b.code); for (const x of [b.i - n - g, b.i + b.n + g]) for (const y of [Math.round(cj), b.j, b.j + b.n - n, j]) take(x, y); for (const y of [b.j - n - g, b.j + b.n + g]) for (const x of [Math.round(ci), b.i, b.i + b.n - n, i]) take(x, y); }
     if (Number.isInteger(h) && Math.abs(ci - i) < P.guide && Math.abs(cj - j) < P.guide) { for (const d of around) { take(ci, j + d); take(i + d, cj); } } } // E716
   return best; }
 function guides(side, c, i, j) { const [, n] = B[c], g = [i + i + n, j + j + n], out = []; if (wallish({ code: c })) return out; // E716
