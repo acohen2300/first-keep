@@ -1,12 +1,6 @@
-# Build (Albert, Nov 26 22:37 "Build and after you're done I'll play a full match on 118"): the copied log covers the whole match and what the thumbs did. Added: every tap on the map and what it became, every button tap, box drags and holds that fell short of a box, a building placed against where the finger held it, the phone's screen and the drawn size of the bar's letters, the stored tap counts; errors kept go from 20 to 60; the caps on orders and news are lifted. The copy comes in parts of a safe size (Copy log 1 of 3), each marked. Records only: does not change how the game plays or looks beyond the button's label.
-e0b7959
-menu.js
-index.html
-books/measure.js
-books/words.js
-books/comments.js
-books/citations.js
-tools/check.py
-tools/build.txt
+# Build (Albert, Nov 27 09:57 to 10:00, the handoff): documents only. The 12 checks go back into RULES.md, the Nov 26 audit becomes its own file, LIST.md opens with a Start here block for a new chat. No game file changes; nothing is published.
+cd4e60e
+RULES.md
 LIST.md
-RULINGS.md
+docs/log/Audit-2026-11-26.md
+tools/build.txt

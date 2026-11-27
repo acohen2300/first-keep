@@ -17,6 +17,25 @@ Read this and RULINGS.md (Albert's live calls) before any work. Nothing else is 
 11. Tests check the rules, not just the build. Untouched code is proven untouched by diff.
 12. Patterns everywhere: same logic, same menus, same colours, same words for the same thing. Default to sets of 3; break it when the content needs it.
 
+## The 12 checks (Albert's core values; check every piece against them, in order)
+His words of Nov 6, and four more for anything new on Nov 9 20:41. He purged them with every other rule on Nov 20; on Nov 26 and 27 he asked for audits and builds to be held to them again, so they are back here, as he wrote them.
+1. Fair?
+2. Follows our logic and rules?
+3. A real-life solution (nature, science, history, another game)?
+4. Real math, its source, where it lives?
+5. Science?
+6. Purpose?
+7. Function?
+8. One home?
+
+For anything new:
+9. Does it have a source? Math, science, physics, a real-life anchor?
+10. Will it improve detail, quality and game play?
+11. Does it solve a problem, or is it just being built for fun?
+12. Will it save code?
+
+The code's character is rule 9 above. In his words of Nov 18: tight and right, lean and mean, clean and clear, simple and elegant, one home for all, nothing in code and all in books.
+
 ## Workflow
 
 - Talk and build are separate. Nothing is built until Albert says "build".

@@ -2,6 +2,25 @@
 
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
+## Start here (written Nov 27 10:05 for a new chat; the handoffs below are the detail)
+- Latest build: v118, https://acohen2300.github.io/first-keep/fresh/v118/ . Branch `fresh`. Each build has its own link; v113 to v118 all stand
+- What happens next: he plays a full match on v118, pastes every part of the copied log (check each part's head and END line before reading) and gives his top five complaints. Nothing else is built before that
+- Read first: RULES.md (the 12 rules, the 12 checks, how we work), then RULINGS.md (his calls; "Commanding soldiers" is the control rule sheet), then the Nov 26 handoffs below
+- How he works: talk and build are separate, nothing is built until he says "build"; short answers, he is on his phone; correct him flatly, argue back at most twice with backup, then his call stands; Claude builds alone, no helper agents
+- The plan (agreed Nov 26): 1 the control rule sheet (done) · 2 build it (done, v115), then his match (owed) · 3 homes for formations, Shelter, Prep and Defend, each with its rule written first · 4 the other cards into the frame, replacing the old styles under it · 5 engine meaning: Attack on open ground, Defend as a standing guard, Formation as wait and form up, hitting a group's front line
+- Open rulings, his to make:
+  1. Where Dismiss for a soldier goes (there is none today)
+  2. Garrisoning soldiers in buildings
+  3. The colour table: picked, primed, under attack, defended, where you are
+  4. The Defend ring with its count of guards (his idea)
+  5. The four differences between him and the rivals (docs/log/Audit-2026-11-26.md, item 4)
+  6. Whether to trace the old battalion system
+  7. The Build tab's hint: show it or cut it
+  8. The ghost: always pull to the minimum, and where it first appears (v117 notes below)
+  9. To confirm from v115: villagers also add to the pick on a tap; New no longer puts the type boxes out
+- Known and not built: formations, Shelter and Prep have no button; the style layering from v114 (step 4); an order that fails keeping the pick has no test; the log's part size (30,000 characters) is a guess to set from his first paste
+- The audit in full: docs/log/Audit-2026-11-26.md
+
 ## Handoff, Nov 26 evening (read this first in a new chat; the handoffs below still stand)
 - 22:33 to 22:37: he asked for a fuller copied log, the whole match, not capped; split into parts was his idea ("two reports 1 and 2", "you can do 3"). "Build" at 22:37; he plays a full match on v118 next. v118: the log keeps a short row for every map tap (who was picked, what it became), every button, every box, every pan that rested at least half the box hold first, every building placed or cancelled; the head carries the screen and the drawn size of a tab's letters and the stored tap counts; errors 60; orders and news to 100,000 (no match reaches it; a number, not a true absence of a cap); the copy is cut at 30,000 characters a part, a guess to set from his first real paste. When he pastes: check every part is there by its head and END line before reading; first questions to answer from it: how often a map tap became none, how many pans were near-miss boxes (is 0.25 s right), which War box he taps first, the letter size against the tab box
 - 22:15: he reported the building ghost snapping "a bit further than the minimum"; "Build" at 22:18. v117: beside one of his, the ghost had two spots to snap to, the pair's true gap and a fixed one lane (2 tiles), and coming in from outside the fixed one was always the nearer; the fixed one is removed. Unchanged, and to tell him: on a spot that already fits and is in line with a building the ghost does not move, so a house held exactly 2 away in the same row stays at 2 until dragged a tile closer; and the first spot when a building is picked is the middle of the screen pulled to the nearest fitting spot, which is often one in line with a building rather than the closest to it
