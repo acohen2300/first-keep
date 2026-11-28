@@ -588,6 +588,7 @@ async def doors():
     async with run.game(SEED, test=True) as pg:
         await run.step(pg, 5); await pg.evaluate(CTL); await pg.evaluate("Z.vis = (v) => [...document.querySelectorAll('[data-v]')].filter((b) => b.offsetParent !== null && b.dataset.v.startsWith(v)).length; fk.pause(true); MENU.render(true); true")
         hp = await pg.evaluate("(() => { const ok = Z.tap('help||'); MENU.render(true); const p = document.querySelector('#panel'), a = [ok, MENU.S.tab, p.innerText.trim().length > 0, Z.vis('help|tab|'), Z.vis('close|')]; Z.tap('close||'); MENU.render(true); return [a, MENU.S.tab]; })()")
+        pg.meant = True
         ft = await pg.evaluate("(() => { fk.pause(false); MENU.render(true); fault(new Error('check one')); fault(new Error('check two')); MENU.render(true); const shown = (q) => getComputedStyle(document.querySelector(q)).display !== 'none'; return [fk.paused(), MENU.S.tab, shown('#base'), Z.vis('resume|') > 0]; })()")
         return hp, ft
 
@@ -773,6 +774,49 @@ async def dead_research():
         await run.step(pg, a[2] + 2)
         return a, await pg.evaluate("ECON.villagersOf(0).length - ZN0")
 
+async def net_errors():
+    """The safety net (Albert, Nov 28, N587). One error thrown twice from the same line is one kind, counted twice: the mail says so with the match going on, and the copied log carries its count and its line. Then two failed saves: no storage, and a part that will not pack; each says why."""
+    BOOM = "const boom = () => { const o = undefined; return o.heal; }, WS = fromBook('words').start, mail = () => { MENU.S.tab = 'Mail'; MENU.render(true); const t = document.querySelector('#panel').innerText; MENU.S.tab = null; MENU.render(true); return t; };"
+    async with run.game(SEED) as pg:
+        pg.meant = True; await run.step(pg, 5)
+        a = await pg.evaluate("(() => { " + BOOM + " fk.pause(false); for (const n of [0, 1]) try { boom(); } catch (e) { fault(e); } const F = fk.faults(), L = JSON.parse(MENU.logText()).errors, m = mail(); return [F.length, F[0].n, fk.paused(), m.includes(WS.broke.split('{line}')[1].trim()), L.length, L[0][3], /:\\d+:\\d+/.test(L[0][1]), L[0][2].length > 0]; })()")
+    out = []
+    for how in ("const db = DB.db; DB.db = null; await save(true); await new Promise((r) => setTimeout(r, 60)); DB.db = db; const why = WS.noStore;", "fk.on('save', () => { const o = null; return o.part; }); await save(true); await new Promise((r) => setTimeout(r, 60)); const why = \"reading 'part'\";"):
+        async with run.game(SEED) as pg:
+            pg.meant = True; await run.step(pg, 5)
+            out.append(await pg.evaluate("(async () => { " + BOOM + " fk.pause(false); " + how + " const m = mail(), [head, tail] = WS.saveFail.split('{why}'); return [m.includes(head) && m.includes(why) && m.includes(tail.trim()), fk.faults().length, fk.faults()[0].line.includes(why)]; })()"))
+    return a, out
+
+async def net_step():
+    """A tick answer that fails every step (N587): sim never throws, the answer after it runs every step, villagers gather, and on the game's own clock the picture is drawn while the error repeats."""
+    async with run.game(SEED) as pg:
+        pg.meant = True; await run.step(pg, 5)
+        a = await pg.evaluate("(() => { window.ZA = 0; window.ZD = 0; fk.on('tick', () => { const o = null; o.x = 1; }); fk.on('tick', () => { ZA++; }); fk.on('draw', () => { ZD++; }); const f0 = SIDES[0].store.food + SIDES[0].store.wood, DT = 1 / D.step.hz, n = 60 * D.step.hz; let thrown = 0; for (let k = 0; k < n; k++) { try { sim(DT); } catch (e) { thrown++; } } return [thrown, ZA === n, SIDES[0].store.food + SIDES[0].store.wood > f0, fk.faults().length, fk.faults()[0].n === n]; })()")
+        await run.release(pg); await pg.wait_for_timeout(1500)
+        return a, await pg.evaluate("ZD")
+
+async def net_one():
+    """One failing soldier, villager, building queue or healer cannot stop the rest (N587). On the test field: a foot soldier is set on a thing no book knows, so his every blow fails; a villager and a farm's queue are made to fail at every turn; a medic the healing table does not know stands by a wounded man. A minute on: the nine other foot have killed their enemy, the other villagers have carried in, the Town Center's own queue has run, and each of the four failures is kept with its count."""
+    JS = """(() => { const T = fk.D.tile, F = units.filter((u) => u.side === 0 && fk.SH[u.code].class === 'Foot' && u.hp > 0), e = units.find((u) => u.side === 2 && fk.SH[u.code].class === 'Foot'), c = F[0], boom = (o, k, w) => Object.defineProperty(o, k, { get() { throw new Error(w); }, set() {}, configurable: true });
+      const foe = fk.spawn(e.code, 2, fk.tileAt(c.bx + 3 * T, c.by), fk.rng), bad = F[0], ok = F.slice(1); WAR.order(ok, foe);
+      const ghost = { kind: 'unit', code: 'NOPE', side: 2, hp: 9, hpMax: 9, bx: bad.bx + T, by: bad.by, k: bad.k, vx: bad.vx, vy: bad.vy }; Object.assign(bad, { job: 'fight', target: ghost, focus: ghost, path: null, cd: 0 });
+      const V = ECON.villagersOf(0), sick = V[0]; Object.assign(sick, { job: 'idle', path: null, target: null }); boom(sick, 'load', 'a villager no rule fits');
+      const tc = fk.seatOf(0), other = fk.blds().find((b) => b.done >= 1 && b !== tc), first = fk.blds().indexOf(other) < fk.blds().indexOf(tc); other.q = ['UV']; boom(other, 'qt', 'a queue no rule fits'); tc.q = ['UV']; tc.qt = 1000; const got0 = V.slice(1).reduce((a, u) => a + (u.got || 0), 0);
+      fk.spawn('US2', 0, fk.tileAt(c.bx, c.by + 3 * T), fk.rng); ok[0].hp -= 1; delete D.heal.US2;
+      const DT = 1 / D.step.hz; let thrown = 0; for (let n = 0; n < 60 * D.step.hz; n++) { try { sim(DT); } catch (x) { thrown++; } }
+      return [thrown, !!foe.gone || !(foe.hp > 0), V.slice(1).reduce((a, u) => a + (u.got || 0), 0) > got0, first && tc.qt < 1000, fk.faults().length, fk.faults().every((f) => f.n > 1), fk.faults().map((f) => f.line.split(' · ')[0])]; })()"""
+    async with run.game(SEED, test=True) as pg:
+        pg.meant = True; await run.step(pg, 40); await pg.evaluate("fk.pause(false)")
+        return await pg.evaluate(JS)
+
+async def net_pause():
+    """Time in the pause menu is not a slow frame (N587): the game runs on its own clock, is paused a second and a half, then runs again; the slowest frame the log keeps is shorter than the pause."""
+    async with run.game(SEED) as pg:
+        await run.step(pg, 5); await run.release(pg); await pg.wait_for_timeout(1000)
+        await pg.evaluate("fk.pause(true)"); await pg.wait_for_timeout(1500); await pg.evaluate("fk.pause(false)"); await pg.wait_for_timeout(1000)
+        return await pg.evaluate("Math.max(0, ...Object.values(MENU.log.slow))"), list(pg.errors)
+
+
 async def check_game():
     a, gathered, people, errs = await play()
     rule('the game loads and a match starts', people > 0, f'{people} people and animals on the board')
@@ -909,6 +953,16 @@ async def check_game():
     rule('the Store\'s Steward (Albert, Nov 23): six tiles, Idle & new sends idle villagers to work, All workers moves workers to match the mix', st is not None and len(st) == 6 and st[0].startswith('Steward') and si == 0 and sn['wood'] > sn['food'], f'tiles {st}; idle after {si}; at work {sn}')
     fb = await falls()
     rule('Fall back: the picked foot walk away from a nearby enemy group, re-form, then go back in at the enemies they left', fb[0][1] > 0 and max(g for g, _, _ in fb) > fb[0][0] + 2 and fb[-1][1] == 0 and fb[-1][2] > 0, f'gap in tiles, falling back, fighting those left, every 2 s: {[(round(g, 1), a, b) for g, a, b in fb]}')
+    ne, ns = await net_errors()
+    rule('an error is kept once by the line that failed, however often it comes: said in the mail with the match going on, and in the copied log with its count and its line (Albert, Nov 28, N587: the log of his frozen match listed none)', ne == [1, 2, False, True, 1, 2, True, True], f'kinds, count, paused, said in the mail, rows in the log, its count, a line number, its trail: {ne}')
+    rule('a failed save says why and is kept as an error: with no storage, and with a part that will not pack (N587: "Storage may be full" was a guess)', ns == [[True, 1, True], [True, 1, True]], f'the reason in the mail, errors kept, the reason in the error; no storage, then a part that will not pack: {ns}')
+    st, drawn = await net_step()
+    rule('a tick answer that fails every step stops nothing: sim never throws, the answer after it runs every step, villagers gather, and the picture is still drawn (N587: one repeating error held his picture still)', st == [0, True, True, 1, True] and drawn > 0, f'thrown, the next answer ran every step, gathered, kinds of error, counted every step: {st}; drawings in 1.5 s on its own clock: {drawn}')
+    no = await net_one()
+    rule('one failing soldier, villager, building queue or healer cannot stop the rest: the nine foot beside a soldier whose every blow fails kill their enemy, the other villagers carry in, the Town Center\'s queue still runs, and all four failures are kept (N587)', no[:6] == [0, True, True, True, 4, True], f'thrown, enemy dead, villagers carried in, the queue after the failing one ran, kinds kept, each counted more than once: {no[:6]}; {no[6]}')
+    np_, pe = await net_pause()
+    rule('time in the pause menu is not a slow frame: after a pause of a second and a half the slowest frame the log keeps is under a second (N587: it logged 1.4 to 1.9 s at every pause)', 0 < np_ < 1000 and not pe, f'{np_} ms; errors {pe[:1]}')
+    rule('no test met an error it was not looking for (a failing step is guarded now, so an error no longer stops a test by itself)', not run.LEFT, f'{len(run.LEFT)}: ' + ' | '.join(run.LEFT[:3]) if run.LEFT else '')
     kept = json.loads(KEPT.read_text()) if KEPT.exists() else {}
     d = await deep() if '--deep' in sys.argv else None
     if '--accept' in sys.argv or not kept:

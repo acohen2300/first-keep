@@ -22,6 +22,7 @@ window.__release = () => { window.__hold = false; if (window.__q) raf(window.__q
 """
 PICTURES = "(() => { const a = window.__cv.filter((c) => c.width * c.height > 0); return { count: a.length, mb: Math.round(a.reduce((s, c) => s + c.width * c.height * 4, 0) / 1e6) }; })()"
 STATE = "JSON.stringify(pack())"
+LEFT = []   # errors a test met and was not looking for (pg.meant = True says it was): since Nov 28 a failing step is guarded and no longer stops a test by itself, so the check counts them here
 
 @contextlib.contextmanager
 def served(root=ROOT):
@@ -57,7 +58,9 @@ async def game(seed=1, root=ROOT, setup=(), test=False, cover=False, begin=True)
                 await pg.locator('button:has-text("Start")').first.tap()
                 await pg.evaluate(f'fk.reset({int(seed)}); fk.pause(true);')
             try: yield pg
-            finally: await b.close()
+            finally:
+                if pg.errors and not getattr(pg, 'meant', False): LEFT.append(pg.errors[0][:160])
+                await b.close()
 
 async def tap(pg, label):
     """Taps the visible button whose text is `label`, or starts with it before a number or sign (Hardest+3)."""
