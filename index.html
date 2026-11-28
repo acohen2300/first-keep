@@ -1173,15 +1173,15 @@ function stride(u, [tx, ty], dt, near = 0) { // E100
   place(u); return d <= Math.max(v, near);
 }
 function step(dt) { // E99
-  for (const u of units) {
+  for (const u of units) try { // E2757
     u.lvx = u.vx; u.lvy = u.vy; u.t += dt; u.mps = 0; const shoved = u.shoved; u.shoved = false;
     if (u.slide) slide(u, dt);
     if (u.path) { const w = u.path[u.at], end = u.at + 1 === u.path.length; if (holdBack(u, w)) continue; if (stride(u, w.length ? w : tileMid(w), dt, shoved ? SP : end && ARRIVE) && ++u.at >= u.path.length) { u.path = null; u.go = false; u.job = u.then || 'idle'; } continue; } // E303
     if (u.spot && !shoved && (u.job === 'gather' || u.job === 'wait' || isIdle(u)) && Math.hypot(u.spot.x - u.bx, u.spot.y - u.by) > ARRIVE) { stride(u, [u.spot.x, u.spot.y], dt); continue; } // E312
     if (has(u, 'Wander') && isIdle(u)) { // E102
       if (u.wait <= 0) { u.wait = -D.wait * Math.log(1 - rng()); const k = tileAt(u.bx + rnd(-D.reach, D.reach), u.by + rnd(-D.reach, D.reach)); if (walkable(k, u)) go(u, k); } else u.wait -= dt; }
-  }
-  regrid(); collide();
+  } catch (e) { fault(e); }
+  safe(regrid); safe(collide);
 }
 function collide() { // E304
   units.forEach((u, n) => (u.ix = n));
