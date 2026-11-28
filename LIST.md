@@ -2,25 +2,24 @@
 
 Open work only. Calls live in RULINGS.md; what was done and why is in `docs/log/` (the old list up to Nov 23: `docs/log/LIST-to-2026-11-23.md`) and in the commits.
 
-## Start here (written Nov 27 16:30 for a new chat; the handoffs below are the detail)
-- Latest build: v119, https://acohen2300.github.io/first-keep/fresh/v119/ . Branch `fresh`. Each build has its own link; v113 to v118 all stand
-- What v119 is, the hands build ("Ok build.", Nov 27 15:37): Attack and Move arm again (three doors, one command); Help opens and closes; a second fault no longer hides the bar; the next ghost steps the true gap and continues the pattern. Each has a real-tap rule in the check
-- What happens next: he plays a full match on v119 and pastes every part of the copied log. Claude owes parts 4 to 6 of his audit brief (market against the ten best in the genre, how to level up, known unknowns) and runs them while he plays; and two or three frame options for the War card's touch sizes
-- Read first: RULES.md, then RULINGS.md ("Commanding soldiers" and the Nov 27 section at its foot), then docs/log/Audit-2026-11-27.md: the 56 faults and the six builds that take them
-- How he works: talk and build are separate, nothing is built until he says "build"; short answers, he is on his phone; correct him flatly, argue back at most twice with backup, then his call stands; Claude builds alone, no helper agents. After the catch-up his match notes drive the order, not the audit's list
-- The builds after v119, in order, one between previews: 2 cleanup (his ruled cuts, dead code, the 11 dead research hidden; no change to play) · 3 rules bugs · 4 the safety net (save and offline checks, icon, version stamp) · 5 speed and memory (needs his phone) · 6 doors, each designed first: Shelter and Prep, Formations with Advance and Fall back, the quick homes, Vassals last. Pacing is its own build once he gives the three numbers
-- Open rulings, his to make (the Nov 27 list in RULINGS.md has the detail):
-  1. How long an undefended player should last on Easy, Normal and Hard (today 71 minutes on Normal, 63 on Hard)
-  2. What Hold means during a march
-  3. Gift: build it or remove the button
-  4. Outlaws and natives only ever fight him: intended or not
-  5. Whether computers should shelter and sell surplus
-  6. Whether an order keeps the pick while War is open
-  7. The War card's touch sizes: which taller frame
-  8. Did he stop using the drag box since v115's quarter-second hold because it stopped working for him (0 boxes in his 22-minute v118 match)?
-  9. Still open from Nov 26: Dismiss for a soldier, garrisoning, the colour table, the Defend ring, where the ghost first appears
-- Known and not built in v119: the War card's touch sizes; villagers and mixed picks still order through `tapDo`; Hold during a march; the build still calls itself v100 · 12
-- Owed by him: part 2 of his v118 log, if he still has it
+## Start here (written Nov 28 for a new chat; the handoffs below are the detail)
+- Latest build: v120, https://acohen2300.github.io/first-keep/fresh/v120/ . Branch `fresh`. Each build has its own link; v113 to v119 all stand
+- What v120 is, the safety net ("Ok build 120", Nov 28 12:50): every error is kept once by the line that failed, said in the mail and written into the copied log with its count and its trail; a part of a step that fails is skipped and the rest, with the drawing, goes on; each soldier, villager, building and part of the two big ticks is guarded; a failed save says why; time in the pause menu is not a slow frame. No change to play; six rules in the check
+- Why: his 254-minute v118 match froze (the picture stood still unless he paused), its log listed no error and its mail said "Save failed. Storage may be full." The cause was not found in a day of tests on v118. If it comes back on v120, the mail and the copied log name the line: read the log's `errors` first
+- What happens next: he plays on v120 and pastes every part of the copied log. Then the builds below, one between previews, each on his "build"
+- Read first: RULES.md, then RULINGS.md (the Nov 28 section at its foot holds every call below), then the work sheet https://claude.ai/artifact/GywjwNrJKD9VrZys4wzwDw (the tests, the pictures of the cards and rings)
+- How he works: talk and build are separate, nothing is built until he says "build"; short answers, he is on his phone; correct him flatly, argue back at most twice with backup, then his call stands; Claude builds alone, no helper agents. Check RULINGS.md before proposing anything: on Nov 28 Claude proposed a new Advance over his Nov 25 ruling and had to withdraw it
+- The builds after v120, in the order he agreed: rings (the scheme and the three sizes, ruled) · the cleanup (his ruled cuts, dead code, the 11 dead research hidden, Charge cut; no change to play) · rules bugs (the raid timer, the new fall rule, Hold says so, the audit's list) · the two cards (Train and Learn both at once; the War card with Form in the gap and the pad following Hold; Advance and Fall back as 5-tile steps) · homes (Shelter and Prep, Work, Muster per class, Trade post, small map, follow by the name) · the computers try to win (four rules; difficulty as thinking speed) · speed and memory on his phone · Vassals last
+- Open rulings, his to make:
+  1. Gift: build it or remove the button
+  2. Outlaws and natives only ever fight him: intended or not
+  3. Whether computers should shelter and sell surplus
+  4. Whether an order keeps the pick while War is open
+  5. "Buildings first" and "No pursuit"
+  6. After a second kind of error the game stops saving (the old rule, kept): with errors guarded now, should it go on saving?
+  7. Still open from Nov 26: Dismiss for a soldier, garrisoning, the Defend ring, where the ghost first appears
+- Known and not built in v120: everything in the Nov 28 rulings marked "not built"; villagers and mixed picks still order through `tapDo`; the build still calls itself v100 · 12; a native raid never ends (found Nov 28)
+- Owed by Claude: parts 4 to 6 of his audit brief (the market against the ten best in the genre, how to level up, known unknowns)
 
 ## Handoff, Nov 26 evening (read this first in a new chat; the handoffs below still stand)
 - 22:33 to 22:37: he asked for a fuller copied log, the whole match, not capped; split into parts was his idea ("two reports 1 and 2", "you can do 3"). "Build" at 22:37; he plays a full match on v118 next. v118: the log keeps a short row for every map tap (who was picked, what it became), every button, every box, every pan that rested at least half the box hold first, every building placed or cancelled; the head carries the screen and the drawn size of a tab's letters and the stored tap counts; errors 60; orders and news to 100,000 (no match reaches it; a number, not a true absence of a cap); the copy is cut at 30,000 characters a part, a guess to set from his first real paste. When he pastes: check every part is there by its head and END line before reading; first questions to answer from it: how often a map tap became none, how many pans were near-miss boxes (is 0.25 s right), which War box he taps first, the letter size against the tab box
